@@ -1,0 +1,1 @@
+ferrari.glb: "Ferrari 458 Italia" by vicent091036, Sketchfab (https://sketchfab.com/models/57bf6cc56931426e87494f554df1dab6), CC BY 4.0, via three.js examples

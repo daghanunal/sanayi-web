@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#14181d" />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 24 24%27%3E%3Cpath fill=%27%23f2a516%27 d=%27M13.5 2 4 13.5h6.5L9 22l10-12.5h-6.6z%27/%3E%3C/svg%3E" />
+    <title>Oto Elektrik | Şaşmaz, Ankara</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..900&family=Martian+Mono:wght@400;600&display=swap"
+    />
+  </head>
+  <body>
+    <header class="topbar" id="topbar"></header>
+
+    <main>
+      <!-- Hero: gösterge paneli. Kontak açılır, lambalar yanar; scroll ettikçe arızalar söner. -->
+      <section class="hero" id="hero" aria-labelledby="hero-title"></section>
+
+      <!-- Kablo demeti bu alanın içinde bütün sayfa boyunca çizilir. -->
+      <div class="board" id="board">
+        <svg class="harness" id="harness" aria-hidden="true"></svg>
+
+        <section class="sec about" id="hakkimizda" data-side="left"></section>
+        <section class="sec fuses" id="hizmetler" data-side="right"></section>
+        <section class="sec diag" id="ariza-tespit" data-side="left"></section>
+        <section class="sec process" id="surec" data-side="right"></section>
+        <section class="sec reviews" id="yorumlar" data-side="left"></section>
+        <section class="sec brands" id="markalar" data-side="right"></section>
+        <section class="sec shop" id="dukkan" data-side="left"></section>
+        <section class="sec cta" id="iletisim" data-side="center"></section>
+      </div>
+    </main>
+
+    <footer class="footer" id="footer"></footer>
+
+    <script type="module" src="./main.js"></script>
+  </body>
+</html>

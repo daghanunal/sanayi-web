@@ -1,0 +1,148 @@
+{
+  "preset": "usta",
+  "isletme": {
+    "ad": "Karaca Oto Döşeme",
+    "sektor": "Oto Döşeme",
+    "slogan": "Oturduğunuz her koltukta elimizin izi var.",
+    "kurulus": 1987,
+    "kurucu": "Hüseyin Karaca",
+    "hakkinda": "Babamız Hüseyin Usta dükkânı tek bir dikiş makinesiyle açtı. Bugün aynı tezgâhta ikinci kuşak olarak çalışıyoruz: derisini kendimiz seçiyor, kalıbını kendimiz çıkarıyor, dikişini kendimiz atıyoruz. Aracınız fabrikadan nasıl çıktıysa ya da nasıl hayal ettiyseniz, öyle teslim ediyoruz."
+  },
+  "iletisim": {
+    "telefon": "0532 555 12 34",
+    "whatsapp": "905325551234",
+    "adres": "Şaşmaz Oto Sanayi Sitesi, 1. Cadde No: 24, Etimesgut/Ankara",
+    "mapsQuery": "Şaşmaz Oto Sanayi Sitesi Etimesgut Ankara"
+  },
+  "saatler": [null, "08:30-19:00", "08:30-19:00", "08:30-19:00", "08:30-19:00", "08:30-19:00", "09:00-16:00"],
+  "hizmetler": [
+    {
+      "baslik": "Koltuk döşeme",
+      "aciklama": "Deri, kumaş ya da alcantara. Süngeri çökmüşse yeniliyor, kalıbı aracın orijinaline göre çıkarıyoruz.",
+      "sure": "2-3 gün",
+      "gorsel": "/img/usta/t-bugun.jpg"
+    },
+    {
+      "baslik": "Tavan döşeme",
+      "aciklama": "Sarkan tavanı söküp yeni kumaşla geriyoruz. Leke yapmayan yapıştırıcı, dalgasız yüzey.",
+      "sure": "1 gün",
+      "gorsel": "/img/usta/is-kesim.jpg"
+    },
+    {
+      "baslik": "Direksiyon kaplama",
+      "aciklama": "Aşınmış direksiyonu elde dikilen deriyle kaplıyoruz. İpliğin rengini siz seçiyorsunuz.",
+      "sure": "Aynı gün",
+      "gorsel": "/img/usta/is-direksiyon.jpg"
+    },
+    {
+      "baslik": "Kapı döşemesi",
+      "aciklama": "Kabaran, yırtılan kapı panellerini koltuklarla aynı malzemeyle yeniden yapıyoruz.",
+      "sure": "1-2 gün",
+      "gorsel": "/img/usta/is-dikis.jpg"
+    },
+    {
+      "baslik": "Koltuk ısıtma",
+      "aciklama": "Fabrika çıkışı olmayan araçlara ısıtma pedi ve düğme takıyoruz. Döşemeyi söküp tekrar diktiğimiz için dışarıdan fark edilmez.",
+      "sure": "1 gün",
+      "gorsel": "/img/usta/is-acik-deri.jpg"
+    },
+    {
+      "baslik": "Klasik araç restorasyonu",
+      "aciklama": "Anadol, Murat 124, eski Mercedes… Orijinal desen ve dikiş aralığına sadık kalarak baştan döşüyoruz.",
+      "sure": "Araca göre",
+      "gorsel": "/img/usta/is-restorasyon.jpg"
+    },
+    {
+      "baslik": "Minibüs ve ticari araç koltukları",
+      "aciklama": "Servis, minibüs ve midibüs koltuklarını filo halinde, hafta sonu çalışarak yetiştiriyoruz.",
+      "sure": "Filoya göre",
+      "gorsel": "/img/usta/t-2003.jpg"
+    }
+  ],
+  "istatistikler": [
+    { "deger": 9400, "sonek": "+", "etiket": "döşenen koltuk" },
+    { "deger": 1300, "sonek": "+", "etiket": "servis ve minibüs koltuğu" },
+    { "deger": 2, "sonek": " yıl", "etiket": "işçilik garantisi" }
+  ],
+  "tarihce": [
+    {
+      "yil": 1987,
+      "baslik": "Tek makine, tek tezgâh",
+      "metin": "Hüseyin Usta, Şaşmaz'daki ilk dükkânını el makinesi ve bir top suniyle açtı. İlk işi komşu dükkânın Murat 131'iydi.",
+      "gorsel": "/img/usta/t-1987.jpg"
+    },
+    {
+      "yil": 1994,
+      "baslik": "Klasiklerin adresi",
+      "metin": "Eski araç meraklıları orijinal desenleri bizde bulmaya başladı. Kalıp arşivimizin ilk sayfaları o yıllardan.",
+      "gorsel": "/img/usta/t-1994.jpg"
+    },
+    {
+      "yil": 2003,
+      "baslik": "Servis filoları",
+      "metin": "Ankara'daki servis firmalarıyla çalışmaya başladık. Bir hafta sonunda kırk koltuk diktiğimiz oldu.",
+      "gorsel": "/img/usta/t-2003.jpg"
+    },
+    {
+      "yil": 2011,
+      "baslik": "Deriye geçiş",
+      "metin": "Çift iğneli sanayi makinesini aldık, İtalyan ve yerli hakiki deriyle çalışmaya başladık.",
+      "gorsel": "/img/usta/t-2011.jpg"
+    },
+    {
+      "yil": 2018,
+      "baslik": "İkinci kuşak",
+      "metin": "Tezgâhı oğlu Emre devraldı. Hüseyin Usta hâlâ her sabah gelip dikişlere bakıyor.",
+      "gorsel": "/img/usta/t-2018.jpg"
+    },
+    {
+      "yil": null,
+      "baslik": "Bugün",
+      "metin": "Alcantara, nappa, kapitone ve ısıtmalı koltuklar. Değişmeyen tek şey: her dikişi elimizle kontrol ediyoruz.",
+      "gorsel": "/img/usta/t-bugun.jpg"
+    }
+  ],
+  "markalar": ["Fiat", "Renault", "Volkswagen", "Ford", "Mercedes-Benz", "Toyota", "Hyundai", "Opel", "Tofaş", "Anadol"],
+  "galeri": [
+    { "src": "/img/usta/is-acik-deri.jpg", "alt": "Açık renk deriyle yeniden döşenmiş ön koltuk" },
+    { "src": "/img/usta/is-klasik.jpg", "alt": "Kırmızı döşemeli klasik araç iç mekânı" },
+    { "src": "/img/usta/is-kesim.jpg", "alt": "Deri kalıba göre kesiliyor" },
+    { "src": "/img/usta/ipler.jpg", "alt": "Duvarda dizili renkli iplik makaraları" },
+    { "src": "/img/usta/is-restorasyon.jpg", "alt": "Restore edilmiş klasik araç direksiyonu ve torpidosu" },
+    { "src": "/img/usta/is-dikis.jpg", "alt": "Siyah deri sanayi makinesinde dikiliyor" }
+  ],
+  "puan": { "ortalama": 4.9, "adet": 187 },
+  "yorumlar": [
+    {
+      "ad": "Murat D.",
+      "puan": 5,
+      "metin": "Passat'ın koltukları çökmüştü. Süngeriyle birlikte yenilediler, fabrika çıkışından daha iyi oldu. Dikişler milim milim düzgün.",
+      "arac": "2014 Passat"
+    },
+    {
+      "ad": "Ayşe T.",
+      "puan": 5,
+      "metin": "Tavan sarkmıştı, sabah bıraktım akşam aldım. Fiyatını önceden söylediler, bir kuruş fazla çıkmadı.",
+      "arac": "2011 Corolla"
+    },
+    {
+      "ad": "Kemal Y.",
+      "puan": 5,
+      "metin": "Babamdan kalan Anadol'un döşemesini orijinal desenine göre yaptılar. Hüseyin Usta eski kalıbı arşivinden çıkardı.",
+      "arac": "1978 Anadol SL"
+    },
+    {
+      "ad": "Onur S.",
+      "puan": 5,
+      "metin": "Servis filomuzdaki 12 minibüsün koltuklarını bir hafta sonunda bitirdiler. Pazartesi araçlar yoldaydı.",
+      "arac": "Sprinter filosu"
+    },
+    {
+      "ad": "Selin A.",
+      "puan": 4,
+      "metin": "Direksiyona kırmızı iplikli deri kaplattım, çok şık oldu. Yoğun oldukları için bir gün beklettiler ama değdi.",
+      "arac": "2019 Egea"
+    }
+  ],
+  "garanti": "Yaptığımız işçiliğe 2 yıl garanti veriyoruz. Dikiş atarsa, ücretsiz yeniden dikeriz."
+}

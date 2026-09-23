@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#121316" />
+  <title>Lastik ve Jant | Şaşmaz</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Anybody:wdth,wght@50..150,300..900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet" />
+</head>
+<body class="is-loading">
+  <!-- Açılış: marka harfleri, diş şeridi yükleme çubuğu, dokununca geç -->
+  <div class="intro" data-intro role="presentation">
+    <div class="intro__half intro__half--top"></div>
+    <div class="intro__half intro__half--bottom"></div>
+    <div class="intro__center">
+      <p class="intro__name" data-intro-name></p>
+      <div class="intro__bar"><i data-intro-bar></i></div>
+      <p class="intro__meta"><span data-intro-pct>0</span><span>Geçmek için dokun</span></p>
+    </div>
+    <i class="intro__streak" data-intro-streak></i>
+  </div>
+
+  <canvas class="stage" data-stage aria-hidden="true"></canvas>
+  <div class="grain" aria-hidden="true"></div>
+  <div class="cursor" data-cursor aria-hidden="true"><i></i></div>
+
+  <div class="wipe" data-wipe aria-hidden="true">
+    <div class="wipe__panel" data-wipe-panel>
+      <p class="wipe__word" data-wipe-word></p>
+    </div>
+  </div>
+
+  <header class="top" data-top>
+    <a class="top__brand" href="#" data-bind="ad"></a>
+    <p class="top__status" data-status></p>
+    <a class="top__call" data-tel data-magnetic><span data-icon="phone"></span><span class="top__num" data-bind="telefon"></span></a>
+  </header>
+
+  <main>
+    <!-- 1. Patinaj: teker yerinde döner, duman, kızgın disk -->
+    <section class="ch ch--hero" data-ch="hero">
+      <div class="ch__pin">
+        <div class="hero">
+          <p class="hero__since" data-since></p>
+          <h1 class="hero__title" data-hero-title></h1>
+          <p class="hero__slogan" data-bind="slogan"></p>
+          <div class="hero__cta">
+            <a class="btn btn--yellow" data-wa target="_blank" rel="noopener" data-magnetic><span data-icon="whatsapp"></span>WhatsApp'tan yaz</a>
+            <a class="btn btn--ghost" data-tel data-magnetic><span data-icon="phone"></span>Hemen ara</a>
+          </div>
+        </div>
+        <div class="hud hud--hero" aria-hidden="true">
+          <p><span>Disk</span><b data-heat>640</b><small>°C</small></p>
+          <p><span>Devir</span><b data-rpm>6.800</b><small>d/d</small></p>
+        </div>
+        <p class="hint" aria-hidden="true" data-hint><i></i>Kaydır, gaza bas</p>
+      </div>
+    </section>
+
+    <!-- 2. Patlatılmış görünüm: her parça bir hizmet -->
+    <section class="ch ch--parca" data-ch="parca">
+      <div class="ch__pin">
+        <h2 class="ch__title ch__title--parca" data-parca-title>Tekerin her parçası bizden geçer.</h2>
+        <div class="labels" data-labels></div>
+      </div>
+    </section>
+
+    <!-- 3. Diş yakın plan: yaz → kış -->
+    <section class="ch ch--dis" data-ch="dis">
+      <div class="ch__pin">
+        <div class="season">
+          <p class="season__temp"><b data-temp>24</b><span>°C</span></p>
+          <div class="season__swap">
+            <div class="season__txt season__txt--yaz" data-yaz>
+              <h2 data-yaz-t></h2>
+              <p data-yaz-m></p>
+            </div>
+            <div class="season__txt season__txt--kis" data-kis>
+              <h2 data-kis-t></h2>
+              <p data-kis-m></p>
+            </div>
+          </div>
+          <a class="btn btn--ghost btn--sm" data-wa-mevsim target="_blank" rel="noopener" data-magnetic><span data-icon="whatsapp"></span>Mevsim değişimi için yaz</a>
+        </div>
+        <div class="season__meter" aria-hidden="true"><i data-season-bar></i><span>Yaz</span><span>Kış</span></div>
+      </div>
+    </section>
+
+    <!-- 4. Rot-balans: yalpalayan teker dengelenir -->
+    <section class="ch ch--balans" data-ch="balans">
+      <div class="ch__pin">
+        <div class="laser" aria-hidden="true"><i class="laser__h" data-laser-h></i><i class="laser__v" data-laser-v></i></div>
+        <div class="balans">
+          <h2 class="ch__title" data-balans-title></h2>
+          <div class="balans__read">
+            <p><span>Dengesizlik</span><b data-gram>35</b><small>g</small></p>
+            <p><span>Rot (toe)</span><b data-toe>0°14′</b></p>
+          </div>
+          <svg class="balans__wave" viewBox="0 0 300 60" preserveAspectRatio="none" aria-hidden="true"><path data-wave d="M0 30 L300 30"/></svg>
+          <ul class="balans__svc" data-balans-svc></ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. Lastik oteli: raf koridorunda uçuş -->
+    <section class="ch ch--otel" data-ch="otel" data-wipe-in="Lastik oteli">
+      <div class="ch__pin">
+        <div class="otel">
+          <p class="otel__count"><b data-otel-count>0</b><span data-otel-label></span></p>
+          <h2 class="ch__title" data-bind="otelBaslik"></h2>
+          <p class="otel__txt" data-bind="otelMetin"></p>
+          <ul class="otel__list" data-otel-list></ul>
+          <a class="btn btn--yellow" data-wa-otel target="_blank" rel="noopener" data-magnetic><span data-icon="whatsapp"></span>Otelde yer ayırt</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. Jant seçici -->
+    <section class="config" data-ch="config" data-wipe-in="Jantını seç" id="jant">
+      <div class="config__panel">
+        <h2 class="ch__title">Jant ve kaliper rengini seç, üstünde gör.</h2>
+        <fieldset class="opts">
+          <legend>Jant</legend>
+          <div class="opts__row" data-rim-opts></div>
+        </fieldset>
+        <fieldset class="opts">
+          <legend>Kaliper</legend>
+          <div class="opts__row" data-cal-opts></div>
+        </fieldset>
+        <p class="config__sum" data-config-sum></p>
+        <a class="btn btn--yellow" data-wa-config target="_blank" rel="noopener" data-magnetic><span data-icon="whatsapp"></span>Bu kombinasyonu sor</a>
+      </div>
+    </section>
+
+    <!-- 7. Hız tüneli: rakamlar -->
+    <section class="ch ch--tunel" data-ch="tunel" data-wipe-in="Rakamlarla">
+      <div class="ch__pin">
+        <ol class="stats" data-stats></ol>
+      </div>
+    </section>
+
+    <!-- İçerik: hizmetler, yorumlar, markalar, konum -->
+    <section class="svc" id="hizmetler">
+      <h2 class="svc__title" data-skew>Her işin süresi belli.</h2>
+      <ul class="svc__list" data-services></ul>
+      <p class="svc__garanti" data-bind="garanti"></p>
+    </section>
+
+    <section class="rev" id="yorumlar">
+      <div class="rev__head">
+        <p class="rev__score"><b data-puan>4,9</b><span class="rev__stars" data-stars></span></p>
+        <p class="rev__count" data-puan-adet></p>
+      </div>
+      <div class="rev__track" data-rev-track></div>
+    </section>
+
+    <section class="brands" aria-label="Çalıştığımız lastik markaları">
+      <div class="marquee" data-marquee="1"></div>
+      <div class="marquee marquee--alt" data-marquee="-1"></div>
+    </section>
+
+    <section class="visit" id="konum">
+      <div class="visit__status">
+        <div class="lights" data-lights aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+        <p class="visit__big" data-status-big></p>
+      </div>
+      <div class="visit__grid">
+        <div>
+          <h2 class="visit__h">Çalışma saatleri</h2>
+          <dl class="hours" data-hours></dl>
+        </div>
+        <div>
+          <h2 class="visit__h">Adres</h2>
+          <p class="visit__addr" data-bind="adres"></p>
+          <a class="btn btn--yellow" data-maps target="_blank" rel="noopener" data-magnetic><span data-icon="pin"></span>Yol tarifi al</a>
+        </div>
+      </div>
+      <div class="visit__map" data-map></div>
+    </section>
+
+    <!-- 8. Final: teker düşer, patinaj, iz bırakıp çıkar -->
+    <section class="ch ch--final" data-ch="final" data-wipe-in="Yola çık">
+      <div class="ch__pin">
+        <div class="final">
+          <h2 class="final__title" data-final-title></h2>
+          <p class="final__txt" data-bind="slogan"></p>
+          <div class="final__cta">
+            <a class="btn btn--yellow btn--xl" data-tel data-magnetic><span data-icon="phone"></span><span data-bind="telefon"></span></a>
+            <a class="btn btn--ghost btn--xl" data-wa target="_blank" rel="noopener" data-magnetic><span data-icon="whatsapp"></span>WhatsApp</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <p class="foot__name" data-bind="ad"></p>
+    <p data-bind="adres"></p>
+    <p><a data-tel data-bind="telefon"></a></p>
+    <p class="foot__small" data-year></p>
+  </footer>
+
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

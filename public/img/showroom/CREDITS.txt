@@ -1,0 +1,15 @@
+Tüm görseller Pexels lisansı (ücretsiz ticari kullanım) — https://www.pexels.com/license/
+hero.jpg        https://www.pexels.com/photo/1729993/
+panel.jpg       https://www.pexels.com/photo/305070/  (panel-once.jpg bundan işlenerek üretildi)
+cila.jpg        https://www.pexels.com/photo/5233259/ (cila-once.jpg bundan işlenerek üretildi)
+kaput.jpg       https://www.pexels.com/photo/30679981/ (kaput-once.jpg bundan işlenerek üretildi)
+g-tesla-y.jpg   https://www.pexels.com/photo/33322120/
+g-i8.jpg        https://www.pexels.com/photo/7387470/
+g-corvette.jpg  https://www.pexels.com/photo/19315078/
+g-klasik.jpg    https://www.pexels.com/photo/5052157/
+g-model3.jpg    https://www.pexels.com/photo/10029773/
+s-boya.jpg      https://www.pexels.com/photo/6870314/
+s-yikama.jpg    https://www.pexels.com/photo/6873179/
+s-firca.jpg     https://www.pexels.com/photo/6873020/
+s-jant.jpg      https://www.pexels.com/photo/5693651/
+s-klasik.jpg    https://www.pexels.com/photo/4969923/

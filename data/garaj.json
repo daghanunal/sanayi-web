@@ -1,0 +1,56 @@
+{
+  "preset": "garaj",
+  "isletme": {
+    "ad": "Demirhan Motor",
+    "sektor": "Motor, Mekanik ve Şanzıman",
+    "slogan": "Motor sesinden anlarız.",
+    "kurulus": 1996,
+    "hakkinda": "1996'da tek kanallı küçük bir dükkânda başladık. Bugün aynı işi, aynı titizlikle, daha geniş bir atölyede yapıyoruz: motoru açmadan önce dinliyor, ölçüyor, ne olduğunu size gösteriyoruz. Parça değiştirmeden önce mutlaka haber veririz."
+  },
+  "iletisim": {
+    "telefon": "0532 555 12 34",
+    "whatsapp": "905325551234",
+    "adres": "Şaşmaz Oto Sanayi Sitesi, 1. Cadde No: 24, Etimesgut/Ankara",
+    "mapsQuery": "Şaşmaz Oto Sanayi Sitesi Etimesgut Ankara"
+  },
+  "saatler": [null, "08:30-19:00", "08:30-19:00", "08:30-19:00", "08:30-19:00", "08:30-19:00", "09:00-16:00"],
+  "hizmetler": [
+    { "baslik": "Motor revizyonu", "aciklama": "Silindir honlama, piston-segman, kol ve ana yatak değişimi. Motor tezgâhta ölçülerek toplanır.", "sure": "3-5 gün" },
+    { "baslik": "Silindir kapak işleri", "aciklama": "Conta yakma, kapak planya, supap alıştırma ve kılavuz değişimi.", "sure": "1-2 gün" },
+    { "baslik": "Triger ve zincir seti", "aciklama": "Kayış, zincir, gergi ve devirdaim değişimi; ayarlar üretici değerlerine göre yapılır.", "sure": "Aynı gün" },
+    { "baslik": "Şanzıman ve debriyaj", "aciklama": "Manuel ve otomatik şanzıman tamiri, debriyaj seti ve volan değişimi.", "sure": "1-3 gün" },
+    { "baslik": "Yağ ve periyodik bakım", "aciklama": "Yağ, filtreler, buji ve sıvılar. Bakım kaydınız dosyanızda tutulur.", "sure": "1 saat" },
+    { "baslik": "Yürüyen aksam", "aciklama": "Amortisör, rotil, salıncak, aks ve fren sistemi kontrolü ve değişimi.", "sure": "Aynı gün" },
+    { "baslik": "Enjektör ve yakıt sistemi", "aciklama": "Enjektör test ve temizliği, yakıt pompası, dizel ve benzinli sistemler.", "sure": "Aynı gün" },
+    { "baslik": "Hararet ve soğutma", "aciklama": "Radyatör, termostat, fan ve sızıntı testi. Hararetin sebebini bulmadan parça değiştirmeyiz.", "sure": "Aynı gün" }
+  ],
+  "surec": [
+    { "baslik": "Dinliyoruz", "aciklama": "Aracı çalıştırır, sesi dinler, arıza tespit cihazıyla hata kayıtlarını okuruz." },
+    { "baslik": "Fiyatı konuşuruz", "aciklama": "Ne yapılacağını, parça ve işçilik fiyatını baştan söyleriz. Onayınız olmadan başlamayız." },
+    { "baslik": "Onarırız", "aciklama": "Çıkan eski parçaları saklarız; isterseniz size gösteririz." },
+    { "baslik": "Yolda deneriz", "aciklama": "Teslimden önce test sürüşü yapar, son kontrolü birlikte yaparız." }
+  ],
+  "istatistikler": [
+    { "deger": 30, "sonek": "", "etiket": "yıldır Şaşmaz'da" },
+    { "deger": 18500, "sonek": "+", "etiket": "araç teslim edildi" },
+    { "deger": 1200, "sonek": "+", "etiket": "motor revizyonu" },
+    { "deger": 1, "sonek": " yıl", "etiket": "işçilik garantisi" }
+  ],
+  "markalar": ["Renault", "Fiat", "Volkswagen", "Ford", "Toyota", "Hyundai", "Opel", "Peugeot", "Dacia", "Skoda"],
+  "galeri": [
+    { "src": "/img/garaj/revizyon.jpg", "alt": "Revizyon için sökülmüş motor tezgâhta" },
+    { "src": "/img/garaj/lift.jpg", "alt": "Lift üzerindeki aracın altında çalışan usta" },
+    { "src": "/img/garaj/eller.jpg", "alt": "Motor üzerinde çalışan ustanın elleri" },
+    { "src": "/img/garaj/yag.jpg", "alt": "Motora yeni yağ dolduruluyor" },
+    { "src": "/img/garaj/aletler.jpg", "alt": "Tezgâh üzerindeki anahtar takımı" }
+  ],
+  "puan": { "ortalama": 4.9, "adet": 214 },
+  "yorumlar": [
+    { "ad": "Mehmet K.", "puan": 5, "metin": "Başka yerde motor gitti dediler. Burada conta yaktığını bulup iki günde teslim ettiler. Çıkan parçaları da gösterdiler.", "arac": "2014 Megane" },
+    { "ad": "Serkan A.", "puan": 5, "metin": "Fiyatı baştan söylediler, sonunda bir kuruş fazla çıkmadı. Triger setini aynı gün yaptılar.", "arac": "2017 Egea" },
+    { "ad": "Ayşe D.", "puan": 5, "metin": "Arabadan anlamadığım belli, yine de her şeyi sabırla anlattılar. Kandırılmadığımı bilmek güzel.", "arac": "2019 Corolla" },
+    { "ad": "Hakan T.", "puan": 4, "metin": "Şanzıman işi bir gün uzadı ama arayıp haber verdiler. İşçilik temiz, araç ilk günkü gibi.", "arac": "2012 Passat" },
+    { "ad": "Emre Y.", "puan": 5, "metin": "Ticari araçla ekmek parası kazanıyorum; beni bekletmeden araya aldılar. Yıllardır buraya geliyorum.", "arac": "2016 Transit" }
+  ],
+  "garanti": "Yapılan işçiliğe 1 yıl garanti."
+}

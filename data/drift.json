@@ -1,0 +1,20 @@
+{
+  "preset": "drift",
+  "tekerOlcu": "225/45 R17",
+  "parcalar": [
+    { "id": "bijon", "baslik": "Bijonlar", "metin": "Tork anahtarıyla, fabrika değerinde sıkılır." },
+    { "id": "jant", "baslik": "Jant", "metin": "Eğilen jantı düzeltir, çizileni fırın boyayla yenileriz." },
+    { "id": "lastik", "baslik": "Lastik", "metin": "Söküm, takım ve yeni sibop fiyata dahil." },
+    { "id": "kaliper", "baslik": "Kaliper", "metin": "Teker sökülmüşken balatalara bakarız, ücret almayız." },
+    { "id": "disk", "baslik": "Fren diski", "metin": "Diskte kanal ya da çatlak varsa önce size gösteririz." }
+  ],
+  "dis": {
+    "yaz": { "baslik": "Yazın geniş blok", "metin": "Sıcak asfaltta daha çok temas, daha kısa fren. Kanallar suyu dışarı atar.", "derece": 24 },
+    "kis": { "baslik": "Kışın lamelli diş", "metin": "7°C'nin altında hamur yumuşak kalır, ince lameller karı tutar, buzda kaymaz.", "derece": -3 }
+  },
+  "balans": {
+    "baslik": "Direksiyon titriyorsa sebebi çoğu zaman 20 gram.",
+    "gram": 35
+  },
+  "finalBaslik": "Lastiğin mi indi?"
+}

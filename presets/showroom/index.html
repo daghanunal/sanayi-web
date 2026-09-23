@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#07080a" />
+  <title>Boya ve Kaporta | Şaşmaz</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,300..900;1,62..125,300..900&display=swap" rel="stylesheet" />
+  <link rel="preload" as="image" href="/img/showroom/hero.jpg" />
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <a class="skip" href="#hizmetler">İçeriğe geç</a>
+
+  <header class="top" id="top">
+    <a class="top__brand" href="#" data-bind="ad"></a>
+    <nav class="top__nav" aria-label="Sayfa içi">
+      <a href="#once-sonra">Önce / Sonra</a>
+      <a href="#hizmetler">Hizmetler</a>
+      <a href="#isler">İşler</a>
+      <a href="#iletisim">İletişim</a>
+    </nav>
+    <a class="top__call" data-href="tel"><span class="dot" data-status-dot></span><span data-bind="telefon"></span></a>
+  </header>
+
+  <main>
+    <!-- HERO -->
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero__media">
+        <img class="hero__img" src="/img/showroom/hero.jpg" alt="Boya kabininin tavan ışıkları siyah bir otomobilin parlak gövdesine yansıyor" fetchpriority="high" />
+        <div class="hero__shade"></div>
+        <div class="hero__sweep" aria-hidden="true"></div>
+      </div>
+      <div class="hero__content">
+        <p class="hero__kicker"><span data-bind="ad"></span><span data-bind="since"></span></p>
+        <h1 class="hero__title" id="hero-title" data-bind="slogan"></h1>
+        <p class="hero__lead">Boya, kaporta, boyasız göçük, pasta-cila ve seramik kaplama. Aracınızın fotoğrafını gönderin, fiyatı aynı gün yazalım.</p>
+        <div class="hero__actions">
+          <a class="btn btn--pearl" data-href="wa-foto" target="_blank" rel="noopener"><span data-icon="whatsapp"></span>Fotoğraf gönder, fiyat al</a>
+          <a class="btn btn--ghost" data-href="tel"><span data-icon="phone"></span>Hemen ara</a>
+        </div>
+        <p class="status" data-status></p>
+      </div>
+      <div class="hero__cue" aria-hidden="true"><span></span></div>
+    </section>
+
+    <!-- İMZA: SCROLL İLE ÖNCE / SONRA -->
+    <section class="reveal" id="once-sonra" aria-labelledby="reveal-title">
+      <div class="reveal__stage">
+        <img class="reveal__img reveal__img--after" src="/img/showroom/panel.jpg" alt="Pasta ve seramik kaplama sonrası ayna gibi parlayan siyah kaput ve far" loading="lazy" />
+        <div class="reveal__gleam" aria-hidden="true"></div>
+        <img class="reveal__img reveal__img--before" src="/img/showroom/panel-once.jpg" alt="Aynı kaputun işlem öncesi hali: matlaşmış vernik, hare ve çizikler" loading="lazy" />
+        <div class="reveal__seam" aria-hidden="true"><i></i></div>
+
+        <div class="reveal__intro">
+          <h2 class="reveal__title" id="reveal-title">Aynı kaput, bir gün arayla.</h2>
+          <p>Aşağı kaydırın, pastanın ne yaptığını görün.</p>
+        </div>
+
+        <div class="reveal__hud" aria-hidden="true">
+          <div class="reveal__label reveal__label--before"><b>Önce</b><span>Matlaşmış vernik, hare, kılcal çizikler</span></div>
+          <div class="reveal__label reveal__label--after"><b>Sonra</b><span>3 aşamalı pasta ve 2 kat seramik</span></div>
+          <div class="meter">
+            <span class="meter__label">Parlaklık, 60° ölçüm</span>
+            <span class="meter__value"><b data-meter>38</b> GU</span>
+            <span class="meter__bar"><i data-meter-bar></i></span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- HİZMETLER -->
+    <section class="services" id="hizmetler" aria-labelledby="services-title">
+      <div class="services__head">
+        <h2 id="services-title">Ne yapıyoruz?</h2>
+        <p>Çizikten komple boyaya kadar her iş aynı kabinde, aynı ekiple.</p>
+      </div>
+      <div class="services__body">
+        <div class="services__visual" aria-hidden="true">
+          <div class="services__frame" data-service-frame></div>
+        </div>
+        <ul class="services__list" data-services></ul>
+      </div>
+    </section>
+
+    <!-- GÜVEN / RAKAMLAR -->
+    <section class="trust" aria-label="Hakkımızda">
+      <div class="booth-lights" aria-hidden="true"><i></i><i></i><i></i></div>
+      <p class="trust__about" data-bind="hakkinda"></p>
+      <dl class="trust__stats" data-stats></dl>
+    </section>
+
+    <!-- GALERİ: YATAY SCROLL -->
+    <section class="gallery" id="isler" aria-labelledby="gallery-title">
+      <div class="gallery__pin">
+        <div class="gallery__track" data-gallery>
+          <div class="gallery__intro">
+            <h2 id="gallery-title">Son teslim ettiklerimiz</h2>
+            <p>Hepsi Şaşmaz'daki kabinimizden çıktı.</p>
+          </div>
+        </div>
+      </div>
+      <div class="gallery__progress" aria-hidden="true"><i data-gallery-progress></i></div>
+    </section>
+
+    <!-- SÜRÜKLENEBİLİR KARŞILAŞTIRMA -->
+    <section class="compare" aria-labelledby="compare-title">
+      <div class="compare__head">
+        <h2 id="compare-title">Kendiniz karşılaştırın</h2>
+        <p>Çizgiyi sağa sola sürükleyin.</p>
+        <div class="compare__tabs" role="tablist" data-compare-tabs></div>
+      </div>
+      <div class="compare__box" data-compare>
+        <img class="compare__img compare__img--after" alt="" loading="lazy" />
+        <img class="compare__img compare__img--before" alt="" loading="lazy" />
+        <span class="compare__tag compare__tag--before">Önce</span>
+        <span class="compare__tag compare__tag--after">Sonra</span>
+        <div class="compare__handle" aria-hidden="true"><span></span></div>
+        <label class="sr-only" for="compare-range">Önce ve sonra arasındaki çizginin konumu</label>
+        <input class="compare__range" id="compare-range" type="range" min="0" max="100" value="50" />
+      </div>
+    </section>
+
+    <!-- SÜREÇ -->
+    <section class="process" aria-labelledby="process-title">
+      <h2 id="process-title">Aracınız bizde şu adımlardan geçer</h2>
+      <ol class="process__list" data-process>
+        <li class="process__rail" aria-hidden="true"><i></i></li>
+      </ol>
+    </section>
+
+    <!-- YORUMLAR -->
+    <section class="reviews" aria-labelledby="reviews-title">
+      <div class="reviews__score">
+        <p class="reviews__big" data-score></p>
+        <div class="reviews__stars" data-stars></div>
+        <h2 id="reviews-title" data-score-text></h2>
+      </div>
+      <ul class="reviews__list" data-reviews></ul>
+    </section>
+
+    <!-- MARKALAR -->
+    <section class="brands" aria-labelledby="brands-title">
+      <h2 class="brands__title" id="brands-title">Tüm marka ve modellerde çalışıyoruz</h2>
+      <div class="brands__marquee" data-brands></div>
+    </section>
+
+    <!-- SAATLER VE KONUM -->
+    <section class="visit" id="iletisim" aria-labelledby="visit-title">
+      <div class="visit__info">
+        <h2 id="visit-title">Uğrayın, aracınıza birlikte bakalım</h2>
+        <p class="status status--light" data-status></p>
+        <table class="hours" data-hours><caption class="sr-only">Çalışma saatleri</caption><tbody></tbody></table>
+        <p class="visit__address"><span data-icon="pin"></span><span data-bind="adres"></span></p>
+        <div class="visit__actions">
+          <a class="btn btn--ink" data-href="maps" target="_blank" rel="noopener"><span data-icon="pin"></span>Yol tarifi al</a>
+          <a class="btn btn--line" data-href="tel"><span data-icon="phone"></span><span data-bind="telefon"></span></a>
+        </div>
+      </div>
+      <div class="visit__map" data-map>
+        <button class="visit__map-load" type="button" data-map-load>Haritayı göster</button>
+      </div>
+    </section>
+
+    <!-- SON ÇAĞRI -->
+    <section class="cta" aria-labelledby="cta-title">
+      <div class="booth-lights booth-lights--dark" aria-hidden="true"><i></i><i></i><i></i></div>
+      <h2 class="cta__title" id="cta-title">Fotoğrafını gönderin, fiyatı aynı gün söyleyelim.</h2>
+      <p class="cta__note" data-bind="garanti"></p>
+      <div class="cta__actions">
+        <a class="btn btn--pearl btn--lg" data-href="wa-foto" target="_blank" rel="noopener"><span data-icon="whatsapp"></span>WhatsApp'tan yaz</a>
+        <a class="btn btn--ghost btn--lg" data-href="tel"><span data-icon="phone"></span><span data-bind="telefon"></span></a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <p class="foot__name" data-bind="ad"></p>
+    <p data-bind="adres"></p>
+    <p><span data-bind="copy"></span></p>
+  </footer>
+
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

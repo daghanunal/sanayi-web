@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#232427" />
+  <title>Lastik ve Jant | Şaşmaz</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders:opsz,wght@10..72,700..900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <header class="top" data-top>
+    <a class="top__brand" href="#" data-bind="ad"></a>
+    <p class="top__status" data-status></p>
+    <a class="top__call" data-tel><span class="top__call-icon" data-icon="phone"></span><span data-bind="telefon"></span></a>
+  </header>
+
+  <main>
+    <!-- Hero: dev teker scroll ile döner, sonra sola yuvarlanıp çıkar -->
+    <section class="hero" data-hero>
+      <div class="hero__lines" aria-hidden="true">
+        <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+      </div>
+      <div class="hero__copy">
+        <p class="hero__since" data-since></p>
+        <h1 class="hero__title" data-hero-title></h1>
+        <p class="hero__slogan" data-bind="slogan"></p>
+        <div class="hero__cta">
+          <a class="btn btn--sari" data-wa target="_blank" rel="noopener"><span data-icon="whatsapp"></span>WhatsApp'tan yaz</a>
+          <a class="btn btn--line" data-tel><span data-icon="phone"></span>Hemen ara</a>
+        </div>
+      </div>
+      <div class="hero__ground" aria-hidden="true">
+        <div class="hero__skid" data-skid></div>
+        <div class="hero__road" data-road></div>
+      </div>
+      <div class="hero__wheel" data-hero-wheel></div>
+      <p class="hero__hint" aria-hidden="true" data-hint>Kaydır, teker dönsün</p>
+    </section>
+
+    <div class="marquee marquee--outline" data-marquee="1" aria-hidden="true">
+      <div class="marquee__track" data-marquee-words="Lastik|Jant|Rot-balans|Lastik oteli|Nitrojen|Patlak tamiri"></div>
+    </div>
+
+    <section class="services" id="hizmetler" aria-labelledby="hizmetler-baslik">
+      <div class="wrap">
+        <div class="services__head">
+          <h2 id="hizmetler-baslik" class="h2">Ne yapıyoruz,<br />ne kadar sürüyor</h2>
+          <p class="services__about" data-bind="hakkinda"></p>
+        </div>
+        <ul class="services__list" data-services></ul>
+      </div>
+    </section>
+
+    <!-- Hız göstergesi: pinlenir, ibre rakamdan rakama gider -->
+    <section class="gauge" aria-labelledby="rakam-baslik" data-gauge>
+      <div class="gauge__inner">
+        <h2 id="rakam-baslik" class="gauge__title">Rakamlarla</h2>
+        <div class="gauge__dial">
+          <svg class="gauge__svg" viewBox="-220 -220 440 300" aria-hidden="true" data-gauge-svg></svg>
+          <div class="gauge__needle" data-needle aria-hidden="true"></div>
+          <div class="gauge__hub" aria-hidden="true"></div>
+          <p class="gauge__readout"><span class="gauge__value" data-gauge-value>0</span><span class="gauge__label" data-gauge-label></span></p>
+        </div>
+        <ol class="gauge__list" data-gauge-list></ol>
+      </div>
+    </section>
+
+    <!-- Pit stop: yatay kayan adımlar ve kronometre -->
+    <section class="pit" aria-labelledby="pit-baslik" data-pit>
+      <div class="pit__head">
+        <h2 id="pit-baslik" class="h2">Lastik değişimi,<br />adım adım</h2>
+        <p class="pit__clock"><span data-pit-clock>00:00</span><small></small></p>
+      </div>
+      <div class="pit__track" data-pit-track></div>
+      <div class="pit__progress" aria-hidden="true"><i data-pit-bar></i></div>
+    </section>
+
+    <section class="season" data-season="yaz" aria-labelledby="mevsim-baslik">
+      <div class="wrap season__grid">
+        <div class="season__media">
+          <img data-season-img="yaz" alt="" loading="lazy" />
+          <img data-season-img="kis" alt="" loading="lazy" />
+          <p class="season__temp"><span data-temp>7°C</span></p>
+        </div>
+        <div class="season__copy">
+          <h2 id="mevsim-baslik" class="h2">Hangi lastik,<br />ne zaman?</h2>
+          <div class="season__toggle" role="tablist" aria-label="Mevsim">
+            <button role="tab" data-season-btn="yaz" aria-selected="true">Yaz</button>
+            <button role="tab" data-season-btn="kis" aria-selected="false">Kış</button>
+            <i class="season__knob" aria-hidden="true"></i>
+          </div>
+          <h3 class="season__name" data-season-title></h3>
+          <p class="season__text" data-season-text></p>
+          <p class="season__when">Değişim zamanı: <strong data-season-when></strong></p>
+        </div>
+      </div>
+    </section>
+
+    <section class="hotel" aria-labelledby="otel-baslik">
+      <div class="hotel__media"><img data-hotel-img alt="Raflarda etiketli mevsimlik lastikler" loading="lazy" /></div>
+      <div class="wrap hotel__copy">
+        <h2 id="otel-baslik" class="hotel__title" data-hotel-title></h2>
+        <p class="hotel__text" data-hotel-text></p>
+        <ul class="hotel__list" data-hotel-list></ul>
+        <a class="btn btn--sari" data-wa-otel target="_blank" rel="noopener"><span data-icon="whatsapp"></span>Otele yer ayırt</a>
+      </div>
+    </section>
+
+    <section class="gallery" aria-label="Atölyeden kareler">
+      <div class="gallery__cols" data-gallery></div>
+    </section>
+
+    <div class="marquee marquee--brands" data-marquee="-1" aria-label="Çalıştığımız markalar">
+      <div class="marquee__track" data-brands></div>
+    </div>
+
+    <section class="reviews" aria-labelledby="yorum-baslik">
+      <div class="wrap">
+        <div class="reviews__head">
+          <p class="reviews__score"><span data-score></span><span class="reviews__stars" data-stars></span></p>
+          <h2 id="yorum-baslik" class="h2">Müşterilerimiz<br />ne diyor</h2>
+          <p class="reviews__count" data-review-count></p>
+        </div>
+        <ul class="reviews__list" data-reviews></ul>
+      </div>
+    </section>
+
+    <section class="visit" id="konum" aria-labelledby="konum-baslik">
+      <div class="wrap visit__grid">
+        <div class="visit__hours">
+          <div class="lights" data-lights aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+          <h2 id="konum-baslik" class="visit__status" data-status-big></h2>
+          <dl class="visit__table" data-hours></dl>
+          <p class="visit__addr" data-bind="adres"></p>
+          <a class="btn btn--sari" data-maps target="_blank" rel="noopener"><span data-icon="pin"></span>Yol tarifi al</a>
+        </div>
+        <div class="visit__map" data-map></div>
+      </div>
+    </section>
+
+    <section class="final" aria-labelledby="final-baslik">
+      <div class="final__wheel" data-final-wheel></div>
+      <div class="wrap final__copy">
+        <h2 id="final-baslik" class="final__title">Lastiğin mi indi?</h2>
+        <p class="final__text">Ara ya da fotoğrafını WhatsApp'tan at, ebadına bakıp fiyatı hemen söyleyelim.</p>
+        <div class="final__cta">
+          <a class="btn btn--sari btn--big" data-tel><span data-icon="phone"></span><span data-bind="telefon"></span></a>
+          <a class="btn btn--line btn--big" data-wa target="_blank" rel="noopener"><span data-icon="whatsapp"></span>WhatsApp</a>
+        </div>
+        <p class="final__guarantee" data-bind="garanti"></p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <div class="wrap foot__grid">
+      <p class="foot__name" data-bind="ad"></p>
+      <p data-bind="adres"></p>
+      <p><a data-tel><span data-bind="telefon"></span></a></p>
+      <p class="foot__copy" data-copy></p>
+    </div>
+  </footer>
+
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

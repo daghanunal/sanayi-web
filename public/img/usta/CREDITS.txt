@@ -1,0 +1,16 @@
+Tüm görseller Pexels lisansı (ücretsiz ticari kullanım, atıf gerekmez).
+hero-koltuk.jpg: https://www.pexels.com/photo/10054684/
+t-1987.jpg: https://www.pexels.com/photo/8882136/
+t-1994.jpg: https://www.pexels.com/photo/18372045/
+t-2003.jpg: https://www.pexels.com/photo/20849161/
+t-2011.jpg: https://www.pexels.com/photo/6660957/
+t-2018.jpg: https://www.pexels.com/photo/31759241/
+t-bugun.jpg: https://www.pexels.com/photo/29293845/
+is-acik-deri.jpg: https://www.pexels.com/photo/3894051/
+is-direksiyon.jpg: https://www.pexels.com/photo/10985553/
+is-klasik.jpg: https://www.pexels.com/photo/33710026/
+is-restorasyon.jpg: https://www.pexels.com/photo/11163579/
+is-kesim.jpg: https://www.pexels.com/photo/4452610/
+is-dikis.jpg: https://www.pexels.com/photo/6660926/
+ipler.jpg: https://www.pexels.com/photo/20190770/
+deri-doku.jpg: https://www.pexels.com/photo/30037103/

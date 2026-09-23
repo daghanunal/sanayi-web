@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0e0d0f" />
+  <title>Motor ve Mekanik | Şaşmaz, Ankara</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230e0d0f'/%3E%3Crect x='10' y='7' width='12' height='12' rx='2' fill='none' stroke='%23ff5a1f' stroke-width='3'/%3E%3Cpath d='M16 19v7' stroke='%23ff5a1f' stroke-width='3'/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Anybody:wdth,wght@50..150,300..900&family=Chivo:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../../shared/base.css" />
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <!-- Açılış -->
+  <div class="intro" aria-hidden="true">
+    <div class="intro__half intro__half--top"></div>
+    <div class="intro__half intro__half--bottom"></div>
+    <div class="intro__core">
+      <p class="intro__name" data-name></p>
+      <div class="intro__bar"><span></span></div>
+      <p class="intro__hint">Kontak açılıyor</p>
+    </div>
+  </div>
+
+  <canvas class="stage" aria-hidden="true"></canvas>
+  <div class="stage-shade" aria-hidden="true"></div>
+
+  <!-- 3D parçaya bağlı etiket -->
+  <div class="callout" aria-hidden="true">
+    <svg class="callout__line"><line x1="0" y1="0" x2="0" y2="0" /></svg>
+    <span class="callout__dot"></span>
+    <span class="callout__label"></span>
+  </div>
+
+  <!-- Devir saati -->
+  <div class="tach" aria-hidden="true">
+    <svg viewBox="0 0 200 120">
+      <path class="tach__track" d="M20 110 A80 80 0 0 1 180 110" />
+      <path class="tach__red" d="M20 110 A80 80 0 0 1 180 110" />
+      <g class="tach__ticks"></g>
+      <line class="tach__needle" x1="100" y1="110" x2="100" y2="40" />
+      <circle cx="100" cy="110" r="6" class="tach__hub" />
+    </svg>
+    <p class="tach__read"><span data-rpm>850</span> dev/dak</p>
+  </div>
+
+  <div class="cursor" aria-hidden="true"></div>
+
+  <header class="top">
+    <a href="#top" class="top__brand" data-name></a>
+    <nav class="top__nav" aria-label="Sayfa bölümleri">
+      <a href="#hizmetler">Hizmetler</a>
+      <a href="#surec">Nasıl çalışırız</a>
+      <a href="#yorumlar">Yorumlar</a>
+      <a href="#konum">Konum</a>
+    </nav>
+    <span class="status" data-status></span>
+    <a class="top__call magnetic" data-tel></a>
+  </header>
+
+  <main>
+    <!-- 1. Hero: toplanmış motor rölantide -->
+    <section class="hero" id="top" aria-label="Giriş">
+      <div class="hero__inner">
+        <p class="hero__kicker" data-since></p>
+        <h1 class="hero__title" data-name data-split></h1>
+        <p class="hero__slogan" data-slogan></p>
+        <div class="hero__actions">
+          <a class="btn btn--hot magnetic" data-tel-btn>Hemen ara</a>
+          <a class="btn btn--line magnetic" data-wa>WhatsApp'tan yaz</a>
+        </div>
+      </div>
+      <p class="hero__hint" aria-hidden="true"><span></span>Kaydırın, motoru açalım</p>
+    </section>
+
+    <!-- 2. Patlatma ve parça turu -->
+    <section class="parts" id="hizmetler" aria-labelledby="parts-h">
+      <div class="parts__intro">
+        <div class="sticky-center">
+        <h2 id="parts-h" class="parts__title" aria-label="Parça parça biliriz.">
+          <span class="scatter" data-scatter>Parça parça</span>
+          <span class="scatter" data-scatter>biliriz.</span>
+        </h2>
+        <p class="parts__lead">Motorun her parçasını söker, ölçer, kitabına göre toplarız. Kaydırdıkça hangi parçada ne iş yaptığımızı görün.</p>
+        </div>
+      </div>
+      <div class="parts__stops" data-stops></div>
+    </section>
+
+    <!-- 3. Dört zaman: silindirin içinde süreç -->
+    <section class="cycle" id="surec" aria-labelledby="cycle-h">
+      <div class="cycle__dive">
+        <div class="sticky-center">
+          <h2 id="cycle-h" class="cycle__title"><span data-split-lines>Motor dört zamanda çalışır.</span> <span data-split-lines>Biz de öyle.</span></h2>
+        </div>
+      </div>
+      <ol class="cycle__strokes" data-strokes></ol>
+    </section>
+
+    <!-- 4. Kepenk: rakamlar -->
+    <section class="shutter-sec" aria-labelledby="stats-h">
+      <div class="shutter">
+        <div class="shutter__slats" aria-hidden="true"></div>
+        <div class="shutter__content">
+          <div class="plate">
+            <p class="plate__name" data-name></p>
+            <h2 id="stats-h" class="plate__h">Şaşmaz'da <span data-years></span> yıl</h2>
+            <p class="plate__p" data-hakkinda></p>
+          </div>
+          <dl class="stats" data-stats></dl>
+        </div>
+        <div class="shutter__bar" aria-hidden="true"><span></span></div>
+      </div>
+    </section>
+
+    <!-- 5. Yorumlar -->
+    <section class="reviews" id="yorumlar" aria-labelledby="rev-h">
+      <div class="reviews__pin">
+        <div class="score">
+          <h2 id="rev-h" class="sr-only">Müşteri yorumları</h2>
+          <p class="score__num"><span data-score></span></p>
+          <p class="score__stars" data-stars aria-hidden="true"></p>
+          <p class="score__meta" data-score-meta></p>
+        </div>
+        <div class="quotes" data-quotes></div>
+        <div class="quotes__dots" data-quote-dots aria-hidden="true"></div>
+      </div>
+    </section>
+
+    <!-- 6. Markalar -->
+    <section class="brands" aria-label="Çalıştığımız markalar">
+      <p class="brands__label">Her marka, her model</p>
+      <div class="marquee" data-marquee><div class="marquee__track" data-brands></div></div>
+      <div class="marquee marquee--rev" data-marquee><div class="marquee__track" data-brands></div></div>
+    </section>
+
+    <!-- 7. Saatler ve konum -->
+    <section class="visit" id="konum" aria-labelledby="visit-h">
+      <h2 id="visit-h" class="visit__h" data-split-lines>Atölyemiz açık, kapımız açık.</h2>
+      <div class="visit__grid">
+        <article class="panel">
+          <span class="panel__tube" aria-hidden="true"></span>
+          <h3 class="panel__h">Çalışma saatleri</h3>
+          <p class="status status--big" data-status></p>
+          <dl class="hours" data-hours></dl>
+        </article>
+        <article class="panel panel--map">
+          <span class="panel__tube" aria-hidden="true"></span>
+          <h3 class="panel__h">Adres</h3>
+          <p class="panel__addr" data-address></p>
+          <div class="map" data-map></div>
+          <a class="btn btn--hot magnetic" data-maps target="_blank" rel="noopener">Yol tarifi al</a>
+        </article>
+      </div>
+    </section>
+
+    <!-- 8. Kontak finali -->
+    <section class="finale" aria-labelledby="final-h">
+      <div class="finale__pin">
+        <p class="finale__key" aria-hidden="true">Kontak</p>
+        <div class="finale__cta">
+          <h2 id="final-h" class="finale__h" data-split>Getirin, bir dinleyelim.</h2>
+          <p class="finale__p">Sesi tarif etmeniz yeter. Arızayı bulur, fiyatı işe başlamadan söyleriz.</p>
+          <div class="finale__actions">
+            <a class="btn btn--hot btn--xl magnetic" data-tel-btn>Hemen ara</a>
+            <a class="btn btn--line btn--xl magnetic" data-wa>WhatsApp'tan yaz</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <p class="foot__name" data-name></p>
+    <p data-address></p>
+    <p><a data-tel-plain></a></p>
+    <p class="foot__small">© <span data-year></span> <span data-name></span></p>
+  </footer>
+
+  <script type="module" src="./main.js"></script>
+</body>
+</html>
