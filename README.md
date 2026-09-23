@@ -22,6 +22,12 @@ Sinematik presetler: aynı işletme verisini kullanır, baştan sona 3D ve scrol
 
 3D araba modeli: `public/models/ferrari.glb` (CC BY 4.0, vicent091036), Draco çözücü `public/draco/`.
 
+## Yayın
+
+Canlı: https://daghanunal.github.io/sanayi-web/ (saha kiti). `main` dalına her push'ta
+`.github/workflows/pages.yml` siteyi `BASE_PATH=/sanayi-web/` ile derleyip GitHub Pages'e yükler.
+Kod ve veri içindeki `/img/...` gibi yollar bu yüzden `import.meta.env.BASE_URL` (veya `core.js` → `asset()`) ile kurulur.
+
 ## Komutlar
 
 ```sh
