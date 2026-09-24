@@ -1,0 +1,132 @@
+/* Kurumsal cam: berrak, serin, yumuşak köşeler. Serif başlıklar (italik vurgular), buzlu cam paneller,
+   geçişte cam bir pencere gibi aşağıdan yükselir ve üzerinden parlama geçer. */
+.k-logo { display: grid; grid-template-columns: auto 1fr; column-gap: 11px; align-items: center; }
+.k-logo::before {
+  content: ''; grid-row: 1 / span 2; width: 34px; height: 26px; border-radius: 16px 16px 6px 6px;
+  background: linear-gradient(135deg, rgb(255 255 255 / .9) 0 22%, transparent 23% 40%, rgb(255 255 255 / .5) 41% 48%, transparent 49%), var(--k-vurgu);
+}
+.k-logo__ad { font-size: 25px; letter-spacing: -0.01em; }
+.k-logo__alt { font-size: 12px; }
+.k-h1 em, .k-h2 em { font-style: italic; }
+
+/* Hero: tam ekran yağmurlu cam */
+.k-hero__baslik { max-width: 12ch; font-size: clamp(50px, 7.4vw, 124px); line-height: .96; }
+@media (max-width: 899px) { .k-hero__baslik { font-size: min(14vw, 64px); } }
+.k-hero__ust { font-weight: 500; letter-spacing: .01em; display: inline-flex; align-items: center; gap: 10px; padding: 7px 14px; border-radius: 999px; background: rgb(255 255 255 / .12); border: 1px solid rgb(255 255 255 / .25); }
+[data-hero='tam'] .k-hero__gorsel::after { background: linear-gradient(180deg, rgb(4 22 30 / .6) 0%, rgb(4 22 30 / .32) 28%, rgb(4 22 30 / .62) 55%, rgb(4 22 30 / .92) 100%); }
+.k-hero__gorsel img { object-position: 50% 40%; }
+[data-hero='tam'] .k-hero .k-btn:not(.k-btn--ikincil) { background: #fff; color: var(--k-koyu); border-color: #fff; }
+[data-hero='tam'] .k-hero .k-btn--ikincil { background: rgb(255 255 255 / .1); }
+.k-hero__bilgi { gap: 0 8px; }
+.k-hero__bilgi div { padding-top: 16px; }
+
+/* Buzlu cam yüzeyler */
+.k-aozet__liste li, .k-yorumlar__liste li, .k-detay div, .k-saatler, .k-form {
+  background: linear-gradient(160deg, rgb(255 255 255 / .85), rgb(255 255 255 / .45));
+  border: 1px solid rgb(255 255 255 / .9); box-shadow: 0 1px 0 rgb(10 27 35 / .06), 0 18px 40px -24px rgb(11 110 153 / .35);
+}
+body { background: radial-gradient(1200px 600px at 100% 0%, #dcebf1, transparent 70%), var(--k-zemin); }
+.k-yorumlar__liste blockquote { font-family: var(--k-font-baslik); font-size: 23px; line-height: 1.3; }
+.k-hozet__ad { font-size: clamp(26px, 3vw, 40px); }
+.k-hozet__liste a:hover .k-hozet__ad { font-style: italic; }
+.k-rakamlar { background: linear-gradient(180deg, var(--k-koyu), #0a3446); }
+.k-rakamlar dd { font-style: italic; font-size: clamp(46px, 6vw, 88px); }
+.k-rakamlar__liste > div { border-color: rgb(191 227 240 / .25); }
+.k-degerler li { border-top-width: 1px; }
+.k-degerler h3 { font-family: var(--k-font-baslik); font-size: 26px; font-weight: 400; }
+.k-surec__no { font-family: var(--k-font-baslik); font-style: italic; font-size: 34px; font-weight: 400; }
+.k-cta { background: linear-gradient(135deg, #0b6e99, #07212c); }
+.k-cta__baslik { font-style: italic; }
+.k-menu a { font-size: clamp(40px, 11vw, 64px); }
+
+/* Geçiş: yükselen cam, üstünden geçen parlama */
+.k-gecis {
+  background:
+    linear-gradient(115deg, transparent 0 38%, rgb(255 255 255 / .55) 38% 44%, transparent 44% 50%, rgb(255 255 255 / .35) 50% 52%, transparent 52%),
+    linear-gradient(180deg, #d8eef6 0%, #a9d6e7 60%, #7fbcd4 100%);
+  box-shadow: inset 0 -6px 0 #07212c;
+}
+
+/* --- Kasko başvuru modülü --- */
+.kb { position: relative; }
+.kb__bas { display: grid; gap: 8px 64px; }
+@media (min-width: 900px) { .kb__bas { grid-template-columns: 6fr 6fr; align-items: end; } }
+.kb__ic { display: grid; gap: 24px; margin-top: 40px; }
+@media (min-width: 960px) { .kb__ic { grid-template-columns: 7fr 4fr; gap: 40px; align-items: stretch; } }
+.kb__panel {
+  border-radius: var(--k-radius-buyuk); padding: clamp(20px, 3vw, 36px);
+  background: linear-gradient(160deg, rgb(255 255 255 / .92), rgb(255 255 255 / .55));
+  border: 1px solid #fff; box-shadow: 0 24px 60px -32px rgb(11 110 153 / .45);
+  display: grid; align-content: start; min-width: 0;
+}
+.kb__adimlar { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; }
+.kb__adimlar button {
+  width: 100%; display: grid; justify-items: start; gap: 6px; padding: 0 0 12px; border: 0; background: none; cursor: pointer;
+  font: inherit; font-size: 13px; font-weight: 600; color: var(--k-soluk); text-align: left; line-height: 1.2;
+}
+.kb__adimlar button span {
+  width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; font-size: 14px;
+  border: 1.5px solid var(--k-cizgi); background: #fff; color: var(--k-soluk); transition: background .3s, color .3s, border-color .3s;
+}
+.kb__adimlar button[aria-current] { color: var(--k-metin); }
+.kb__adimlar button[aria-current] span { background: var(--k-vurgu); color: #fff; border-color: var(--k-vurgu); box-shadow: 0 0 0 5px rgb(11 110 153 / .15); }
+.kb__adimlar button.is-tamam span { background: var(--k-koyu); color: #fff; border-color: var(--k-koyu); }
+@media (max-width: 520px) { .kb__adimlar button { font-size: 12px; } }
+.kb__ray { height: 3px; border-radius: 2px; background: var(--k-cizgi); overflow: hidden; margin-bottom: 26px; }
+.kb__ray span { display: block; height: 100%; background: linear-gradient(90deg, var(--k-vurgu), #5fc0e3); transform-origin: left; transform: scaleX(0); }
+.kb__form { display: grid; gap: 20px; }
+.kb__adim { display: grid; gap: 22px; }
+.kb__adim[hidden] { display: none; }
+.kb__form fieldset { border: 0; padding: 0; margin: 0; min-width: 0; }
+.kb__form fieldset[hidden] { display: none; }
+.kb__form legend { padding: 0; margin-bottom: 12px; font-family: var(--k-font-baslik); font-size: 26px; line-height: 1.1; }
+.kb__secim { display: flex; flex-wrap: wrap; gap: 8px; }
+.kb__secim label { position: relative; }
+.kb__secim input { position: absolute; inset: 0; opacity: 0; margin: 0; cursor: pointer; }
+.kb__secim span { display: block; padding: 11px 16px; border-radius: var(--k-radius); border: 1.5px solid var(--k-cizgi); background: #fff; font-weight: 600; font-size: 15px; transition: background .2s, color .2s, border-color .2s; }
+.kb__secim input:checked + span { background: var(--k-koyu); color: #fff; border-color: var(--k-koyu); }
+.kb__secim input:focus-visible + span, .kb__foto input:focus-visible ~ span:last-child { outline: 2px solid var(--k-vurgu); outline-offset: 2px; }
+.kb__not { padding: 12px 16px; border-radius: 14px; background: rgb(11 110 153 / .08); color: #0a4d6b; font-size: 15px; line-height: 1.45; margin-top: 10px; }
+.kb__iki { display: grid; gap: 14px; }
+@media (min-width: 600px) { .kb__iki { grid-template-columns: 1fr 1fr; } }
+.kb__metin { display: grid; gap: 6px; font-weight: 600; font-size: 15px; }
+.kb__metin small { font-weight: 400; color: var(--k-soluk); font-size: 14px; }
+.kb__metin input { width: 100%; font: inherit; font-size: 17px; font-weight: 400; padding: 12px 14px; border-radius: var(--k-radius); border: 1.5px solid var(--k-cizgi); background: #fff; color: var(--k-metin); }
+.kb__metin input:focus { outline: none; border-color: var(--k-vurgu); box-shadow: 0 0 0 3px rgb(11 110 153 / .18); }
+.kb__foto { display: grid; gap: 6px; }
+.kb__foto label { position: relative; display: flex; gap: 12px; align-items: center; padding: 12px 14px; border-radius: 14px; background: #fff; border: 1.5px solid var(--k-cizgi); cursor: pointer; font-size: 15px; line-height: 1.35; }
+.kb__foto input { position: absolute; inset: 0; opacity: 0; margin: 0; cursor: pointer; }
+.kb__tik { width: 22px; height: 22px; border-radius: 7px; border: 2px solid var(--k-cizgi); flex: none; position: relative; transition: background .2s, border-color .2s; }
+.kb__foto input:checked ~ .kb__tik { background: var(--k-vurgu); border-color: var(--k-vurgu); }
+.kb__foto input:checked ~ .kb__tik::after { content: ''; position: absolute; left: 6px; top: 2px; width: 5px; height: 10px; border: solid #fff; border-width: 0 2px 2px 0; rotate: 45deg; }
+.kb__foto label:has(input:checked) { border-color: rgb(11 110 153 / .45); }
+.kb__ozet { display: grid; gap: 0; border-top: 1px solid var(--k-cizgi); }
+.kb__ozet div { display: flex; justify-content: space-between; gap: 16px; padding: 11px 0; border-bottom: 1px solid var(--k-cizgi); font-size: 15px; }
+.kb__ozet dt { color: var(--k-soluk); }
+.kb__ozet dd { margin: 0; font-weight: 600; text-align: right; }
+.kb__alt { display: flex; flex-wrap: wrap; gap: 10px; justify-content: space-between; margin-top: 6px; }
+.kb__alt [hidden] { display: none; }
+.kb__gonder { flex: 1 1 auto; }
+.kb__son { color: var(--k-soluk); font-size: 14px; }
+
+.kb__gorsel {
+  margin: 0; border-radius: var(--k-radius-buyuk); background: radial-gradient(120% 80% at 50% 0%, #0f4a63, var(--k-koyu));
+  color: var(--k-koyu-metin); padding: 28px 24px; display: grid; justify-items: center; align-content: center; gap: 18px; min-height: 320px; overflow: hidden;
+}
+@media (max-width: 959px) { .kb__gorsel { grid-template-columns: 110px 1fr; justify-items: start; align-items: center; min-height: 0; padding: 18px 20px; order: -1; } }
+.kb__arac { width: min(100%, 190px); height: auto; }
+@media (max-width: 959px) { .kb__arac { width: 100%; max-height: 170px; } }
+.kb__govde { fill: rgb(255 255 255 / .06); stroke: rgb(191 227 240 / .45); stroke-width: 1.5; }
+.kb__arac [data-cam] { fill: rgb(191 227 240 / .14); stroke: rgb(191 227 240 / .5); stroke-width: 1.2; transition: fill .4s, stroke .4s; }
+.kb__arac [data-cam].is-secili { fill: #5fc0e3; stroke: #d8f3fc; }
+.kb__iz { fill: none; stroke: #07212c; stroke-width: 2; transition: opacity .3s; }
+.kb__gorsel figcaption { display: grid; gap: 4px; text-align: center; }
+@media (max-width: 959px) { .kb__gorsel figcaption { text-align: left; } }
+.kb__gorsel figcaption span { font-family: var(--k-font-baslik); font-size: 28px; line-height: 1.05; }
+.kb__gorsel figcaption small { color: var(--k-koyu-soluk); font-size: 14px; }
+[data-sayfa='kasko'] .kb { padding-top: 48px; }
+[data-sayfa='kasko'] .kb__bas { display: none; }
+[data-sayfa='kasko'] .kb__ic { margin-top: 0; }
+/* Motorun 'tam' hero kuralı alt sayfalarda menü açıkken logoyu koyu boyuyor; açık menüde açık renk kalsın */
+.k-menu-acik .k-ust .k-logo, .k-menu-acik .k-ust .k-logo__alt { color: var(--k-koyu-metin) !important; }
+.k-menu-acik .k-ust .k-burger span { background: var(--k-koyu-metin) !important; }

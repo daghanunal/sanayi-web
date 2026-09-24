@@ -196,6 +196,9 @@ a:hover > .k-ok { transform: translateX(4px); }
 [data-hero='tam'] body:not(.k-ana) .k-ust .k-logo, [data-hero='tam'] body:not(.k-ana) .k-ust .k-nav a,
 [data-hero='tam'] body:not(.k-ana) .k-ust .k-ust__tel, [data-hero='tam'] body:not(.k-ana) .k-ust .k-logo__alt { color: var(--k-metin); }
 [data-hero='tam'] body:not(.k-ana) .k-ust .k-burger span { background: var(--k-metin); }
+/* Açık mobil menü koyu zeminde: tam hero'lu iç sayfalarda da logo ve telefon açık renkte kalsın. */
+[data-hero='tam'].k-menu-acik body .k-ust .k-logo, [data-hero='tam'].k-menu-acik body .k-ust .k-ust__tel,
+[data-hero='tam'].k-menu-acik body .k-ust .k-logo__alt { color: var(--k-koyu-metin); }
 [data-hero='tam'] body:not(.k-ana) .k-ust .k-metin-dugme { color: var(--k-metin); border-color: var(--k-cizgi); }
 
 /* yazi: dev başlık, altında geniş fotoğraf bandı */
@@ -379,6 +382,7 @@ a:hover > .k-ok { transform: translateX(4px); }
 
 /* --- Geçiş perdesi, KVKK penceresi, çerez bandı --- */
 .k-gecis { position: fixed; inset: 0; z-index: 150; background: var(--k-gecis); visibility: hidden; transform: scaleY(0); pointer-events: none; }
+[data-gecis='yan'] .k-gecis { transform: scaleX(0); }
 .k-dialog { border: 0; padding: 0; border-radius: var(--k-radius-buyuk); max-width: min(640px, calc(100vw - 32px)); background: var(--k-zemin); color: var(--k-metin); }
 .k-dialog::backdrop { background: rgb(0 0 0 / .55); }
 .k-dialog__ic { padding: 28px; display: grid; gap: 14px; max-height: 80vh; overflow-y: auto; }

@@ -61,9 +61,9 @@ export const PRESETS = [
   { id: 'kurumsal-doseme', grup: 'kurumsal', sektor: 'doseme', ad: 'Kurumsal', icin: 'Döşeme, kurumsal görünüm', renk: '#6e1b27' },
   { id: 'kurumsal-yedekparca', grup: 'kurumsal', sektor: 'yedekparca', ad: 'Kurumsal', icin: 'Yedek parça, kurumsal görünüm', renk: '#1f3fd1' },
   { id: 'kurumsal-rektifiye', grup: 'kurumsal', sektor: 'rektifiye', ad: 'Kurumsal', icin: 'Rektifiye ve torna, kurumsal görünüm', renk: '#f4c542' },
-  { id: 'kurumsal-egzoz', grup: 'kurumsal', sektor: 'egzoz', ad: 'Kurumsal', icin: 'Egzoz, kurumsal görünüm', renk: '#8a94a6' },
-  { id: 'kurumsal-cam', grup: 'kurumsal', sektor: 'cam', ad: 'Kurumsal', icin: 'Oto cam, kurumsal görünüm', renk: '#8a94a6' },
-  { id: 'kurumsal-agirvasita', grup: 'kurumsal', sektor: 'agirvasita', ad: 'Kurumsal', icin: 'Ağır vasıta, kurumsal görünüm', renk: '#8a94a6' },
+  { id: 'kurumsal-egzoz', grup: 'kurumsal', sektor: 'egzoz', ad: 'Kurumsal', icin: 'Egzoz, kurumsal görünüm', renk: '#b83d12' },
+  { id: 'kurumsal-cam', grup: 'kurumsal', sektor: 'cam', ad: 'Kurumsal', icin: 'Oto cam, kurumsal görünüm', renk: '#0b6e99' },
+  { id: 'kurumsal-agirvasita', grup: 'kurumsal', sektor: 'agirvasita', ad: 'Kurumsal', icin: 'Ağır vasıta, kurumsal görünüm', renk: '#f5b700' },
   { id: 'kurumsal-eczane', grup: 'kurumsal', sektor: 'eczane', ad: 'Kurumsal', icin: 'Eczane, kurumsal görünüm', renk: '#1d5c45' },
   { id: 'kurumsal-alci', grup: 'kurumsal', sektor: 'alci', ad: 'Kurumsal', icin: 'Alçıbay, kurumsal görünüm', renk: '#f29d20' },
   { id: 'eczane', grup: 'ozel', sektor: 'eczane', ad: 'Eczane', icin: 'Mahalle eczanesi', renk: '#3fbf8a' },
@@ -71,7 +71,7 @@ export const PRESETS = [
 ];
 
 // Henüz yapılmamış ya da yayına alınmamış presetler burada gizlenir.
-export const HAZIR_OLMAYAN = new Set(['kurumsal-egzoz', 'kurumsal-cam', 'kurumsal-agirvasita']);
+export const HAZIR_OLMAYAN = new Set([]);
 export const hazirPresetler = () => PRESETS.filter((p) => !HAZIR_OLMAYAN.has(p.id));
 
 export const presetById = (id) => PRESETS.find((p) => p.id === id);

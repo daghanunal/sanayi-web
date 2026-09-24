@@ -1,0 +1,104 @@
+{
+  "kurumsal": {
+    "hero": {
+      "baslik": "Filonuz yolda, bakımı bizde.",
+      "metin": "Çekici, kamyon, otobüs ve midibüs için motor, şanzıman, havalı fren, AdBlue ve takograf. İşin ne kadar süreceğini baştan söyler, sözünde teslim ederiz. Yol yardım hattımız 7 gün 24 saat açık.",
+      "birincil": "Sözleşme teklifi",
+      "ikincil": "Filo bakım sözleşmesi",
+      "ikincilRota": "filo"
+    },
+    "ozet": {
+      "baslik": "Araç yatarsa para kaybedersiniz",
+      "metin": "İşi o hesapla yaparız. Arızayı cihazla tespit eder, parçayı ve süreyi baştan söyleriz. Onayınız olmadan ek iş yapmaz, fren ve süspansiyon işlerini yükte deneyip teslim ederiz."
+    },
+    "hizmetOzetBaslik": "Motordan freninin havasına",
+    "hizmetEk": {
+      "Motor bakım ve revizyon": {
+        "gorsel": "/img/tonaj/kaput.jpg",
+        "detay": [["Tespit", "Arıza cihazı, yağ basıncı, blow-by"], ["Kural", "Gerekmiyorsa söktürmeyiz"]]
+      },
+      "Havalı fren sistemi": { "detay": [["Test", "Hat basıncı cihazla"], ["Kapsam", "EBS ve ABS dahil"]] },
+      "AdBlue ve SCR": { "detay": [["Yaklaşım", "Temizlik ve onarım"], ["İptal", "Yapılmaz"]] },
+      "Yol yardım ve mobil servis": { "gorsel": "/img/tonaj/beyaz.jpg" }
+    },
+    "anlasmaBaslik": "Filolar ve kurumlar için",
+    "anlasmaMetin": "Nakliye, dağıtım ve servis filoları için sefer aralarına göre planlanan bakım, araç başına dosya ve aylık tek fatura.",
+    "anlasmalar": [
+      {
+        "baslik": "Filo bakım sözleşmesi",
+        "kisa": "Araç başına bakım dosyası, sefer arasına göre randevu.",
+        "metin": "Nakliye ve servis filoları için bakım takvimi tutar, aracı sefer aralarına göre alırız. Her aracın dosyası bizde; ne zaman ne değişti, bir mesajla öğrenirsiniz.",
+        "maddeler": ["Araç başına bakım dosyası ve hatırlatma", "Sefer arasına göre randevu, gece teslim", "Aylık tek fatura", "Yolda kalan filo aracına öncelik"],
+        "buton": "Sözleşme görüşmesi talep edin"
+      },
+      {
+        "baslik": "Personel ve öğrenci servisleri",
+        "kisa": "Sezon öncesi kontrol ve düzenli bakım.",
+        "metin": "Servis otobüsü ve midibüslerin sezon öncesi fren, süspansiyon ve motor kontrolünü toplu olarak planlar, araçlarınızı sefer saatlerinin dışında alırız.",
+        "maddeler": ["Sezon öncesi toplu kontrol", "Fren ve körük kontrolü her bakımda", "Kontrol sonuçlarının araç bazında dökümü"],
+        "buton": "Görüşme talep edin"
+      },
+      {
+        "baslik": "Sigorta ve hasar dosyaları",
+        "kisa": "Mekanik hasarlarda eksper sürecini takip ederiz.",
+        "metin": "Kasko kapsamındaki mekanik hasarlarda eksper randevusunu ve evrak takibini biz yürütürüz. Çalıştığımız sigorta şirketlerinin güncel listesi için bizi arayın.",
+        "maddeler": ["Fotoğraflı hasar tespiti", "Parça onayı gelmeden işe başlamama", "Sürecin her adımında bilgilendirme"],
+        "buton": "Hasar dosyası için yazın"
+      }
+    ],
+    "anlasmaNotu": "Sözleşme koşulları araç sayısına, araç tiplerine ve yıllık kilometreye göre belirlenir; teklifimizi yazılı olarak iletiriz.",
+    "hakkimizda": {
+      "baslik": "Biz kimiz",
+      "paragraflar": [
+        "Şaşmaz Oto Sanayi Sitesi'nin ağır vasıta bölümünde, İstanbul yolunun kenarındayız. Çekici, kamyon, otobüs ve midibüsün motorundan freninin havasına kadar her işine bakıyoruz.",
+        "Tek araçlı nakliyecinin yanında nakliye, dağıtım ve servis filolarıyla da çalışıyoruz. Her aracın dosyasını tutar, bakım zamanını hatırlatır, yolda kalan araca servis aracımızla gideriz."
+      ],
+      "gorsel": "/img/tonaj/usta.jpg",
+      "gorselAlt": "Ustamız kamyonun önünde çalışıyor"
+    },
+    "misyon": "Aracı en kısa sürede, söylediğimiz sürede ve doğru teşhisle yola geri çıkarmak.",
+    "vizyon": "Ankara'dan geçen nakliyecinin ve filo sahibinin aklına ilk gelen, sözünde duran ağır vasıta servisi olmak.",
+    "degerler": [
+      { "baslik": "Süre sözü", "metin": "İşin ne kadar süreceğini baştan söyler, gecikecekse önceden haber veririz." },
+      { "baslik": "Cihazla tespit", "metin": "Kaçağı kulakla değil cihazla buluruz." },
+      { "baslik": "Yasal iş", "metin": "AdBlue ve emisyon sistemlerinde iptal yapmayız; sistemi onarırız." },
+      { "baslik": "Yükte test", "metin": "Fren ve süspansiyon işlerini yükte deneyip teslim ederiz." }
+    ],
+    "kalite": {
+      "baslik": "Çalışma düzenimiz",
+      "metin": "Her araç aynı sırayla ilerler: kabul, tespit, yazılı süre ve fiyat, onay, onarım, yükte test ve teslim.",
+      "maddeler": [
+        "Araç kabulünde kilometre, hasar ve arıza kodları kaydedilir.",
+        "Arıza tespiti marka cihazları ve basınç ölçümüyle yapılır.",
+        "Çıkan parçalar saklanır, istenirse size teslim edilir.",
+        "Takograf kalibrasyonu gerekirse yetkili istasyona yönlendirilir."
+      ]
+    },
+    "kariyer": {
+      "baslik": "Ekibimize katılın",
+      "metin": "Ağır vasıta motor, şanzıman ve havalı fren işlerinde deneyimli usta ve mesleği öğrenmek isteyen çırak arkadaşlarla tanışmak isteriz. Kısa bir tanıtımla bize yazın."
+    },
+    "markaBaslik": "Bakım yaptığımız markalar",
+    "sssBaslik": "Nakliyecinin aklına takılanlar",
+    "sss": [
+      { "soru": "Yolda kaldım, ne kadar sürede gelirsiniz?", "cevap": "Konumunuza ve saate göre değişir. Aradığınızda ya da konum gönderdiğinizde tahmini süreyi söyleriz; mümkünse arızayı yerinde gideririz." },
+      { "soru": "AdBlue iptali yapıyor musunuz?", "cevap": "Hayır. Sistemi söker, temizler, arızalı pompa, enjektör ya da sensörü değiştiririz. İptal yasal değildir ve muayeneden geçmez." },
+      { "soru": "Takograf kalibrasyonu yapıyor musunuz?", "cevap": "Takografın sensör, kablo ve ekran arızalarını gideririz. Kalibrasyon gerekiyorsa yetkili istasyona yönlendiririz." },
+      { "soru": "Filo sözleşmesinde ödeme nasıl oluyor?", "cevap": "Aylık tek fatura ve araç bazında iş dökümü veririz. Koşulları filonuzun büyüklüğüne göre yazılı teklifle konuşuruz." },
+      { "soru": "Aracı gece bırakıp sabah alabilir miyim?", "cevap": "Filo araçlarında sefer arasına göre randevu verir, uygun işlerde gece çalışıp sabah teslim ederiz." }
+    ],
+    "sayfalar": {
+      "kurumsal": { "baslik": "Kurumsal", "metin": "Kim olduğumuz, nasıl çalıştığımız ve neye önem verdiğimiz.", "gorsel": "/img/tonaj/beyaz.jpg" },
+      "hizmetler": { "baslik": "Hizmetlerimiz", "metin": "Motor, şanzıman, havalı fren, AdBlue ve takograf; her iş için ortalama süre." },
+      "filo": { "baslik": "Filo bakım sözleşmesi", "metin": "Filonuzu anlatın, yıllık bakım yükünü görün, sözleşme teklifini hazır mesajla isteyin.", "gorsel": "/img/tonaj/kaput.jpg" },
+      "sss": { "baslik": "Sık sorulan sorular", "metin": "En çok sorulanları burada yanıtladık; bulamadığınızı arayıp sorun." },
+      "iletisim": { "baslik": "İletişim", "metin": "Sözleşme teklifi, randevu ya da yol yardım için arayın veya yazın." }
+    },
+    "konular": ["Filo bakım sözleşmesi", "Yol yardım", "Randevu", "Fiyat teklifi", "Sigorta / hasar dosyası", "Genel bilgi"],
+    "cta": {
+      "baslik": "Yolda mı kaldınız?",
+      "metin": "Yol yardım hattımız 7 gün 24 saat açık. Arayın ya da konumunuzu gönderin, servis aracımız yola çıksın.",
+      "buton": "Bize yazın"
+    }
+  }
+}
