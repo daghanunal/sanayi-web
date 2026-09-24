@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0a1a1f" />
+  <title>Otomatik Şanzıman | Şaşmaz</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230a1a1f'/%3E%3Ccircle cx='16' cy='16' r='9' fill='none' stroke='%23d4ad62' stroke-width='3' stroke-dasharray='3 2.6'/%3E%3Ccircle cx='16' cy='16' r='4' fill='%23ff2e4d'/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Michroma&family=Outfit:wght@300;400;500;600;700&family=Victor+Mono:wght@500;600&display=swap&subset=latin-ext" rel="stylesheet" />
+</head>
+<body class="is-loading">
+  <!-- Açılış: vites seçici P → R → N → D. D'ye oturunca harf büyüyüp ekranı açar. -->
+  <div class="intro" data-intro role="presentation">
+    <div class="intro__gate">
+      <span class="intro__slot" data-slot></span>
+      <ol class="intro__letters">
+        <li data-l>P</li><li data-l>R</li><li data-l>N</li><li data-l>D</li>
+      </ol>
+    </div>
+    <p class="intro__name" data-intro-name></p>
+    <p class="intro__skip">Geçmek için dokunun</p>
+  </div>
+
+  <canvas class="stage" data-stage aria-hidden="true"></canvas>
+  <div class="cursor" data-cursor aria-hidden="true"><i></i></div>
+
+  <header class="top" data-top>
+    <a class="top__brand" href="#" data-brand><span class="top__mark" aria-hidden="true"></span><span data-bind="ad"></span></a>
+    <p class="top__status" data-status></p>
+    <a class="top__call" data-tel data-magnetic><span data-icon="phone"></span><span class="top__num" data-bind="telefon"></span></a>
+  </header>
+
+  <main>
+    <!-- Film: planet dişli → tork konvertörü → mekatronik → DSG → CVT → yağ, hepsi tek hatta -->
+    <section class="film" data-film>
+      <div class="film__sticky">
+        <div class="hero" data-hero>
+          <p class="hero__since" data-since></p>
+          <h1 class="hero__title" data-hero-title></h1>
+          <p class="hero__slogan" data-bind="slogan"></p>
+          <ul class="hero__types"><li>Klasik otomatik</li><li>DSG</li><li>CVT</li></ul>
+          <div class="hero__cta">
+            <a class="btn btn--ruby" data-tel data-magnetic><span data-icon="phone"></span>Hemen ara</a>
+            <a class="btn btn--ghost" data-wa target="_blank" rel="noopener" data-magnetic><span data-icon="whatsapp"></span>WhatsApp'tan yaz</a>
+          </div>
+        </div>
+
+        <ol class="rail" data-rail aria-label="Şanzımanın içindeki duraklar"></ol>
+        <div class="cards" data-cards></div>
+
+        <div class="hud" data-hud aria-hidden="true">
+          <div class="hud__gear">
+            <p class="hud__prnd"><span>P</span><span>R</span><span>N</span><b>D</b></p>
+            <p class="hud__digit" data-h-digit>1</p>
+          </div>
+          <div class="hud__meter">
+            <p class="hud__lbl"><span data-h-lbl></span><b data-h-verdict>Sarsıntılı</b></p>
+            <canvas class="hud__wave" data-h-wave width="240" height="56"></canvas>
+            <p class="hud__spec" data-h-spec></p>
+          </div>
+        </div>
+
+        <div class="overview" data-overview>
+          <p class="overview__kicker">Üç tip şanzıman, tek dükkân</p>
+          <h2 class="overview__title">Kutuyu indirmeden önce derdini dinleriz.</h2>
+        </div>
+
+        <p class="hint" data-hint aria-hidden="true"><i></i>Kaydırın, şanzımanın içine girelim</p>
+      </div>
+    </section>
+
+    <!-- Hakkımızda -->
+    <section class="about" data-about>
+      <div class="about__body">
+        <p class="kicker">Hakkımızda</p>
+        <h2 class="sec-title" data-rise>Her şanzımanın değişmesi gerekmez.</h2>
+        <p class="about__text" data-about-text></p>
+        <ul class="stats" data-stats></ul>
+      </div>
+      <figure class="about__img">
+        <img src="/img/sektor-sanziman/usta-tablet.jpg" alt="Ustamız araç başında teşhis cihazıyla şanzıman kaydını okuyor" loading="lazy" width="1600" height="1067" />
+        <figcaption>Önce cihaz, sonra yol, en son söküm.</figcaption>
+      </figure>
+    </section>
+
+    <!-- Belirti çözücü -->
+    <section class="symp" id="belirti" data-symp>
+      <header class="sec-head">
+        <p class="kicker">Belirti çözücü</p>
+        <h2 class="sec-title" data-rise>Aracınız ne yapıyor?</h2>
+        <p>Şikâyetinize dokunun; sebebin genelde nerede çıktığını ve ilk neye baktığımızı görün.</p>
+      </header>
+      <div class="symp__wrap">
+        <div class="symp__chips" role="tablist" aria-label="Belirtiler" data-chips></div>
+        <article class="symp__panel" role="tabpanel" data-panel aria-live="polite"></article>
+      </div>
+    </section>
+
+    <!-- Hizmetler -->
+    <section class="services" id="hizmetler">
+      <header class="sec-head">
+        <p class="kicker">Hizmetler</p>
+        <h2 class="sec-title" data-rise>Yalnızca otomatik şanzıman.</h2>
+        <p>Süreler ortalamadır. Fiyatı, işe başlamadan söyleriz.</p>
+      </header>
+      <ol class="svc" data-services></ol>
+    </section>
+
+    <!-- Süreç -->
+    <section class="steps">
+      <header class="sec-head">
+        <p class="kicker">Nasıl çalışırız</p>
+        <h2 class="sec-title" data-rise>Onayınız olmadan şanzıman inmez.</h2>
+      </header>
+      <div class="steps__grid">
+        <ol class="steps__list" data-steps></ol>
+        <div class="steps__photos">
+          <img src="/img/sektor-sanziman/teshis.jpg" alt="Teşhis tableti ile şanzıman arıza kaydı okunuyor" loading="lazy" width="1600" height="1067" />
+          <img src="/img/sektor-sanziman/yag.jpg" alt="Araca yeni yağ dolduruluyor" loading="lazy" width="1600" height="1067" />
+        </div>
+      </div>
+    </section>
+
+    <!-- Yorumlar -->
+    <section class="reviews" id="yorumlar">
+      <header class="reviews__head">
+        <p class="reviews__score"><b data-puan>4,8</b><span class="reviews__stars" data-stars></span></p>
+        <p class="reviews__count" data-puan-adet></p>
+      </header>
+      <div class="reviews__rail"><div class="reviews__track" data-rev-track></div></div>
+    </section>
+
+    <!-- Markalar -->
+    <section class="brands" aria-label="Sık gelen markalar">
+      <div class="marquee" data-marquee></div>
+    </section>
+
+    <!-- Dükkân -->
+    <section class="shop" id="konum">
+      <div class="shop__info">
+        <p class="kicker">Konum ve saatler</p>
+        <h2 class="sec-title" data-rise>Şaşmaz Oto Sanayi'ndeyiz.</h2>
+        <p class="shop__status" data-status-big></p>
+        <dl class="shop__hours" data-hours></dl>
+        <p class="shop__addr" data-bind="adres"></p>
+        <div class="shop__cta">
+          <a class="btn btn--ruby" data-maps target="_blank" rel="noopener" data-magnetic><span data-icon="pin"></span>Yol tarifi al</a>
+          <a class="btn btn--ghost" data-tel data-magnetic><span data-icon="phone"></span>Ara</a>
+        </div>
+      </div>
+      <div class="shop__map" data-map></div>
+    </section>
+
+    <!-- Final: planet seti yakın plan, dönerek -->
+    <section class="finale" data-finale>
+      <div class="finale__sticky">
+        <p class="finale__kicker" data-garanti></p>
+        <h2 class="finale__title" data-final-title></h2>
+        <p class="finale__sub">Arabayla gelin, önce birlikte yolda deneyelim. Sorunu anlatmak için yazmanız da yeter.</p>
+        <div class="finale__cta">
+          <a class="btn btn--ruby btn--xl" data-tel data-magnetic><span data-icon="phone"></span>Hemen ara</a>
+          <a class="btn btn--ghost btn--xl" data-wa target="_blank" rel="noopener" data-magnetic><span data-icon="whatsapp"></span>WhatsApp'tan yaz</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <p data-year></p>
+    <p data-bind="adres"></p>
+    <p class="foot__small">Fotoğraflar: Pexels. 3D şanzıman parçaları bu site için kodla çizildi.</p>
+  </footer>
+
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

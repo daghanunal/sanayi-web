@@ -1,0 +1,15 @@
+Bu klasördeki görseller public/img/sektor-klima/ görsellerinin küçültülmüş kopyalarıdır. Kaynaklar:
+Tüm görseller Pexels lisansıyla (ücretsiz, ticari kullanım serbest, atıf gerekmez):
+havalandirma.jpg: "Gray and Black Car Aircon in Close Up Shot" — Erik Mclean, https://www.pexels.com/photo/gray-and-black-car-aircon-in-close-up-shot-13850014/
+klima-paneli.jpg: "Dashboard in Car" — Julia Avamotive, https://www.pexels.com/photo/dashboard-in-car-8305336/
+orta-konsol.jpg: "Radio, Air Conditioning and Gearbox in Car", https://www.pexels.com/photo/radio-air-conditioning-and-gearbox-in-car-11291690/
+konsol-sb.jpg: "Black and White Photo of Car Dashboard" — Amirali Shaghaghi, https://www.pexels.com/photo/black-and-white-photo-of-car-dashboard-17169453/
+yaz-surus.jpg: "Person driving car in sunny day", https://www.pexels.com/photo/person-driving-car-in-sunny-day-5650630/
+motor-kontrol.jpg: "A Mechanic Repairing a Car" — Artem Podrez, https://www.pexels.com/photo/a-mechanic-repairing-a-car-8985455/
+atolye.jpg: "Mechanic Looking at the Engine of the Car" — Artem Podrez, https://www.pexels.com/photo/mechanic-looking-at-the-engine-of-the-car-8985452/
+lift.jpg: "A Mechanic Inspecting a Vehicle" — Artem Podrez, https://www.pexels.com/photo/a-mechanic-inspecting-a-vehicle-8986070/
+usta-sb.jpg: "A Mechanic Fixing a Car" — Artem Podrez, https://www.pexels.com/photo/a-mechanic-fixing-a-car-8985714/
+kaput-acik.jpg: "Open Hood of a Car" — Sergey Meshkov, https://www.pexels.com/photo/open-hood-of-a-car-8478228/
+motor-dikey.jpg: "Close-up of a Car with Open Hood" — Myles Moore, https://www.pexels.com/photo/close-up-of-a-car-with-open-hood-20094998/
+motor-bolmesi.jpg: "Red Car Engine Bay", https://www.pexels.com/photo/red-car-engine-bay-4116220/
+teshis.jpg: "Mechanic Checking the Engine of a Car" — Gustavo Fring, https://www.pexels.com/photo/mechanic-checking-the-engine-of-a-car-6870298/

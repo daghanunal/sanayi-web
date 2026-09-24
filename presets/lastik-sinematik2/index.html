@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#e7ebf0" />
+  <title>Lastik ve Jant | Şaşmaz</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23e7ebf0'/%3E%3Ccircle cx='16' cy='16' r='11' fill='none' stroke='%2314171c' stroke-width='6'/%3E%3Ccircle cx='16' cy='16' r='3' fill='%23ff4d00'/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Funnel+Sans:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+</head>
+<body class="is-loading">
+  <!-- Açılış: kara basılan lastik izi, diş derinliği dolar -->
+  <div class="intro" data-intro role="presentation">
+    <div class="intro__center">
+      <p class="intro__kicker">Şaşmaz Oto Sanayi</p>
+      <p class="intro__name" data-intro-name></p>
+      <div class="intro__print" aria-hidden="true"><i data-intro-print></i></div>
+      <p class="intro__meta"><span>Diş derinliği</span><b><span data-intro-mm>0,0</span> mm</b></p>
+    </div>
+    <p class="intro__skip">Geçmek için dokun</p>
+  </div>
+
+  <canvas class="stage" data-stage aria-hidden="true"></canvas>
+  <div class="flakes" aria-hidden="true"></div>
+
+  <!-- İz perdesi: bölümler arası lastik izi geçer -->
+  <div class="wipe" data-wipe aria-hidden="true">
+    <div class="wipe__band" data-wipe-band><p class="wipe__word" data-wipe-word></p></div>
+  </div>
+
+  <header class="top" data-top>
+    <a class="top__brand" href="#" data-bind="ad"></a>
+    <p class="top__status" data-status></p>
+    <nav class="top__nav" aria-label="Bölümler">
+      <a href="#hizmetler">Hizmetler</a>
+      <a href="#otel">Lastik oteli</a>
+      <a href="#konum">Konum</a>
+    </nav>
+    <a class="top__call" data-tel data-magnetic><span data-icon="phone"></span><span class="top__num" data-bind="telefon"></span></a>
+  </header>
+
+  <main>
+    <!-- 1. Kahraman: karın içinde duran kışlık lastik -->
+    <section class="ch ch--hero" data-ch="hero">
+      <div class="ch__pin">
+        <div class="hero">
+          <p class="hero__since"><span class="dot"></span><span data-since></span></p>
+          <h1 class="hero__title" data-hero-title></h1>
+          <p class="hero__slogan" data-bind="slogan"></p>
+          <div class="hero__cta">
+            <a class="btn btn--orange" data-wa target="_blank" rel="noopener" data-magnetic><span data-icon="whatsapp"></span>WhatsApp'tan yaz</a>
+            <a class="btn btn--ink" data-tel data-magnetic><span data-icon="phone"></span>Hemen ara</a>
+          </div>
+        </div>
+        <div class="hero__spec" aria-hidden="true">
+          <p><span>Ölçü</span><b data-olcu></b></p>
+          <p><span>Stok</span><b data-stok></b></p>
+        </div>
+        <p class="hint" aria-hidden="true" data-hint><i></i>Kaydır</p>
+      </div>
+    </section>
+
+    <!-- 2. Diş: kaydırdıkça lastik aşınır, ölçü düşer -->
+    <section class="ch ch--dis" data-ch="dis">
+      <div class="ch__pin">
+        <div class="dis">
+          <h2 class="ch__title" data-dis-title></h2>
+          <div class="dis__stages" data-dis-stages></div>
+          <p class="dis__note" data-dis-note></p>
+        </div>
+        <div class="gauge" aria-hidden="true">
+          <p class="gauge__num"><b data-mm>8,0</b><span>mm</span></p>
+          <div class="gauge__rule" data-rule>
+            <i class="gauge__fill" data-gauge-fill></i>
+            <span class="gauge__mark" style="--at:50%">4</span>
+            <span class="gauge__mark gauge__mark--red" style="--at:20%">1,6</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. İz: lastik karda yuvarlanır, her kar direği bir hizmet -->
+    <section class="ch ch--iz" data-ch="iz" id="hizmetler">
+      <div class="ch__pin">
+        <div class="iz__head">
+          <h2 class="ch__title" data-iz-title></h2>
+          <p class="iz__sub" data-iz-sub></p>
+        </div>
+        <div class="stations" data-stations></div>
+        <p class="iz__odo" aria-hidden="true"><span>İz</span><b data-odo>0</b><small>m</small></p>
+      </div>
+    </section>
+
+    <!-- 4. Lastik oteli: lastikler yağar, raflara dizilir -->
+    <section class="ch ch--otel" data-ch="otel" id="otel" data-wipe-in="Lastik oteli">
+      <div class="ch__pin">
+        <div class="otel">
+          <p class="otel__count"><b data-otel-count>0</b><span data-otel-label></span></p>
+          <h2 class="ch__title" data-bind="otelBaslik"></h2>
+          <p class="otel__txt" data-bind="otelMetin"></p>
+          <ul class="otel__list" data-otel-list></ul>
+          <a class="btn btn--orange" data-wa-otel target="_blank" rel="noopener" data-magnetic><span data-icon="whatsapp"></span>Otelde yer ayırt</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- İçerik -->
+    <section class="season" aria-labelledby="mevsim-h">
+      <div class="season__head">
+        <p class="kicker">Mevsim kuralı</p>
+        <h2 id="mevsim-h" class="season__rule"><span data-kural></span></h2>
+        <p class="season__lead">Hava bu derecenin altına indi mi kışlık, üstüne çıktı mı yazlık.</p>
+      </div>
+      <div class="season__grid" data-season></div>
+    </section>
+
+    <section class="flow" aria-labelledby="flow-h">
+      <div class="flow__head">
+        <p class="kicker kicker--light">Lastik değişimi</p>
+        <h2 id="flow-h" class="flow__title"><b data-flow-total></b> dakikada yoldasın.</h2>
+      </div>
+      <div class="flow__body">
+        <div class="clockbar">
+          <div class="clock" aria-hidden="true">
+            <svg viewBox="0 0 200 200"><circle class="clock__bg" cx="100" cy="100" r="86"/><circle class="clock__arc" data-clock-arc cx="100" cy="100" r="86"/></svg>
+            <p class="clock__num"><b data-clock-num>0</b><span>dk</span></p>
+          </div>
+          <p class="clockbar__cap" data-clock-cap></p>
+        </div>
+        <ol class="flow__list" data-flow></ol>
+      </div>
+    </section>
+
+    <section class="nums" aria-label="Rakamlarla">
+      <ol class="nums__list" data-stats></ol>
+      <p class="nums__garanti" data-bind="garanti"></p>
+    </section>
+
+    <section class="rev" id="yorumlar" aria-labelledby="rev-h">
+      <div class="rev__head">
+        <h2 id="rev-h" class="rev__title">Müşteri ne diyor</h2>
+        <p class="rev__score"><b data-puan></b><span class="rev__stars" data-stars></span><span class="rev__count" data-puan-adet></span></p>
+      </div>
+      <div class="rev__track" data-rev-track></div>
+    </section>
+
+    <section class="brands" aria-label="Çalıştığımız lastik markaları">
+      <div class="marquee" data-marquee="1"></div>
+    </section>
+
+    <section class="visit" id="konum" aria-labelledby="visit-h">
+      <div class="visit__grid">
+        <div class="visit__col">
+          <p class="kicker">Çalışma saatleri</p>
+          <p class="visit__big" data-status-big></p>
+          <dl class="hours" data-hours></dl>
+        </div>
+        <div class="visit__col">
+          <p class="kicker">Adres</p>
+          <h2 id="visit-h" class="visit__addr" data-bind="adres"></h2>
+          <div class="visit__btns">
+            <a class="btn btn--orange" data-maps target="_blank" rel="noopener" data-magnetic><span data-icon="pin"></span>Yol tarifi al</a>
+            <a class="btn btn--line" data-tel data-magnetic><span data-icon="phone"></span><span data-bind="telefon"></span></a>
+          </div>
+        </div>
+      </div>
+      <div class="visit__map" data-map></div>
+    </section>
+
+    <!-- 5. Final: lastik kara düşer, iz bırakarak çıkar -->
+    <section class="ch ch--final" data-ch="final" data-wipe-in="Yola çık">
+      <div class="ch__pin">
+        <div class="final">
+          <h2 class="final__title" data-final-title></h2>
+          <p class="final__txt" data-final-alt></p>
+          <div class="final__cta">
+            <a class="btn btn--orange btn--xl" data-tel data-magnetic><span data-icon="phone"></span><span data-bind="telefon"></span></a>
+            <a class="btn btn--ink btn--xl" data-wa target="_blank" rel="noopener" data-magnetic><span data-icon="whatsapp"></span>WhatsApp</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <p class="foot__name" data-bind="ad"></p>
+    <p data-bind="adres"></p>
+    <p><a data-tel data-bind="telefon"></a></p>
+    <p class="foot__small" data-year></p>
+  </footer>
+
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

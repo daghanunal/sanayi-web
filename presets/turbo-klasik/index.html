@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#121519" />
+  <title>Turbo Revizyon | Şaşmaz, Ankara</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23121519'/%3E%3Cpath d='M16 16m-2 0a2 2 0 1 0 4 0a4 4 0 1 0-8 0a6 6 0 1 0 12 0a8 8 0 1 0-16 0' fill='none' stroke='%23b98cff' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@500;600;700&family=Libre+Franklin:wght@400;500;600&family=Ubuntu+Sans+Mono:wght@400;500&display=swap&subset=latin-ext" rel="stylesheet" />
+  <link rel="preload" as="image" href="/img/turbo-klasik/giris-m.jpg" media="(max-width: 899px)" />
+  <link rel="preload" as="image" href="/img/turbo-klasik/giris-d.jpg" media="(min-width: 900px)" />
+</head>
+<body>
+  <header class="top">
+    <a href="#top" class="top__brand"><svg class="top__mark" viewBox="0 0 32 32" aria-hidden="true"><path d="M16 16m-2 0a2 2 0 1 0 4 0a4 4 0 1 0-8 0a6 6 0 1 0 12 0a8 8 0 1 0-16 0" /></svg><span data-bind="ad"></span></a>
+    <nav class="top__nav" aria-label="Sayfa bölümleri">
+      <a href="#belirti">Belirtiler</a>
+      <a href="#hizmetler">Hizmetler</a>
+      <a href="#surec">Nasıl çalışırız</a>
+      <a href="#yorumlar">Yorumlar</a>
+      <a href="#konum">Konum</a>
+    </nav>
+    <a class="top__call" data-tel><span data-icon="phone"></span><span data-bind="telefon"></span></a>
+  </header>
+
+  <main>
+    <!-- İMZA: salyangoza dalış. Kaydırdıkça kamera turbonun çıkış ağzına girer: ağızdan açılan
+         dairesel pencerelerle önce gövdeye, sonra çarka inilir; salyangoz sarmalı çizilir, mil devri
+         0'dan 180.000 d/dk'ya çıkar, sonunda çizim çarkı tam devirde döner. -->
+    <section class="hero" id="top" aria-label="Giriş">
+      <div class="hero__pin">
+        <div class="dive" aria-hidden="true" data-dive>
+          <div class="dive__frame" data-frame="1">
+            <picture>
+              <source media="(min-width: 900px)" srcset="/img/turbo-klasik/giris-d.jpg" />
+              <img src="/img/turbo-klasik/giris-m.jpg" alt="" fetchpriority="high" decoding="async" />
+            </picture>
+          </div>
+          <div class="dive__frame dive__frame--iris" data-frame="2"><img src="/img/turbo-klasik/yakin.jpg" alt="" decoding="async" /></div>
+          <div class="dive__frame dive__frame--iris" data-frame="3"><img src="/img/turbo-klasik/cark.jpg" alt="" decoding="async" /></div>
+          <div class="dive__shade"></div>
+          <svg class="volute" data-volute viewBox="-100 -100 200 200">
+            <defs>
+              <linearGradient id="isil" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="#f1b544" />
+                <stop offset=".35" stop-color="#d4692c" />
+                <stop offset=".7" stop-color="#8b44c4" />
+                <stop offset="1" stop-color="#3a6bea" />
+              </linearGradient>
+            </defs>
+            <circle class="volute__ring" data-ring r="0" cx="0" cy="0" />
+            <g data-volute-g><path class="volute__path" data-volute-path pathLength="1" d="" /></g>
+          </svg>
+          <div class="wheel" data-wheel>
+            <div class="wheel__blur"></div>
+            <svg class="wheel__svg" viewBox="-100 -100 200 200" data-wheel-svg>
+              <circle class="wheel__rim" r="96" />
+              <g data-blades></g>
+              <circle class="wheel__hub" r="16" />
+              <circle class="wheel__nut" r="6" />
+            </svg>
+          </div>
+        </div>
+
+        <div class="hero__copy">
+          <p class="hero__since mono" data-since></p>
+          <h1 class="hero__name" data-bind="ad"></h1>
+          <p class="hero__slogan" data-bind="slogan"></p>
+          <div class="hero__cta">
+            <a class="btn btn--tint" data-tel><span data-icon="phone"></span>Hemen ara</a>
+            <a class="btn btn--glass" href="#belirti">Turbom ne yapıyor?</a>
+          </div>
+        </div>
+
+        <div class="hud" aria-hidden="true">
+          <p class="hud__label mono">Mil devri</p>
+          <p class="hud__rpm"><b data-rpm>0</b><span class="mono">d/dk</span></p>
+          <div class="hud__bar"><span data-rpm-bar></span></div>
+        </div>
+
+        <ol class="stages mono" aria-hidden="true" data-stages></ol>
+
+        <div class="hero__end">
+          <p class="hero__endk mono">Tam devirde balans</p>
+          <p class="hero__endt">Sebebini bulmadan <em>yenisini takmayız.</em></p>
+        </div>
+        <p class="hero__hint mono" aria-hidden="true"><span></span>Kaydırın, turbonun içine girelim</p>
+      </div>
+    </section>
+
+    <!-- Rakamlar -->
+    <section class="band" aria-label="Rakamlarla">
+      <ul class="band__list" data-stats></ul>
+    </section>
+
+    <!-- Belirti → parça -->
+    <section class="belirti" id="belirti" aria-labelledby="belirti-h">
+      <div class="belirti__head">
+        <p class="eyebrow mono">Turbo mu, başka bir şey mi?</p>
+        <h2 class="h2" id="belirti-h">Şikâyetinizi seçin, <em>nereye bakacağımızı</em> gösterelim.</h2>
+        <p class="lead">Turboyu bitiren çoğu zaman turbonun kendisi değildir. Kesin sebebi söküp ölçünce söyleriz; tahminle turbo değiştirmeyiz.</p>
+      </div>
+      <div class="belirti__grid">
+        <div class="belirti__opts" role="radiogroup" aria-label="Belirti" data-opts></div>
+        <figure class="parca" data-parca>
+          <div class="parca__img">
+            <img src="/img/turbo-klasik/sokum.jpg" alt="Revizyon için parçalarına ayrılmış turbo" loading="lazy" decoding="async" />
+            <div class="parca__pins" data-pins></div>
+          </div>
+          <figcaption class="parca__cap" data-parca-cap aria-live="polite"></figcaption>
+        </figure>
+        <div class="belirti__res" data-res aria-live="polite"></div>
+      </div>
+    </section>
+
+    <!-- Hizmetler -->
+    <section class="hizmet" id="hizmetler" aria-labelledby="hizmet-h">
+      <div class="hizmet__head">
+        <p class="eyebrow mono">Yalnızca turbo</p>
+        <h2 class="h2" id="hizmet-h">Milinden <em>intercooler hortumuna.</em></h2>
+        <p class="lead">Süreler ortalamadır. Fiyatı işe başlamadan söyleriz; ek parça gerekirse önce size sorarız.</p>
+      </div>
+      <ol class="hizmet__list" data-services></ol>
+    </section>
+
+    <!-- Süreç -->
+    <section class="surec" id="surec" aria-labelledby="surec-h">
+      <figure class="surec__photo"><img src="/img/turbo-klasik/tezgah.jpg" alt="Tezgâhta turbo üzerinde çalışan usta" loading="lazy" decoding="async" /></figure>
+      <div class="surec__body">
+        <p class="eyebrow mono">Beş adım, hepsi sizin önünüzde</p>
+        <h2 class="h2" id="surec-h">Önce ölçeriz, <em>sonra konuşuruz.</em></h2>
+        <ol class="steps" data-steps></ol>
+        <p class="garanti"><span data-icon="check"></span><span data-bind="garanti"></span></p>
+      </div>
+    </section>
+
+    <!-- Atölye -->
+    <section class="atolye" aria-labelledby="atolye-h">
+      <figure class="atolye__photo"><img src="/img/turbo-klasik/usta.jpg" alt="Elinde turbo tutan usta" loading="lazy" decoding="async" /></figure>
+      <div class="atolye__copy">
+        <p class="eyebrow mono" data-years></p>
+        <h2 class="h2" id="atolye-h">Başka iş yapmıyoruz. <em>Sadece turbo.</em></h2>
+        <p class="lead" data-bind="hakkinda"></p>
+        <ul class="atolye__facts mono">
+          <li><b>Dizel</b> binek, hafif ticari, kamyonet</li>
+          <li><b>Benzinli</b> küçük hacimli turbo motorlar</li>
+          <li><b>VNT</b> değişken kanatlı turbolar</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Galeri -->
+    <section class="galeri" aria-label="Atölyeden kareler">
+      <div class="galeri__track" data-gallery></div>
+    </section>
+
+    <!-- Yorumlar -->
+    <section class="yorum" id="yorumlar" aria-labelledby="yorum-h">
+      <div class="yorum__head">
+        <h2 class="h2" id="yorum-h">Turbosu <em>kurtulanlar</em> anlatıyor.</h2>
+        <div class="score">
+          <p class="score__num" data-score></p>
+          <div>
+            <p class="score__stars" data-stars></p>
+            <p class="score__count mono" data-review-count></p>
+          </div>
+        </div>
+      </div>
+      <ul class="yorum__list" data-reviews></ul>
+    </section>
+
+    <!-- Markalar -->
+    <section class="marka" aria-label="Baktığımız turbo ve araç markaları">
+      <div class="marka__track" data-brands></div>
+    </section>
+
+    <!-- Saatler + konum -->
+    <section class="konum" id="konum" aria-labelledby="konum-h">
+      <div class="konum__info">
+        <p class="eyebrow mono">Şaşmaz Oto Sanayi</p>
+        <h2 class="h2" id="konum-h">Turboyu getirin, <em>birlikte açalım.</em></h2>
+        <p class="konum__status" data-status-big></p>
+        <dl class="hours" data-hours></dl>
+        <p class="konum__addr" data-bind="adres"></p>
+        <div class="konum__btns">
+          <a class="btn btn--ink" data-maps target="_blank" rel="noopener"><span data-icon="pin"></span>Yol tarifi al</a>
+          <a class="btn btn--line" data-tel><span data-icon="phone"></span>Ara</a>
+        </div>
+      </div>
+      <div class="konum__map" data-map><span class="mono">Harita yükleniyor</span></div>
+    </section>
+
+    <!-- Final -->
+    <section class="final" aria-labelledby="final-h">
+      <img class="final__bg" src="/img/turbo-klasik/atolye.jpg" alt="" loading="lazy" decoding="async" />
+      <div class="final__in">
+        <svg class="final__spiral" viewBox="-100 -100 200 200" aria-hidden="true"><path data-final-spiral pathLength="1" d="" /></svg>
+        <h2 class="final__title" id="final-h" data-final></h2>
+        <p class="final__sub">Aracın modelini ve şikâyeti yazın, gelmeden önce ne yapacağımızı söyleyelim.</p>
+        <div class="final__btns">
+          <a class="btn btn--tint btn--big" data-tel><span data-icon="phone"></span>Hemen ara</a>
+          <a class="btn btn--light btn--big" data-wa target="_blank" rel="noopener"><span data-icon="whatsapp"></span>WhatsApp'tan yaz</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <p class="foot__name" data-bind="ad"></p>
+    <p data-bind="adres"></p>
+    <p><a data-tel data-bind="telefon"></a> · <span data-status></span></p>
+    <p class="foot__small">© <span data-year></span> <span data-bind="ad"></span>. Fotoğraflar: Pexels.</p>
+  </footer>
+
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

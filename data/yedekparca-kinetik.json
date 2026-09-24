@@ -1,0 +1,26 @@
+{
+  "hero": {
+    "satirlar": ["Parçanın", "adını", "bilmeniz", "gerekmez."],
+    "alt": "Şasi numarasını yazın, gerisini biz buluruz."
+  },
+  "vin": {
+    "ornek": "VF1RFB00X56789012",
+    "baslik": "17 hane yeter.",
+    "gruplar": [
+      { "bas": 0, "son": 3, "etiket": "Üretici", "metin": "Hangi marka, hangi fabrika." },
+      { "bas": 3, "son": 9, "etiket": "Motor ve donanım", "metin": "Dizel mi benzinli mi, hangi motor, hangi paket." },
+      { "bas": 9, "son": 17, "etiket": "Yıl ve seri", "metin": "Aynı modelin hangi yılı, hangi üretim serisi." }
+    ],
+    "sonuc": { "parca": "Fren diski", "detay": "Ön takım, havalandırmalı", "raf": "A-04" }
+  },
+  "katalogKelime": ["Fren", "Filtre", "Süspansiyon", "Triger", "Debriyaj", "Ateşleme", "Motor"],
+  "afisler": [
+    { "src": "/img/yedekparca-kinetik/koridor-p.jpg", "kelime": "Rafta", "not": "Tavana kadar dolu raflar, 48.000 çeşit", "alt": "Deponun uzun koridoru, iki yanda tavana kadar dolu raflar" },
+    { "src": "/img/yedekparca-kinetik/tepsi-k.jpg", "kelime": "Tezgâhta", "not": "Setler eksiksiz, conta dahil", "alt": "Tezgâhta tepsiye dizilmiş motor parçaları" },
+    { "src": "/img/yedekparca-kinetik/eksantrik-p.jpg", "kelime": "Orijinal", "not": "Ya da muadili. Hangisi iyi, dürüstçe söyleriz.", "alt": "Eksantrik mili yakından" }
+  ],
+  "final": {
+    "satirlar": ["Numarayı", "atın,", "parçası", "gelsin."],
+    "metin": "Şasi numarasını ya da ruhsatın fotoğrafını WhatsApp'tan gönderin. Orijinal ve muadil seçeneğini, stok ve teslim saatini tek mesajda yazalım. Fiyatı parçayı göndermeden söyleriz."
+  }
+}

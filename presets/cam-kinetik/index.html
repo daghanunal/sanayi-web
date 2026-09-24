@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#ff5b1f" />
+  <title>Oto Cam | Şaşmaz, Ankara</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23ff5b1f'/%3E%3Cpath d='M16 16 L4 9 M16 16 L27 5 M16 16 L29 20 M16 16 L10 29 M16 16 L21 29' stroke='%2315110e' stroke-width='2.4' stroke-linecap='round'/%3E%3Ccircle cx='16' cy='16' r='3.4' fill='%2315110e'/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Climate+Crisis&family=Sora:wght@400;600;700;800&display=swap&subset=latin-ext" rel="stylesheet" />
+  <link rel="preload" as="image" href="/img/kristal/yagmur.jpg" />
+  <link rel="stylesheet" href="../../shared/base.css" />
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <header class="ust">
+    <a href="#top" class="ust__marka"><span class="ust__iz" aria-hidden="true"></span><span data-name></span></a>
+    <nav class="ust__nav" aria-label="Sayfa bölümleri">
+      <a href="#hizmetler">Hizmetler</a>
+      <a href="#film">Cam filmi</a>
+      <a href="#yorumlar">Yorumlar</a>
+      <a href="#konum">Konum</a>
+    </nav>
+    <span class="durum" data-status></span>
+    <a class="ust__tel" data-tel></a>
+  </header>
+
+  <main>
+    <!-- Afiş: dükkân adı dev harflerle, cama taş çarpar, çatlak yayılır. -->
+    <section class="hero" id="top" aria-label="Giriş">
+      <div class="hero__ustsatir"><p class="hero__kicker" data-since></p><span class="durum hero__durum" data-status></span></div>
+      <h1 class="yigin" data-yigin></h1>
+      <figure class="hero__cam" aria-hidden="true">
+        <img data-hero-img alt="" fetchpriority="high" />
+        <svg class="hero__catlak" viewBox="0 0 100 100" preserveAspectRatio="none" data-hero-catlak></svg>
+        <span class="hero__tas"></span>
+        <span class="hero__damga">30 dk</span>
+      </figure>
+      <div class="hero__alt">
+        <p class="hero__slogan" data-slogan></p>
+        <div class="butonlar">
+          <a class="btn btn--koyu" data-wa>Camın fotoğrafını gönder</a>
+          <a class="btn btn--cizgi" data-tel-btn>Hemen ara</a>
+        </div>
+        <p class="hero__kasko"><b>Kasko</b><span data-kasko></span></p>
+      </div>
+    </section>
+
+    <div class="serit serit--ust" aria-hidden="true"><div class="serit__ic" data-serit="ÖN CAM · YAN CAM · ARKA CAM · SUNROOF · TAŞ İZİ · CAM FİLMİ · KALİBRASYON ·"></div></div>
+
+    <!-- İmza: taş izi → çatlak → cam parçalanır → yenisi yerine oturur. -->
+    <section class="kirilma" aria-label="Taş izi neden beklemez">
+      <div class="kirilma__pin">
+        <div class="kirilma__sahne">
+          <div class="pano" data-pano>
+            <div class="pano__yeni"><span class="pano__yeni-yazi">YENİ</span><span class="pano__parilti"></span></div>
+            <div class="pano__kirik" data-kirik></div>
+            <svg class="pano__catlak" data-catlak aria-hidden="true"></svg>
+            <span class="pano__tas" aria-hidden="true"></span>
+          </div>
+        </div>
+        <ol class="kirilma__metin" data-kirilma></ol>
+        <div class="kirilma__ilerleme" aria-hidden="true"><span></span></div>
+      </div>
+    </section>
+
+    <section class="sayilar" aria-label="Rakamlarla">
+      <dl data-stats></dl>
+    </section>
+
+    <section class="hizmetler" id="hizmetler">
+      <header class="bas">
+        <p class="bas__no">01</p>
+        <h2 class="bas__baslik">Aracın bütün camları.</h2>
+        <p class="bas__not">Süreler ortalamadır. Fiyatı işe başlamadan söyleriz.</p>
+      </header>
+      <ul class="hizmet-liste" data-services></ul>
+    </section>
+
+    <!-- Cam filmi: kaydırdıkça cam koyulaşır. -->
+    <section class="film" id="film" aria-label="Cam filmi seçimi">
+      <div class="film__pin">
+        <img class="film__img" data-film-img alt="Araç içinden tavan camı ve yan camlar" loading="lazy" />
+        <div class="film__perde" data-film-perde></div>
+        <div class="film__icerik">
+          <p class="bas__no bas__no--acik">02 · Cam filmi</p>
+          <div class="film__makara" aria-live="polite"><div class="film__makara-ic" data-film-makara></div></div>
+          <p class="film__not" data-film-not></p>
+          <dl class="film__olcu">
+            <div><dt>Işık geçirgenliği</dt><dd><span class="cubuk"><i data-film-bar="isik"></i></span></dd></div>
+            <div><dt>Isı kesme</dt><dd><span class="cubuk"><i data-film-bar="isi"></i></span></dd></div>
+            <div><dt>UV engelleme</dt><dd><b data-film-uv>%99</b></dd></div>
+          </dl>
+          <p class="film__yasal">Ön cam ve ön yan camlarda yasal sınıra uygun film öneririz.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="surec" aria-label="Nasıl çalışırız">
+      <header class="bas">
+        <p class="bas__no">03</p>
+        <h2 class="bas__baslik">Fotoğraftan teslime.</h2>
+      </header>
+      <ol class="surec__liste" data-steps></ol>
+    </section>
+
+    <section class="galeri" aria-label="Atölyeden">
+      <div class="galeri__izgara" data-gallery></div>
+    </section>
+
+    <section class="yorumlar" id="yorumlar">
+      <header class="yorumlar__bas">
+        <p class="bas__no">04</p>
+        <p class="puan"><span class="puan__sayi" data-puan></span><span class="puan__yildiz" data-yildiz></span></p>
+        <p class="puan__alt" data-puan-alt></p>
+      </header>
+      <div class="kartlar" data-reviews tabindex="0" aria-label="Müşteri yorumları, yana kaydırın"></div>
+    </section>
+
+    <div class="serit serit--marka" aria-hidden="true"><div class="serit__ic" data-brands></div></div>
+
+    <section class="konum" id="konum">
+      <div class="konum__sol">
+        <p class="bas__no bas__no--acik">05 · Konum</p>
+        <p class="konum__durum durum durum--buyuk" data-status></p>
+        <h2 class="konum__baslik">Şaşmaz'da, <span data-cadde></span></h2>
+        <p class="konum__adres" data-address></p>
+        <dl class="saatler" data-hours></dl>
+        <div class="butonlar">
+          <a class="btn btn--turuncu" data-maps target="_blank" rel="noopener">Yol tarifi al</a>
+          <a class="btn btn--cizgi-acik" data-tel-btn></a>
+        </div>
+      </div>
+      <div class="harita" data-map></div>
+    </section>
+
+    <section class="final" aria-label="Bize ulaşın">
+      <p class="final__ust" data-final></p>
+      <a class="final__tel" data-final-tel><span data-final-tel-yazi></span></a>
+      <div class="butonlar butonlar--orta">
+        <a class="btn btn--koyu" data-wa>WhatsApp'tan fotoğraf gönder</a>
+        <a class="btn btn--cizgi" data-tel-btn>Hemen ara</a>
+      </div>
+      <p class="final__garanti" data-garanti></p>
+    </section>
+  </main>
+
+  <footer class="alt">
+    <p><span data-name></span> · <span data-address></span></p>
+    <p>© <span data-year></span> <span data-name></span>. Fotoğraflar: Pexels.</p>
+  </footer>
+
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

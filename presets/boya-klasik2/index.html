@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#17181a" />
+  <title>Boya ve Kaporta | Şaşmaz, Ankara</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%2317191b'/%3E%3Crect x='6' y='21' width='20' height='5' fill='%238e949b'/%3E%3Crect x='6' y='15' width='20' height='5' fill='%23c9cac5'/%3E%3Crect x='6' y='9' width='20' height='5' fill='%23ff4d1a'/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Epilogue:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,800&family=Space+Mono:wght@400;700&display=swap&subset=latin-ext" rel="stylesheet" />
+  <link rel="preload" as="image" href="/img/boya-klasik2/kat-sac.jpg" />
+  <link rel="stylesheet" href="../../shared/base.css" />
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <a class="skip" href="#hizmetler">İçeriğe geç</a>
+
+  <header class="top" data-top>
+    <a href="#katlar" class="top__brand"><span class="top__mark" aria-hidden="true"><i></i><i></i><i></i></span><span data-bind="ad"></span></a>
+    <nav class="top__nav" aria-label="Sayfa bölümleri">
+      <a href="#hizmetler">Hizmetler</a>
+      <a href="#renk">Renk</a>
+      <a href="#isler">İşler</a>
+      <a href="#iletisim">Konum</a>
+    </nav>
+    <a class="top__call" data-href="tel"><span data-icon="phone"></span><span class="top__num" data-bind="telefon"></span></a>
+  </header>
+
+  <main>
+    <!-- HERO / İMZA: dört kat, scroll ile üst üste -->
+    <section class="kat" id="katlar" aria-labelledby="hero-title">
+      <div class="kat__stage">
+        <div class="kat__photo">
+          <div class="layer layer--0"><img src="/img/boya-klasik2/kat-sac.jpg" alt="Boyası sökülmüş, çıplak sac halindeki spor otomobilin arkası" fetchpriority="high" /></div>
+          <div class="layer layer--1"><div class="layer__in"><img src="/img/boya-klasik2/kat-astar.jpg" alt="" /></div><span class="layer__edge"></span></div>
+          <div class="layer layer--2"><div class="layer__in"><img src="/img/boya-klasik2/kat-boya.jpg" alt="" /></div><span class="layer__edge"></span></div>
+          <div class="layer layer--3"><div class="layer__in"><img src="/img/boya-klasik2/kat-vernik.jpg" alt="" /><span class="gloss"></span></div><span class="layer__edge"></span></div>
+          <div class="kat__shade" aria-hidden="true"></div>
+        </div>
+
+        <div class="kat__panel">
+          <div class="kat__intro">
+            <p class="kat__kicker mono"><span data-bind="since"></span></p>
+            <h1 class="kat__title" id="hero-title" data-bind="slogan"></h1>
+            <p class="kat__lead">Boya, kaporta, boyasız göçük, pasta-cila ve seramik. Aracın fotoğrafını gönderin, fiyatı işe başlamadan söyleyelim.</p>
+            <div class="kat__actions">
+              <a class="btn btn--paint" data-href="wa-foto" target="_blank" rel="noopener"><span data-icon="whatsapp"></span>Fotoğraf gönder</a>
+              <a class="btn btn--line" data-href="tel"><span data-icon="phone"></span>Hemen ara</a>
+            </div>
+            <p class="kat__hint mono" aria-hidden="true"><span class="kat__hint-bar"></span>Kaydırın: sacdan verniğe dört kat</p>
+          </div>
+
+          <div class="kat__caps" data-caps aria-live="off"></div>
+
+          <div class="kesit" aria-hidden="true">
+            <div class="kesit__head mono"><span>Toplam kalınlık</span><b><span data-um>0</span> µm</b></div>
+            <div class="kesit__box" data-kesit></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- HİZMETLER -->
+    <section class="hiz" id="hizmetler" aria-labelledby="hiz-title">
+      <div class="sec-head">
+        <p class="sec-head__no mono">01 / Hizmetler</p>
+        <h2 id="hiz-title">Çizikten komple boyaya, hepsi aynı kabinde.</h2>
+      </div>
+      <ol class="hiz__list" data-services></ol>
+    </section>
+
+    <!-- ÖLÇÜM FÖYÜ / GÜVEN -->
+    <section class="foy" aria-labelledby="foy-title">
+      <div class="foy__sheet">
+        <div class="foy__ruler" aria-hidden="true"></div>
+        <div class="foy__top mono"><span>Ölçüm föyü</span><span data-bind="ad"></span></div>
+        <h2 class="foy__title" id="foy-title">Makineye dokunmadan önce ölçeriz.</h2>
+        <p class="foy__about" data-bind="hakkinda"></p>
+        <dl class="foy__stats" data-stats></dl>
+        <p class="foy__warranty"><span class="stamp mono">Yazılı garanti</span><span data-bind="garanti"></span></p>
+      </div>
+    </section>
+
+    <!-- RENK TUTTURMA -->
+    <section class="renk" id="renk" aria-labelledby="renk-title">
+      <div class="renk__text">
+        <p class="sec-head__no mono">02 / Renk</p>
+        <h2 id="renk-title">Rengi cihaz okur, göz onaylar.</h2>
+        <p>Renk kodu kapak içinden okunur, ama güneşte solmuş bir araçta kod yetmez. Ölçüm cihazıyla karışımı panel panel tuttururuz. Bir renk seçin, aynı gövdeyi o renkte görün.</p>
+      </div>
+      <div class="renk__view">
+        <div class="renk__frame" data-renk-frame>
+          <img class="renk__img is-top" src="/img/boya-klasik2/renk-turuncu.jpg" alt="Turuncu boyalı spor otomobilin arkası" loading="lazy" data-renk-a />
+          <img class="renk__img" alt="" loading="lazy" data-renk-b />
+          <span class="renk__edge" aria-hidden="true"></span>
+        </div>
+          <div class="renk__swatches" role="radiogroup" aria-label="Renk seçin" data-swatches></div>
+          <p class="renk__name mono"><span data-renk-name></span><span class="renk__rate" data-renk-rate></span></p>
+      </div>
+    </section>
+
+    <!-- SÜREÇ -->
+    <section class="surec" aria-labelledby="surec-title">
+      <div class="sec-head">
+        <p class="sec-head__no mono">03 / Süreç</p>
+        <h2 id="surec-title">Aracınız bizde kat kat ilerler.</h2>
+      </div>
+      <div class="surec__body">
+        <div class="surec__col" aria-hidden="true"><i data-surec-fill></i></div>
+        <ol class="surec__list" data-process></ol>
+      </div>
+    </section>
+
+    <!-- GALERİ -->
+    <section class="isler" id="isler" aria-labelledby="isler-title">
+      <div class="sec-head">
+        <p class="sec-head__no mono">04 / Teslim edilenler</p>
+        <h2 id="isler-title">Kabinden son çıkanlar.</h2>
+      </div>
+      <div class="isler__grid" data-gallery></div>
+    </section>
+
+    <!-- YORUMLAR -->
+    <section class="yorum" id="yorumlar" aria-labelledby="yorum-title">
+      <div class="yorum__score">
+        <p class="yorum__big" data-score></p>
+        <div class="yorum__stars" data-stars></div>
+        <h2 id="yorum-title" data-score-text></h2>
+      </div>
+      <ul class="yorum__list" data-reviews></ul>
+      <div class="markalar" aria-label="Çalıştığımız markalar"><div class="markalar__track" data-brands></div></div>
+    </section>
+
+    <!-- SAATLER VE KONUM -->
+    <section class="konum" id="iletisim" aria-labelledby="konum-title">
+      <div class="konum__info">
+        <p class="sec-head__no mono">05 / Konum</p>
+        <h2 id="konum-title">Aracı getirin, gün ışığında birlikte bakalım.</h2>
+        <p class="status" data-status></p>
+        <table class="saat" data-hours><caption class="sr-only">Çalışma saatleri</caption><tbody></tbody></table>
+        <p class="konum__adres"><span data-icon="pin"></span><span data-bind="adres"></span></p>
+        <div class="konum__actions">
+          <a class="btn btn--ink" data-href="maps" target="_blank" rel="noopener"><span data-icon="pin"></span>Yol tarifi al</a>
+          <a class="btn btn--ghost-ink" data-href="tel"><span data-icon="phone"></span><span data-bind="telefon"></span></a>
+        </div>
+      </div>
+      <div class="konum__map" data-map><span class="mono">Harita yükleniyor</span></div>
+    </section>
+
+    <!-- SON ÇAĞRI -->
+    <section class="son" aria-labelledby="son-title">
+      <div class="son__strata" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+      <h2 class="son__title" id="son-title">Dört fotoğraf çekin, gönderin.<br /><em>Fiyatı işe başlamadan söyleriz.</em></h2>
+      <p class="son__note">Önden, arkadan, iki yandan. Hasarlı yeri yakından bir tane daha.</p>
+      <div class="son__actions">
+        <a class="btn btn--paint btn--lg" data-href="wa-foto" target="_blank" rel="noopener"><span data-icon="whatsapp"></span>WhatsApp'tan gönder</a>
+        <a class="btn btn--line btn--lg" data-href="tel"><span data-icon="phone"></span><span data-bind="telefon"></span></a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <p class="foot__name" data-bind="ad"></p>
+    <p data-bind="adres"></p>
+    <p class="mono" data-bind="copy"></p>
+  </footer>
+
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

@@ -1,0 +1,131 @@
+{
+  "kurumsal": {
+    "tabela": {
+      "cikis": "ÇIKIŞ",
+      "yon": "Şaşmaz Sanayi",
+      "satir": "Motor · Şanzıman · Havalı fren · AdBlue",
+      "alt": "Tır, kamyon, otobüs ve midibüs servisi",
+      "baslik": "Yolunuzun üstündeyiz.",
+      "metin": "İstanbul yolundan Şaşmaz'a sapın, aracınızı kanala alalım. Yolda kaldıysanız siz yerinizden kıpırdamayın; konumunuzu atın, servis aracımız size gelsin."
+    },
+    "ozet": {
+      "baslik": "Araç yattığı her saat size yük",
+      "metin": "O yüzden işi baştan konuşuruz: arızayı cihazla buluruz, parçayı ve süreyi söyleriz, onayınızı alıp başlarız. Fren ve körük işlerini yükte deneyip öyle teslim ederiz."
+    },
+    "hizmetOzetBaslik": "Hangi şeritte ne yapıyoruz",
+    "hizmetEk": {
+      "Motor bakım ve revizyon": {
+        "kisa": "Periyodik bakım, enjektör, yakıt pompası, turbo, revizyon.",
+        "gorsel": "/img/kurumsal-agirvasita2/kamyon-atolye.jpg",
+        "detay": [["Tespit", "Arıza cihazı ve yağ basıncı"], ["Kural", "Gerekmiyorsa söktürmeyiz"]]
+      },
+      "Şanzıman ve diferansiyel": { "detay": [["Kapsam", "Manuel, AMT, retarder"], ["Köprü", "Çift köprü birlikte ölçülür"]] },
+      "Havalı fren sistemi": {
+        "gorsel": "/img/kurumsal-agirvasita2/kamyon-bakim.jpg",
+        "detay": [["Test", "Hat basıncı cihazla"], ["Kapsam", "EBS ve ABS dahil"]]
+      },
+      "AdBlue ve SCR": { "detay": [["Yaklaşım", "Söküp temizleriz"], ["İptal", "Yapmayız"]] },
+      "Yol yardım ve mobil servis": {
+        "gorsel": "/img/kurumsal-agirvasita2/gece-yol.jpg",
+        "detay": [["Hat", "7 gün 24 saat"], ["Önce", "Yerinde onarmayı deneriz"]]
+      }
+    },
+    "yolYardim": {
+      "baslik": "Nerede kaldınız?",
+      "metin": "Size en yakın noktayı, aracınızı ve derdini seçin. Hazır mesajı WhatsApp'tan gönderin; servis aracı yola çıkmadan ne götüreceğini bilsin.",
+      "noktalar": [
+        { "ad": "Sincan OSB", "yol": "Sincan", "km": 9 },
+        { "ad": "Eskişehir yolu", "yol": "D-200", "km": 18 },
+        { "ad": "Temelli", "yol": "D-200", "km": 32 },
+        { "ad": "Kazan", "yol": "Kazan yolu", "km": 36 },
+        { "ad": "Gölbaşı", "yol": "D-750", "km": 38 },
+        { "ad": "Ayaş", "yol": "D-140", "km": 42 },
+        { "ad": "Esenboğa", "yol": "Havalimanı yolu", "km": 45 },
+        { "ad": "Polatlı çıkışı", "yol": "D-200", "km": 62 },
+        { "ad": "Kırıkkale", "yol": "D-200", "km": 92 }
+      ],
+      "not": "Mesafeler Şaşmaz'dan yaklaşık yol mesafesidir. Ne kadar sürede geleceğimizi arayınca saate ve trafiğe göre söyleriz."
+    },
+    "olcumBaslik": "Ölçmeden teslim etmeyiz",
+    "olcumMetin": "Her işin sonunda aynı değeri yeniden ölçeriz. Aşağıdaki değerler tipik bir arızada girişte ve teslimde okunan değerlere örnektir.",
+    "anlasmaBaslik": "Filolar ve kurumlar için",
+    "anlasmaMetin": "Nakliye, dağıtım ve servis filoları için sefer aralarına göre planlanan bakım ve aylık tek fatura.",
+    "anlasmalar": [
+      {
+        "baslik": "Filo bakım programı",
+        "kisa": "Araç başına dosya, sefer arasına göre randevu.",
+        "metin": "Her aracın bakım dosyasını tutar, zamanı gelince haber veririz. Aracı sefer aralarına göre alır, uygun işlerde gece çalışıp sabah teslim ederiz.",
+        "maddeler": ["Araç başına bakım dosyası ve hatırlatma", "Sefer arasına göre randevu, gece teslim", "Aylık tek fatura ve araç bazında döküm", "Yolda kalan filo aracına öncelik"],
+        "buton": "Filo görüşmesi isteyin"
+      },
+      {
+        "baslik": "Personel ve öğrenci servisleri",
+        "kisa": "Sezon öncesi toplu kontrol.",
+        "metin": "Okul ve iş dönemi başlamadan önce servis otobüsü ve midibüslerin fren, körük ve motor kontrolünü toplu planlar, araçları sefer saatleri dışında alırız.",
+        "maddeler": ["Sezon öncesi toplu kontrol", "Fren ve körük her bakımda", "Araç bazında kontrol dökümü"],
+        "buton": "Kontrol planı isteyin"
+      },
+      {
+        "baslik": "Sigorta ve hasar dosyaları",
+        "kisa": "Mekanik hasarda eksper takibi.",
+        "metin": "Kasko kapsamındaki mekanik hasarlarda eksper randevusunu ve evrakı biz takip ederiz. Çalıştığımız sigorta şirketlerinin güncel listesi için bizi arayın.",
+        "maddeler": ["Fotoğraflı hasar tespiti", "Parça onayı gelmeden işe başlamayız", "Her adımda bilgilendirme"],
+        "buton": "Hasar dosyası için yazın"
+      }
+    ],
+    "anlasmaNotu": "Koşullar araç sayısına, tipine ve yıllık kilometreye göre belirlenir; teklifimizi yazılı iletiriz.",
+    "hakkimizda": {
+      "baslik": "Şaşmaz'ın girişinde, yolun kenarında",
+      "paragraflar": [
+        "Şaşmaz Oto Sanayi Sitesi'nin ağır vasıta bölümündeyiz. İstanbul yolundan inen tır, kamyon, otobüs ve midibüs birkaç dakikada kanalımızda olur.",
+        "Tek araçlı nakliyeciyle de, yüz araçlık filoyla da aynı düzende çalışırız: önce ölçer, sonra konuşur, en son söküm yaparız. Yolda kalana servis aracımızla gideriz."
+      ],
+      "gorsel": "/img/kurumsal-agirvasita2/cekici.jpg",
+      "gorselAlt": "Siyah çekici kamyonun önden görünüşü"
+    },
+    "misyon": "Aracı doğru teşhisle, söylediğimiz sürede yola geri çıkarmak.",
+    "vizyon": "Ankara'dan geçen nakliyecinin yolda kaldığında ilk aradığı numara olmak.",
+    "degerler": [
+      { "baslik": "Süre sözü", "metin": "Ne kadar süreceğini baştan söyler, gecikecekse önceden ararız." },
+      { "baslik": "Önce ölçüm", "metin": "Kaçağı kulakla değil cihazla buluruz." },
+      { "baslik": "Yasal iş", "metin": "AdBlue ve emisyonda iptal yapmayız, sistemi onarırız." },
+      { "baslik": "Yükte deneme", "metin": "Fren ve süspansiyonu yükte deneyip teslim ederiz." }
+    ],
+    "kalite": {
+      "baslik": "Her araç aynı yoldan geçer",
+      "metin": "Kabul, tespit, yazılı süre, onay, onarım, yükte deneme ve teslim. Sıra atlamayız.",
+      "maddeler": [
+        "Kabulde kilometre, hasar ve arıza kodları kaydedilir.",
+        "Tespit marka cihazları ve basınç ölçümüyle yapılır.",
+        "Çıkan parçalar saklanır, isterseniz size verilir.",
+        "Takograf kalibrasyonu gerekirse yetkili istasyona yönlendirilir."
+      ]
+    },
+    "kariyer": {
+      "baslik": "Ekibe katılın",
+      "metin": "Ağır vasıta motor, şanzıman ve havalı frende deneyimli usta ve mesleği öğrenmek isteyen çırak arıyoruz. Kısa bir tanıtımla yazın."
+    },
+    "markaBaslik": "Kanala giren markalar",
+    "sssBaslik": "Yolda kalanın sorduğu",
+    "sss": [
+      { "soru": "Gece de geliyor musunuz?", "cevap": "Evet, yol yardım hattı 7 gün 24 saat açık. Arayın ya da konum atın, ne kadar sürede geleceğimizi o an söyleriz." },
+      { "soru": "Yerinde onarabiliyor musunuz?", "cevap": "Hava kaçağı, akü, sensör ve hortum gibi işlerin çoğunu yerinde gideririz. Olmuyorsa aracı çekiciyle sanayiye alırız." },
+      { "soru": "AdBlue iptali yapıyor musunuz?", "cevap": "Hayır. Sistemi söker, temizler, arızalı parçayı değiştiririz. İptal yasal değildir ve muayeneden geçmez." },
+      { "soru": "Fiyatı ne zaman öğrenirim?", "cevap": "Arızayı tespit ettikten sonra, işe başlamadan söyleriz. Onayınız olmadan ek iş yapmayız." },
+      { "soru": "Takograf kalibrasyonu yapıyor musunuz?", "cevap": "Sensör, kablo ve ekran arızalarını gideririz. Kalibrasyon gerekiyorsa yetkili istasyona yönlendiririz." }
+    ],
+    "sayfalar": {
+      "kurumsal": { "baslik": "Biz kimiz", "metin": "Nerede olduğumuz, nasıl çalıştığımız, neye önem verdiğimiz.", "gorsel": "/img/kurumsal-agirvasita2/agir-vasita.jpg" },
+      "hizmetler": { "baslik": "Hizmetler", "metin": "Motordan freninin havasına; her iş için ortalama süre." },
+      "yol-yardim": { "baslik": "Yol yardım", "metin": "Yolda kaldıysanız bulunduğunuz yerden bize ulaşın. Hat 7 gün 24 saat açık." },
+      "kurumsal-musteriler": { "baslik": "Filo ve kurumlar", "metin": "Sefer planınıza göre bakım, araç başına dosya, aylık tek fatura.", "gorsel": "/img/kurumsal-agirvasita2/kamyon-bakim.jpg" },
+      "iletisim": { "baslik": "İletişim", "metin": "Randevu, filo görüşmesi ya da yol yardım için arayın veya yazın." }
+    },
+    "konular": ["Yol yardım", "Randevu", "Filo bakım programı", "Fiyat bilgisi", "Sigorta / hasar dosyası", "Genel bilgi"],
+    "cta": {
+      "baslik": "Yolda mı kaldınız?",
+      "metin": "Hat 7 gün 24 saat açık. Arayın ya da konumunuzu atın, servis aracımız yola çıksın.",
+      "buton": "Bize yazın"
+    }
+  }
+}

@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#e2dbf8" />
+  <title>Oto Yedek Parça | Şaşmaz</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='16' fill='%235b2bff'/%3E%3Cellipse cx='16' cy='21' rx='9' ry='3' fill='%23e2dbf8'/%3E%3Ccircle cx='16' cy='13' r='5' fill='none' stroke='%23fff' stroke-width='2.4'/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Tilt+Warp&family=Rethink+Sans:wght@400;500;600;700;800&family=Sometype+Mono:wght@400;500;600&display=swap&subset=latin-ext" rel="stylesheet" />
+</head>
+<body class="is-loading">
+  <div class="backdrop" aria-hidden="true"><i class="backdrop__glow"></i></div>
+  <canvas class="stage" data-stage aria-hidden="true"></canvas>
+
+  <header class="top" data-top>
+    <a class="top__brand" href="#" data-brand><i class="top__dot" aria-hidden="true"></i><span data-bind="ad"></span></a>
+    <p class="top__status" data-status></p>
+    <a class="top__call" data-tel><span data-icon="phone"></span><span class="top__num" data-bind="telefon"></span></a>
+  </header>
+
+  <main>
+    <!-- 0. Giriş: dev isim fonun önünde, parçalar harflerin önünden geçer -->
+    <section class="film film--hero" data-film="0">
+      <div class="stick stick--back"><h1 class="giant" data-giant></h1></div>
+      <div class="stick stick--front">
+        <div class="hero">
+          <p class="kicker" data-kicker></p>
+          <p class="hero__slogan" data-bind="slogan"></p>
+          <div class="hero__cta">
+            <a class="btn btn--ink" data-wa target="_blank" rel="noopener"><span data-icon="whatsapp"></span>Şasi no ile sor</a>
+            <a class="btn btn--line" data-tel><span data-icon="phone"></span>Hemen ara</a>
+          </div>
+        </div>
+        <p class="hero__count" aria-hidden="true"><b data-hero-count>0</b><span data-hero-count-label></span></p>
+        <p class="hint" aria-hidden="true"><i></i>Kaydırın, vitrin dönsün</p>
+      </div>
+    </section>
+
+    <!-- 1. Döner vitrin: her kategori sırayla kaideye çıkar -->
+    <section class="film film--vitrin" data-film="1" id="parcalar" aria-label="Parça kategorileri">
+      <div class="stick">
+        <div class="vcard" data-vcard>
+          <p class="vcard__top"><span class="vcard__raf" data-v-raf></span><span class="vcard__n"><b data-v-n>01</b> / <span data-v-total></span></span></p>
+          <h2 class="vcard__title" data-v-title></h2>
+          <p class="vcard__desc" data-v-desc></p>
+          <ul class="vcard__chips" data-v-chips></ul>
+          <p class="vcard__stock"><b data-v-stock>0</b> kalem rafta</p>
+        </div>
+        <ol class="vdots" data-vdots aria-hidden="true"></ol>
+        <p class="vlabel" aria-hidden="true">Döner vitrin</p>
+      </div>
+      <ul class="sr-only" data-v-list></ul>
+    </section>
+
+    <!-- 2. Şasi numarası: 17 hane çözülür, rulet doğru parçada durur -->
+    <section class="film film--sasi" data-film="2" id="sasi" aria-label="Şasi numarasıyla parça bulma">
+      <div class="stick">
+        <div class="sasi">
+          <p class="kicker">Nasıl çalışıyoruz</p>
+          <h2 class="sasi__title">Parçanın adını bilmeniz gerekmez.</h2>
+          <div class="vin" data-vin aria-label="Örnek şasi numarası"></div>
+          <div class="vin__legend" data-vin-legend>
+            <span style="--c:1/4">Üretici</span>
+            <span style="--c:4/10">Motor ve donanım</span>
+            <span style="--c:10/18">Aracın seri numarası</span>
+          </div>
+          <ol class="steps" data-steps></ol>
+        </div>
+        <p class="match" data-match aria-hidden="true"><i></i>Eşleşti: <b data-match-name></b></p>
+      </div>
+    </section>
+
+    <!-- 3. Rakamlar: parçalar üst üste dizilir, kamera sütunu tırmanır -->
+    <section class="film film--stats" data-film="3" aria-label="Rakamlarla">
+      <div class="stick">
+        <div class="stats">
+          <p class="kicker kicker--light" data-since></p>
+          <p class="stats__about" data-bind="hakkinda"></p>
+          <ul class="stats__list" data-stats></ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. Teslimat: kaide merkez, halkalar yayılır, parçalar kurye gibi döner -->
+    <section class="film film--teslimat" data-film="4" aria-label="Teslimat süreleri">
+      <div class="stick">
+        <div class="tes">
+          <p class="kicker">Teslimat</p>
+          <h2 class="tes__title">Parça kapınıza ne kadar sürede gelir?</h2>
+          <ol class="tes__list" data-tes></ol>
+          <p class="tes__note" data-bind="garanti"></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Film arası: opak bölümler -->
+    <section class="plain plain--galeri" aria-label="Dükkândan kareler">
+      <div class="wrap">
+        <p class="kicker">Dükkândan</p>
+        <h2 class="plain__title">Raflar dolu, <em>kutular hazır.</em></h2>
+      </div>
+      <div class="strip" data-strip></div>
+    </section>
+
+    <section class="plain plain--markalar" aria-label="Markalar">
+      <div class="wrap">
+        <p class="kicker">Hangi araca</p>
+        <h2 class="plain__title">Binekten hafif ticariye, <em>her markaya parça.</em></h2>
+      </div>
+      <div class="marquee" data-marquee="markalar"></div>
+      <div class="wrap"><p class="plain__small">Rafta en çok bulunan üretici markaları</p></div>
+      <div class="marquee marquee--alt" data-marquee="parcaMarkalari"></div>
+    </section>
+
+    <section class="plain plain--yorum" aria-label="Müşteri yorumları">
+      <div class="wrap">
+        <div class="puan">
+          <p class="puan__big" data-puan></p>
+          <p class="puan__stars" data-puan-stars aria-hidden="true"></p>
+          <p class="puan__meta" data-puan-meta></p>
+        </div>
+        <ul class="yorumlar" data-yorumlar></ul>
+      </div>
+    </section>
+
+    <section class="plain plain--ziyaret" id="ziyaret" aria-label="Çalışma saatleri ve konum">
+      <div class="wrap ziyaret">
+        <div class="ziyaret__info">
+          <p class="kicker">Gelin, görün</p>
+          <h2 class="plain__title">Tezgâhımız <em>açık mı?</em></h2>
+          <p class="open" data-open></p>
+          <ul class="saatler" data-saatler></ul>
+          <p class="adres"><span data-icon="pin"></span><span data-bind="adres"></span></p>
+          <div class="ziyaret__cta">
+            <a class="btn btn--ink" data-maps target="_blank" rel="noopener"><span data-icon="pin"></span>Yol tarifi al</a>
+            <a class="btn btn--line" data-tel><span data-icon="phone"></span>Ara</a>
+          </div>
+        </div>
+        <div class="map" data-map-slot><p>Harita yükleniyor</p></div>
+      </div>
+    </section>
+
+    <!-- 6. Final: parçalar gökten inip kaidenin çevresinde toplanır -->
+    <section class="film film--final" data-film="6" aria-label="İletişim">
+      <div class="stick">
+        <div class="final">
+          <h2 class="final__title" data-final-title>Parçanız bugün yola çıksın.</h2>
+          <div class="final__bottom">
+          <p class="final__sub">Şasi numarasını WhatsApp'tan atın, orijinal ve muadil seçeneğini tek mesajda yazalım.</p>
+          <div class="final__cta">
+            <a class="btn btn--white" data-wa target="_blank" rel="noopener"><span data-icon="whatsapp"></span>WhatsApp'tan sor</a>
+            <a class="btn btn--lineW" data-tel><span data-icon="phone"></span><span data-bind="telefon"></span></a>
+          </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <footer class="footer">
+    <p class="footer__name" data-bind="ad"></p>
+    <p data-bind="adres"></p>
+    <p class="footer__small" data-year></p>
+  </footer>
+
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

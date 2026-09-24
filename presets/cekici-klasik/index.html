@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#eceef0" />
+  <title>Çekici ve Yol Yardım | Şaşmaz, Ankara</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M16 3 30 28H2z' fill='none' stroke='%23e3241b' stroke-width='4' stroke-linejoin='round'/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Saira+Extra+Condensed:wght@600;700;800&family=Saira:wght@400;500;600;700&family=Saira+Stencil+One&display=swap&subset=latin-ext" rel="stylesheet" />
+  <link rel="preload" as="image" href="/img/cekici-klasik/giris-m.jpg" media="(max-width: 899px)" />
+  <link rel="preload" as="image" href="/img/cekici-klasik/giris-d.jpg" media="(min-width: 900px)" />
+</head>
+<body>
+  <header class="top">
+    <a href="#top" class="top__brand"><svg class="top__mark" viewBox="0 0 32 32" aria-hidden="true"><path d="M16 4 29 27H3z" /></svg><span data-bind="ad"></span></a>
+    <nav class="top__nav" aria-label="Sayfa bölümleri">
+      <a href="#durum">Ne oldu?</a>
+      <a href="#surec">Nasıl işler</a>
+      <a href="#yorumlar">Yorumlar</a>
+      <a href="#saat">7/24</a>
+      <a href="#konum">Konum</a>
+    </nav>
+    <a class="top__call" data-tel><span class="top__dot" aria-hidden="true"></span><span data-icon="phone"></span><span data-bind="telefon"></span></a>
+  </header>
+
+  <main>
+    <!-- İMZA: ikaz üçgeni. Yolda kalan aracın arkasına konan reflektörlü üçgen bir pencere olur;
+         kaydırdıkça üçgen büyüyüp ekranı yutar, fotoğrafın içine girilir. Ardından varış sayacı
+         45 dakikadan sıfıra iner, çekici yol çizgisi üzerinde ilerler ve kare "yanınızdayız" ile
+         yükleme fotoğrafına geçer. -->
+    <section class="hero" id="top" aria-label="Giriş">
+      <div class="hero__pin">
+        <div class="hero__win" data-win aria-hidden="true">
+          <div class="hero__img" data-img="1">
+            <picture>
+              <source media="(min-width: 900px)" srcset="/img/cekici-klasik/giris-d.jpg" />
+              <img src="/img/cekici-klasik/giris-m.jpg" alt="" fetchpriority="high" decoding="async" />
+            </picture>
+          </div>
+          <div class="hero__img hero__img--2" data-img="2">
+            <picture>
+              <source media="(min-width: 900px)" srcset="/img/cekici-klasik/varis-d.jpg" />
+              <img src="/img/cekici-klasik/varis-m.jpg" alt="" decoding="async" loading="lazy" />
+            </picture>
+          </div>
+          <div class="hero__shade" data-shade></div>
+        </div>
+        <svg class="hero__tri" data-tri aria-hidden="true">
+          <path class="tri__out" data-tri-out d="" />
+          <path class="tri__in" data-tri-in d="" />
+          <path class="tri__glint" data-tri-glint d="" pathLength="100" />
+        </svg>
+
+        <div class="hero__intro" data-intro>
+          <p class="kicker"><span class="kicker__dot"></span><span data-since></span></p>
+          <h1 class="hero__title"><span class="l1">Yolda mı</span><span class="l2">kaldınız?</span></h1>
+          <p class="hero__lead">Üçgeni koyun, gerisi bizde. <span data-bind="slogan"></span></p>
+          <div class="hero__cta">
+            <a class="btn btn--red" data-tel><span data-icon="phone"></span>Hemen ara</a>
+            <a class="btn btn--ghost" data-wa-konum target="_blank" rel="noopener"><span data-icon="pin"></span>Konum at</a>
+          </div>
+        </div>
+
+        <div class="eta" data-eta aria-hidden="true">
+          <p class="eta__label">Ankara içi ortalama varış</p>
+          <p class="eta__num"><span data-eta-num>45</span><small>dk</small></p>
+          <p class="eta__done" data-eta-done>Yanınızdayız.</p>
+          <div class="eta__road">
+            <span class="eta__end">Şaşmaz</span>
+            <div class="eta__line"><i data-eta-fill></i><svg class="eta__truck" data-eta-truck viewBox="0 0 48 24"><path d="M2 16V6h20v10M22 9h12l6 7v0H22z" /><path d="M1 17h45" /><circle cx="10" cy="19" r="3" /><circle cx="36" cy="19" r="3" /></svg></div>
+            <span class="eta__end">Siz</span>
+          </div>
+        </div>
+        <p class="hero__hint" data-hint>Kaydırın</p>
+      </div>
+    </section>
+
+    <div class="chevron" aria-hidden="true"><div class="chevron__track"></div></div>
+
+    <!-- Hizmetler: durum seçici -->
+    <section class="durum" id="durum" aria-labelledby="durum-baslik">
+      <div class="wrap">
+        <header class="sec-head">
+          <p class="eyebrow">Hizmetler</p>
+          <h2 id="durum-baslik" class="h2">Ne oldu? Seçin,<br />mesajınız hazır olsun.</h2>
+        </header>
+        <div class="durum__grid">
+          <div class="chips" role="tablist" aria-label="Durumunuz" data-chips></div>
+          <article class="panel" data-panel aria-live="polite">
+            <div class="panel__media"><img data-panel-img src="/img/cekici-klasik/cekici-yukleme.jpg" alt="" loading="lazy" decoding="async" /><span class="panel__no" data-panel-no></span></div>
+            <div class="panel__body">
+              <p class="panel__time"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="13" r="8" /><path d="M12 9v4l2.5 2.5M9 2h6" /></svg><span data-panel-sure></span></p>
+              <h3 class="panel__title" data-panel-title></h3>
+              <p class="panel__text" data-panel-text></p>
+              <label class="konum"><input type="checkbox" data-konum /><span class="konum__box" aria-hidden="true"></span><span data-konum-text>Mesaja konumumu ekle</span></label>
+              <div class="panel__cta">
+                <a class="btn btn--red" data-panel-wa target="_blank" rel="noopener"><span data-icon="whatsapp"></span>WhatsApp'tan yaz</a>
+                <a class="btn btn--line" data-tel><span data-icon="phone"></span>Ara</a>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Güven: rakamlar -->
+    <section class="rakam" aria-label="Rakamlarla">
+      <div class="wrap rakam__grid" data-stats></div>
+    </section>
+
+    <!-- İmza bölümü: telefonunuza ne gelir (süreç + WhatsApp mesajları) -->
+    <section class="surec" id="surec" aria-labelledby="surec-baslik">
+      <div class="wrap">
+        <header class="sec-head sec-head--light">
+          <p class="eyebrow">Nasıl işler</p>
+          <h2 id="surec-baslik" class="h2">Aradığınız andan teslime,<br />her adım telefonunuzda.</h2>
+          <p class="sec-lead" data-bind="garanti"></p>
+        </header>
+        <div class="adimlar-wrap">
+          <span class="adimlar__rail" aria-hidden="true"><i data-rail></i></span>
+          <ol class="adimlar" data-steps></ol>
+        </div>
+      </div>
+    </section>
+
+    <!-- Hakkında + galeri şeridi -->
+    <section class="hakkinda" aria-labelledby="hak-baslik">
+      <div class="wrap hakkinda__grid">
+        <div>
+          <p class="eyebrow">Biz kimiz</p>
+          <h2 id="hak-baslik" class="h2" data-years></h2>
+        </div>
+        <p class="hakkinda__text" data-bind="hakkinda"></p>
+      </div>
+      <div class="serit" data-strip aria-label="Sahadan fotoğraflar"></div>
+    </section>
+
+    <!-- Yorumlar -->
+    <section class="yorumlar" id="yorumlar" aria-labelledby="yor-baslik">
+      <div class="wrap">
+        <header class="yorumlar__head">
+          <div>
+            <p class="eyebrow">Yolda kalanlar anlatıyor</p>
+            <h2 id="yor-baslik" class="h2">Gece ikide de<br />telefonu açtık.</h2>
+          </div>
+          <div class="puan" data-puan></div>
+        </header>
+      </div>
+      <div class="yorum-list" data-reviews></div>
+    </section>
+
+    <!-- Saatler: canlı saat -->
+    <section class="saat" id="saat" aria-labelledby="saat-baslik">
+      <div class="wrap saat__grid">
+        <div>
+          <p class="eyebrow">Çalışma saatleri</p>
+          <h2 id="saat-baslik" class="h2">Saat kaç olursa olsun.</h2>
+          <p class="saat__status"><span class="saat__dot"></span><span data-status-big></span></p>
+          <ul class="saat__list" data-hours></ul>
+        </div>
+        <div class="saat__clock" aria-hidden="true">
+          <p class="saat__now">Şu an</p>
+          <p class="saat__time" data-clock>00:00</p>
+          <p class="saat__sub" data-clock-sub></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Konum -->
+    <section class="konum-sec" id="konum" aria-labelledby="konum-baslik">
+      <div class="wrap konum__grid">
+        <div class="konum__info">
+          <p class="eyebrow">Konum</p>
+          <h2 id="konum-baslik" class="h2">Şaşmaz'dan her yöne çıkarız.</h2>
+          <p class="konum__adres" data-bind="adres"></p>
+          <a class="btn btn--dark" data-maps target="_blank" rel="noopener"><span data-icon="pin"></span>Yol tarifi al</a>
+          <p class="konum__label">Sık çıktığımız yollar</p>
+          <ul class="yollar" data-roads></ul>
+        </div>
+        <div class="map" data-map><span class="map__ph">Harita yükleniyor…</span></div>
+      </div>
+    </section>
+
+    <!-- Final -->
+    <section class="final" aria-labelledby="final-baslik">
+      <svg class="final__tri" viewBox="0 0 100 88" aria-hidden="true"><path d="M50 4 96 84H4z" /></svg>
+      <div class="wrap final__in">
+        <p class="eyebrow eyebrow--light">7/24 açık hat</p>
+        <h2 id="final-baslik" class="final__title">Bir telefon yeter.</h2>
+        <a class="final__tel" data-tel data-bind="telefon"></a>
+        <div class="final__cta">
+          <a class="btn btn--white" data-tel><span data-icon="phone"></span>Hemen ara</a>
+          <a class="btn btn--ghost-light" data-wa-konum target="_blank" rel="noopener"><span data-icon="whatsapp"></span>WhatsApp'tan konum at</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <div class="wrap foot__in">
+      <p class="foot__brand"><svg class="top__mark" viewBox="0 0 32 32" aria-hidden="true"><path d="M16 4 29 27H3z" /></svg><span data-bind="ad"></span></p>
+      <p data-bind="adres"></p>
+      <p><a data-tel data-bind="telefon"></a></p>
+      <p class="foot__small">© <span data-year></span> <span data-bind="ad"></span> · Çekici ve yol yardım · Etimesgut/Ankara</p>
+    </div>
+  </footer>
+
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

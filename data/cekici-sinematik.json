@@ -1,0 +1,113 @@
+{
+  "preset": "cekici-sinematik",
+  "intro": {
+    "saat": "02:14",
+    "yer": "Eskişehir yolu, Ankara çıkışı",
+    "not": "Yolda kalan bir sürücü arıyor"
+  },
+  "film": [
+    {
+      "id": "yola",
+      "saat": "02:16",
+      "etiket": "Yola çıktık",
+      "baslik": "Kaç dakikada geleceğimizi söyleriz.",
+      "surec": 1,
+      "hizmet": "7/24 çekici"
+    },
+    {
+      "id": "yerinde",
+      "saat": "02:47",
+      "etiket": "Vardık",
+      "baslik": "Yerinde biterse, orada biter.",
+      "surec": 2,
+      "hizmet": "Yol yardım",
+      "yerinde": [
+        "Akü takviye",
+        "Yolda lastik değişimi",
+        "Yakıt ikmali"
+      ]
+    },
+    {
+      "id": "foto",
+      "saat": "02:52",
+      "etiket": "Fotoğraf",
+      "baslik": "Yüklemeden önce dört yanını çekeriz.",
+      "surec": 3,
+      "hizmet": "Araç taşıma",
+      "kareler": [
+        "Sağ",
+        "Ön",
+        "Sol",
+        "Arka"
+      ]
+    },
+    {
+      "id": "yukleme",
+      "saat": "02:58",
+      "etiket": "Yükleme",
+      "baslik": "Kasa iner, vinç çeker.",
+      "metin": "Kayar kasa yere kadar iner. Araç vinçle, altı ve tamponu yere sürtmeden kasaya alınır; tekerler kayışla, gövde zincirle sabitlenir.",
+      "hizmet": "Kaza sonrası araç taşıma"
+    },
+    {
+      "id": "teslim",
+      "saat": "03:31",
+      "etiket": "Teslim",
+      "baslik": "Söylediğiniz adrese, aynı hâliyle.",
+      "surec": 4,
+      "hizmet": "Şehirlerarası taşıma"
+    }
+  ],
+  "yoldaKaldiysaniz": {
+    "baslik": "Yolda kaldıysanız, biz gelene kadar.",
+    "maddeler": [
+      {
+        "baslik": "Dörtlüleri yakın",
+        "metin": "Aracı olabildiğince sağa, emniyet şeridine alın. Gece ise park lambaları da açık kalsın."
+      },
+      {
+        "baslik": "Reflektörü koyun",
+        "metin": "Reflektör üçgenini aracın 30 metre kadar gerisine, gelen trafiğin göreceği yere koyun."
+      },
+      {
+        "baslik": "Bariyerin arkasına geçin",
+        "metin": "Araçta ve yolda beklemeyin. Yolcularla birlikte bariyerin ya da yol kenarının gerisine geçin."
+      },
+      {
+        "baslik": "Arayın, konum atın",
+        "metin": "Bizi arayın ya da aşağıdaki düğmeyle konumunuzu WhatsApp'tan gönderin. Kaç dakikada orada olacağımızı söyleriz."
+      }
+    ]
+  },
+  "finalBaslik": "Gece ikide de açarız.",
+  "galeri": [
+    {
+      "src": "/img/cekici-sinematik/cekici-yukleme.jpg",
+      "alt": "Kayar kasalı çekiciye beyaz bir pikap yükleniyor"
+    },
+    {
+      "src": "/img/cekici-sinematik/vinc-kurtarma.jpg",
+      "alt": "Vinçli çekici bir otomobili kaldırıp kasaya alıyor"
+    },
+    {
+      "src": "/img/cekici-sinematik/aku-takviye.jpg",
+      "alt": "Açık motor kaputu önünde takviye kablosu maşaları"
+    },
+    {
+      "src": "/img/cekici-sinematik/cekici-sehir.jpg",
+      "alt": "Şehir merkezinde ilerleyen turuncu kayar kasalı çekici"
+    },
+    {
+      "src": "/img/cekici-sinematik/yolda-lastik.jpg",
+      "alt": "Yol kenarında bir aracın tekerleği değiştiriliyor"
+    },
+    {
+      "src": "/img/cekici-sinematik/agir-vasita.jpg",
+      "alt": "Yol kenarında sıralanmış tırlar"
+    },
+    {
+      "src": "/img/cekici-sinematik/aku-kablo.jpg",
+      "alt": "Motor bölmesinde aküye bağlanmış takviye kabloları"
+    }
+  ]
+}

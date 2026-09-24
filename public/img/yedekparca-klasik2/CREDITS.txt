@@ -1,0 +1,8 @@
+Tüm görseller Pexels lisansıyla (ücretsiz, ticari kullanım serbest):
+tepsi.jpg: https://www.pexels.com/photo/mechanic-organizing-engine-components-in-workshop-29181493/
+eksantrik.jpg: https://www.pexels.com/photo/close-up-photo-of-a-engine-camshaft-7565159/
+disliler.jpg: https://www.pexels.com/photo/silver-metal-round-gears-connected-to-each-other-149387/
+yag.jpg: https://www.pexels.com/photo/close-up-of-hand-pouring-oil-to-engine-13065700/
+kafa.jpg: https://www.pexels.com/photo/engine-cylinder-head-with-camshafts-7565172/
+Ayrıca public/img/depo/ görselleri (bkz. public/img/depo/CREDITS.txt).
+koridor-m.jpg, koridor-d.jpg: https://www.pexels.com/photo/expansive-warehouse-aisle-filled-with-products-29454379/

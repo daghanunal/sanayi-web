@@ -1,0 +1,73 @@
+{
+  "preset": "klima-klasik",
+  "hero": {
+    "sicak": 38,
+    "soguk": 6,
+    "sicakDurum": "Gaz eksik, kompresör boşa yoruluyor.",
+    "sogukDurum": "Normal. Sağlıklı klima ağızdan 4–8 °C üfler."
+  },
+  "belirtiler": [
+    {
+      "id": "serin",
+      "etiket": "Serin üflemiyor",
+      "sebep": "En sık sebep gaz eksikliği. Gaz eksikse bir yerden kaçıyordur. Basınçlar normalse kompresör kavraması ya da fana bakarız.",
+      "ilk": "Basınç ölçümü ve kaçak testi",
+      "sure": "1 saat"
+    },
+    {
+      "id": "koku",
+      "etiket": "Rutubet kokusu var",
+      "sebep": "Evaporatörde biriken küf ve tıkanmış polen filtresi. Koku genelde klimayı ilk açtığınızda gelir.",
+      "ilk": "Polen filtresi ve dezenfeksiyon",
+      "sure": "45 dk"
+    },
+    {
+      "id": "bitiyor",
+      "etiket": "Gaz her yaz bitiyor",
+      "sebep": "Gaz kendiliğinden eksilmez. Delinmiş kondenser, çatlak hortum ya da yorulmuş conta kaçırır.",
+      "ilk": "Azot basınç testi ve UV boyayla kaçak arama",
+      "sure": "1 saat"
+    },
+    {
+      "id": "trafik",
+      "etiket": "Trafikte ısınıyor",
+      "sebep": "Yolda serin, trafikte sıcaksa kondenseri soğutan fan ya da fan rölesi çalışmıyor olabilir. Kirli kondenser de aynı şeyi yapar.",
+      "ilk": "Fan motoru, röle ve sigorta kontrolü",
+      "sure": "1-2 saat"
+    },
+    {
+      "id": "panel",
+      "etiket": "Dijital panel tuhaf",
+      "sebep": "Tek taraf sıcak üflüyorsa ya da ayar tutmuyorsa klape motoru veya sıcaklık sensörü olabilir.",
+      "ilk": "Arıza tespit cihazıyla hata kayıtlarını okuma",
+      "sure": "Aynı gün"
+    },
+    {
+      "id": "ses",
+      "etiket": "Açınca ses yapıyor",
+      "sebep": "Klima açılınca gelen tıkırtı ya da uğultu çoğu zaman kompresör kavraması veya rulmandır. Her zaman kompresör değişimi gerekmez.",
+      "ilk": "Kavrama ve kompresör kontrolü",
+      "sure": "1 saat"
+    },
+    {
+      "id": "bugu",
+      "etiket": "Camlar buğulanıyor",
+      "sebep": "Klima havayı kurutarak buğuyu alır. Tıkalı polen filtresi ya da eksik gaz varsa camlar geç açılır.",
+      "ilk": "Polen filtresi ve gaz basıncı kontrolü",
+      "sure": "30 dk"
+    }
+  ],
+  "gazlar": [
+    {
+      "ad": "R134a",
+      "metin": "Yıllardır kullanılan klasik gaz. Çoğu eski ve orta yaşlı araçta bu var.",
+      "not": "Tartılarak doldurulur"
+    },
+    {
+      "ad": "R1234yf",
+      "metin": "Yeni nesil araçlarda kullanılan gaz. Farklı cihaz ve farklı rakor ister; birbirine karıştırılmaz.",
+      "not": "Cihazımız ikisine de uygun"
+    }
+  ],
+  "finalBaslik": "Yaz gelmeden bir ölçtürün."
+}

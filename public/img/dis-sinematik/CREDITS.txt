@@ -1,0 +1,2 @@
+dis.glb: Bu site için Blender + OpenVDB ile SDF modelleme (azı dişi mine/dentin/pulpa, kesici). Kaynak betik: .shots/dis-sinematik/tooth.py
+Fotoğraflar: public/img/sektor-dis/ (bkz. oradaki CREDITS.txt, Pexels)

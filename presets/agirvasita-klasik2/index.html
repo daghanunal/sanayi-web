@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#006b3c" />
+  <title>Ağır Vasıta Servisi | Şaşmaz</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23006b3c'/%3E%3Crect x='3' y='3' width='26' height='26' rx='4' fill='none' stroke='%23fff' stroke-width='2'/%3E%3Cpath d='M10 22 L21 11 M13 11 H21 V19' stroke='%23fff' stroke-width='3' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Overpass:wght@400;500;600;700;800;900&family=Overpass+Mono:wght@500;700&family=Doto:wght@800;900&display=swap&subset=latin-ext" rel="stylesheet" />
+  <link rel="preload" as="image" href="/img/agirvasita-klasik2/gece-yol.jpg" fetchpriority="high" />
+</head>
+<body>
+  <header class="top" data-top>
+    <a class="top__brand" href="#" aria-label="Başa dön">
+      <span class="top__logo" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 18 L17 7 M9 7 H17 V15" /></svg></span>
+      <span data-bind="ad"></span>
+    </a>
+    <p class="top__status" data-status></p>
+    <a class="top__yardim" data-tel><i aria-hidden="true"></i>7/24<span class="top__yardim-uzun"> yol yardım</span></a>
+    <a class="top__call" data-tel aria-label="Telefonla ara"><span data-icon="phone"></span><span class="top__call-no" data-bind="telefon"></span></a>
+  </header>
+
+  <main>
+    <!-- İMZA: Köprü tabelasının altından geçiş. Kaydırdıkça km düşer, tabela üstünüze gelir, yeşil ekranı kaplar. -->
+    <section class="hero" data-hero aria-label="Giriş">
+      <div class="hero__pin" data-hero-pin>
+        <img class="hero__foto" data-hero-foto src="/img/agirvasita-klasik2/gece-yol.jpg" alt="" fetchpriority="high" decoding="async" />
+        <div class="hero__karart" aria-hidden="true"></div>
+        <div class="hero__serit" aria-hidden="true"><i data-serit></i></div>
+
+        <div class="gantry" data-gantry>
+          <div class="gantry__kiris" aria-hidden="true"></div>
+          <div class="tabela" data-tabela>
+            <i class="tabela__parlama" data-parlama aria-hidden="true"></i>
+            <div class="tabela__ic" data-tabela-ic>
+              <div class="tabela__ust">
+                <span class="kalkan" aria-hidden="true">7/24</span>
+                <span class="tabela__tur" data-tabela-ust></span>
+              </div>
+              <h1 class="tabela__ad" data-hero-ad></h1>
+              <div class="tabela__cikis">
+                <svg class="tabela__ok" viewBox="0 0 48 48" aria-hidden="true"><path d="M12 36 L34 14 M18 14 H34 V30" /></svg>
+                <span class="tabela__yon" data-tabela-yon></span>
+                <span class="tabela__km"><b data-km>2,0</b> km</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="vardin" data-vardin aria-hidden="true">
+          <p class="vardin__ust" data-vardin-ust></p>
+          <p class="vardin__baslik">Buradasınız.</p>
+          <i class="vardin__cizgi"></i>
+          <p class="vardin__ad" data-vardin-ad></p>
+        </div>
+
+        <div class="hero__alt" data-hero-alt>
+          <p class="hero__slogan" data-bind="slogan"></p>
+          <div class="hero__cta">
+            <a class="btn btn--beyaz" data-tel><span data-icon="phone"></span>Hemen ara</a>
+            <a class="btn btn--cizgi" data-wa-yardim target="_blank" rel="noopener"><span data-icon="pin"></span>Konum gönder</a>
+          </div>
+          <p class="hero__ipucu" aria-hidden="true"><span></span>Kaydırın, çıkışa gelelim</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Yeşil: tabelanın içi. Hakkında + 7/24 yol yardım + km taşları -->
+    <section class="yesil" id="yardim">
+      <div class="kap">
+        <p class="etiket etiket--beyaz" data-yardim-etiket></p>
+        <h2 class="baslik baslik--dev" data-yardim-baslik data-split></h2>
+        <div class="yesil__grid">
+          <p class="yesil__metin" data-bind="hakkinda"></p>
+          <div class="servis" data-reveal>
+            <div class="servis__ikon" aria-hidden="true">
+              <svg viewBox="0 0 48 48"><path d="M30 8a10 10 0 0 0-9.6 12.8L8 33.2V40h6.8l12.4-12.4A10 10 0 0 0 40 18l-6 6-6-2-2-6 6-6a10 10 0 0 0-2-2z"/></svg>
+            </div>
+            <div>
+              <p class="servis__ust">Yol yardım hattı</p>
+              <a class="servis__tel" data-tel data-bind="telefon"></a>
+              <p class="servis__alt" data-bind="yolYardim"></p>
+            </div>
+            <a class="btn btn--beyaz btn--tam" data-wa-yardim target="_blank" rel="noopener"><span data-icon="whatsapp"></span>WhatsApp'tan konum at</a>
+            <p class="servis__not" data-yardim-not></p>
+          </div>
+        </div>
+        <ol class="taslar" data-taslar aria-label="Rakamlarla"></ol>
+      </div>
+    </section>
+
+    <!-- Hizmetler: çıkış levhaları -->
+    <section class="cikislar" id="hizmetler">
+      <div class="kap">
+        <p class="etiket">Hizmetler</p>
+        <h2 class="baslik" data-cikis-baslik data-split></h2>
+        <p class="giris" data-cikis-metin></p>
+        <ol class="cikis-liste" data-hizmetler></ol>
+        <aside class="bilgi" data-reveal>
+          <span class="bilgi__i" aria-hidden="true">i</span>
+          <div>
+            <h3 data-tako-baslik></h3>
+            <p data-tako-metin></p>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- Sektöre özel: güzergah (alt sistemler + LED ölçüm) -->
+    <section class="guzergah" id="guzergah">
+      <div class="kap">
+        <p class="etiket">Aracın altında</p>
+        <h2 class="baslik" data-guzergah-baslik data-split></h2>
+        <p class="giris" data-guzergah-metin></p>
+        <div class="rota" data-rota>
+          <div class="rota__yol" aria-hidden="true"><i data-rota-dolgu></i></div>
+          <ol class="rota__liste" data-duraklar></ol>
+        </div>
+      </div>
+    </section>
+
+    <!-- Filo -->
+    <section class="filo" id="filo">
+      <div class="filo__foto" data-parallax-kap>
+        <img src="/img/agirvasita-klasik2/volvo.jpg" alt="Yol kenarında sıralanmış üç beyaz tır" loading="lazy" decoding="async" data-parallax />
+      </div>
+      <div class="filo__kart" data-reveal>
+        <p class="etiket etiket--yesil">Filo servisi</p>
+        <h2 class="baslik baslik--koyu" data-filo-baslik></h2>
+        <p data-filo-metin></p>
+        <ul class="filo__liste" data-filo-maddeler></ul>
+        <a class="btn btn--yesil" data-wa-filo target="_blank" rel="noopener"><span data-icon="whatsapp"></span>Filo için yazın</a>
+      </div>
+    </section>
+
+    <!-- Süreç: dört levha -->
+    <section class="surec">
+      <div class="kap">
+        <p class="etiket etiket--yesil">Nasıl çalışırız</p>
+        <h2 class="baslik baslik--koyu" data-surec-baslik data-split></h2>
+        <ol class="levhalar" data-surec></ol>
+        <p class="garanti"><span aria-hidden="true">✓</span><span data-bind="garanti"></span></p>
+      </div>
+    </section>
+
+    <!-- Yorumlar: değişken mesaj panosu -->
+    <section class="yorumlar" id="yorumlar">
+      <div class="kap">
+        <p class="etiket">Müşteriler</p>
+        <h2 class="baslik" data-yorum-baslik data-split></h2>
+        <div class="pano" data-pano>
+          <div class="pano__puan">
+            <b data-puan></b>
+            <span class="pano__yildiz" data-yildiz aria-hidden="true"></span>
+            <small data-puan-adet></small>
+          </div>
+          <div class="pano__ekran" aria-live="polite">
+            <p class="pano__metin" data-pano-metin></p>
+            <p class="pano__kim" data-pano-kim></p>
+          </div>
+          <div class="pano__nokta" data-pano-nokta role="tablist" aria-label="Yorumlar"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Galeri -->
+    <section class="galeri">
+      <div class="kap">
+        <p class="etiket etiket--yesil">Dükkândan</p>
+        <h2 class="baslik baslik--koyu" data-galeri-baslik data-split></h2>
+      </div>
+      <div class="galeri__serit" data-galeri tabindex="0" aria-label="Fotoğraflar, yana kaydırın"></div>
+      <div class="kap">
+        <p class="etiket etiket--yesil" data-marka-baslik></p>
+        <ul class="markalar" data-markalar></ul>
+      </div>
+    </section>
+
+    <!-- Saatler + konum -->
+    <section class="konum" id="konum">
+      <div class="kap konum__grid">
+        <div class="saatler" data-reveal>
+          <p class="etiket etiket--beyaz">Çalışma saatleri</p>
+          <p class="saatler__durum" data-status-big></p>
+          <dl class="saatler__liste" data-saatler></dl>
+          <p class="saatler__not" data-bind="yolYardim"></p>
+        </div>
+        <div class="harita-kap">
+          <h2 class="baslik baslik--koyu baslik--orta" data-konum-baslik></h2>
+          <p class="adres" data-bind="adres"></p>
+          <div class="harita" data-harita><span>Harita yükleniyor</span></div>
+          <div class="konum__btn">
+            <a class="btn btn--yesil" data-maps target="_blank" rel="noopener"><span data-icon="pin"></span>Yol tarifi al</a>
+            <a class="btn btn--koyu-cizgi" data-tel><span data-icon="phone"></span>Ara</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Final: ikinci tabela -->
+    <section class="final">
+      <img class="final__foto" src="/img/agirvasita-klasik2/yolda.jpg" alt="" loading="lazy" decoding="async" />
+      <div class="final__karart" aria-hidden="true"></div>
+      <div class="final__tabela" data-reveal>
+        <div class="final__ust"><span class="kalkan kalkan--mavi" aria-hidden="true">SOS</span><span>Çıkış buradan</span></div>
+        <h2 class="final__baslik" data-final-baslik></h2>
+        <p class="final__metin" data-final-metin></p>
+        <div class="final__cta">
+          <a class="btn btn--beyaz" data-tel><span data-icon="phone"></span><span data-bind="telefon"></span></a>
+          <a class="btn btn--cizgi" data-wa target="_blank" rel="noopener"><span data-icon="whatsapp"></span>WhatsApp</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="alt">
+    <div class="kap alt__grid">
+      <div>
+        <p class="alt__ad" data-bind="ad"></p>
+        <p data-bind="adres"></p>
+      </div>
+      <div>
+        <a data-tel data-bind="telefon"></a>
+        <p class="alt__kucuk" data-copy></p>
+      </div>
+    </div>
+  </footer>
+
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

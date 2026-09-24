@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#101013" />
+  <title>Egzoz ve DPF | Şaşmaz</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='9' cy='16' r='6' fill='none' stroke='%23ff3b5c' stroke-width='4'/%3E%3Ccircle cx='23' cy='16' r='6' fill='none' stroke='%23ff3b5c' stroke-width='4'/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Rethink+Sans:wght@400;500;600;700;800&family=Fragment+Mono&display=swap&subset=latin-ext" rel="stylesheet" />
+</head>
+<body class="is-intro">
+  <div class="backdrop" data-backdrop aria-hidden="true"></div>
+  <div class="words" data-words aria-hidden="true"></div>
+  <canvas class="stage" data-stage aria-hidden="true"></canvas>
+
+  <header class="top" data-top>
+    <a class="top__brand" href="#" data-brand><i class="top__mark" aria-hidden="true"><b></b><b></b></i><span data-bind="ad"></span></a>
+    <p class="top__status" data-status></p>
+    <a class="top__call" data-tel><span data-icon="phone"></span><span class="top__num" data-bind="telefon"></span></a>
+  </header>
+
+  <main>
+    <!-- Film: açılış dumanı → siyah → mavi → beyaz → is → temiz -->
+    <section class="film" data-film>
+      <div class="film__sticky">
+        <div class="hero" data-hero>
+          <p class="hero__kicker" data-since></p>
+          <h1 class="hero__title" data-hero-title></h1>
+          <p class="hero__slogan" data-bind="slogan"></p>
+          <div class="hero__cta">
+            <a class="btn btn--hot" data-tel><span data-icon="phone"></span>Hemen ara</a>
+            <a class="btn btn--line" data-wa target="_blank" rel="noopener"><span data-icon="whatsapp"></span>WhatsApp'tan yaz</a>
+          </div>
+        </div>
+
+        <p class="intro-meter" data-intro-meter aria-hidden="true"><span>Gaz ölçülüyor</span><b data-intro-pct>0</b></p>
+
+        <div class="chapters" data-chapters></div>
+
+        <aside class="gauge" data-gauge aria-hidden="true">
+          <p class="gauge__head"><span>Örnek ölçüm</span><b data-verdict>Kalır</b></p>
+          <div class="gauge__rows" data-gauge-rows></div>
+        </aside>
+
+        <ol class="dots" data-dots aria-hidden="true"></ol>
+        <p class="hint" data-hint aria-hidden="true">Kaydırın, dumanın rengi ne diyor bakalım</p>
+      </div>
+    </section>
+
+    <!-- Ölçüm ve güven -->
+    <section class="trust" data-trust>
+      <div class="trust__lead">
+        <p class="eyebrow">Neden buradasınız</p>
+        <h2 class="h2" data-trust-title>Değişmesi gerekmeyen parçayı değiştirmeyiz.</h2>
+        <p class="trust__text" data-about></p>
+      </div>
+      <ul class="stats" data-stats></ul>
+      <div class="report" data-report>
+        <p class="report__head"><span data-report-title></span><span>Önce → Sonra</span></p>
+        <div class="report__rows" data-report-rows></div>
+        <p class="report__note">Örnek değerlerdir. Sınırlar aracın yakıt tipine ve model yılına göre değişir.</p>
+      </div>
+    </section>
+
+    <!-- Hizmetler -->
+    <section class="svc" id="hizmetler">
+      <header class="svc__head">
+        <p class="eyebrow">Yaptığımız işler</p>
+        <h2 class="h2">Motordan uca kadar, egzozda ne varsa.</h2>
+        <p class="svc__note">Fiyatı işe başlamadan söyleriz. Süreler ortalamadır.</p>
+      </header>
+      <ol class="svc__list" data-services></ol>
+    </section>
+
+    <!-- Atölye şeridi -->
+    <section class="reel" data-reel>
+      <div class="reel__sticky">
+        <p class="reel__label">Atölyeden</p>
+        <div class="reel__track" data-reel-track></div>
+      </div>
+    </section>
+
+    <!-- Süreç -->
+    <section class="steps">
+      <header class="steps__head">
+        <p class="eyebrow">Nasıl çalışırız</p>
+        <h2 class="h2">Önce ölçeriz, sonra konuşuruz.</h2>
+      </header>
+      <ol class="steps__list" data-steps></ol>
+    </section>
+
+    <!-- Yorumlar -->
+    <section class="reviews" id="yorumlar">
+      <header class="reviews__head">
+        <p class="reviews__score"><b data-puan></b><span><span class="reviews__stars" data-stars></span><span data-puan-adet></span></span></p>
+        <h2 class="h2">Sanayide ne diyorlar.</h2>
+      </header>
+      <div class="reviews__rail" data-rail tabindex="0" aria-label="Müşteri yorumları">
+        <div class="reviews__track" data-reviews></div>
+      </div>
+    </section>
+
+    <section class="brands" aria-label="Çalıştığımız markalar">
+      <div class="marquee" data-marquee></div>
+    </section>
+
+    <!-- Saatler + konum -->
+    <section class="shop" id="konum">
+      <div class="shop__info">
+        <p class="eyebrow">Şaşmaz'da</p>
+        <h2 class="h2">Gelin, lifte kaldıralım.</h2>
+        <p class="shop__status" data-status-big></p>
+        <dl class="shop__hours" data-hours></dl>
+        <p class="shop__addr" data-bind="adres"></p>
+        <div class="shop__cta">
+          <a class="btn btn--hot" data-maps target="_blank" rel="noopener"><span data-icon="pin"></span>Yol tarifi al</a>
+          <a class="btn btn--line btn--ink" data-tel><span data-icon="phone"></span>Ara</a>
+        </div>
+      </div>
+      <div class="shop__map" data-map><p>Harita yaklaşınca yüklenir</p></div>
+    </section>
+
+    <!-- Final: uçtan duman halkası -->
+    <section class="finale" data-finale>
+      <div class="finale__sticky">
+        <p class="eyebrow eyebrow--hot" data-garanti></p>
+        <h2 class="finale__title" data-final-title></h2>
+        <div class="finale__cta">
+          <a class="btn btn--hot btn--xl" data-tel><span data-icon="phone"></span>Hemen ara</a>
+          <a class="btn btn--line btn--xl" data-wa target="_blank" rel="noopener"><span data-icon="whatsapp"></span>WhatsApp'tan yaz</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <p class="foot__name" data-bind="ad"></p>
+    <p data-bind="adres"></p>
+    <p><a data-tel data-bind="telefon"></a></p>
+    <p class="foot__small" data-year></p>
+  </footer>
+
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

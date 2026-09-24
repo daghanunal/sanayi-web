@@ -1,0 +1,54 @@
+{
+  "gurultu": {
+    "once": "GÜRÜLTÜ",
+    "sonra": "SESSİZ",
+    "baslik": "Delik susturucu 104 desibel bağırır.",
+    "metin": "Muayenede sınır 90 desibeldir. Delinen parçayı tek başına değiştirir, askıyı ve kelepçeyi yeniler, sesi sizin önünüzde ölçeriz.",
+    "once_db": 104,
+    "sonra_db": 78,
+    "sinir_db": 90
+  },
+  "duman": [
+    {
+      "renk": "SİYAH",
+      "anlam": "Yakıt",
+      "metin": "Fazla yakıt yanmadan çıkıyor. Enjektör, hava filtresi ya da tıkalı DPF olabilir. Ölçüp sebebini söyleriz.",
+      "ton": "siyah"
+    },
+    {
+      "renk": "MAVİ",
+      "anlam": "Yağ",
+      "metin": "Motor yağ yakıyor. Egzozdan önce motora bakmak gerekir; boşuna parça değiştirmeyiz, doğru yere yönlendiririz.",
+      "ton": "mavi"
+    },
+    {
+      "renk": "BEYAZ",
+      "anlam": "Su",
+      "metin": "Soğuk sabahta normaldir. Sıcak motorda da sürüyorsa conta ya da su kaçağı olabilir. Beş dakikada bakarız.",
+      "ton": "beyaz"
+    }
+  ],
+  "slogan2": [
+    "SESSİZ",
+    "TEMİZ",
+    "MUAYENEYE HAZIR"
+  ],
+  "galeri": [
+    {
+      "src": "/img/egzoz-kinetik/lift-duman.jpg",
+      "alt": "Ustamız lifte kaldırılmış aracın altında egzozu kontrol ediyor"
+    },
+    {
+      "src": "/img/egzoz-kinetik/kaynak-turuncu.jpg",
+      "alt": "Egzoz borusunun argon kaynağı, kıvılcımlar"
+    },
+    {
+      "src": "/img/egzoz-kinetik/uc-duman.jpg",
+      "alt": "Paslanmaz çift egzoz ucu yakın plan"
+    },
+    {
+      "src": "/img/egzoz-kinetik/duman-turuncu.jpg",
+      "alt": "Egzoz ucundan çıkan duman"
+    }
+  ]
+}

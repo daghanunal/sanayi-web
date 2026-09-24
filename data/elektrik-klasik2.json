@@ -1,0 +1,21 @@
+{
+  "hero": {
+    "baslik": "Bu karmaşada tek bir kablo arızalı.",
+    "vurgu": "arızalı",
+    "cozum": "Biz onu tahminle değil, ölçerek buluruz. Arıza tespiti 30 dakika, fiyatı işe başlamadan söyleriz.",
+    "bulgu": "Bulundu: oksitli toprak soketi",
+    "ipucu": "Kaydırın, kabloları toplayalım"
+  },
+  "bant": {
+    "baslik": "Her rengin bir amperi var.",
+    "metin": "Sigortanın rengi hangi devreye baktığımızı söyler. Biz de işe oradan başlarız: hangi hat yanıyor, hangisi akım çekmiyor."
+  },
+  "kodlar": {
+    "baslik": "Beyin bir kod yazar. Asıl sebebi biz buluruz.",
+    "metin": "Hata kodu arızanın adresidir, kendisi değil. Aynı kod bazen bir sensör, bazen kemirilmiş bir kablo çıkar. Son aylarda dükkândan çıkan dört örnek:"
+  },
+  "final": {
+    "baslik": "Lamba yanıyorsa, arayın.",
+    "metin": "Aracı getirin, cihaza bağlayalım. Yarım saatte ne olduğunu ve ne tutacağını söyleriz."
+  }
+}

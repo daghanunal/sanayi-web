@@ -1,0 +1,8 @@
+Tüm görseller Pexels lisansıyla (ücretsiz, ticari kullanım serbest), cottonbro studio:
+anahtar.jpg: https://www.pexels.com/photo/7564865/
+kulbutor.jpg: https://www.pexels.com/photo/7564864/
+yaylar.jpg: https://www.pexels.com/photo/7565161/
+eksantrik.jpg: https://www.pexels.com/photo/7565172/
+atolye.jpg: https://www.pexels.com/photo/7564867/
+temizlik.jpg: https://www.pexels.com/photo/7565174/
+Ayrıca public/img/garaj/ görselleri (kaynaklar oradaki CREDITS.txt'de).

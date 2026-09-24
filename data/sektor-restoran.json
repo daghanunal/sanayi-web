@@ -1,0 +1,66 @@
+{
+  "preset": "sektor-restoran",
+  "isletme": {
+    "ad": "Közde Ocakbaşı",
+    "sektor": "Ocakbaşı, Kebap ve Izgara",
+    "slogan": "Ateşi sabah yakarız, kebabı siz gelince açarız.",
+    "kurulus": 1998,
+    "hakkinda": "1998'den beri Etimesgut'ta aynı ocağın başındayız. Kıymayı her sabah dükkânda zırhla çeker, şişe siparişle sararız; ızgara meşe kömürünün közünde, gözünüzün önünde pişer. Öğlen sanayiden gelen ustalara hızlı servis, akşam ailelere uzun sofra kurarız."
+  },
+  "iletisim": {
+    "telefon": "0532 555 19 98",
+    "whatsapp": "905325551998",
+    "adres": "Şaşmaz Mah. Ankara Bulvarı No: 112/B, Etimesgut/Ankara",
+    "mapsQuery": "Şaşmaz Mahallesi Etimesgut Ankara ocakbaşı"
+  },
+  "saatler": ["12:00-23:00", "11:30-23:00", "11:30-23:00", "11:30-23:00", "11:30-23:00", "11:30-23:30", "11:30-23:30"],
+  "hizmetler": [
+    { "baslik": "Ocakbaşı masası", "aciklama": "Ocağın hemen önündeki tezgâhta oturun; ustamız şişleri közün üstünde çevirirken siz de izleyin. Pişen ilk şiş doğrudan tabağınıza gelir.", "sure": "Masaya oturunca" },
+    { "baslik": "Adana ve Urfa kebap", "aciklama": "Zırhla kıyılmış kuzu eti, kuyruk yağı ve pul biberle yoğrulur. Acılı ya da acısız isteyin; közlenmiş domates, biber ve lavaşla gelir.", "sure": "15-20 dk" },
+    { "baslik": "Şiş ve pirzola", "aciklama": "Kuşbaşı kuzu şiş, tavuk şiş, kanat ve kuzu pirzola. Etler bir gün önceden sütte ve soğan suyunda dinlendirilir, siparişte şişe dizilir.", "sure": "20-25 dk" },
+    { "baslik": "Günlük mezeler", "aciklama": "Haydari, acılı ezme, patlıcan salatası, humus, közlenmiş biber, yoğurtlu semizotu. Her sabah o günün sebzesiyle hazırlanır, bitince yenisi yapılmaz.", "sure": "Hemen" },
+    { "baslik": "Lahmacun ve pide", "aciklama": "Taş fırında ince hamurla açılan lahmacun, kıymalı ve kaşarlı pide. Kebap pişene kadar masaya ara sıcak olarak da istenebilir.", "sure": "10 dk" },
+    { "baslik": "Paket servis", "aciklama": "WhatsApp'tan ya da telefonla sipariş verin, hazır olunca haber verelim. Kebaplar lavaşı ayrı, közlemesi ayrı paketlenir; eve vardığınızda ıslanmamış olur.", "sure": "25-35 dk" },
+    { "baslik": "Grup ve iş yemekleri", "aciklama": "Arka salonda 40 kişiye kadar uzun masa kurarız. Sanayi esnafının öğle yemeği, şirket yemeği ya da ekip toplantısı için sabit menü birlikte belirlenir.", "sure": "1-2 gün önceden" },
+    { "baslik": "Aile davetleri ve organizasyon", "aciklama": "Nişan, doğum günü, askerden gelen, mevlit sonrası yemek. Masa düzeni, meze çeşidi ve servis saatini önceden konuşur, gün geldiğinde hazır bekleriz.", "sure": "3-5 gün önceden" },
+    { "baslik": "Rezervasyon", "aciklama": "Hafta sonu akşamları ocakbaşı tezgâhı erkenden dolar. Kişi sayısını ve saati yazın, masanızı ayıralım.", "sure": "Aynı gün" }
+  ],
+  "surec": [
+    { "baslik": "Sabah ateş yakılır", "aciklama": "Meşe kömürü erkenden yakılır; köz beyazlayıp harlı alev sönmeden şiş ocağa girmez." },
+    { "baslik": "Et hazırlanır", "aciklama": "Kuzu eti sabah gelir, zırhla kıyılır ya da kuşbaşı doğranır. Gün içinde yetecek kadar hazırlanır, ertesi güne bırakılmaz." },
+    { "baslik": "Siparişinizi alırız", "aciklama": "Acı ayarını, pişme derecesini ve yanında ne istediğinizi sorarız; şişe o anda sarılır." },
+    { "baslik": "Közde pişer", "aciklama": "Şiş közün üstünde sürekli çevrilir; yağı damladıkça dumanı ete siner." },
+    { "baslik": "Sıcak servis edilir", "aciklama": "Kebap lavaşın üstünde, közlemesiyle birlikte ocaktan doğrudan masaya gelir." }
+  ],
+  "istatistikler": [
+    { "deger": 28, "sonek": "", "etiket": "yıldır aynı ocağın başında", "kurulustanHesapla": true },
+    { "deger": 12, "sonek": "", "etiket": "çeşit günlük meze" },
+    { "deger": 40, "sonek": "", "etiket": "kişilik grup salonu" },
+    { "deger": 7, "sonek": " gün", "etiket": "haftada açık" }
+  ],
+  "galeri": [
+    { "src": "/img/sektor-restoran/kor-adana.jpg", "alt": "Meşe kömürünün alevleri üzerinde pişen Adana kebap şişi" },
+    { "src": "/img/sektor-restoran/ocak.jpg", "alt": "Uzun ocakbaşında şişleri çeviren ustalar ve yükselen duman" },
+    { "src": "/img/sektor-restoran/kor-duman.jpg", "alt": "Kor halindeki kömürün üstünde yan yana pişen kebap şişleri" },
+    { "src": "/img/sektor-restoran/kor-sis.jpg", "alt": "Közün hemen üstünde kızaran kebaplar" },
+    { "src": "/img/sektor-restoran/adana-tabak.jpg", "alt": "Lavaş, bulgur pilavı, közlenmiş domates ve biberle servis edilen Adana kebap" },
+    { "src": "/img/sektor-restoran/servis.jpg", "alt": "Tahta servis tahtasında lavaş üstünde kebap ve salata" },
+    { "src": "/img/sektor-restoran/kebap-tabak.jpg", "alt": "Közlenmiş sebze ve patatesle hazırlanmış kebap tabağı" },
+    { "src": "/img/sektor-restoran/meze-bakir.jpg", "alt": "Bakır kaplarda servis edilen mezeler" },
+    { "src": "/img/sektor-restoran/meze-masa.jpg", "alt": "Masada ekmek sepetiyle birlikte günlük mezeler" },
+    { "src": "/img/sektor-restoran/sofra.jpg", "alt": "Meze ve ara sıcaklarla kurulmuş kalabalık sofra" },
+    { "src": "/img/sektor-restoran/lahmacun.jpg", "alt": "Salata, limon ve ayranla servis edilen lahmacun" },
+    { "src": "/img/sektor-restoran/firin.jpg", "alt": "Taş fırından yeni çıkan lahmacunlar" },
+    { "src": "/img/sektor-restoran/cay.jpg", "alt": "Yemek sonrası ince belli bardakta demli çay" },
+    { "src": "/img/sektor-restoran/salon.jpg", "alt": "Beyaz örtülü masalarıyla sakin yemek salonu" }
+  ],
+  "puan": { "ortalama": 4.8, "adet": 642 },
+  "yorumlar": [
+    { "ad": "Serkan B.", "puan": 5, "metin": "Sanayide çalışıyorum, öğlen yarım saatim var. Oturur oturmaz mezeler geliyor, Adana da on beş dakikada masada. Yıllardır buradayım." },
+    { "ad": "Derya K.", "puan": 5, "metin": "Kızımın nişan yemeğini arka salonda yaptık, otuz iki kişiydik. Mezeleri ve saati önceden konuştuk, her şey dediğimiz gibi geldi." },
+    { "ad": "Emre T.", "puan": 5, "metin": "Ocakbaşı tezgâhında oturup şişlerin pişmesini izlemek ayrı bir keyif. Acısız istedim, gerçekten acısız geldi." },
+    { "ad": "Hülya S.", "puan": 4, "metin": "Paket söyledik, lavaşı ayrı koymuşlar, eve gelince hiç ıslanmamıştı. Cumartesi akşamı biraz bekledik, önceden aramak lazım." },
+    { "ad": "Kadir Y.", "puan": 5, "metin": "Ekibimizle ayda bir iş yemeği yapıyoruz. Masayı hazır buluyoruz, hesap da tek seferde çıkıyor. Lahmacunu da çok iyi." }
+  ],
+  "garanti": "Et her sabah taze gelir, kıyma dükkânda zırhla çekilir; ertesi güne kalan et kullanılmaz."
+}

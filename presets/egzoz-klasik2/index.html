@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0e0e10" />
+  <title>Egzoz | Şaşmaz, Ankara</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230e0e10'/%3E%3Cg fill='%23ff2e63'%3E%3Crect x='5' y='12' width='3' height='8'/%3E%3Crect x='10' y='6' width='3' height='20'/%3E%3Crect x='15' y='10' width='3' height='12'/%3E%3Crect x='20' y='14' width='3' height='4'/%3E%3Crect x='25' y='15' width='3' height='2'/%3E%3C/g%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=Hanken+Grotesk:wght@400;500;600;700&family=Martian+Mono:wght@400;600;700&display=swap&subset=latin-ext" rel="stylesheet" />
+  <link rel="preload" as="image" href="/img/egzoz-klasik2/hero-dik.jpg" media="(max-width: 699px)" />
+  <link rel="preload" as="image" href="/img/egzoz-klasik2/hero.jpg" media="(min-width: 700px)" />
+</head>
+<body>
+  <header class="top">
+    <a href="#top" class="top__brand"><span class="top__mark" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span><span data-bind="ad"></span></a>
+    <nav class="top__nav" aria-label="Sayfa bölümleri">
+      <a href="#olcum">Ölçüm</a>
+      <a href="#hat">Hat</a>
+      <a href="#hizmetler">Hizmetler</a>
+      <a href="#yorumlar">Yorumlar</a>
+      <a href="#konum">Konum</a>
+    </nav>
+    <span class="top__status" data-status></span>
+    <a class="top__call" data-tel><span data-icon="phone"></span><span data-bind="telefon"></span></a>
+  </header>
+
+  <main>
+    <!-- İMZA: gürültü ölçer. Kaydırdıkça dalga söner, desibel 104'ten 78'e iner, hüküm döner. -->
+    <section class="hero" id="top" aria-label="Giriş">
+      <div class="hero__pin">
+        <picture class="hero__photo" aria-hidden="true">
+          <source media="(max-width: 699px)" srcset="/img/egzoz-klasik2/hero-dik.jpg" />
+          <img src="/img/egzoz-klasik2/hero.jpg" alt="" fetchpriority="high" decoding="async" />
+        </picture>
+        <div class="hero__tint" aria-hidden="true"></div>
+
+        <div class="hero__copy">
+          <p class="hero__since mono" data-since></p>
+          <h1 class="hero__name" data-bind="ad"></h1>
+          <p class="hero__slogan" data-bind="slogan"></p>
+        </div>
+
+        <div class="meter" aria-hidden="true">
+          <div class="meter__read">
+            <p class="meter__num"><b data-db>104</b><span>dB</span></p>
+            <div class="meter__side">
+              <p class="meter__verdict" data-verdict>Muayeneden kalır</p>
+              <p class="meter__line mono" data-line></p>
+            </div>
+          </div>
+          <div class="wave">
+            <div class="wave__limit"><span class="mono">Sınır <b data-limit>90</b> dB</span></div>
+            <div class="wave__amp" data-wave></div>
+          </div>
+        </div>
+
+        <div class="hero__cta">
+          <a class="btn btn--sig" data-tel><span data-icon="phone"></span>Hemen ara</a>
+          <a class="btn btn--ghost" data-wa target="_blank" rel="noopener"><span data-icon="whatsapp"></span>WhatsApp</a>
+        </div>
+        <p class="hero__hint mono" aria-hidden="true"><span></span>Kaydırın, sussun</p>
+      </div>
+    </section>
+
+    <!-- Ölçüm: gelişte / teslimde -->
+    <section class="olcum" id="olcum" aria-labelledby="olcum-h">
+      <div class="olcum__head">
+        <p class="eyebrow mono">Emisyon cihazı · sizin önünüzde</p>
+        <h2 class="h2" id="olcum-h">Gelişte kaldı.<br /><em>Teslimde geçti.</em></h2>
+        <p class="lead">Muayene raporunun fotoğrafını gönderin, hangi değerden kaldığınıza bakalım. İşten önce ve sonra ölçer, çıktısını elinize veririz.</p>
+        <a class="btn btn--sig" data-wa-rapor target="_blank" rel="noopener"><span data-icon="whatsapp"></span>Raporun fotoğrafını gönder</a>
+      </div>
+      <ol class="gauges" data-gauges></ol>
+      <p class="olcum__note mono">Örnek değerlerdir. Sınırlar yakıt tipine ve model yılına göre değişir.</p>
+    </section>
+
+    <!-- Hat: beş durak, fotoğraflı -->
+    <section class="hat" id="hat" aria-labelledby="hat-h">
+      <div class="hat__head">
+        <p class="eyebrow mono">Motordan uca</p>
+        <h2 class="h2" id="hat-h">Arıza hangi duraktaysa<br />orayı onarırız.</h2>
+      </div>
+      <ol class="hat__list" data-hat></ol>
+    </section>
+
+    <!-- Rakamlar bandı -->
+    <section class="band" aria-label="Rakamlarla">
+      <ul class="band__list" data-stats></ul>
+    </section>
+
+    <!-- Hizmetler -->
+    <section class="hizmet" id="hizmetler" aria-labelledby="hizmet-h">
+      <div class="hizmet__head">
+        <h2 class="h2" id="hizmet-h">Yaptığımız işler</h2>
+        <p class="lead">Süreler ortalamadır. Fiyatı işe başlamadan söyleriz, parça gerekiyorsa önce haber veririz.</p>
+      </div>
+      <ul class="hizmet__list" data-services></ul>
+    </section>
+
+    <!-- Hakkımızda -->
+    <section class="atolye" aria-labelledby="atolye-h">
+      <figure class="atolye__photo"><img src="/img/manifold/lift.jpg" alt="Lifte kaldırılmış aracın altında egzoz kontrolü" loading="lazy" decoding="async" /></figure>
+      <div class="atolye__copy">
+        <p class="eyebrow mono" data-years></p>
+        <h2 class="h2" id="atolye-h">Değişmesi gerekmeyen parçayı değiştirmeyiz.</h2>
+        <p class="lead" data-bind="hakkinda"></p>
+        <p class="atolye__garanti"><span data-icon="check"></span><span data-bind="garanti"></span></p>
+      </div>
+    </section>
+
+    <!-- Süreç -->
+    <section class="surec" aria-labelledby="surec-h">
+      <h2 class="h2" id="surec-h">Dört adımda teslim</h2>
+      <ol class="surec__list" data-steps></ol>
+    </section>
+
+    <!-- Yorumlar -->
+    <section class="yorum" id="yorumlar" aria-labelledby="yorum-h">
+      <div class="yorum__head">
+        <h2 class="h2" id="yorum-h">Sanayide ne diyorlar</h2>
+        <div class="score">
+          <p class="score__num" data-score>4,8</p>
+          <div>
+            <p class="score__stars" data-stars></p>
+            <p class="score__count mono" data-review-count></p>
+          </div>
+        </div>
+      </div>
+      <ul class="yorum__list" data-reviews></ul>
+    </section>
+
+    <!-- Markalar -->
+    <section class="marka" aria-label="Çalıştığımız markalar">
+      <div class="marka__track" data-brands></div>
+    </section>
+
+    <!-- Saatler + konum -->
+    <section class="konum" id="konum" aria-labelledby="konum-h">
+      <div class="konum__info">
+        <h2 class="h2" id="konum-h">Şaşmaz'da,<br />4. Cadde'de.</h2>
+        <p class="konum__status" data-status-big></p>
+        <dl class="hours" data-hours></dl>
+        <p class="konum__addr" data-bind="adres"></p>
+        <div class="konum__btns">
+          <a class="btn btn--ink" data-maps target="_blank" rel="noopener"><span data-icon="pin"></span>Yol tarifi al</a>
+          <a class="btn btn--line" data-tel><span data-icon="phone"></span>Ara</a>
+        </div>
+      </div>
+      <div class="konum__map" data-map><span class="mono">Harita yükleniyor</span></div>
+    </section>
+
+    <!-- Final -->
+    <section class="final" aria-labelledby="final-h">
+      <img class="final__bg" src="/img/manifold/duman.jpg" alt="" loading="lazy" decoding="async" />
+      <div class="final__in">
+        <p class="final__flat" aria-hidden="true"><span class="mono">78 dB</span><i></i></p>
+        <h2 class="final__title" id="final-h" data-final></h2>
+        <div class="final__btns">
+          <a class="btn btn--sig btn--big" data-tel><span data-icon="phone"></span>Hemen ara</a>
+          <a class="btn btn--light btn--big" data-wa target="_blank" rel="noopener"><span data-icon="whatsapp"></span>WhatsApp'tan yaz</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <p class="foot__name" data-bind="ad"></p>
+    <p data-bind="adres"></p>
+    <p><a data-tel data-bind="telefon"></a></p>
+    <p class="foot__small">© <span data-year></span> <span data-bind="ad"></span>. Fotoğraflar: Pexels.</p>
+  </footer>
+
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

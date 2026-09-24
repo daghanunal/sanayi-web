@@ -1,0 +1,5 @@
+Tüm görseller Pexels lisansıyla (ücretsiz, ticari kullanım serbest). public/img/sektor-cekici/ içindeki
+kaynaklardan yeniden boyutlandırılıp sıkıştırıldı (kaynak listesi: public/img/sektor-cekici/CREDITS.txt).
+giris-m.jpg, giris-d.jpg: "Man Standing Near Broken Car on Road" — https://www.pexels.com/photo/man-standing-near-broken-car-on-road-13151295/
+varis-m.jpg, varis-d.jpg: "A Car on a Tow Truck" — https://www.pexels.com/photo/a-car-on-a-tow-truck-17429097/
+Diğerleri aynı adla public/img/sektor-cekici/ kaynaklarıyla aynıdır.

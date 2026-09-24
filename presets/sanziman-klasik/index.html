@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#111418" />
+  <title>Otomatik Şanzıman | Şaşmaz, Ankara</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23111418'/%3E%3Ctext x='16' y='23' text-anchor='middle' font-family='Arial' font-weight='900' font-size='19' fill='%23d7193f'%3ED%3C/text%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Pathway+Extreme:opsz,wdth,wght@8..144,75..100,400..900&family=Radio+Canada+Big:wght@400;500;700&family=Ubuntu+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="preload" as="image" href="/img/sanziman-klasik/vites-secici.jpg" />
+</head>
+<body>
+  <header class="top">
+    <a href="#top" class="top__brand">
+      <span class="top__ind mono" aria-hidden="true" data-ind><i>P</i><i>R</i><i>N</i><i>D</i></span>
+      <span class="top__name" data-bind="ad"></span>
+    </a>
+    <nav class="top__nav" aria-label="Sayfa bölümleri">
+      <a href="#tipler">Şanzıman tipleri</a>
+      <a href="#hizmetler">Hizmetler</a>
+      <a href="#yag">Yağ rengi</a>
+      <a href="#yorumlar">Yorumlar</a>
+      <a href="#konum">Konum</a>
+    </nav>
+    <a class="top__call" data-tel><span data-icon="phone"></span><span data-bind="telefon"></span></a>
+  </header>
+
+  <main>
+    <!-- İMZA: vites kapısı. Kaydırdıkça sağdaki P-R-N-D kapısında kırmızı gösterge aşağı kayar,
+         her kademede "tık" diye oturur (snap), fotoğraf ve o kademenin cümlesi değişir. -->
+    <section class="hero" id="top" aria-label="Giriş">
+      <div class="hero__pin">
+        <div class="hero__stage" aria-hidden="true" data-stage></div>
+        <div class="hero__shade" aria-hidden="true"></div>
+
+        <div class="hero__copy">
+          <p class="hero__since mono" data-since></p>
+          <h1 class="hero__name" data-bind="ad"></h1>
+          <p class="hero__slogan" data-bind="slogan"></p>
+        </div>
+
+        <div class="gate" aria-hidden="true">
+          <div class="gate__slot"><span class="gate__fill" data-fill></span></div>
+          <span class="gate__knob" data-knob></span>
+          <ol class="gate__list" data-gate></ol>
+        </div>
+
+        <div class="hero__foot">
+          <div class="gcard" aria-live="polite">
+            <p class="gcard__tag mono"><b data-g-harf>P</b><span data-g-ad></span><span class="gcard__step" data-g-step></span></p>
+            <p class="gcard__title" data-g-title></p>
+            <p class="gcard__text" data-g-text></p>
+          </div>
+          <div class="hero__cta">
+            <a class="btn btn--atf" data-tel><span data-icon="phone"></span>Hemen ara</a>
+            <a class="btn btn--ghost" href="#tipler">Şanzımanım hangisi?</a>
+          </div>
+        </div>
+        <p class="hero__hint mono" aria-hidden="true"><span></span>Kaydırın, vitese alın</p>
+      </div>
+    </section>
+
+    <!-- Şanzıman tipleri -->
+    <section class="tip" id="tipler" aria-labelledby="tip-h">
+      <div class="tip__head">
+        <p class="eyebrow mono">Üç ayrı mekanizma</p>
+        <h2 class="h2" id="tip-h">Her şanzıman <em>aynı dili konuşmaz.</em></h2>
+        <p class="lead">Aracınızdaki kutuyu seçin; en sık gördüğümüz belirtileri ve ilk neye baktığımızı görün.</p>
+      </div>
+      <div class="tip__tabs" role="tablist" aria-label="Şanzıman tipi" data-tabs></div>
+      <div class="tip__panel" role="tabpanel" data-panel aria-live="polite"></div>
+    </section>
+
+    <!-- Rakamlar -->
+    <section class="band" aria-label="Rakamlarla">
+      <ul class="band__list" data-stats></ul>
+    </section>
+
+    <!-- Hizmetler -->
+    <section class="svcs" id="hizmetler" aria-labelledby="svc-h">
+      <div class="svcs__head">
+        <p class="eyebrow mono">Yalnızca otomatik şanzıman</p>
+        <h2 class="h2" id="svc-h">Yağ değişiminden <em>tam revizyona.</em></h2>
+        <p class="lead">Süreler ortalamadır. Fiyatı işe başlamadan söyleriz; ek parça gerekirse önce sizi ararız.</p>
+      </div>
+      <ol class="svcs__list" data-services></ol>
+    </section>
+
+    <!-- Yağ rengi -->
+    <section class="yag" id="yag" aria-labelledby="yag-h">
+      <div class="yag__head">
+        <p class="eyebrow mono">Kendiniz de bakabilirsiniz</p>
+        <h2 class="h2" id="yag-h">Şanzıman yağının rengi <em>çok şey söyler.</em></h2>
+        <p class="lead">Otomatik şanzıman yağı yeniyken kırmızıdır. Renk koyulaştıkça içeride olan biteni anlatır.</p>
+      </div>
+      <div class="dip" aria-hidden="true"><span class="dip__bar" data-dip></span><span class="dip__marks"><i>MIN</i><i>MAX</i></span></div>
+      <ul class="yag__list" data-oils></ul>
+      <figure class="yag__photo"><img src="/img/sanziman-klasik/yag.jpg" alt="Araca yeni yağ dolduruluyor" loading="lazy" decoding="async" /></figure>
+    </section>
+
+    <!-- Süreç -->
+    <section class="surec" id="surec" aria-labelledby="surec-h">
+      <div class="surec__head">
+        <p class="eyebrow mono">Onayınız olmadan kutu inmez</p>
+        <h2 class="h2" id="surec-h">Beş adımda <em>teslim.</em></h2>
+      </div>
+      <div class="surec__wrap">
+        <span class="surec__line" aria-hidden="true"><i data-line></i></span>
+        <ol class="surec__list" data-steps></ol>
+      </div>
+    </section>
+
+    <!-- Hakkında -->
+    <section class="about" aria-labelledby="about-h">
+      <figure class="about__photo"><img src="/img/sanziman-klasik/atolye.jpg" alt="Liftlerde araçların bulunduğu atölye" loading="lazy" decoding="async" /></figure>
+      <div class="about__copy">
+        <p class="eyebrow mono" data-years></p>
+        <h2 class="h2" id="about-h">Motora bakmayız. <em>Yalnızca şanzıman.</em></h2>
+        <p class="lead" data-bind="hakkinda"></p>
+        <p class="about__garanti"><span data-icon="check"></span><span data-bind="garanti"></span></p>
+      </div>
+    </section>
+
+    <!-- Galeri -->
+    <section class="gal" aria-label="Atölyeden kareler">
+      <div class="gal__track" data-gallery></div>
+    </section>
+
+    <!-- Yorumlar -->
+    <section class="yorum" id="yorumlar" aria-labelledby="yorum-h">
+      <div class="yorum__head">
+        <h2 class="h2" id="yorum-h">Vitesi <em>yağ gibi geçenler.</em></h2>
+        <div class="score">
+          <p class="score__num" data-score></p>
+          <div>
+            <p class="score__stars" data-stars></p>
+            <p class="score__count mono" data-review-count></p>
+          </div>
+        </div>
+      </div>
+      <ul class="yorum__list" data-reviews></ul>
+    </section>
+
+    <!-- Markalar -->
+    <section class="marka" aria-label="Şanzımanına baktığımız markalar">
+      <div class="marka__track" data-brands></div>
+    </section>
+
+    <!-- Saatler + konum -->
+    <section class="konum" id="konum" aria-labelledby="konum-h">
+      <div class="konum__info">
+        <p class="eyebrow mono">Şaşmaz Oto Sanayi</p>
+        <h2 class="h2" id="konum-h">Getirin, <em>birlikte deneyelim.</em></h2>
+        <p class="konum__status" data-status-big></p>
+        <dl class="hours" data-hours></dl>
+        <p class="konum__addr" data-bind="adres"></p>
+        <div class="konum__btns">
+          <a class="btn btn--ink" data-maps target="_blank" rel="noopener"><span data-icon="pin"></span>Yol tarifi al</a>
+          <a class="btn btn--line" data-tel><span data-icon="phone"></span>Ara</a>
+        </div>
+      </div>
+      <div class="konum__map" data-map><span class="mono">Harita yükleniyor</span></div>
+    </section>
+
+    <!-- Final -->
+    <section class="final" aria-labelledby="final-h">
+      <img class="final__bg" src="/img/sanziman-klasik/gece-vites.jpg" alt="" loading="lazy" decoding="async" />
+      <span class="final__d" aria-hidden="true">D</span>
+      <div class="final__in">
+        <p class="eyebrow mono">Kalkışta titreme · vuruntu · uğultu</p>
+        <h2 class="final__title" id="final-h" data-final></h2>
+        <div class="final__btns">
+          <a class="btn btn--atf btn--big" data-tel><span data-icon="phone"></span>Hemen ara</a>
+          <a class="btn btn--light btn--big" data-wa target="_blank" rel="noopener"><span data-icon="whatsapp"></span>WhatsApp'tan yaz</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <p class="foot__name" data-bind="ad"></p>
+    <p data-bind="adres"></p>
+    <p><a data-tel data-bind="telefon"></a></p>
+    <p class="foot__small">© <span data-year></span> <span data-bind="ad"></span>. Fotoğraflar: Pexels.</p>
+  </footer>
+
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

@@ -1,0 +1,4 @@
+eksantrik.jpg: "Close up photo of a Engine Camshaft", Pexels, https://www.pexels.com/photo/close-up-photo-of-a-engine-camshaft-7565159/ (Pexels License)
+freze-talas.jpg: "Close Up Photo of Metal Tool", Pexels, https://www.pexels.com/photo/close-up-photo-of-metal-tool-10406128/ (Pexels License)
+Ayrıca public/img/mikron/ görselleri kullanılıyor (kaynaklar oradaki CREDITS.txt'de).
+3D sahne (torna, talaş, taşlama taşı) bu site için three.js ile kodla üretildi.

@@ -1,0 +1,65 @@
+{
+  "preset": "sektor-klima",
+  "isletme": {
+    "ad": "Serin Oto Klima",
+    "sektor": "Oto Klima: Gaz Dolumu, Kaçak Testi, Kompresör ve Kondenser",
+    "slogan": "Klimanız serin üflemiyorsa sebebini bulalım.",
+    "kurulus": 2005,
+    "hakkinda": "2005'ten beri Şaşmaz'da yalnızca oto klimayla uğraşıyoruz. Gazı basıp göndermeyiz: önce sistemi vakumlar, kaçağı arar, basınçları ölçeriz. Ne bulduğumuzu size gösterir, parça gerekiyorsa işe başlamadan önce söyleriz."
+  },
+  "iletisim": {
+    "telefon": "0532 555 27 14",
+    "whatsapp": "905325552714",
+    "adres": "Şaşmaz Oto Sanayi Sitesi, 4. Cadde No: 31, Etimesgut/Ankara",
+    "mapsQuery": "Şaşmaz Oto Sanayi Sitesi Etimesgut Ankara"
+  },
+  "saatler": [null, "08:30-19:00", "08:30-19:00", "08:30-19:00", "08:30-19:00", "08:30-19:00", "09:00-17:00"],
+  "hizmetler": [
+    { "baslik": "Klima gazı dolumu", "aciklama": "R134a ve R1234yf. Sistem önce vakumlanır, gaz aracın etiketindeki miktara göre tartılarak doldurulur; kompresör yağı da kontrol edilir.", "sure": "45 dk" },
+    { "baslik": "Kaçak testi", "aciklama": "Azotla basınç testi ve UV boyayla kaçak arama. Gaz her yıl bitiyorsa bir yerden kaçıyordur; önce orayı buluruz.", "sure": "1 saat" },
+    { "baslik": "Kompresör onarımı ve değişimi", "aciklama": "Manyetik kavrama, rulman ve kontrol valfi arızaları. Onarılabiliyorsa onarır, değişim gerekiyorsa sistemi yıkayıp öyle takarız.", "sure": "1-2 gün" },
+    { "baslik": "Kondenser ve evaporatör", "aciklama": "Delinmiş ya da tıkanmış kondenser değişimi, evaporatör kaçağı ve kurutucu filtre yenileme.", "sure": "Aynı gün" },
+    { "baslik": "Polen filtresi değişimi", "aciklama": "Kötü koku, zayıf üfleme ve cam buğulanmasının en sık sebebi. Aracınıza uygun filtre, aktif karbonlu seçenekle birlikte.", "sure": "15 dk" },
+    { "baslik": "Klima dezenfeksiyonu", "aciklama": "Evaporatör ve hava kanallarındaki küf ve bakteriye karşı köpük ya da buhar uygulaması. Rutubet kokusu gider.", "sure": "30 dk" },
+    { "baslik": "Elektronik klima arızaları", "aciklama": "Dijital klima paneli, fan motoru ve rezistansı, klape motorları, basınç ve sıcaklık sensörleri. Arıza tespit cihazıyla hata kayıtları okunur.", "sure": "Aynı gün" },
+    { "baslik": "Fan ve fan rölesi", "aciklama": "Radyatör ve kondenser fanı çalışmıyorsa klima trafikte serin üflemez. Fan motoru, röle ve sigorta kontrolü.", "sure": "1-2 saat" }
+  ],
+  "surec": [
+    { "baslik": "Ölçüyoruz", "aciklama": "Motor çalışırken klimayı açar, manometreyle yüksek ve alçak basıncı, üfleme ağzındaki sıcaklığı ölçeriz." },
+    { "baslik": "Sebebi buluyoruz", "aciklama": "Gaz eksikse kaçağı ararız; basınçlar normalse kompresör, fan ve elektronik tarafa bakarız." },
+    { "baslik": "Size söylüyoruz", "aciklama": "Ne bulduğumuzu gösterir, yapılacak işi ve fiyatı baştan konuşuruz. Onayınız olmadan başlamayız." },
+    { "baslik": "Onarıp dolduruyoruz", "aciklama": "Parça değişirse sistemi vakumlar, gazı tartarak basarız. Kaçak onarımından sonra tekrar test ederiz." },
+    { "baslik": "Birlikte kontrol", "aciklama": "Teslimde üfleme sıcaklığını sizin önünüzde ölçer, klimayı birkaç dakika birlikte dinleriz." }
+  ],
+  "istatistikler": [
+    { "deger": 21, "sonek": "", "etiket": "yıldır Şaşmaz'da", "kurulustanHesapla": true },
+    { "deger": 26000, "sonek": "+", "etiket": "klima gazı dolumu" },
+    { "deger": 3400, "sonek": "+", "etiket": "bulunan kaçak" },
+    { "deger": 6, "sonek": " ay", "etiket": "işçilik garantisi" }
+  ],
+  "markalar": ["Renault", "Fiat", "Volkswagen", "Ford", "Toyota", "Hyundai", "Opel", "Peugeot", "Mercedes-Benz", "BMW"],
+  "galeri": [
+    { "src": "/img/sektor-klima/havalandirma.jpg", "alt": "Araç içindeki yuvarlak klima üfleme ağzı" },
+    { "src": "/img/sektor-klima/klima-paneli.jpg", "alt": "Araç konsolundaki klima kontrol düğmeleri" },
+    { "src": "/img/sektor-klima/motor-kontrol.jpg", "alt": "Kaputu açık araçta motor bölmesini kontrol eden usta" },
+    { "src": "/img/sektor-klima/atolye.jpg", "alt": "Atölyede kaputu açık aracın başında çalışan usta" },
+    { "src": "/img/sektor-klima/teshis.jpg", "alt": "Elinde tabletle motor bölmesini kontrol eden usta" },
+    { "src": "/img/sektor-klima/motor-bolmesi.jpg", "alt": "Atölyede kaputu açık kırmızı aracın motor bölmesi" },
+    { "src": "/img/sektor-klima/orta-konsol.jpg", "alt": "Klima ve radyo panelinin bulunduğu orta konsol" },
+    { "src": "/img/sektor-klima/yaz-surus.jpg", "alt": "Güneşli bir günde direksiyon başındaki sürücü ve havalandırma ızgaraları" },
+    { "src": "/img/sektor-klima/kaput-acik.jpg", "alt": "Kaputu açılmış aracın motor bölmesi" },
+    { "src": "/img/sektor-klima/lift.jpg", "alt": "Lift üzerindeki aracın altını kontrol eden usta" },
+    { "src": "/img/sektor-klima/usta-sb.jpg", "alt": "Motor bölmesine eğilmiş usta, siyah beyaz" },
+    { "src": "/img/sektor-klima/konsol-sb.jpg", "alt": "Havalandırma ağızlarıyla araç konsolu, siyah beyaz" },
+    { "src": "/img/sektor-klima/motor-dikey.jpg", "alt": "Açık kaputun altındaki motor ve hortumlar" }
+  ],
+  "puan": { "ortalama": 4.8, "adet": 187 },
+  "yorumlar": [
+    { "ad": "Murat S.", "puan": 5, "metin": "Her yaz gaz bastırıyordum, iki ayda bitiyordu. Burada kaçak testi yaptılar, kondenserin delik olduğunu gösterdiler. Değişimden sonra bir daha gaz eklemedim.", "arac": "2015 Clio" },
+    { "ad": "Gülay E.", "puan": 5, "metin": "Klimayı açınca rutubet kokusu geliyordu. Polen filtresini değiştirip dezenfeksiyon yaptılar, yarım saatte bitti. Koku tamamen gitti.", "arac": "2018 Egea" },
+    { "ad": "Okan B.", "puan": 5, "metin": "Başka yerde kompresör gitti dediler. Burada kavramanın bozuk olduğunu buldular, kompresörü değiştirmeden aynı gün çözdüler.", "arac": "2013 Focus" },
+    { "ad": "Selin A.", "puan": 4, "metin": "Yeni gaz R1234yf olduğu için parça bir gün geç geldi ama arayıp haber verdiler. Klima şimdi buz gibi.", "arac": "2020 Corolla" },
+    { "ad": "Kemal D.", "puan": 5, "metin": "Dijital klima paneli sadece sıcak üflüyordu. Klape motorunu buldular, gereksiz parça önermediler. Taksiyle çalışıyorum, beni bekletmediler.", "arac": "2017 Passat" }
+  ],
+  "garanti": "Yapılan işçiliğe 6 ay garanti."
+}

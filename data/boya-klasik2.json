@@ -1,0 +1,17 @@
+{
+  "katlar": [
+    { "ad": "Sac", "mikron": 0, "not": "Çıplak sac. Göçük burada düzelir, pas burada temizlenir. Bu kat düzgün değilse üstüne ne sürseniz belli olur." },
+    { "ad": "Astar", "mikron": 40, "not": "Macunun üstüne dolgu astarı, ardından ıslak zımpara. Boyanın tutunduğu yer burası." },
+    { "ad": "Renk", "mikron": 20, "not": "Renk kodu cihazla okunur, karışım panel panel tutturulur. Kapı ile çamurluk arasında ton farkı kalmaz." },
+    { "ad": "Vernik", "mikron": 50, "not": "İki kat vernik, 60 derecede fırın. Parlaklığı veren, rengi güneşten koruyan kat." }
+  ],
+  "renkler": [
+    { "ad": "Turuncu", "hex": "#ff4d1a", "src": "/img/boya-klasik2/renk-turuncu.jpg" },
+    { "ad": "Kırmızı", "hex": "#d81e1e", "src": "/img/boya-klasik2/renk-kirmizi.jpg" },
+    { "ad": "Mavi", "hex": "#2448d8", "src": "/img/boya-klasik2/renk-mavi.jpg" },
+    { "ad": "Yeşil", "hex": "#1f9a56", "src": "/img/boya-klasik2/renk-yesil.jpg" },
+    { "ad": "Sarı", "hex": "#f3c317", "src": "/img/boya-klasik2/renk-sari.jpg" },
+    { "ad": "Siyah", "hex": "#26262a", "src": "/img/boya-klasik2/renk-siyah.jpg" },
+    { "ad": "Beyaz", "hex": "#f1f1ee", "src": "/img/boya-klasik2/renk-beyaz.jpg" }
+  ]
+}

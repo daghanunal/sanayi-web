@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#c3121b" />
+  <title>Motor ve Mekanik | Şaşmaz, Ankara</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='16' fill='%23c3121b'/%3E%3Cpath d='M16 7l7.8 4.5v9L16 25l-7.8-4.5v-9z' fill='none' stroke='%23f3eee6' stroke-width='2.4'/%3E%3Cpath d='M11 16h10' stroke='%23f3eee6' stroke-width='2.4'/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&family=Inter+Tight:wght@400;500;600;700&family=Spline+Sans+Mono:wght@400;500;600&display=swap&subset=latin-ext" rel="stylesheet" />
+  <link rel="stylesheet" href="../../shared/base.css" />
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <!-- Açılış: lokma anahtar saplamayı iki kez 90° çevirir -->
+  <div class="intro" aria-hidden="true">
+    <div class="intro__core">
+      <svg class="intro__dial" viewBox="0 0 200 200">
+        <circle class="intro__ring" cx="100" cy="100" r="86" />
+        <circle class="intro__arc" cx="100" cy="100" r="86" />
+        <path class="intro__hex" d="M100 52 141.6 76v48L100 148 58.4 124V76z" />
+        <line class="intro__mark" x1="70" y1="100" x2="130" y2="100" />
+      </svg>
+      <p class="intro__deg"><span data-intro-deg>0</span>°</p>
+      <p class="intro__name" data-name></p>
+    </div>
+  </div>
+
+  <div class="bg" aria-hidden="true"></div>
+  <canvas class="stage" aria-hidden="true"></canvas>
+  <div class="grain" aria-hidden="true"></div>
+  <div class="labels" aria-hidden="true" data-labels></div>
+
+  <header class="top">
+    <a href="#top" class="top__brand" data-name></a>
+    <nav class="top__nav" aria-label="Sayfa bölümleri">
+      <a href="#hizmetler">Hizmetler</a>
+      <a href="#sira">Nasıl çalışırız</a>
+      <a href="#yorumlar">Yorumlar</a>
+      <a href="#konum">Konum</a>
+    </nav>
+    <span class="status" data-status></span>
+    <a class="top__call" data-tel></a>
+  </header>
+
+  <main>
+    <!-- 1. Hero -->
+    <section class="hero" id="top" aria-label="Giriş">
+      <div class="hero__inner">
+        <p class="kicker" data-since></p>
+        <h1 class="hero__title" data-name data-hero-title></h1>
+        <p class="hero__slogan" data-slogan></p>
+        <p class="hero__lead">Motor, şanzıman, yürüyen aksam. Açmadan önce dinler, sökmeden önce fiyatı söyleriz.</p>
+        <div class="hero__actions">
+          <a class="btn btn--ink" data-tel-btn>Hemen ara</a>
+          <a class="btn btn--line" data-wa>WhatsApp'tan yaz</a>
+        </div>
+      </div>
+      <p class="hero__spec" aria-hidden="true"><span>Silindir kapak saplaması</span><span>M12 × 1,5</span><span>90° + 90°</span></p>
+      <p class="hero__hint" aria-hidden="true">Kaydırın, saplamayı yerine oturtalım <i></i></p>
+    </section>
+
+    <!-- 2. Hizmetler -->
+    <section class="serv" id="hizmetler" aria-labelledby="serv-h">
+      <div class="serv__head">
+        <p class="kicker">Hizmetler</p>
+        <h2 id="serv-h" class="h2" data-reveal>Sökeriz, ölçeriz, <em>kitabına göre</em> toplarız.</h2>
+      </div>
+      <ol class="serv__list" data-services></ol>
+    </section>
+
+    <!-- 3. İmza: sıkma sırası -->
+    <section class="seq" id="sira" aria-labelledby="seq-h">
+      <div class="seq__stick">
+        <div class="seq__copy">
+          <p class="kicker kicker--red">Sıkma sırası</p>
+          <h2 id="seq-h" class="h2 seq__h">Rastgele sıkılan kapak <em>eğilir.</em></h2>
+          <p class="seq__p">Silindir kapağı ortadan dışa, çapraz sırayla ve açıyla sıkılır. Atlanan tek saplama contayı yakar. Bizim her işimiz bu sırayla yürür:</p>
+          <ol class="seq__steps" data-steps></ol>
+        </div>
+        <div class="seq__hud" aria-hidden="true">
+          <p class="seq__count">Saplama <b data-bolt>01</b><span>/10</span></p>
+          <p class="seq__angle"><b data-angle>0°</b> <span>hedef 90° + 90°</span></p>
+          <div class="seq__meter"><i data-meter></i></div>
+          <p class="seq__done" data-done>Sıkılan her saplamaya boya kalemiyle çizgi çekeriz. Atlanan olmasın diye.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. Rakamlar -->
+    <section class="stats-sec" aria-labelledby="stats-h">
+      <div class="stats-sec__in">
+        <p class="kicker kicker--red" data-name></p>
+        <h2 id="stats-h" class="h2">Şaşmaz'da <em><span data-years></span> yıl.</em></h2>
+        <p class="stats-sec__p" data-hakkinda></p>
+        <dl class="stats" data-stats></dl>
+      </div>
+    </section>
+
+    <!-- 5. Atölye -->
+    <section class="shop" aria-labelledby="shop-h">
+      <div class="shop__head">
+        <p class="kicker kicker--red">Atölyeden</p>
+        <h2 id="shop-h" class="h2">Tezgâh <em>temiz,</em> iş ortada.</h2>
+      </div>
+      <div class="shop__grid" data-gallery></div>
+    </section>
+
+    <!-- 6. Yorumlar -->
+    <section class="rev" id="yorumlar" aria-labelledby="rev-h">
+      <div class="rev__head">
+        <div class="rev__score">
+          <p class="rev__num" data-score></p>
+          <div>
+            <p class="rev__stars" data-stars></p>
+            <p class="rev__meta" data-score-meta></p>
+          </div>
+        </div>
+        <h2 id="rev-h" class="h2">Müşteri <em>ne dedi?</em></h2>
+      </div>
+      <div class="rev__track" data-quotes tabindex="0" aria-label="Müşteri yorumları, yana kaydırın"></div>
+      <div class="brands" aria-label="Çalıştığımız markalar"><div class="brands__track" data-brands></div></div>
+    </section>
+
+    <!-- 7. Saatler ve konum -->
+    <section class="loc" id="konum" aria-labelledby="loc-h">
+      <div class="loc__card">
+        <p class="kicker">Çalışma saatleri</p>
+        <h2 id="loc-h" class="h2 loc__h"><span data-status-big></span></h2>
+        <dl class="hours" data-hours></dl>
+        <p class="loc__addr" data-address></p>
+        <a class="btn btn--ink" data-maps target="_blank" rel="noopener">Yol tarifi al</a>
+      </div>
+      <div class="loc__map" data-map><p>Harita yükleniyor</p></div>
+    </section>
+
+    <!-- 8. Final -->
+    <section class="finale" aria-labelledby="final-h">
+      <div class="finale__in">
+        <p class="kicker">10 / 10 sıkıldı</p>
+        <h2 id="final-h" class="finale__h">Sesi tarif edin, <em>gerisi bizde.</em></h2>
+        <p class="finale__p">Arızayı bulur, fiyatı işe başlamadan söyleriz. <span data-garanti></span></p>
+        <div class="finale__actions">
+          <a class="btn btn--ink btn--xl" data-tel-btn>Hemen ara</a>
+          <a class="btn btn--bone btn--xl" data-wa>WhatsApp'tan yaz</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <p class="foot__name" data-name></p>
+    <p data-address></p>
+    <p><a data-tel-plain></a></p>
+    <p class="foot__small">© <span data-year></span> <span data-name></span></p>
+  </footer>
+
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

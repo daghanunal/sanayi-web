@@ -1,0 +1,4 @@
+Kaynak fotoğraflar public/img/sektor-klima/ altındadır (Pexels lisansı, ayrıntı: public/img/sektor-klima/CREDITS.txt).
+menfez.jpg: havalandirma.jpg'nin küçültülmüş kopyası (Erik Mclean, https://www.pexels.com/photo/gray-and-black-car-aircon-in-close-up-shot-13850014/)
+menfez-termal.jpg, lift-termal.jpg, kaput-termal.jpg: havalandirma.jpg, lift.jpg, kaput-acik.jpg
+  fotoğraflarından termal kamera görünümü verecek renk eşlemesiyle (PIL, gri ton → termal skala) üretildi; gerçek termal ölçüm değildir.

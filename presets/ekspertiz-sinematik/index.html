@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0b0c12" />
+  <title>Oto Ekspertiz | Şaşmaz</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230b0c12'/%3E%3Crect x='7' y='6' width='18' height='20' rx='5' fill='none' stroke='%231ed69b' stroke-width='2.5'/%3E%3Cpath d='M4 16h24' stroke='%23ffb627' stroke-width='2.5'/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Encode+Sans+Expanded:wght@500;700;800;900&family=Host+Grotesk:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap&subset=latin-ext" rel="stylesheet" />
+</head>
+<body class="is-loading">
+  <!-- Açılış: boya kalınlık ölçeri kaputa değer, değer okunur, tarama çizgisi sahneyi açar -->
+  <div class="intro" data-intro role="presentation">
+    <div class="intro__probe">
+      <p class="intro__lbl"><span data-intro-no></span><span>Kaput · ölçüm 1/5</span></p>
+      <p class="intro__val"><b data-intro-val>000</b><small>µm</small></p>
+      <p class="intro__cls" data-intro-cls>Ölçülüyor</p>
+      <div class="intro__bars" data-intro-bars aria-hidden="true"></div>
+      <p class="intro__name" data-intro-name></p>
+    </div>
+    <i class="intro__scan" data-intro-scan></i>
+    <p class="intro__skip">Geçmek için dokunun</p>
+  </div>
+
+  <canvas class="stage" data-stage aria-hidden="true"></canvas>
+
+  <header class="top" data-top>
+    <a class="top__brand" href="#" data-bind="ad"></a>
+    <p class="top__status" data-status></p>
+    <a class="top__call" data-tel><span data-icon="phone"></span><span class="top__num" data-bind="telefon"></span></a>
+  </header>
+
+  <main>
+    <!-- Film: bölmeye giriş → tarama kapısı (boya) → lift (şasi) → röntgen (OBD) → merdaneler (dinamo) → kuşbakışı rapor -->
+    <section class="film" data-film>
+      <div class="film__sticky">
+        <div class="hero" data-hero>
+          <p class="hero__since" data-since></p>
+          <h1 class="hero__title" data-hero-title></h1>
+          <p class="hero__slogan" data-bind="slogan"></p>
+          <div class="hero__cta">
+            <a class="btn btn--mint" data-wa-randevu target="_blank" rel="noopener"><span data-icon="whatsapp"></span>Randevu al</a>
+            <a class="btn btn--ghost" data-tel><span data-icon="phone"></span>Hemen ara</a>
+          </div>
+        </div>
+
+        <ol class="rail" data-rail aria-label="İnceleme adımları"></ol>
+        <div class="chaps" data-chaps></div>
+
+        <!-- Bölüm göstergeleri -->
+        <div class="hud hud--boya" data-hud="boya" aria-hidden="true">
+          <p class="hud__k">Boya kalınlığı · <span data-m-side>sağ taraf</span></p>
+          <p class="hud__panel" data-m-panel>—</p>
+          <p class="hud__val"><b data-m-val>0</b><small>µm</small></p>
+          <p class="chip" data-m-cls>—</p>
+          <ul class="legend" data-legend></ul>
+        </div>
+        <div class="hud hud--sasi" data-hud="sasi" aria-hidden="true">
+          <p class="hud__k">Lift · şasi kontrolü</p>
+          <ul class="checks" data-checks></ul>
+        </div>
+        <div class="hud hud--obd" data-hud="obd" aria-hidden="true">
+          <p class="hud__k">OBD taraması · <span data-obd-count>0</span>/<span data-obd-total></span> beyin</p>
+          <ul class="term" data-term></ul>
+        </div>
+        <div class="hud hud--dyno" data-hud="dyno" aria-hidden="true">
+          <p class="hud__k" data-dyno-lbl></p>
+          <div class="dyno__nums">
+            <p class="hud__val"><b data-dyno-kw>0</b><small>kW</small></p>
+            <p class="dyno__rpm"><b data-dyno-rpm>0</b> d/dk</p>
+          </div>
+          <svg class="dyno__chart" viewBox="0 0 300 110" preserveAspectRatio="none">
+            <path class="dyno__grid" d="M0 27.5H300M0 55H300M0 82.5H300M75 0V110M150 0V110M225 0V110" />
+            <path class="dyno__curve" data-dyno-curve d="" />
+            <circle class="dyno__dot" data-dyno-dot r="4" cx="0" cy="110" />
+          </svg>
+        </div>
+        <div class="hud hud--rapor" data-hud="rapor">
+          <p class="hud__k"><span data-rapor-no></span></p>
+          <h2 class="rapor__title" data-rapor-title></h2>
+          <ul class="rapor__list" data-rapor-list></ul>
+          <p class="rapor__note" data-rapor-note></p>
+        </div>
+
+        <p class="hint" data-hint aria-hidden="true"><i></i>Kaydırın, araç bölmeye girsin</p>
+      </div>
+    </section>
+
+    <!-- Rapor kâğıdı başlar -->
+    <div class="paper">
+      <section class="about" data-about>
+        <header class="form-head">
+          <p class="form-head__t">Ekspertiz raporu</p>
+          <p class="form-head__no" data-form-no></p>
+        </header>
+        <div class="about__grid">
+          <div class="about__copy">
+            <h2 class="sec-title" data-reveal>Satıcının da alıcının da değil, <em>aracın</em> yanındayız.</h2>
+            <p class="about__text" data-bind="hakkinda"></p>
+          </div>
+          <dl class="fields" data-stats></dl>
+        </div>
+      </section>
+
+      <section class="svc" id="hizmetler">
+        <header class="sec-head">
+          <p class="sec-kicker">Kontrol listesi</p>
+          <h2 class="sec-title" data-reveal>Tek seferde, aracın tamamı.</h2>
+          <p class="sec-lead">Her madde raporda ayrı satırdır. Süreleri baştan söyleriz; fiyatı incelemeye başlamadan konuşuruz.</p>
+        </header>
+        <ol class="svc__list" data-services></ol>
+      </section>
+
+      <!-- İmza: dokunmatik boya ölçer -->
+      <section class="gauge" id="olcer" data-gauge>
+        <div class="gauge__copy">
+          <p class="sec-kicker">Rapordaki araç şeması</p>
+          <h2 class="sec-title" data-reveal data-olcer-title></h2>
+          <p class="sec-lead" data-olcer-text></p>
+          <div class="reading" data-reading aria-live="polite">
+            <p class="reading__panel" data-r-panel>Bir parçaya dokunun</p>
+            <p class="reading__val"><b data-r-val>—</b><small>µm</small></p>
+            <p class="chip chip--lg" data-r-cls>Ölçüm bekleniyor</p>
+          </div>
+          <div class="gauge__actions">
+            <button class="btn btn--ink" type="button" data-measure-all>Hepsini ölç</button>
+            <button class="btn btn--line" type="button" data-measure-reset>Sıfırla</button>
+          </div>
+          <ul class="legend legend--ink" data-legend2></ul>
+          <p class="gauge__note" data-ornek></p>
+        </div>
+        <div class="gauge__plan">
+          <svg class="plan" viewBox="0 0 360 600" data-plan role="group" aria-label="Araç şeması, parçaya dokunup ölçün"></svg>
+        </div>
+      </section>
+
+      <section class="steps">
+        <header class="sec-head">
+          <p class="sec-kicker">Nasıl işler</p>
+          <h2 class="sec-title" data-reveal>Randevudan rapora dört adım.</h2>
+        </header>
+        <ol class="steps__list" data-steps></ol>
+      </section>
+
+      <section class="strip" aria-label="Bölmeden kareler">
+        <header class="sec-head sec-head--row">
+          <h2 class="sec-title" data-reveal>Lift altından kareler.</h2>
+          <p class="strip__hint">Yana kaydırın</p>
+        </header>
+        <div class="strip__track" data-gallery tabindex="0"></div>
+      </section>
+
+      <section class="reviews" id="yorumlar">
+        <header class="reviews__head">
+          <div>
+            <p class="sec-kicker">Rapor sonrası</p>
+            <h2 class="sec-title" data-reveal>Getirenler ne diyor?</h2>
+          </div>
+          <p class="score"><b data-puan>4,8</b><span class="score__stars" data-stars></span><span class="score__n" data-puan-adet></span></p>
+        </header>
+        <div class="reviews__grid" data-reviews></div>
+      </section>
+
+      <section class="shop" id="konum">
+        <div class="shop__info">
+          <p class="sec-kicker">Bölme adresi</p>
+          <h2 class="sec-title" data-reveal>Şaşmaz Oto Sanayi'ndeyiz.</h2>
+          <p class="shop__status" data-status-big></p>
+          <dl class="shop__hours" data-hours></dl>
+          <p class="shop__addr" data-bind="adres"></p>
+          <div class="shop__cta">
+            <a class="btn btn--ink" data-maps target="_blank" rel="noopener"><span data-icon="pin"></span>Yol tarifi al</a>
+            <a class="btn btn--line" data-tel><span data-icon="phone"></span>Ara</a>
+          </div>
+        </div>
+        <div class="shop__map" data-map></div>
+      </section>
+    </div>
+
+    <section class="finale" data-finale>
+      <div class="finale__stamp" data-stamp aria-hidden="true">
+        <svg viewBox="0 0 200 200"><defs><path id="st-c" d="M100 100m-78 0a78 78 0 1 1 156 0a78 78 0 1 1-156 0" /></defs>
+          <circle cx="100" cy="100" r="94" /><circle cx="100" cy="100" r="62" />
+          <text><textPath href="#st-c" data-stamp-text></textPath></text>
+          <text x="100" y="96" text-anchor="middle" class="st-big">KONTROL</text>
+          <text x="100" y="122" text-anchor="middle" class="st-small">EDİLDİ</text>
+        </svg>
+      </div>
+      <h2 class="finale__title" data-final-title></h2>
+      <p class="finale__sub" data-final-text></p>
+      <div class="finale__cta">
+        <a class="btn btn--mint btn--xl" data-wa-randevu target="_blank" rel="noopener"><span data-icon="whatsapp"></span>WhatsApp'tan randevu</a>
+        <a class="btn btn--ghost btn--xl" data-tel><span data-icon="phone"></span><span data-bind="telefon"></span></a>
+      </div>
+      <p class="finale__garanti" data-garanti></p>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <p data-year></p>
+    <p data-bind="adres"></p>
+    <p class="foot__small">Fotoğraflar: Pexels. 3D araç ve bölme bu site için kodla çizildi.</p>
+  </footer>
+
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

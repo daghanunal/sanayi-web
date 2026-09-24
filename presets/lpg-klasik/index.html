@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#e6ebef" />
+  <title>LPG Dönüşüm | Şaşmaz, Ankara</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230a1628'/%3E%3Ccircle cx='16' cy='16' r='9' fill='none' stroke='%23ffffff33' stroke-width='5'/%3E%3Cpath d='M16 7a9 9 0 1 1-8.56 6.2' fill='none' stroke='%23f0531c' stroke-width='5'/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Encode+Sans+Expanded:wght@600;800;900&family=Atkinson+Hyperlegible+Next:wght@400;600;700&family=DM+Mono:wght@400;500&display=swap&subset=latin-ext" rel="stylesheet" />
+  <link rel="preload" as="image" href="/img/lpg-klasik/hero-dik.jpg" media="(max-width: 899px)" />
+  <link rel="preload" as="image" href="/img/lpg-klasik/hero.jpg" media="(min-width: 900px)" />
+</head>
+<body>
+  <header class="top">
+    <a href="#top" class="top__brand"><span class="top__mark" aria-hidden="true"></span><span data-bind="ad"></span></a>
+    <nav class="top__nav" aria-label="Sayfa bölümleri">
+      <a href="#uyar-mi">Aracıma uyar mı?</a>
+      <a href="#hizmetler">Hizmetler</a>
+      <a href="#evrak">Evrak</a>
+      <a href="#yorumlar">Yorumlar</a>
+      <a href="#konum">Konum</a>
+    </nav>
+    <span class="top__status" data-status></span>
+    <a class="top__call" data-tel><span data-icon="phone"></span><span data-bind="telefon"></span></a>
+  </header>
+
+  <main>
+    <!-- İMZA: simit tank göstergesi. Kaydırdıkça tank dolar, ibre %80'de durur (çok valf dolumu keser),
+         kalan %20 genleşme payı olarak taranır. -->
+    <section class="hero" id="top" aria-label="Giriş">
+      <div class="hero__pin">
+        <div class="hero__photo" aria-hidden="true">
+          <picture>
+            <source media="(max-width: 899px)" srcset="/img/lpg-klasik/hero-dik.jpg" />
+            <img src="/img/lpg-klasik/hero.jpg" alt="" fetchpriority="high" decoding="async" />
+          </picture>
+          <p class="hero__tag mono"><span data-since></span></p>
+        </div>
+
+        <div class="hero__panel">
+          <div class="hero__copy">
+            <p class="eyebrow mono">LPG dönüşüm · bakım · muayene</p>
+            <h1 class="hero__name" data-bind="ad"></h1>
+            <p class="hero__slogan" data-bind="slogan"></p>
+            <div class="hero__cta">
+              <a class="btn btn--alev" data-tel><span data-icon="phone"></span>Hemen ara</a>
+              <a class="btn btn--line" href="#uyar-mi">Aracıma uyar mı?</a>
+            </div>
+            <ul class="hero__facts" data-facts></ul>
+          </div>
+        </div>
+
+        <div class="tank" aria-hidden="true">
+          <svg class="tank__svg" viewBox="0 0 400 400">
+            <defs>
+              <pattern id="tarama" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+                <rect width="7" height="7" fill="rgb(159 224 255 / .12)" />
+                <rect width="2.4" height="7" fill="#9fe0ff" />
+              </pattern>
+              <linearGradient id="alev" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="#ffc09c" />
+                <stop offset=".45" stop-color="#ff6a2e" />
+                <stop offset="1" stop-color="#d9400c" />
+              </linearGradient>
+            </defs>
+            <circle class="tank__disc" cx="200" cy="200" r="198" />
+            <g class="tank__ticks" data-ticks></g>
+            <circle class="tank__body" cx="200" cy="200" r="132" />
+            <circle class="tank__pay" cx="200" cy="200" r="132" data-pay />
+            <circle class="tank__fill" cx="200" cy="200" r="132" data-fill />
+            <circle class="tank__edge" cx="200" cy="200" r="160" />
+            <circle class="tank__edge" cx="200" cy="200" r="104" />
+            <g class="tank__needle" data-needle><path d="M200 42 L207 26 L193 26 Z" /></g>
+          </svg>
+          <div class="tank__read">
+            <p class="tank__num"><small>%</small><b data-level>0</b></p>
+            <p class="tank__lbl mono" data-state>Tank boş</p>
+          </div>
+        </div>
+
+        <p class="tank__note" data-note>Çok valf dolumu <b>%80'de</b> keser. Kalan pay, gazın ısınınca genleşmesi için boş kalır.</p>
+        <p class="hero__hint mono" aria-hidden="true"><span></span>Kaydırın, tank dolsun</p>
+      </div>
+    </section>
+
+    <!-- Aracıma uyar mı? -->
+    <section class="uyar" id="uyar-mi" aria-labelledby="uyar-h">
+      <div class="uyar__head">
+        <p class="eyebrow mono">30 saniyelik ön bakış</p>
+        <h2 class="h2" id="uyar-h">Aracınıza <em>uyar mı?</em></h2>
+        <p class="lead">Motor tipinizi seçin. Kesin cevabı aracı görünce veririz; uygun değilse bunu da açıkça söyleriz.</p>
+      </div>
+      <div class="uyar__box">
+        <div class="uyar__opts" role="radiogroup" aria-label="Motor tipi" data-opts></div>
+        <div class="uyar__res" data-res aria-live="polite"></div>
+      </div>
+    </section>
+
+    <!-- Hizmetler -->
+    <section class="hizmet" id="hizmetler" aria-labelledby="hizmet-h">
+      <div class="hizmet__head">
+        <p class="eyebrow mono">Yalnızca LPG</p>
+        <h2 class="h2" id="hizmet-h">Tanktan enjektöre,<br />bütün hat bizde.</h2>
+        <p class="lead">Süreler ortalamadır. Fiyatı işe başlamadan söyleriz; ek parça gerekirse önce haber veririz.</p>
+      </div>
+      <ul class="hizmet__list" data-services></ul>
+      <p class="hizmet__hint mono" aria-hidden="true"><span data-svc-count>1 / 8</span><span class="hizmet__bar"><i data-svc-bar></i></span><span>Kaydırın</span></p>
+    </section>
+
+    <!-- Rakamlar -->
+    <section class="band" aria-label="Rakamlarla">
+      <ul class="band__list" data-stats></ul>
+    </section>
+
+    <!-- Evrak yolu -->
+    <section class="evrak" id="evrak" aria-labelledby="evrak-h">
+      <div class="evrak__head">
+        <p class="eyebrow mono">Proje · montaj belgesi · ruhsat</p>
+        <h2 class="h2" id="evrak-h">Evrak derdi <em>bizde.</em></h2>
+        <p class="lead">Montaja proje hazır olmadan başlamayız. Aracı teslim alırken hangi belgenin nereye gideceği elinizde yazılı olur.</p>
+      </div>
+      <ol class="evrak__list" data-steps></ol>
+    </section>
+
+    <!-- Atölye -->
+    <section class="atolye" aria-labelledby="atolye-h">
+      <figure class="atolye__photo"><img src="/img/lpg-klasik/atolye.jpg" alt="Atölye duvarında düzenli asılmış el aletleri" loading="lazy" decoding="async" /></figure>
+      <div class="atolye__copy">
+        <p class="eyebrow mono" data-years></p>
+        <h2 class="h2" id="atolye-h">Başka iş yapmıyoruz. <em>Sadece LPG.</em></h2>
+        <p class="lead" data-bind="hakkinda"></p>
+        <p class="atolye__garanti"><span data-icon="check"></span><span data-bind="garanti"></span></p>
+      </div>
+    </section>
+
+    <!-- Galeri -->
+    <section class="galeri" aria-label="Atölyeden kareler">
+      <div class="galeri__track" data-gallery></div>
+    </section>
+
+    <!-- Yorumlar -->
+    <section class="yorum" id="yorumlar" aria-labelledby="yorum-h">
+      <div class="yorum__head">
+        <h2 class="h2" id="yorum-h">Dönüşüm yaptıranlar anlatıyor</h2>
+        <div class="score">
+          <p class="score__num" data-score>4,8</p>
+          <div>
+            <p class="score__stars" data-stars></p>
+            <p class="score__count mono" data-review-count></p>
+          </div>
+        </div>
+      </div>
+      <ul class="yorum__list" data-reviews></ul>
+    </section>
+
+    <!-- Markalar -->
+    <section class="marka" aria-label="Dönüşüm yaptığımız markalar">
+      <div class="marka__track" data-brands></div>
+    </section>
+
+    <!-- Saatler + konum -->
+    <section class="konum" id="konum" aria-labelledby="konum-h">
+      <div class="konum__info">
+        <p class="eyebrow mono">Şaşmaz Oto Sanayi</p>
+        <h2 class="h2" id="konum-h">Gelin, aracınıza birlikte bakalım.</h2>
+        <p class="konum__status" data-status-big></p>
+        <dl class="hours" data-hours></dl>
+        <p class="konum__addr" data-bind="adres"></p>
+        <div class="konum__btns">
+          <a class="btn btn--ink" data-maps target="_blank" rel="noopener"><span data-icon="pin"></span>Yol tarifi al</a>
+          <a class="btn btn--line" data-tel><span data-icon="phone"></span>Ara</a>
+        </div>
+      </div>
+      <div class="konum__map" data-map><span class="mono">Harita yükleniyor</span></div>
+    </section>
+
+    <!-- Final -->
+    <section class="final" aria-labelledby="final-h">
+      <img class="final__bg" src="/img/lpg-klasik/yol.jpg" alt="" loading="lazy" decoding="async" />
+      <div class="final__in">
+        <p class="final__ring" aria-hidden="true"><i></i></p>
+        <h2 class="final__title" id="final-h" data-final></h2>
+        <div class="final__btns">
+          <a class="btn btn--alev btn--big" data-tel><span data-icon="phone"></span>Hemen ara</a>
+          <a class="btn btn--light btn--big" data-wa target="_blank" rel="noopener"><span data-icon="whatsapp"></span>WhatsApp'tan yaz</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <p class="foot__name" data-bind="ad"></p>
+    <p data-bind="adres"></p>
+    <p><a data-tel data-bind="telefon"></a></p>
+    <p class="foot__small">© <span data-year></span> <span data-bind="ad"></span>. Fotoğraflar: Pexels.</p>
+  </footer>
+
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

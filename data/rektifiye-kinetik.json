@@ -1,0 +1,13 @@
+{
+  "preset": "rektifiye-kinetik",
+  "heroNot": "Krank, silindir, kafa. Ölçmeden işlemeyiz, işledikten sonra yine ölçeriz.",
+  "surecGorsel": [
+    { "src": "/img/rektifiye-kinetik/freze-du.jpg", "alt": "Soğutma sıvısıyla çalışan freze tezgâhı" },
+    { "src": "/img/rektifiye-kinetik/atolye-du.jpg", "alt": "Atölyede tezgâh başında çalışan usta" },
+    { "src": "/img/rektifiye-kinetik/torna-du.jpg", "alt": "Atölyede torna tezgâhı ve ayna" },
+    { "src": "/img/rektifiye-kinetik/tezgah-du.jpg", "alt": "Yıllarca çalışmış işleme tezgâhı" }
+  ],
+  "surecKelime": ["ÖLÇ", "YAZ", "İŞLE", "TESLİM"],
+  "finalBaslik": "Motoru getir, önce ölçelim.",
+  "fiyatNot": "Fiyatı işe başlamadan söyleriz. Onayınız olmadan tezgâha almayız."
+}

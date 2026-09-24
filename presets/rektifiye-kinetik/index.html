@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#b9d4c3" />
+  <title>Motor Rektifiye ve Torna | Şaşmaz, Ankara</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='4' fill='%23b9d4c3'/%3E%3Crect x='3' y='11' width='26' height='10' fill='%23121a16'/%3E%3Cpath d='M16 21 L20 29 L12 29Z' fill='%23ff5a1a'/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Encode+Sans:wdth,wght@75..125,300..900&family=Reddit+Mono:wght@400..700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../../shared/base.css" />
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <header class="ust">
+    <a href="#top" class="ust__ad" data-name></a>
+    <span class="ust__durum" data-status></span>
+    <a class="ust__tel" data-tel></a>
+  </header>
+
+  <main id="top">
+    <!-- 1. Açılış: iş parçası tornada döner, kalem geçtikçe harfler ölçüsüne iner. -->
+    <section class="hero">
+      <p class="hero__ust mono" data-since></p>
+      <div class="hero__parcalar" data-parca aria-hidden="true"></div>
+      <p class="hero__olcuok mono" aria-hidden="true"><i></i><span data-alinan></span><i></i></p>
+      <h1 class="sr-only" data-name></h1>
+      <div class="hero__alt">
+        <p class="hero__slogan" data-slogan></p>
+        <div class="hero__olcu mono" aria-hidden="true">
+          <span>Ø</span><b data-hero-cap>75,000</b><span>mm</span>
+          <i class="hero__olcu-etiket" data-hero-etiket>ham</i>
+        </div>
+        <p class="hero__not" data-hero-not></p>
+        <div class="butonlar">
+          <a class="btn btn--turuncu" data-tel-btn>Hemen ara</a>
+          <a class="btn btn--cizgi" data-wa>WhatsApp'tan yaz</a>
+        </div>
+      </div>
+      <div class="talas" data-talas aria-hidden="true"></div>
+    </section>
+
+    <!-- 2. Hakkında: kaydırdıkça kelimeler dolar. -->
+    <section class="okuma">
+      <p class="etiket mono">01 / Tezgâh</p>
+      <p class="okuma__metin" data-hakkinda></p>
+    </section>
+
+    <!-- 3. İmza: büyütme ölçüleri. Mikrometre gibi rakamlar döner. -->
+    <section class="buyutme" id="olcu">
+      <div class="buyutme__sahne">
+        <p class="etiket mono">02 / Büyütme</p>
+        <h2 class="buyutme__baslik">Silindir kaç ölçü büyür, <em>ölçmeden söylemeyiz.</em></h2>
+        <div class="buyutme__daire" aria-hidden="true">
+          <svg viewBox="0 0 200 200">
+            <circle class="d-yuva" cx="100" cy="100" r="80" />
+            <circle class="d-piston" cx="100" cy="100" r="70" />
+            <line class="d-cap" x1="20" y1="100" x2="180" y2="100" />
+          </svg>
+        </div>
+        <div class="buyutme__sayi" data-mikro aria-live="polite"></div>
+        <div class="buyutme__bilgi">
+          <span class="buyutme__ad" data-olcu-ad></span>
+          <span class="buyutme__piston mono" data-olcu-piston></span>
+        </div>
+        <div class="kovan" aria-hidden="true"><div class="kovan__serit" data-kovan></div><i class="kovan__ibre"></i></div>
+        <ol class="buyutme__liste mono" data-olcu-liste></ol>
+      </div>
+    </section>
+
+    <!-- 4. Hizmetler -->
+    <section class="hizmetler" id="hizmetler">
+      <div class="bolum-bas">
+        <p class="etiket mono">03 / Tezgâhta ne var</p>
+        <h2 class="buyuk">Sekiz iş, <br />tek ölçü.</h2>
+      </div>
+      <ol class="hizmet-liste" data-services></ol>
+      <p class="fiyat-not" data-fiyat-not></p>
+    </section>
+
+    <!-- 5. Süreç: fotoğraf + dev fiil, afiş gibi -->
+    <section class="surec" id="surec" data-steps></section>
+
+    <!-- 6. Ölçü raporu -->
+    <section class="rapor" id="rapor">
+      <div class="bolum-bas">
+        <p class="etiket mono">05 / Ölçü raporu</p>
+        <h2 class="buyuk">Rapor parçayla <br />elinize gelir.</h2>
+      </div>
+      <div class="rapor__kagit">
+        <div class="rapor__ust mono">
+          <span data-rapor-is></span>
+          <span data-rapor-sinif></span>
+        </div>
+        <div class="rapor__nominal"><span class="mono">Hedef çap</span><b data-rapor-nominal></b><span class="mono">mm</span></div>
+        <div class="rapor__bant" data-bant aria-hidden="true">
+          <i class="rapor__tol"></i>
+          <span class="rapor__bant-sol mono">−0,005</span><span class="rapor__bant-sag mono">+0,005</span>
+        </div>
+        <table class="rapor__tablo mono">
+          <thead><tr><th>Sil.</th><th>Ölçü</th><th>Ovalite</th><th></th></tr></thead>
+          <tbody data-rapor-satir></tbody>
+        </table>
+        <ul class="rapor__not" data-rapor-not></ul>
+        <p class="rapor__uyari mono">Örnek rapor. Sizin motorunuzun ölçüsü tezgâhta alınır.</p>
+      </div>
+    </section>
+
+    <!-- 7. Rakamlar -->
+    <section class="rakamlar">
+      <p class="etiket mono">06 / Rakamlar</p>
+      <dl class="rakam-liste" data-stats></dl>
+    </section>
+
+    <!-- 8. Motor kodları: çapraz iki bant -->
+    <section class="bantlar" aria-label="Sık gelen motorlar">
+      <div class="bant bant--turuncu"><div class="bant__ic" data-brands></div></div>
+      <div class="bant bant--murekkep"><div class="bant__ic bant__ic--ters" data-brands2></div></div>
+    </section>
+
+    <!-- 9. Yorumlar -->
+    <section class="yorumlar" id="yorumlar">
+      <div class="puan">
+        <p class="puan__sayi" data-puan></p>
+        <div>
+          <p class="puan__yildiz" data-puan-yildiz></p>
+          <p class="puan__alt mono" data-puan-alt></p>
+        </div>
+      </div>
+      <div class="yorum-serit" data-reviews tabindex="0" aria-label="Müşteri yorumları"></div>
+    </section>
+
+    <!-- 10. Saatler + konum -->
+    <section class="konum" id="konum">
+      <div class="konum__sol">
+        <p class="etiket mono">08 / Tezgâh saatleri</p>
+        <p class="konum__durum" data-status-buyuk></p>
+        <dl class="saatler mono" data-hours></dl>
+        <p class="konum__adres" data-address></p>
+        <a class="btn btn--murekkep" data-maps target="_blank" rel="noopener">Yol tarifi al</a>
+      </div>
+      <div class="konum__harita" data-map></div>
+    </section>
+
+    <!-- 11. Final -->
+    <section class="final">
+      <h2 class="final__baslik" data-final></h2>
+      <p class="final__garanti" data-garanti></p>
+      <div class="butonlar">
+        <a class="btn btn--turuncu btn--dev" data-tel-btn>Ara</a>
+        <a class="btn btn--acik btn--dev" data-wa>WhatsApp</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="alt mono">
+    <p><span data-name></span> · <span data-address></span></p>
+    <p>© <span data-year></span> <span data-name></span>. Fotoğraflar: Pexels.</p>
+  </footer>
+
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

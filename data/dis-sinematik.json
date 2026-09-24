@@ -1,0 +1,66 @@
+{
+  "preset": "dis-sinematik",
+  "film": [
+    {
+      "id": "muayene",
+      "durak": "Muayene",
+      "no": "01",
+      "baslik": "Önce bakar, sonra gösteririz.",
+      "metin": "Dişler, diş eti ve çene eklemi tek tek kontrol edilir. Gerekirse röntgen çekilir; ne gördüğümüzü ekranda birlikte inceleriz.",
+      "hizmet": "Muayene",
+      "etiket": "Çürük burada"
+    },
+    {
+      "id": "temizlik",
+      "durak": "Temizlik",
+      "no": "02",
+      "baslik": "Diş taşı gider, yüzey parlar.",
+      "metin": "Diş taşı ve renklenmeler ultrasonik aletle temizlenir, yüzeyler cilalanır. Evde fırçalamayı ve diş ipini de gösteririz.",
+      "hizmet": "Diş taşı temizliği"
+    },
+    {
+      "id": "dolgu",
+      "durak": "Dolgu",
+      "no": "03",
+      "baslik": "Çürük temizlenir, diş renginde kapanır.",
+      "metin": "Kompozit dolgu mavi ışıkla sertleştirilir. Isırma kontrolü yapılmadan koltuktan kalkmazsınız.",
+      "hizmet": "Dolgu",
+      "etiket": "Kompozit dolgu"
+    },
+    {
+      "id": "kanal",
+      "durak": "Kanal",
+      "no": "04",
+      "baslik": "İçeride ne olduğunu da anlatırız.",
+      "metin": "İltihaplanan sinir dokusu lokal anestezi altında temizlenir, kanallar doldurulur. Çoğu diş tek seansta, bazıları iki seansta biter.",
+      "hizmet": "Kanal tedavisi"
+    },
+    {
+      "id": "implant",
+      "durak": "İmplant",
+      "no": "05",
+      "baslik": "Eksik dişin yerine, aşama aşama.",
+      "metin": "Kemik yapısı röntgenle değerlendirilir, uygunsa implant yerleştirilir. Kaynaşma süresinden sonra üst yapı takılır; her aşamayı önceden anlatırız.",
+      "hizmet": "İmplant",
+      "etiket": "Titanyum vida"
+    },
+    {
+      "id": "ortodonti",
+      "durak": "Ortodonti",
+      "no": "06",
+      "baslik": "Çapraşık dişler sıraya girer.",
+      "metin": "Tel veya şeffaf plak seçenekleri anlatılır. Tedavi boyunca düzenli kontrole çağırır, ne zaman gelmeniz gerektiğini hatırlatırız.",
+      "hizmet": "Ortodonti"
+    }
+  ],
+  "katmanlar": ["Mine", "Dentin", "Pulpa (sinir)"],
+  "sema": {
+    "baslik": "Hangi dişiniz?",
+    "metin": "Şemada ağrıyan ya da merak ettiğiniz dişe dokunun. Diş numarasıyla birlikte WhatsApp'tan yazın; muayene randevusunu ona göre ayarlayalım."
+  },
+  "cocuk": {
+    "baslik": "İlk ziyaret korkutmasın.",
+    "metin": "Aletleri önce çocuğunuzun eline verip tanıtırız. Koltuğa alışması için acele etmeyiz; fissür örtücü ve flor uygulamasıyla süt dişlerini koruruz."
+  },
+  "finalBaslik": "Randevunuzu birlikte ayarlayalım."
+}

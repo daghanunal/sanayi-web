@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#070a10" />
+  <title>Turbo Revizyon | Şaşmaz</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='12' fill='none' stroke='%238fdcff' stroke-width='4'/%3E%3Cpath d='M16 4a12 12 0 0 1 12 12' fill='none' stroke='%23ff6b1c' stroke-width='4'/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Tomorrow:ital,wght@0,400;0,600;0,700;0,800;1,700;1,800&family=Commissioner:wght@400;500;600;700&family=Ubuntu+Sans+Mono:wght@400;500;600&display=swap&subset=latin-ext" rel="stylesheet" />
+</head>
+<body class="is-loading">
+  <!-- Açılış: kompresör çarkı dönmeye başlar, devir sayacı yükselir, ad belirir -->
+  <div class="intro" data-intro role="presentation">
+    <div class="intro__wheel" data-intro-wheel aria-hidden="true">
+      <svg viewBox="-100 -100 200 200">
+        <circle class="intro__rim" r="92" />
+        <circle class="intro__rim intro__rim--in" r="78" />
+        <g data-intro-blades></g>
+        <circle class="intro__hub" r="16" />
+      </svg>
+    </div>
+    <div class="intro__center">
+      <p class="intro__rpm"><b data-intro-rpm>0</b><span>d/dk</span></p>
+      <p class="intro__name" data-intro-name></p>
+      <p class="intro__skip">Geçmek için dokunun</p>
+    </div>
+  </div>
+
+  <canvas class="stage" data-stage aria-hidden="true"></canvas>
+  <div class="cursor" data-cursor aria-hidden="true"><i></i></div>
+
+  <header class="top" data-top>
+    <a class="top__brand" href="#" data-brand><span class="top__mark" aria-hidden="true"></span><span data-bind="ad"></span></a>
+    <nav class="top__nav" aria-label="Bölümler">
+      <a href="#hizmetler">Hizmetler</a>
+      <a href="#belirti">Belirtiler</a>
+      <a href="#yorumlar">Yorumlar</a>
+      <a href="#konum">Konum</a>
+    </nav>
+    <p class="top__status" data-status></p>
+    <a class="top__call" data-tel data-magnetic><span data-icon="phone"></span><span class="top__num" data-bind="telefon"></span></a>
+  </header>
+
+  <main>
+    <!-- Film: kapalı turbo → söküm → balans → VNT → yağ hattı → basınç -->
+    <section class="film" data-film>
+      <div class="film__sticky">
+        <div class="hero" data-hero>
+          <p class="hero__since" data-since></p>
+          <h1 class="hero__title" data-hero-title></h1>
+          <p class="hero__slogan" data-bind="slogan"></p>
+          <div class="hero__cta">
+            <a class="btn btn--heat" data-tel data-magnetic><span data-icon="phone"></span>Hemen ara</a>
+            <a class="btn btn--ghost" data-wa target="_blank" rel="noopener" data-magnetic><span data-icon="whatsapp"></span>WhatsApp'tan yaz</a>
+          </div>
+          <p class="hero__sides" aria-hidden="true"><span class="is-cold">Soğuk taraf · temiz hava</span><span class="is-hot">Sıcak taraf · egzoz</span></p>
+        </div>
+
+        <aside class="hud" data-hud aria-hidden="true">
+          <p class="hud__row"><span>Devir</span><b data-h-rpm>0</b><small>d/dk</small></p>
+          <p class="hud__row hud__row--boost"><span>Basınç</span><b data-h-bar>0,0</b><small>bar</small></p>
+          <div class="hud__gauge"><i data-h-gauge></i></div>
+          <p class="hud__extra" data-h-extra></p>
+          <ol class="hud__ticks" data-ticks></ol>
+        </aside>
+
+        <div class="labels" data-labels aria-hidden="true"></div>
+
+        <div class="cards" data-cards></div>
+
+        <p class="hint" data-hint aria-hidden="true"><i></i>Kaydırın, turboyu birlikte açalım</p>
+      </div>
+    </section>
+
+    <!-- Hakkımızda -->
+    <section class="about" data-about>
+      <div class="about__head">
+        <p class="kicker" data-about-kicker></p>
+        <h2 class="sec-title" data-split>Sadece turbo. Başka iş almayız.</h2>
+      </div>
+      <div class="about__grid">
+        <figure class="about__img about__img--a"><img src="/img/sektor-turbo/usta-turbo.jpg" alt="Tezgâhta turbo üzerinde çalışan usta" loading="lazy" width="1333" height="2000" /></figure>
+        <div class="about__body">
+          <p class="about__text" data-about-text></p>
+          <ul class="stats" data-stats></ul>
+        </div>
+        <figure class="about__img about__img--b"><img src="/img/sektor-turbo/sokulmus-turbo.jpg" alt="Revizyon için parçalarına ayrılmış turbo" loading="lazy" width="1333" height="2000" /></figure>
+      </div>
+    </section>
+
+    <!-- Hizmetler: çelik zemin, her satırda soğuktan sıcağa ısınan çizgi -->
+    <section class="services" id="hizmetler">
+      <header class="sec-head">
+        <p class="kicker kicker--ink">Hizmetler</p>
+        <h2 class="sec-title" data-split>Turboda ne varsa, burada.</h2>
+        <p>Fiyatı işe başlamadan söyleriz. Turboyu açmadan "komple değişecek" demeyiz.</p>
+      </header>
+      <ol class="svc" data-services></ol>
+    </section>
+
+    <!-- İmza: belirti seçici -->
+    <section class="diag" id="belirti">
+      <header class="sec-head">
+        <p class="kicker">Belirtiler</p>
+        <h2 class="sec-title" data-split>Arabanız ne yapıyor?</h2>
+        <p>Şikâyeti seçin, nereye bakacağımızı söyleyelim. Kesin sebebi turboyu ölçmeden söylemeyiz.</p>
+      </header>
+      <div class="diag__box">
+        <div class="diag__list" role="tablist" aria-label="Belirtiler" data-diag-list></div>
+        <div class="diag__out" data-diag-out aria-live="polite">
+          <svg class="diag__dial" viewBox="0 0 120 120" aria-hidden="true">
+            <circle cx="60" cy="60" r="50" class="diag__dial-bg" />
+            <circle cx="60" cy="60" r="50" class="diag__dial-fg" data-diag-arc />
+            <g data-diag-blades></g>
+          </svg>
+          <p class="diag__tag" data-diag-tag></p>
+          <h3 class="diag__title" data-diag-title></h3>
+          <p class="diag__cause" data-diag-cause></p>
+          <p class="diag__check"><span>Baktığımız yerler</span><b data-diag-check></b></p>
+          <a class="btn btn--heat" data-diag-wa target="_blank" rel="noopener" data-magnetic><span data-icon="whatsapp"></span>Bunu WhatsApp'tan sorun</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Süreç: mil üzerinde beş adım -->
+    <section class="steps">
+      <header class="sec-head">
+        <p class="kicker">İş sırası</p>
+        <h2 class="sec-title" data-split>Sebebi bulmadan yenisini takmayız.</h2>
+      </header>
+      <ol class="steps__list" data-steps></ol>
+    </section>
+
+    <!-- Galeri: yatay kayan şerit -->
+    <section class="gallery" aria-label="Atölyeden fotoğraflar">
+      <div class="gallery__track" data-gal-track></div>
+    </section>
+
+    <!-- Yorumlar -->
+    <section class="reviews" id="yorumlar">
+      <header class="reviews__head">
+        <p class="reviews__score"><b data-puan>4,8</b><span class="reviews__stars" data-stars></span></p>
+        <p class="reviews__count" data-puan-adet></p>
+      </header>
+      <div class="reviews__grid" data-reviews></div>
+    </section>
+
+    <!-- Markalar -->
+    <section class="brands" aria-label="Baktığımız turbo ve araç markaları">
+      <div class="marquee" data-marquee></div>
+    </section>
+
+    <!-- Dükkân -->
+    <section class="shop" id="konum">
+      <div class="shop__info">
+        <p class="kicker">Konum ve saatler</p>
+        <h2 class="sec-title" data-split>Sanayinin içinde, kolay bulunur.</h2>
+        <p class="shop__status" data-status-big></p>
+        <dl class="shop__hours" data-hours></dl>
+        <p class="shop__addr" data-bind="adres"></p>
+        <div class="shop__cta">
+          <a class="btn btn--heat" data-maps target="_blank" rel="noopener" data-magnetic><span data-icon="pin"></span>Yol tarifi al</a>
+          <a class="btn btn--ghost" data-tel data-magnetic><span data-icon="phone"></span>Ara</a>
+        </div>
+      </div>
+      <div class="shop__map" data-map></div>
+    </section>
+
+    <!-- Final: turbo son kez tam devirde -->
+    <section class="finale" data-finale>
+      <div class="finale__sticky">
+        <p class="kicker" data-final-kicker></p>
+        <h2 class="finale__title" data-final-title></h2>
+        <p class="finale__sub" data-garanti></p>
+        <div class="finale__cta">
+          <a class="btn btn--heat btn--xl" data-tel data-magnetic><span data-icon="phone"></span>Hemen ara</a>
+          <a class="btn btn--ghost btn--xl" data-wa target="_blank" rel="noopener" data-magnetic><span data-icon="whatsapp"></span>WhatsApp'tan yaz</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <p data-year></p>
+    <p data-bind="adres"></p>
+    <p class="foot__small">Fotoğraflar: Pexels. 3D turbo bu site için kodla çizildi; göstergeler temsilidir.</p>
+  </footer>
+
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

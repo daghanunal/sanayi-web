@@ -1,0 +1,9 @@
+Tüm görseller Pexels lisansıyla (ücretsiz, ticari kullanım serbest). Hepsi bu tasarım için iki renkli (lacivert+pembe / lacivert+kâğıt) baskıya çevrildi; -p ve -k sonekleri.
+disk: https://www.pexels.com/photo/a-close-up-shot-of-a-vehicle-disc-brake-6870299/
+koridor: https://www.pexels.com/photo/expansive-warehouse-aisle-filled-with-products-29454379/
+yuksek-raf: https://www.pexels.com/photo/low-angle-shot-of-boxes-standing-on-the-shelves-in-a-warehouse-27111449/
+kutu-arac: https://www.pexels.com/photo/a-man-stacking-the-boxes-at-the-back-of-a-car-7843968/
+eller: https://www.pexels.com/photo/person-holding-a-engine-turbo-7565160/
+tepsi: https://www.pexels.com/photo/mechanic-organizing-engine-components-in-workshop-29181493/
+disliler: https://www.pexels.com/photo/silver-metal-round-gears-connected-to-each-other-149387/
+eksantrik: https://www.pexels.com/photo/close-up-photo-of-a-engine-camshaft-7565159/

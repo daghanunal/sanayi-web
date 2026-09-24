@@ -1,0 +1,126 @@
+{
+  "preset": "sanziman-klasik",
+  "vitesler": [
+    {
+      "harf": "P",
+      "ad": "Park",
+      "baslik": "Aracı bırakın, önce kaydı okuruz.",
+      "metin": "Teşhis cihazını bağlar, şanzıman beynindeki hata kodlarına ve canlı verilere bakarız.",
+      "img": "/img/sanziman-klasik/vites-secici.jpg"
+    },
+    {
+      "harf": "R",
+      "ad": "Geri",
+      "baslik": "Şikâyetin geçmişine gideriz.",
+      "metin": "Hangi viteste, hangi sıcaklıkta vuruyor? Sizinle aynı arabada yolda deneriz.",
+      "img": "/img/sanziman-klasik/teshis.jpg"
+    },
+    {
+      "harf": "N",
+      "ad": "Nötr",
+      "baslik": "Onayınız olmadan kutu inmez.",
+      "metin": "Yağ mı, mekatronik mi, revizyon mu; işi ve fiyatı baştan konuşuruz.",
+      "img": "/img/sanziman-klasik/usta-tablet.jpg"
+    },
+    {
+      "harf": "D",
+      "ad": "Sürüş",
+      "baslik": "Son sürüşle teslim ederiz.",
+      "metin": "Soğuk ve sıcak şanzımanla deneriz, hata kaydı kalmadığını görünce anahtarı veririz.",
+      "img": "/img/sanziman-klasik/vites-kolu.jpg"
+    }
+  ],
+  "tipler": [
+    {
+      "kod": "AT",
+      "ad": "Klasik otomatik",
+      "alt": "Tork konvertörlü, planet dişlili",
+      "metin": "Kalkışı tork konvertörü yapar, vitesleri planet dişliler ve balatalar değiştirir. Uzun ömürlüdür ama yağı ihmal edilirse balatalar yanar.",
+      "belirtiler": [
+        "Vites geçerken gecikme ya da vuruntu",
+        "Devir yükseliyor, araç çekmiyor",
+        "Sıcakken acil moda geçme"
+      ],
+      "img": "/img/sanziman-klasik/dislilar.jpg"
+    },
+    {
+      "kod": "DSG",
+      "ad": "DSG / çift kavrama",
+      "alt": "Kuru ve ıslak tip",
+      "metin": "İki ayrı kavrama bir sonraki vitesi önceden hazırlar. Hızlıdır; kavrama seti ve mekatronik, şehir içi dur-kalkta en çok yorulan parçalardır.",
+      "belirtiler": [
+        "Kalkışta titreme, silkeleme",
+        "1-2 arası vuruntu",
+        "Göstergede vites harfi yanıp sönüyor"
+      ],
+      "img": "/img/sanziman-klasik/mekatronik.jpg"
+    },
+    {
+      "kod": "CVT",
+      "ad": "CVT",
+      "alt": "Kayış ve kasnaklı, kademesiz",
+      "metin": "Sabit vites yoktur; çelik kayış iki kasnak arasında oranı sürekli değiştirir. Yalnızca kendi özel yağıyla çalışır, yanlış yağ kayışı kaydırır.",
+      "belirtiler": [
+        "Hızlanırken uğultu ya da ıslık",
+        "Gaza basınca gecikmeli çekiş",
+        "Yokuşta güç kaybı"
+      ],
+      "img": "/img/sanziman-klasik/gece-vites.jpg"
+    }
+  ],
+  "yagRenkleri": [
+    {
+      "ad": "Parlak kırmızı",
+      "renk": "#c8102e",
+      "durum": "Sağlıklı",
+      "metin": "Berrak, kokusuz. Değişim zamanı gelene kadar dokunmayız."
+    },
+    {
+      "ad": "Koyu kahve",
+      "renk": "#6b2a14",
+      "durum": "Değişim zamanı",
+      "metin": "Yağ ısındıkça yorulmuş. Doğru yağla, sıcakken seviye ayarıyla değiştiririz."
+    },
+    {
+      "ad": "Siyah, yanık kokulu",
+      "renk": "#1c1210",
+      "durum": "İçeride aşınma var",
+      "metin": "Balata ya da kavrama yanmış olabilir. Önce karteri açıp talaşa bakarız."
+    }
+  ],
+  "finalBaslik": "Vites vuruyorsa, beklemeyin.",
+  "galeri": [
+    {
+      "src": "/img/sanziman-klasik/atolye.jpg",
+      "alt": "Liftlerde araçların bulunduğu geniş atölye"
+    },
+    {
+      "src": "/img/sanziman-klasik/teshis.jpg",
+      "alt": "Teşhis tableti ile şanzıman arıza kaydı okunuyor"
+    },
+    {
+      "src": "/img/sanziman-klasik/yag.jpg",
+      "alt": "Araca yeni yağ dolduruluyor"
+    },
+    {
+      "src": "/img/sanziman-klasik/lift.jpg",
+      "alt": "Atölyede lift üzerindeki araç"
+    },
+    {
+      "src": "/img/sanziman-klasik/devre-karti.jpg",
+      "alt": "Kontrol ünitesine ait devre kartı"
+    },
+    {
+      "src": "/img/sanziman-klasik/kaput-alti.jpg",
+      "alt": "Kaputu açık aracı inceleyen usta"
+    },
+    {
+      "src": "/img/sanziman-klasik/obd.jpg",
+      "alt": "Araca takılı arıza tespit cihazı"
+    },
+    {
+      "src": "/img/sanziman-klasik/motor-bolmesi.jpg",
+      "alt": "Eldivenli elle motor bölmesinde kontrol"
+    }
+  ]
+}

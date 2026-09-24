@@ -1,0 +1,21 @@
+{
+  "preset": "lpg-klasik",
+  "finalBaslik": "Yolda fark etmezsiniz. Pompada fark edersiniz.",
+  "hizmetGorsel": [
+    { "src": "/img/lpg-klasik/eller.jpg", "alt": "Emme manifoldu çevresinde bağlantıları sıkan ustanın elleri" },
+    { "src": "/img/lpg-klasik/motor-siyah.jpg", "alt": "Kaputu açılmış aracın motor bölmesi ve teşhis cihazı" },
+    { "src": "/img/lpg-klasik/usta.jpg", "alt": "Açık kaput altında motor üzerinde çalışan usta" },
+    { "src": "/img/lpg-klasik/tespit.jpg", "alt": "Araca bağlanmış arıza tespit cihazıyla ayar yapılıyor" },
+    { "src": "/img/lpg-klasik/manometre.jpg", "alt": "Gaz hattı üzerindeki basınç göstergeleri" },
+    { "src": "/img/lpg-klasik/tablet.jpg", "alt": "Atölyede tabletle araç verilerini inceleyen usta" },
+    { "src": "/img/lpg-klasik/lift.jpg", "alt": "Bakım alanında bekleyen araç" },
+    { "src": "/img/lpg-klasik/motor-kirmizi.jpg", "alt": "Atölyede kaputu açık bekleyen kırmızı araç" }
+  ],
+  "uygunluk": [
+    { "id": "mpi", "secenek": "Benzinli, çok noktalı enjeksiyon", "ornek": "Egea, Clio, Corolla, Accent gibi çoğu benzinli araç", "hukum": "Uyar", "ton": "evet", "metin": "Sıralı enjeksiyon sistemiyle dönüşür. Her silindire ayrı gaz enjektörü takılır, geçişi hissetmezsiniz.", "sure": "1-2 gün" },
+    { "id": "di", "secenek": "Direkt enjeksiyonlu benzinli", "ornek": "TSI, TFSI, GDI, EcoBoost motorlar", "hukum": "Uyar, doğru sistemle", "ton": "evet", "metin": "Her kit bu motora olmaz. Benzin enjektörlerini koruyan, direkt enjeksiyon için yapılmış sistem kurar, motora göre ayrı ayarlarız.", "sure": "2-3 gün" },
+    { "id": "eski", "secenek": "Zaten LPG'li, eski tip sistem", "ornek": "Karbüratörlü ya da ilk nesil sistemler", "hukum": "Yenileriz", "ton": "evet", "metin": "Sıralı enjeksiyona çeviririz. Tank ve hatlar sağlamsa ve süresi dolmamışsa yeniden kullanılır.", "sure": "1 gün" },
+    { "id": "dizel", "secenek": "Dizel", "ornek": "Motorin yakan araçlar", "hukum": "Yapmıyoruz", "ton": "hayir", "metin": "Dizel motora standart LPG dönüşümü yapılmaz. Bunu baştan söyleriz, boşuna masraf ettirmeyiz.", "sure": "" },
+    { "id": "bilmiyorum", "secenek": "Emin değilim", "ornek": "Ruhsatta motor bilgisi yazar", "hukum": "Birlikte bakalım", "ton": "belki", "metin": "Ruhsatın fotoğrafını WhatsApp'tan gönderin. Motor koduna bakıp hangi sistemin uyacağını yazalım.", "sure": "" }
+  ]
+}

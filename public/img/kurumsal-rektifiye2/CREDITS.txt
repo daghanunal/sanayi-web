@@ -1,0 +1,3 @@
+talas.jpg: "Close Up Photo of Metal Tool", Pexels, https://www.pexels.com/photo/close-up-photo-of-metal-tool-10406128/ (Pexels License)
+kafa.jpg: "Engine Cylinder Head with Camshafts", Pexels, https://www.pexels.com/photo/engine-cylinder-head-with-camshafts-7565172/ (Pexels License)
+disli.jpg: "Silver Metal Round Gears Connected to Each Other", Pexels, https://www.pexels.com/photo/silver-metal-round-gears-connected-to-each-other-149387/ (Pexels License)

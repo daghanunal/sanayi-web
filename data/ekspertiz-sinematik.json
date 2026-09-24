@@ -1,0 +1,86 @@
+{
+  "preset": "ekspertiz-sinematik",
+  "ornekArac": "Örnek araç: 2017 model, 118.400 km, orta sınıf sedan",
+  "film": [
+    {
+      "id": "boya",
+      "no": "01",
+      "kisa": "Boya",
+      "baslik": "Her panel, tek tek ölçülür.",
+      "metin": "Boya kalınlık ölçeri her parçada birkaç noktaya değer. Fabrika boyası ince okur; lokal ya da komple boya kalın. Sonuç rapordaki araç şemasına renk renk işlenir."
+    },
+    {
+      "id": "sasi",
+      "no": "02",
+      "kisa": "Şasi",
+      "baslik": "Lifte kaldırır, altına gireriz.",
+      "metin": "Kazayı boya saklayabilir, şasi saklayamaz. Şasi uçları, podyeler ve bagaj havuzu el feneriyle kaynak, çekme ve kesim izine karşı taranır."
+    },
+    {
+      "id": "obd",
+      "no": "03",
+      "kisa": "Arıza",
+      "baslik": "Silinen arıza kaydı da okunur.",
+      "metin": "Cihaz OBD soketine takılır; motor, şanzıman, ABS ve hava yastığı beyinlerindeki kayıtlı ve sonradan silinmiş hata kodları tek tek rapora geçer."
+    },
+    {
+      "id": "dyno",
+      "no": "04",
+      "kisa": "Dinamo",
+      "baslik": "Yük altında, sonra yolda.",
+      "metin": "Araç dinamometrenin merdanelerine çıkar, gaz sonuna kadar verilir. Çekiş, vites geçişi ve titreşim ölçülür; ardından gerçek yolda sürülür."
+    },
+    {
+      "id": "rapor",
+      "no": "05",
+      "kisa": "Rapor",
+      "baslik": "Gördüğümüz neyse, rapora o yazılır.",
+      "metin": "Fotoğraflı rapor aynı gün elinizde, PDF'i WhatsApp'ta. Her maddeyi aracın başında birlikte okuruz."
+    }
+  ],
+  "siniflar": [
+    { "ad": "Orijinal", "renk": "#1ed69b" },
+    { "ad": "Lokal boyalı", "renk": "#ffb627" },
+    { "ad": "Boyalı", "renk": "#ff5a36" },
+    { "ad": "Değişen", "renk": "#e0368f" }
+  ],
+  "paneller": [
+    { "id": "on-tampon", "ad": "Ön tampon", "mikron": 246, "sinif": 2 },
+    { "id": "kaput", "ad": "Kaput", "mikron": 118, "sinif": 0 },
+    { "id": "sol-on-camurluk", "ad": "Sol ön çamurluk", "mikron": 124, "sinif": 0 },
+    { "id": "sag-on-camurluk", "ad": "Sağ ön çamurluk", "mikron": 109, "sinif": 0 },
+    { "id": "sol-on-kapi", "ad": "Sol ön kapı", "mikron": 176, "sinif": 1 },
+    { "id": "sag-on-kapi", "ad": "Sağ ön kapı", "mikron": 121, "sinif": 0 },
+    { "id": "sol-arka-kapi", "ad": "Sol arka kapı", "mikron": 115, "sinif": 0 },
+    { "id": "sag-arka-kapi", "ad": "Sağ arka kapı", "mikron": 127, "sinif": 0 },
+    { "id": "sol-arka-camurluk", "ad": "Sol arka çamurluk", "mikron": 119, "sinif": 0 },
+    { "id": "sag-arka-camurluk", "ad": "Sağ arka çamurluk", "mikron": 298, "sinif": 2 },
+    { "id": "tavan", "ad": "Tavan", "mikron": 131, "sinif": 0 },
+    { "id": "bagaj", "ad": "Bagaj kapağı", "mikron": 112, "sinif": 3 },
+    { "id": "arka-tampon", "ad": "Arka tampon", "mikron": 188, "sinif": 1 }
+  ],
+  "sasiNoktalari": [
+    { "ad": "Ön şasi uçları", "sonuc": "Orijinal, kaynak izi yok" },
+    { "ad": "Sağ podye", "sonuc": "Orijinal" },
+    { "ad": "Arka şasi uçları", "sonuc": "Orijinal" },
+    { "ad": "Bagaj havuzu", "sonuc": "Düzeltme izi, fotoğraflandı" }
+  ],
+  "obdKodlari": [
+    { "modul": "Motor", "kod": "—", "durum": "Kayıt yok" },
+    { "modul": "Şanzıman", "kod": "P0700", "durum": "Silinmiş kayıt bulundu" },
+    { "modul": "ABS / ESP", "kod": "—", "durum": "Kayıt yok" },
+    { "modul": "Hava yastığı", "kod": "B0012", "durum": "Geçmiş kayıt, aktif değil" },
+    { "modul": "Konfor", "kod": "—", "durum": "Kayıt yok" }
+  ],
+  "dinamo": { "maksimumKw": 92, "devir": 5800, "etiket": "Tekerden ölçülen güç" },
+  "rapor": {
+    "baslik": "Rapor hazır.",
+    "not": "Ölçüm değerleri örnek araca aittir; sizin aracınızın raporu kendi ölçümüyle hazırlanır."
+  },
+  "olcer": {
+    "baslik": "Ölçeri elinize alın.",
+    "metin": "Rapordaki araç şeması böyle görünür. Bir parçaya dokunun, ölçtüğümüz değeri görün. Hangi değerin ne anlama geldiğini raporu verirken de tek tek anlatırız."
+  },
+  "finalBaslik": "Kaparoyu vermeden önce getirin.",
+  "finalMetin": "Aracın marka, model ve yılını yazın; alıcıyla satıcıya uyan saati birlikte ayarlayalım. Fiyatı incelemeye başlamadan söyleriz."
+}

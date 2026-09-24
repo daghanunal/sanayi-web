@@ -1,0 +1,107 @@
+{
+  "preset": "sektor-mimarlik",
+  "isletme": {
+    "ad": "Çizgi Mimarlık",
+    "sektor": "Mimarlık Ofisi",
+    "slogan": "Önce dinleriz, sonra çizeriz.",
+    "kurulus": 2009,
+    "hakkinda": "2009'dan beri Etimesgut'ta konut, ticari yapı ve iç mekân projeleri hazırlıyoruz. Arsayı yerinde görür, imar durumunu okur, ihtiyacınızı dinledikten sonra ilk eskizi çizeriz. Avan projeden ruhsat ve uygulama projesine, şantiyedeki sorulara kadar aynı ekip sizinle kalır."
+  },
+  "iletisim": {
+    "telefon": "0532 555 63 09",
+    "whatsapp": "905325556309",
+    "adres": "Piyade Mahallesi, İstasyon Caddesi No: 41/6, Etimesgut/Ankara",
+    "mapsQuery": "Piyade Mahallesi İstasyon Caddesi Etimesgut Ankara"
+  },
+  "saatler": [null, "09:00-18:30", "09:00-18:30", "09:00-18:30", "09:00-18:30", "09:00-18:30", "10:00-15:00"],
+  "hizmetler": [
+    {
+      "baslik": "Konut projeleri",
+      "aciklama": "Müstakil ev, villa ve apartman projeleri. Arsanın yönü, eğimi ve imar koşulları üzerinden plan kurulur; güneş, manzara ve komşu yapılar hesaba katılır.",
+      "sure": "Avan proje 3-5 hafta",
+      "gorsel": "/img/sektor-mimarlik/villa.jpg"
+    },
+    {
+      "baslik": "Ticari yapı projeleri",
+      "aciklama": "Ofis, mağaza, depo ve karma kullanımlı yapılar. Otopark, yangın kaçışı ve engelli erişimi gibi yönetmelik başlıkları ilk eskizden itibaren plana işlenir.",
+      "sure": "Avan proje 4-8 hafta",
+      "gorsel": "/img/sektor-mimarlik/ticari-yapi.jpg"
+    },
+    {
+      "baslik": "Ruhsat projesi",
+      "aciklama": "Belediyeye sunulacak mimari proje, vaziyet planı ve gerekli çizimler hazırlanır. İnceleme sırasında gelen düzeltme notlarını biz işler, dosyayı yeniden teslim ederiz.",
+      "sure": "2-4 hafta",
+      "gorsel": "/img/sektor-mimarlik/plan.jpg"
+    },
+    {
+      "baslik": "Uygulama projesi ve detaylar",
+      "aciklama": "Şantiyenin kullanacağı ölçülü planlar, kesitler, cephe ve doğrama detayları. Statik, mekanik ve elektrik projeleriyle çakışmalar çizim masasında çözülür.",
+      "sure": "3-6 hafta",
+      "gorsel": "/img/sektor-mimarlik/cizim.jpg"
+    },
+    {
+      "baslik": "İç mimarlık",
+      "aciklama": "Ev, ofis ve dükkân iç mekânları. Mutfak ve banyo yerleşimi, dolap ve mobilya çizimleri, aydınlatma planı, malzeme ve renk seçimi tek dosyada toplanır.",
+      "sure": "2-5 hafta",
+      "gorsel": "/img/sektor-mimarlik/salon.jpg"
+    },
+    {
+      "baslik": "Restorasyon ve eski yapı",
+      "aciklama": "Eski yapının rölövesi alınır, mevcut durumu belgelenir; restitüsyon ve restorasyon projesi hazırlanır. Koruma kurulu süreci için gereken çizimler dosyalanır.",
+      "sure": "Yapıya göre, ön görüşmede",
+      "gorsel": "/img/sektor-mimarlik/restorasyon.jpg"
+    },
+    {
+      "baslik": "3D görselleştirme",
+      "aciklama": "Proje daha inşa edilmeden içini ve dışını görün. Gün ışığında ve akşam render'ları, iç mekân görselleri ve gerekirse fiziksel maket hazırlanır.",
+      "sure": "1-2 hafta",
+      "gorsel": "/img/sektor-mimarlik/3d-yatak-odasi.jpg"
+    },
+    {
+      "baslik": "Tadilat ve tip proje",
+      "aciklama": "Mevcut dairede duvar kaldırma, mutfak açma, çatı katı veya balkon kapatma gibi işler için rölöve, tadilat projesi ve belediyeye başvuru çizimleri.",
+      "sure": "1-3 hafta",
+      "gorsel": "/img/sektor-mimarlik/ofis.jpg"
+    }
+  ],
+  "surec": [
+    { "baslik": "Tanışma ve yer ziyareti", "aciklama": "Ne istediğinizi, bütçe aralığınızı ve takviminizi dinleriz. Arsayı ya da mevcut yapıyı yerinde görür, fotoğraf ve ölçü alırız." },
+    { "baslik": "İmar ve ön araştırma", "aciklama": "İmar durumu, çekme mesafeleri, emsal ve yükseklik sınırları belediyeden alınır; nelerin yapılabileceğini size açıkça anlatırız." },
+    { "baslik": "Eskiz ve avan proje", "aciklama": "Birkaç plan seçeneği çizilir, maket veya 3D görsellerle birlikte masaya yatırılır. Siz onaylayana kadar değiştiririz." },
+    { "baslik": "Ruhsat projesi ve başvuru", "aciklama": "Onaylanan tasarım ruhsat projesine dönüştürülür, diğer disiplinlerle birlikte belediyeye sunulur ve düzeltmeler takip edilir." },
+    { "baslik": "Uygulama projesi", "aciklama": "Şantiyenin ihtiyaç duyduğu ölçülü çizimler, detaylar ve malzeme listeleri hazırlanır, müteahhide teslim edilir." },
+    { "baslik": "Şantiyede yanınızdayız", "aciklama": "Kaba inşaattan ince işlere kadar belirli aşamalarda şantiyeye gelir, çizimin sahaya doğru aktarıldığını birlikte kontrol ederiz." }
+  ],
+  "istatistikler": [
+    { "deger": 17, "sonek": "", "etiket": "yıldır Etimesgut'ta", "kurulustanHesapla": true },
+    { "deger": 420, "sonek": "+", "etiket": "tamamlanan proje" },
+    { "deger": 160000, "sonek": " m²", "etiket": "çizilen kapalı alan" },
+    { "deger": 30, "sonek": "+", "etiket": "restorasyon ve eski yapı projesi" }
+  ],
+  "markalar": ["AutoCAD", "Revit", "ArchiCAD", "SketchUp", "3ds Max", "V-Ray", "Lumion", "Photoshop"],
+  "galeri": [
+    { "src": "/img/sektor-mimarlik/cizim-masasi.jpg", "alt": "Çizim masasında elle perspektif eskiz çizen mimar" },
+    { "src": "/img/sektor-mimarlik/plan.jpg", "alt": "Ölçüleri işlenmiş bir konut kat planının yakın çekimi" },
+    { "src": "/img/sektor-mimarlik/cizim.jpg", "alt": "Cetvel ve kalemle vaziyet planı üzerinde çalışan eller" },
+    { "src": "/img/sektor-mimarlik/ofis.jpg", "alt": "Planlar, eskiz defteri ve görsellerle dolu çalışma masası" },
+    { "src": "/img/sektor-mimarlik/bilgisayar.jpg", "alt": "Bilgisayarda bir konutun cephe çizimi üzerinde çalışan mimar" },
+    { "src": "/img/sektor-mimarlik/3d-yatak-odasi.jpg", "alt": "Ekranda üç boyutlu yatak odası tasarımı" },
+    { "src": "/img/sektor-mimarlik/maket.jpg", "alt": "Yeşil alanlarıyla birlikte bir yerleşim maketi" },
+    { "src": "/img/sektor-mimarlik/maket-ahsap.jpg", "alt": "Çatı iskeleti görünen ahşap ev maketi" },
+    { "src": "/img/sektor-mimarlik/villa.jpg", "alt": "Ahşap ve taş kaplamalı modern müstakil ev" },
+    { "src": "/img/sektor-mimarlik/ticari-yapi.jpg", "alt": "Tuğla ve cam cepheli çok katlı ofis binası" },
+    { "src": "/img/sektor-mimarlik/ic-mekan.jpg", "alt": "Yüksek tavanlı, açık renkli oturma odası" },
+    { "src": "/img/sektor-mimarlik/salon.jpg", "alt": "TV ünitesi ve koltuklarıyla tasarlanmış salon" },
+    { "src": "/img/sektor-mimarlik/restorasyon.jpg", "alt": "İskele kurulmuş tarihi taş yapının restorasyonu" },
+    { "src": "/img/sektor-mimarlik/santiye-plan.jpg", "alt": "Şantiyede basılı projeyi birlikte inceleyen ekip" }
+  ],
+  "puan": { "ortalama": 4.9, "adet": 87 },
+  "yorumlar": [
+    { "ad": "Emre D.", "puan": 5, "metin": "Arsamız eğimliydi, iki mimar 'zor' demişti. İlk görüşmede eğimi bodrum katına çeviren bir plan önerdiler. Ev bitti, bahçe katı en sevdiğimiz yer oldu.", "arac": "Müstakil ev, Eryaman" },
+    { "ad": "Ayşe K.", "puan": 5, "metin": "Mutfakla salonu birleştirmek istiyorduk. Taşıyıcı duvarı önceden tespit ettiler, statikçiyle birlikte çözüm buldular. 3D görseller sayesinde ne olacağını baştan gördük.", "arac": "Daire tadilatı, Elvankent" },
+    { "ad": "Hakan T.", "puan": 5, "metin": "Depo ve ofis binamızın ruhsat projesini yaptılar. Belediyeden gelen düzeltmeleri bize dert etmeden hallettiler, süreç boyunca her aşamada haber verdiler.", "arac": "Ticari yapı, Etimesgut" },
+    { "ad": "Derya Y.", "puan": 4, "metin": "Avan proje aşaması beklediğimden biraz uzun sürdü, ama bunun sebebi bizim fikir değiştirmemizdi. Her revizyonda sabırla yeniden çizdiler.", "arac": "Villa, Yapracık" },
+    { "ad": "Serkan A.", "puan": 5, "metin": "Dükkânımızın iç mimarisi için çalıştık. Dolap ve tezgâh çizimleri o kadar net ki usta hiçbir şey sormadan imalata geçti.", "arac": "Mağaza iç mimarisi, Bağlıca" }
+  ],
+  "garanti": "Çizdiğimiz projenin arkasındayız: belediye incelemesinde istenen düzeltmeleri biz yapar, şantiyede çizimle ilgili her soruyu inşaat bitene kadar yanıtlarız."
+}

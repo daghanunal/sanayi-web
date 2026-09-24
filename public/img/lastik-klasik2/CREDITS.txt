@@ -1,0 +1,5 @@
+Tüm görseller Pexels lisansıyla (ücretsiz ticari kullanım).
+jant-hero.jpg https://www.pexels.com/photo/31646380/
+dis.jpg       https://www.pexels.com/photo/441103/
+lift.jpg      https://www.pexels.com/photo/6870302/ (Gustavo Fring)
+Ayrıca public/img/pist/ görselleri kullanılır (kaynakları orada).

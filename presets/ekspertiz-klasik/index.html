@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#15171c" />
+  <title>Oto Ekspertiz | Şaşmaz, Ankara</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2315171c'/%3E%3Crect x='5' y='8' width='22' height='16' rx='3' fill='none' stroke='%237a4dff' stroke-width='2.4' transform='rotate(-10 16 16)'/%3E%3Cpath d='M11 16.5l3.2 3L21 12.5' fill='none' stroke='%23eef0f3' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Encode+Sans:wdth,wght@75..100,500..900&family=Wix+Madefor+Text:wght@400;500;600;700&family=Courier+Prime:wght@400;700&display=swap&subset=latin-ext" rel="stylesheet" />
+  <link rel="preload" as="image" href="/img/ekspertiz-klasik/alttan-m.jpg" media="(max-width: 899px)" />
+  <link rel="preload" as="image" href="/img/ekspertiz-klasik/lift-suv.jpg" media="(min-width: 900px)" />
+</head>
+<body>
+  <header class="top">
+    <a href="#top" class="top__brand"><span class="top__mark" aria-hidden="true"></span><span data-bind="ad"></span></a>
+    <nav class="top__nav" aria-label="Sayfa bölümleri">
+      <a href="#hizmetler">Neye bakarız</a>
+      <a href="#okuma">Rapor nasıl okunur</a>
+      <a href="#surec">Süreç</a>
+      <a href="#yorumlar">Yorumlar</a>
+      <a href="#konum">Konum</a>
+    </nav>
+    <a class="top__call" data-tel><span data-icon="phone"></span><span data-bind="telefon"></span></a>
+  </header>
+
+  <main>
+    <!-- İMZA: ekspertiz raporu. Kaydırınca rapor kâğıdı fotoğrafın üstüne çıkar; ölçüm ucu panelden
+         panele gezer, her panelin boya kalınlığı okunur ve şema renklenir. En sonda mor mühür basılır. -->
+    <section class="hero" id="top" aria-label="Giriş">
+      <div class="hero__pin">
+        <picture class="hero__photo" aria-hidden="true">
+          <source media="(min-width: 900px)" srcset="/img/ekspertiz-klasik/lift-suv.jpg" />
+          <img src="/img/ekspertiz-klasik/alttan-m.jpg" alt="" fetchpriority="high" decoding="async" />
+        </picture>
+        <div class="hero__shade" aria-hidden="true"></div>
+
+        <div class="hero__copy">
+          <p class="hero__since"><span class="dot" aria-hidden="true"></span><span data-since></span></p>
+          <h1 class="hero__name" data-bind="ad"></h1>
+          <p class="hero__slogan" data-bind="slogan"></p>
+          <div class="hero__cta">
+            <a class="btn btn--mor" data-tel><span data-icon="phone"></span>Randevu için ara</a>
+            <a class="btn btn--ghost" data-wa target="_blank" rel="noopener"><span data-icon="whatsapp"></span>WhatsApp</a>
+          </div>
+        </div>
+
+        <article class="sheet" aria-label="Örnek ekspertiz raporu">
+          <header class="sheet__head">
+            <div>
+              <p class="sheet__title">Ekspertiz raporu</p>
+              <p class="sheet__car tw" data-bind="ornekArac"></p>
+            </div>
+            <p class="sheet__no tw"><span>No</span><b data-no></b></p>
+          </header>
+          <div class="sheet__body">
+            <svg class="car" viewBox="0 0 360 440" role="img" aria-label="Aracın panel panel boya ölçüm şeması" data-car></svg>
+            <div class="stamp" aria-hidden="true">
+              <div class="stamp__in">
+                <p class="stamp__top">Kontrol edildi</p>
+                <p class="stamp__name" data-stamp-name></p>
+                <p class="stamp__date tw" data-stamp-date></p>
+              </div>
+            </div>
+          </div>
+          <div class="sheet__status" aria-live="off">
+            <p class="st__label tw" data-st-label>Boya kalınlığı ölçümü</p>
+            <p class="st__row"><b class="st__panel" data-st-panel>Kaydırın, ölçüme başlayalım</b><span class="st__val tw" data-st-val></span></p>
+            <p class="st__bar" aria-hidden="true"><span data-st-bar></span></p>
+          </div>
+          <ul class="sheet__legend" data-legend></ul>
+        </article>
+        <p class="hero__hint tw" aria-hidden="true"><span></span>Kaydırın</p>
+      </div>
+    </section>
+
+    <!-- Rakamlar -->
+    <section class="stats" aria-label="Rakamlarla">
+      <ul class="stats__list" data-stats></ul>
+    </section>
+
+    <!-- Hizmetler -->
+    <section class="svc" id="hizmetler" aria-labelledby="svc-h">
+      <div class="svc__head">
+        <p class="eyebrow">Tek randevuda</p>
+        <h2 class="h2" id="svc-h">Kaportadan <em>arıza kaydına</em> kadar.</h2>
+        <p class="lead">Süreler ortalamadır. Ücreti aracı teslim alırken söyleriz; incelemenin ortasında fiyat değişmez.</p>
+      </div>
+      <div class="svc__grid">
+        <div class="svc__viewer" aria-hidden="true" data-viewer></div>
+        <ol class="svc__list" data-services></ol>
+      </div>
+    </section>
+
+    <!-- Rapor okuma: mikron cetveli -->
+    <section class="okuma" id="okuma" aria-labelledby="okuma-h">
+      <div class="okuma__head">
+        <p class="eyebrow eyebrow--light">Rapor nasıl okunur</p>
+        <h2 class="h2" id="okuma-h">Boya kalınlığı <em>yalan söylemez.</em></h2>
+        <p class="lead">Fabrika boyası incedir ve panel boyunca aynı ölçer. Sonradan atılan boya ve macun kalınlığı artırır. Rapordaki renkler bu ölçümden gelir.</p>
+      </div>
+      <div class="ruler" data-ruler>
+        <div class="ruler__track" data-ruler-track></div>
+        <div class="ruler__scale tw" data-ruler-scale aria-hidden="true"></div>
+        <p class="ruler__note tw" data-ruler-note></p>
+      </div>
+      <ul class="codes" data-codes></ul>
+    </section>
+
+    <!-- Kontrol listesi -->
+    <section class="liste" aria-labelledby="liste-h">
+      <figure class="liste__photo"><img src="/img/ekspertiz-klasik/sasi-alt.jpg" alt="El feneriyle aracın alt şasisini inceleyen usta" loading="lazy" decoding="async" /></figure>
+      <div class="liste__copy">
+        <p class="eyebrow" data-points></p>
+        <h2 class="h2" id="liste-h">Bakmadığımız yer <em>kalmaz.</em></h2>
+        <div class="groups" data-groups></div>
+      </div>
+    </section>
+
+    <!-- Süreç -->
+    <section class="surec" id="surec" aria-labelledby="surec-h">
+      <div class="surec__head">
+        <p class="eyebrow">Randevudan rapora</p>
+        <h2 class="h2" id="surec-h">Dört adım, <em>aynı gün.</em></h2>
+      </div>
+      <ol class="steps" data-steps></ol>
+    </section>
+
+    <!-- Hakkında -->
+    <section class="biz" aria-labelledby="biz-h">
+      <figure class="biz__photo"><img src="/img/ekspertiz-klasik/alttan.jpg" alt="Lift altında ön takımı ışıkla kontrol eden usta" loading="lazy" decoding="async" /></figure>
+      <div class="biz__copy">
+        <p class="eyebrow" data-years></p>
+        <h2 class="h2" id="biz-h">Satıcının da alıcının da <em>değil, aracın</em> yanındayız.</h2>
+        <p class="lead" data-bind="hakkinda"></p>
+        <p class="biz__garanti"><span class="biz__seal" aria-hidden="true"></span><span data-bind="garanti"></span></p>
+      </div>
+    </section>
+
+    <!-- Galeri -->
+    <section class="galeri" aria-label="Atölyeden kareler">
+      <div class="galeri__track" data-gallery></div>
+    </section>
+
+    <!-- Yorumlar -->
+    <section class="yorum" id="yorumlar" aria-labelledby="yorum-h">
+      <div class="yorum__head">
+        <h2 class="h2" id="yorum-h">Getirenler <em>anlatıyor.</em></h2>
+        <div class="score">
+          <p class="score__num" data-score></p>
+          <div>
+            <p class="score__stars" data-stars></p>
+            <p class="score__count tw" data-review-count></p>
+          </div>
+        </div>
+      </div>
+      <ul class="yorum__list" data-reviews></ul>
+    </section>
+
+    <!-- Markalar -->
+    <section class="marka" aria-label="İncelediğimiz markalar">
+      <div class="marka__track" data-brands></div>
+    </section>
+
+    <!-- Saatler + konum -->
+    <section class="konum" id="konum" aria-labelledby="konum-h">
+      <div class="konum__info">
+        <p class="eyebrow">Şaşmaz Oto Sanayi</p>
+        <h2 class="h2" id="konum-h">Aracı getirin, <em>birlikte bakalım.</em></h2>
+        <p class="konum__status" data-status-big></p>
+        <dl class="hours" data-hours></dl>
+        <p class="konum__addr" data-bind="adres"></p>
+        <div class="konum__btns">
+          <a class="btn btn--ink" data-maps target="_blank" rel="noopener"><span data-icon="pin"></span>Yol tarifi al</a>
+          <a class="btn btn--line" data-tel><span data-icon="phone"></span>Ara</a>
+        </div>
+      </div>
+      <div class="konum__map" data-map><span class="tw">Harita yükleniyor</span></div>
+    </section>
+
+    <!-- Final -->
+    <section class="final" aria-labelledby="final-h">
+      <img class="final__bg" src="/img/ekspertiz-klasik/el-sikisma.jpg" alt="" loading="lazy" decoding="async" />
+      <div class="final__in">
+        <p class="final__stamp" aria-hidden="true">Önce ekspertiz</p>
+        <h2 class="final__title" id="final-h" data-final></h2>
+        <div class="final__btns">
+          <a class="btn btn--mor btn--big" data-tel><span data-icon="phone"></span>Hemen ara</a>
+          <a class="btn btn--light btn--big" data-wa target="_blank" rel="noopener"><span data-icon="whatsapp"></span>WhatsApp'tan randevu</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <p class="foot__name" data-bind="ad"></p>
+    <p data-bind="adres"></p>
+    <p><a data-tel data-bind="telefon"></a></p>
+    <p class="foot__small">© <span data-year></span> <span data-bind="ad"></span>. Fotoğraflar: Pexels. Rapor şeması örnektir.</p>
+  </footer>
+
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

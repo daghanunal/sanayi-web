@@ -1,0 +1,7 @@
+yolda.jpg / yolda-m.jpg: "View of a Mercedes-Benz Actros Driving on a Street" — Pexels, https://www.pexels.com/photo/view-of-a-mercedes-benz-actros-driving-on-a-street-20097991/ (Pexels lisansı)
+gece-yol.jpg: "Car Lights on the Highway at Night" — Pexels, https://www.pexels.com/photo/car-lights-on-the-highway-at-night-15444512/ (Pexels lisansı)
+volvo.jpg: "White Volvo Semi-truck on Side of Road" — Pexels, https://www.pexels.com/photo/white-volvo-semi-truck-on-side-of-road-2199293/ (Pexels lisansı)
+atolye.jpg: "An Auto Mechanic Repairing Engine of a Truck" — Pexels, https://www.pexels.com/photo/an-auto-mechanic-repairing-engine-of-a-truck-7541356/ (Pexels lisansı)
+bakim.jpg: "Person Fixing a Truck" — Pexels, https://www.pexels.com/photo/person-fixing-a-truck-7541360/ (Pexels lisansı)
+cekici.jpg: "Mercedes-Benz Cargo Truck" — Pexels, https://www.pexels.com/photo/mercedes-benz-cargo-truck-16100082/ (Pexels lisansı)
+Ayrıca public/img/tonaj/ altındaki usta.jpg, beyaz.jpg, kaput.jpg kullanılır (kaynakları orada).

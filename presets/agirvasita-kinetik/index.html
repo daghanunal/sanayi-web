@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0b6e4f" />
+  <title>Ağır Vasıta Servisi | Şaşmaz, Ankara</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230b6e4f'/%3E%3Crect x='3' y='3' width='26' height='26' rx='4' fill='none' stroke='%23fff' stroke-width='2'/%3E%3Cpath d='M16 24V10m-6 6 6-6 6 6' fill='none' stroke='%23fff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Chivo+Mono:wght@500;700&display=swap&subset=latin-ext" rel="stylesheet" />
+  <link rel="preload" as="image" href="/img/agirvasita-kinetik/actros.jpg" />
+</head>
+<body>
+  <header class="top">
+    <a href="#top" class="top__brand"><span class="top__ok" aria-hidden="true">↑</span><span data-name></span></a>
+    <nav class="top__nav" aria-label="Sayfa bölümleri">
+      <a href="#konvoy">Hizmetler</a>
+      <a href="#levha">Ölçüm</a>
+      <a href="#yardim">Yol yardım</a>
+      <a href="#konum">Konum</a>
+    </nav>
+    <span class="km" aria-hidden="true"><small>Şaşmaz</small><b data-km>38</b><small>km</small></span>
+    <a class="top__call" data-tel></a>
+  </header>
+
+  <main>
+    <!-- Kaydırmak = sürmek. Üst geçit levhası yaklaşır, tepeden geçer. -->
+    <section class="hero" id="top" aria-label="Giriş">
+      <div class="hero__foto"><img data-img="hero" alt="Tünelde hızla ilerleyen çekici" fetchpriority="high" /></div>
+      <div class="hero__serit" aria-hidden="true"></div>
+      <div class="hero__sahne">
+        <div class="levha levha--hero" data-hero-levha>
+          <p class="levha__ust"><span class="ok ok--sol" aria-hidden="true">↖</span><span data-since></span></p>
+          <h1 class="hero__ad" data-hero-ad></h1>
+          <p class="levha__alt"><span data-slogan></span><span class="levha__km">0 km</span></p>
+        </div>
+        <div class="hero__aks">
+          <a class="btn btn--adr" data-tel-btn>Hemen ara</a>
+          <a class="btn btn--beyaz" data-wa>WhatsApp'tan yaz</a>
+        </div>
+        <p class="hero__ipucu" aria-hidden="true">Kaydırın, yola çıkalım</p>
+      </div>
+    </section>
+
+    <!-- Şeritler: araç tipleri dev yazı olarak zıt yönlerde akar. -->
+    <section class="seritler" aria-label="Hakkımızda">
+      <div class="seritler__yol" data-seritler aria-hidden="true"></div>
+      <div class="seritler__metin">
+        <h2><span data-years></span> yıldır aynı yolun kenarında.</h2>
+        <p data-hakkinda></p>
+      </div>
+    </section>
+
+    <!-- İstatistik: ADR turuncu plakaları -->
+    <section class="plakalar" aria-label="Rakamlarla">
+      <dl class="plakalar__liste" data-stats></dl>
+    </section>
+
+    <!-- İmza: konvoy. Her dorse bir hizmet; kaydırdıkça çekici sürükler. -->
+    <section class="konvoy" id="konvoy" aria-label="Hizmetler">
+      <div class="konvoy__pin">
+        <p class="konvoy__arka" aria-hidden="true" data-arka></p>
+        <div class="konvoy__bas">
+          <p class="etiket" data-konvoy-ust></p>
+          <h2 data-konvoy-baslik></h2>
+        </div>
+        <div class="konvoy__yol">
+          <div class="konvoy__tren" data-tren></div>
+          <div class="konvoy__asfalt" aria-hidden="true"><span data-asfalt></span></div>
+        </div>
+        <p class="konvoy__not">Süreler ortalamadır. Parça değişecekse önce size haber veririz.</p>
+      </div>
+    </section>
+
+    <!-- Levhalar: hız levhası gibi daire, rakam gelişten teslime döner. -->
+    <section class="levhalar" id="levha">
+      <div class="bolum-bas">
+        <p class="etiket" data-levha-ust></p>
+        <h2 data-levha-baslik></h2>
+        <p data-levha-metin></p>
+      </div>
+      <ol class="olcumler" data-olcum></ol>
+      <p class="kucuk" data-levha-not></p>
+    </section>
+
+    <!-- Yol yardım -->
+    <section class="yardim" id="yardim" aria-label="Yol yardım">
+      <div class="yardim__tepe" aria-hidden="true"><span></span><span></span><span></span></div>
+      <p class="etiket etiket--koyu">7 gün 24 saat</p>
+      <h2 class="yardim__baslik" data-yardim-baslik>Yolda kaldıysanız konum atın.</h2>
+      <a class="yardim__tel" data-tel-big></a>
+      <p class="yardim__metin" data-yardim></p>
+      <div class="yardim__aks">
+        <a class="btn btn--koyu" data-wa-konum>Konumumu WhatsApp'tan gönder</a>
+      </div>
+      <ol class="kmler" data-steps></ol>
+    </section>
+
+    <!-- Filo -->
+    <section class="filo" aria-label="Filo bakımı">
+      <div class="filo__foto"><img data-img="gece" alt="Gece otoyolda akan farlar" loading="lazy" /></div>
+      <div class="filo__icerik">
+        <div class="levha levha--filo">
+          <p class="levha__ust">Filo şeridi</p>
+          <h2 data-filo-baslik></h2>
+          <p class="filo__metin" data-filo-metin></p>
+          <ul class="filo__maddeler" data-filo></ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="takograf" aria-label="Takograf">
+      <figure class="takograf__foto"><img data-img="cekici" alt="Siyah çekici, önünde turuncu ADR plakası" loading="lazy" /></figure>
+      <div class="takograf__metin">
+        <p class="etiket">Takograf</p>
+        <h2 data-tak-baslik></h2>
+        <p data-tak-metin></p>
+        <p class="markalar__bas">Çalıştığımız markalar</p>
+        <ul class="markalar" data-brands></ul>
+      </div>
+    </section>
+
+    <section class="yorumlar" id="yorumlar" aria-label="Yorumlar">
+      <div class="yorumlar__bas">
+        <div class="puan" data-puan></div>
+        <div>
+          <h2>Şoförler ve filo sahipleri anlatıyor.</h2>
+          <p data-puan-alt></p>
+        </div>
+      </div>
+      <div class="yorumlar__serit" data-reviews tabindex="0" aria-label="Müşteri yorumları, yana kaydırın"></div>
+    </section>
+
+    <section class="konum" id="konum">
+      <div class="levha levha--cikis">
+        <p class="cikis__ust"><span class="cikis__no">ÇIKIŞ</span><span class="ok" aria-hidden="true">↗</span></p>
+        <h2>Şaşmaz Oto Sanayi</h2>
+        <p class="cikis__alt">Ağır Vasıta Bölümü</p>
+      </div>
+      <div class="konum__govde">
+        <div class="konum__bilgi">
+          <p class="durum" data-status></p>
+          <dl class="saatler" data-hours></dl>
+          <p class="konum__adres" data-address></p>
+          <div class="konum__aks">
+            <a class="btn btn--yesil" data-maps target="_blank" rel="noopener">Yol tarifi al</a>
+            <a class="btn btn--cizgi" data-tel-btn></a>
+          </div>
+        </div>
+        <div class="harita" data-map></div>
+      </div>
+    </section>
+
+    <section class="final" aria-label="Bize ulaşın">
+      <img class="final__img" data-img="beyaz" alt="" loading="lazy" />
+      <div class="final__ic">
+        <h2 class="final__baslik" data-final></h2>
+        <p data-garanti></p>
+        <div class="hero__aks">
+          <a class="btn btn--adr" data-tel-btn>Hemen ara</a>
+          <a class="btn btn--beyaz" data-wa>WhatsApp'tan yaz</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="alt">
+    <p><b data-name></b> · <span data-address></span></p>
+    <p>© <span data-year></span> <span data-name></span>. Fotoğraflar: Pexels.</p>
+  </footer>
+
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

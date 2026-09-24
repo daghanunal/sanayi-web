@@ -1,0 +1,126 @@
+{
+  "istatistikler": [
+    { "deger": 0, "sonek": "", "etiket": "yıldır Şaşmaz'da", "kurulustanHesapla": true },
+    { "deger": 9400, "sonek": "+", "etiket": "yeniden dikilen koltuk" },
+    { "deger": 1300, "sonek": "+", "etiket": "servis ve minibüs koltuğu" },
+    { "deger": 2, "sonek": " yıl", "etiket": "dikiş garantisi" }
+  ],
+  "surec": [
+    { "baslik": "Göster", "aciklama": "Aracı getirin ya da fotoğrafını atın. Yırtığı, çöken yeri, sarkan tavanı birlikte işaretleriz." },
+    { "baslik": "Seç", "aciklama": "Deri, suni deri, kumaş, alcantara. Numuneyi aracın içinde, gün ışığında tutup bakarız." },
+    { "baslik": "Yazalım", "aciklama": "Malzeme, işçilik ve teslim günü işe başlamadan yazılı verilir. Sonradan ek çıkmaz." },
+    { "baslik": "Dikelim", "aciklama": "Kalıp aracın kendisinden çıkar, kesim ve dikiş tezgâhta yapılır, her dikiş elle kontrol edilir." }
+  ],
+  "tarihce": [
+    { "yil": 1987, "baslik": "Bir makine, bir top suni", "metin": "Atölye Şaşmaz'da tek bir el makinesiyle açıldı. İlk iş, komşu dükkânın Murat 131'inin arka koltuğuydu." },
+    { "yil": 1994, "baslik": "Pepita yılları", "metin": "Klasik araç sahipleri orijinal kumaşı ve dikiş aralığını bizde aramaya başladı. Kalıp arşivimiz o yıllarda doldu." },
+    { "yil": 2003, "baslik": "Servis filoları", "metin": "Ankara'daki servis firmalarının koltuklarını hafta sonları yenilemeye başladık." },
+    { "yil": 2011, "baslik": "Çift iğne", "metin": "Çift iğneli sanayi makinesi geldi; hakiki deri ve nappa ile çalışmaya başladık." },
+    { "yil": 2018, "baslik": "İkinci kuşak", "metin": "Tezgâh ikinci kuşağa geçti. Kurucumuz hâlâ sabahları gelip dikişlere bakıyor." },
+    { "yil": null, "baslik": "Aynı tezgâh", "metin": "Alcantara, kapitone, koltuk ısıtma. Malzeme değişti; her dikişi elle kontrol etmemiz değişmedi." }
+  ],
+  "yorumlar": [
+    { "ad": "Murat D.", "puan": 5, "metin": "Passat'ın koltukları çökmüştü. Süngeriyle birlikte yenilediler, fabrika çıkışından daha iyi oldu. Dikişler milim milim düzgün.", "arac": "2014 Passat" },
+    { "ad": "Ayşe T.", "puan": 5, "metin": "Tavan sarkmıştı, sabah bıraktım akşam aldım. Fiyatını önceden söylediler, bir kuruş fazla çıkmadı.", "arac": "2011 Corolla" },
+    { "ad": "Kemal Y.", "puan": 5, "metin": "Babamdan kalan Anadol'un döşemesini orijinal desenine göre yaptılar. Eski kalıbı arşivlerinden çıkardılar.", "arac": "1978 Anadol SL" },
+    { "ad": "Onur S.", "puan": 5, "metin": "Servis filomuzdaki 12 minibüsün koltuklarını bir hafta sonunda bitirdiler. Pazartesi araçlar yoldaydı.", "arac": "Sprinter filosu" },
+    { "ad": "Selin A.", "puan": 4, "metin": "Direksiyona kırmızı iplikli deri kaplattım, çok şık oldu. Yoğun oldukları için bir gün beklettiler ama değdi.", "arac": "2019 Egea" }
+  ],
+  "kurumsal": {
+    "hero": {
+      "baslik": "Yırtık, çökük, sarkık. Gösterin, dikelim.",
+      "metin": "Koltuk, tavan, kapı, direksiyon. Binek araçtan servis filosuna kadar iç döşemenin her parçasını kendi tezgâhımızda yeniden yapıyoruz. Fiyatı işe başlamadan yazılı söyleriz.",
+      "birincil": "Teklif isteyin",
+      "ikincil": "Aracımı işaretle",
+      "ikincilRota": "ic-mekan"
+    },
+    "ozet": {
+      "baslik": "Kalıp aracınızdan çıkar",
+      "metin": "Hazır kılıf geçirmiyoruz. Koltuğu söker, eski döşemeden kalıbı çıkarır, yeni malzemeyi o kalıba göre keser ve dikeriz. Bu yüzden oturunca kırışmaz, üç ay sonra bollaşmaz."
+    },
+    "hizmetOzetBaslik": "Tezgâhta ne yapıyoruz",
+    "anlasmaBaslik": "Filolar, galeriler, sigorta dosyaları",
+    "anlasmaMetin": "Tek araçla çalıştığımız özeni toplu işe de taşıyoruz: araç başına kayıt, hafta sonu çalışma, yazılı iş dökümü.",
+    "anlasmalar": [
+      {
+        "baslik": "Servis ve personel taşıma filoları",
+        "kisa": "Cuma akşamı alır, pazartesi sabahı teslim ederiz.",
+        "metin": "Araçlarınız hafta içi yolda kalsın diye hafta sonu çalışırız. Filoyu parti parti planlar, her aracın koltuk sayısını ve malzemesini dosyasına işleriz.",
+        "maddeler": ["Hafta sonu çalışma planı", "Araç bazında iş kaydı", "Aynı malzemeden yedek kılıf", "Aylık tek fatura"],
+        "buton": "Filo teklifi isteyin"
+      },
+      {
+        "baslik": "Galeri ve kiralama firmaları",
+        "kisa": "Satış ya da iade öncesi iç mekân toparlama.",
+        "metin": "Satışa çıkacak ya da iade edilecek araçlarda tavan, koltuk ve kapı döşemesini toplu olarak yeniler, araç başına iş dökümü veririz.",
+        "maddeler": ["Toplu araç kabulü", "Araç başına iş dökümü", "Öncelikli teslim günü"],
+        "buton": "Görüşme talep edin"
+      },
+      {
+        "baslik": "Sigorta ve hasar dosyaları",
+        "kisa": "Su baskını, yangın, kaza sonrası iç döşeme.",
+        "metin": "Hasarlı iç döşemenin fotoğraflı raporunu hazırlar, eksper onayından sonra işe başlarız. Anlaşmalı sigorta şirketlerinin güncel listesi için bizi arayın.",
+        "maddeler": ["Fotoğraflı hasar raporu", "Onay gelmeden işe başlamama", "Orijinal renk ve dokuya yakın malzeme"],
+        "buton": "Hasar dosyası için yazın"
+      }
+    ],
+    "anlasmaNotu": "Koşullar araç tipine, koltuk sayısına ve malzemeye göre belirlenir. Aracı görüp teklifimizi yazılı iletiriz.",
+    "hakkimizda": {
+      "baslik": "Tek makineyle açılan tezgâh",
+      "paragraflar": [
+        "Atölyemiz Şaşmaz Oto Sanayi Sitesi'nde tek bir dikiş makinesiyle açıldı. Bugün aynı tezgâhta ikinci kuşak olarak çalışıyoruz: derisini kendimiz seçiyor, kalıbını kendimiz çıkarıyor, dikişini kendimiz atıyoruz.",
+        "Klasik araç sahipleri orijinal deseni, servis firmaları hızı, galeriler düzenli iş dökümünü bizden bekliyor. Hepsine aynı cevabı veriyoruz: önce aracı görelim, sonra fiyatı yazalım."
+      ],
+      "gorsel": "/img/usta/t-2018.jpg",
+      "gorselAlt": "Atölyede koltuk kılıfı üzerinde çalışan döşemeci"
+    },
+    "misyon": "Koltuğu ilk günkü formuna getirmek; malzemeyi, süreyi ve fiyatı baştan açıkça söylemek.",
+    "vizyon": "Ankara'da hem bir filo sahibinin hem bir klasik araç meraklısının gönül rahatlığıyla aracını bıraktığı döşeme atölyesi olmak.",
+    "degerler": [
+      { "baslik": "Kalıp araçtan", "metin": "Tahminle değil, aracın kendi döşemesinden kalıp çıkarırız." },
+      { "baslik": "Sünger dahil", "metin": "Çökmüş süngerin üstüne yeni kılıf geçirmeyiz." },
+      { "baslik": "Yazılı fiyat", "metin": "Malzeme ve işçilik işe başlamadan yazılır." },
+      { "baslik": "Söz verilen gün", "metin": "Verdiğimiz teslim gününü tutarız; tutamayacaksak önceden haber veririz." }
+    ],
+    "kalite": {
+      "baslik": "Her iş aynı sırayla",
+      "metin": "Söküm, kalıp, kesim, dikiş, sünger, montaj ve son kontrol. Acele iş de olsa bu sıra değişmez.",
+      "maddeler": [
+        "Kalıp aracın orijinal döşemesinden çıkarılır ve arşive kaydedilir.",
+        "Sünger çökmüşse ölçüsüne göre yenilenir.",
+        "Dikiş aralığı ve iplik rengi baştan birlikte belirlenir.",
+        "Teslimden önce koltuk ayarları, kemerler ve ısıtma bağlantıları kontrol edilir."
+      ]
+    },
+    "tarihceBaslik": "Tezgâhın yılları",
+    "kariyer": {
+      "baslik": "Tezgâhımıza katılın",
+      "metin": "Kesim ve dikiş bilen usta ve mesleği öğrenmek isteyen çırak arkadaşlarla tanışmak isteriz. Kısa bir tanıtımla bize yazın."
+    },
+    "sssBaslik": "Aklınıza takılanlar",
+    "sss": [
+      { "soru": "Araç kaç gün atölyede kalır?", "cevap": "Tavan ve direksiyon çoğunlukla aynı gün, koltuk takımı 2-3 gün sürer. Kesin günü aracı görünce yazılı söyleriz." },
+      { "soru": "Tek bir yırtık koltuk yapılır mı?", "cevap": "Evet. Aynı malzemeyi bulabiliyorsak yalnız o parçayı yeniler, bulamıyorsak farkı baştan söyleriz." },
+      { "soru": "Fotoğrafla fiyat verir misiniz?", "cevap": "Fotoğraftan kabaca bir aralık söyleriz. Kesin fiyatı malzemeyi seçip aracı gördükten sonra yazılı veririz." },
+      { "soru": "Koltuk ısıtma sonradan takılır mı?", "cevap": "Evet. Döşemeyi söküp ısıtma pedini yerleştirir, tekrar dikeriz. Dışarıdan fark edilmez." },
+      { "soru": "Filo araçlarında nasıl çalışıyorsunuz?", "cevap": "Hafta sonu çalışır, araçları parti parti alırız. Her aracın iş kaydı tutulur, aylık tek fatura kesilir." }
+    ],
+    "sayfalar": {
+      "kurumsal": { "baslik": "Kurumsal", "metin": "Atölyemizin hikâyesi, çalışma sıramız ve neye önem verdiğimiz.", "gorsel": "/img/usta/ipler.jpg" },
+      "hizmetler": { "baslik": "Hizmetler", "metin": "Koltuktan tavana, direksiyondan klasik restorasyona. Her iş için ortalama süre." },
+      "ic-mekan": { "baslik": "Aracınızı işaretleyin", "metin": "Hangi parçada ne sorun var, dokunarak gösterin. İş listesi ve tahmini süre hazır mesajla bize gelsin." },
+      "kurumsal-musteriler": { "baslik": "Filo ve kurumsal", "metin": "Servis filoları, galeriler ve sigorta dosyaları için planlı döşeme.", "gorsel": "/img/usta/t-2003.jpg" },
+      "referanslar": { "baslik": "Tezgâhtan", "metin": "Atölyeden kareler ve müşterilerimizin yorumları." },
+      "iletisim": { "baslik": "İletişim", "metin": "Teklif, randevu ya da bir sorunuz için yazın; aynı gün dönüş yapalım." }
+    },
+    "konular": ["Koltuk döşeme teklifi", "Tavan döşeme", "Filo koltuk yenileme", "Klasik araç restorasyonu", "Sigorta / hasar dosyası", "Genel bilgi"],
+    "galeriBaslik": "Tezgâhtan çıkanlar",
+    "yorumBaslik": "Koltuğunu yaptıranlar",
+    "markaBaslik": "Tezgâhımıza gelen markalar",
+    "cta": {
+      "baslik": "Bir fotoğraf atın, fiyatı yazalım",
+      "metin": "Yırtığın, çöken yerin ya da sarkan tavanın fotoğrafını gönderin. Malzemeyi birlikte seçelim, teslim gününü baştan söyleyelim.",
+      "buton": "Teklif isteyin"
+    }
+  }
+}

@@ -1,0 +1,113 @@
+{
+  "finalBaslik": "Turbo ıslık çalmaya başladıysa beklemeyin.",
+  "parcalar": [
+    {
+      "id": "cark",
+      "no": "A",
+      "x": 52,
+      "y": 39,
+      "ad": "Kompresör çarkı",
+      "metin": "Havayı emip sıkıştıran çark. Kanatta çentik ya da sürtme izi varsa içeri bir şey kaçmıştır; hava filtresine ve hortumlara bakarız."
+    },
+    {
+      "id": "mil",
+      "no": "B",
+      "x": 71,
+      "y": 47,
+      "ad": "Mil, yatak ve segmanlar",
+      "metin": "Turbonun kalbi. Yağ gelmezse ya da kirli gelirse ilk burası aşınır. Mil boşluğunu ölçer, balansı buradan kontrol ederiz."
+    },
+    {
+      "id": "turbin",
+      "no": "C",
+      "x": 61,
+      "y": 58,
+      "ad": "Türbin gövdesi ve VNT kanatları",
+      "metin": "Egzozla dönen taraf. Kısa yol ve düşük devirde kurum bağlar, kanatlar sıkışır; çekiş düşer, siyah duman başlar."
+    },
+    {
+      "id": "flans",
+      "no": "D",
+      "x": 40,
+      "y": 60,
+      "ad": "Egzoz flanşı ve contası",
+      "metin": "Buradan kaçak varsa turbo basınç yapamaz, motor bölmesinden tıslama gelir. Revizyon sonrası contayı hep yeniler."
+    },
+    {
+      "id": "salyangoz",
+      "no": "E",
+      "x": 55,
+      "y": 80,
+      "ad": "Kompresör gövdesi",
+      "metin": "Salyangoz dediğimiz gövde. İçinde yağ birikmişse sebep turbo olmayabilir; karter havalandırmasına da bakarız."
+    }
+  ],
+  "belirtiler": [
+    {
+      "ad": "Islık ya da siren sesi",
+      "parca": "mil",
+      "sebep": "Mil boşluğu artmış ya da çark grubunun balansı bozulmuş.",
+      "yapilan": "Mil boşluğunu ölçeriz. Yatak ve segmanlar yenilenir, çark grubu balans cihazında dengelenir."
+    },
+    {
+      "ad": "Mavi duman, yağ eksiltme",
+      "parca": "mil",
+      "sebep": "Segmanlar aşınmış ya da yağ dönüş hattı tıkanmış; yağ turbodan geri dönemiyor.",
+      "yapilan": "Önce dönüş hattını ve karter havalandırmasını kontrol ederiz. Hat açılmadan turboyu takmayız."
+    },
+    {
+      "ad": "Siyah duman, çekiş yok",
+      "parca": "turbin",
+      "sebep": "VNT kanatları kurum bağlamış ya da aktüatör doğru konuma gitmiyor.",
+      "yapilan": "Kanat mekanizmasını söküp temizleriz, aktüatörü ve konum sensörünü değerlere göre ayarlarız."
+    },
+    {
+      "ad": "Gaz verince tekleme, güç kaybı",
+      "parca": "flans",
+      "sebep": "Çoğu zaman bir hortumda ya da flanşta basınç kaçağı vardır; turbo sağlam olabilir.",
+      "yapilan": "Hattı basınç testiyle tararız. Kaçak hortum, kelepçe ya da contaysa turboya dokunmayız."
+    },
+    {
+      "ad": "Intercooler'da yağ",
+      "parca": "salyangoz",
+      "sebep": "Az miktar normal olabilir. Çoksa kompresör tarafı segmanı ya da karter havalandırması.",
+      "yapilan": "Intercooler'ı temizleyip test ederiz, kompresör tarafındaki boşluğu ölçeriz. Sebep turbo değilse söyleriz."
+    },
+    {
+      "ad": "Sürtme sesi, kırık kanat",
+      "parca": "cark",
+      "sebep": "İçeri yabancı cisim kaçmış ya da mil boşluğu çarkı gövdeye sürtecek kadar açılmış.",
+      "yapilan": "Çark grubu değişir; hava filtresi ve emme hortumlarını temizlemeden turbo çalıştırılmaz."
+    }
+  ],
+  "galeri": [
+    {
+      "src": "/img/turbo-klasik/sokum.jpg",
+      "alt": "Revizyon için parçalarına ayrılmış turbo"
+    },
+    {
+      "src": "/img/turbo-klasik/eller.jpg",
+      "alt": "Yağlı ellerini bezle silen usta"
+    },
+    {
+      "src": "/img/turbo-klasik/cark.jpg",
+      "alt": "Gövdesi açılmış turbonun kompresör çarkı"
+    },
+    {
+      "src": "/img/turbo-klasik/dizel.jpg",
+      "alt": "Dizel motor üzerinde çalışan usta"
+    },
+    {
+      "src": "/img/turbo-klasik/yakin.jpg",
+      "alt": "Aşınmış turbo gövdesine yakından bakış"
+    },
+    {
+      "src": "/img/turbo-klasik/motor.jpg",
+      "alt": "Turbolu benzinli motorun motor bölmesi"
+    },
+    {
+      "src": "/img/turbo-klasik/giris-m.jpg",
+      "alt": "Atölye tezgâhında bekleyen turbo"
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+Tüm görseller Pexels lisansıyla (ücretsiz, ticari kullanım serbest), pexels.com:
+klinik.jpg: "Modern Dental Office Interior with Equipment" https://www.pexels.com/photo/modern-dental-office-interior-with-equipment-30902075/
+unite.jpg: "A Dental Equipment in the Clinic" https://www.pexels.com/photo/a-dental-equipment-in-the-clinic-6812453/
+muayenehane.jpg: "Modern Dental Office with Dental Chair Equipment" https://www.pexels.com/photo/modern-dental-office-with-dental-chair-equipment-35438269/
+hekim.jpg: "A Dentist Examining a Patient at a Dental Clinic" https://www.pexels.com/photo/a-dentist-examining-a-patient-at-a-dental-clinic-19976592/
+ekip.jpg: "Dentists Examining a Patient at a Dental Clinic" https://www.pexels.com/photo/dentists-examining-a-patient-at-a-dental-clinic-19976604/
+aletler.jpg: "A Close-Up Shot of Dental Equipment" https://www.pexels.com/photo/a-close-up-shot-of-dental-equipment-6627668/
+alet-seti.jpg: "Dental Tool Set" https://www.pexels.com/photo/dental-tool-set-305566/
+implant.jpg: "Dental implants with screw on table in clinic" https://www.pexels.com/photo/dental-implants-with-screw-on-table-in-clinic-4687905/
+ekipman.jpg: "Modern dental equipment on table in light room in clinic" https://www.pexels.com/photo/modern-dental-equipment-on-table-in-light-room-in-clinic-3845729/
+cocuk.jpg: "Photo of a Child in Dental Clinic" https://www.pexels.com/photo/nen-tractament-salut-dental-odontologia-8224633/
+implant-model.jpg: "Close-Up Shot of Dental Implant Model" https://www.pexels.com/photo/close-up-shot-of-dental-implant-model-6502305/
+model.jpg: "Cast Model of Dentures" https://www.pexels.com/photo/cast-model-of-dentures-6529216/
+tedavi.jpg: "Dentist Working on Woman's Teeth" https://www.pexels.com/photo/dentist-working-working-on-woman-s-teeth-3779713/

@@ -1,0 +1,5 @@
+Tüm görseller Pexels lisansıyla (ücretsiz, ticari kullanım serbest). public/img/manifold/ fotoğraflarından çift renk (duotone) işlenmiş kopyalar:
+uc-*.jpg: https://www.pexels.com/photo/close-up-of-luxury-sports-car-exhaust-design-30674492/
+duman-*.jpg: https://www.pexels.com/photo/car-exhaust-pipe-5233282/
+kaynak-*.jpg: https://www.pexels.com/photo/crop-welder-welding-steel-pipe-at-work-4305372/
+lift-*.jpg: https://www.pexels.com/photo/a-serviceman-in-blue-coverall-standing-under-a-vehicle-and-fixing-it-8986105/

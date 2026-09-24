@@ -1,0 +1,63 @@
+{
+  "preset": "klima-sinematik",
+  "film": [
+    {
+      "id": "kompresor",
+      "durak": "Kompresör",
+      "baslik": "Soğuk burada başlar.",
+      "metin": "Kompresör gazı sıkıştırır, ısıtır, devreye basar. Kavrama tutmuyorsa, rulman ses yapıyorsa ya da kontrol valfi takıldıysa fan üfler ama serin gelmez. Önce onarılabilir mi ona bakarız.",
+      "hizmet": "Kompresör",
+      "olcum": { "alcak": [3.6, 2.1], "yuksek": [4.2, 14.8], "ek": { "etiket": "Üfleme", "once": 29, "sonra": 7, "birim": "°C" } }
+    },
+    {
+      "id": "kondenser",
+      "durak": "Kondenser",
+      "baslik": "Isı tamponun arkasından çıkar.",
+      "metin": "Kondenser gazın ısısını dışarı verir. Taş deler, çamur tıkar, fan dönmezse basınç fırlar ve klima trafikte ısınır. Delikse değiştirir, fanı ve rölesini ölçeriz.",
+      "hizmet": "Kondenser ve fan",
+      "olcum": { "alcak": [3.2, 2.1], "yuksek": [24.5, 14.8], "ek": { "etiket": "Üfleme", "once": 19, "sonra": 7, "birim": "°C" } }
+    },
+    {
+      "id": "kacak",
+      "durak": "Kaçak",
+      "baslik": "Gaz kendiliğinden bitmez.",
+      "metin": "Her yaz gaz ekletiyorsanız bir yerden kaçıyordur. Sisteme azot basıp basıncı izler, UV boyayla kaçağı ışıkta buluruz. Bulduğumuz yeri size gösteririz.",
+      "hizmet": "Kaçak testi",
+      "olcum": { "alcak": [0.6, 2.1], "yuksek": [5.1, 14.8], "ek": { "etiket": "Azot testi", "once": 7.4, "sonra": 12, "birim": " bar" } }
+    },
+    {
+      "id": "dolum",
+      "durak": "Gaz dolumu",
+      "baslik": "Tartıyla dolar, göz kararı değil.",
+      "metin": "Önce sistem vakumlanır, içindeki nem ve hava alınır. R134a ya da R1234yf, aracın etiketinde yazan miktar kadar tartılarak basılır. Kompresör yağı da kontrol edilir.",
+      "hizmet": "Klima gazı dolumu",
+      "olcum": { "alcak": [-0.9, 2.1], "yuksek": [-0.9, 14.8], "ek": { "etiket": "Basılan gaz", "once": 0, "sonra": 100, "birim": "%" } }
+    },
+    {
+      "id": "evaporator",
+      "durak": "Evaporatör",
+      "baslik": "Serinlik torpidonun arkasında doğar.",
+      "metin": "Genleşme valfinden geçen gaz evaporatörde buz gibi olur, fan o soğuğu kabine üfler. Evaporatör kaçağını, tıkanan kurutucu filtreyi ve takılan valfi burada buluruz.",
+      "hizmet": "Evaporatör",
+      "olcum": { "alcak": [2.1, 2.1], "yuksek": [14.8, 14.8], "ek": { "etiket": "Üfleme", "once": 16, "sonra": 5, "birim": "°C" } }
+    },
+    {
+      "id": "filtre",
+      "durak": "Filtre",
+      "baslik": "Koku varsa sebebi bellidir.",
+      "metin": "Rutubet kokusu, zayıf üfleme, buğulanan cam: çoğu zaman tıkalı polen filtresi ve evaporatörde biriken küf. Filtreyi değiştirir, kanalları köpük ya da buharla dezenfekte ederiz.",
+      "hizmet": "Polen filtresi ve dezenfeksiyon",
+      "olcum": { "alcak": [2.1, 2.1], "yuksek": [14.8, 14.8], "ek": { "etiket": "Hava akışı", "once": 45, "sonra": 100, "birim": "%" } }
+    }
+  ],
+  "belirtiler": [
+    { "id": "sicak", "etiket": "Sıcak üflüyor", "sebep": "Gaz eksik, kompresör kavraması tutmuyor ya da fan çalışmıyor olabilir. Gaz basıp göndermeyiz; önce iki basıncı da ölçer, sebebi buluruz.", "is": "Ölçüm, kaçak testi, gerekirse dolum", "sure": "1 saat" },
+    { "id": "bitiyor", "etiket": "Her yaz gaz bitiyor", "sebep": "Sistemde kaçak var. Azot ve UV boyayla yerini buluruz; çoğu zaman delik kondenser, eskimiş conta ya da çatlak hortum çıkar.", "is": "Kaçak testi ve onarım", "sure": "1 saat" },
+    { "id": "koku", "etiket": "Kötü koku geliyor", "sebep": "Evaporatörde biriken küf ve tıkalı polen filtresi. Filtre değişir, kanallar köpük ya da buharla dezenfekte edilir.", "is": "Polen filtresi ve dezenfeksiyon", "sure": "45 dk" },
+    { "id": "trafik", "etiket": "Yolda serin, trafikte sıcak", "sebep": "Araç durunca kondensere hava gitmiyor: fan motoru, fan rölesi ya da sigorta. Kondenser tıkalıysa da aynı şey olur.", "is": "Fan ve kondenser kontrolü", "sure": "1-2 saat" },
+    { "id": "ses", "etiket": "Açınca ses yapıyor", "sebep": "Kompresör rulmanı ya da manyetik kavrama. Dinler, ölçeriz; onarılabiliyorsa kompresörü değiştirmeden onarırız.", "is": "Kompresör kontrolü", "sure": "1-2 gün" },
+    { "id": "panel", "etiket": "Panel tek tarafa üflüyor", "sebep": "Dijital klimada klape motoru, sıcaklık sensörü ya da fan rezistansı. Arıza tespit cihazıyla hata kayıtlarını okuruz.", "is": "Elektronik klima arızası", "sure": "Aynı gün" },
+    { "id": "bugu", "etiket": "Camlar buğulanıyor", "sebep": "Tıkalı polen filtresi ve içeride kalan nem. Klima kompresörü devreye girmiyorsa nem de alınmaz; ikisine birden bakarız.", "is": "Filtre ve kompresör kontrolü", "sure": "30 dk" }
+  ],
+  "finalBaslik": "Yaz gelmeden bir ölçtürün."
+}

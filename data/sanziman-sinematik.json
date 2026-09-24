@@ -1,0 +1,109 @@
+{
+  "bolumler": [
+    {
+      "id": "planet",
+      "vites": "1",
+      "durak": "Planet dişli",
+      "kicker": "Klasik otomatik şanzıman",
+      "baslik": "Güneş, uydular, çember. Vitesi bu üçlü değiştirir.",
+      "metin": "Tork konvertörlü şanzımanın içinde planet dişli setleri, onları tutan balatalar ve keçeler çalışır. Revizyonda kutu tezgâhta sökülür, aşınan her parça yenilenir, toplanan şanzıman araç üzerinde adapte edilir.",
+      "olcer": "Vites geçişi",
+      "wa": "otomatik şanzıman revizyonu"
+    },
+    {
+      "id": "tork",
+      "vites": "2",
+      "durak": "Tork konvertörü",
+      "kicker": "Motorla şanzıman arasındaki yağ kavraması",
+      "baslik": "Motorun gücünü yağla taşır. Kilitlemezse titretir.",
+      "metin": "Pompa, türbin ve stator aynı gövdede yağ içinde döner. Kilitleme kavraması kaçırınca yolda titreme, devir dalgalanması ve hararet başlar. Konvertörü kontrol eder, onarır ya da değiştiririz.",
+      "olcer": "Yolda titreşim",
+      "wa": "tork konvertörü kontrolü"
+    },
+    {
+      "id": "meka",
+      "vites": "3",
+      "durak": "Mekatronik",
+      "kicker": "Valf gövdesi ve şanzıman beyni",
+      "baslik": "Yağın hangi kanaldan gideceğine beyin karar verir.",
+      "metin": "Solenoidler basıncı açıp kapatır, sensörler beyne bilgi yollar. Tek bir sensör yüzünden ünite değiştirilmez; önce onarılabilir mi bakarız. Parçadan sonra beyni programlar, öğrenme değerlerini sıfırlar, adaptasyon sürüşünü yaparız.",
+      "olcer": "Hata kaydı",
+      "wa": "mekatronik ve beyin programlama"
+    },
+    {
+      "id": "dsg",
+      "vites": "4",
+      "durak": "DSG",
+      "kicker": "Çift kavramalı şanzıman",
+      "baslik": "Bir kavrama tek vitesleri, öbürü çiftleri tutar.",
+      "metin": "Kuru ve ıslak tip DSG'lerde kavrama setini, çatalı ve rulmanı değiştiririz. Kalkışta titreme, park manevrasında vuruntu, vites geçişinde boşa düşme şikâyetlerine bakarız.",
+      "olcer": "Kalkış",
+      "wa": "DSG kavrama sorunu"
+    },
+    {
+      "id": "cvt",
+      "vites": "5",
+      "durak": "CVT",
+      "kicker": "Kademesiz şanzıman",
+      "baslik": "Vites yok; kasnaklar açılıp kapanır, kayış tırmanır.",
+      "metin": "Kayış ve kasnakları kontrol eder, basıncı ölçeriz. Uğultu ve çekiş kaybı genelde yağla, kayışla ya da kasnak yüzeyiyle ilgilidir. CVT'ye yalnızca kendi özel yağı konur.",
+      "olcer": "Uğultu",
+      "wa": "CVT şanzıman tamiri"
+    },
+    {
+      "id": "yag",
+      "vites": "6",
+      "durak": "Şanzıman yağı",
+      "kicker": "Hepsinin kanı aynı",
+      "baslik": "Doğru yağ, doğru sıcaklıkta, doğru seviyede.",
+      "metin": "Şanzıman yağı hem yağlar hem soğutur hem de vitesleri basınçla değiştirir. Üreticinin öngördüğü yağı koyar, seviyeyi şanzıman ısınınca ayarlarız. Gerekirse filtre ve karter contası da yenilenir; eski yağı size gösteririz.",
+      "olcer": "Yağ basıncı",
+      "wa": "şanzıman yağı değişimi"
+    }
+  ],
+  "belirtiler": [
+    {
+      "id": "vurma",
+      "ad": "Vites vuruyor",
+      "ne": "Geçişte arkadan itilmiş gibi sarsıntı, özellikle 1'den 2'ye ve 2'den 3'e.",
+      "sebep": ["Yağ eskimiş ya da seviyesi yanlış", "Mekatronikte basınç solenoidi", "Adaptasyon değerleri bozulmuş"],
+      "ilk": "Önce arıza kaydını okur, yağa bakarız. Çoğu zaman yağ ve adaptasyon yeter."
+    },
+    {
+      "id": "titreme",
+      "ad": "Kalkışta titreme",
+      "ne": "Dururken ya da yavaş kalkarken araç silkeleniyor, trafikte artıyor.",
+      "sebep": ["DSG'de kavrama seti yıpranmış", "Çift kütleli volan", "Tork konvertörü kilitleme kavraması"],
+      "ilk": "Sizinle yolda deneriz; titremenin hangi hızda başladığı sebebi söyler."
+    },
+    {
+      "id": "ugultu",
+      "ad": "Uğultu var",
+      "ne": "Hızlandıkça yükselen, gaz kesince azalan bir ses.",
+      "sebep": ["CVT'de kayış ya da kasnak yüzeyi", "Şanzıman rulmanı", "Yağ seviyesi düşük"],
+      "ilk": "Sesin devirle mi hızla mı değiştiğine bakar, yağ basıncını ölçeriz."
+    },
+    {
+      "id": "kayma",
+      "ad": "Devir kaçıyor",
+      "ne": "Gaza basınca devir yükseliyor ama araç aynı oranda hızlanmıyor.",
+      "sebep": ["Balatalar aşınmış", "İç keçelerden basınç kaçağı", "Yağ yanmış"],
+      "ilk": "Yağın rengine ve kokusuna bakarız. Yanık kokuyorsa revizyonu konuşuruz."
+    },
+    {
+      "id": "lamba",
+      "ad": "Arıza lambası yandı",
+      "ne": "Göstergede şanzıman uyarısı çıktı, araç tek viteste kalıyor.",
+      "sebep": ["Sensör ya da kablo bağlantısı", "Mekatronik arızası", "Aşırı ısınma kaydı"],
+      "ilk": "Aracı cihaza bağlar, hata kodlarını ve canlı verileri birlikte okuruz."
+    },
+    {
+      "id": "gec",
+      "ad": "Vitese geç giriyor",
+      "ne": "D'ye ya da R'ye alınca bir iki saniye bekliyor, sonra vuruyor.",
+      "sebep": ["Yağ seviyesi düşük", "Valf gövdesinde tıkanma", "Pompa basıncı yetersiz"],
+      "ilk": "Seviyeyi şanzıman sıcakken kontrol eder, basıncı ölçer, ondan sonra konuşuruz."
+    }
+  ],
+  "finalBaslik": "Vitese alın, gelin."
+}

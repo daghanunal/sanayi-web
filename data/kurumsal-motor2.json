@@ -1,0 +1,93 @@
+{
+  "kurumsal": {
+    "hero": {
+      "baslik": "Önce yazarız, sonra açarız.",
+      "metin": "Motoru açmadan önce dinler, ölçer, ne yapılacağını ve fiyatını iş emrine yazarız. Onayınız olmadan tek vida sökülmez; çıkan parça size teslim edilir.",
+      "birincil": "İş emri açın",
+      "ikincil": "Hizmetlerimiz",
+      "ikincilRota": "hizmetler"
+    },
+    "ozet": {
+      "baslik": "Her araç bir dosya, her iş bir satır",
+      "metin": "Aracınız atölyeye girdiği anda kilometresi, şikâyeti ve yapılacak iş kâğıda geçer. Yıllar sonra gelseniz de dosyanız dolaptadır; neyin ne zaman değiştiğini birlikte bakarız."
+    },
+    "hizmetOzetBaslik": "Tezgâhtaki işler",
+    "anlasmaBaslik": "Şirket ve esnaf araçları",
+    "anlasmaMetin": "Ekmeğini araçla kazananı bekletmeyiz. Ticari araç, filo ve kasko işlerinde tek dosya, tek muhatap.",
+    "anlasmalar": [
+      {
+        "baslik": "Ticari araç önceliği",
+        "kisa": "Arızalı iş aracı sıraya girmeden atölyeye alınır.",
+        "metin": "Taksi, servis, kargo ya da hafif ticari; aracınız yoldaysa para kazanıyorsunuz. Arızalı iş aracını aynı gün teşhise alır, işin ne kadar süreceğini baştan söyleriz.",
+        "maddeler": ["Aynı gün teşhis", "Süre ve fiyat işe başlamadan", "Çıkan parçalar araçla birlikte teslim", "Araç bazında bakım dosyası"],
+        "buton": "Ticari aracım için yazın"
+      },
+      {
+        "baslik": "Şirket filoları",
+        "kisa": "Kilometreye göre bakım hatırlatması, aylık tek fatura.",
+        "metin": "Şirket araçlarınızın bakım zamanını kilometresine göre takip eder, zamanı gelen aracı biz hatırlatırız. Her araç için ayrı iş dökümü, ayda tek fatura.",
+        "maddeler": ["Araç bazında iş ve parça geçmişi", "Bakım zamanı hatırlatması", "Aylık tek fatura ve döküm"],
+        "buton": "Filo görüşmesi isteyin"
+      },
+      {
+        "baslik": "Kasko ve hasar dosyası",
+        "kisa": "Mekanik hasarda eksper sürecini birlikte yürütürüz.",
+        "metin": "Kasko kapsamındaki mekanik hasarlarda eksper randevusu, fotoğraflı tespit ve evrak takibini yürütürüz. Çalıştığımız sigorta şirketlerinin güncel listesi için bizi arayın.",
+        "maddeler": ["Fotoğraflı hasar tespiti", "Parça onayı gelmeden işe başlamama", "Her adımda telefonla bilgi"],
+        "buton": "Hasar dosyası için yazın"
+      }
+    ],
+    "anlasmaNotu": "Anlaşma koşulları araç sayısına ve tipine göre konuşulur; teklifimizi yazılı veririz.",
+    "hakkimizda": {
+      "baslik": "Kâğıdı olan atölye",
+      "paragraflar": [
+        "1996'da tek kanallı küçük bir dükkânda başladık. İlk günden beri aynı alışkanlıkla çalışıyoruz: her aracın bir iş emri, her işin bir satırı olur. Ne söylediysek o yazılır, ne yazıldıysa o yapılır.",
+        "Bugün daha geniş bir atölyede motor revizyonu, silindir kapak, triger, şanzıman ve yürüyen aksam işleri yapıyoruz. Motoru açmadan önce dinliyor, ölçüyor, ne olduğunu size gösteriyoruz."
+      ],
+      "gorsel": "/img/garaj/eller.jpg",
+      "gorselAlt": "Motor üzerinde çalışan ustaların elleri"
+    },
+    "misyon": "Arızayı tahminle değil ölçerek bulmak, ne yapacağımızı ve fiyatını işe başlamadan yazmak.",
+    "vizyon": "Şaşmaz'da aracını bırakan herkesin, dosyasına bakıp neyin neden yapıldığını görebildiği bir atölye olmak.",
+    "degerler": [
+      { "baslik": "Yazılı fiyat", "metin": "Parça ve işçilik fiyatı iş emrine işe başlamadan yazılır." },
+      { "baslik": "Onaysız iş yok", "metin": "Yeni bir arıza çıkarsa önce sizi ararız, sonra devam ederiz." },
+      { "baslik": "Eski parça sizin", "metin": "Değişen parçalar atılmaz, aracınızla birlikte teslim edilir." },
+      { "baslik": "Dosya saklanır", "metin": "Yaptığımız her iş aracınızın dosyasında durur." }
+    ],
+    "kalite": {
+      "baslik": "Bir iş emri nasıl kapanır",
+      "metin": "Kabulden teslime kadar her adım iş emrine işlenir; siz de aynı kâğıdın kopyasını alırsınız.",
+      "maddeler": [
+        "Kabulde kilometre, yakıt seviyesi ve görünen hasarlar yazılır.",
+        "Teşhis cihaz ve ölçü aletleriyle yapılır, sonuç size gösterilir.",
+        "Parça seçenekleri orijinal ve muadil olarak fiyatlarıyla sunulur.",
+        "Teslimden önce test sürüşü yapılır, iş emri birlikte kapatılır."
+      ]
+    },
+    "sss": [
+      { "soru": "Fiyatı ne zaman öğrenirim?", "cevap": "Teşhisten sonra, işe başlamadan. Parça ve işçilik ayrı ayrı yazılır; onayınız olmadan başlamayız." },
+      { "soru": "Motoru açınca başka arıza çıkarsa?", "cevap": "Durur, sizi arar, gördüğümüzü fotoğrafla gösteririz. Yeni kalem ancak onayınızla iş emrine eklenir." },
+      { "soru": "Eski parçaları görebilir miyim?", "cevap": "Evet. Değişen parçaları saklarız, aracınızla birlikte teslim ederiz." },
+      { "soru": "Randevusuz gelebilir miyim?", "cevap": "Gelebilirsiniz; ama önceden ararsanız aracınızı bekletmeden teşhise alırız." }
+    ],
+    "kariyer": {
+      "baslik": "Tezgâha usta ve çırak arıyoruz",
+      "metin": "Motor ve şanzıman işinde elini taşın altına koyan usta ya da mesleği öğrenmek isteyen çırak arkadaşlarla tanışmak isteriz. Kısa bir tanıtımla bize yazın."
+    },
+    "sayfalar": {
+      "kurumsal": { "baslik": "Kurumsal", "metin": "Kim olduğumuz, nasıl çalıştığımız ve iş emrimizin arkasında nasıl durduğumuz.", "gorsel": "/img/garaj/motor-bw.jpg" },
+      "hizmetler": { "baslik": "Hizmetlerimiz", "metin": "Motor revizyonundan periyodik bakıma, her iş için ortalama süre ve kapsam." },
+      "kurumsal-musteriler": { "baslik": "Şirket ve esnaf araçları", "metin": "Ticari araç önceliği, filo bakım takibi ve kasko dosyası.", "gorsel": "/img/garaj/lift.jpg" },
+      "referanslar": { "baslik": "Tezgâhtan ve müşterilerden", "metin": "Atölyeden kareler, müşterilerimizin yorumları ve baktığımız markalar." },
+      "iletisim": { "baslik": "İletişim", "metin": "Randevu, fiyat ya da bir sorunuz için yazın; aynı gün dönüş yapalım." }
+    },
+    "konular": ["İş emri / arıza", "Fiyat sorma", "Randevu", "Ticari araç / filo", "Kasko / hasar dosyası", "Genel bilgi"],
+    "formBaslik": "Bize yazın",
+    "cta": {
+      "baslik": "Aracınız ne yapıyor, yazın.",
+      "metin": "Şikâyeti anlatın, ne kontrol edileceğini ve fiyatı işe başlamadan söyleyelim.",
+      "buton": "İş emri açın"
+    }
+  }
+}

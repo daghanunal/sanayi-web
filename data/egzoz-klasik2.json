@@ -1,0 +1,11 @@
+{
+  "durakGorsel": {
+    "manifold": { "src": "/img/egzoz-klasik2/kivilcim.jpg", "alt": "Aracın altında egzoz hattına kaynak, kıvılcımlar" },
+    "katalitik": { "src": "/img/egzoz-klasik2/katalitik.jpg", "alt": "Atölye duvarında sıra sıra katalitik konvertör" },
+    "dpf": { "src": "/img/egzoz-klasik2/alt.jpg", "alt": "Lifte kaldırılmış aracın altında egzoz kontrolü" },
+    "susturucu": { "src": "/img/egzoz-klasik2/tek-uc.jpg", "alt": "Arka susturucu ve paslanmaz egzoz ucu" },
+    "uc": { "src": "/img/egzoz-klasik2/duman-cift.jpg", "alt": "Çift egzoz ucundan çıkan duman" }
+  },
+  "sesSatiri": "Bu ses muayeneden geçmez.",
+  "sessizSatiri": "Bu ses geçer."
+}

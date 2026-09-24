@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#04061a" />
+  <title>LPG Dönüşüm | Şaşmaz</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='10' fill='none' stroke='%232447ff' stroke-width='6'/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Tektur:wght@500;700;900&family=Commissioner:wght@400;500;600;700&family=Sometype+Mono:wght@400;600&display=swap&subset=latin-ext" rel="stylesheet" />
+</head>
+<body class="is-intro">
+  <div class="backdrop" data-backdrop aria-hidden="true"></div>
+  <canvas class="stage" data-stage aria-hidden="true"></canvas>
+
+  <header class="top" data-top>
+    <a class="top__brand" href="#" data-brand><i class="top__mark" aria-hidden="true"></i><span data-bind="ad"></span></a>
+    <nav class="top__nav" aria-label="Bölümler">
+      <a href="#hizmetler">Hizmetler</a>
+      <a href="#surec">Süreç</a>
+      <a href="#yorumlar">Yorumlar</a>
+      <a href="#konum">Konum</a>
+    </nav>
+    <p class="top__status" data-status></p>
+    <a class="top__call" data-tel><span data-icon="phone"></span><span class="top__num" data-bind="telefon"></span></a>
+  </header>
+
+  <main>
+    <!-- Film: alev halkası → tank → çok valf → regülatör → enjektör → silindir → ayar -->
+    <section class="film" data-film>
+      <div class="film__sticky">
+        <div class="hero" data-hero>
+          <p class="hero__kicker" data-since></p>
+          <h1 class="hero__title" data-hero-title></h1>
+          <p class="hero__slogan" data-bind="slogan"></p>
+          <div class="hero__cta">
+            <a class="btn btn--flame" data-tel><span data-icon="phone"></span>Hemen ara</a>
+            <a class="btn btn--ghost" data-wa target="_blank" rel="noopener"><span data-icon="whatsapp"></span>WhatsApp'tan yaz</a>
+          </div>
+        </div>
+
+        <p class="ignite" data-ignite aria-hidden="true"><span>Ateşleme</span><b data-ignite-pct>0</b></p>
+
+        <!-- Gazın güzergâhı -->
+        <div class="route" data-route aria-hidden="true">
+          <div class="route__line"><i class="route__fill" data-route-fill></i><i class="route__dot" data-route-dot></i></div>
+          <ol class="route__stops" data-route-stops></ol>
+        </div>
+
+        <div class="chapters" data-chapters></div>
+
+        <aside class="meter" data-meter aria-hidden="true">
+          <p class="meter__head"><span>Hat okuması</span><small>örnek değer</small></p>
+          <div class="meter__row"><span>Hâl</span><b data-m-hal>Sıvı</b></div>
+          <div class="meter__row"><span>Basınç</span><b><span data-m-bar>7</span> <small>bar</small></b></div>
+          <div class="meter__row"><span>Sıcaklık</span><b><span data-m-temp>18</span> <small>°C</small></b></div>
+          <div class="meter__seq"><span>Sıra</span><ol data-seq><li>1</li><li>3</li><li>4</li><li>2</li></ol></div>
+        </aside>
+
+        <p class="hint" data-hint aria-hidden="true"><i></i>Kaydırın, gazın yolunu izleyin</p>
+      </div>
+    </section>
+
+    <!-- Güven -->
+    <section class="trust" data-trust>
+      <div class="trust__lead">
+        <p class="eyebrow">Yalnızca LPG</p>
+        <h2 class="h2" data-trust-title></h2>
+        <p class="trust__text" data-about></p>
+        <p class="trust__garanti" data-garanti></p>
+      </div>
+      <ul class="stats" data-stats></ul>
+    </section>
+
+    <!-- Hizmetler -->
+    <section class="svc" id="hizmetler">
+      <header class="svc__head">
+        <p class="eyebrow">Yaptığımız işler</p>
+        <h2 class="h2">Tanktan enjektöre, LPG'de ne varsa.</h2>
+        <p class="svc__note">Fiyatı işe başlamadan söyleriz. Süreler ortalamadır, araca göre değişir.</p>
+      </header>
+      <ol class="svc__grid" data-services></ol>
+    </section>
+
+    <!-- Süreç: evrak yolu -->
+    <section class="path" id="surec" data-path>
+      <div class="path__sticky">
+        <header class="path__head">
+          <p class="eyebrow eyebrow--light">Süreç</p>
+          <h2 class="h2" data-evrak-title></h2>
+          <p class="path__note">Proje hazırlanmadan montaja başlamayız. Montaj belgesi elinize verilir, ruhsat için nereye gideceğinizi tek tek yazarız.</p>
+        </header>
+        <div class="path__pipe" data-pipe>
+          <svg class="path__svg" viewBox="0 0 1000 40" preserveAspectRatio="none" aria-hidden="true">
+            <line x1="0" y1="20" x2="1000" y2="20" class="path__track" />
+            <line x1="0" y1="20" x2="1000" y2="20" class="path__gas" data-gas />
+          </svg>
+          <ol class="path__steps" data-steps></ol>
+        </div>
+      </div>
+    </section>
+
+    <!-- Atölye -->
+    <section class="shop-photos" aria-label="Atölyeden">
+      <header class="shop-photos__head">
+        <p class="eyebrow">Atölyeden</p>
+        <h2 class="h2">Kaput açık, bilgisayar bağlı.</h2>
+      </header>
+      <div class="mosaic" data-mosaic></div>
+    </section>
+
+    <!-- Yorumlar -->
+    <section class="reviews" id="yorumlar">
+      <header class="reviews__head">
+        <p class="reviews__score"><b data-puan></b><span><span class="reviews__stars" data-stars></span><span data-puan-adet></span></span></p>
+        <h2 class="h2">Gazla gidenler ne diyor.</h2>
+      </header>
+      <div class="reviews__rail" data-rail tabindex="0" aria-label="Müşteri yorumları">
+        <div class="reviews__track" data-reviews></div>
+      </div>
+    </section>
+
+    <section class="brands" aria-label="Dönüşüm yaptığımız markalar">
+      <p class="brands__label">Dönüşüm yaptığımız markalar</p>
+      <div class="marquee" data-marquee></div>
+    </section>
+
+    <!-- Saatler + konum -->
+    <section class="visit" id="konum">
+      <div class="visit__info">
+        <p class="eyebrow">Şaşmaz'da</p>
+        <h2 class="h2">Aracınızı getirin, bakalım.</h2>
+        <p class="visit__status" data-status-big></p>
+        <dl class="visit__hours" data-hours></dl>
+        <p class="visit__addr" data-bind="adres"></p>
+        <div class="visit__cta">
+          <a class="btn btn--flame" data-maps target="_blank" rel="noopener"><span data-icon="pin"></span>Yol tarifi al</a>
+          <a class="btn btn--ink" data-tel><span data-icon="phone"></span>Ara</a>
+        </div>
+      </div>
+      <div class="visit__map" data-map><p>Harita yaklaşınca yüklenir</p></div>
+    </section>
+
+    <!-- Final: alev yeniden yanar -->
+    <section class="finale" data-finale>
+      <div class="finale__sticky">
+        <p class="finale__kicker" data-final-kicker></p>
+        <h2 class="finale__title" data-final-title></h2>
+        <div class="finale__cta">
+          <a class="btn btn--flame btn--xl" data-tel><span data-icon="phone"></span>Hemen ara</a>
+          <a class="btn btn--ghost btn--xl" data-wa target="_blank" rel="noopener"><span data-icon="whatsapp"></span>WhatsApp'tan yaz</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <p class="foot__name" data-bind="ad"></p>
+    <p data-bind="adres"></p>
+    <p><a data-tel data-bind="telefon"></a></p>
+    <p class="foot__small" data-year></p>
+  </footer>
+
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

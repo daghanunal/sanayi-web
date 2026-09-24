@@ -1,0 +1,115 @@
+{
+  "kurumsal": {
+    "hero": {
+      "baslik": "Önce ölçeriz, sonra boyarız.",
+      "metin": "Her paneli boya kalınlık cihazıyla ölçer, fabrika boyası mı, daha önce boyanmış mı, altında macun var mı, baştan söyleriz. Lokal ve komple boya, kaporta, boyasız göçük, pasta, seramik ve PPF aynı atölyede.",
+      "birincil": "Ölçüm randevusu alın",
+      "ikincil": "Ölçüm nasıl yapılır",
+      "ikincilRota": "olcum"
+    },
+    "ozet": {
+      "baslik": "Gözle değil, ölçüyle",
+      "metin": "Pastaya başlamadan vernik kalınlığına, boyaya başlamadan renk koduna, şaseye dokunmadan ölçü noktalarına bakarız. Ne yapacağımızı ve fiyatını işe başlamadan yazılı söyleriz."
+    },
+    "hizmetOzetBaslik": "Atölyede yapılan işler",
+    "hizmetEk": {
+      "Lokal ve komple boya": { "kisa": "Renk kodu cihazla okunur, fırınlı kabinde boyanır. Parça değişmiş gibi durmaz.", "gorsel": "/img/kurumsal-boya2/tabanca.jpg", "detay": [["Kabin", "Fırınlı, tozsuz"], ["Renk", "Cihazla eşleme"]] },
+      "Boyasız göçük düzeltme": { "kisa": "Dolu ve kapı göçüğü boyaya dokunmadan çıkar, orijinal boya korunur.", "detay": [["Boya", "Dokunulmaz"], ["Ekspertiz", "Orijinal kalır"]] },
+      "Kaporta ve şase düzeltme": { "kisa": "Kazalı araçta ölçü alıp şaseyi fabrika değerine çekeriz.", "detay": [["Şase", "Ölçüyle düzeltme"], ["Sigorta", "Dosyayı biz takip ederiz"]] },
+      "Pasta ve cila": { "kisa": "Vernik kalınlığını ölçmeden makineye dokunmayız. Hare ve kılcal çizik gider.", "gorsel": "/img/kurumsal-boya2/pasta-kirmizi.jpg", "detay": [["Aşama", "3 aşamalı pasta"], ["Önce", "Panel panel ölçüm"]] },
+      "Seramik kaplama": { "kisa": "Pastadan sonra 2 kat seramik. Su boncuk boncuk akar, yıkaması kolaylaşır.", "gorsel": "/img/kurumsal-boya2/cila-yakin.jpg" },
+      "Boya koruma filmi (PPF)": { "kisa": "Kaput, tampon ve çamurluklara şeffaf film; taş sekmesine karşı kalkan." },
+      "Detaylı iç ve dış temizlik": { "kisa": "Köpüklü ön yıkama, jant ve kaliper ayrı fırça, koltuk ve tavan buharla." }
+    },
+    "anlasmaBaslik": "Sigorta dosyası ve filo araçları",
+    "anlasmaMetin": "Eksper randevusundan fotoğraflı teslime kadar tek muhatap. Ölçüm kaydı her dosyada var.",
+    "anlasmalar": [
+      {
+        "baslik": "Kasko ve trafik sigortası hasarları",
+        "kisa": "İhbardan dosya kapanışına kadar süreci biz takip ederiz.",
+        "metin": "Eksper randevusunu alır, parça ve işçilik onayını takip ederiz. Onay gelmeden parça sökmeyiz. Çalıştığımız sigorta şirketlerinin güncel listesi için bizi arayın.",
+        "maddeler": ["Kabulde panel panel boya ölçümü ve fotoğraf", "Onay gelmeden işe başlamama", "Onarım boyunca fotoğrafla bilgilendirme", "Teslimde ölçüm ve fotoğraf raporu"],
+        "buton": "Hasar dosyası için yazın"
+      },
+      {
+        "baslik": "Şirket ve filo araçları",
+        "kisa": "Küçük hasarlar birikmeden, araç bazında kayıtla.",
+        "metin": "Şirket araçlarının boya, kaporta ve iade öncesi düzeltmelerini araç bazında kayıt tutarak yaparız; dönem sonunda tek fatura ve iş dökümü veririz.",
+        "maddeler": ["Araç bazında ölçüm ve iş kaydı", "Küçük hasarlar için hızlı giriş", "Dönemlik tek fatura"],
+        "buton": "Filo görüşmesi talep edin"
+      },
+      {
+        "baslik": "Galeri ve alım-satım öncesi",
+        "kisa": "Satış öncesi ölçüm, boyasız göçük ve pasta ile araç hazırlığı.",
+        "metin": "Satışa çıkacak araçta önce ölçüm yapar, boyasız çıkabilecek göçüğü boyamadan çıkarırız. Ölçüm dökümünü müşterinize gösterebileceğiniz biçimde veririz.",
+        "maddeler": ["Panel panel ölçüm dökümü", "Orijinal boyayı koruyan onarım önceliği", "Toplu araç kabulü için planlama"],
+        "buton": "Görüşme talep edin"
+      }
+    ],
+    "anlasmaNotu": "Sigorta şirketinin onay süresi dosyaya göre değişir. Süreci her adımda size yazılı olarak bildiririz.",
+    "hakkimizda": {
+      "baslik": "Ölçü aleti elimizden düşmez",
+      "paragraflar": [
+        "Şaşmaz Oto Sanayi Sitesi'ndeki atölyemizde boya, kaporta ve detaylı bakım yapıyoruz. Fırınlı boya kabini, renk ölçüm cihazı, boya kalınlık ölçer ve şase ölçü düzeneğiyle kazalı araçtan tek panel çiziğe kadar her işi aynı yerde çözüyoruz.",
+        "Çalışma biçimimiz basit: aracı gün ışığında inceler, her paneli ölçer, fiyatı işe başlamadan yazılı veririz. Onayınız olmadan işe başlamayız; teslimden önce aracı gün ışığı lambasının altında son bir kez biz kontrol ederiz."
+      ],
+      "gorsel": "/img/kurumsal-boya2/polisaj.jpg",
+      "gorselAlt": "Mavi tulumlu usta siyah aracın çamurluğunu makineyle parlatıyor"
+    },
+    "misyon": "Aracı, onarıldığı anlaşılmayacak bir işçilikle, ölçüm kaydıyla ve baştan söylenen fiyatla teslim etmek.",
+    "vizyon": "Şaşmaz'da boya ve kaporta denince, kayıtlı ve ölçerek çalışan atölye olarak akla gelmek.",
+    "degerler": [
+      { "baslik": "Ölçmeden başlamamak", "metin": "Boya kalınlığı ve şase ölçüsü alınmadan işe girilmez." },
+      { "baslik": "Yazılı fiyat", "metin": "Parça ve işçilik fiyatı işe başlamadan yazılı verilir." },
+      { "baslik": "Orijinali korumak", "metin": "Boyasız çıkabilecek göçüğü boyamayız." },
+      { "baslik": "Fotoğraflı rapor", "metin": "Kabulden teslime aracın fotoğrafları ve ölçümleri sizde kalır." }
+    ],
+    "kalite": {
+      "baslik": "Her araçta aynı akış",
+      "metin": "Kabul ve fotoğraf, panel panel ölçüm, yazılı teklif, onay, onarım, gün ışığında son kontrol ve teslim.",
+      "maddeler": [
+        "Araç kabulünde tüm paneller fotoğraflanır, boya kalınlığı ölçülür.",
+        "Renk kodu cihazla okunur, karışım panel panel tutturulur.",
+        "Boya ve vernik tozsuz, fırınlı kabinde yapılır.",
+        "Pastadan önce ve sonra vernik kalınlığı yeniden ölçülür.",
+        "Teslimden önce gün ışığı lambası altında son kontrol yapılır."
+      ]
+    },
+    "kariyer": {
+      "baslik": "Ekibimize katılın",
+      "metin": "Boya, kaporta ve pasta-cila işlerinde deneyimli usta ve mesleği öğrenmek isteyen çırak arkadaşlarla tanışmak isteriz. Kısa bir tanıtımla bize yazın."
+    },
+    "sssBaslik": "Boya ölçümü hakkında",
+    "sss": [
+      { "soru": "Boya kalınlık ölçümü ne işe yarar?", "cevap": "Panelin fabrika boyasında mı olduğunu, daha önce boyanıp boyanmadığını ve altında macun olup olmadığını gösterir. Alım-satımda ve pastadan önce işe yarar." },
+      { "soru": "Tamponu neden ölçmüyorsunuz?", "cevap": "Çoğu tampon plastiktir; cihaz metal olmayan yüzeyde doğru okumaz. Tamponlara gün ışığı lambasıyla, renk ve parlaklık farkına bakarak karar veririz." },
+      { "soru": "Pastada boya incelir mi?", "cevap": "Her pasta vernikten bir miktar alır. Bu yüzden önce ölçer, vernik ince olan panelde makineyi daha hafif kullanır ya da hiç girmeyiz." },
+      { "soru": "Ölçüm ne kadar sürer?", "cevap": "Bütün aracın ölçümü ve fotoğraflanması yaklaşık yarım saat sürer. Randevuyla gelirseniz beklemezsiniz." },
+      { "soru": "Boyanan parça ekspertizde belli olur mu?", "cevap": "Ölçümde boyalı görünür; ama renk ve parlaklık farkı gözle anlaşılmaz. Boyasız çıkarılabilecek göçüğü boyamayız." }
+    ],
+    "yorumBaslik": "Ölçümü gören ne diyor",
+    "galeriBaslik": "Kabinden çıkanlar",
+    "galeri": [
+      { "src": "/img/kurumsal-boya2/pasta-kirmizi.jpg", "alt": "Kırmızı kapıda makine pastası" },
+      { "src": "/img/showroom/kaput.jpg", "alt": "Kırmızı kaput, pasta ve seramik sonrası" },
+      { "src": "/img/kurumsal-boya2/polisaj.jpg", "alt": "Siyah çamurlukta polisaj" },
+      { "src": "/img/showroom/g-klasik.jpg", "alt": "Klasik araç, komple boya" },
+      { "src": "/img/showroom/g-corvette.jpg", "alt": "Arka tampon, kaporta ve lokal boya" },
+      { "src": "/img/kurumsal-boya2/cila-yakin.jpg", "alt": "Siyah kaputta son kat cila" }
+    ],
+    "sayfalar": {
+      "kurumsal": { "baslik": "Kurumsal", "metin": "Kim olduğumuz, nasıl çalıştığımız ve neye önem verdiğimiz.", "gorsel": "/img/showroom/panel.jpg" },
+      "hizmetler": { "baslik": "Hizmetler", "metin": "Lokal boyadan PPF'ye, her iş için ortalama süre ve kapsam." },
+      "olcum": { "baslik": "Boya ölçümü", "metin": "Aracın her panelinde boya kaç mikron, ne anlama gelir? Alım-satım öncesi ve pastadan önce." },
+      "kurumsal-musteriler": { "baslik": "Sigorta ve filo", "metin": "Kasko, trafik sigortası, şirket ve galeri araçları için tek muhatap.", "gorsel": "/img/showroom/kaput.jpg" },
+      "islerimiz": { "baslik": "İşlerimiz", "metin": "Kabinden çıkan araçlar ve müşterilerimizin yorumları." },
+      "iletisim": { "baslik": "İletişim", "metin": "Ölçüm randevusu, hasar fotoğrafı ya da bir sorunuz için yazın; aynı gün dönüş yapalım." }
+    },
+    "konular": ["Boya ölçümü randevusu", "Hasar / sigorta dosyası", "Fiyat teklifi", "Şirket araçları", "Genel bilgi"],
+    "cta": {
+      "baslik": "Aracınızı getirin, her panelini ölçelim",
+      "metin": "Yarım saatte bütün aracı ölçer, ne yapılması gerektiğini ve fiyatını işe başlamadan söyleriz.",
+      "buton": "Randevu alın"
+    }
+  }
+}

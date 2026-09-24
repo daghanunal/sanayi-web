@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#1f2bdb" />
+  <title>Oto Döşeme | Şaşmaz</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231f2bdb'/%3E%3Cpath d='M6 22 Q16 6 26 22' fill='none' stroke='%23ff8cc6' stroke-width='3' stroke-dasharray='3 2.4' stroke-linecap='round'/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,500..800;1,6..96,400..700&family=Onest:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap&subset=latin-ext" rel="stylesheet" />
+</head>
+<body class="is-loading">
+  <!-- Açılış: iplik bir dikiş hattı atar, perde o hattan makasla açılır -->
+  <div class="intro" data-intro role="presentation">
+    <div class="intro__half intro__half--top" data-intro-top>
+      <div class="intro__inner">
+        <p class="intro__kicker">Şaşmaz Oto Sanayi · Oto döşeme</p>
+        <p class="intro__name" data-intro-name></p>
+      </div>
+    </div>
+    <div class="intro__half intro__half--bot" data-intro-bot>
+      <div class="intro__inner">
+        <p class="intro__meta"><span>Dikiş</span><b data-intro-count>000</b><span>/ 120</span></p>
+      </div>
+    </div>
+    <svg class="intro__seam" viewBox="0 0 1000 20" preserveAspectRatio="none" aria-hidden="true">
+      <line class="intro__stitch" data-intro-line x1="0" y1="10" x2="1000" y2="10" />
+    </svg>
+    <i class="intro__needle" data-intro-needle aria-hidden="true"></i>
+    <p class="intro__skip">Geçmek için dokun</p>
+  </div>
+
+  <canvas class="stage" data-stage aria-hidden="true"></canvas>
+  <div class="glow" aria-hidden="true"></div>
+
+  <header class="top" data-top>
+    <a class="top__brand" href="#" data-bind="ad"></a>
+    <p class="top__status" data-status></p>
+    <nav class="top__nav" aria-label="Bölümler">
+      <a href="#malzeme">Malzeme</a>
+      <a href="#hizmetler">Hizmetler</a>
+      <a href="#konum">Konum</a>
+    </nav>
+    <a class="top__call" data-tel><span data-icon="phone"></span><span class="top__num" data-bind="telefon"></span></a>
+  </header>
+
+  <main>
+    <!-- 1. Kahraman + atölye: kumaş sökülür, kalıbı çizilir, kesilir, dikilir, gerilir -->
+    <section class="ch ch--hero" data-ch="hero">
+      <div class="ch__pin">
+        <div class="hero" data-hero>
+          <p class="hero__since"><span class="dot"></span><span data-since></span></p>
+          <h1 class="hero__title" data-hero-title></h1>
+          <p class="hero__slogan" data-bind="slogan"></p>
+          <div class="hero__cta">
+            <a class="btn btn--pink" data-tel><span data-icon="phone"></span>Hemen ara</a>
+            <a class="btn btn--line" data-wa target="_blank" rel="noopener"><span data-icon="whatsapp"></span>WhatsApp'tan yaz</a>
+          </div>
+          <p class="hint" aria-hidden="true"><i></i>Kaydırın, kumaşı biçelim</p>
+        </div>
+
+        <div class="steps" data-steps aria-live="polite">
+          <div class="steps__head">
+            <p class="steps__kicker">Tezgâhta bir koltuk</p>
+            <p class="gauge" aria-hidden="true"><span data-gauge-label>Söküm</span><b><span data-gauge>0</span><small>%</small></b></p>
+          </div>
+          <ol class="steps__rail" data-steps-rail></ol>
+          <div class="steps__body" data-steps-body></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. Malzeme: aynı panel kumaştan kapitoneye dönüşür -->
+    <section class="ch ch--mat" data-ch="mat" id="malzeme">
+      <div class="ch__pin">
+        <div class="mat">
+          <p class="mat__kicker">Malzemeyi birlikte seçeriz</p>
+          <p class="mat__idx"><b data-mat-idx>01</b><span>/ 04</span></p>
+          <h2 class="mat__name" data-mat-name></h2>
+          <p class="mat__alt" data-mat-alt></p>
+          <p class="mat__txt" data-mat-txt></p>
+          <ul class="mat__chips" data-mat-chips></ul>
+        </div>
+        <ol class="kartela" data-kartela aria-hidden="true"></ol>
+      </div>
+    </section>
+
+    <!-- İçerik -->
+    <section class="svc" id="hizmetler" aria-labelledby="svc-h">
+      <div class="svc__head">
+        <p class="kicker">Hizmetler</p>
+        <h2 id="svc-h" class="svc__title">Koltuktan tavana,<br /><em>her dikiş bizden.</em></h2>
+      </div>
+      <ol class="svc__list" data-svc></ol>
+    </section>
+
+    <section class="nums" aria-label="Rakamlarla">
+      <p class="nums__about" data-bind="hakkinda"></p>
+      <ol class="nums__list" data-stats></ol>
+      <p class="nums__garanti"><span class="seam" aria-hidden="true"></span><span data-bind="garanti"></span></p>
+    </section>
+
+    <section class="yil" aria-labelledby="yil-h">
+      <div class="yil__head">
+        <p class="kicker kicker--pink">Aynı tezgâh</p>
+        <h2 id="yil-h" class="yil__title"><span data-yas></span> yılın dikişi</h2>
+      </div>
+      <div class="yil__wrap">
+        <svg class="yil__thread" data-thread aria-hidden="true" preserveAspectRatio="none">
+          <defs><mask id="yilMask"><path data-thread-draw fill="none" stroke="#fff" stroke-width="10" /></mask></defs>
+          <path data-thread-path fill="none" mask="url(#yilMask)" />
+        </svg>
+        <ol class="yil__list" data-tarihce></ol>
+      </div>
+    </section>
+
+    <section class="rev" id="yorumlar" aria-labelledby="rev-h">
+      <div class="rev__head">
+        <h2 id="rev-h" class="rev__title">Oturan <em>ne diyor</em></h2>
+        <p class="rev__score"><b data-puan></b><span class="rev__stars" data-stars></span><span class="rev__count" data-puan-adet></span></p>
+      </div>
+      <div class="rev__track" data-rev></div>
+      <div class="brands" aria-label="Döşediğimiz markalar"><div class="marquee" data-marquee></div></div>
+    </section>
+
+    <section class="visit" id="konum" aria-labelledby="visit-h">
+      <div class="visit__grid">
+        <div class="visit__col">
+          <p class="kicker">Çalışma saatleri</p>
+          <p class="visit__big" data-status-big></p>
+          <dl class="hours" data-hours></dl>
+        </div>
+        <div class="visit__col">
+          <p class="kicker">Adres</p>
+          <h2 id="visit-h" class="visit__addr" data-bind="adres"></h2>
+          <div class="visit__btns">
+            <a class="btn btn--blue" data-maps target="_blank" rel="noopener"><span data-icon="pin"></span>Yol tarifi al</a>
+            <a class="btn btn--ghost" data-tel><span data-icon="phone"></span><span data-bind="telefon"></span></a>
+          </div>
+        </div>
+      </div>
+      <div class="visit__map" data-map><p>Harita yaklaşınca yüklenir</p></div>
+    </section>
+
+    <!-- 3. Final: örtü iner, sonra uçup çağrıyı açar -->
+    <section class="ch ch--final" data-ch="final">
+      <div class="ch__pin">
+        <p class="final__hint" data-final-hint aria-hidden="true">Örtüyü kaldırmak için kaydırın</p>
+        <div class="final" data-final>
+          <p class="kicker kicker--pink">Şaşmaz Oto Sanayi</p>
+          <h2 class="final__title" data-final-title></h2>
+          <p class="final__txt" data-final-alt></p>
+          <div class="final__cta">
+            <a class="btn btn--pink btn--xl" data-tel><span data-icon="phone"></span><span data-bind="telefon"></span></a>
+            <a class="btn btn--line btn--xl" data-wa target="_blank" rel="noopener"><span data-icon="whatsapp"></span>WhatsApp</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <p class="foot__name" data-bind="ad"></p>
+    <p data-bind="adres"></p>
+    <p><a data-tel data-bind="telefon"></a></p>
+    <p class="foot__small" data-year></p>
+  </footer>
+
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#ff5a1f" />
+  <title>Egzoz | Şaşmaz, Ankara</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='16' fill='%23ff5a1f'/%3E%3Ccircle cx='16' cy='16' r='7' fill='none' stroke='%231b1530' stroke-width='4'/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=Hanken+Grotesk:wght@400;500;600;700;800&family=Martian+Mono:wght@400;600&display=swap&subset=latin-ext" rel="stylesheet" />
+  <link rel="preload" as="image" href="/img/egzoz-kinetik/uc-turuncu.jpg" />
+  <link rel="stylesheet" href="../../shared/base.css" />
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <header class="top">
+    <a href="#top" class="top__brand"><span class="top__mark" aria-hidden="true"></span><span data-name></span></a>
+    <nav class="top__nav" aria-label="Sayfa bölümleri">
+      <a href="#hat">Egzoz hattı</a>
+      <a href="#hizmetler">Hizmetler</a>
+      <a href="#yorumlar">Yorumlar</a>
+      <a href="#konum">Konum</a>
+    </nav>
+    <span class="status" data-status></span>
+    <a class="top__call" data-tel></a>
+  </header>
+
+  <main>
+    <!-- Afiş: dev isim, borunun ağzı ve dalga dalga yayılan ses halkaları -->
+    <section class="hero" id="top" aria-label="Giriş">
+      <p class="hero__ust mono" data-since></p>
+      <h1 class="afis" data-afis></h1>
+      <div class="sahne" aria-hidden="true">
+        <div class="dalga" data-dalga></div>
+        <div class="boru">
+          <img class="boru__img" src="/img/egzoz-kinetik/uc-turuncu.jpg" alt="" fetchpriority="high" />
+          <span class="halka"></span><span class="halka"></span><span class="halka"></span>
+        </div>
+      </div>
+      <div class="hero__alt">
+        <p class="hero__slogan" data-slogan></p>
+        <div class="butonlar">
+          <a class="btn btn--koyu" data-tel-btn>Hemen ara</a>
+          <a class="btn btn--cizgi" data-wa>WhatsApp'tan yaz</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- İmza: GÜRÜLTÜ kelimesi titrer; kaydırdıkça desibel düşer, harfler susar, SESSİZ yazar -->
+    <section class="ses" aria-label="Ses ölçümü">
+      <div class="ses__pin">
+        <p class="ses__etiket mono">Ses ölçümü · muayene sınırı <b data-sinir></b> dB</p>
+        <div class="ses__sahne">
+          <div class="ses__halkalar" aria-hidden="true"><span class="halka"></span><span class="halka"></span><span class="halka"></span></div>
+          <p class="ses__kelime ses__kelime--once" data-gurultu aria-hidden="true"></p>
+          <p class="ses__kelime ses__kelime--sonra" data-sessiz aria-hidden="true"></p>
+        </div>
+        <div class="olcer">
+          <p class="olcer__sayi"><b data-db>104</b><small>dB</small></p>
+          <div class="olcer__cubuk"><span class="olcer__dolu" data-db-bar></span><span class="olcer__sinir" data-sinir-cizgi><i>sınır</i></span></div>
+        </div>
+        <div class="ses__metin">
+          <h2 data-ses-baslik></h2>
+          <p data-ses-metin></p>
+        </div>
+      </div>
+    </section>
+
+    <section class="hat" id="hat" aria-label="Egzoz hattı">
+      <div class="bas">
+        <p class="mono bas__ust">Motordan uca beş durak</p>
+        <h2 class="h2">Gaz beş yerden geçer. Arıza hangisindeyse orayı onarırız.</h2>
+      </div>
+      <ol class="hat__liste" data-hat></ol>
+    </section>
+
+    <section class="rapor" aria-label="Muayene ölçümü">
+      <div class="bas">
+        <p class="mono bas__ust">Önünüzde ölçülür, çıktısı size verilir</p>
+        <h2 class="h2" data-rapor-baslik></h2>
+      </div>
+      <div class="rapor__liste" data-olcum></div>
+      <p class="damga" aria-hidden="true">GEÇTİ</p>
+      <p class="rapor__not mono">Örnek değerlerdir. Sınırlar aracın yakıt tipine ve model yılına göre değişir.</p>
+    </section>
+
+    <section class="duman" aria-label="Duman rengi">
+      <div class="bas bas--ters">
+        <p class="mono bas__ust">Egzoza bakın</p>
+        <h2 class="h2">Dumanın rengi arızayı söyler.</h2>
+      </div>
+      <div class="duman__liste" data-duman></div>
+    </section>
+
+    <section class="hizmetler" id="hizmetler">
+      <div class="bas bas--ters">
+        <p class="mono bas__ust">Süreler ortalamadır</p>
+        <h2 class="h2">Tezgâhta ne var?</h2>
+        <p class="bas__alt">Fiyatı işe başlamadan söyleriz. Temizlenebilen parçayı değiştirmeyiz.</p>
+      </div>
+      <ul class="hizmet-liste" data-services></ul>
+    </section>
+
+    <section class="rakam" aria-label="Rakamlarla">
+      <div class="serit" aria-hidden="true"><div class="serit__ic" data-serit></div></div>
+      <dl class="rakam__liste" data-stats></dl>
+    </section>
+
+    <section class="surec" aria-label="Nasıl çalışırız">
+      <div class="bas">
+        <p class="mono bas__ust">Dört adım</p>
+        <h2 class="h2">Lifte kaldırmadan fiyat konuşmayız.</h2>
+      </div>
+      <ol class="surec__liste" data-steps></ol>
+    </section>
+
+    <section class="galeri" aria-label="Atölyeden">
+      <div class="galeri__izgara" data-gallery></div>
+    </section>
+
+    <section class="yorumlar" id="yorumlar">
+      <div class="yorumlar__bas">
+        <p class="puan" data-puan></p>
+        <div>
+          <p class="puan__yildiz" data-yildiz></p>
+          <p class="puan__alt mono" data-puan-alt></p>
+          <h2 class="h2 h2--kucuk">Sanayide ne diyorlar?</h2>
+        </div>
+      </div>
+      <div class="yorum-serit" data-reviews tabindex="0" aria-label="Müşteri yorumları, yana kaydırın"></div>
+      <div class="markalar" aria-label="Çalıştığımız markalar"><div class="markalar__ic" data-brands></div></div>
+    </section>
+
+    <section class="konum" id="konum">
+      <div class="konum__metin">
+        <p class="mono bas__ust">Şaşmaz Oto Sanayi</p>
+        <h2 class="h2">Dükkân açık mı?</h2>
+        <p class="acik" data-status></p>
+        <dl class="saatler" data-hours></dl>
+        <p class="adres" data-address></p>
+        <div class="butonlar">
+          <a class="btn btn--turuncu" data-maps target="_blank" rel="noopener">Yol tarifi al</a>
+          <a class="btn btn--cizgi" data-tel-btn></a>
+        </div>
+      </div>
+      <div class="harita" data-map></div>
+    </section>
+
+    <section class="final" aria-label="Bize ulaşın">
+      <div class="final__halkalar" aria-hidden="true"><span class="halka"></span><span class="halka"></span><span class="halka"></span></div>
+      <h2 class="final__baslik" data-final></h2>
+      <p class="final__garanti" data-garanti></p>
+      <div class="butonlar butonlar--orta">
+        <a class="btn btn--koyu btn--buyuk" data-tel-btn>Hemen ara</a>
+        <a class="btn btn--cizgi btn--buyuk" data-wa>WhatsApp'tan yaz</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="alt">
+    <p><b data-name></b>, <span data-address></span></p>
+    <p>© <span data-year></span> <span data-name></span>. Fotoğraflar: Pexels.</p>
+  </footer>
+
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

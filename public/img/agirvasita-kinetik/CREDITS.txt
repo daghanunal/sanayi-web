@@ -1,0 +1,5 @@
+Tüm görseller Pexels lisansıyla (ücretsiz, ticari kullanım serbest):
+actros.jpg: "View of a Mercedes-Benz Actros Driving on a Street" https://www.pexels.com/photo/view-of-a-mercedes-benz-actros-driving-on-a-street-20097991/
+gece.jpg: "Car Lights on the Highway at Night" https://www.pexels.com/photo/car-lights-on-the-highway-at-night-15444512/
+cekici.jpg: "Mercedes-Benz Cargo Truck" https://www.pexels.com/photo/mercedes-benz-cargo-truck-16100082/
+Ayrıca public/img/tonaj/ altındaki beyaz.jpg kullanılır (kaynakları orada).

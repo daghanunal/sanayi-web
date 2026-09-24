@@ -1,0 +1,60 @@
+{
+  "bolumler": [
+    {
+      "id": "tank",
+      "durak": "Tank",
+      "kicker": "Sıvı hâlde, basınç altında",
+      "baslik": "Stepne yuvasına simit tank. Bagaj yerinde kalır.",
+      "metin": "Tankı aracın bagaj yapısına göre seçeriz: stepne yuvasına oturan simit ya da silindir. Periyodik muayenesini de, ömrünü dolduranın değişimini de burada yaparız.",
+      "hal": "Sıvı", "basinc": "7", "sicaklik": "18",
+      "wa": "tank muayenesi ya da tank değişimi"
+    },
+    {
+      "id": "valf",
+      "durak": "Çok valf",
+      "kicker": "Tankın kapısı",
+      "baslik": "Doldurma, seviye, emniyet: hepsi tek valfte.",
+      "metin": "Çok valf gazı içeride tutan parçadır. Muayeneden önce ilk buraya bakarız; bağlantıları cihazla kaçak testinden geçirir, eksik varsa aracınız muayeneye gitmeden gideririz.",
+      "hal": "Sıvı", "basinc": "7", "sicaklik": "18",
+      "wa": "tank ve çok valf kontrolü"
+    },
+    {
+      "id": "buhar",
+      "durak": "Regülatör",
+      "kicker": "Sıvı burada gaza döner",
+      "baslik": "Regülatör motor suyuyla ısınır, gazı buhara çevirir.",
+      "metin": "Sıvı LPG regülatörde buharlaşır, basıncı düşer. Filtreler tıkanınca araç gazda teklemeye başlar; bakımda önce gaz ve buhar filtrelerini değiştirir, regülatörü kontrol ederiz.",
+      "hal": "Gaz", "basinc": "1,2", "sicaklik": "45",
+      "wa": "LPG bakımı ve filtre değişimi"
+    },
+    {
+      "id": "sira",
+      "durak": "Enjektör",
+      "kicker": "Sıralı enjeksiyon",
+      "baslik": "Her silindire kendi sırasında gaz.",
+      "metin": "Her silindirin ayrı gaz enjektörü var. Elektronik ünite benzin enjektörünün sinyalini okur, gazı aynı sırada ve aynı sürede verir. Araç benzinle gider gibi çeker, geçişi hissetmezsiniz.",
+      "hal": "Gaz", "basinc": "1,2", "sicaklik": "40",
+      "wa": "sıralı enjeksiyon LPG dönüşümü"
+    },
+    {
+      "id": "direkt",
+      "durak": "Silindir",
+      "kicker": "TSI · TFSI · GDI",
+      "baslik": "Direkt enjeksiyonlu motorda da olur.",
+      "metin": "Çoğu yerin yapmam dediği motorlar. Benzin enjektörlerini koruyan uygun sistemi seçer, motorun değerlerine göre ayrı ayarlarız. Uygun değilse de baştan açıkça söyleriz.",
+      "hal": "Yanma", "basinc": "1,2", "sicaklik": "40",
+      "wa": "direkt enjeksiyonlu aracın LPG dönüşümü"
+    },
+    {
+      "id": "ayar",
+      "durak": "Ayar",
+      "kicker": "Bilgisayar ve yol testi",
+      "baslik": "Ayarın son sözünü yol söyler.",
+      "metin": "Bilgisayarla ilk ayarı yaparız, sonra aracı yolda farklı devirlerde deneriz. Tekleme, rölantide düşme, geçişte takılma: enjektör sürelerini motorun değerlerine göre yeniden kurarız.",
+      "hal": "Gaz", "basinc": "1,2", "sicaklik": "40",
+      "wa": "LPG ayarı ve arıza tespiti"
+    }
+  ],
+  "finalBaslik": "Aracınızı getirin, uygun mu değil mi ilk bakışta söyleyelim.",
+  "evrakBaslik": "Evrak işini de biz takip ederiz."
+}

@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#dfe2e7" />
+  <title>Motor Rektifiye ve Torna | Şaşmaz, Ankara</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23e0b45a'/%3E%3Cstop offset='.5' stop-color='%236b34d4'/%3E%3Cstop offset='1' stop-color='%232f6bd8'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='32' height='32' rx='8' fill='%2312121a'/%3E%3Cpath d='M7 22c4-9 9-9 9-4s5 5 9-4' fill='none' stroke='url(%23g)' stroke-width='3.2' stroke-linecap='round'/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Krona+One&family=Red+Hat+Text:wght@400;500;700&family=Red+Hat+Mono:wght@400;500;600&display=swap&subset=latin-ext" rel="stylesheet" />
+  <link rel="stylesheet" href="../../shared/base.css" />
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <!-- Açılış: ayna ayakları parçayı sıkar, devir yükselir -->
+  <div class="intro" aria-hidden="true">
+    <div class="intro__core">
+      <svg class="ayna" viewBox="-110 -110 220 220">
+        <defs>
+          <linearGradient id="tavG" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#e3b862" />
+            <stop offset=".35" stop-color="#b8683a" />
+            <stop offset=".65" stop-color="#6b34d4" />
+            <stop offset="1" stop-color="#2f6bd8" />
+          </linearGradient>
+        </defs>
+        <circle class="ayna__ring" r="104" />
+        <circle class="ayna__body" r="96" />
+        <g class="ayna__spin">
+          <g class="ayna__jaws">
+            <rect class="ayna__jaw" x="-11" y="-92" width="22" height="46" rx="3" />
+            <rect class="ayna__jaw" x="-11" y="-92" width="22" height="46" rx="3" transform="rotate(120)" />
+            <rect class="ayna__jaw" x="-11" y="-92" width="22" height="46" rx="3" transform="rotate(240)" />
+          </g>
+          <circle class="ayna__bar" r="30" />
+          <circle class="ayna__center" r="4" />
+          <path class="ayna__mark" d="M0 -30 L0 -14" />
+        </g>
+      </svg>
+      <p class="intro__rpm"><span data-rpm>0</span> dev/dk</p>
+      <p class="intro__name" data-name></p>
+      <p class="intro__hint">Parça aynaya bağlanıyor. Geçmek için dokunun.</p>
+    </div>
+  </div>
+
+  <div class="backdrop" aria-hidden="true"><div class="backdrop__dark"></div></div>
+  <canvas class="stage" aria-hidden="true"></canvas>
+  <div class="flash" aria-hidden="true"></div>
+
+  <header class="hdr">
+    <a class="hdr__brand" href="#top"><span class="hdr__mark" aria-hidden="true"></span><span data-name></span></a>
+    <nav class="hdr__nav" aria-label="Bölümler">
+      <a href="#isler">İşler</a>
+      <a href="#yuzey">Yüzey</a>
+      <a href="#rapor">Rapor</a>
+      <a href="#konum">Konum</a>
+    </nav>
+    <p class="hdr__status" data-status></p>
+    <a class="hdr__tel" data-tel></a>
+  </header>
+
+  <main id="top">
+    <!-- Film: torna, talaş, numune, taşlama, talaş tüneli -->
+    <section class="film" aria-label="Tezgâhta ne oluyor">
+      <div class="film__stick">
+        <div class="hud" aria-hidden="true">
+          <p class="hud__lbl" data-hud-lbl>Ham çap</p>
+          <p class="hud__val"><span data-hud-val>Ø 80,00</span></p>
+          <p class="hud__unit" data-hud-unit>mm</p>
+          <div class="hud__bar"><i data-hud-bar></i></div>
+        </div>
+
+        <div class="chap chap--hero" data-ch="0">
+          <p class="chap__kick" data-since></p>
+          <h1 class="hero__title" data-name></h1>
+          <p class="hero__lead" data-slogan></p>
+          <div class="hero__cta">
+            <a class="btn btn--ink" data-tel-btn>Hemen ara</a>
+            <a class="btn btn--line" data-wa>WhatsApp'tan yaz</a>
+          </div>
+          <p class="hero__hint"><span></span>Kaydırın, tezgâhı çalıştıralım</p>
+        </div>
+
+        <div class="chap" data-ch="1">
+          <p class="chap__kick">01 · Torna</p>
+          <h2 class="chap__title">Talaş kıvrılır, ölçü iner.</h2>
+          <p class="chap__txt">Kalem her paso birkaç yüzde bir milimetre alır. Talaşın rengi bize kesme sıcaklığını söyler: saman sarısı iyi, mor dikkat, mavi fazla.</p>
+        </div>
+
+        <div class="chap" data-ch="2">
+          <p class="chap__kick">02 · Numuneden parça</p>
+          <h2 class="chap__title">Aynısını işleriz.</h2>
+          <p class="chap__txt">Burç, flanş, mil, adaptör. Çizim ya da eski parçayı getirin; kademe kademe ölçer, aynı ölçüde çıkarırız.</p>
+        </div>
+
+        <div class="chap" data-ch="3">
+          <p class="chap__kick">03 · Taşlama</p>
+          <h2 class="chap__title">Işıklar söner, taş konuşur.</h2>
+          <p class="chap__txt">Krank muylusu taşın altında ayna gibi olur. Çizik, ovalite, yatak izi kıvılcımla gider. Sonra iki yönden ölçülür.</p>
+        </div>
+
+        <div class="chap chap--tunel" data-ch="4">
+          <p class="chap__kick">04 · Ölçü</p>
+          <h2 class="chap__title">Beş mikron.</h2>
+          <p class="chap__txt">Bir saç teli bunun on dört katı kalın. Motor bu farkı hisseder; biz de ölçeriz, rapora yazarız.</p>
+        </div>
+
+        <ol class="steps" aria-hidden="true">
+          <li>Torna</li><li>Numune</li><li>Taşlama</li><li>Ölçü</li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- Hizmetler -->
+    <section class="isler" id="isler">
+      <div class="wrap">
+        <header class="sec-head">
+          <p class="kick">Tezgâhtaki işler</p>
+          <h2 class="sec-title" data-split>Getirdiğiniz parça, ölçüsüyle geri döner.</h2>
+          <p class="sec-lead">Motor ustaları da buraya iş getirir. Her iş için toleransı ve süreyi baştan söyleriz; fiyatı işe başlamadan konuşuruz.</p>
+        </header>
+        <ol class="isler__list" data-hizmetler></ol>
+      </div>
+    </section>
+
+    <!-- İstatistik + hakkında -->
+    <section class="sayilar">
+      <div class="wrap">
+        <p class="sayilar__txt" data-hakkinda></p>
+        <div class="sayilar__grid" data-stats></div>
+      </div>
+    </section>
+
+    <!-- İmza: büyüteç altında yüzey -->
+    <section class="yuzey" id="yuzey">
+      <div class="wrap yuzey__grid">
+        <div class="yuzey__txt">
+          <p class="kick">Büyüteç altında</p>
+          <h2 class="sec-title" data-split>Yüzeye bakın, işi anlayın.</h2>
+          <p class="sec-lead">Aynı çelik, üç ayrı yüzey. Büyüteci parçanın üstünde gezdirin; hangi işin hangi izi bıraktığını görün.</p>
+          <div class="yuzey__tabs" role="tablist" aria-label="Yüzey türü" data-yuzey-tabs></div>
+          <div class="yuzey__info" aria-live="polite">
+            <p class="yuzey__deger" data-yuzey-deger></p>
+            <p class="yuzey__metin" data-yuzey-metin></p>
+            <p class="yuzey__not">Değerler tipik aralıktır, parçaya göre değişir.</p>
+          </div>
+        </div>
+        <figure class="lupe" data-lupe>
+          <canvas class="lupe__cv" aria-hidden="true"></canvas>
+          <figcaption class="lupe__cap">Büyütme <b>×40</b> <span data-lupe-hint>· sürükleyin</span></figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- Rapor: tolerans bandı -->
+    <section class="rapor" id="rapor">
+      <div class="wrap rapor__grid">
+        <div class="rapor__txt">
+          <p class="kick">Ölçü raporu</p>
+          <h2 class="sec-title" data-split>Her silindir bandın içinde.</h2>
+          <p class="sec-lead">Motor gittiğinde ölçüler kâğıtta, parçanın yanında gider. Motoru toplayan usta neyle karşılaşacağını bilir.</p>
+          <dl class="rapor__meta" data-rapor-meta></dl>
+        </div>
+        <figure class="bant" data-bant></figure>
+      </div>
+    </section>
+
+    <!-- Süreç -->
+    <section class="surec">
+      <div class="wrap">
+        <header class="sec-head">
+          <p class="kick">Nasıl çalışıyoruz</p>
+          <h2 class="sec-title" data-split>Ölç, konuş, işle, ölç.</h2>
+        </header>
+        <div class="surec__wrap">
+          <svg class="surec__spiral" viewBox="0 0 100 1000" preserveAspectRatio="none" aria-hidden="true">
+            <defs><linearGradient id="spiralG" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="1000"><stop offset="0" stop-color="#e3b862"/><stop offset=".33" stop-color="#b8683a"/><stop offset=".66" stop-color="#6b34d4"/><stop offset="1" stop-color="#2f6bd8"/></linearGradient></defs>
+            <path data-spiral d="" />
+          </svg>
+          <ol class="surec__list" data-surec></ol>
+        </div>
+      </div>
+    </section>
+
+    <!-- Galeri -->
+    <section class="galeri" aria-label="Atölyeden">
+      <div class="wrap">
+        <header class="sec-head sec-head--row">
+          <h2 class="sec-title" data-split>Atölyeden</h2>
+          <p class="sec-lead">Tezgâh, taş, freze. Parçayı kendi gözünüzle görmek isterseniz uğrayın.</p>
+        </header>
+      </div>
+      <div class="galeri__track" data-galeri data-lenis-prevent-touch></div>
+    </section>
+
+    <!-- Yorumlar -->
+    <section class="yorumlar">
+      <div class="wrap">
+        <header class="sec-head sec-head--row">
+          <h2 class="sec-title" data-split>Ustalar ne diyor</h2>
+          <p class="puan"><b data-puan></b><span class="puan__s" data-stars></span><span data-puan-adet></span></p>
+        </header>
+        <div class="yorumlar__grid" data-yorumlar></div>
+      </div>
+    </section>
+
+    <section class="motorlar" aria-label="Sık gelen motorlar">
+      <p class="wrap motorlar__lbl">Sık gelen motorlar</p>
+      <div class="marquee"><div class="marquee__in" data-marquee></div></div>
+    </section>
+
+    <!-- Konum -->
+    <section class="konum" id="konum">
+      <div class="wrap konum__grid">
+        <div class="konum__txt">
+          <p class="kick">Konum ve saatler</p>
+          <h2 class="sec-title" data-split>Tezgâh burada.</h2>
+          <p class="konum__status" data-status-big></p>
+          <table class="saatler" data-saatler></table>
+          <p class="konum__adres" data-address></p>
+          <div class="konum__btns">
+            <a class="btn btn--ink" data-maps target="_blank" rel="noopener">Yol tarifi al</a>
+            <a class="btn btn--line" data-tel-btn>Ara</a>
+          </div>
+        </div>
+        <div class="harita" data-map><span>Harita yükleniyor</span></div>
+      </div>
+    </section>
+
+    <!-- Final: sahne geri gelir -->
+    <section class="son">
+      <div class="son__in wrap">
+        <p class="kick kick--light">Parçayı getirin</p>
+        <h2 class="son__title" data-split>Ölçüsüne getirelim.</h2>
+        <p class="son__lead" data-garanti></p>
+        <div class="son__btns">
+          <a class="btn btn--tav btn--big" data-tel-btn>Hemen ara</a>
+          <a class="btn btn--glass btn--big" data-wa>WhatsApp'tan yaz</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <div class="wrap foot__grid">
+      <p class="foot__name" data-name></p>
+      <p data-address></p>
+      <p><a data-tel-plain></a></p>
+      <p class="foot__small">© <span data-year></span> <span data-name></span>. Fotoğraflar: Pexels. Torna sahnesi bu site için kodla üretildi.</p>
+    </div>
+  </footer>
+
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

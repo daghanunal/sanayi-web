@@ -1,0 +1,66 @@
+{
+  "preset": "sektor-lpg",
+  "isletme": {
+    "ad": "Mavi Alev LPG",
+    "sektor": "LPG Dönüşüm, Bakım ve Muayene",
+    "slogan": "Yakıtı değiştirin, aracınızın huyunu değil.",
+    "kurulus": 2002,
+    "hakkinda": "2002'den beri Şaşmaz'da yalnızca LPG işi yapıyoruz. Aracınızın motoruna uygun sistemi seçer, tankı ve hatları kurallara uygun döşer, ayarı yol testiyle bitiririz. Proje, montaj belgesi ve ruhsata işleme adımlarını da biz takip ederiz; siz aracınızı teslim alırken evraklarınız hazır olur."
+  },
+  "iletisim": {
+    "telefon": "0532 555 27 02",
+    "whatsapp": "905325552702",
+    "adres": "Şaşmaz Oto Sanayi Sitesi, 4. Cadde No: 17, Etimesgut/Ankara",
+    "mapsQuery": "Şaşmaz Oto Sanayi Sitesi Etimesgut Ankara"
+  },
+  "saatler": [null, "08:30-19:00", "08:30-19:00", "08:30-19:00", "08:30-19:00", "08:30-19:00", "09:00-16:00"],
+  "hizmetler": [
+    { "baslik": "Sıralı enjeksiyon LPG dönüşümü", "aciklama": "Her silindire ayrı gaz enjektörü, motorun beyniyle uyumlu çalışan elektronik ünite. Araç benzinle çalışır gibi çeker, geçişi siz hissetmezsiniz.", "sure": "1-2 gün" },
+    { "baslik": "Direkt enjeksiyonlu araçlar", "aciklama": "TSI, TFSI, GDI gibi direkt enjeksiyonlu motorlara uygun sistemler. Benzin enjektörlerini koruyan yapıyla kurulur, motora göre ayrı ayarlanır.", "sure": "2-3 gün" },
+    { "baslik": "LPG bakım ve filtre değişimi", "aciklama": "Gaz ve buhar filtreleri, regülatör kontrolü, hortum ve bağlantılarda kaçak testi. Her 15.000-20.000 km'de bir önerilir.", "sure": "1 saat" },
+    { "baslik": "Ayar ve arıza tespiti", "aciklama": "Tekleme, rölantide düşme, gazda geçişte takılma. Bilgisayarla okuma yapar, enjektör sürelerini motorun değerlerine göre yeniden ayarlarız.", "sure": "Aynı gün" },
+    { "baslik": "Tank periyodik muayenesi", "aciklama": "Tankın, çok valfin ve bağlantıların kontrolü. Muayeneye girmeden önce eksikleri görür, aracınızın bir kez gidip geçmesini sağlarız.", "sure": "Aynı gün" },
+    { "baslik": "Proje ve ruhsat işlemleri", "aciklama": "Tadilat projesi, montaj belgesi ve ruhsata LPG'nin işlenmesi için gereken evrak. Hangi belgenin nereye gideceğini baştan anlatırız.", "sure": "Birkaç iş günü" },
+    { "baslik": "Tank değişimi ve yerleşim", "aciklama": "Bagaj hacmini koruyan stepne yuvası tipi (simit) ya da silindir tank. Ömrünü dolduran tankı yenisiyle değiştiririz.", "sure": "Aynı gün" },
+    { "baslik": "Sistem yenileme", "aciklama": "Eski tip karbüratörlü ya da ilk nesil sistemleri sıralı enjeksiyona çeviririz. Sağlam kalan tank ve hatlar mümkünse yeniden kullanılır.", "sure": "1 gün" }
+  ],
+  "surec": [
+    { "baslik": "Aracı inceleriz", "aciklama": "Motor tipine, kilometresine ve bagaj yapısına bakar, hangi sistemin ve tankın uygun olduğunu söyleriz. Uygun değilse de açıkça söyleriz." },
+    { "baslik": "Proje hazırlanır", "aciklama": "Dönüşüm için gereken tadilat projesi hazırlanır. Montaja ancak bu adım tamamlandıktan sonra başlarız." },
+    { "baslik": "Montaj yapılır", "aciklama": "Tank, çok valf, regülatör, enjektörler ve elektronik ünite takılır; bütün bağlantılar kaçak testinden geçer." },
+    { "baslik": "Ayar ve yol testi", "aciklama": "Bilgisayarla ilk ayar yapılır, ardından yolda farklı devirlerde deneyip son ayarı veririz." },
+    { "baslik": "Evrak ve teslim", "aciklama": "Montaj belgesi verilir, ruhsat işlemi için yol gösterilir. Kullanımı ve bakım aralıklarını anlatıp aracı teslim ederiz." }
+  ],
+  "istatistikler": [
+    { "deger": 24, "sonek": "", "etiket": "yıldır Şaşmaz'da", "kurulustanHesapla": true },
+    { "deger": 9500, "sonek": "+", "etiket": "LPG dönüşümü" },
+    { "deger": 30000, "sonek": "+", "etiket": "bakım ve ayar" },
+    { "deger": 2, "sonek": " yıl", "etiket": "montaj garantisi" }
+  ],
+  "markalar": ["Renault", "Fiat", "Volkswagen", "Hyundai", "Toyota", "Dacia", "Opel", "Skoda", "Peugeot", "Ford"],
+  "galeri": [
+    { "src": "/img/sektor-lpg/usta.jpg", "alt": "Açık kaput altında motor üzerinde çalışan usta" },
+    { "src": "/img/sektor-lpg/tespit.jpg", "alt": "Araca bağlanmış arıza tespit cihazıyla ayar yapılıyor" },
+    { "src": "/img/sektor-lpg/manometre.jpg", "alt": "Gaz hattı üzerindeki basınç göstergeleri" },
+    { "src": "/img/sektor-lpg/motor-siyah.jpg", "alt": "Kaputu açılmış aracın motor bölmesi ve teşhis cihazı" },
+    { "src": "/img/sektor-lpg/eller.jpg", "alt": "Emme manifoldu çevresinde bağlantıları sıkan ustanın elleri" },
+    { "src": "/img/sektor-lpg/tablet.jpg", "alt": "Atölyede tabletle araç verilerini inceleyen usta" },
+    { "src": "/img/sektor-lpg/motor-kirmizi.jpg", "alt": "Atölyede kaputu açık bekleyen kırmızı araç" },
+    { "src": "/img/sektor-lpg/kontrol.jpg", "alt": "Kaputu açık aracın motorunu kontrol eden usta" },
+    { "src": "/img/sektor-lpg/yakit-gosterge.jpg", "alt": "Gece aydınlanan gösterge panelinde yakıt göstergesi" },
+    { "src": "/img/sektor-lpg/gosterge.jpg", "alt": "Direksiyon arkasında hız ve yakıt göstergesi" },
+    { "src": "/img/sektor-lpg/yol.jpg", "alt": "Otoyolda seyreden araçlar" },
+    { "src": "/img/sektor-lpg/yakit.jpg", "alt": "Aracın deposuna yakıt dolduruluyor" },
+    { "src": "/img/sektor-lpg/lift.jpg", "alt": "Bakım alanında bekleyen araç" },
+    { "src": "/img/sektor-lpg/atolye.jpg", "alt": "Atölye duvarında düzenli asılmış el aletleri" }
+  ],
+  "puan": { "ortalama": 4.8, "adet": 187 },
+  "yorumlar": [
+    { "ad": "Murat S.", "puan": 5, "metin": "Taksici olarak günde 300 km yapıyorum. Dönüşümden sonra yakıt masrafım gözle görülür düştü, araç da eskisi gibi çekiyor.", "arac": "2019 Egea" },
+    { "ad": "Gökhan E.", "puan": 5, "metin": "Direkt enjeksiyonlu olduğu için çoğu yer yapmam dedi. Burada hangi sistemin uygun olduğunu anlattılar, bir yıldır sorunsuz.", "arac": "2018 Golf 1.4 TSI" },
+    { "ad": "Zeynep A.", "puan": 5, "metin": "Ruhsat işini nasıl yapacağımı hiç bilmiyordum. Evrakları hazırladılar, nereye gideceğimi tek tek yazıp verdiler.", "arac": "2016 Clio" },
+    { "ad": "Ali R.", "puan": 4, "metin": "Rölantide tekliyordu, ayarını yapıp filtreleri değiştirdiler. İş bir saat sürdü, beklerken çay bile geldi.", "arac": "2014 Accent Blue" },
+    { "ad": "Burak Ç.", "puan": 5, "metin": "Tank muayenesinden önce kontrol ettirdim, bir bağlantı değişti ve muayeneden ilk seferde geçtim.", "arac": "2012 Corolla" }
+  ],
+  "garanti": "Montaj ve işçiliğe 2 yıl garanti; parçalarda üretici garantisi geçerlidir."
+}

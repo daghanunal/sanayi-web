@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0a1230" />
+  <title>Çekici ve Yol Yardım | Şaşmaz</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230a1230'/%3E%3Cpath d='M16 5 L28 26 H4Z' fill='none' stroke='%23ffb21e' stroke-width='3.4' stroke-linejoin='round'/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Karla:wght@400;500;700;800&family=Oxanium:wght@500;600;700&display=swap&subset=latin-ext" rel="stylesheet" />
+</head>
+<body class="is-loading">
+  <!-- Açılış: gece 02:14, telefon çalar. Açılınca tepe lambası gibi dönen bir süpürme sahneyi açar. -->
+  <div class="intro" data-intro role="presentation">
+    <div class="intro__call" data-intro-call>
+      <p class="intro__time" data-intro-time></p>
+      <div class="intro__phone">
+        <i class="intro__ring"></i><i class="intro__ring intro__ring--2"></i><i class="intro__ring intro__ring--3"></i>
+        <span class="intro__icon" data-icon="phone"></span>
+      </div>
+      <p class="intro__label">Gelen arama</p>
+      <p class="intro__where" data-intro-where></p>
+      <p class="intro__answer" data-intro-answer><span>Açıldı:</span> <b data-intro-name></b></p>
+      <div class="intro__slide"><i data-intro-knob></i><span>Kaydırarak açılıyor</span></div>
+      <p class="intro__skip">Geçmek için dokunun</p>
+    </div>
+  </div>
+
+  <canvas class="stage" data-stage aria-hidden="true"></canvas>
+  <div class="flash" data-flash aria-hidden="true"></div>
+  <div class="cursor" data-cursor aria-hidden="true"><i></i></div>
+
+  <header class="top" data-top>
+    <a class="top__brand" href="#" data-bind="ad"></a>
+    <p class="top__line"><span class="top__dot"></span><span data-status></span></p>
+    <a class="top__call" data-tel data-magnetic><span data-icon="phone"></span><span class="top__num" data-bind="telefon"></span></a>
+  </header>
+
+  <main>
+    <!-- Film: yolda kalan araç → çekici yola çıkar → varış → fotoğraf → kasa iner, vinç çeker → teslim -->
+    <section class="film" data-film>
+      <div class="film__sticky">
+        <div class="hud" data-hud aria-hidden="true">
+          <div class="hud__clock"><small>Saat</small><b data-hud-clock>02:14</b></div>
+          <div class="hud__eta" data-hud-eta><small>Varışa</small><b><span data-eta>45</span> dk</b></div>
+          <div class="hud__rec"><i></i>Canlı takip</div>
+        </div>
+
+        <div class="hero" data-hero>
+          <p class="hero__kicker" data-kicker></p>
+          <h1 class="hero__title" data-hero-title></h1>
+          <p class="hero__slogan" data-bind="slogan"></p>
+          <div class="hero__cta">
+            <a class="btn btn--amber" data-tel data-magnetic><span data-icon="phone"></span>Hemen ara</a>
+            <a class="btn btn--ghost" data-wa-konum target="_blank" rel="noopener" data-magnetic><span data-icon="whatsapp"></span>Konum gönder</a>
+          </div>
+        </div>
+
+        <ol class="chapters" data-rail aria-label="Çağrıdan teslime"></ol>
+        <div class="cards" data-cards></div>
+
+        <div class="route" data-route aria-hidden="true">
+          <svg viewBox="0 0 220 120">
+            <path class="route__base" d="M16 96 C 60 96, 70 40, 118 44 S 176 20, 204 22" />
+            <path class="route__done" data-route-path d="M16 96 C 60 96, 70 40, 118 44 S 176 20, 204 22" />
+            <circle class="route__a" cx="16" cy="96" r="5" />
+            <circle class="route__b" cx="204" cy="22" r="6" />
+            <circle class="route__truck" data-route-truck r="5" cx="16" cy="96" />
+          </svg>
+          <p><span>Şaşmaz</span><span data-route-to></span></p>
+        </div>
+
+        <div class="shots" data-shots aria-hidden="true"></div>
+        <ul class="onsite" data-onsite aria-hidden="true"></ul>
+
+        <div class="overview" data-overview>
+          <p class="overview__kicker">Çağrıdan teslime</p>
+          <h2 class="overview__title">Ankara'nın her yolunda.</h2>
+        </div>
+
+        <p class="hint" data-hint aria-hidden="true"><i></i>Kaydırın, yola çıkıyoruz</p>
+      </div>
+    </section>
+
+    <!-- Hizmetler: yol levhası gibi -->
+    <section class="svc" id="hizmetler">
+      <header class="svc__head">
+        <p class="eyebrow">Ne için ararsınız</p>
+        <h2 class="sec-title" data-rise>Çekici, akü, lastik, yakıt. Gece gündüz.</h2>
+      </header>
+      <ol class="svc__list" data-services></ol>
+    </section>
+
+    <!-- Güven -->
+    <section class="trust" data-trust>
+      <div class="trust__img"><img src="/img/cekici-sinematik/zincir-sabitleme.jpg" alt="Çekici kasasında tekerlek zincirle sabitleniyor" loading="lazy" width="1200" height="800" /></div>
+      <div class="trust__body">
+        <p class="eyebrow eyebrow--amber">Hakkımızda</p>
+        <p class="trust__text" data-about-text></p>
+        <ul class="stats" data-stats></ul>
+        <p class="trust__promise" data-garanti></p>
+      </div>
+    </section>
+
+    <!-- İmza: yolda kaldıysanız + tek dokunuşla konum gönder -->
+    <section class="safe" data-safe id="yolda-kaldim">
+      <div class="safe__sticky">
+        <div class="safe__head">
+          <p class="eyebrow eyebrow--amber">Biz gelene kadar</p>
+          <h2 class="sec-title" data-safe-title></h2>
+        </div>
+        <div class="safe__scene" aria-hidden="true">
+          <svg viewBox="0 0 400 220" data-safe-svg>
+            <line x1="0" y1="190" x2="400" y2="190" class="safe__road" />
+            <line x1="0" y1="150" x2="400" y2="150" class="safe__edge" />
+            <g class="safe__car" data-safe-car>
+              <rect x="250" y="148" width="110" height="26" rx="8" />
+              <path d="M270 148 L284 128 H330 L344 148 Z" />
+              <circle cx="275" cy="176" r="10" class="safe__wheel" /><circle cx="336" cy="176" r="10" class="safe__wheel" />
+              <circle cx="360" cy="158" r="5" class="safe__haz" data-safe-haz /><circle cx="250" cy="158" r="5" class="safe__haz" data-safe-haz />
+            </g>
+            <g class="safe__tri" data-safe-tri><path d="M80 176 L100 140 L120 176 Z" /></g>
+            <path class="safe__dist" data-safe-dist d="M120 196 H250" />
+            <text x="185" y="214" text-anchor="middle" class="safe__m" data-safe-m>30 m</text>
+            <g class="safe__rail"><line x1="0" y1="118" x2="400" y2="118" /><line x1="30" y1="118" x2="30" y2="140" /><line x1="130" y1="118" x2="130" y2="140" /><line x1="230" y1="118" x2="230" y2="140" /><line x1="330" y1="118" x2="330" y2="140" /></g>
+            <g class="safe__person" data-safe-person><circle cx="300" cy="84" r="7" /><path d="M300 92 V114 M290 100 H310 M300 114 L292 128 M300 114 L308 128" /></g>
+            <g class="safe__call" data-safe-call><circle cx="300" cy="84" r="16" /><circle cx="300" cy="84" r="28" /></g>
+          </svg>
+        </div>
+        <ol class="safe__steps" data-safe-steps></ol>
+        <div class="safe__cta">
+          <button class="btn btn--amber btn--xl" type="button" data-geo><span data-icon="pin"></span><span data-geo-label>Konumumu WhatsApp'tan gönder</span></button>
+          <p class="safe__note" data-geo-note>Telefonunuz konum izni sorar. Konumunuz yalnızca WhatsApp mesajına eklenir.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Galeri: gece şeridi -->
+    <section class="reel" data-reel aria-label="Sahadan fotoğraflar">
+      <div class="reel__track" data-reel-track></div>
+    </section>
+
+    <!-- Yorumlar -->
+    <section class="reviews" id="yorumlar">
+      <header class="reviews__head">
+        <p class="reviews__score"><b data-puan>4,8</b><span class="reviews__stars" data-stars></span></p>
+        <p class="reviews__count" data-puan-adet></p>
+      </header>
+      <div class="reviews__grid" data-reviews></div>
+    </section>
+
+    <!-- Markalar -->
+    <section class="brands" aria-label="Taşıdığımız markalar">
+      <div class="marquee" data-marquee></div>
+    </section>
+
+    <!-- 7/24 + konum -->
+    <section class="base" id="konum">
+      <div class="base__info">
+        <p class="base__big" aria-label="7 gün 24 saat açık">7<span>/</span>24</p>
+        <p class="base__status" data-status-big></p>
+        <dl class="base__hours" data-hours></dl>
+        <p class="base__addr" data-bind="adres"></p>
+        <div class="base__cta">
+          <a class="btn btn--ink" data-maps target="_blank" rel="noopener" data-magnetic><span data-icon="pin"></span>Yol tarifi al</a>
+          <a class="btn btn--line" data-tel data-magnetic><span data-icon="phone"></span>Ara</a>
+        </div>
+      </div>
+      <div class="base__map" data-map></div>
+    </section>
+
+    <!-- Final: gece yolu, tepe lambası döner -->
+    <section class="finale" data-finale>
+      <div class="finale__sticky">
+        <p class="finale__kicker">Hat açık, bayram dahil</p>
+        <h2 class="finale__title" data-final-title></h2>
+        <p class="finale__num" data-bind="telefon"></p>
+        <div class="finale__cta">
+          <a class="btn btn--amber btn--xl" data-tel data-magnetic><span data-icon="phone"></span>Hemen ara</a>
+          <a class="btn btn--ghost btn--xl" data-wa-konum target="_blank" rel="noopener" data-magnetic><span data-icon="whatsapp"></span>WhatsApp'tan yaz</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <p data-year></p>
+    <p data-bind="adres"></p>
+    <p class="foot__small">Fotoğraflar: Pexels. 3D gece sahnesi bu site için kodla çizildi.</p>
+  </footer>
+
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

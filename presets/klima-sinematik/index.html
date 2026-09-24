@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#f3a05e" />
+  <title>Oto Klima | Şaşmaz</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230b2233'/%3E%3Cpath d='M16 5v22M6.5 10.5l19 11M6.5 21.5l19-11' stroke='%235fe3ff' stroke-width='2.6' stroke-linecap='round'/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Tektur:wdth,wght@75..100,500..900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Ubuntu+Sans+Mono:wght@500;600;700&display=swap&subset=latin-ext" rel="stylesheet" />
+</head>
+<body class="is-loading">
+  <!-- Açılış: güneşte kalmış kabin, A/C düğmesine basılır, soğuk halka yayılır -->
+  <div class="intro" data-intro role="presentation">
+    <div class="intro__cold" data-intro-cold></div>
+    <div class="intro__center">
+      <p class="intro__temp"><b data-intro-temp>41</b><span>°C</span></p>
+      <p class="intro__lbl">Kabin sıcaklığı</p>
+      <button class="intro__ac" data-intro-ac type="button" aria-label="Klimayı aç">
+        <span class="intro__led"></span>
+        <svg viewBox="0 0 48 48" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M24 6v36M8.4 15l31.2 18M8.4 33l31.2-18"/><path d="M19 8.5l5 4 5-4M19 39.5l5-4 5 4M7.6 21.2l6-1.6-1.6-6M40.4 26.8l-6 1.6 1.6 6M12 34.6l1.6-6-6-1.6M36 13.4l-1.6 6 6 1.6"/></g></svg>
+        <span class="intro__ac-t">A/C</span>
+      </button>
+      <p class="intro__name" data-intro-name></p>
+    </div>
+  </div>
+
+  <div class="sky" aria-hidden="true"><i class="sky__cold"></i><i class="sky__hot" data-sky-hot></i><i class="sky__uv" data-sky-uv></i></div>
+  <canvas class="stage" data-stage aria-hidden="true"></canvas>
+  <div class="cursor" data-cursor aria-hidden="true"><i></i></div>
+
+  <header class="top" data-top>
+    <a class="top__brand" href="#"><span class="top__flake" aria-hidden="true"></span><span data-bind="ad"></span></a>
+    <p class="top__status" data-status></p>
+    <a class="top__call" data-tel data-magnetic><span data-icon="phone"></span><span class="top__num" data-bind="telefon"></span></a>
+  </header>
+
+  <main>
+    <!-- Film: sıcak kabin → kompresör → kondenser → UV kaçak → vakum ve dolum → evaporatör → filtre → buz gibi -->
+    <section class="film" data-film>
+      <div class="film__sticky">
+        <div class="haze" data-haze aria-hidden="true"></div>
+
+        <div class="hero" data-hero>
+          <p class="hero__since" data-since></p>
+          <h1 class="hero__title" data-hero-title></h1>
+          <p class="hero__slogan" data-bind="slogan"></p>
+          <div class="hero__cta">
+            <a class="btn btn--hot" data-tel data-magnetic><span data-icon="phone"></span>Hemen ara</a>
+            <a class="btn btn--glass" data-wa target="_blank" rel="noopener" data-magnetic><span data-icon="whatsapp"></span>WhatsApp'tan yaz</a>
+          </div>
+        </div>
+
+        <!-- Kabin termometresi: film boyunca düşer -->
+        <div class="thermo" data-thermo aria-hidden="true">
+          <p class="thermo__lbl">Kabin</p>
+          <p class="thermo__val"><b data-cabin>38,0</b><small>°C</small></p>
+          <div class="thermo__bar"><i data-cabin-fill></i></div>
+        </div>
+
+        <!-- Manifold saatleri: mavi alçak, kırmızı yüksek basınç -->
+        <div class="hud" data-hud aria-hidden="true">
+          <div class="dial dial--lo">
+            <svg viewBox="0 0 100 100"><circle class="dial__face" cx="50" cy="50" r="46"/><path class="dial__arc" d="M18.2 81.8 A45 45 0 1 1 81.8 81.8" pathLength="100"/><g data-ticks-lo></g><line class="dial__needle" data-needle-lo x1="50" y1="50" x2="50" y2="14"/><circle class="dial__hub" cx="50" cy="50" r="5"/></svg>
+            <p><b data-lo>0,0</b> bar<span>Alçak</span></p>
+          </div>
+          <div class="dial dial--hi">
+            <svg viewBox="0 0 100 100"><circle class="dial__face" cx="50" cy="50" r="46"/><path class="dial__arc" d="M18.2 81.8 A45 45 0 1 1 81.8 81.8" pathLength="100"/><g data-ticks-hi></g><line class="dial__needle" data-needle-hi x1="50" y1="50" x2="50" y2="14"/><circle class="dial__hub" cx="50" cy="50" r="5"/></svg>
+            <p><b data-hi>0,0</b> bar<span>Yüksek</span></p>
+          </div>
+          <div class="hud__ex">
+            <p class="hud__ex-l" data-ex-lbl>Üfleme</p>
+            <p class="hud__ex-v"><b data-ex-val>0</b><small data-ex-unit>°C</small></p>
+            <p class="hud__verdict" data-verdict>Arızalı</p>
+          </div>
+        </div>
+
+        <ol class="rail" data-rail aria-label="Klima devresindeki duraklar"></ol>
+        <div class="tag" data-tag aria-hidden="true"><i></i><span data-tag-t></span></div>
+        <div class="cards" data-cards></div>
+
+        <div class="overview" data-overview>
+          <p class="overview__kicker">Kompresörden üfleme ağzına</p>
+          <h2 class="overview__title">Devrenin tamamı, <em>tek dükkânda.</em></h2>
+        </div>
+
+        <p class="hint" data-hint aria-hidden="true"><i></i>Kaydırın, kabini soğutalım</p>
+      </div>
+    </section>
+
+    <!-- Hakkımızda -->
+    <section class="about" data-about>
+      <figure class="about__img">
+        <img src="/img/klima-sinematik/havalandirma.jpg" alt="Araç içindeki yuvarlak klima üfleme ağzı" loading="lazy" width="933" height="1400" />
+        <figcaption data-about-cap></figcaption>
+      </figure>
+      <div class="about__body">
+        <p class="kicker">Biz kimiz</p>
+        <h2 class="sec-title" data-rise>Gazı basıp göndermeyiz.</h2>
+        <p class="about__text" data-about-text></p>
+        <ul class="stats" data-stats></ul>
+      </div>
+    </section>
+
+    <!-- Hizmetler: satır ortadan geçerken sıcak şerit soğur -->
+    <section class="services" id="hizmetler">
+      <header class="sec-head">
+        <p class="kicker">Hizmetler</p>
+        <h2 class="sec-title" data-rise>Klimanın her parçası.</h2>
+        <p>Süreyi baştan söyleriz. Fiyatı da işe başlamadan konuşuruz.</p>
+      </header>
+      <ol class="svc" data-services></ol>
+    </section>
+
+    <!-- İmza: belirti seç -->
+    <section class="symptom" data-symptom>
+      <div class="symptom__head">
+        <p class="kicker">Kendi kendinize ön tespit</p>
+        <h2 class="sec-title" data-rise>Klimanız ne yapıyor?</h2>
+        <p>Belirtiyi seçin, çoğu zaman neden olduğunu söyleyelim. Kesin cevabı ölçünce veririz.</p>
+      </div>
+      <div class="symptom__grid">
+        <div class="symptom__chips" data-chips role="tablist" aria-label="Belirtiler"></div>
+        <div class="symptom__out">
+          <div class="vent" aria-hidden="true">
+            <svg viewBox="0 0 200 200" data-vent>
+              <defs>
+                <radialGradient id="ventG" cx="50%" cy="45%" r="60%"><stop offset="0" stop-color="#2a3a46"/><stop offset="1" stop-color="#0b1720"/></radialGradient>
+              </defs>
+              <circle cx="100" cy="100" r="92" fill="#dfe9ee"/>
+              <circle cx="100" cy="100" r="80" fill="url(#ventG)"/>
+              <g data-vent-blades></g>
+              <circle cx="100" cy="100" r="14" fill="#dfe9ee"/>
+            </svg>
+            <div class="vent__flow" data-flow></div>
+          </div>
+          <article class="diag" data-diag aria-live="polite">
+            <p class="diag__k">Muhtemel sebep</p>
+            <p class="diag__t" data-diag-t></p>
+            <dl class="diag__m">
+              <div><dt>Yapılacak iş</dt><dd data-diag-is></dd></div>
+              <div><dt>Süre</dt><dd data-diag-sure></dd></div>
+            </dl>
+            <a class="btn btn--ink" data-diag-wa target="_blank" rel="noopener" data-magnetic><span data-icon="whatsapp"></span>Bu belirtiyi yazın</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Atölye fotoğrafları -->
+    <section class="shots" aria-label="Atölyeden">
+      <div class="shots__track" data-shots></div>
+    </section>
+
+    <!-- Süreç -->
+    <section class="steps">
+      <header class="sec-head">
+        <p class="kicker">Nasıl çalışırız</p>
+        <h2 class="sec-title" data-rise>Önce ölçü, sonra iş.</h2>
+      </header>
+      <ol class="steps__list" data-steps></ol>
+    </section>
+
+    <!-- Yorumlar -->
+    <section class="reviews" id="yorumlar">
+      <header class="reviews__head">
+        <div>
+          <p class="kicker">Müşterilerimiz</p>
+          <h2 class="sec-title" data-rise>Serinleyenler anlatıyor.</h2>
+        </div>
+        <p class="reviews__score"><b data-puan>4,8</b><span><span class="reviews__stars" data-stars></span><span data-puan-adet></span></span></p>
+      </header>
+      <div class="reviews__rail" data-rev-track></div>
+    </section>
+
+    <section class="brands" aria-label="Çalıştığımız markalar">
+      <div class="marquee" data-marquee></div>
+    </section>
+
+    <!-- Dükkân -->
+    <section class="shop" id="konum">
+      <div class="shop__info">
+        <p class="kicker">Konum ve saatler</p>
+        <h2 class="sec-title" data-rise>Şaşmaz'da, 4. Cadde'de.</h2>
+        <p class="shop__status" data-status-big></p>
+        <dl class="shop__hours" data-hours></dl>
+        <p class="shop__addr" data-bind="adres"></p>
+        <div class="shop__cta">
+          <a class="btn btn--ink" data-maps target="_blank" rel="noopener" data-magnetic><span data-icon="pin"></span>Yol tarifi al</a>
+          <a class="btn btn--line" data-tel data-magnetic><span data-icon="phone"></span>Ara</a>
+        </div>
+      </div>
+      <div class="shop__map" data-map></div>
+    </section>
+
+    <!-- Final: devre buz gibi çalışıyor -->
+    <section class="finale" data-finale>
+      <div class="finale__sticky">
+        <p class="finale__temp" aria-hidden="true"><b data-final-temp>6</b>°</p>
+        <h2 class="finale__title" data-final-title></h2>
+        <p class="finale__sub">Klima sezonunda sıra uzar. Arayın, gününüzü ayarlayalım. <span data-garanti></span></p>
+        <div class="finale__cta">
+          <a class="btn btn--hot btn--xl" data-tel data-magnetic><span data-icon="phone"></span>Hemen ara</a>
+          <a class="btn btn--glass btn--xl" data-wa-final target="_blank" rel="noopener" data-magnetic><span data-icon="whatsapp"></span>WhatsApp'tan gün alın</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <p data-year></p>
+    <p data-bind="adres"></p>
+    <p class="foot__small">Fotoğraflar: Pexels. 3D klima devresi bu site için kodla çizildi.</p>
+  </footer>
+
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

@@ -1,0 +1,66 @@
+{
+  "preset": "sektor-dizel",
+  "isletme": {
+    "ad": "Enjektör Dizel",
+    "sektor": "Dizel Enjektör ve Yakıt Pompası",
+    "slogan": "Enjektörü tahminle değil, tezgâhta ölçerek söyleriz.",
+    "kurulus": 1995,
+    "hakkinda": "1995'ten beri Şaşmaz'da yalnızca dizel yakıt sistemiyle uğraşıyoruz. Gelen her enjektörü önce test tezgâhında ölçer, debi ve kaçak değerlerini size çıktı olarak gösteririz. Temizlikle düzelecek enjektöre değişim, tamirle kurtulacak pompaya yenisini önermeyiz."
+  },
+  "iletisim": {
+    "telefon": "0532 555 38 95",
+    "whatsapp": "905325553895",
+    "adres": "Şaşmaz Oto Sanayi Sitesi, 4. Cadde No: 37, Etimesgut/Ankara",
+    "mapsQuery": "Şaşmaz Oto Sanayi Sitesi Etimesgut Ankara"
+  },
+  "saatler": [null, "08:30-18:30", "08:30-18:30", "08:30-18:30", "08:30-18:30", "08:30-18:30", "09:00-15:00"],
+  "hizmetler": [
+    { "baslik": "Common rail enjektör testi", "aciklama": "Enjektör tezgâha bağlanır; rölanti, kısmi yük ve tam yük debisi ile geri dönüş kaçağı ölçülür. Sonuçlar enjektör başına çıktı olarak verilir.", "sure": "1-2 saat" },
+    { "baslik": "Enjektör tamiri", "aciklama": "Meme, valf grubu ve conta değişimi; ultrasonik temizlik. Tamirden sonra enjektör tezgâhta yeniden ölçülür, değerleri tutmadan teslim edilmez.", "sure": "Aynı gün" },
+    { "baslik": "Enjektör kodlama", "aciklama": "Tamir veya değişimden sonra enjektörün düzeltme kodu (IMA/QR/C2I) motor beynine arıza tespit cihazıyla işlenir.", "sure": "30 dakika" },
+    { "baslik": "Yüksek basınç pompası", "aciklama": "Common rail pompa sökümü, parça kontrolü, tamiri ve tezgâhta basınç ile debi testi. Talaşlanma varsa sebebini yakıt sisteminde ararız.", "sure": "1-2 gün" },
+    { "baslik": "Mekanik pompa ve pompa enjektör", "aciklama": "Sıra tip ve distribütör tip pompaların ayarı, pompa enjektör (PD) ve eski tip mekanik enjektörlerin püskürtme basıncı ayarı.", "sure": "1-2 gün" },
+    { "baslik": "Rail ve basınç sensörü kontrolü", "aciklama": "Rail basınç sensörü, basınç regülatörü ve dönüş hatları ölçülür. Zor çalışma ve güç kaybının yakıt tarafında olup olmadığı netleşir.", "sure": "1 saat" },
+    { "baslik": "Ağır vasıta dizel", "aciklama": "Kamyon, çekici, otobüs ve iş makinesi enjektörleri ile pompaları. Ticari araç sahibini bekletmemek için işini araya alırız.", "sure": "1-2 gün" },
+    { "baslik": "Yakıt sistemi temizliği", "aciklama": "Suya veya kirli yakıta maruz kalmış sistemde depo, hat ve filtre temizliği. Yeni enjektör takmadan önce kirin kaynağını ortadan kaldırırız.", "sure": "Aynı gün" }
+  ],
+  "surec": [
+    { "baslik": "Aracı dinleriz", "aciklama": "Motoru çalıştırır, arıza kayıtlarını okur, enjektör düzeltme değerlerine ve geri dönüş miktarına bakarız." },
+    { "baslik": "Tezgâhta ölçeriz", "aciklama": "Sökülen enjektör veya pompa test tezgâhına bağlanır. Hangisinin arızalı olduğu ölçümle belli olur, tahmine yer kalmaz." },
+    { "baslik": "Sonucu gösteririz", "aciklama": "Ölçüm çıktısını size verir, temizlik mi tamir mi değişim mi gerektiğini ve fiyatını söyleriz. Onayınız olmadan işe başlamayız." },
+    { "baslik": "Onarır, yeniden ölçeriz", "aciklama": "Tamir edilen parça tezgâhta tekrar test edilir. Değerler üretici aralığına girmeden araca takılmaz." },
+    { "baslik": "Takar, kodlarız", "aciklama": "Enjektörler takılır, düzeltme kodları beyne işlenir, motor çalıştırılıp yol denemesi yapılır." }
+  ],
+  "istatistikler": [
+    { "deger": 31, "sonek": "", "etiket": "yıldır dizelde", "kurulustanHesapla": true },
+    { "deger": 42000, "sonek": "+", "etiket": "enjektör test edildi" },
+    { "deger": 3800, "sonek": "+", "etiket": "pompa tamiri" },
+    { "deger": 6, "sonek": " ay", "etiket": "işçilik garantisi" }
+  ],
+  "markalar": ["Bosch", "Delphi", "Denso", "Siemens VDO", "Continental", "Mercedes-Benz", "Ford Trucks", "MAN", "Renault", "Fiat"],
+  "galeri": [
+    { "src": "/img/sektor-dizel/silindir-kapak.jpg", "alt": "Kamyon motorunun silindir kapağında çalışan ustanın elleri" },
+    { "src": "/img/sektor-dizel/manometre.jpg", "alt": "Test düzeneğindeki basınç göstergeleri" },
+    { "src": "/img/sektor-dizel/komparator.jpg", "alt": "0,01 mm hassasiyetli komparatör saati" },
+    { "src": "/img/sektor-dizel/dizel-kapak.jpg", "alt": "Dizel motor silindir kapağı tezgâhta toplanıyor" },
+    { "src": "/img/sektor-dizel/kamyon-atolye.jpg", "alt": "Atölyede kabini açılmış kamyon" },
+    { "src": "/img/sektor-dizel/parca-tepsisi.jpg", "alt": "Sökülen parçalar tepside sırayla diziliyor" },
+    { "src": "/img/sektor-dizel/dizel-motor.jpg", "alt": "Standa alınmış ağır vasıta dizel motoru" },
+    { "src": "/img/sektor-dizel/dijital-olcum.jpg", "alt": "Dijital mikrometre ile hassas ölçüm" },
+    { "src": "/img/sektor-dizel/motor-ustu.jpg", "alt": "Anahtarla dizel motor üzerinde çalışan usta" },
+    { "src": "/img/sektor-dizel/kamyon-bakim.jpg", "alt": "Kaputu açık kamyonun motor bölmesinde bakım" },
+    { "src": "/img/sektor-dizel/eksantrik.jpg", "alt": "Eksantrik milleri ve silindir kapağı" },
+    { "src": "/img/sektor-dizel/usta.jpg", "alt": "Anahtar takımını seçen usta" },
+    { "src": "/img/sektor-dizel/cekici.jpg", "alt": "Park halindeki çekici" },
+    { "src": "/img/sektor-dizel/yolda.jpg", "alt": "Gece yolda ilerleyen tır" }
+  ],
+  "puan": { "ortalama": 4.8, "adet": 187 },
+  "yorumlar": [
+    { "ad": "Murat S.", "puan": 5, "metin": "Dört enjektörü de değiştirin dediler başka yerde. Burada tezgâhta ölçtüler, yalnızca biri arızalıymış. Çıktısını da elime verdiler.", "arac": "2015 Doblo 1.6 Multijet" },
+    { "ad": "Ramazan E.", "puan": 5, "metin": "Çekicinin enjektörlerini sabah bıraktım, akşam kodlanmış halde teslim aldım. Sefer kaçırmadım, güç kaybı da gitti.", "arac": "2017 Actros 1845" },
+    { "ad": "Gökhan Y.", "puan": 5, "metin": "Pompa talaş yapmış. Sadece pompayı değil, hatları ve depoyu da temizlediler; sebebini anlattılar. Bir yıl oldu, sorun yok.", "arac": "2012 Transit" },
+    { "ad": "Selin A.", "puan": 4, "metin": "Sabah zor çalışıyordu. Sensör ve regülatörü ölçüp regülatörde buldular. Parça bir gün geç geldi ama arayıp haber verdiler.", "arac": "2016 Passat 2.0 TDI" },
+    { "ad": "İbrahim K.", "puan": 5, "metin": "Eski traktörün mekanik pompasını artık bilen kalmadı sanıyordum. Ayarladılar, dumanı kesildi, yakıtı da azaldı.", "arac": "1998 Tümosan 8085" }
+  ],
+  "garanti": "Tamir edilen enjektör ve pompalarda 6 ay işçilik garantisi; teslimde test çıktısı verilir."
+}

@@ -1,0 +1,100 @@
+{
+  "preset": "sektor-ekspertiz",
+  "isletme": {
+    "ad": "Güven Oto Ekspertiz",
+    "sektor": "Oto Ekspertiz",
+    "slogan": "Almadan önce bir de biz bakalım.",
+    "kurulus": 2012,
+    "hakkinda": "2012'den beri Şaşmaz'da ikinci el araç alan ve satanlar için ekspertiz yapıyoruz. Aracı lifte kaldırır, boyasını panel panel ölçer, arıza kayıtlarını okur ve yolda deneriz. Gördüğümüzü olduğu gibi rapora yazarız; satıcının da alıcının da yanında değil, aracın durumunun yanındayız."
+  },
+  "iletisim": {
+    "telefon": "0532 555 41 12",
+    "whatsapp": "905325554112",
+    "adres": "Şaşmaz Oto Sanayi Sitesi, 6. Cadde No: 18, Etimesgut/Ankara",
+    "mapsQuery": "Şaşmaz Oto Sanayi Sitesi Etimesgut Ankara oto ekspertiz"
+  },
+  "saatler": [null, "08:30-19:00", "08:30-19:00", "08:30-19:00", "08:30-19:00", "08:30-19:00", "09:00-17:00"],
+  "hizmetler": [
+    {
+      "baslik": "Alım-satım öncesi tam ekspertiz",
+      "aciklama": "Kaporta, boya, şasi, motor, şanzıman, yürüyen aksam ve elektronik; aracın tamamı tek seferde kontrol edilir. Kaparo vermeden önce getirin.",
+      "sure": "1,5-2 saat",
+      "gorsel": "/img/sektor-ekspertiz/kontrol.jpg"
+    },
+    {
+      "baslik": "Boya kalınlığı ölçümü",
+      "aciklama": "Her panel birkaç noktadan ölçülür. Orijinal, lokal boyalı, komple boyalı ve macunlu parçalar rapordaki araç şemasında tek tek işaretlenir.",
+      "sure": "20 dk",
+      "gorsel": "/img/sektor-ekspertiz/lift-suv.jpg"
+    },
+    {
+      "baslik": "Şasi ve kaporta kontrolü",
+      "aciklama": "Araç lifte kaldırılır; şasi uçları, podye, direkler ve bagaj havuzu kaynak, çekme ve değişim izine karşı tek tek incelenir.",
+      "sure": "30 dk",
+      "gorsel": "/img/sektor-ekspertiz/sasi-alt.jpg"
+    },
+    {
+      "baslik": "OBD arıza taraması",
+      "aciklama": "Motor, şanzıman, ABS, hava yastığı ve konfor modüllerindeki kayıtlı ve silinmiş hata kodları okunur. Silinmiş kodlar da rapora yazılır.",
+      "sure": "15 dk",
+      "gorsel": "/img/sektor-ekspertiz/obd-cihaz.jpg"
+    },
+    {
+      "baslik": "Motor ve mekanik kontrol",
+      "aciklama": "Motor soğukken çalıştırılır; sızıntı, üfleme, yağ ve antifriz durumu, kayış ve bağlantılar kontrol edilir.",
+      "sure": "20 dk",
+      "gorsel": "/img/sektor-ekspertiz/motor-kontrol.jpg"
+    },
+    {
+      "baslik": "Yürüyen aksam ve fren",
+      "aciklama": "Amortisör, rotil, salıncak burçları, aks körükleri, balata ve disk aşınması ölçülür; lastiklerin diş derinliği ve üretim tarihi yazılır.",
+      "sure": "20 dk",
+      "gorsel": "/img/sektor-ekspertiz/sasi-onarim.jpg"
+    },
+    {
+      "baslik": "Dinamometre ve test sürüşü",
+      "aciklama": "Araç dinamometrede yük altında denenir, ardından yolda sürülür. Vites geçişleri, çekiş, titreşim ve ses gözlemi rapora eklenir.",
+      "sure": "30 dk",
+      "gorsel": "/img/sektor-ekspertiz/gosterge.jpg"
+    },
+    {
+      "baslik": "Yazılı ve fotoğraflı rapor",
+      "aciklama": "Bütün tespitler fotoğraflarıyla birlikte tek raporda toplanır; basılı verilir, PDF'i WhatsApp'tan gönderilir. Rapordaki her maddeyi yüz yüze anlatırız.",
+      "sure": "Aynı gün",
+      "gorsel": "/img/sektor-ekspertiz/el-sikisma.jpg"
+    }
+  ],
+  "surec": [
+    { "baslik": "Randevu alın", "aciklama": "Aracın marka, model ve yılını WhatsApp'tan yazın; alıcı ve satıcı için uygun saati birlikte ayarlayalım." },
+    { "baslik": "Aracı teslim alırız", "aciklama": "Ruhsat ve kilometre kaydedilir. İsterseniz inceleme boyunca aracın yanında durabilirsiniz." },
+    { "baslik": "Ölçer, tarar, deneriz", "aciklama": "Boya ölçümü, lift üstünde şasi ve alt takım kontrolü, OBD taraması, dinamometre ve yol testi sırayla yapılır." },
+    { "baslik": "Raporu birlikte okuruz", "aciklama": "Raporu elinize verir, her maddeyi araç başında gösteririz. Kararı siz verirsiniz; biz yalnızca gördüğümüzü söyleriz." }
+  ],
+  "istatistikler": [
+    { "deger": 14, "sonek": "", "etiket": "yıldır Şaşmaz'da", "kurulustanHesapla": true },
+    { "deger": 21000, "sonek": "+", "etiket": "araç incelendi" },
+    { "deger": 150, "sonek": "+", "etiket": "kontrol noktası" },
+    { "deger": 2, "sonek": " saat", "etiket": "içinde rapor elinizde" }
+  ],
+  "markalar": ["Renault", "Fiat", "Volkswagen", "Ford", "Toyota", "Hyundai", "Opel", "Peugeot", "Honda", "BMW"],
+  "galeri": [
+    { "src": "/img/sektor-ekspertiz/lift-suv.jpg", "alt": "Lifte kaldırılmış aracın altını kontrol eden usta" },
+    { "src": "/img/sektor-ekspertiz/sasi-alt.jpg", "alt": "El feneriyle aracın alt şasisini inceleyen usta" },
+    { "src": "/img/sektor-ekspertiz/obd-cihaz.jpg", "alt": "Araca bağlı arıza tespit cihazının ekranı" },
+    { "src": "/img/sektor-ekspertiz/alttan.jpg", "alt": "Lift altında ön takımı ışıkla kontrol eden usta" },
+    { "src": "/img/sektor-ekspertiz/alt-sasi.jpg", "alt": "Lift üzerindeki aracın alt takımı ve egzoz hattı" },
+    { "src": "/img/sektor-ekspertiz/kontrol.jpg", "alt": "Kaputu açık araçta motoru çalıştırıp dinleyen usta" },
+    { "src": "/img/sektor-ekspertiz/motor-kontrol.jpg", "alt": "Elinde tabletle motor bölmesini kontrol eden usta" },
+    { "src": "/img/sektor-ekspertiz/arac-sirasi.jpg", "alt": "Satışa hazır ikinci el araçlar sıra halinde" },
+    { "src": "/img/sektor-ekspertiz/anahtar.jpg", "alt": "Ekspertizden sonra araç anahtarı teslim ediliyor" }
+  ],
+  "puan": { "ortalama": 4.8, "adet": 356 },
+  "yorumlar": [
+    { "ad": "Burak S.", "puan": 5, "metin": "Satıcı 'tertemiz' demişti. Arka çamurluk ve bagaj havuzunda işlem çıktı, fotoğraflarıyla gösterdiler. Kaparoyu vermeden önce getirdiğim iyi oldu.", "arac": "2018 Golf" },
+    { "ad": "Zeynep A.", "puan": 5, "metin": "Arabadan hiç anlamıyorum. Raporu tek tek anlattılar, hangi kusurun önemli hangisinin önemsiz olduğunu açık açık söylediler.", "arac": "2020 Clio" },
+    { "ad": "Murat E.", "puan": 5, "metin": "Kendi aracımı satmadan önce yaptırdım. Alıcı raporu görünce pazarlık uzamadı, aynı gün işimiz bitti.", "arac": "2016 Corolla" },
+    { "ad": "Onur K.", "puan": 4, "metin": "Cumartesi biraz yoğundu, yarım saat bekledim. Ama kontrol çok detaylı, silinmiş şanzıman arızasını bile buldular.", "arac": "2015 Focus" },
+    { "ad": "Selin T.", "puan": 5, "metin": "Babamla gittik, inceleme boyunca aracın yanında durmamıza izin verdiler. Lifte kaldırınca altını da gösterdiler.", "arac": "2019 Egea" }
+  ],
+  "garanti": "Rapordaki tespitlerin arkasındayız; bir maddeye itirazınız olursa aracı ücretsiz yeniden kontrol ederiz."
+}

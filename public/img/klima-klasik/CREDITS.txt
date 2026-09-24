@@ -1,0 +1,2 @@
+vent-sicak.jpg, vent-soguk.jpg: public/img/sektor-klima/havalandirma.jpg (Pexels, Erik Mclean, https://www.pexels.com/photo/gray-and-black-car-aircon-in-close-up-shot-13850014/) sıcak/soğuk tonlanmış kopyaları.
+Diğer görseller public/img/sektor-klima/ klasöründen (bkz. oradaki CREDITS.txt).

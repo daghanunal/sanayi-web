@@ -1,0 +1,9 @@
+Tüm görseller Pexels lisansıyla (ücretsiz, ticari kullanım serbest):
+hero.jpg: https://www.pexels.com/photo/close-up-shot-of-a-car-muffler-10827691/
+hero-dik.jpg: https://www.pexels.com/photo/close-up-of-dual-chrome-exhaust-pipes-31558500/
+katalitik.jpg: https://www.pexels.com/photo/stack-of-catalytic-converters-in-workshop-display-28641471/
+kivilcim.jpg: https://www.pexels.com/photo/person-welding-car-10551343/
+alt.jpg: https://www.pexels.com/photo/man-in-blue-coverall-checking-under-a-vehicle-8985613/
+duman-cift.jpg: https://www.pexels.com/photo/smoke-coming-from-the-exhaust-pipes-5233284/
+tek-uc.jpg: https://www.pexels.com/photo/a-close-up-of-a-car-exhaust-pipe-27258913/
+Diğer görseller public/img/manifold/ klasöründen (bkz. oradaki CREDITS.txt).

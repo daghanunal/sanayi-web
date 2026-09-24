@@ -1,0 +1,64 @@
+{
+  "preset": "sektor-turbo",
+  "isletme": {
+    "ad": "Basınç Turbo",
+    "sektor": "Turbo Revizyon ve Tamiri",
+    "slogan": "Turbonuzu değiştirmeden önce bir de bize açtırın.",
+    "kurulus": 2010,
+    "hakkinda": "2010'dan beri Şaşmaz'da yalnızca turboyla uğraşıyoruz. Gelen turboyu söker, milini, yataklarını ve çarklarını ölçer, neyin neden bozulduğunu size gösteririz. Turboyu bitiren çoğu zaman yağ hattı ya da tıkalı bir filtredir; sebebi bulmadan yenisini takmayız."
+  },
+  "iletisim": {
+    "telefon": "0532 555 38 10",
+    "whatsapp": "905325553810",
+    "adres": "Şaşmaz Oto Sanayi Sitesi, 5. Cadde No: 31, Etimesgut/Ankara",
+    "mapsQuery": "Şaşmaz Oto Sanayi Sitesi Etimesgut Ankara"
+  },
+  "saatler": [null, "08:30-19:00", "08:30-19:00", "08:30-19:00", "08:30-19:00", "08:30-19:00", "09:00-16:00"],
+  "hizmetler": [
+    { "baslik": "Turbo revizyonu", "aciklama": "Turbo tamamen sökülür; mil, yatak, segman ve contalar yenilenir. Gövdeler temizlenip ölçülerek toplanır.", "sure": "1-2 gün" },
+    { "baslik": "Balans ayarı", "aciklama": "Mil ve çark grubu yüksek devirde balans cihazında dengelenir. Titreşim ve ıslık sesi buradan gelir.", "sure": "Aynı gün" },
+    { "baslik": "VNT ve aktüatör ayarı", "aciklama": "Değişken kanatlı turbolarda kanat mekanizması temizlenir, aktüatör ve konum sensörü değerlere göre ayarlanır.", "sure": "Aynı gün" },
+    { "baslik": "Intercooler temizliği ve testi", "aciklama": "Intercooler içindeki yağ birikintisi temizlenir, basınç testiyle çatlak ve kaçak aranır. Hortum ve kelepçeler kontrol edilir.", "sure": "Aynı gün" },
+    { "baslik": "Turbo yağ hattı", "aciklama": "Besleme ve dönüş boruları, banjo cıvataları ve süzgeçler kontrol edilir. Tıkalı hat yenilenmeden turbo takılmaz.", "sure": "2-3 saat" },
+    { "baslik": "Dizel turbolar", "aciklama": "Binek, hafif ticari ve kamyonet dizel turboları. Duman, çekiş kaybı ve yağ yakma şikâyetlerine bakarız.", "sure": "1-2 gün" },
+    { "baslik": "Benzinli turbolar", "aciklama": "Küçük hacimli benzinli turbo motorlar. Wastegate, dump valf ve basınç kaçağı kontrolü yapılır.", "sure": "1-2 gün" },
+    { "baslik": "Söküm ve montaj", "aciklama": "Turboyu araçtan söker, revizyon sonrası yeni conta ve yağla takarız. İlk çalıştırmayı dükkânda yaparız.", "sure": "Aynı gün" }
+  ],
+  "surec": [
+    { "baslik": "Aracı dinliyoruz", "aciklama": "Motoru çalıştırır, ıslık, duman ve basınç değerlerine bakarız; arıza kayıtlarını cihazla okuruz." },
+    { "baslik": "Turboyu söküp ölçüyoruz", "aciklama": "Mil boşluğunu, yatakları ve çarkları ölçeriz. Arızanın sebebini ve fiyatı söyleriz; onayınız olmadan başlamayız." },
+    { "baslik": "Revizyon ve balans", "aciklama": "Aşınan parçalar yenilenir, gövdeler temizlenir, çark grubu balans cihazında dengelenir." },
+    { "baslik": "Yağ hattını kontrol ediyoruz", "aciklama": "Besleme ve dönüş hattı, intercooler ve hortumlar kontrol edilir. Turboyu bozan sebep ortadan kalkmadan takmayız." },
+    { "baslik": "Takıp deniyoruz", "aciklama": "Turbo yeni conta ve yağla takılır, basınç değerleri ölçülür, yol denemesinden sonra teslim edilir." }
+  ],
+  "istatistikler": [
+    { "deger": 16, "sonek": "", "etiket": "yıldır Şaşmaz'da", "kurulustanHesapla": true },
+    { "deger": 7400, "sonek": "+", "etiket": "turbo revizyonu" },
+    { "deger": 2100, "sonek": "+", "etiket": "intercooler ve yağ hattı işi" },
+    { "deger": 1, "sonek": " yıl", "etiket": "işçilik garantisi" }
+  ],
+  "markalar": ["Garrett", "BorgWarner", "Holset", "IHI", "Mitsubishi", "KKK", "Volkswagen", "Ford", "Renault", "Fiat"],
+  "galeri": [
+    { "src": "/img/sektor-turbo/usta-turbo.jpg", "alt": "Tezgâhta turbo üzerinde çalışan usta" },
+    { "src": "/img/sektor-turbo/turbin-cark.jpg", "alt": "Gövdesi açılmış turbonun kompresör çarkı" },
+    { "src": "/img/sektor-turbo/sokulmus-turbo.jpg", "alt": "Revizyon için parçalarına ayrılmış turbo" },
+    { "src": "/img/sektor-turbo/eller-turbo.jpg", "alt": "Tezgâh üzerindeki dizel turboyu kontrol eden eller" },
+    { "src": "/img/sektor-turbo/tezgah-turbo.jpg", "alt": "Atölye tezgâhında bekleyen turbo" },
+    { "src": "/img/sektor-turbo/turbo-yakin.jpg", "alt": "Aşınmış turbo gövdesine yakından bakış" },
+    { "src": "/img/sektor-turbo/usta-portre.jpg", "alt": "Elinde turbo tutan usta" },
+    { "src": "/img/sektor-turbo/krom-turbo.jpg", "alt": "Motor bölmesinde turbo ve intercooler borusu" },
+    { "src": "/img/sektor-turbo/motor-turbo.jpg", "alt": "Turbolu benzinli motorun motor bölmesi" },
+    { "src": "/img/sektor-turbo/dizel-motor.jpg", "alt": "Dizel motor üzerinde çalışan usta" },
+    { "src": "/img/sektor-turbo/atolye.jpg", "alt": "Atölyede ağır vasıta motoru üzerinde çalışma" },
+    { "src": "/img/sektor-turbo/temiz-eller.jpg", "alt": "Yağlı ellerini bezle silen usta" }
+  ],
+  "puan": { "ortalama": 4.8, "adet": 176 },
+  "yorumlar": [
+    { "ad": "Murat S.", "puan": 5, "metin": "Yetkili servis turbo komple değişecek dedi. Burada söküp baktılar, yağ dönüş hattı tıkanmış. Revizyon ve yeni hatla araç ilk günkü gibi çekiyor.", "arac": "2015 Passat 1.6 TDI" },
+    { "ad": "Onur K.", "puan": 5, "metin": "Islık sesi vardı, balansı bozukmuş. Ölçüm sonuçlarını telefonuma fotoğrafla attılar, ertesi gün teslim ettiler.", "arac": "2018 Transit Custom" },
+    { "ad": "Zeynep A.", "puan": 5, "metin": "Arabam gaz verince tekliyor, güç kaybediyordu. VNT kanatları kurum bağlamış; temizleyip ayarladılar, fiyatı da baştan söylediler.", "arac": "2016 Megane 1.5 dCi" },
+    { "ad": "İsmail T.", "puan": 4, "metin": "Parça gelmediği için bir gün geç çıktı ama arayıp haber verdiler. İşçilik temiz, çıkan eski parçaları da gösterdiler.", "arac": "2013 Doblo 1.6 Multijet" },
+    { "ad": "Burak E.", "puan": 5, "metin": "Intercooler'dan yağ geliyordu, turbo gitti sanıyordum. Turbo sağlam çıktı, sadece karter havalandırmasını değiştirdik. Dürüst esnaf.", "arac": "2019 Egea 1.3 Multijet" }
+  ],
+  "garanti": "Turbo revizyonu işçiliğine 1 yıl garanti."
+}

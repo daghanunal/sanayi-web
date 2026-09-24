@@ -1,0 +1,1 @@
+Bu tasarım yalnızca public/img/kristal/ görsellerini kullanır (Pexels lisansı; kaynaklar public/img/kristal/CREDITS.txt).

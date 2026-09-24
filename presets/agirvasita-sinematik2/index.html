@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0b1a1f" />
+  <title>Ağır Vasıta Servisi | Şaşmaz</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230b7a4b'/%3E%3Crect x='3' y='3' width='26' height='26' rx='4' fill='none' stroke='%23f2f4ee' stroke-width='2'/%3E%3Cpath d='M12 22 L21 13 M14 12 H21 V19' stroke='%23f2f4ee' stroke-width='3' fill='none'/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Overpass:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,800;1,900&family=Overpass+Mono:wght@500;700&display=swap" rel="stylesheet" />
+</head>
+<body class="is-loading">
+  <!-- Açılış: karanlıkta yeşil çıkış tabelası farla aydınlanır, sonra yol başlar -->
+  <div class="intro" data-intro role="presentation">
+    <div class="intro__sign" data-intro-sign>
+      <span class="intro__tab">ÇIKIŞ</span>
+      <p class="intro__to" data-intro-ust></p>
+      <p class="intro__name" data-intro-name></p>
+      <svg class="intro__arrow" viewBox="0 0 60 60" aria-hidden="true"><path d="M14 46 L42 18 M22 16 H44 V38" fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="square"/></svg>
+      <i class="intro__shine" data-intro-shine></i>
+    </div>
+    <p class="intro__skip">Geçmek için dokunun</p>
+  </div>
+
+  <canvas class="stage" data-stage aria-hidden="true"></canvas>
+  <div class="vignette" aria-hidden="true"></div>
+
+  <!-- Gösterge: kat edilen yol -->
+  <div class="hud" data-hud aria-hidden="true">
+    <span class="hud__to">ŞAŞMAZ</span><svg viewBox="0 0 60 60"><path d="M14 46 L42 18 M22 16 H44 V38" fill="none" stroke="currentColor" stroke-width="8"/></svg><b class="hud__km" data-km>42,0 km</b>
+  </div>
+
+  <header class="top" data-top>
+    <a class="top__brand" href="#" data-bind="ad"></a>
+    <p class="top__status" data-status></p>
+    <a class="top__call" data-tel><span data-icon="phone"></span><span class="top__num" data-bind="telefon"></span></a>
+  </header>
+
+  <main>
+    <section class="hero" data-cam="hero" id="bas">
+      <div class="hero__in">
+        <p class="hero__since" data-since></p>
+        <h1 class="hero__title" data-hero-title></h1>
+        <p class="hero__slogan" data-bind="slogan"></p>
+        <div class="hero__cta">
+          <a class="btn btn--green" data-tel><span data-icon="phone"></span>Hemen ara</a>
+          <a class="btn btn--ghost" data-wa-konum target="_blank" rel="noopener"><span data-icon="pin"></span>Yoldayım, konum at</a>
+        </div>
+        <p class="hero__sos"><i></i><span data-sos></span></p>
+      </div>
+      <p class="hero__hint" aria-hidden="true">Kaydırın, yola çıkalım</p>
+    </section>
+
+    <section class="about" data-cam="side">
+      <p class="lbl" data-t="hakkindaEtiket"></p>
+      <p class="about__text" data-about></p>
+      <figure class="about__photo"><img src="/img/tonaj/kaput.jpg" alt="Kaputu açık kamyonun motoruna lambayla bakan usta" loading="lazy" width="999" height="1500" /><figcaption>Kabini yatırır, önce dinleriz.</figcaption></figure>
+    </section>
+
+    <section class="stops" data-stops>
+      <header class="stops__head" data-cam="chase0">
+        <p class="lbl" data-t="duraklarEtiket"></p>
+        <h2 class="h2" data-t="duraklarBaslik"></h2>
+        <p class="stops__lead" data-t="duraklarMetin"></p>
+      </header>
+      <div data-stop-list></div>
+    </section>
+
+    <section class="exits solid" id="hizmetler">
+      <div class="wrap">
+        <p class="lbl">Hizmetler</p>
+        <h2 class="h2" data-t="hizmetBaslik"></h2>
+        <p class="exits__lead" data-t="hizmetMetin"></p>
+        <figure class="exits__photo"><img src="/img/tonaj/usta.jpg" alt="Atölyede kırmızı kamyonun yanında parça üzerinde çalışan usta" loading="lazy" width="1600" height="1066" /></figure>
+        <ol class="exits__list" data-exits></ol>
+        <aside class="tako">
+          <div class="tako__dial" aria-hidden="true"><svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="52" /><path class="tako__needle" d="M60 60 L60 16" /><g class="tako__ticks" data-ticks></g></svg></div>
+          <div>
+            <h3 data-tako-baslik></h3>
+            <p data-tako-metin></p>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="km" data-cam="aerial">
+      <div class="wrap">
+        <p class="lbl" data-t="kmBaslik"></p>
+        <div class="odos" data-stats></div>
+      </div>
+      <div class="filo" data-cam="aerial2">
+        <div class="wrap">
+          <div class="filo__card">
+            <img class="filo__img" src="/img/tonaj/beyaz.jpg" alt="Gece park halinde farları yanan beyaz frigorifik tır" loading="lazy" width="1700" height="1275" />
+            <p class="lbl">Filolar için</p>
+            <h2 class="h2" data-filo-baslik></h2>
+            <p data-filo-metin></p>
+            <ul class="filo__list" data-filo-list></ul>
+            <a class="btn btn--green" data-wa-filo target="_blank" rel="noopener"><span data-icon="whatsapp"></span>Filo için teklif isteyin</a>
+          </div>
+        </div>
+      </div>
+      <div class="brands" aria-label="Baktığımız markalar">
+        <div class="brands__track" data-brands></div>
+      </div>
+    </section>
+
+    <section class="route-sec solid" id="surec">
+      <div class="wrap">
+        <p class="lbl">Nasıl çalışırız</p>
+        <h2 class="h2" data-t="surecBaslik"></h2>
+        <div class="steps">
+          <svg class="steps__road" viewBox="0 0 40 1000" preserveAspectRatio="none" aria-hidden="true"><path class="steps__base" d="M20 0 V1000" /><path class="steps__mid" d="M20 0 V1000" /><path class="steps__line" d="M20 0 V1000" data-road-line /></svg>
+          <ol data-steps></ol>
+        </div>
+        <p class="garanti" data-garanti></p>
+      </div>
+    </section>
+
+    <section class="radio" data-cam="cab" id="yorumlar">
+      <div class="wrap">
+        <p class="lbl" data-t="yorumBaslik"></p>
+        <div class="score" data-score></div>
+        <ul class="msgs" data-msgs></ul>
+      </div>
+    </section>
+
+    <section class="hours solid" id="saatler">
+      <div class="wrap hours__grid">
+        <div>
+          <p class="lbl" data-t="saatBaslik"></p>
+          <div class="vms" data-vms aria-live="polite"><span data-vms-text></span></div>
+          <dl class="hours__list" data-hours></dl>
+          <p class="hours__sos" data-sos></p>
+        </div>
+        <div class="loc">
+          <p class="lbl" data-t="konumBaslik"></p>
+          <p class="loc__addr" data-bind="adres"></p>
+          <div class="loc__map" data-map><p>Harita yükleniyor</p></div>
+          <a class="btn btn--light" data-maps target="_blank" rel="noopener"><span data-icon="pin"></span>Yol tarifi al</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="final" data-cam="final" data-final>
+      <div class="final__in">
+        <p class="final__tag"><i></i>Yol yardım 7/24</p>
+        <h2 class="final__title" data-final-title></h2>
+        <p class="final__text" data-sos></p>
+        <a class="final__tel" data-tel><span data-bind="telefon"></span></a>
+        <div class="final__cta">
+          <a class="btn btn--green" data-tel><span data-icon="phone"></span>Hemen ara</a>
+          <a class="btn btn--ghost" data-wa-konum target="_blank" rel="noopener"><span data-icon="whatsapp"></span>Konumumu gönder</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot solid">
+    <div class="wrap">
+      <p class="foot__name" data-bind="ad"></p>
+      <p data-bind="adres"></p>
+      <p><a data-tel><span data-bind="telefon"></span></a></p>
+      <p class="foot__small">© <span data-year></span> <span data-bind="ad"></span>. Fotoğraflar: Pexels. Tır, yol ve tabelalar bu site için kodla çizildi.</p>
+    </div>
+  </footer>
+
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

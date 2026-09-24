@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#07131b" />
+  <title>Oto Klima | Şaşmaz, Ankara</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='16' fill='%2307131b'/%3E%3Ccircle cx='16' cy='16' r='10' fill='none' stroke='%2316a6e0' stroke-width='3'/%3E%3Cpath d='M10 13h12M9 16h14M10 19h12' stroke='%23e8f6fb' stroke-width='1.6'/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@500;700;800;900&family=Karla:wght@400;500;700&family=Fragment+Mono&display=swap&subset=latin-ext" rel="stylesheet" />
+  <link rel="preload" as="image" href="/img/klima-klasik/vent-sicak.jpg" />
+</head>
+<body>
+  <header class="top">
+    <a href="#top" class="top__brand"><span class="top__mark" aria-hidden="true"></span><span data-bind="ad"></span></a>
+    <nav class="top__nav" aria-label="Sayfa bölümleri">
+      <a href="#belirti">Belirtiler</a>
+      <a href="#hizmetler">Hizmetler</a>
+      <a href="#surec">Nasıl çalışırız</a>
+      <a href="#yorumlar">Yorumlar</a>
+      <a href="#konum">Konum</a>
+    </nav>
+    <a class="top__call" data-tel><span data-icon="phone"></span><span data-bind="telefon"></span></a>
+  </header>
+
+  <main>
+    <!-- İMZA: termostat. Kaydırdıkça üfleme ağzı sıcaktan soğuğa döner: soğuk hava ağızdan
+         dairesel olarak yayılır, derece 38'den 6'ya iner, kadran ibresi kırmızıdan maviye döner. -->
+    <section class="hero" id="top" aria-label="Giriş">
+      <div class="hero__pin">
+        <div class="hero__stage" aria-hidden="true">
+          <img class="hero__img hero__img--sicak" src="/img/klima-klasik/vent-sicak.jpg" alt="" fetchpriority="high" decoding="async" />
+          <img class="hero__img hero__img--soguk" src="/img/klima-klasik/vent-soguk.jpg" alt="" decoding="async" />
+          <div class="hero__frost"></div>
+          <div class="vent" data-vent>
+            <span class="vent__wave"></span><span class="vent__wave"></span><span class="vent__wave"></span>
+            <svg class="dial" viewBox="0 0 200 200">
+              <defs>
+                <linearGradient id="kadran" x1="0" y1="1" x2="1" y2="0">
+                  <stop offset="0" stop-color="#16a6e0" />
+                  <stop offset=".5" stop-color="#e8f6fb" />
+                  <stop offset="1" stop-color="#ff6a2b" />
+                </linearGradient>
+              </defs>
+              <g class="dial__ticks" data-ticks></g>
+              <path class="dial__arc" d="M 36.4 163.6 A 90 90 0 1 1 163.6 163.6" pathLength="1" />
+              <g class="dial__needle" data-needle><circle cx="100" cy="6" r="5.5" /></g>
+            </svg>
+            <p class="vent__read"><b data-temp>38</b><span>°C</span></p>
+          </div>
+        </div>
+
+        <div class="hero__copy">
+          <p class="hero__since mono" data-since></p>
+          <h1 class="hero__name" data-bind="ad"></h1>
+          <ul class="hero__quick" data-quick></ul>
+        </div>
+
+        <div class="hero__foot">
+          <div class="hero__state">
+            <p class="hero__label mono">Üfleme ağzı</p>
+            <p class="hero__verdict"><b class="mono" data-badge></b><span data-verdict></span></p>
+          </div>
+          <p class="hero__slogan" data-bind="slogan"></p>
+          <div class="hero__cta">
+            <a class="btn btn--buz" data-tel><span data-icon="phone"></span>Hemen ara</a>
+            <a class="btn btn--ghost" href="#belirti">Klimam ne yapıyor?</a>
+          </div>
+        </div>
+        <p class="hero__hint mono" aria-hidden="true"><span></span>Kaydırın, soğusun</p>
+      </div>
+    </section>
+
+    <!-- Belirti seçici -->
+    <section class="belirti" id="belirti" aria-labelledby="belirti-h">
+      <div class="belirti__head">
+        <p class="eyebrow mono">30 saniyelik ön bakış</p>
+        <h2 class="h2" id="belirti-h">Klimanız <em>ne yapıyor?</em></h2>
+        <p class="lead">Size en yakın belirtiyi seçin. Kesin sebebi aracı ölçünce söyleriz; tahminle parça değiştirmeyiz.</p>
+      </div>
+      <div class="belirti__box">
+        <div class="belirti__opts" role="radiogroup" aria-label="Belirti" data-opts></div>
+        <div class="belirti__res" data-res aria-live="polite"></div>
+      </div>
+    </section>
+
+    <!-- Rakamlar -->
+    <section class="band" aria-label="Rakamlarla">
+      <ul class="band__list" data-stats></ul>
+    </section>
+
+    <!-- Hizmetler -->
+    <section class="hizmet" id="hizmetler" aria-labelledby="hizmet-h">
+      <div class="hizmet__head">
+        <p class="eyebrow mono">Yalnızca oto klima</p>
+        <h2 class="h2" id="hizmet-h">Kompresörden <em>polen filtresine.</em></h2>
+        <p class="lead">Süreler ortalamadır. Fiyatı işe başlamadan söyleriz; ek parça gerekirse önce haber veririz.</p>
+      </div>
+      <ul class="hizmet__list" data-services></ul>
+    </section>
+
+    <!-- Gaz tipi -->
+    <section class="gaz" aria-labelledby="gaz-h">
+      <figure class="gaz__photo"><img src="/img/sektor-klima/kaput-acik.jpg" alt="Kaputu açılmış aracın motor bölmesi" loading="lazy" decoding="async" /></figure>
+      <div class="gaz__copy">
+        <p class="eyebrow mono">Hangi gaz?</p>
+        <h2 class="h2" id="gaz-h">İki gaz, <em>iki ayrı hat.</em></h2>
+        <p class="lead">Aracınızın hangi gazı kullandığı kaputun altındaki etikette yazar. Miktar da oradadır; biz o miktarı tartarak basarız.</p>
+        <ul class="gaz__list" data-gas></ul>
+      </div>
+    </section>
+
+    <!-- Süreç: servis fişi -->
+    <section class="surec" id="surec" aria-labelledby="surec-h">
+      <div class="surec__head">
+        <p class="eyebrow mono">Gazı basıp göndermeyiz</p>
+        <h2 class="h2" id="surec-h">Önce ölçeriz, <em>sonra konuşuruz.</em></h2>
+      </div>
+      <div class="fis">
+        <div class="fis__top mono"><span>SERVİS FİŞİ</span><span data-fis-no></span></div>
+        <ol class="fis__list" data-steps></ol>
+        <p class="fis__garanti"><span data-icon="check"></span><span data-bind="garanti"></span></p>
+      </div>
+    </section>
+
+    <!-- Atölye -->
+    <section class="atolye" aria-labelledby="atolye-h">
+      <figure class="atolye__photo"><img src="/img/sektor-klima/teshis.jpg" alt="Elinde tabletle motor bölmesini kontrol eden usta" loading="lazy" decoding="async" /></figure>
+      <div class="atolye__copy">
+        <p class="eyebrow mono" data-years></p>
+        <h2 class="h2" id="atolye-h">Başka iş yapmıyoruz. <em>Sadece klima.</em></h2>
+        <p class="lead" data-bind="hakkinda"></p>
+      </div>
+    </section>
+
+    <!-- Galeri -->
+    <section class="galeri" aria-label="Atölyeden kareler">
+      <div class="galeri__track" data-gallery></div>
+    </section>
+
+    <!-- Yorumlar -->
+    <section class="yorum" id="yorumlar" aria-labelledby="yorum-h">
+      <div class="yorum__head">
+        <h2 class="h2" id="yorum-h">Serinleyenler <em>anlatıyor.</em></h2>
+        <div class="score">
+          <p class="score__num" data-score></p>
+          <div>
+            <p class="score__stars" data-stars></p>
+            <p class="score__count mono" data-review-count></p>
+          </div>
+        </div>
+      </div>
+      <ul class="yorum__list" data-reviews></ul>
+    </section>
+
+    <!-- Markalar -->
+    <section class="marka" aria-label="Klimasına baktığımız markalar">
+      <div class="marka__track" data-brands></div>
+    </section>
+
+    <!-- Saatler + konum -->
+    <section class="konum" id="konum" aria-labelledby="konum-h">
+      <div class="konum__info">
+        <p class="eyebrow mono">Şaşmaz Oto Sanayi</p>
+        <h2 class="h2" id="konum-h">Gelin, <em>birlikte ölçelim.</em></h2>
+        <p class="konum__status" data-status-big></p>
+        <dl class="hours" data-hours></dl>
+        <p class="konum__addr" data-bind="adres"></p>
+        <div class="konum__btns">
+          <a class="btn btn--ink" data-maps target="_blank" rel="noopener"><span data-icon="pin"></span>Yol tarifi al</a>
+          <a class="btn btn--line" data-tel><span data-icon="phone"></span>Ara</a>
+        </div>
+      </div>
+      <div class="konum__map" data-map><span class="mono">Harita yükleniyor</span></div>
+    </section>
+
+    <!-- Final -->
+    <section class="final" aria-labelledby="final-h">
+      <img class="final__bg" src="/img/klima-klasik/vent-soguk.jpg" alt="" loading="lazy" decoding="async" />
+      <div class="final__in">
+        <p class="final__temp mono" aria-hidden="true"><span data-final-temp></span></p>
+        <h2 class="final__title" id="final-h" data-final></h2>
+        <div class="final__btns">
+          <a class="btn btn--buz btn--big" data-tel><span data-icon="phone"></span>Hemen ara</a>
+          <a class="btn btn--light btn--big" data-wa target="_blank" rel="noopener"><span data-icon="whatsapp"></span>WhatsApp'tan yaz</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <p class="foot__name" data-bind="ad"></p>
+    <p data-bind="adres"></p>
+    <p><a data-tel data-bind="telefon"></a></p>
+    <p class="foot__small">© <span data-year></span> <span data-bind="ad"></span>. Fotoğraflar: Pexels.</p>
+  </footer>
+
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

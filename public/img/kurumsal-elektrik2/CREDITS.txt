@@ -1,0 +1,5 @@
+Tüm görseller Pexels lisansıyla (ücretsiz, ticari kullanım serbest):
+gece-yol.jpg: "Car Lights on the Highway at Night" — https://www.pexels.com/photo/car-lights-on-the-highway-at-night-15444512/
+aku-kablo.jpg: "Car Battery with Jumper Cables Attached" — https://www.pexels.com/photo/car-battery-with-jumper-cables-attached-32282232/
+kaput.jpg: "Man in Black Jacket and Black Knit Cap Inspecting Car Engine" — https://www.pexels.com/photo/3807277/
+Ayrıca public/img/devre/ görselleri kullanılır (kaynaklar orada).

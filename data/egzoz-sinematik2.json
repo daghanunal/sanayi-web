@@ -1,0 +1,46 @@
+{
+  "preset": "egzoz-sinematik2",
+  "dumanlar": [
+    {
+      "id": "siyah",
+      "renk": "Siyah",
+      "kelime": "SİYAH",
+      "anlam": "Yakıt fazla yanıyor",
+      "baslik": "Siyah duman: motor fazla yakıt basıyor.",
+      "metin": "Tıkalı hava filtresi, damlatan enjektör ya da dolmuş bir DPF. Önce gazı ölçeriz; sorun egzozdaysa burada çözeriz, motordaysa açıkça söyleriz.",
+      "hizmet": "siyah duman"
+    },
+    {
+      "id": "mavi",
+      "renk": "Mavi",
+      "kelime": "MAVİ",
+      "anlam": "Yağ yakıyor",
+      "baslik": "Mavi duman: yağ yanma odasına kaçıyor.",
+      "metin": "Segman, subap lastiği ya da turbo. Bu bir egzoz arızası değildir; boşuna susturucu değiştirtmeyiz, ne olduğunu söyler, doğru adrese yönlendiririz.",
+      "hizmet": "mavi duman"
+    },
+    {
+      "id": "beyaz",
+      "renk": "Beyaz",
+      "kelime": "BEYAZ",
+      "anlam": "Su ya da antifriz",
+      "baslik": "Beyaz duman: soğuk sabahta buhar, gün boyu sürerse conta.",
+      "metin": "Motor ısınınca kesiliyorsa normaldir. Kesilmiyor, tatlı bir koku geliyorsa su yanıyor olabilir. Ölçer, bakar, dürüstçe söyleriz.",
+      "hizmet": "beyaz duman"
+    },
+    {
+      "id": "is",
+      "renk": "Gri is",
+      "kelime": "İS",
+      "anlam": "DPF doldu",
+      "baslik": "Lamba yandı, çekiş düştü: partikül filtresi dolu.",
+      "metin": "Dizelde en sık gördüğümüz iş. Filtreyi sökeriz, makinede yıkayıp fırınlarız, basıncını ölçüp takarız. Değiştirmekten çok daha ucuzdur.",
+      "hizmet": "DPF temizleme"
+    }
+  ],
+  "temiz": {
+    "kelime": "TEMİZ",
+    "baslik": "Görünmüyorsa, geçer.",
+    "metin": "İşten sonra ölçümü sizin önünüzde tekrarlarız. Çıktısını elinize veririz, muayeneye gönül rahatlığıyla gidersiniz."
+  }
+}

@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#1d1022" />
+  <title>Oto Yedek Parça | Şaşmaz</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='16' fill='%231d1022'/%3E%3Ccircle cx='16' cy='16' r='12' fill='%234fe0b5'/%3E%3Ccircle cx='16' cy='16' r='5' fill='%231d1022'/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=Instrument+Sans:wght@400..700&display=swap&subset=latin-ext" rel="stylesheet" />
+  <link rel="preload" as="image" href="/img/yedekparca-klasik2/koridor-m.jpg" media="(max-width: 899px)" />
+  <link rel="preload" as="image" href="/img/yedekparca-klasik2/koridor-d.jpg" media="(min-width: 900px)" />
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <a class="skip" href="#raflar">İçeriğe geç</a>
+
+  <header class="ust" id="ust">
+    <a class="ust__logo" href="#ust" aria-label="Sayfa başı">
+      <svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="18" fill="currentColor"/><circle cx="20" cy="20" r="7" fill="var(--erik)"/><g fill="var(--erik)"><circle cx="20" cy="9.5" r="2"/><circle cx="30" cy="16.8" r="2"/><circle cx="26.2" cy="28.5" r="2"/><circle cx="13.8" cy="28.5" r="2"/><circle cx="10" cy="16.8" r="2"/></g></svg>
+      <span data-bind="ad"></span>
+    </a>
+    <nav class="ust__nav" aria-label="Sayfa içi">
+      <a href="#raflar">Raflar</a>
+      <a href="#sasi">Şasi no</a>
+      <a href="#teslimat">Teslimat</a>
+      <a href="#iletisim">İletişim</a>
+    </nav>
+    <span class="ust__durum"><i data-status-dot></i><span data-status-short></span></span>
+    <a class="ust__tel" data-href="tel"><span data-icon="phone"></span><span class="ust__num" data-bind="telefon"></span></a>
+  </header>
+
+  <main>
+    <!-- HERO: fren diski açıklığı. Kaydırınca disk bir bijon döner, sonra bijon deliğinden depoya girilir. -->
+    <section class="hero" aria-labelledby="hero-baslik" data-hero>
+      <div class="hero__sahne">
+        <picture>
+          <source media="(min-width: 900px)" srcset="/img/yedekparca-klasik2/koridor-d.jpg" width="1500" height="843" />
+          <img class="hero__foto" src="/img/yedekparca-klasik2/koridor-m.jpg" width="1000" height="1333" data-hero-foto alt="Deponun uzun koridoru, iki yanda tavana kadar dolu raflar" fetchpriority="high" />
+        </picture>
+        <div class="hero__karart" data-karart></div>
+        <svg class="hero__maske" data-maske aria-hidden="true"><path data-maske-yol fill-rule="evenodd"/><path class="hero__cizgi" data-cizgi-yol/><path class="hero__jant" data-jant-yol/></svg>
+        <div class="hero__bas" data-hero-bas>
+          <p class="hero__ust" data-bind="since"></p>
+          <h1 class="hero__baslik" id="hero-baslik" data-bind="ad"></h1>
+        </div>
+        <div class="hero__alt" data-hero-alt>
+          <p class="hero__slogan" data-bind="slogan"></p>
+          <div class="hero__btnler">
+            <a class="btn btn--nane" href="#sasi">Şasi no ile sor</a>
+            <a class="btn btn--cizgi" data-href="tel"><span data-icon="phone"></span>Ara</a>
+          </div>
+        </div>
+        <p class="hero__ara" data-hero-ara aria-hidden="true">Bir bijon çevirin,<br /><em>depoya girelim.</em></p>
+        <p class="hero__ipucu" data-ipucu aria-hidden="true"><span></span>Kaydırın, depoya girelim</p>
+        <div class="hero__son" data-hero-son>
+          <p class="hero__sayi"><b data-hero-sayi>0</b><span data-hero-sonek></span></p>
+          <p class="hero__son-metin">çeşit parça bu koridorda.<br />Rafta olmayanı aynı gün getiririz.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- RAFLAR: hizmet grupları -->
+    <section class="raflar" id="raflar" aria-labelledby="raflar-baslik">
+      <header class="bolum-bas">
+        <p class="etiket">Raflar</p>
+        <h2 class="h2" id="raflar-baslik">Yedi raf, <em data-kalem></em> kalem.</h2>
+        <p class="bolum-bas__metin" data-bind="hakkinda"></p>
+      </header>
+      <ol class="raf-liste" data-raflar></ol>
+      <p class="raflar__not"><span data-icon-check></span><span data-bind="garanti"></span></p>
+    </section>
+
+    <!-- ŞASİ: imza etkileşimi -->
+    <section class="sasi" id="sasi" aria-labelledby="sasi-baslik">
+      <div class="sasi__ic">
+        <div class="sasi__metin">
+          <p class="etiket etiket--nane">Parçanın adını bilmeniz gerekmez</p>
+          <h2 class="h2" id="sasi-baslik">17 hane yazın.<br />Gerisi bizde.</h2>
+          <p class="sasi__aciklama">Ruhsatın ön yüzünde <b>E</b> kutusundaki şasi numarası. Yazmak zor geliyorsa ruhsatın fotoğrafını WhatsApp'tan atın, o da olur.</p>
+        </div>
+        <div class="vin" data-vin>
+          <label class="vin__etiket" for="vin-girdi">Şasi numarası <span data-vin-sayac>0 / 17</span></label>
+          <div class="vin__kutular" aria-hidden="true" data-vin-kutular></div>
+          <input class="vin__girdi" id="vin-girdi" data-vin-girdi maxlength="17" autocomplete="off" autocapitalize="characters" spellcheck="false" inputmode="text" placeholder="Örn. VF1RFB00X12345678" />
+          <p class="vin__not" data-vin-not>I, O ve Q harfleri şasi numarasında kullanılmaz.</p>
+          <a class="btn btn--nane btn--genis" data-vin-gonder target="_blank" rel="noopener"><span data-icon="whatsapp"></span><span data-vin-gonder-metin>Ruhsat fotoğrafını gönder</span></a>
+        </div>
+      </div>
+      <ol class="surec" data-surec></ol>
+    </section>
+
+    <!-- RAKAMLAR -->
+    <section class="rakamlar" aria-label="Rakamlarla">
+      <dl class="rakamlar__liste" data-rakamlar></dl>
+    </section>
+
+    <!-- DEPO FOTOĞRAFLARI -->
+    <section class="depo" aria-labelledby="depo-baslik">
+      <header class="bolum-bas bolum-bas--yan">
+        <p class="etiket">Depo</p>
+        <h2 class="h2" id="depo-baslik">Sorduğunuz parça<br />büyük ihtimalle şu an rafta.</h2>
+      </header>
+      <div class="depo__izgara" data-depo></div>
+    </section>
+
+    <!-- TESLİMAT: halkalar -->
+    <section class="teslimat" id="teslimat" aria-labelledby="teslimat-baslik">
+      <div class="teslimat__ic">
+        <header class="bolum-bas">
+          <p class="etiket etiket--nane">Teslimat</p>
+          <h2 class="h2" id="teslimat-baslik">Şaşmaz'dan dışarı,<br />halka halka.</h2>
+        </header>
+        <div class="halka" aria-hidden="true">
+          <svg viewBox="0 0 400 400" data-halka></svg>
+        </div>
+        <ol class="teslimat__liste" data-teslimat></ol>
+      </div>
+    </section>
+
+    <!-- MARKALAR -->
+    <section class="markalar" aria-labelledby="markalar-baslik">
+      <h2 class="etiket markalar__baslik" id="markalar-baslik">Hangi araç olursa, hangi marka parça isterseniz</h2>
+      <div class="serit" data-serit="arac"></div>
+      <div class="serit serit--ters" data-serit="parca"></div>
+    </section>
+
+    <!-- YORUMLAR -->
+    <section class="yorumlar" aria-labelledby="yorum-baslik">
+      <div class="yorumlar__bas">
+        <div class="puan" data-puan></div>
+        <h2 class="h2" id="yorum-baslik">Ustalar ne diyor?</h2>
+      </div>
+      <div class="yorum-serit" data-yorumlar tabindex="0" aria-label="Müşteri yorumları, yana kaydırın"></div>
+    </section>
+
+    <!-- SAATLER + KONUM -->
+    <section class="iletisim" id="iletisim" aria-labelledby="iletisim-baslik">
+      <div class="iletisim__ic">
+        <div class="saat">
+          <p class="etiket">Çalışma saatleri</p>
+          <h2 class="h2" id="iletisim-baslik">Dükkân açık mı?</h2>
+          <p class="durum" data-status></p>
+          <dl class="saat__liste" data-saatler></dl>
+        </div>
+        <div class="konum">
+          <div class="konum__harita" data-harita><span>Harita yükleniyor</span></div>
+          <p class="konum__adres" data-bind="adres"></p>
+          <a class="btn btn--koyu" data-href="maps" target="_blank" rel="noopener"><span data-icon="pin"></span>Yol tarifi al</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- FİNAL -->
+    <section class="final" aria-labelledby="final-baslik">
+      <div class="final__disk" aria-hidden="true">
+        <svg viewBox="0 0 200 200"><path fill-rule="evenodd" fill="currentColor" data-final-disk/></svg>
+      </div>
+      <h2 class="final__baslik" id="final-baslik">Parçayı söyleyin,<br /><em>yola çıksın.</em></h2>
+      <div class="final__btnler">
+        <a class="btn btn--nane btn--buyuk" data-href="wa" target="_blank" rel="noopener"><span data-icon="whatsapp"></span>WhatsApp'tan yaz</a>
+        <a class="btn btn--cizgi btn--buyuk" data-href="tel"><span data-icon="phone"></span><span data-bind="telefon"></span></a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="alt">
+    <p class="alt__ad" data-bind="ad"></p>
+    <p data-bind="adres"></p>
+    <p data-bind="copy"></p>
+  </footer>
+
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

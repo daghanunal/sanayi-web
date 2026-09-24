@@ -1,0 +1,3 @@
+Bu klasördeki görseller public/img/sektor-dis/ içindeki Pexels görsellerinin küçültülmüş/renk ayarlı kopyalarıdır.
+Kaynaklar için: public/img/sektor-dis/CREDITS.txt (Pexels lisansı, ücretsiz ticari kullanım).
+hero-d*.jpg: unite.jpg, hero-m*.jpg: muayenehane.jpg

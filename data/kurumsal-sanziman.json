@@ -1,0 +1,103 @@
+{
+  "galeri": [
+    { "src": "/img/kurumsal-sanziman/kesit.jpg", "alt": "Kesiti açılmış otomatik şanzıman: tork konvertörü, kavrama paketleri ve planet dişliler" },
+    { "src": "/img/kurumsal-sanziman/tamir.jpg", "alt": "Tezgâha bağlanmış şanzıman üzerinde çalışan usta" },
+    { "src": "/img/kurumsal-sanziman/teshis.jpg", "alt": "Teşhis tableti ile şanzıman arıza kaydı okunuyor" },
+    { "src": "/img/kurumsal-sanziman/dsg-kol.jpg", "alt": "Çift kavramalı şanzımanlı aracın vites kolu" },
+    { "src": "/img/kurumsal-sanziman/mekatronik.jpg", "alt": "Elektronik kontrol kartı yakın plan" },
+    { "src": "/img/kurumsal-sanziman/lift.jpg", "alt": "Atölyede lift üzerindeki araç" },
+    { "src": "/img/kurumsal-sanziman/dislilar.jpg", "alt": "Birbirine geçen metal dişliler" },
+    { "src": "/img/kurumsal-sanziman/yag.jpg", "alt": "Araca yeni yağ dolduruluyor" },
+    { "src": "/img/kurumsal-sanziman/usta-tablet.jpg", "alt": "Usta araç başında teşhis cihazıyla çalışıyor" }
+  ],
+  "kurumsal": {
+    "hero": {
+      "baslik": "Şanzımanı değiştirmeden önce bize okutun.",
+      "metin": "Klasik tork konvertörlü, DSG ve CVT. Arıza kaydını okur, aracı sizinle yolda dener, neyin bozulduğunu gösteririz. Çoğu zaman koca şanzıman değil; bir solenoid, bir sensör ya da doğru yapılmış bir yağ değişimi yeter.",
+      "birincil": "Şanzımanımı baktırayım",
+      "ikincil": "Şikâyetime göre bak",
+      "ikincilRota": "hizmetler"
+    },
+    "ozet": {
+      "baslik": "Her vuruntu yeni şanzıman demek değil",
+      "metin": "Vites vuruyor, kalkışta titriyor ya da devir fırlıyorsa önce sebebi buluruz. Şanzımanı indirmeden arıza kaydına, canlı veriye ve yağa bakarız; indirmek gerekiyorsa bunu, nedenini ve fiyatını işe başlamadan söyleriz."
+    },
+    "hizmetOzetBaslik": "Tezgâhtaki işler",
+    "yorumBaslik": "Vitesi düzelenler ne diyor",
+    "surecBaslik": "Bir şanzıman bizde nasıl ilerler",
+    "galeriBaslik": "Atölyeden",
+    "markaBaslik": "Otomatik şanzımanına baktığımız markalar",
+    "anlasmaBaslik": "Servisler ve filolar",
+    "anlasmaMetin": "Şanzımanı söküp getiren sanayi ustalarına ve aracı yoldan çekemeyen filolara ayrı sıra açıyoruz.",
+    "anlasmalar": [
+      {
+        "baslik": "Servislere tezgâh işi",
+        "kisa": "Söktüğünüz şanzımanı ya da mekatroniği getirin, onarılmış teslim alın.",
+        "metin": "Sanayideki servisler şanzımanı ya da mekatronik üniteyi söküp getirir; biz tezgâhta açar, bulduğumuzu gösterir, onarıp teslim ederiz. Montajdan sonra adaptasyon için aracı getirmeniz yeterli.",
+        "maddeler": ["Getirilen üniteye aynı gün ön kontrol", "Çıkan parçalar ve bulgu fotoğraflı", "Montaj sonrası adaptasyon sürüşü", "Toplu işte ayrı sıra"],
+        "buton": "Servis olarak yazın"
+      },
+      {
+        "baslik": "Filo ve ticari araçlar",
+        "kisa": "Otomatik vitesli filo araçlarında aynı gün teşhis, süre baştan.",
+        "metin": "Otomatik vitesli servis, kurye ve şirket araçlarında aynı gün arıza kaydı okur, işin ne kadar süreceğini baştan söyleriz. Her aracın şanzıman yağı ve onarım geçmişini ayrı tutarız.",
+        "maddeler": ["Aynı gün teşhis", "Süre ve fiyat işe başlamadan", "Araç bazında yağ değişimi takibi", "Aylık tek fatura ve döküm"],
+        "buton": "Filo için görüşelim"
+      }
+    ],
+    "anlasmaNotu": "Koşullar araç sayısına ve iş tipine göre konuşulur; teklifimizi yazılı veririz.",
+    "hakkimizda": {
+      "baslik": "Yalnızca otomatik şanzıman",
+      "paragraflar": [
+        "2007'de Şaşmaz'da açtığımız dükkânda başka iş yapmadık: yalnızca otomatik şanzıman. Klasik tork konvertörlü kutular, DSG ve çift kavramalılar, CVT'ler. Aynı işi yıllarca yapınca hangi kutunun hangi viteste neden vurduğunu ezbere bilir hale geliyorsunuz.",
+        "Şanzımanı indirmeden önce okuruz, deneriz, dinleriz. İndirilmesi gerekmeyen şanzımanı indirmeyiz; revizyon gerekiyorsa bunu da gösterip açıkça söyleriz."
+      ],
+      "gorsel": "/img/kurumsal-sanziman/tamir.jpg",
+      "gorselAlt": "Tezgâha bağlanmış şanzıman üzerinde çalışan usta"
+    },
+    "misyon": "Şanzımanın neden bozulduğunu okuyarak ve deneyerek bulmak, gerekmeyen parçayı değiştirmemek.",
+    "vizyon": "Şaşmaz'da otomatik şanzıman denince önce okutulan, en son indirilen yer olmak.",
+    "degerler": [
+      { "baslik": "Önce okuruz", "metin": "Arıza kaydı ve canlı veri okunmadan şanzımana el sürülmez." },
+      { "baslik": "Birlikte deneriz", "metin": "Şikâyeti sizinle aynı arabada, hangi viteste çıktığını görerek anlarız." },
+      { "baslik": "Fiyat baştan", "metin": "Ne yapılacağını ve fiyatını söyleriz; onayınız olmadan şanzıman indirilmez." },
+      { "baslik": "Eski parça sizin", "metin": "Değişen balata, solenoid ya da sensörü isterseniz size gösterir, teslim ederiz." }
+    ],
+    "kalite": {
+      "baslik": "Bir şanzıman nasıl teslim edilir",
+      "metin": "Onarımdan çıkan her şanzıman aynı kontrol sırasından geçer.",
+      "maddeler": [
+        "Arıza kayıtları silinmeden önce not edilir, onarımdan sonra yeniden okunur.",
+        "Yağ, üreticinin öngördüğü tipte ve doğru sıcaklıkta seviyesi ayarlanarak konur.",
+        "Parça değişiminden sonra beyin adaptasyonu ve öğrenme sürüşü yapılır.",
+        "Soğuk ve sıcak şanzımanla ayrı ayrı test sürüşü yapılır.",
+        "Hata kaydı kalmadığı kontrol edilmeden araç teslim edilmez."
+      ]
+    },
+    "sss": [
+      { "soru": "Şanzımanım değişmeli mi, onarılır mı?", "cevap": "Okuyup denemeden söylemeyiz. Pek çok şikâyet mekatronikte, bir solenoidde ya da yanlış yağda çıkar. Revizyon gerekiyorsa gösterir, değişim seçeneğini de fiyatıyla söyleriz." },
+      { "soru": "Fiyatı ne zaman öğrenirim?", "cevap": "Teşhisten sonra, işe başlamadan. Onayınız olmadan şanzıman indirilmez." },
+      { "soru": "Şanzıman yağı değişir mi, 'ömürlük' değil mi?", "cevap": "Ömürlük denen yağ da zamanla yorulur. Kullanıma göre değişim önerilir; biz üreticinin öngördüğü yağla, sıcaklığa göre seviye ayarlayarak değiştiririz." },
+      { "soru": "DSG kalkışta titriyor, kavrama mı gitti?", "cevap": "Olabilir, ama önce adaptasyon değerlerine ve mekatroniğe bakarız. Bazen yazılım güncellemesi ve adaptasyon sorunu çözer." },
+      { "soru": "Aracı getiremiyorum, ne yapabilirim?", "cevap": "Bizi arayın; şikâyeti dinleyip ne olabileceğini konuşuruz. Çekici gerekiyorsa sanayideki çekicilerle çalışıyoruz." }
+    ],
+    "kariyer": {
+      "baslik": "Tezgâha usta ve çırak arıyoruz",
+      "metin": "Otomatik şanzıman, mekatronik ya da araç elektroniğinde tecrübesi olan usta veya mesleği öğrenmek isteyen çırak arkadaşlarla tanışmak isteriz. Kısa bir tanıtımla bize yazın."
+    },
+    "sayfalar": {
+      "kurumsal": { "baslik": "Kurumsal", "metin": "Kim olduğumuz, neden yalnızca otomatik şanzımanla uğraştığımız ve bir şanzımanı nasıl teslim ettiğimiz.", "gorsel": "/img/kurumsal-sanziman/atolye.jpg" },
+      "hizmetler": { "baslik": "Hizmetlerimiz", "metin": "Revizyondan mekatroniğe, yağ değişiminden adaptasyona; her iş için ortalama süre ve kapsam." },
+      "kurumsal-musteriler": { "baslik": "Servisler ve filolar", "metin": "Sanayideki servislere tezgâh işi, otomatik vitesli filolara aynı gün teşhis.", "gorsel": "/img/kurumsal-sanziman/lift.jpg" },
+      "referanslar": { "baslik": "Atölyeden ve müşterilerden", "metin": "Tezgâhtan kareler, müşterilerimizin yorumları ve baktığımız markalar." },
+      "iletisim": { "baslik": "İletişim", "metin": "Şikâyeti yazın ya da aracı getirin; aynı gün dönüş yapalım." }
+    },
+    "konular": ["Şanzıman arızası / teşhis", "Otomatik şanzıman revizyonu", "DSG / çift kavrama", "CVT", "Şanzıman yağı değişimi", "Mekatronik / beyin", "Servis olarak iş getirmek", "Filo / ticari araç", "Genel bilgi"],
+    "formBaslik": "Bize yazın",
+    "cta": {
+      "baslik": "Vites vuruyorsa, önce bir okutun.",
+      "metin": "Şikâyeti anlatın ya da aracı getirin; arıza kaydını okuyup sizinle yolda deneyelim, fiyatı işe başlamadan söyleyelim.",
+      "buton": "Şanzımanımı baktırayım"
+    }
+  }
+}

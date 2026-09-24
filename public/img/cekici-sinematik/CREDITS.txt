@@ -1,0 +1,9 @@
+cekici-yukleme.jpg: "A Car on a Tow Truck" — https://www.pexels.com/photo/a-car-on-a-tow-truck-17429097/
+zincir-sabitleme.jpg: "Arm of a Mechanic Repairing a Car" — https://www.pexels.com/photo/arm-of-a-mechanic-repairing-a-car-17429095/
+yolda-lastik.jpg: "Man Fixing a Car" — https://www.pexels.com/photo/man-fixing-a-car-17429096/
+aku-takviye.jpg: "Man Holding Clips in Front of a Car Engine" — https://www.pexels.com/photo/man-holding-clips-in-front-of-a-car-engine-5572265/
+aku-kablo.jpg: "Car Battery with Jumper Cables Attached" — https://www.pexels.com/photo/car-battery-with-jumper-cables-attached-32282232/
+vinc-kurtarma.jpg: "A Car Being Towed Away" — https://www.pexels.com/photo/a-car-being-towed-away-13151224/
+cekici-sehir.jpg: "A Yellow Flat Bed Truck on a Street Near a Pedestrian Lane" — https://www.pexels.com/photo/a-yellow-flat-bed-truck-on-a-street-near-a-pedestrian-lane-11383127/
+agir-vasita.jpg: "White Volvo Semi-truck on Side of Road" — https://www.pexels.com/photo/white-volvo-semi-truck-on-side-of-road-2199293/
+(Kaynak: public/img/sektor-cekici, 1200px'e küçültüldü)

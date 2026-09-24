@@ -1,0 +1,4 @@
+Pexels lisansı (ücretsiz, ticari kullanım serbest):
+parca-tepsisi.jpg: "Mechanic Organizing Engine Components in Workshop" https://www.pexels.com/photo/mechanic-organizing-engine-components-in-workshop-29181493/
+Ayrıca public/img/depo/ görselleri kullanılır (kaynaklar orada).
+Patlatılmış ön teker çizimi bu site için SVG olarak kodla çizildi.

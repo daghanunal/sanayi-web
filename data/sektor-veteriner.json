@@ -1,0 +1,117 @@
+{
+  "preset": "sektor-veteriner",
+  "isletme": {
+    "ad": "Pati Veteriner Kliniği",
+    "sektor": "Veteriner Kliniği",
+    "slogan": "Kediniz, köpeğiniz için randevulu muayene ve aşı takibi.",
+    "kurulus": 2011,
+    "hakkinda": "2011'den beri Etimesgut'ta kedi ve köpeklere bakıyoruz. Muayeneyi acele etmeden yapar, ne bulduğumuzu ve ne önerdiğimizi size açıkça anlatırız. Aşı karnesini biz takip eder, zamanı gelince WhatsApp'tan haber veririz."
+  },
+  "iletisim": {
+    "telefon": "0532 555 18 42",
+    "whatsapp": "905325551842",
+    "adres": "Elvankent Mah. Sakarya Cad. No: 27/B, Etimesgut/Ankara",
+    "mapsQuery": "Elvankent Mahallesi Etimesgut Ankara veteriner kliniği"
+  },
+  "saatler": [null, "09:00-19:00", "09:00-19:00", "09:00-19:00", "09:00-19:00", "09:00-19:00", "10:00-17:00"],
+  "hizmetler": [
+    {
+      "id": "muayene",
+      "baslik": "Genel muayene",
+      "aciklama": "Kilo, ateş, kalp ve akciğer dinleme, göz, kulak ve deri kontrolü. İştahı, tuvaleti ya da davranışı değişen hayvanınızı getirin; bulguları muayene sonunda tek tek anlatırız.",
+      "sure": "20-30 dk",
+      "gorsel": "/img/sektor-veteriner/steteskop.jpg",
+      "mesaj": "Merhaba, muayene için randevu almak istiyorum."
+    },
+    {
+      "id": "asi",
+      "baslik": "Aşı takvimi",
+      "aciklama": "Yavru kedi ve köpeklerde ilk aşılardan yıllık tekrarlara kadar karneyi biz tutarız. Aşıdan önce kısa bir muayene yapar, bir sonraki tarihi karneye yazar ve günü gelince hatırlatırız.",
+      "sure": "15 dk",
+      "gorsel": "/img/sektor-veteriner/pomeranyen.jpg",
+      "mesaj": "Merhaba, aşı takvimi için bilgi almak istiyorum."
+    },
+    {
+      "id": "kisirlastirma",
+      "baslik": "Kısırlaştırma",
+      "aciklama": "Operasyondan önce muayene ve kan tahlili yapılır, anestezi riskini birlikte konuşuruz. Aynı gün evinize gönderir, dikiş kontrolü için tekrar çağırırız. Evde nelere dikkat edeceğinizi yazılı olarak veririz.",
+      "sure": "Yarım gün, kontrol 10 gün sonra",
+      "gorsel": "/img/sektor-veteriner/muayene-masasi.jpg",
+      "mesaj": "Merhaba, kısırlaştırma için ön görüşme yapmak istiyorum."
+    },
+    {
+      "id": "dis",
+      "baslik": "Diş taşı temizliği",
+      "aciklama": "Ağız kokusu, diş etinde kızarıklık ya da yemek yerken zorlanma diş taşının işareti olabilir. Önce ağız muayenesi yapılır; temizlik sedasyon altında, ultrasonik cihazla yapılır.",
+      "sure": "1-2 saat",
+      "gorsel": "/img/sektor-veteriner/agiz-kontrol.jpg"
+    },
+    {
+      "id": "laboratuvar",
+      "baslik": "Laboratuvar ve kan tahlili",
+      "aciklama": "Hemogram ve biyokimya klinikteki cihazlarda çalışılır, sonucu çoğu zaman aynı ziyarette görürsünüz. Dışarıya gönderilmesi gereken testlerde sonucu size WhatsApp'tan iletiriz.",
+      "sure": "Sonuç 30-45 dk",
+      "gorsel": "/img/sektor-veteriner/laboratuvar.jpg"
+    },
+    {
+      "id": "ultrason",
+      "baslik": "Ultrason ile inceleme",
+      "aciklama": "Karın içi organlar, idrar kesesi ve gebelik takibi için ultrasonla bakarız. Görüntüyü ekranda size de gösterir, ne gördüğümüzü açıklarız.",
+      "sure": "15-20 dk",
+      "gorsel": "/img/sektor-veteriner/ultrason.jpg"
+    },
+    {
+      "id": "bakim",
+      "baslik": "Kedi ve köpek bakımı",
+      "aciklama": "Tırnak kesimi, kulak temizliği, tüy düğümü açma ve iç-dış parazit kontrolü. Yaşlı ve huzursuz hayvanlarda işi acele etmeden, gerekirse birkaç aşamada yaparız.",
+      "sure": "20-40 dk",
+      "gorsel": "/img/sektor-veteriner/sefkat.jpg"
+    },
+    {
+      "id": "acil",
+      "baslik": "Acil durumlar",
+      "aciklama": "Zehirlenme şüphesi, kanama, nefes darlığı, trafik kazası ya da doğum güçlüğünde yola çıkmadan önce arayın. Hekimimiz telefonda ilk yapılacakları söyler, siz gelene kadar hazırlık yapılır.",
+      "sure": "Önce arayın",
+      "gorsel": "/img/sektor-veteriner/goz-muayene.jpg",
+      "mesaj": "Merhaba, acil bir durum var, hemen görüşebilir miyiz?"
+    }
+  ],
+  "surec": [
+    { "baslik": "Randevu alın", "aciklama": "Arayın ya da WhatsApp'tan yazın; türünü, yaşını ve şikâyetini kısaca belirtin. Acil değilse size uygun saati birlikte belirleriz." },
+    { "baslik": "Muayene", "aciklama": "Hayvanınızı tanır, geçmişini sorar ve baştan sona muayene ederiz. Varsa eski aşı karnesini ve tahlil sonuçlarını getirin." },
+    { "baslik": "Gerekirse tahlil", "aciklama": "Kan tahlili ya da ultrason gerekiyorsa nedenini anlatır, onayınızı aldıktan sonra yaparız." },
+    { "baslik": "Bilgilendirme", "aciklama": "Bulguları ve önerdiğimiz tedavi yolunu açıklarız. Evde yapılacakları yazılı olarak veririz." },
+    { "baslik": "Kontrol ve hatırlatma", "aciklama": "Kontrol ve bir sonraki aşı tarihini karneye yazar, zamanı gelince WhatsApp'tan haber veririz." }
+  ],
+  "istatistikler": [
+    { "deger": 15, "sonek": "", "etiket": "yıldır Etimesgut'ta", "kurulustanHesapla": true },
+    { "deger": 30, "sonek": " dk", "etiket": "kan tahlili sonucu (ortalama)" },
+    { "deger": 2, "sonek": "", "etiket": "muayene odası, kedi ve köpek ayrı" },
+    { "deger": 6, "sonek": " gün", "etiket": "haftada açık" }
+  ],
+  "markalar": ["Kedi", "Köpek", "Yavru kedi", "Yavru köpek", "Yaşlı dostlar", "Tavşan", "Muhabbet kuşu", "Hamster"],
+  "galeri": [
+    { "src": "/img/sektor-veteriner/hekim-kopek.jpg", "alt": "Muayene masasında yaşlı köpekle veteriner hekim" },
+    { "src": "/img/sektor-veteriner/steteskop.jpg", "alt": "Köpeğin kalbini steteskopla dinleyen hekim" },
+    { "src": "/img/sektor-veteriner/goz-muayene.jpg", "alt": "Köpeğin gözünü cihazla kontrol eden hekim" },
+    { "src": "/img/sektor-veteriner/agiz-kontrol.jpg", "alt": "Köpeğin diş ve diş etlerine bakılıyor" },
+    { "src": "/img/sektor-veteriner/pomeranyen.jpg", "alt": "Muayene masasında Pomeranian cinsi köpek" },
+    { "src": "/img/sektor-veteriner/ultrason.jpg", "alt": "Ultrason cihazının başında köpekle muayene" },
+    { "src": "/img/sektor-veteriner/laboratuvar.jpg", "alt": "Lamel üzerine kan örneği hazırlanıyor" },
+    { "src": "/img/sektor-veteriner/kan-ornegi.jpg", "alt": "Tüp ve lamellerle kan tahlili hazırlığı" },
+    { "src": "/img/sektor-veteriner/muayene-masasi.jpg", "alt": "Muayene masasında dinlenen Alman çoban köpeği" },
+    { "src": "/img/sektor-veteriner/sefkat.jpg", "alt": "Eldivenli elle başı okşanan yaşlı köpek" },
+    { "src": "/img/sektor-veteriner/kedi.jpg", "alt": "Tekir kedi yandan portre" },
+    { "src": "/img/sektor-veteriner/kedi-portre.jpg", "alt": "Turuncu beyaz kedi yandan portre" },
+    { "src": "/img/sektor-veteriner/kopek-portre.jpg", "alt": "Terrier köpek yandan portre" }
+  ],
+  "puan": { "ortalama": 4.8, "adet": 236 },
+  "yorumlar": [
+    { "ad": "Selin A.", "puan": 5, "metin": "Kedimin aşı zamanı geldiğinde WhatsApp'tan mesaj geldi, ben unutmuştum. Karneyi her seferinde düzgünce dolduruyorlar.", "arac": "Tekir, 3 yaşında" },
+    { "ad": "Burak T.", "puan": 5, "metin": "Köpeğimiz gece bir şey yuttu, aradık, ne yapmamız gerektiğini telefonda anlattılar. Sabah ilk iş muayene edip ultrasonla baktılar.", "arac": "Golden, 5 yaşında" },
+    { "ad": "Nurcan Y.", "puan": 5, "metin": "Kısırlaştırmadan önce kan tahlili yaptılar ve riskleri tek tek anlattılar. Eve gönderirken bakım notlarını kâğıda yazdılar.", "arac": "Van kedisi, 1 yaşında" },
+    { "ad": "Emre K.", "puan": 4, "metin": "Yaşlı köpeğimin tırnaklarını ve diş kontrolünü sabırla yaptılar, hiç zorlamadılar. Cumartesi açık olmaları işimize geliyor.", "arac": "Kangal kırması, 11 yaşında" },
+    { "ad": "Deniz O.", "puan": 5, "metin": "Kan tahlilinin sonucunu yarım saatte aldık, ekranda değerleri gösterip açıkladılar. Gereksiz hiçbir şey önermediler.", "arac": "British Shorthair, 7 yaşında" }
+  ],
+  "garanti": "Her muayenenin sonunda bulguları anlatır, kontrol tarihini karneye yazarız."
+}

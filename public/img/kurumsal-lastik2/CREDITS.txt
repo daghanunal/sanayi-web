@@ -1,0 +1,4 @@
+Tüm görseller Pexels lisansıyla (ücretsiz ticari kullanım, atıf gerekmez).
+depo.jpg https://www.pexels.com/photo/3806252/
+hava.jpg https://www.pexels.com/photo/3807386/
+Ayrıca public/img/pist/ görselleri kullanılır.

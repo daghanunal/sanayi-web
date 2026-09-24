@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#e6ebee" />
+  <title>Motor Rektifiye ve Torna | Şaşmaz, Ankara</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='16' fill='%23e6ebee'/%3E%3Ccircle cx='16' cy='16' r='10' fill='none' stroke='%230c1418' stroke-width='3'/%3E%3Cpath d='M10 10l12 12M22 10L10 22' stroke='%2300a39a' stroke-width='2'/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;800;900&family=Onest:wght@400;500;600;700&family=Red+Hat+Mono:wght@400;500;600&display=swap&subset=latin-ext" rel="stylesheet" />
+  <link rel="preload" as="image" href="/img/rektifiye-klasik2/silindir-ic.jpg" />
+  <link rel="stylesheet" href="../../shared/base.css" />
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <header class="top">
+    <a href="#top" class="top__brand"><span class="top__mark" aria-hidden="true"></span><span data-name></span></a>
+    <nav class="top__nav" aria-label="Sayfa bölümleri">
+      <a href="#isler">İşler</a>
+      <a href="#olcu">Ölçü</a>
+      <a href="#rapor">Rapor</a>
+      <a href="#yorumlar">Yorumlar</a>
+      <a href="#konum">Konum</a>
+    </nav>
+    <span class="chip" data-status-chip></span>
+    <a class="top__call" data-tel aria-label="Telefonla ara"></a>
+  </header>
+
+  <main>
+    <!-- İMZA: silindirin içine bakış. Kaydırdıkça kovan ölçü halkası döner, çap 75,000'den 75,250'ye
+         çıkar, 45° hon izi çizilir, sonra kovan büyüyüp ekranı kaplar: silindirin içindesiniz. -->
+    <section class="hero" id="top" aria-label="Giriş">
+      <div class="hero__stage">
+        <div class="hero__text">
+          <ul class="hero__tags mono" data-tags></ul>
+          <p class="hero__since mono" data-since></p>
+          <h1 class="hero__title"><span class="krom" data-name></span></h1>
+          <p class="hero__slogan" data-slogan></p>
+          <div class="hero__actions">
+            <a class="btn btn--ink" data-tel-btn>Hemen ara</a>
+            <a class="btn btn--line" data-wa>WhatsApp</a>
+          </div>
+        </div>
+
+        <div class="bore" aria-hidden="true">
+          <svg class="bore__ring" viewBox="-60 -60 120 120"><g class="bore__ticks"></g></svg>
+          <div class="bore__win">
+            <div class="bore__img"><img src="/img/rektifiye-klasik2/silindir-ic.jpg" alt="" fetchpriority="high" /></div>
+            <svg class="bore__hatch" viewBox="0 0 100 100" preserveAspectRatio="none"><g class="hatch hatch--a"></g><g class="hatch hatch--b"></g></svg>
+            <div class="bore__glint"></div>
+          </div>
+          <div class="bore__pointer"></div>
+        </div>
+
+        <div class="readout" aria-hidden="true">
+          <span class="readout__lbl mono">Silindir çapı</span>
+          <span class="readout__val"><span class="readout__o">Ø</span><span data-cap>75,000</span><small>mm</small></span>
+          <span class="readout__cls mono" data-cls>Standart ölçü</span>
+          <span class="readout__hon mono">Hon açısı <b>45°</b></span>
+        </div>
+
+        <p class="hero__cue mono" aria-hidden="true"><span></span>Kaydırın, silindiri işleyelim</p>
+
+        <div class="hero__shade" aria-hidden="true"></div>
+        <div class="hero__end">
+          <p class="hero__end-k mono" data-end-k></p>
+          <p class="hero__end-t">Ölçüsüne geldi.</p>
+          <ul class="hero__end-list mono" data-end-list></ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="about" aria-label="Hakkımızda">
+      <div class="wrap">
+        <p class="about__lead" data-about></p>
+      </div>
+    </section>
+
+    <section class="services" id="isler" aria-labelledby="isler-t">
+      <div class="wrap services__grid">
+        <div class="services__side">
+          <p class="kicker mono">Tezgâhtaki işler</p>
+          <h2 class="h2" id="isler-t">Her işin bir <em>toleransı</em> var.</h2>
+          <p class="lead">Ölçüyü tezgâhın başında yazarız, işten sonra aynı aletle yine ölçeriz. Aşağıdaki rakamlar çalıştığımız sınırlar.</p>
+          <figure class="services__photo">
+            <img data-svc-img src="/img/rektifiye-klasik2/krank.jpg" alt="Taşlanmış krank mili" loading="lazy" />
+            <figcaption class="mono" data-svc-cap>Krank taşlama</figcaption>
+          </figure>
+        </div>
+        <ol class="svc" data-services></ol>
+      </div>
+    </section>
+
+    <section class="sizes" id="olcu" aria-labelledby="olcu-t">
+      <div class="wrap sizes__grid">
+        <div class="sizes__copy">
+          <p class="kicker mono">Büyütme ölçüleri</p>
+          <h2 class="h2" id="olcu-t">Silindir aşındıysa bir <em>üst ölçüye</em> çıkarız.</h2>
+          <p class="lead">Kovan ölçülür, ovalite ve konik bakılır. Hangi ölçüye ineceğimizi söyleriz, piston o ölçüde gelir. Her halka çeyrek milimetre.</p>
+          <ol class="sizes__list mono" data-sizes></ol>
+        </div>
+        <div class="rings" aria-hidden="true">
+          <svg viewBox="-100 -100 200 200" class="rings__svg"><g data-rings></g></svg>
+          <div class="rings__label"><span data-ring-val>75,00</span><small data-ring-cls>STD</small></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="report" id="rapor" aria-labelledby="rapor-t">
+      <div class="wrap report__grid">
+        <div class="report__copy">
+          <p class="kicker mono">Parçayla birlikte elinize</p>
+          <h2 class="h2" id="rapor-t">Ölçü raporu olmadan <em>motor çıkmaz.</em></h2>
+          <p class="lead" data-garanti></p>
+          <dl class="stats" data-stats></dl>
+        </div>
+        <article class="sheet" aria-label="Örnek ölçü raporu">
+          <header class="sheet__head">
+            <span class="mono">ÖLÇÜ RAPORU</span>
+            <span class="mono sheet__no" data-sheet-no></span>
+          </header>
+          <p class="sheet__job" data-rapor-is></p>
+          <div class="sheet__nom mono" data-rapor-nom></div>
+          <ul class="sheet__cyl" data-rapor-cyl></ul>
+          <dl class="sheet__notes mono" data-rapor-notes></dl>
+          <div class="sheet__stamp" aria-hidden="true"><span>UYGUN</span></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="steps" aria-labelledby="sira-t">
+      <div class="wrap">
+        <p class="kicker mono">Sıra hiç değişmez</p>
+        <h2 class="h2" id="sira-t">Ölç, söyle, işle, <em>yine ölç.</em></h2>
+        <ol class="steps__list" data-steps></ol>
+      </div>
+    </section>
+
+    <section class="gallery" aria-label="Atölyeden">
+      <div class="gallery__track" data-gallery></div>
+    </section>
+
+    <section class="engines" aria-labelledby="motor-t">
+      <div class="wrap">
+        <p class="kicker mono">Sık gelen motorlar</p>
+        <h2 class="h2 h2--s" id="motor-t">Bu motorların ölçüsü tezgâhta ezber.</h2>
+        <ul class="engines__list mono" data-engines></ul>
+      </div>
+    </section>
+
+    <section class="reviews" id="yorumlar" aria-labelledby="yorum-t">
+      <div class="wrap">
+        <div class="reviews__head">
+          <div>
+            <p class="kicker mono">Motor ustaları ne diyor</p>
+            <h2 class="h2" id="yorum-t">İşi getiren <em>geri geliyor.</em></h2>
+          </div>
+          <div class="score"><span class="score__n" data-score></span><span class="score__s" data-stars></span><span class="score__c mono" data-score-count></span></div>
+        </div>
+        <ul class="reviews__list" data-reviews></ul>
+      </div>
+    </section>
+
+    <section class="visit" id="konum" aria-labelledby="konum-t">
+      <div class="wrap visit__grid">
+        <div class="visit__hours">
+          <p class="kicker mono">Çalışma saatleri</p>
+          <h2 class="h2 h2--s" id="konum-t">Tezgâh sabah sekizde döner.</h2>
+          <p class="status" data-status></p>
+          <dl class="hours mono" data-hours></dl>
+          <p class="visit__addr" data-address></p>
+          <a class="btn btn--line" data-maps target="_blank" rel="noopener">Yol tarifi al</a>
+        </div>
+        <div class="visit__map" data-map><span class="mono">Harita yükleniyor</span></div>
+      </div>
+    </section>
+
+    <section class="final" aria-labelledby="final-t">
+      <div class="final__ring" aria-hidden="true"></div>
+      <div class="wrap final__in">
+        <p class="kicker mono">Motor sökülmeden önce de arayabilirsiniz</p>
+        <h2 class="final__t" id="final-t">Getirin, <span class="krom krom--dark">önce ölçelim.</span></h2>
+        <p class="final__p">Ölçüyü söyleriz, fiyatı işe başlamadan söyleriz. Onayınız olmadan tezgâha almayız.</p>
+        <div class="final__actions">
+          <a class="btn btn--accent btn--big" data-tel-btn>Ara</a>
+          <a class="btn btn--line-light btn--big" data-wa>WhatsApp'tan yaz</a>
+        </div>
+        <a class="final__tel" data-tel-big></a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <div class="wrap foot__in">
+      <span class="foot__name" data-name></span>
+      <span data-address></span>
+      <span class="mono">© <span data-year></span> · Görseller: Flickr (CC), Wikimedia, Pexels</span>
+    </div>
+  </footer>
+
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

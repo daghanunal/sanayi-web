@@ -1,0 +1,10 @@
+Pexels (ücretsiz lisans), https://www.pexels.com/photo/<id>/
+karmasa.jpg 4480525 (Blue red and yellow electric wires)
+sigortalar.jpg 4617591 (Rows of multicolored car electrical fuses)
+kablolar.jpg 17072947 (Close-up of cables)
+aku-takviye.jpg 32282233 (Car battery with jumper cables in engine bay)
+kaput-usta.jpg 8478244 (Man fixing a car)
+multimetre.jpg 38292956 (Close-up of multimeter and tools on table)
+olcum.jpg 33531830 (Electrician working with multimeter in workshop)
+far-gece.jpg 32723285 (Sleek sports car at night with headlights on)
+Ayrıca public/img/devre/ görselleri kullanılır (kaynaklar orada).

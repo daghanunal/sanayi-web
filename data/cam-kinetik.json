@@ -1,0 +1,18 @@
+{
+  "preset": "cam-kinetik",
+  "heroGorsel": "/img/kristal/yagmur.jpg",
+  "kirilma": {
+    "kirikGorsel": "/img/kristal/catlak.jpg",
+    "yeniGorsel": "/img/kristal/sunroof.jpg",
+    "kelime": "CAM",
+    "adimlar": [
+      { "ust": "Otoyolda", "baslik": "Küçük bir taş.", "alt": "Bozuk para kadar bir iz. Çoğu kişi önemsemez." },
+      { "ust": "Bir hafta sonra", "baslik": "Çatlak yürür.", "alt": "Sabah soğuğu, öğlen güneşi. İz her gün biraz daha uzar." },
+      { "ust": "Beklerseniz", "baslik": "Cam gider.", "alt": "Sürücünün görüşünü kesen çatlak muayenede kusur sayılır." },
+      { "ust": "Bize gelirseniz", "baslik": "Aynı gün yenisi.", "alt": "Erken gelen iz 30 dakikada reçineyle kapanır. Geç kalan cam 2-3 saatte değişir." }
+    ]
+  },
+  "filmGorsel": "/img/kristal/sunroof.jpg",
+  "finalBaslik": "Camın fotoğrafını atın, tamir mi değişim mi söyleyelim.",
+  "kasko": "Kaskonuzda cam teminatı varsa dosyayı biz açarız."
+}

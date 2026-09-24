@@ -1,0 +1,15 @@
+Tüm görseller Pexels lisansıyla (ücretsiz, ticari kullanım serbest), https://www.pexels.com/photo/<id>/
+tir-usta.jpg: Pexels 7019378 "Mechanic and Truck" — https://www.pexels.com/photo/mechanic-and-truck-7019378/
+usta-kaput.jpg: Pexels 8985714 "A Mechanic Fixing a Car" (Artem Podrez) — https://www.pexels.com/photo/a-mechanic-fixing-a-car-8985714/
+teshis.jpg: Pexels 6870298 "Mechanic Checking the Engine of a Car" (Gustavo Fring) — https://www.pexels.com/photo/mechanic-checking-the-engine-of-a-car-6870298/
+genlesme-kabi.jpg: Pexels 8478265 "A Mechanic Repairing a Car" (Sergey Meshkov) — https://www.pexels.com/photo/a-mechanic-repairing-a-car-8478265/
+kaynak.jpg: Pexels 5846247 "A Person Welding at a Workshop" (Tima Miroshnichenko) — https://www.pexels.com/photo/a-person-welding-at-a-workshop-5846247/
+hararet-gostergesi-dikey.jpg: Pexels 17245075 "Close-up of the Speedometer on the Dashboard in a Modern Car" — https://www.pexels.com/photo/close-up-of-the-speedometer-on-the-dashboard-in-a-modern-car-17245075/
+hararet-gostergesi.jpg: Pexels 12509457 "Fuel and Temperature Gauges on a Black Panel Board" — https://www.pexels.com/photo/fuel-and-temperature-gauges-on-a-black-panel-board-12509457/
+hortumlar.jpg: Pexels 1409999 "Close-up Photo of Vehicle Engine" (George Sultan) — https://www.pexels.com/photo/close-up-photo-of-vehicle-engine-1409999/
+tir-kaput.jpg: Pexels 7541346 "A Man Looking under the Hood of a Truck with a Garage Work Light" — https://www.pexels.com/photo/a-man-looking-under-the-hood-of-a-truck-with-a-garage-work-light-7541346/
+tir-motor.jpg: Pexels 7564861 "Mechanic Repairing a Truck Engine" (cottonbro studio) — https://www.pexels.com/photo/mechanic-repairing-a-truck-engine-7564861/
+motor-bolmesi.jpg: Pexels 4116220 "Red Car Engine Bay" — https://www.pexels.com/photo/red-car-engine-bay-4116220/
+kaput-alti.jpg: Pexels 3807277 "Man in Black Jacket and Black Knit Cap Inspecting Car Engine" — https://www.pexels.com/photo/3807277/
+frigorifik-tir.jpg: Pexels 11053640 "Photo of a White Truck with Lights" (Sergei Skrynnik) — https://www.pexels.com/photo/photo-of-a-white-truck-with-lights-11053640/
+tezgah.jpg: Pexels 3822900 "Self employed male mechanic working in garage" — https://www.pexels.com/photo/self-employed-male-mechanic-working-in-garage-3822900/

@@ -1,0 +1,29 @@
+{
+  "preset": "lastik-sinematik2",
+  "olcu": "205/55 R16",
+  "dis": {
+    "baslik": "Lastiğin ne kadar yolu kaldı, dişinden okunur.",
+    "yeni": 8,
+    "kis": 4,
+    "sinir": 1.6,
+    "asamalar": [
+      { "mm": 8, "baslik": "Yeni lastik", "metin": "Dişler derin, kanallar suyu ve karı rahat atıyor." },
+      { "mm": 4, "baslik": "Kış için sınır", "metin": "4 mm'nin altındaki kış lastiği karda tutmaz. Ankara kışına bununla çıkma." },
+      { "mm": 1.6, "baslik": "Yasal sınır", "metin": "1,6 mm yasal alt sınır. Islak yolda fren mesafesi belirgin uzar, lastik suda yüzer." }
+    ],
+    "not": "Diş derinliğini ücretsiz ölçüyoruz. Uğra, bir dakikada söyleyelim."
+  },
+  "iz": {
+    "baslik": "Her işin bir izi var.",
+    "alt": "Aracın içeri girdiği andan çıktığı ana kadar yaptığımız işler."
+  },
+  "otel": {
+    "baslik": "Lastik oteli",
+    "metin": "Mevsimlik lastiklerini balkonda, apartman boşluğunda saklama. Yıkıyoruz, dişini ölçüyoruz, plakana etiketleyip ışık almayan rafa kaldırıyoruz. Mevsim dönünce WhatsApp'tan haber veriyoruz.",
+    "gorsel": "/img/pist/raf.jpg",
+    "maddeler": ["Yıkama ve kontrol dahil", "Plakaya özel etiket", "Mevsim hatırlatması WhatsApp'tan", "Sigortalı depo"]
+  },
+  "mevsimKural": "7°C",
+  "finalBaslik": "İzini bizde bırak.",
+  "finalAlt": "Fiyatı işe başlamadan söyleriz. Telefonda ne dediysek o."
+}

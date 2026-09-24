@@ -1,0 +1,5 @@
+Tüm görseller Pexels lisansıyla (ücretsiz, ticari kullanım serbest):
+kesit.jpg: Pexels 28721763 "Detailed view of a car transmission cutaway" — https://www.pexels.com/photo/28721763/
+tamir.jpg: Pexels 29181492 "Mechanic uses tools to repair car transmission" — https://www.pexels.com/photo/29181492/
+dsg-kol.jpg: Pexels 4227726 "Automatic car shifter" — https://www.pexels.com/photo/4227726/
+Diğerleri public/img/sektor-sanziman/ içinden küçültülmüş kopyalar; kaynaklar oradaki CREDITS.txt'de.

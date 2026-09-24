@@ -1,0 +1,249 @@
+{
+  "otel": {
+    "gorsel": "/img/kurumsal-lastik2/depo.jpg"
+  },
+  "kurumsal": {
+    "hero": {
+      "baslik": "Dört teker, tek durak.",
+      "metin": "Lastik, jant, rot-balans ve lastik oteli aynı çatı altında. Aracınızı ölçerek karşılarız, fiyatı işe başlamadan söyleriz, çoğu işi aynı gün teslim ederiz.",
+      "birincil": "Randevu isteyin",
+      "ikincil": "Dişini ölç",
+      "ikincilRota": "dis-olcer"
+    },
+    "ozet": {
+      "baslik": "Ölçmeden lastik satmayız",
+      "metin": "Diş derinliğine, lastiğin yaşına ve basıncına bakarız. Değişim gerekmiyorsa bunu da açıkça söyleriz; gerekiyorsa ebadı ve fiyatı baştan konuşuruz."
+    },
+    "hizmetOzetBaslik": "Tekerle ilgili her iş",
+    "hizmetEk": {
+      "Lastik satışı ve değişimi": {
+        "kisa": "Yazlık, kışlık, dört mevsim. Söküm, takım ve sibop dahil.",
+        "gorsel": "/img/pist/degisim.jpg",
+        "detay": [
+          [
+            "Stok",
+            "3.000'den fazla lastik"
+          ],
+          [
+            "Olmayan ebat",
+            "Ertesi sabah"
+          ]
+        ]
+      },
+      "Rot ayarı": {
+        "kisa": "3D ölçüm; direksiyon çekiyorsa ya da lastik tek taraftan yiyorsa.",
+        "gorsel": "/img/pist/rot.jpg",
+        "detay": [
+          [
+            "Ölçüm",
+            "Ekranda birlikte bakarız"
+          ],
+          [
+            "Kontrol",
+            "1 ay ücretsiz"
+          ]
+        ]
+      },
+      "Balans": {
+        "kisa": "Yüksek hızda titreyen direksiyon için dört teker dengeleme.",
+        "gorsel": "/img/pist/usta.jpg"
+      },
+      "Lastik oteli": {
+        "kisa": "Mevsimlik takımınız yıkanır, etiketlenir, rafta bekler.",
+        "gorsel": "/img/kurumsal-lastik2/depo.jpg",
+        "detay": [
+          [
+            "Hatırlatma",
+            "WhatsApp'tan"
+          ],
+          [
+            "Etiket",
+            "Plakaya özel"
+          ]
+        ]
+      },
+      "Jant düzeltme ve boya": {
+        "kisa": "Eğilen jant düzeltilir, çizilen jant fırın boyayla yenilenir.",
+        "gorsel": "/img/pist/jant-siyah.jpg"
+      },
+      "Nitrojen dolumu": {
+        "kisa": "Basınç daha geç düşer; uzun yol öncesi öneririz.",
+        "gorsel": "/img/pist/basinc.jpg"
+      },
+      "Patlak tamiri": {
+        "kisa": "Tamir edilebiliyorsa tamir, edilemiyorsa açık söz.",
+        "gorsel": "/img/kurumsal-lastik2/hava.jpg"
+      }
+    },
+    "halkaBaslik": "Rakamlarla atölyemiz",
+    "anlasmaBaslik": "Şirket araçlarına düzenli bakım",
+    "anlasmaMetin": "Servis, kiralama ve dağıtım araçlarınızın lastiklerini tek muhatapla yönetin: kayıt, toplu değişim, depolama.",
+    "anlasmalar": [
+      {
+        "baslik": "Filo lastik takibi",
+        "kisa": "Her aracın ebadı, lastik yaşı ve diş derinliği kayıtta.",
+        "metin": "Filonuzdaki her aracın lastik bilgisini kayda alırız. Değişim zamanı yaklaşanı size bildirir, toplu değişimi araçlarınızın boş olduğu saatlere planlarız.",
+        "maddeler": [
+          "Araç bazında lastik ve diş derinliği kaydı",
+          "Mevsim değişimi için toplu randevu",
+          "Her değişimde rot-balans ve basınç kontrolü",
+          "Dönemlik tek fatura ve iş dökümü"
+        ],
+        "buton": "Filo görüşmesi isteyin"
+      },
+      {
+        "baslik": "Şirket araçlarına lastik oteli",
+        "kisa": "Mevsimlik takımlar plakaya etiketli, rafta hazır.",
+        "metin": "Yazlık ya da kışlık takımları yıkar, kontrol eder, plakaya etiketleyip depoda saklarız. Mevsim dönünce takımlar hazırdır, değişim sırası beklemez.",
+        "maddeler": [
+          "Yıkama, kontrol ve plakaya özel etiket",
+          "Diş derinliği ölçümü ve kayıt",
+          "Mevsim dönüşünde hatırlatma"
+        ],
+        "buton": "Otel için görüşelim"
+      },
+      {
+        "baslik": "Kiralama ve servis araçları",
+        "kisa": "Patlak ve jant hasarında öncelikli giriş.",
+        "metin": "Patlak ya da jant hasarı işi durdurur. Bu araçları öncelikli alır, yapılan işi araç bazında raporlarız.",
+        "maddeler": [
+          "Patlak ve jant hasarında öncelikli giriş",
+          "İade öncesi lastik kontrol listesi",
+          "Araç bazında iş raporu"
+        ],
+        "buton": "Görüşme isteyin"
+      }
+    ],
+    "anlasmaNotu": "Anlaşma koşulları araç sayısına, ebatlara ve depolama ihtiyacına göre belirlenir; teklifimizi yazılı iletiriz.",
+    "hakkimizda": {
+      "baslik": "Şaşmaz'daki teker atölyesi",
+      "paragraflar": [
+        "Şaşmaz Oto Sanayi Sitesi'ndeki atölyemizde lastik satışı ve değişimi, rot-balans, jant düzeltme ve lastik oteli hizmeti veriyoruz. Bireysel müşterilerimizin yanında şirket, servis ve kiralama araçlarına da bakıyoruz.",
+        "Çalışma biçimimiz değişmedi: lastiği ölçer, ne gerektiğini açıkça söyler, fiyatı baştan veririz. Jantı çizmeyen makinede söker, bijonları torkla sıkar, aracı basıncı kontrol edilmiş olarak teslim ederiz."
+      ],
+      "gorsel": "/img/pist/usta.jpg",
+      "gorselAlt": "İki usta atölyede teker başında çalışıyor"
+    },
+    "misyon": "Aracı güvenle yola çıkaracak lastiği doğru ebatta, açık fiyatla ve aynı gün takmak.",
+    "vizyon": "Ankara'da lastik işini gönül rahatlığıyla bırakılan, kayıtlı ve düzenli çalışan bir teker atölyesi olmak.",
+    "degerler": [
+      {
+        "baslik": "Önce ölçüm",
+        "metin": "Diş derinliğini ve lastik yaşını ölçmeden değişim önermeyiz."
+      },
+      {
+        "baslik": "Torkla sıkma",
+        "metin": "Bijonlar tork anahtarıyla, üretici değerinde sıkılır."
+      },
+      {
+        "baslik": "Kayıtlı iş",
+        "metin": "Her aracın lastik geçmişi kayıtta durur."
+      },
+      {
+        "baslik": "Açık fiyat",
+        "metin": "Fiyatı işe başlamadan söyleriz; sonradan ek çıkmaz."
+      }
+    ],
+    "kalite": {
+      "baslik": "Her araçta aynı sıra",
+      "metin": "Kabulde ölçüm, açık fiyat, jantı çizmeyen söküm-takım, balans, torkla sıkma ve son basınç kontrolü.",
+      "maddeler": [
+        "Kabulde diş derinliği, lastik yaşı ve basınç kontrol edilir.",
+        "Söküm ve takım jantı çizmeyen makinede yapılır.",
+        "Her teker balans makinesinde dengelenir.",
+        "Bijonlar tork anahtarıyla sıkılır, basınç son kez ölçülür."
+      ]
+    },
+    "kariyer": {
+      "baslik": "Ekibimize katılın",
+      "metin": "Lastik, rot-balans ve jant işlerinde deneyimli usta ve mesleği öğrenmek isteyen çırak arkadaşlarla tanışmak isteriz. Kısa bir tanıtımla bize yazın."
+    },
+    "sss": [
+      {
+        "soru": "Diş derinliğini kendim nasıl ölçerim?",
+        "cevap": "Diş derinliği ölçeriniz yoksa dişlerin arasındaki küçük çıkıntılara (aşınma göstergesi) bakın. Diş bu çıkıntıyla aynı hizaya geldiyse lastik 1,6 mm'ye inmiştir, beklemeden değiştirin. Emin değilseniz uğrayın, ölçümü ücretsiz yaparız."
+      },
+      {
+        "soru": "Kış lastiği ne zaman takılmalı?",
+        "cevap": "Hava 7°C'nin altına düştüğünde kış lastiği yolu daha iyi tutar. Ankara'da bu genellikle Kasım başıdır. Kış lastiğinde diş derinliği en az 4 mm olmalıdır."
+      },
+      {
+        "soru": "Lastiğin yaşını nasıl anlarım?",
+        "cevap": "Yanaktaki DOT yazısının son dört hanesine bakın. 2322, 2022'nin 23. haftası demektir. Diş derinliği yeterli olsa da yaşlı lastiğin hamuru sertleşir."
+      },
+      {
+        "soru": "Dört lastiği birden mi değiştirmeliyim?",
+        "cevap": "Aynı aks üzerindeki iki lastik aynı olmalıdır. Diğer aksın lastikleri iyiyse ikisini değiştirmek yeter; yeni lastikleri genellikle arkaya takmanızı öneririz."
+      },
+      {
+        "soru": "Randevusuz gelebilir miyim?",
+        "cevap": "Gelebilirsiniz. Mevsim geçişlerinde ve cumartesileri sıra olabildiği için WhatsApp'tan saat almanızı öneririz."
+      }
+    ],
+    "sssBaslik": "Sık sorulanlar",
+    "galeriBaslik": "Atölyeden kareler",
+    "galeri": [
+      {
+        "src": "/img/kurumsal-lastik2/depo.jpg",
+        "alt": "Lastik deposunda raflar ve üst üste dizili lastikler"
+      },
+      {
+        "src": "/img/pist/degisim.jpg",
+        "alt": "Usta, lifte kaldırılmış aracın lastiğini değiştiriyor"
+      },
+      {
+        "src": "/img/pist/rot.jpg",
+        "alt": "Rot ayarı cihazının sensörü tekere takılıyor"
+      },
+      {
+        "src": "/img/kurumsal-lastik2/hava.jpg",
+        "alt": "Lastiğe hava basılıyor"
+      },
+      {
+        "src": "/img/pist/usta.jpg",
+        "alt": "İki usta atölyede teker başında çalışıyor"
+      },
+      {
+        "src": "/img/pist/jant-siyah.jpg",
+        "alt": "Yakından koyu renk alaşım jant"
+      }
+    ],
+    "markaBaslik": "Stokta tuttuğumuz markalar",
+    "sayfalar": {
+      "kurumsal": {
+        "baslik": "Biz kimiz",
+        "metin": "Nasıl çalıştığımız ve neye önem verdiğimiz.",
+        "gorsel": "/img/pist/degisim.jpg"
+      },
+      "hizmetler": {
+        "baslik": "Hizmetlerimiz",
+        "metin": "Lastik değişiminden jant boyasına, her iş için ortalama süre."
+      },
+      "kurumsal-musteriler": {
+        "baslik": "Filo ve şirket araçları",
+        "metin": "Lastik kaydı, toplu değişim ve depolama tek muhatapla.",
+        "gorsel": "/img/kurumsal-lastik2/depo.jpg"
+      },
+      "dis-olcer": {
+        "baslik": "Diş ölçer",
+        "metin": "Lastiğinizin dişi ne durumda? Mevsimi seçin, milimetreyi kaydırın."
+      },
+      "iletisim": {
+        "baslik": "İletişim",
+        "metin": "Randevu, fiyat ya da filo sorusu için yazın; aynı gün dönüş yapalım."
+      }
+    },
+    "konular": [
+      "Randevu",
+      "Lastik fiyatı",
+      "Filo takibi",
+      "Lastik oteli",
+      "Genel bilgi"
+    ],
+    "cta": {
+      "baslik": "Tekerleri bize bırakın",
+      "metin": "Aracınızı ve lastik ebadınızı yazın; saatini ayarlayalım, fiyatı işe başlamadan söyleyelim.",
+      "buton": "Randevu isteyin"
+    }
+  }
+}

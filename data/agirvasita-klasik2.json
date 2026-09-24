@@ -1,0 +1,32 @@
+{
+  "preset": "agirvasita-klasik2",
+  "tabela": {
+    "ust": "Tır · Kamyon · Otobüs · Çekici",
+    "yon": "Şaşmaz Oto Sanayi",
+    "km": 2.0
+  },
+  "yardimBlok": {
+    "etiket": "7/24 yol yardım",
+    "baslik": "Yolda kaldıysanız servis aracı yola çıkar.",
+    "mesaj": "Merhaba, yolda kaldım. Konumumu gönderiyorum. Araç: ",
+    "not": "WhatsApp'ta ataç simgesine basıp Konum'u seçin, biz yola çıkalım."
+  },
+  "cikisBaslik": "Arızanız hangi çıkışta?",
+  "cikisMetin": "Sekiz iş, sekiz çıkış. Yanında süresi yazıyor; araç geldiğinde ölçüp kesin süreyi söyleriz.",
+  "guzergahBaslik": "Aracın altında altı durak.",
+  "guzergahMetin": "Kabinden arka köprüye kadar her durakta ölçeriz. Geldiğindeki değeri de teslimdeki değeri de size gösteririz.",
+  "surecBaslik": "Dükkâna kadar dört levha.",
+  "yorumBaslik": "Yoldan gelen mesajlar",
+  "galeriBaslik": "Kanalda, liftte, yolda",
+  "markaBaslik": "Hangi marka olursa",
+  "konumBaslik": "Şaşmaz girişi, ağır vasıta bölümü",
+  "finalMetin": "Arayın ya da konum atın. Aracınız dükkândaysa süreyi baştan, yoldaysa geliş saatimizi söyleriz.",
+  "galeri": [
+    { "src": "/img/agirvasita-klasik2/bakim.jpg", "alt": "Açık kaputlu sarı tırın motorunda çalışan usta", "etiket": "Motor" },
+    { "src": "/img/tonaj/kaput.jpg", "alt": "Kaput altına el lambası tutan usta", "etiket": "Arıza tespit" },
+    { "src": "/img/agirvasita-klasik2/cekici.jpg", "alt": "Siyah çekici, yakın plan", "etiket": "Çekici" },
+    { "src": "/img/tonaj/usta.jpg", "alt": "Atölyede silindir kapağı üzerinde çalışan usta", "etiket": "Revizyon" },
+    { "src": "/img/agirvasita-klasik2/atolye.jpg", "alt": "Atölyede kaputu açık sarı kamyon", "etiket": "Atölye" },
+    { "src": "/img/tonaj/beyaz.jpg", "alt": "Gece park halindeki beyaz frigorifik tır", "etiket": "Teslim" }
+  ]
+}

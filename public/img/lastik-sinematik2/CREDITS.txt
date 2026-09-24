@@ -1,0 +1,2 @@
+Bu tasarım kendi görseli kullanmıyor: public/img/pist/ görselleri (Pexels, bkz. public/img/pist/CREDITS.txt).
+3D lastik ve jant three.js ile prosedürel üretiliyor.

@@ -1,0 +1,293 @@
+{
+  "kurumsal": {
+    "hero": {
+      "baslik": "Yakıtı değiştirin, aracınızın huyunu değil.",
+      "metin": "Sıralı enjeksiyon LPG dönüşümü, bakım, ayar ve tank muayenesi. Projesinden ruhsata işlenmesine kadar bütün evrakı biz takip ederiz."
+    },
+    "ozet": {
+      "baslik": "Yalnızca LPG",
+      "metin": "Başka iş yapmıyoruz. Motoru inceler, uygun sistemi seçer, tankı ve hatları kurala uygun döşer, ayarı yolda bitiririz. Evrak işi de bizde."
+    },
+    "hizmetOzetBaslik": "Yaptığımız işler",
+    "hizmetEk": {
+      "Sıralı enjeksiyon LPG dönüşümü": {
+        "kisa": "Her silindire ayrı enjektör. Araç benzindeki gibi çeker, geçişi hissetmezsiniz.",
+        "gorsel": "/img/kurumsal-lpg/eller.jpg",
+        "detay": [
+          [
+            "Uygun motor",
+            "Çok noktalı enjeksiyonlu benzinli"
+          ],
+          [
+            "Kapsam",
+            "Tank, çok valf, regülatör, enjektör, beyin"
+          ],
+          [
+            "Garanti",
+            "Montaj ve işçilik 2 yıl"
+          ]
+        ]
+      },
+      "Direkt enjeksiyonlu araçlar": {
+        "kisa": "TSI, TFSI, GDI motorlara uygun, benzin enjektörünü koruyan sistem.",
+        "gorsel": "/img/kurumsal-lpg/motor-siyah.jpg",
+        "detay": [
+          [
+            "Uygun motor",
+            "Direkt enjeksiyonlu benzinli"
+          ],
+          [
+            "Ayar",
+            "Motora göre ayrı ayarlanır"
+          ],
+          [
+            "Ön inceleme",
+            "Uygun değilse açıkça söyleriz"
+          ]
+        ]
+      },
+      "LPG bakım ve filtre değişimi": {
+        "kisa": "Gaz ve buhar filtresi, regülatör kontrolü, kaçak testi.",
+        "gorsel": "/img/kurumsal-lpg/usta.jpg",
+        "detay": [
+          [
+            "Aralık",
+            "15.000-20.000 km"
+          ],
+          [
+            "Kaçak testi",
+            "Bütün bağlantılarda"
+          ]
+        ]
+      },
+      "Ayar ve arıza tespiti": {
+        "kisa": "Tekleme, rölantide düşme, geçişte takılma. Bilgisayarla okur, yeniden ayarlarız.",
+        "gorsel": "/img/kurumsal-lpg/tespit.jpg",
+        "detay": [
+          [
+            "Yöntem",
+            "Bilgisayarla okuma + yol testi"
+          ]
+        ]
+      },
+      "Tank periyodik muayenesi": {
+        "kisa": "Tank, çok valf ve bağlantılar muayeneden önce kontrol edilir.",
+        "gorsel": "/img/kurumsal-lpg/manometre.jpg",
+        "detay": [
+          [
+            "Kontrol",
+            "Tank etiketi, çok valf, bağlantılar"
+          ]
+        ]
+      },
+      "Proje ve ruhsat işlemleri": {
+        "kisa": "Tadilat projesi, montaj belgesi, ruhsata işlenme. Hangi kâğıt nereye, baştan anlatırız.",
+        "gorsel": "/img/kurumsal-lpg/tablet.jpg",
+        "detay": [
+          [
+            "Takip",
+            "Evrakın tamamı bizde"
+          ]
+        ]
+      },
+      "Tank değişimi ve yerleşim": {
+        "gorsel": "/img/kurumsal-lpg/yakit.jpg",
+        "detay": [
+          [
+            "Tipler",
+            "Simit (stepne yuvası) ya da silindir"
+          ]
+        ]
+      },
+      "Sistem yenileme": {
+        "gorsel": "/img/kurumsal-lpg/kontrol.jpg",
+        "detay": [
+          [
+            "Geri kullanım",
+            "Sağlam tank ve hat mümkünse korunur"
+          ]
+        ]
+      }
+    },
+    "hakkimizda": {
+      "baslik": "2002'den beri tek iş: LPG",
+      "paragraflar": [
+        "Şaşmaz Oto Sanayi'deki atölyemizde yalnızca LPG dönüşümü, bakımı, ayarı ve tank işleri yapıyoruz. Motor tamiri, kaporta, boya yok; bütün dikkatimiz gaz sisteminde.",
+        "Aracı almadan önce motorunu inceler, hangi sistemin ve hangi tankın uygun olduğunu söyleriz. Uygun değilse de bunu açıkça söyleriz; dönüşüm her araca yapılmaz.",
+        "Montajdan sonra işi bilgisayar ekranında bitirmeyiz. Ayarı yolda, farklı devirlerde deneyerek veririz. Proje, montaj belgesi ve ruhsat için gereken evrakı da biz takip ederiz."
+      ],
+      "gorsel": "/img/kurumsal-lpg/kontrol.jpg",
+      "gorselAlt": "Ustamız kaputu açık aracın motorunu kontrol ediyor"
+    },
+    "misyon": "Aracın motoruna uygun sistemi kurmak, gazı güvenle taşımak ve evrakını eksiksiz teslim etmek.",
+    "vizyon": "Şaşmaz'da LPG denince akla gelen, sorulduğunda dürüst cevap veren atölye olmak.",
+    "degerler": [
+      {
+        "baslik": "Önce inceleme",
+        "metin": "Hangi sistemin olacağına motoru görmeden karar vermeyiz."
+      },
+      {
+        "baslik": "Kaçak testi",
+        "metin": "Her bağlantı, her bakımda test edilir. Kokuyla değil, cihazla."
+      },
+      {
+        "baslik": "Yolda ayar",
+        "metin": "Son ayar yol testinden sonra verilir."
+      },
+      {
+        "baslik": "Evrak bizde",
+        "metin": "Proje ve montaj belgesi araçla birlikte teslim edilir."
+      }
+    ],
+    "kalite": {
+      "baslik": "Gaz işinde kısa yol yok",
+      "metin": "LPG sistemi basınçlı gaz taşır. Bu yüzden her montaj ve bakımda aynı kontrol listesini baştan sona uygularız.",
+      "maddeler": [
+        "Montajdan önce tadilat projesi hazırlanır, montaja ondan sonra başlanır.",
+        "Tank ve çok valf, aracın yapısına uygun yere ve kurala uygun sabitlenir.",
+        "Bütün gaz bağlantıları kaçak testinden geçer.",
+        "İlk ayar bilgisayarla, son ayar yol testiyle yapılır.",
+        "Bakım aralıkları ve kullanım anlatılmadan araç teslim edilmez."
+      ]
+    },
+    "sssBaslik": "Sorulanlar",
+    "sss": [
+      {
+        "soru": "Her araca LPG takılır mı?",
+        "cevap": "Hayır. Motor tipine, yaşına ve bagaj yapısına bakarız. Uygun olmayan araçta bunu açıkça söyleriz."
+      },
+      {
+        "soru": "Direkt enjeksiyonlu araca LPG olur mu?",
+        "cevap": "Birçok TSI, TFSI ve GDI motora olur, ama bu motorlara özel sistem gerekir. Aracı görüp motor koduna göre söyleriz."
+      },
+      {
+        "soru": "Dönüşüm kaç gün sürer?",
+        "cevap": "Sıralı enjeksiyon sistemi genelde 1-2 gün, direkt enjeksiyonlu araçlarda 2-3 gün. Proje ve ruhsat işlemleri birkaç iş günü ekler."
+      },
+      {
+        "soru": "Bakım ne sıklıkla yapılmalı?",
+        "cevap": "Gaz ve buhar filtreleri için 15.000-20.000 km'de bir bakım öneririz. Çok yol yapan taksi ve filo araçlarında daha sık bakmak gerekir."
+      },
+      {
+        "soru": "Tankımın süresi dolduysa ne olur?",
+        "cevap": "Tank etiketindeki son kullanım tarihine bakın. Süresi dolan tank değiştirilmelidir; muayeneden önce getirirseniz tankı ve bağlantıları kontrol eder, gerekirse aynı gün değiştiririz."
+      },
+      {
+        "soru": "Fiyat ne kadar?",
+        "cevap": "Araca, motora ve seçilen sisteme göre değişir. Aracı gördükten sonra fiyatı işe başlamadan söyleriz."
+      }
+    ],
+    "anlasmaBaslik": "Taksi ve filo araçları",
+    "anlasmalar": [
+      {
+        "baslik": "Taksiciler",
+        "kisa": "Günde yüzlerce km yapan araca hızlı bakım ve ayar.",
+        "metin": "Taksi aracı beklemez. Bakım ve ayarı randevuyla aynı gün yapar, aracı vardiyaya yetiştiririz.",
+        "maddeler": [
+          "Randevulu bakım, sıra beklemeden",
+          "Km'ye göre bakım takvimi hatırlatması",
+          "Arızada önce telefonla yönlendirme"
+        ],
+        "buton": "Taksi için görüşelim"
+      },
+      {
+        "baslik": "Filo ve servis araçları",
+        "kisa": "Birden fazla aracın dönüşümü ve bakım takibi.",
+        "metin": "Şirket araçlarının dönüşümünü planlı sırayla yapar, her aracın bakım kaydını ayrı tutarız.",
+        "maddeler": [
+          "Araç araç planlanan dönüşüm",
+          "Her araç için ayrı bakım kaydı",
+          "Tank muayene tarihlerinin takibi"
+        ],
+        "buton": "Filo görüşmesi isteyin"
+      },
+      {
+        "baslik": "Galericiler",
+        "kisa": "Satıştan önce LPG kontrolü ve evrak düzeni.",
+        "metin": "Satışa çıkacak LPG'li aracın tankını, bağlantılarını ve evrakını kontrol eder, eksik varsa söyleriz.",
+        "maddeler": [
+          "Tank etiketi ve süre kontrolü",
+          "Kaçak testi",
+          "Ruhsat ve belge kontrolü"
+        ],
+        "buton": "Galeri için yazın"
+      }
+    ],
+    "anlasmaNotu": "Kurumsal çalışma koşulları araç sayısına göre konuşulur; ayrıntı için arayın.",
+    "galeriBaslik": "Atölyeden",
+    "galeri": [
+      {
+        "src": "/img/kurumsal-lpg/eller.jpg",
+        "alt": "Emme manifoldu çevresinde bağlantılar sıkılıyor"
+      },
+      {
+        "src": "/img/kurumsal-lpg/tespit.jpg",
+        "alt": "Arıza tespit cihazıyla ayar yapılıyor"
+      },
+      {
+        "src": "/img/kurumsal-lpg/manometre.jpg",
+        "alt": "Gaz hattındaki basınç göstergeleri"
+      },
+      {
+        "src": "/img/kurumsal-lpg/motor-siyah.jpg",
+        "alt": "Kaputu açık aracın motor bölmesi"
+      },
+      {
+        "src": "/img/kurumsal-lpg/tablet.jpg",
+        "alt": "Araç verileri tablette inceleniyor"
+      },
+      {
+        "src": "/img/kurumsal-lpg/atolye.jpg",
+        "alt": "Atölye duvarında düzenli el aletleri"
+      }
+    ],
+    "markaBaslik": "Sık dönüşüm yaptığımız markalar",
+    "sayfalar": {
+      "kurumsal": {
+        "baslik": "Tek iş, yirmi yılı aşkın süre",
+        "metin": "Şaşmaz Oto Sanayi'de yalnızca LPG işi yapan atölye.",
+        "gorsel": "/img/kurumsal-lpg/lift-genis.jpg"
+      },
+      "hizmetler": {
+        "baslik": "Dönüşümden muayeneye",
+        "metin": "Sistem, bakım, ayar, tank ve evrak. Hepsi aynı yerde.",
+        "gorsel": "/img/kurumsal-lpg/eller-genis.jpg"
+      },
+      "uygunluk": {
+        "baslik": "Aracınıza LPG olur mu?",
+        "metin": "Motor tipini seçin, hangi sistemin uygun olduğunu, ne kadar süreceğini ve hangi evrakın gerektiğini görün."
+      },
+      "tank": {
+        "baslik": "Tank muayenesi, ilk seferde",
+        "metin": "Muayeneden önce tankı, çok valfi ve bağlantıları kontrol eder, eksik varsa önceden gideririz.",
+        "gorsel": "/img/kurumsal-lpg/yol-genis.jpg"
+      },
+      "filo": {
+        "baslik": "Taksi, filo ve galeri",
+        "metin": "Çok yol yapan araçlar için planlı bakım ve takip."
+      },
+      "iletisim": {
+        "baslik": "Bize ulaşın",
+        "metin": "Aracınızın marka, model ve yılını yazın; uygun sistemi ve süreyi söyleyelim."
+      }
+    },
+    "cta": {
+      "baslik": "Aracınızın ruhsatını ve kilometresini alıp gelin.",
+      "metin": "Motoru inceler, hangi sistemin uygun olduğunu ve fiyatı işe başlamadan söyleriz.",
+      "buton": "Randevu isteyin"
+    },
+    "konular": [
+      "LPG dönüşümü",
+      "Bakım ve ayar",
+      "Tank muayenesi",
+      "Proje ve ruhsat",
+      "Taksi / filo",
+      "Diğer"
+    ],
+    "formBaslik": "Aracınızı anlatın",
+    "kariyer": {
+      "baslik": "Ekibimize katılın",
+      "metin": "LPG montajı ve ayarı bilen ya da öğrenmek isteyen, işine özen gösteren ustalar ve çıraklar arıyoruz."
+    }
+  }
+}

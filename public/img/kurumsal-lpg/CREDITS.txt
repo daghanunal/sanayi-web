@@ -1,0 +1,16 @@
+public/img/kurumsal-lpg: public/img/sektor-lpg fotoğraflarının yeşil çift ton (duotone) işlenmiş kopyaları. Kaynaklar:
+yakit.jpg: Pexels 20500733
+motor-kirmizi.jpg: Pexels 4116220
+usta.jpg: Pexels 8478233
+kontrol.jpg: Pexels 6870298
+motor-siyah.jpg: Pexels 4116207
+eller.jpg: Pexels 4116225
+manometre.jpg: Pexels 16679542
+tespit.jpg: Pexels 4116193
+tablet.jpg: Pexels 6870332
+lift.jpg: Pexels 3894030 (Modified Pov)
+yakit-gosterge.jpg: Pexels 5438618 (Erik Mclean)
+gosterge.jpg: Pexels 9737313 (Erik Mclean)
+yol.jpg: Pexels 221284
+atolye.jpg: Pexels 29286299 (iddea photo)
+Lisans: Pexels License (ücretsiz ticari kullanım)

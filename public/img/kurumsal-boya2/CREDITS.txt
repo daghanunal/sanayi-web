@@ -1,0 +1,6 @@
+Tüm fotoğraflar Pexels lisansıyla (ücretsiz, ticari kullanım serbest) — https://www.pexels.com/license/
+pasta-kirmizi.jpg  https://www.pexels.com/photo/5233262/
+tabanca.jpg        https://www.pexels.com/photo/6870301/
+polisaj.jpg        https://www.pexels.com/photo/6870296/
+cila-yakin.jpg     https://www.pexels.com/photo/5233261/
+Ayrıca public/img/showroom/ altındaki fotoğraflar kullanılıyor (kaynaklar oradaki CREDITS.txt'de).

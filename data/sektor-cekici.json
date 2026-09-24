@@ -1,0 +1,67 @@
+{
+  "preset": "sektor-cekici",
+  "isletme": {
+    "ad": "Hızır Çekici",
+    "sektor": "Çekici ve Yol Yardım",
+    "slogan": "Yolda kaldıysanız, bir telefon yeter.",
+    "kurulus": 2008,
+    "hakkinda": "2008'den beri Şaşmaz'dan Ankara'nın dört bir yanına çekici çıkarıyoruz. Gece, bayram, kar demeden telefonu biz açarız; konumunuzu alır, ne kadar sürede orada olacağımızı söyler ve söylediğimiz saatte geliriz. Aracınızı yüklemeden önce hasarını fotoğraflar, istediğiniz servise ya da sanayideki ustanıza sağlam teslim ederiz."
+  },
+  "iletisim": {
+    "telefon": "0532 555 48 08",
+    "whatsapp": "905325554808",
+    "adres": "Şaşmaz Oto Sanayi Sitesi, 12. Cadde No: 3, Etimesgut/Ankara",
+    "mapsQuery": "Şaşmaz Oto Sanayi Sitesi Etimesgut Ankara"
+  },
+  "saatler": ["00:00-24:00", "00:00-24:00", "00:00-24:00", "00:00-24:00", "00:00-24:00", "00:00-24:00", "00:00-24:00"],
+  "yediYirmiDort": true,
+  "hizmetler": [
+    { "baslik": "7/24 çekici", "aciklama": "Arızalanan ya da çalışmayan aracınızı kayar kasalı çekiciyle yerden yükseltmeden, tekerleri sabitleyerek taşırız.", "sure": "Ankara içi 30-60 dk'da yanınızda" },
+    { "baslik": "Akü takviye", "aciklama": "Sabah çalışmayan araca takviye cihazıyla geliriz. Akü ölçülür; bitmişse söyleriz, gerekiyorsa yenisini takarız.", "sure": "Yerinde 15 dk" },
+    { "baslik": "Yolda lastik değişimi", "aciklama": "Patlayan lastiği yerinde yedekle değiştiririz. Yedek yoksa aracı en yakın lastikçiye götürürüz.", "sure": "Yerinde 20 dk" },
+    { "baslik": "Kaza sonrası araç taşıma", "aciklama": "Tutanak tamamlandıktan sonra aracı olay yerinden alır, sigorta eksperinin göreceği servise ya da kaportacınıza taşırız.", "sure": "Aynı gün" },
+    { "baslik": "Şehirlerarası taşıma", "aciklama": "Aracınızı Ankara'dan Türkiye'nin her iline ya da başka şehirden Ankara'ya kapalı ya da açık kasayla götürürüz.", "sure": "Mesafeye göre 1-2 gün" },
+    { "baslik": "Ağır vasıta kurtarma", "aciklama": "Kamyon, tır, otobüs ve iş makinesi için vinçli ağır çekici. Devrilen ya da yoldan çıkan aracı güvenle yola alırız.", "sure": "Duruma göre planlanır" },
+    { "baslik": "Yoldan çıkan araç kurtarma", "aciklama": "Kara, çamura, hendeğe saplanan aracı vinç ve halatla, kaportasına zarar vermeden çıkarırız.", "sure": "Yerinde 30-60 dk" },
+    { "baslik": "Yakıt ikmali", "aciklama": "Yakıtı bitip yolda kalan araca, sizi en yakın istasyona ulaştıracak kadar yakıt getiririz.", "sure": "Ankara içi 30-60 dk" }
+  ],
+  "surec": [
+    { "baslik": "Arıyorsunuz", "aciklama": "Telefonu açan kişi nerede olduğunuzu ve aracın durumunu sorar. WhatsApp'tan konum atmanız yeterli." },
+    { "baslik": "Süreyi söyleriz", "aciklama": "En yakın çekiciyi yönlendirir, ne kadar sürede orada olacağımızı ve ücreti baştan söyleriz." },
+    { "baslik": "Yerinde bakarız", "aciklama": "Akü, lastik ya da yakıt gibi yerinde çözülecek bir işse orada hallederiz. Değilse aracı yüklemeye hazırlarız." },
+    { "baslik": "Fotoğraflar, sabitleriz", "aciklama": "Yüklemeden önce aracın dört yanını fotoğraflayıp size göndeririz. Tekerler kayışla, gövde zincirle sabitlenir." },
+    { "baslik": "Teslim ederiz", "aciklama": "Aracı istediğiniz adrese bırakır, teslim fotoğrafını ve anahtarın kimde olduğunu size bildiririz." }
+  ],
+  "istatistikler": [
+    { "deger": 18, "sonek": "", "etiket": "yıldır Ankara yollarında", "kurulustanHesapla": true },
+    { "deger": 24, "sonek": "/7", "etiket": "açık hat, bayram dahil" },
+    { "deger": 42000, "sonek": "+", "etiket": "taşınan araç" },
+    { "deger": 45, "sonek": " dk", "etiket": "Ankara içi ortalama varış" }
+  ],
+  "markalar": ["Renault", "Fiat", "Volkswagen", "Ford", "Toyota", "Hyundai", "Mercedes-Benz", "BMW", "Iveco", "MAN"],
+  "galeri": [
+    { "src": "/img/sektor-cekici/cekici-yukleme.jpg", "alt": "Kayar kasalı çekiciye beyaz bir pikap yükleniyor" },
+    { "src": "/img/sektor-cekici/zincir-sabitleme.jpg", "alt": "Çekici kasasında tekerlek zincirle sabitleniyor" },
+    { "src": "/img/sektor-cekici/arac-tasima.jpg", "alt": "Çekici üzerinde taşınan klasik otomobil, şehir içinde" },
+    { "src": "/img/sektor-cekici/cekici-sehir.jpg", "alt": "Şehir merkezinde ilerleyen turuncu kayar kasalı çekici" },
+    { "src": "/img/sektor-cekici/vinc-kurtarma.jpg", "alt": "Vinçli çekici bir otomobili kaldırıp kasaya alıyor" },
+    { "src": "/img/sektor-cekici/agir-kurtarma.jpg", "alt": "Yağmurlu sokakta bekleyen kırmızı ağır çekici" },
+    { "src": "/img/sektor-cekici/aku-takviye.jpg", "alt": "Açık motor kaputu önünde takviye kablosu maşaları" },
+    { "src": "/img/sektor-cekici/aku-kablo.jpg", "alt": "Motor bölmesinde aküye bağlanmış takviye kabloları" },
+    { "src": "/img/sektor-cekici/aku-yol.jpg", "alt": "Kaputu açık arazi aracına akü takviyesi yapılıyor" },
+    { "src": "/img/sektor-cekici/yolda-lastik.jpg", "alt": "Yol kenarında bir aracın tekerleği değiştiriliyor" },
+    { "src": "/img/sektor-cekici/lastik-degisimi.jpg", "alt": "Köy yolunda patlayan lastiği değiştiren sürücü" },
+    { "src": "/img/sektor-cekici/yolda-kalan.jpg", "alt": "Kaputu açık aracın yanında telefonla yardım bekleyen sürücü" },
+    { "src": "/img/sektor-cekici/agir-vasita.jpg", "alt": "Yol kenarında sıralanmış tırlar" },
+    { "src": "/img/sektor-cekici/gece-yol.jpg", "alt": "Gece otoyolda araç farlarının bıraktığı ışık izleri" }
+  ],
+  "puan": { "ortalama": 4.8, "adet": 326 },
+  "yorumlar": [
+    { "ad": "Murat S.", "puan": 5, "metin": "Gece ikide Eskişehir yolunda kaldım. 35 dakika dedi, 30 dakikada geldiler. Aracı yüklemeden önce fotoğraflarını çekip WhatsApp'tan attılar.", "arac": "2015 Passat" },
+    { "ad": "Elif K.", "puan": 5, "metin": "Sabah işe giderken araba çalışmadı. Yarım saatte gelip aküyü ölçtüler, takviyeyle çalıştırdılar; aküyü değiştirmem gerektiğini de dürüstçe söylediler.", "arac": "2018 Clio" },
+    { "ad": "Oğuz T.", "puan": 5, "metin": "Kazadan sonra ne yapacağımı bilemedim. Tutanak bitince aracı alıp sigortanın anlaşmalı servisine götürdüler, beni de yolda bırakmadılar.", "arac": "2020 Corolla" },
+    { "ad": "Kemal A.", "puan": 4, "metin": "Tırımız Polatlı çıkışında yoldan çıktı. Ağır çekici biraz geç geldi ama aracı hasarsız yola aldılar, işini bilen bir ekip.", "arac": "2016 Actros" },
+    { "ad": "Zeynep D.", "puan": 5, "metin": "Arabamı İzmir'den Ankara'ya taşıttım. Ücreti baştan söylediler, ertesi gün kapımda teslim ettiler; tek çizik yoktu.", "arac": "2019 Egea" }
+  ],
+  "garanti": "Taşıdığımız aracı yüklemeden önce fotoğraflarız; teslimde aynı hâliyle teslim ederiz."
+}

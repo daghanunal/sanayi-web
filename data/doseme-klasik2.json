@@ -1,0 +1,78 @@
+{
+  "preset": "doseme-klasik2",
+  "surec": [
+    {
+      "baslik": "Söküm",
+      "aciklama": "Koltuğu aracınızdan söküp tezgâha alıyoruz. Eski kılıfı yırtmadan çıkarıyoruz, çünkü kalıbı ondan alacağız.",
+      "gorsel": "/img/usta/t-2018.jpg"
+    },
+    {
+      "baslik": "Kalıp",
+      "aciklama": "Eski parçaları açıp kâğıda seriyoruz. Her panelin kenarına dikiş payını işaretliyoruz.",
+      "gorsel": "/img/usta/is-kesim.jpg"
+    },
+    {
+      "baslik": "Kesim",
+      "aciklama": "Deriyi elle seçiyor, kusurlu yerini kenara ayırıyoruz. Paneller kalıba göre tek tek kesiliyor.",
+      "gorsel": "/img/doseme-klasik2/perfore.jpg"
+    },
+    {
+      "baslik": "Dikiş",
+      "aciklama": "Sanayi makinesinde, seçtiğiniz iplikle. Görünen her dikişi milim milim kontrol ediyoruz.",
+      "gorsel": "/img/usta/is-dikis.jpg"
+    },
+    {
+      "baslik": "Giydirme",
+      "aciklama": "Çökmüş süngeri yeniliyor, kılıfı iskelete gergin ve kırışıksız giydiriyoruz. Koltuk aracınıza geri takılıyor.",
+      "gorsel": "/img/doseme-klasik2/hero.jpg"
+    }
+  ],
+  "etiketler": [
+    {
+      "x": 62,
+      "y": 12,
+      "yon": "sol",
+      "baslik": "Sırt",
+      "metin": "Dikey pili, kalıbından"
+    },
+    {
+      "x": 50,
+      "y": 38,
+      "yon": "sol",
+      "baslik": "Oturak",
+      "metin": "Yeni sünger"
+    },
+    {
+      "x": 62,
+      "y": 66,
+      "yon": "sol",
+      "baslik": "Kenar",
+      "metin": "Çift sıra dikiş"
+    },
+    {
+      "x": 58,
+      "y": 83,
+      "yon": "sol",
+      "baslik": "İskelet",
+      "metin": "Ray ve yay kontrolü"
+    }
+  ],
+  "galeriEk": [
+    {
+      "src": "/img/doseme-klasik2/kapitone.jpg",
+      "alt": "Elmas desen dikişli gri perfore deri arka koltuk"
+    },
+    {
+      "src": "/img/doseme-klasik2/alcantara.jpg",
+      "alt": "Siyah alcantara oturak, turuncu deri şeritli"
+    },
+    {
+      "src": "/img/doseme-klasik2/konyak.jpg",
+      "alt": "Konyak rengi deri spor koltuklar"
+    },
+    {
+      "src": "/img/doseme-klasik2/gece.jpg",
+      "alt": "Lacivert tonlu siyah deri ön koltuk"
+    }
+  ]
+}

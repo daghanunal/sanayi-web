@@ -1,0 +1,33 @@
+{
+  "preset": "rektifiye-sinematik2",
+  "yuzeyler": [
+    {
+      "ad": "Tornadan çıktı",
+      "tip": "torna",
+      "deger": "Ra 1,6–3,2 µm",
+      "metin": "Kalemin bıraktığı ilerleme izi. Burç, flanş, mil için yeterli; yatak oturacak yüzey için değil."
+    },
+    {
+      "ad": "Taşlandı",
+      "tip": "tas",
+      "deger": "Ra 0,2–0,4 µm",
+      "metin": "Krank muylusu böyle çıkar. İz neredeyse görünmez, yatak yüzeyi tam oturur."
+    },
+    {
+      "ad": "Honlandı",
+      "tip": "hon",
+      "deger": "Ra 0,4–0,8 µm",
+      "metin": "Silindirde çapraz iz bırakırız. Oluklar yağ tutar, segman oturur, motor yağ yakmaz."
+    }
+  ],
+  "galeriEk": [
+    {
+      "src": "/img/rektifiye-sinematik2/eksantrik.jpg",
+      "alt": "Taşlanmış eksantrik mili yakından"
+    },
+    {
+      "src": "/img/rektifiye-sinematik2/freze-talas.jpg",
+      "alt": "Frezede talaş kaldıran kesici"
+    }
+  ]
+}

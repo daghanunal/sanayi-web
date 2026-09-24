@@ -1,0 +1,88 @@
+{
+  "kurumsal": {
+    "hero": {
+      "baslik": "Klimanız serin üflemiyorsa sebebini bulalım.",
+      "metin": "Gazı basıp göndermeyiz. Önce sistemi ölçer, kaçağı arar, basınçlara bakarız; ne bulduğumuzu size gösterir, parça gerekiyorsa işe başlamadan söyleriz.",
+      "birincil": "Arızayı yazın",
+      "ikincil": "Hizmetlerimiz",
+      "ikincilRota": "hizmetler"
+    },
+    "hizmetOzetBaslik": "Klimada yaptığımız işler",
+    "anlasmalar": [
+      {
+        "baslik": "Taksi, servis ve ticari araç",
+        "kisa": "Yazın klimasız kalan iş aracı sıraya girmeden bakılır.",
+        "metin": "Taksi, öğrenci servisi, kargo ya da hafif ticari; yolcu taşıyan araçta klima iştir. Arızalı iş aracını aynı gün ölçüme alır, işin ne kadar süreceğini baştan söyleriz.",
+        "maddeler": ["Aynı gün basınç ve kaçak ölçümü", "Süre ve fiyat işe başlamadan", "Parça beklenecekse önceden haber", "Araç bazında yapılan iş kaydı"],
+        "buton": "Ticari aracım için yazın"
+      },
+      {
+        "baslik": "Şirket filoları",
+        "kisa": "Yaz gelmeden bütün araçların klima kontrolü tek seferde.",
+        "metin": "Filonuzdaki araçları sıcaklar başlamadan sırayla ölçer; gazı azalan, kaçağı olan ya da filtresi dolan aracı tek listede size bildiririz. Her araç için ayrı döküm, ayda tek fatura.",
+        "maddeler": ["Yaz öncesi toplu kontrol planı", "Araç bazında ölçüm ve iş dökümü", "Aylık tek fatura"],
+        "buton": "Filo görüşmesi isteyin"
+      },
+      {
+        "baslik": "Galeri ve alım satım",
+        "kisa": "Satıştan önce klimanın durumunu ölçüp yazılı veririz.",
+        "metin": "Galerinize giren ya da satacağınız aracın klimasını ölçer; üfleme sıcaklığını, basınçları ve varsa kaçağı kâğıda yazarız. Alıcıya gösterebileceğiniz sade bir kontrol notu.",
+        "maddeler": ["Üfleme sıcaklığı ve basınç ölçümü", "Kaçak var mı yok mu, açık yazı", "Aynı gün sonuç"],
+        "buton": "Galeri için yazın"
+      }
+    ],
+    "anlasmaNotu": "Anlaşma koşulları araç sayısına ve tipine göre konuşulur; teklifimizi yazılı veririz.",
+    "hakkimizda": {
+      "baslik": "Yalnızca klima",
+      "paragraflar": [
+        "2005'ten beri Şaşmaz'da tek işle uğraşıyoruz: oto klima. Motor, fren ya da kaporta yapmıyoruz; bütün cihazımız ve bütün vaktimiz klimaya ayrılmış.",
+        "Gaz basıp göndermek kolaydır, ama kaçak varsa gaz birkaç haftada yine biter. Bu yüzden önce ölçeriz: vakum, basınç, kaçak testi, üfleme sıcaklığı. Ne bulduğumuzu size gösterir, parça gerekiyorsa işe başlamadan söyleriz."
+      ],
+      "gorsel": "/img/sektor-klima/atolye.jpg",
+      "gorselAlt": "Atölyede kaputu açık aracın başında çalışan usta"
+    },
+    "misyon": "Klimayı tahminle değil ölçerek onarmak; gazı kaçağını bulmadan basmamak.",
+    "vizyon": "Şaşmaz'da \"klima bir türlü soğutmuyor\" diyen herkesin ilk aklına gelen, ölçüp gösteren atölye olmak.",
+    "degerler": [
+      { "baslik": "Önce ölçüm", "metin": "Manometre, termometre ve kaçak testi olmadan iş başlamaz." },
+      { "baslik": "Tartılı gaz", "metin": "Gaz, aracın etiketindeki miktara göre tartılarak doldurulur." },
+      { "baslik": "Fiyat baştan", "metin": "Parça ve işçilik işe başlamadan söylenir, onaysız iş yapılmaz." },
+      { "baslik": "Teslimde test", "metin": "Üfleme sıcaklığı sizin önünüzde ölçülür." }
+    ],
+    "kalite": {
+      "baslik": "Bir klima işi nasıl kapanır",
+      "metin": "Kabulden teslime kadar her aracın klimasında aynı sırayı izleriz.",
+      "maddeler": [
+        "Motor çalışırken alçak ve yüksek taraf basınçları, üfleme sıcaklığı ölçülür.",
+        "Gaz eksikse önce kaçak aranır: azotla basınç testi, gerekirse UV boya.",
+        "Sistem vakumlanır, gaz ve yağ aracın etiketindeki miktara göre tartılır.",
+        "Teslimde üfleme sıcaklığı yeniden ölçülür ve size gösterilir."
+      ]
+    },
+    "sss": [
+      { "soru": "Klimam her yaz gaz istiyor, normal mi?", "cevap": "Değil. Kapalı bir sistemde gaz kendiliğinden bitmez; her yıl azalıyorsa bir yerden kaçırıyordur. Önce kaçağı bulur, onarır, sonra doldururuz." },
+      { "soru": "Aracımın gazı R134a mı, R1234yf mi?", "cevap": "Kaputun altındaki klima etiketinde yazar. Yeni araçların çoğunda R1234yf, daha eskilerde R134a kullanılır. Etiketi göremezseniz plakayla arayın, birlikte bakalım." },
+      { "soru": "Klimadan kötü koku geliyor, ne yapılır?", "cevap": "Çoğu zaman polen filtresi dolmuş ya da evaporatörde küf oluşmuştur. Filtre değişimi ve dezenfeksiyon yarım saat kadar sürer." },
+      { "soru": "Fiyatı ne zaman öğrenirim?", "cevap": "Ölçümden sonra, işe başlamadan. Parça ve işçilik ayrı ayrı söylenir; onayınız olmadan başlamayız." },
+      { "soru": "Randevusuz gelebilir miyim?", "cevap": "Gelebilirsiniz. Yazın yoğun oluyoruz; önceden ararsanız aracınızı bekletmeden ölçüme alırız." }
+    ],
+    "kariyer": {
+      "baslik": "Klima işini bilen ya da öğrenmek isteyen",
+      "metin": "Oto klima, elektrik ve arıza tespit tarafında deneyimli bir usta ya da mesleği öğrenmek isteyen çırak arkadaşlarla tanışmak isteriz. Kısa bir tanıtımla bize yazın."
+    },
+    "sayfalar": {
+      "kurumsal": { "baslik": "Kurumsal", "metin": "Kim olduğumuz, neden yalnızca klimayla uğraştığımız ve nasıl çalıştığımız.", "gorsel": "/img/kurumsal-klima/kaput-termal.jpg" },
+      "hizmetler": { "baslik": "Hizmetlerimiz", "metin": "Gaz dolumundan elektronik klima arızalarına, her iş için ortalama süre ve kapsam." },
+      "kurumsal-musteriler": { "baslik": "Filo ve ticari araç", "metin": "Taksi ve servis önceliği, yaz öncesi filo kontrolü, galeriler için satış öncesi ölçüm.", "gorsel": "/img/kurumsal-klima/lift-termal.jpg" },
+      "referanslar": { "baslik": "Atölyeden ve müşterilerden", "metin": "Atölyeden kareler, müşterilerimizin yorumları ve baktığımız markalar." },
+      "iletisim": { "baslik": "İletişim", "metin": "Klimanız ne yapıyor, yazın; aynı gün dönüş yapalım." }
+    },
+    "konular": ["Klima soğutmuyor", "Gaz dolumu", "Kaçak testi", "Koku / filtre", "Elektronik klima arızası", "Filo / ticari araç", "Genel bilgi"],
+    "formBaslik": "Bize yazın",
+    "cta": {
+      "baslik": "Menfezden ılık hava mı geliyor? Yazın.",
+      "metin": "Ne olduğunu anlatın; neye bakacağımızı ve fiyatı işe başlamadan söyleyelim.",
+      "buton": "Arızayı yazın"
+    }
+  }
+}

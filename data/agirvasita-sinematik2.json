@@ -1,0 +1,18 @@
+{
+  "sinema": {
+    "introUst": "Şaşmaz Oto Sanayi",
+    "introAlt": "Ağır vasıta servisi",
+    "hakkindaEtiket": "Yolun kenarındayız",
+    "duraklarEtiket": "Aracın altı, durak durak",
+    "duraklarBaslik": "Her tabela bir arıza. Hepsi aynı çatı altında.",
+    "duraklarMetin": "Aşağı kaydırdıkça tır yola devam eder; her portalın altından geçtiğinde o bölümde neye baktığımızı anlatırız. Değerler: gelen araçta ölçtüğümüz ile teslimde ölçtüğümüz.",
+    "hizmetBaslik": "Hangi çıkıştan girerseniz girin",
+    "hizmetMetin": "Süreler ortalamadır. Aracınızı görünce kesin süreyi söyleriz; fiyatı da işe başlamadan.",
+    "kmBaslik": "Kilometre taşları",
+    "surecBaslik": "Yolda kaldığınız andan teslime",
+    "yorumBaslik": "Telsizden gelenler",
+    "saatBaslik": "Atölye saatleri",
+    "konumBaslik": "Şaşmaz'ın girişindeyiz",
+    "cikisTabela": { "tab": "ÇIKIŞ", "main": "ŞAŞMAZ", "sub": "Oto Sanayi · Ağır Vasıta" }
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "hizmetGorselleri": [
+    "/img/pist/degisim.jpg",
+    "/img/pist/rot.jpg",
+    "/img/pist/usta.jpg",
+    "/img/pist/raf.jpg",
+    "/img/pist/jant-siyah.jpg",
+    "/img/pist/basinc.jpg",
+    "/img/lastik-klasik2/lift.jpg"
+  ],
+  "derinlik": {
+    "baslik": "Lastiğinde kaç milim kaldı?",
+    "metin": "Yeni bir binek lastiğinin dişi 7-8 mm olur. Kaydırıcıyı çek, lastiğin nerede duruyor gör.",
+    "esikler": [
+      { "min": 6, "etiket": "Yeni gibi", "metin": "Rahat kullan. Basıncı ayda bir kontrol et, rot-balansı yılda bir yaptır.", "ton": "iyi" },
+      { "min": 4, "etiket": "Yarı ömür", "metin": "Yazın sorun yok. Kışlık lastikte 4 mm'nin altı yasal olarak kış lastiği sayılmaz, sezon başı bir baktır.", "ton": "iyi" },
+      { "min": 3, "etiket": "Islakta dikkat", "metin": "Kışın tutuş gitti. Yağmurda fren mesafesi uzamaya başladı; bu sezonu planla.", "ton": "orta" },
+      { "min": 1.6, "etiket": "Değişim zamanı", "metin": "Islak zeminde kızaklama riski ciddi. Ebadını WhatsApp'tan at, stokta var mı hemen söyleyelim.", "ton": "kotu" },
+      { "min": 0, "etiket": "Yasal sınırın altında", "metin": "1,6 mm'nin altı trafikte cezalı ve tehlikeli. Aracı böyle kullanma, bugün gel.", "ton": "kotu" }
+    ]
+  },
+  "mevsimEsik": "7°C"
+}

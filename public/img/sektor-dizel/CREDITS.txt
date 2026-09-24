@@ -1,0 +1,15 @@
+Tüm görseller Pexels lisansıyla (ücretsiz, ticari kullanım serbest), pexels.com:
+silindir-kapak.jpg: "A Person Fixing a Machine" https://www.pexels.com/photo/a-person-fixing-a-machine-7564871/
+motor-ustu.jpg: "Person Holding a Wrench Repairing the Engine" https://www.pexels.com/photo/person-holding-a-wrench-repairing-the-engine-7564866/
+manometre.jpg: "Analog Pressure Gauges in Close-up Shot" https://www.pexels.com/photo/analog-pressure-gauges-in-close-up-shot-5532838/
+komparator.jpg: "Close-up of Mitutoyo Dial Indicator in Workshop" https://www.pexels.com/photo/close-up-of-mitutoyo-dial-indicator-in-workshop-38291710/
+dijital-olcum.jpg: "Close-up of Digital Micrometer Measurement" https://www.pexels.com/photo/close-up-of-digital-micrometer-measurement-33712451/
+dizel-kapak.jpg: "A Technician Repairing a Motor Part" https://www.pexels.com/photo/a-technician-repairing-a-motor-part-8985664/
+kamyon-atolye.jpg: "An Auto Mechanic Repairing Engine of a Truck" https://www.pexels.com/photo/an-auto-mechanic-repairing-engine-of-a-truck-7541356/
+kamyon-bakim.jpg: "Person Fixing a Truck" https://www.pexels.com/photo/person-fixing-a-truck-7541360/
+parca-tepsisi.jpg: "Mechanic Organizing Engine Components in Workshop" https://www.pexels.com/photo/mechanic-organizing-engine-components-in-workshop-29181493/
+dizel-motor.jpg: "Mechanic Operating Heavy Machinery Engine in Sao Paulo" https://www.pexels.com/photo/mechanic-operating-heavy-machinery-engine-in-sao-paulo-31103436/
+cekici.jpg: "Mercedes-Benz Cargo Truck" https://www.pexels.com/photo/mercedes-benz-cargo-truck-16100082/
+eksantrik.jpg: "Engine Cylinder Head with Camshafts" https://www.pexels.com/photo/engine-cylinder-head-with-camshafts-7565172/
+usta.jpg: "A Mechanic Tuning an Engine" https://www.pexels.com/photo/a-mechanic-tuning-an-engine-7564872/
+yolda.jpg: "View of a Mercedes-Benz Actros Driving on a Street" https://www.pexels.com/photo/view-of-a-mercedes-benz-actros-driving-on-a-street-20097991/

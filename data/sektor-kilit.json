@@ -1,0 +1,65 @@
+{
+  "preset": "sektor-kilit",
+  "isletme": {
+    "ad": "Anahtar Oto Kilit",
+    "sektor": "Oto Kilit, Anahtar ve İmmobilizer Kodlama",
+    "slogan": "Anahtarınız kayıpsa bile aracınız yolda kalmaz.",
+    "kurulus": 1999,
+    "hakkinda": "1999'dan beri Şaşmaz'da yalnızca oto kilit ve anahtar işi yapıyoruz. Düz metal anahtardan akıllı anahtara kadar yedeğinizi çıkarır, çipini araca tanıtır, bozulan kontağı ve kilidi onarırız. Aracın size ait olduğunu ruhsat ve kimlikle doğrulamadan hiçbir kapıyı açmaz, hiçbir anahtarı kodlamayız."
+  },
+  "iletisim": {
+    "telefon": "0532 555 47 19",
+    "whatsapp": "905325554719",
+    "adres": "Şaşmaz Oto Sanayi Sitesi, 4. Cadde No: 11, Etimesgut/Ankara",
+    "mapsQuery": "Şaşmaz Oto Sanayi Sitesi Etimesgut Ankara"
+  },
+  "saatler": [null, "08:30-19:00", "08:30-19:00", "08:30-19:00", "08:30-19:00", "08:30-19:00", "09:00-17:00"],
+  "hizmetler": [
+    { "baslik": "Yedek anahtar", "aciklama": "Elinizdeki anahtarın kopyası, bıçağı araç kilidinize göre kesilerek çıkarılır. Çipli anahtarlar kesimden sonra araca tanıtılır.", "sure": "20-40 dk" },
+    { "baslik": "Tüm anahtarlar kayıp", "aciklama": "Hiç anahtarınız kalmadıysa kilitten ya da şase numarasından yeni anahtar çıkarır, araca tanıtır, kayıp anahtarları sistemden sileriz.", "sure": "Aynı gün" },
+    { "baslik": "İmmobilizer ve transponder kodlama", "aciklama": "Çip okumayan, \"anahtar tanınmadı\" uyarısı veren ya da marş basmayan araçlarda immobilizer arızasını tespit eder, anahtarı yeniden kodlarız.", "sure": "1-2 saat" },
+    { "baslik": "Kumanda ve akıllı anahtar", "aciklama": "Kumandalı, sustalı ve anahtarsız çalıştırma (keyless) sistemli anahtarlar. Yeni kumanda araca tanıtılır, tüm tuşlar denenerek teslim edilir.", "sure": "1-2 saat" },
+    { "baslik": "Kumanda kabı ve pil değişimi", "aciklama": "Kırılan kap, aşınan tuş ya da biten pil. Elektronik kart yeni kaba aktarılır, anahtarınız yeniden kodlama gerektirmeden çalışır.", "sure": "15-30 dk" },
+    { "baslik": "Kapıda kalan araç açma", "aciklama": "Anahtar içeride kaldıysa kapıyı ve camı zorlamadan, özel açma aletleriyle açarız. Ruhsat ve kimlik kontrolü yapılır.", "sure": "15-30 dk" },
+    { "baslik": "Kontak tamiri ve değişimi", "aciklama": "Dönmeyen, takılan ya da anahtarı zor çıkan kontak. Silindir sökülüp temizlenir, aşınan pinler değiştirilir; gerekirse kontak yenilenir.", "sure": "1-3 saat" },
+    { "baslik": "Kapı ve bagaj kilidi tamiri", "aciklama": "Açılmayan kapı, sıkışan bagaj, merkezi kilide cevap vermeyen kapı. Kilit göbeği onarılır ve mevcut anahtarınıza uyarlanır.", "sure": "1-2 saat" },
+    { "baslik": "Kırık anahtar çıkarma", "aciklama": "Kontakta ya da kapı kilidinde kırılan anahtar parçası kilide zarar vermeden çıkarılır, yerine yenisi kesilir.", "sure": "30-60 dk" }
+  ],
+  "surec": [
+    { "baslik": "Arayın ya da yazın", "aciklama": "Aracın marka, model ve yılını, sorunun ne olduğunu söyleyin. Anahtar tipinizi ve işin ne kadar süreceğini telefonda söyleriz." },
+    { "baslik": "Sahipliği doğrularız", "aciklama": "Ruhsat ve kimliğinizi kontrol ederiz. Ruhsattaki isimle eşleşmeyen araçta kapı açma ve kodlama yapmayız." },
+    { "baslik": "Anahtarı keser, kodlarız", "aciklama": "Anahtar bıçağı kilidinize göre kesilir, çip ve kumanda arıza tespit cihazıyla araca tanıtılır." },
+    { "baslik": "Birlikte deneriz", "aciklama": "Kapılar, bagaj, kumanda tuşları ve marş sizin yanınızda tek tek denenir. Sorun yoksa teslim ederiz." }
+  ],
+  "istatistikler": [
+    { "deger": 27, "sonek": "", "etiket": "yıldır Şaşmaz'da", "kurulustanHesapla": true },
+    { "deger": 32000, "sonek": "+", "etiket": "anahtar kesildi" },
+    { "deger": 9500, "sonek": "+", "etiket": "immobilizer kodlama" },
+    { "deger": 40, "sonek": "+", "etiket": "marka ve model" }
+  ],
+  "markalar": ["Renault", "Fiat", "Volkswagen", "Ford", "Toyota", "Hyundai", "Opel", "Peugeot", "Honda", "Mercedes-Benz"],
+  "galeri": [
+    { "src": "/img/sektor-kilit/atolye.jpg", "alt": "Duvarı anahtar boşluklarıyla dolu kilit atölyesinde çalışan usta" },
+    { "src": "/img/sektor-kilit/akilli-anahtar.jpg", "alt": "Orta konsolda duran kumandalı akıllı anahtar" },
+    { "src": "/img/sektor-kilit/anahtar-duvari.jpg", "alt": "Kancalara dizilmiş ham anahtarlar" },
+    { "src": "/img/sektor-kilit/kapi-acma.jpg", "alt": "Araç kapı kilidine takılmış açma aleti" },
+    { "src": "/img/sektor-kilit/kodlama.jpg", "alt": "Aracın arıza tespit soketine takılı kodlama cihazı" },
+    { "src": "/img/sektor-kilit/kilit-silindiri.jpg", "alt": "Pinleri görünen kilit silindiri yakın çekim" },
+    { "src": "/img/sektor-kilit/silindir-parcalari.jpg", "alt": "Sökülmüş kilit silindiri, pinleri ve yayları" },
+    { "src": "/img/sektor-kilit/dukkan.jpg", "alt": "Anahtar dükkânında tezgâhta anahtar işleyen usta" },
+    { "src": "/img/sektor-kilit/kontak.jpg", "alt": "Kontaktaki anahtarı çeviren sürücü eli" },
+    { "src": "/img/sektor-kilit/start-stop.jpg", "alt": "Anahtarsız çalıştırma için start-stop düğmesi" },
+    { "src": "/img/sektor-kilit/kapi-kilidi.jpg", "alt": "Anahtarla açılan araç kapısı" },
+    { "src": "/img/sektor-kilit/yedek-anahtar.jpg", "alt": "Siyah zemin üzerinde sustalı araç anahtarı" },
+    { "src": "/img/sektor-kilit/anahtarlar.jpg", "alt": "Üst üste duran metal anahtarlar" }
+  ],
+  "puan": { "ortalama": 4.9, "adet": 187 },
+  "yorumlar": [
+    { "ad": "Burak S.", "puan": 5, "metin": "Tek anahtarım vardı, o da kayboldu. Aracı çekiciyle getirdim, akşam olmadan iki yeni anahtarla çıktım. Eski anahtarı da sistemden sildiler.", "arac": "2015 Clio" },
+    { "ad": "Zeynep A.", "puan": 5, "metin": "Anahtarı arabada unutup kapıyı kilitledim. Yirmi dakikada geldiler, kapıda tek çizik yok. Önce ruhsatı istemeleri ayrıca güven verdi.", "arac": "2018 Egea" },
+    { "ad": "Mustafa T.", "puan": 5, "metin": "Kumandanın kabı kırılmıştı, yetkili servis komple anahtar değişimi dedi. Burada kartı yeni kaba aktardılar, yarım saatte bitti.", "arac": "2013 Golf" },
+    { "ad": "Oğuz K.", "puan": 4, "metin": "Araç anahtarı tanımıyordu. Sorun çipteymiş; yeniden kodladılar. Parça bekledik diye iş bir gün sürdü ama baştan haber verdiler.", "arac": "2011 Corolla" },
+    { "ad": "Elif D.", "puan": 5, "metin": "Kontak dönmüyordu, değişim gerekir sandım. Silindiri temizleyip pinleri yenilediler, eski anahtarımla çalışıyor.", "arac": "2009 Focus" }
+  ],
+  "garanti": "Kesilen anahtara, kodlamaya ve kilit işçiliğine 1 yıl garanti."
+}

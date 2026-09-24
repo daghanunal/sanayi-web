@@ -1,0 +1,69 @@
+{
+  "kurumsal": {
+    "hero": {
+      "baslik": "Önce muayene, sonra birlikte karar.",
+      "metin": "Röntgeninizi ekranda birlikte açar, hangi dişte ne gördüğümüzü gösteririz. Seçenekleri tek tek anlatırız; hangisiyle başlanacağına siz karar verirsiniz.",
+      "birincil": "Randevu isteyin",
+      "ikincil": "Diş haritası",
+      "ikincilRota": "dis-haritasi"
+    },
+    "ozet": {
+      "baslik": "Kliniğimiz",
+      "metin": "2009'dan beri Etimesgut'ta, aynı adreste hasta kabul ediyoruz. Dört tedavi odamız var; randevu saatinizde içeri alınırsınız, acele ettirilmezsiniz."
+    },
+    "hizmetOzetBaslik": "Kliniğimizde yapılan tedaviler",
+    "yorumBaslik": "Hastalarımız ne diyor",
+    "galeriBaslik": "Kliniğimizden",
+    "surecBaslik": "İlk randevudan kontrole",
+    "sssBaslik": "Sık sorulanlar",
+    "hakkimizda": {
+      "baslik": "Aynı adreste, aynı özenle",
+      "paragraflar": [
+        "2009'dan beri Etimesgut'ta, İstasyon Caddesi'ndeki aynı adreste hasta kabul ediyoruz. Muayeneden sonra ağzınızda ne gördüğümüzü röntgen üzerinde gösterir, tedavi seçeneklerini tek tek anlatırız.",
+        "Hangi tedaviye başlanacağına siz karar verirsiniz; aceleye getirmeyiz. Tedavi süresince her seansta ne yapılacağını önceden söyler, sonrasında kontrol randevunuzu biz hatırlatırız."
+      ],
+      "gorsel": "/img/sektor-dis/muayenehane.jpg",
+      "gorselAlt": "Gün ışığı alan tedavi odası ve diş ünitesi"
+    },
+    "misyon": "Hastaya ağzında ne olduğunu anlaşılır biçimde göstermek, kararı onunla birlikte vermek.",
+    "vizyon": "Etimesgut'ta ailece gelinen, çocukların da korkmadan oturduğu bir klinik olmak.",
+    "degerler": [
+      { "baslik": "Önce göster", "metin": "Röntgeni ve ağız içi görüntüyü ekranda birlikte inceleriz." },
+      { "baslik": "Onayınızla", "metin": "Planı ve seçenekleri anlatırız; onayınız olmadan başlamayız." },
+      { "baslik": "Randevu saati", "metin": "Randevularımızı aralıklı veririz, bekleme salonunda vakit geçirmezsiniz." },
+      { "baslik": "Sonrası da var", "metin": "Çekim ve kanal tedavisinden sonra arar, nasıl olduğunuzu sorarız." }
+    ],
+    "kalite": {
+      "baslik": "Çalışma ilkelerimiz",
+      "metin": "Diş hekimliği meslek kurallarına ve ilgili mevzuata uygun çalışırız.",
+      "maddeler": [
+        "Her hasta için steril paketlenmiş muayene seti açılır.",
+        "Tedavi planı ve seçenekler işe başlamadan anlatılır.",
+        "Tedavi sonrası dikkat edilecekler yazılı olarak verilir.",
+        "Sağlık bilgileriniz yalnızca tedaviniz için kullanılır."
+      ]
+    },
+    "sss": [
+      { "soru": "İlk muayenede ne yapılıyor?", "cevap": "Şikâyetinizi dinler, dişlerinizi, diş etinizi ve çene ekleminizi kontrol ederiz. Gerekirse röntgen çeker, görüntüyü ekranda birlikte inceleriz. Tedaviye aynı gün başlamak zorunda değilsiniz." },
+      { "soru": "Tedavinin ücretini önceden öğrenebilir miyim?", "cevap": "Muayeneden sonra tedavi planıyla birlikte ücret bilgisini de veririz. Muayene etmeden telefonda tedavi ücreti söylemiyoruz; ağzınızı görmeden doğru bilgi veremeyiz." },
+      { "soru": "Çocuğumu kaç yaşında getirmeliyim?", "cevap": "İlk süt dişleri çıktıktan sonra bir kontrol yeterlidir. İlk ziyarette aletleri önce tanıtır, çocuğunuzun koltuğa alışmasına zaman tanırız." },
+      { "soru": "Kanal tedavisi kaç seans sürer?", "cevap": "Çoğu diş tek seansta tamamlanır; iltihabın durumuna göre bazıları iki seans sürer. Kaç seans gerektiğini muayenede söyleriz." },
+      { "soru": "Randevumu WhatsApp'tan alabilir miyim?", "cevap": "Evet. Adınızı, şikâyetinizi ve size uygun günleri yazın; boş saatleri iletelim. Diş haritası sayfasından hangi dişiniz olduğunu da işaretleyip gönderebilirsiniz." },
+      { "soru": "Cumartesi açık mısınız?", "cevap": "Cumartesi 09:30 ile 15:00 arasında açığız. Pazar günü kapalıyız." }
+    ],
+    "sayfalar": {
+      "kurumsal": { "baslik": "Kliniğimiz", "metin": "Nasıl çalıştığımız ve sizi nasıl karşıladığımız.", "gorsel": "/img/sektor-dis/klinik.jpg" },
+      "hizmetler": { "baslik": "Tedaviler", "metin": "Muayeneden implanta, hangi tedavinin nasıl yapıldığını ve ortalama ne kadar sürdüğünü burada anlattık." },
+      "dis-haritasi": { "baslik": "Diş haritası", "metin": "Hangi dişiniz, ne şikâyetiniz var? İşaretleyin, randevu mesajınızı biz hazırlayalım." },
+      "sorular": { "baslik": "Sık sorulanlar", "metin": "En çok sorulanları yanıtladık; bulamadığınızı arayıp sorun." },
+      "iletisim": { "baslik": "Randevu ve iletişim", "metin": "Arayın, WhatsApp'tan yazın ya da formu doldurun; size uygun saati birlikte bulalım." }
+    },
+    "konular": ["Muayene randevusu", "Diş ağrısı", "Çocuğum için randevu", "İmplant ve protez", "Ortodonti", "Genel bilgi"],
+    "formBaslik": "Randevu isteyin",
+    "cta": {
+      "baslik": "Önce bir muayene, gerisini birlikte konuşalım",
+      "metin": "Size uygun günü yazın, boş saatleri hemen iletelim.",
+      "buton": "Randevu isteyin"
+    }
+  }
+}

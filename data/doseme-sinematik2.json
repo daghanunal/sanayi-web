@@ -1,0 +1,38 @@
+{
+  "preset": "doseme-sinematik2",
+  "surec": [
+    { "baslik": "Söküm", "aciklama": "Eski döşemeyi dikiş dikiş söküyoruz. Parçalar çöpe gitmez, yeni kalıbın ölçüsü onlardan alınır." },
+    { "baslik": "Kalıp", "aciklama": "Tebeşirle kalıbı çıkarıyoruz. Aracın fabrika hattına sadık kalıyoruz, milim kaçırmıyoruz." },
+    { "baslik": "Kesim", "aciklama": "Deri ya da kumaş, lif yönüne bakılarak kesilir. Yanlış yönde kesilen parça zamanla sarkar." },
+    { "baslik": "Dikiş", "aciklama": "Çift iğneli sanayi makinesinde, sizin seçtiğiniz iplik rengiyle dikiyoruz." },
+    { "baslik": "Gergi", "aciklama": "Kılıfı süngerin üstüne kırışıksız geriyor, koltuğu araca geri takıyoruz." }
+  ],
+  "malzemeler": [
+    {
+      "ad": "Kumaş",
+      "alt": "Dokuma döşemelik",
+      "metin": "Nefes alır; yazın yapışmaz, kışın üşütmez. Servis ve aile araçlarında en çok bunu seçiyorlar.",
+      "ozellik": ["Nefes alır", "Kolay temizlenir", "Renk seçeneği bol"]
+    },
+    {
+      "ad": "Alcantara",
+      "alt": "Süet dokulu mikrofiber",
+      "metin": "Elinizi gezdirince tonu değişen, kaydırmayan yüzey. Direksiyonda ve koltuk ortalarında tutuş verir.",
+      "ozellik": ["Kaydırmaz", "Mat görünüm", "Direksiyonda tutuş"]
+    },
+    {
+      "ad": "Nappa deri",
+      "alt": "Yumuşak hakiki deri",
+      "metin": "İnce, yumuşak ve hafif parlak. Delikli dokusu hava aldırır; bakımı yapıldıkça yıllarca güzel kalır.",
+      "ozellik": ["Hakiki deri", "Delikli seçenek", "Silerek temizlenir"]
+    },
+    {
+      "ad": "Kapitone",
+      "alt": "Baklava dikişli dolgu",
+      "metin": "Süngerle beraber baklava deseninde dikilir. İplik rengini siz seçersiniz, dikiş aralığını biz tuttururuz.",
+      "ozellik": ["Dolgulu yüzey", "İplik rengi sizden", "Elle kontrol"]
+    }
+  ],
+  "finalBaslik": "Örtüyü kaldıralım.",
+  "finalAlt": "Aracınızı getirin, malzemeyi birlikte seçelim. Fiyatı işe başlamadan söyleriz."
+}

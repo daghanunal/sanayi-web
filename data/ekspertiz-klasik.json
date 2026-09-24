@@ -1,0 +1,34 @@
+{
+  "preset": "ekspertiz-klasik",
+  "ornekArac": "Örnek rapor · 2018 hatchback · 84.000 km",
+  "paneller": [
+    { "id": "kaput", "ad": "Motor kaputu", "um": 118, "durum": "orijinal" },
+    { "id": "sol-on-camurluk", "ad": "Sol ön çamurluk", "um": 124, "durum": "orijinal" },
+    { "id": "sol-on-kapi", "ad": "Sol ön kapı", "um": 131, "durum": "orijinal" },
+    { "id": "sol-arka-kapi", "ad": "Sol arka kapı", "um": 127, "durum": "orijinal" },
+    { "id": "sol-arka-camurluk", "ad": "Sol arka çamurluk", "um": 214, "durum": "lokal" },
+    { "id": "bagaj", "ad": "Bagaj kapağı", "um": 322, "durum": "boyali" },
+    { "id": "sag-arka-camurluk", "ad": "Sağ arka çamurluk", "um": 121, "durum": "orijinal" },
+    { "id": "sag-arka-kapi", "ad": "Sağ arka kapı", "um": 129, "durum": "orijinal" },
+    { "id": "sag-on-kapi", "ad": "Sağ ön kapı", "um": 96, "durum": "degisen" },
+    { "id": "sag-on-camurluk", "ad": "Sağ ön çamurluk", "um": 119, "durum": "orijinal" },
+    { "id": "tavan", "ad": "Tavan", "um": 126, "durum": "orijinal" },
+    { "id": "on-tampon", "ad": "Ön tampon", "um": null, "durum": "plastik" },
+    { "id": "arka-tampon", "ad": "Arka tampon", "um": null, "durum": "plastik" }
+  ],
+  "kodlar": [
+    { "id": "orijinal", "ad": "Orijinal", "aralik": "90–160 µm", "min": 90, "max": 160, "metin": "Fabrika boyası. Panelin her noktası birbirine yakın ölçer." },
+    { "id": "lokal", "ad": "Lokal boyalı", "aralik": "160–250 µm", "min": 160, "max": 250, "metin": "Panelin bir kısmı boyanmış. Genelde çizik ya da küçük bir sürtme onarımıdır." },
+    { "id": "boyali", "ad": "Boyalı", "aralik": "250–400 µm", "min": 250, "max": 400, "metin": "Panel komple boyanmış. Neden boyandığını altına ve kenarlarına bakarak ararız." },
+    { "id": "macun", "ad": "Macunlu", "aralik": "400 µm üstü", "min": 400, "max": 600, "metin": "Kalın dolgu var. Göçük düzeltilmiş demektir; darbenin nereye kadar gittiğine bakarız." },
+    { "id": "degisen", "ad": "Değişen", "aralik": "Ölçüm tek başına söylemez", "min": 0, "max": 0, "metin": "Parça yerine yenisi takılmış. Cıvata izi, sızdırmazlık macunu ve renk farkından anlaşılır." }
+  ],
+  "kontrolGruplari": [
+    { "ad": "Kaporta ve boya", "maddeler": ["Panel panel boya ölçümü", "Kapı ve kaput aralıkları", "Cıvata ve menteşe izleri", "Renk ve dokusu farklı parçalar"] },
+    { "ad": "Şasi ve gövde", "maddeler": ["Ön ve arka şasi uçları", "Podye ve direkler", "Bagaj havuzu", "Kaynak, çekme ve değişim izi"] },
+    { "ad": "Motor ve şanzıman", "maddeler": ["Soğuk çalıştırma ve rölanti", "Yağ ve antifriz sızıntısı", "Üfleme ve duman", "Vites geçişleri ve kavrama"] },
+    { "ad": "Yürüyen aksam", "maddeler": ["Amortisör ve salıncak burçları", "Rotil ve aks körükleri", "Balata ve disk aşınması", "Lastik diş derinliği ve üretim tarihi"] },
+    { "ad": "Elektronik", "maddeler": ["Kayıtlı ve silinmiş arıza kodları", "Hava yastığı ve ABS modülleri", "Gösterge ve konfor donanımı", "Akü ve şarj değerleri"] }
+  ],
+  "finalBaslik": "Kaparoyu vermeden önce aracı bize getirin."
+}

@@ -1,0 +1,67 @@
+{
+  "preset": "sektor-radyator",
+  "isletme": {
+    "ad": "Soğuk Radyatör",
+    "sektor": "Radyatör ve Soğutma Sistemleri",
+    "slogan": "Hararet yaptıysa önce sebebini buluruz.",
+    "kurulus": 1990,
+    "hakkinda": "1990'dan beri Şaşmaz'da yalnızca radyatör ve soğutma işi yapıyoruz. Aracınız hararet yaptığında radyatörü hemen değiştirmeyiz: önce sistemi basınçla test eder, suyun nereden kaçtığını, fanın ne zaman devreye girdiğini, termostatın açılıp açılmadığını ölçeriz. Tamiri mümkünse tamir ederiz, değişim gerekiyorsa nedenini gösterip söyleriz."
+  },
+  "iletisim": {
+    "telefon": "0532 555 47 90",
+    "whatsapp": "905325554790",
+    "adres": "Şaşmaz Oto Sanayi Sitesi, 4. Cadde No: 31, Etimesgut/Ankara",
+    "mapsQuery": "Şaşmaz Oto Sanayi Sitesi Etimesgut Ankara radyatör"
+  },
+  "saatler": [null, "08:30-19:00", "08:30-19:00", "08:30-19:00", "08:30-19:00", "08:30-19:00", "09:00-16:00"],
+  "hizmetler": [
+    { "baslik": "Radyatör tamiri", "aciklama": "Delik, çatlak ve sızıntı yapan radyatörler sökülüp temizlenir, su havuzunda basınçla test edilir. Bakır-pirinç radyatörde lehim, plastik tanklı radyatörde tank ve conta değişimi yapılır.", "sure": "Aynı gün" },
+    { "baslik": "Radyatör değişimi", "aciklama": "Tamiri kurtarmayan radyatörler aracınıza uygun yenisiyle değiştirilir. Takıldıktan sonra sistemin havası alınır, antifrizi tamamlanır.", "sure": "2-3 saat" },
+    { "baslik": "Petek temizliği ve değişimi", "aciklama": "Kireç ve tortuyla tıkanmış petekler kimyasal banyoda açılır. Tıkanıklık petekleri çürütmüşse yeni petek örülür.", "sure": "1-2 gün" },
+    { "baslik": "Fan ve fan müşiri", "aciklama": "Fan motoru, fan rölesi ve müşir kontrol edilir. Fanın hangi sıcaklıkta devreye girdiği ölçülür, arızalı parça değiştirilir.", "sure": "1-2 saat" },
+    { "baslik": "Termostat ve devirdaim", "aciklama": "Açılmayan ya da açık kalan termostat, su kaçıran devirdaim pompası değiştirilir. Hortum ve kelepçeler de aynı anda gözden geçirilir.", "sure": "Aynı gün" },
+    { "baslik": "Hararet arıza tespiti", "aciklama": "Soğutma sistemi basınç testi, kapak testi ve silindir kapak contasından yağa ya da egzoza su karışıp karışmadığının kontrolü. Sebep belli olmadan parça değiştirmeyiz.", "sure": "1 saat" },
+    { "baslik": "Klima kondenseri", "aciklama": "Taş çarpmasıyla delinen ya da çürüyen klima kondenserlerinin tamiri ve değişimi. Değişimden sonra sistem vakumlanıp gazı doldurulur.", "sure": "Aynı gün" },
+    { "baslik": "Ağır vasıta radyatörü", "aciklama": "Kamyon, çekici, otobüs ve iş makinesi radyatörleri; intercooler ve yağ soğutucuları. Büyük radyatörler atölyede sökülüp petek ve tank olarak ayrı ayrı onarılır.", "sure": "1-3 gün" },
+    { "baslik": "Antifriz ve soğutma bakımı", "aciklama": "Eski suyun boşaltılması, sistemin yıkanması ve doğru oranda antifriz doldurulması. Kış öncesi donma derecesini ölçüp söyleriz.", "sure": "1 saat" }
+  ],
+  "surec": [
+    { "baslik": "Sistemi dinliyoruz", "aciklama": "Aracı çalıştırır, hararet göstergesini, fanın devreye girişini ve hortumların ısınmasını izleriz." },
+    { "baslik": "Basınçla test ederiz", "aciklama": "Soğutma sistemine basınç verip suyun nereden kaçtığını buluruz; radyatör kapağını da ayrıca test ederiz." },
+    { "baslik": "Fiyatı konuşuruz", "aciklama": "Tamir mi değişim mi gerektiğini, parça ve işçilik fiyatını baştan söyleriz. Onayınız olmadan başlamayız." },
+    { "baslik": "Onarır, havasını alırız", "aciklama": "Tamir ya da değişimden sonra antifrizi tamamlar, sistemin havasını alırız." },
+    { "baslik": "Sıcakta deneriz", "aciklama": "Motoru çalışma sıcaklığına getirip fanın devreye girdiğini ve suyun eksilmediğini birlikte kontrol ederiz." }
+  ],
+  "istatistikler": [
+    { "deger": 36, "sonek": "", "etiket": "yıldır Şaşmaz'da", "kurulustanHesapla": true },
+    { "deger": 21000, "sonek": "+", "etiket": "radyatör tamir edildi" },
+    { "deger": 3400, "sonek": "+", "etiket": "ağır vasıta radyatörü" },
+    { "deger": 1, "sonek": " yıl", "etiket": "işçilik garantisi" }
+  ],
+  "markalar": ["Renault", "Fiat", "Ford", "Volkswagen", "Toyota", "Hyundai", "Mercedes-Benz", "MAN", "Scania", "Isuzu"],
+  "galeri": [
+    { "src": "/img/sektor-radyator/hararet-gostergesi.jpg", "alt": "Gösterge panelinde hararet göstergesi" },
+    { "src": "/img/sektor-radyator/teshis.jpg", "alt": "Usta kaputu açık araçta soğutma sistemini kontrol ediyor" },
+    { "src": "/img/sektor-radyator/genlesme-kabi.jpg", "alt": "Motor bölmesinde çalışan usta, solda antifriz genleşme kabı" },
+    { "src": "/img/sektor-radyator/hortumlar.jpg", "alt": "Motor bölmesinde genleşme kabı ve su hortumları" },
+    { "src": "/img/sektor-radyator/motor-bolmesi.jpg", "alt": "Atölyede kaputu açık araç, soğutma suyu deposu görünüyor" },
+    { "src": "/img/sektor-radyator/kaput-alti.jpg", "alt": "Usta el feneriyle kaputun altını inceliyor" },
+    { "src": "/img/sektor-radyator/usta-kaput.jpg", "alt": "Kaputun altında çalışan usta" },
+    { "src": "/img/sektor-radyator/kaynak.jpg", "alt": "Atölyede kaynak yapılan tezgâh" },
+    { "src": "/img/sektor-radyator/tezgah.jpg", "alt": "Atölye tezgâhında çalışan usta" },
+    { "src": "/img/sektor-radyator/tir-kaput.jpg", "alt": "Kamyonun motor kapağı altına lamba tutan usta" },
+    { "src": "/img/sektor-radyator/tir-motor.jpg", "alt": "Ağır vasıta motoru üzerinde çalışan usta" },
+    { "src": "/img/sektor-radyator/tir-usta.jpg", "alt": "Loş atölyede çekicinin yanında çalışan usta" },
+    { "src": "/img/sektor-radyator/frigorifik-tir.jpg", "alt": "Gece yolda frigorifik dorseli tır" },
+    { "src": "/img/sektor-radyator/hararet-gostergesi-dikey.jpg", "alt": "Karanlıkta yanan hararet ve yakıt göstergesi" }
+  ],
+  "puan": { "ortalama": 4.8, "adet": 176 },
+  "yorumlar": [
+    { "ad": "Murat S.", "puan": 5, "metin": "Başka yerde radyatör değişecek dediler. Burada basınç testi yapıp sızıntının hortum kelepçesinden olduğunu buldular, yarım saatte çıktım.", "arac": "2015 Clio" },
+    { "ad": "Kemal B.", "puan": 5, "metin": "Çekicinin radyatörü yolda su kaçırmaya başladı. Ertesi gün petekleri toplayıp teslim ettiler, o günden beri hararet yok.", "arac": "2013 Axor" },
+    { "ad": "Zeynep A.", "puan": 5, "metin": "Fan çalışmıyormuş, trafikte hararet yapıyordu. Neyin bozulduğunu gösterdiler, fiyatı baştan söylediler, aynı gün bitti.", "arac": "2018 Corolla" },
+    { "ad": "Ali R.", "puan": 4, "metin": "Klima kondenseri taş yemişti. Parça bir gün geç geldi ama arayıp haber verdiler. Klima şimdi buz gibi.", "arac": "2017 Focus" },
+    { "ad": "Hüseyin Ç.", "puan": 5, "metin": "Minibüsle servis yapıyorum, aracın yatması ekmeğimin gitmesi demek. Termostat ve devirdaimi sabah bırakıp öğlen aldım.", "arac": "2016 Sprinter" }
+  ],
+  "garanti": "Yapılan işçiliğe 1 yıl garanti."
+}

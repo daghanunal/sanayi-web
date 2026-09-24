@@ -1,0 +1,106 @@
+{
+  "kurumsal": {
+    "hero": {
+      "ust": "Motor rektifiye ve torna · Şaşmaz Oto Sanayi",
+      "baslik": "Motoru ölçüsüne getiririz.",
+      "metin": "Krank taşlama, silindir honlama, kafa planyası, supap ve torna işleri. Parçayı ölçerek alır, ölçerek teslim ederiz; rapor elinize parçayla birlikte gelir.",
+      "birincil": "İş fişi hazırlayın",
+      "ikincil": "Hizmetler",
+      "ikincilRota": "hizmetler"
+    },
+    "ozet": {
+      "baslik": "Isınan metal renk verir. Biz ölçüye bakarız.",
+      "metin": "Sarmış bir yatağın krankta bıraktığı saman sarısı, mor, mavi izleri çoğu usta tanır. Rengi görmek kolay; asıl iş, muylunun kaç mikron gittiğini ve hangi alt ölçüye inerse kurtulacağını söylemek. Tezgâhımızda her parça önce ölçülür, sonra işlenir, sonra yine ölçülür."
+    },
+    "hizmetOzetBaslik": "Tezgâhtaki işler",
+    "anlasmaBaslik": "Ustalara ve servislere",
+    "anlasmaMetin": "Düzenli iş gönderen ustalara sıra önceliği, cari hesap ve motor bazında rapor arşivi.",
+    "anlasmalar": [
+      {
+        "baslik": "Usta ve servis hesabı",
+        "kisa": "Sıra önceliği, ay sonu tek ekstre.",
+        "metin": "Motoru söküp parçayı bize getiren ustalar için sıra önceliği ve cari hesapla çalışıyoruz. Her motorun ölçü raporu dosyanızda durur; aynı motor ikinci kez geldiğinde geçmişi elimizdedir.",
+        "maddeler": ["Düzenli işte sıra önceliği", "Ay sonu tek ekstre", "Motor bazında rapor arşivi", "İş bitince telefonla haber"],
+        "buton": "Hesap açmak için yazın"
+      },
+      {
+        "baslik": "Filo atölyeleri",
+        "kisa": "Toplu işte yazılı teslim takvimi.",
+        "metin": "Kendi bakım atölyesi olan filoların söktüğü krank, blok ve kafaları işler, raporuyla geri veririz. Toplu işte teslim takvimini baştan yazılı veririz.",
+        "maddeler": ["Yazılı teslim takvimi", "Plaka ya da motor numarasıyla kayıt", "Faturada iş dökümü"],
+        "buton": "Görüşme isteyin"
+      },
+      {
+        "baslik": "Numuneden parça",
+        "kisa": "Burç, flanş, mil: numuneyle getirin.",
+        "metin": "Piyasada bulunmayan burç, flanş, mil ve adaptörü çizimden ya da numuneden işleriz. Tek adet de olur, küçük seri de.",
+        "maddeler": ["Çizim ya da numuneyle üretim", "Tek adet ya da küçük seri", "Malzeme seçeneğiyle fiyat"],
+        "buton": "Numune için yazın"
+      }
+    ],
+    "anlasmaNotu": "Çalışma koşulları iş hacmine göre konuşulur; fiyatı işe başlamadan yazılı söyleriz.",
+    "hakkimizda": {
+      "baslik": "Aynı tezgâh, aynı sıra",
+      "paragraflar": [
+        "Şaşmaz Oto Sanayi Sitesi'ndeki atölyemizde motor rektifiye ve torna işleri yapıyoruz. Müşterilerimizin çoğu motor ustaları ve servisler: motoru söker, parçayı getirir, işlenmiş ve ölçülmüş olarak geri alırlar.",
+        "Her parça aynı sırayla ilerler. Giriş ölçüsü alınır, fiyat söylenir, onay gelince tezgâha girer, her adımdan sonra ölçü kontrol edilir. Son ölçü rapora yazılır, parça yıkanıp tıpalanarak teslim edilir."
+      ],
+      "gorsel": "/img/mikron/atolye.jpg",
+      "gorselAlt": "Atölyede tezgâh başında çalışan usta"
+    },
+    "misyon": "Motoru üreticinin öngördüğü ölçüye getirmek ve bunu yazılı raporla belgelemek.",
+    "vizyon": "Ankara'daki motor ustalarının ölçüsüne güvenerek parça gönderdiği atölye olmak.",
+    "degerler": [
+      { "baslik": "Önce ölçü", "metin": "İşe başlamadan ölçer, hangi ölçüye inileceğini söyleriz." },
+      { "baslik": "Yazılı rapor", "metin": "Her iş ölçü raporuyla teslim edilir." },
+      { "baslik": "Onaysız iş yok", "metin": "Fiyat onaylanmadan parça tezgâha girmez." },
+      { "baslik": "Açık söz", "metin": "Kurtulmayacak parçayı işleyip para almayız; baştan söyleriz." }
+    ],
+    "kalite": {
+      "baslik": "Parça tezgâhta nasıl ilerler",
+      "metin": "Giriş ölçüsü, onay, işleme, ara ölçü, son ölçü, yıkama, raporlu teslim. Sıra hiç değişmez.",
+      "maddeler": [
+        "Giriş ölçüsü alınır; aşınma, ovalite ve konik rapora yazılır.",
+        "Isı izi olan krank taşlamadan önce çatlak kontrolünden geçer.",
+        "Son ölçü üretici toleransıyla karşılaştırılır; tolerans dışı parça teslim edilmez.",
+        "Yağ kanalları temizlenir, parça tıpalanarak teslim edilir."
+      ]
+    },
+    "sss": [
+      { "soru": "Krankta mavi, mor izler var. Kurtulur mu?", "cevap": "Çoğu zaman kurtulur. Önce çatlak kontrolü yapar, muyluyu ölçeriz. İz alt ölçüye taşlanınca çıkıyorsa taşlarız; çatlak ya da çok derin iz varsa krankı işleyip para almayız, baştan söyleriz." },
+      { "soru": "Hangi ölçüye ineceğimi nasıl bilirim?", "cevap": "Silindiri ve krankı ölçer, aşınmanın üstüne temiz işleme payı kalacak ilk alt ya da üst ölçüyü yazarız. Piston ve yatak siparişini bu ölçüye göre verirsiniz." },
+      { "soru": "İş ne kadar sürer?", "cevap": "Planya ve basınç testi çoğunlukla aynı gün, krank taşlama ve honlama 1-2 gün. Yoğunluğa göre teslim gününü parçayı bırakırken söyleriz." },
+      { "soru": "Parçayı getirmem mi gerekiyor?", "cevap": "Sanayi içindeki ustaların parçasını yoğunluğa göre alıp geri bırakıyoruz. Arayıp saat ayarlayın." }
+    ],
+    "sayfalar": {
+      "kurumsal": { "baslik": "Kurumsal", "metin": "Atölyemiz, çalışma sıramız ve ölçüye neden bu kadar önem verdiğimiz.", "gorsel": "/img/mikron/torna.jpg" },
+      "hizmetler": { "baslik": "Hizmetler", "metin": "Her iş için çalıştığımız tolerans ve ortalama süre." },
+      "servisler": { "baslik": "Ustalara ve servislere", "metin": "Düzenli iş gönderen ustalar, servisler ve filo atölyeleri için.", "gorsel": "/img/kurumsal-rektifiye2/kafa.jpg" },
+      "is-fisi": { "baslik": "İş fişi", "metin": "Getireceğiniz parçaları işaretleyin; yapılacak işler, süreler ve yanınızda getirmeniz gerekenler tek kâğıtta çıksın." },
+      "iletisim": { "baslik": "İletişim", "metin": "İş göndermek, ölçü sormak ya da hesap açmak için yazın." }
+    },
+    "konular": ["İş göndermek istiyorum", "Ölçü / fiyat sorusu", "Usta ve servis hesabı", "Özel parça işleme", "Genel bilgi"],
+    "markaBaslik": "Sık gelen motorlar",
+    "surecBaslik": "Dört adım, her seferinde",
+    "galeriBaslik": "Tezgâhtan",
+    "cta": {
+      "baslik": "Parçayı getirin, önce ölçelim.",
+      "metin": "Hangi ölçüye inileceğini ve fiyatı işe başlamadan söyleriz. Raporu parçayla birlikte alırsınız.",
+      "buton": "İş fişi hazırlayın"
+    }
+  },
+  "parcalar": [
+    { "id": "krank", "ad": "Krank mili", "isler": ["Krank taşlama"], "getir": ["Eski yatakları atmayın, getirin", "Motor kodu ya da ruhsat fotoğrafı"] },
+    { "id": "blok", "ad": "Motor bloğu", "isler": ["Silindir honlama", "Blok ve kafa planyası", "Gömlek değişimi"], "getir": ["Yeni pistonlar alındıysa pistonlar", "Motor kodu"] },
+    { "id": "kafa", "ad": "Silindir kapağı", "isler": ["Kafa basınç testi", "Blok ve kafa planyası", "Supap ve yuva işleme"], "getir": ["Supaplar ve yayları kapakta kalsın", "Varsa yeni supap lastikleri"] },
+    { "id": "biyel", "ad": "Biyel kolları", "isler": ["Biyel ve yatak yuvası"], "getir": ["Kol kapaklarını karıştırmayın, numaralı getirin", "Pim ve burçlar"] },
+    { "id": "ozel", "ad": "Özel parça", "isler": ["Torna ve freze işleri"], "getir": ["Numune ya da ölçülü çizim", "Kaç adet lazım olduğu"] }
+  ],
+  "tavSkala": [
+    { "renk": "#e6cf8a", "ad": "Açık saman", "derece": 220, "metin": "Yüzey hafif ısınmış. Çoğunlukla silinir gibi görünür ama muylu yine de ölçülür." },
+    { "renk": "#c9923d", "ad": "Koyu saman", "derece": 240, "metin": "Yağ bir süre azalmış. Ovalite ve konik ölçülür, genelde ilk alt ölçü yeter." },
+    { "renk": "#9a5a2c", "ad": "Bronz", "derece": 255, "metin": "Yatak sürtmeye başlamış. Taşlamadan önce çatlak kontrolü şart." },
+    { "renk": "#6b2f86", "ad": "Mor", "derece": 270, "metin": "Yatak sarmış. İzin derinliği ölçülür; hangi alt ölçüde temizlendiğini söyleriz." },
+    { "renk": "#2c4ea8", "ad": "Mavi", "derece": 300, "metin": "Muylu çok ısınmış. Çatlak ve sertlik kontrolünden sonra karar verilir; kurtulmuyorsa baştan söyleriz." }
+  ]
+}

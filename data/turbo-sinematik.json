@@ -1,0 +1,80 @@
+{
+  "preset": "turbo-sinematik",
+  "film": [
+    {
+      "id": "sokum",
+      "etiket": "Söküm",
+      "baslik": "Önce parça parça açarız.",
+      "metin": "Gövdeler ayrılır, mil ve çark grubu çıkar. Mil boşluğu, yataklar ve çark uçları tek tek ölçülür.",
+      "hizmet": "Turbo revizyonu"
+    },
+    {
+      "id": "balans",
+      "etiket": "Balans",
+      "baslik": "Yüksek devirde titremeden dönmeli.",
+      "metin": "Mil ve çark grubu balans cihazında döndürülür. Islık ve titreşimin sebebi çoğu zaman burada çıkar.",
+      "hizmet": "Balans ayarı"
+    },
+    {
+      "id": "vnt",
+      "etiket": "VNT",
+      "baslik": "Kanatlar kurum bağlarsa çekiş gider.",
+      "metin": "Değişken kanatlar temizlenir, serbest açılıp kapandığı görülür. Aktüatör ve konum sensörü değerlere göre ayarlanır.",
+      "hizmet": "VNT ve aktüatör ayarı"
+    },
+    {
+      "id": "yag",
+      "etiket": "Yağ hattı",
+      "baslik": "Turboyu bitiren çoğu zaman yağ hattıdır.",
+      "metin": "Besleme ve dönüş boruları, banjo cıvataları, süzgeçler bakılır. Tıkalı hat yenilenmeden turbo takılmaz.",
+      "hizmet": "Turbo yağ hattı"
+    },
+    {
+      "id": "basinc",
+      "etiket": "Basınç",
+      "baslik": "Takar, basıncı ölçer, yolda deneriz.",
+      "metin": "Intercooler ve hortumlar basınç testinden geçer. Turbo yeni conta ve yağla takılır, değerler okunur, sonra teslim.",
+      "hizmet": "Intercooler temizliği ve testi"
+    }
+  ],
+  "parcalar": [
+    { "id": "kg", "ad": "Kompresör gövdesi", "not": "Temiz hava buradan girer" },
+    { "id": "kc", "ad": "Kompresör çarkı", "not": "Uçları ölçülür" },
+    { "id": "yg", "ad": "Yatak gövdesi", "not": "Mil, yatak, segman" },
+    { "id": "tc", "ad": "Türbin çarkı", "not": "Egzozla döner" },
+    { "id": "tg", "ad": "Türbin gövdesi", "not": "Sıcak taraf" }
+  ],
+  "belirtiler": [
+    {
+      "ad": "Islık sesi",
+      "sebep": "Mil boşluğu açılmış ya da balans bozulmuş olabilir. Patlak bir hortum veya gevşek kelepçe de ıslık yapar.",
+      "bakariz": "Mil boşluğu, çark uçları, basınç hortumları ve kelepçeler.",
+      "mesaj": "aracımda turbodan ıslık sesi geliyor"
+    },
+    {
+      "ad": "Mavi duman, yağ eksiltme",
+      "sebep": "Turbo segmanları yağ kaçırıyor olabilir. Çoğu zaman sebep tıkalı yağ dönüş hattı ya da karter havalandırmasıdır.",
+      "bakariz": "Yağ dönüş hattı, karter havalandırması, segman ve mil boşluğu.",
+      "mesaj": "aracım mavi duman atıyor, yağ eksiltiyor"
+    },
+    {
+      "ad": "Çekiş kaybı, arıza lambası",
+      "sebep": "VNT kanatları kurum bağlamış ya da aktüatör ayarı kaçmış olabilir. Basınç sensörü de bu şikâyeti yapar.",
+      "bakariz": "Arıza kayıtları, VNT kanatları, aktüatör, basınç değerleri.",
+      "mesaj": "aracımda çekiş kaybı var, arıza lambası yanıyor"
+    },
+    {
+      "ad": "Siyah duman",
+      "sebep": "Basınç kaçağı, intercooler hortumu ya da takılı kalan kanatlar olabilir. Turbo dışı sebepleri de ayırırız.",
+      "bakariz": "Intercooler ve hortumlar, basınç testi, VNT hareketi.",
+      "mesaj": "aracım gaz verince siyah duman atıyor"
+    },
+    {
+      "ad": "Intercooler'da yağ",
+      "sebep": "Azı normal olabilir. Fazlaysa kompresör tarafı segmanı ya da karter havalandırması bakılır; turbo her zaman suçlu değildir.",
+      "bakariz": "Intercooler içi, kompresör tarafı, karter havalandırması.",
+      "mesaj": "intercooler hortumunda yağ var"
+    }
+  ],
+  "finalBaslik": "Değiştirmeden önce bir de bize açtırın."
+}

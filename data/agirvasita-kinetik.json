@@ -1,0 +1,35 @@
+{
+  "preset": "agirvasita-kinetik",
+  "yolKm": 38,
+  "gorsel": {
+    "hero": "/img/agirvasita-kinetik/actros.jpg",
+    "cekici": "/img/agirvasita-kinetik/cekici.jpg",
+    "gece": "/img/agirvasita-kinetik/gece.jpg",
+    "beyaz": "/img/tonaj/beyaz.jpg"
+  },
+  "serit": [
+    "Tır",
+    "Kamyon",
+    "Otobüs",
+    "Çekici",
+    "Midibüs",
+    "Dorse"
+  ],
+  "konvoy": {
+    "ust": "Motordan freninin havasına",
+    "baslik": "Sekiz dorse iş, tek adres."
+  },
+  "levha": {
+    "ust": "Gelişte ve teslimde",
+    "baslik": "Önce ölçeriz, sonra söyleriz.",
+    "metin": "Aracınız gelince arızayı cihazla ölçeriz, işi bitirince aynı ölçümü tekrar yaparız. İki rakamı da size gösteririz.",
+    "not": "Değerler temsilidir; her aracın ölçümü kendine göredir."
+  },
+  "surecKm": [
+    "0",
+    "1",
+    "2",
+    "3"
+  ],
+  "finalBaslik": "Yolda mı kaldınız?"
+}

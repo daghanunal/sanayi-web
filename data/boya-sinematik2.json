@@ -1,0 +1,5 @@
+{
+  "preset": "boya-sinematik2",
+  "dolu": { "gocuk": 12 },
+  "olcum": { "sapmaMm": 6.4, "deltaEOnce": 4.2, "deltaESonra": 0.4, "kalinlikMikron": 118 }
+}

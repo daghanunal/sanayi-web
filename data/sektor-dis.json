@@ -1,0 +1,116 @@
+{
+  "preset": "sektor-dis",
+  "isletme": {
+    "ad": "Etimesgut Diş Kliniği",
+    "sektor": "Diş Kliniği",
+    "slogan": "Önce muayene, sonra birlikte karar.",
+    "kurulus": 2009,
+    "hakkinda": "2009'dan beri Etimesgut'ta, aynı adreste hasta kabul ediyoruz. Muayeneden sonra ağzınızda ne gördüğümüzü röntgen üzerinde gösterir, tedavi seçeneklerini tek tek anlatırız. Hangi tedaviye başlanacağına siz karar verirsiniz; aceleye getirmeyiz."
+  },
+  "iletisim": {
+    "telefon": "0532 555 47 18",
+    "whatsapp": "905325554718",
+    "adres": "Atakent Mah. İstasyon Caddesi No: 62/3, Etimesgut/Ankara",
+    "mapsQuery": "Atakent Mahallesi İstasyon Caddesi Etimesgut Ankara"
+  },
+  "saatler": [null, "09:00-19:00", "09:00-19:00", "09:00-19:00", "09:00-19:00", "09:00-19:00", "09:30-15:00"],
+  "hizmetler": [
+    {
+      "id": "muayene",
+      "baslik": "Muayene ve röntgen",
+      "aciklama": "Dişler, diş eti ve çene eklemi tek tek kontrol edilir. Gerekirse röntgen çekilir, görüntüyü ekranda birlikte inceleriz.",
+      "sure": "30-45 dk",
+      "gorsel": "/img/sektor-dis/hekim.jpg",
+      "mesaj": "Merhaba, muayene için randevu almak istiyorum."
+    },
+    {
+      "id": "temizlik",
+      "baslik": "Diş taşı temizliği",
+      "aciklama": "Diş taşı ve renklenmeler ultrasonik aletle temizlenir, ardından yüzeyler cilalanır. Evde fırçalama ve diş ipi kullanımını da gösteririz.",
+      "sure": "30-45 dk",
+      "gorsel": "/img/sektor-dis/aletler.jpg"
+    },
+    {
+      "id": "dolgu",
+      "baslik": "Dolgu",
+      "aciklama": "Çürük temizlenir, diş renginde kompozit dolguyla kapatılır. Isırma kontrolü yapılmadan koltuktan kalkmazsınız.",
+      "sure": "30-60 dk",
+      "gorsel": "/img/sektor-dis/tedavi.jpg"
+    },
+    {
+      "id": "kanal",
+      "baslik": "Kanal tedavisi",
+      "aciklama": "İltihaplanan sinir dokusu lokal anestezi altında temizlenir, kanallar doldurulur. Çoğu diş tek seansta, bazıları iki seansta tamamlanır.",
+      "sure": "1-2 seans",
+      "gorsel": "/img/sektor-dis/unite.jpg"
+    },
+    {
+      "id": "implant",
+      "baslik": "İmplant",
+      "aciklama": "Kemik yapısı röntgenle değerlendirilir, uygunsa implant yerleştirilir. Kemikle kaynaşma süresinden sonra üst yapı takılır; her aşamayı önceden anlatırız.",
+      "sure": "2-4 ay (aşamalı)",
+      "gorsel": "/img/sektor-dis/implant.jpg",
+      "mesaj": "Merhaba, implant için muayene randevusu almak istiyorum."
+    },
+    {
+      "id": "protez",
+      "baslik": "Kron, köprü ve protez",
+      "aciklama": "Ölçü alınır, laboratuvarda hazırlanan kron veya protez provalarla ağzınıza uyarlanır. Rahat edene kadar ayar yaparız.",
+      "sure": "1-3 hafta",
+      "gorsel": "/img/sektor-dis/implant-model.jpg"
+    },
+    {
+      "id": "ortodonti",
+      "baslik": "Ortodonti (diş teli)",
+      "aciklama": "Çapraşık dişler ve kapanış bozuklukları için tel veya şeffaf plak seçenekleri anlatılır. Tedavi süresince düzenli kontrole çağırırız.",
+      "sure": "12-24 ay",
+      "gorsel": "/img/sektor-dis/model.jpg"
+    },
+    {
+      "id": "cocuk",
+      "baslik": "Çocuk diş hekimliği",
+      "aciklama": "İlk ziyarette aletleri önce tanıtır, çocuğunuzun koltuğa alışmasına zaman tanırız. Fissür örtücü ve flor uygulamasıyla süt dişlerini koruruz.",
+      "sure": "20-40 dk",
+      "gorsel": "/img/sektor-dis/cocuk.jpg",
+      "mesaj": "Merhaba, çocuğum için randevu almak istiyorum."
+    },
+    {
+      "id": "cekim",
+      "baslik": "Diş çekimi ve yirmilik dişler",
+      "aciklama": "Çekimden önce röntgenle kök yapısına bakılır. Sonrasında nelere dikkat edeceğinizi yazılı olarak verir, ertesi gün telefonla ararız.",
+      "sure": "20-60 dk",
+      "gorsel": "/img/sektor-dis/alet-seti.jpg"
+    }
+  ],
+  "surec": [
+    { "baslik": "Randevunuzu alın", "aciklama": "Telefonla ya da WhatsApp'tan size uygun günü ve saati birlikte belirleyelim." },
+    { "baslik": "Muayene olun", "aciklama": "Şikâyetinizi dinler, ağız içini inceler, gerekirse röntgen çekeriz." },
+    { "baslik": "Planı birlikte konuşalım", "aciklama": "Ne gördüğümüzü gösterir, seçenekleri ve kaç seans süreceğini anlatırız. Onayınız olmadan başlamayız." },
+    { "baslik": "Tedavi ve kontrol", "aciklama": "Tedavi planlanan seanslarda yapılır. Sonrasında kontrol randevunuzu verir, ne zaman gelmeniz gerektiğini hatırlatırız." }
+  ],
+  "istatistikler": [
+    { "deger": 17, "sonek": "", "etiket": "yıldır Etimesgut'ta", "kurulustanHesapla": true },
+    { "deger": 4, "sonek": "", "etiket": "tedavi odası" },
+    { "deger": 6, "sonek": " gün", "etiket": "haftada açık" },
+    { "deger": 6, "sonek": " ay", "etiket": "arayla kontrol hatırlatması" }
+  ],
+  "galeri": [
+    { "src": "/img/sektor-dis/muayenehane.jpg", "alt": "Gün ışığı alan tedavi odası ve diş ünitesi" },
+    { "src": "/img/sektor-dis/klinik.jpg", "alt": "Temiz ve düzenli muayene odası" },
+    { "src": "/img/sektor-dis/ekip.jpg", "alt": "Hekim ve asistan birlikte muayene yaparken" },
+    { "src": "/img/sektor-dis/ekipman.jpg", "alt": "Tedaviye hazırlanan ünite ve steril aletler" },
+    { "src": "/img/sektor-dis/unite.jpg", "alt": "Diş ünitesi ve çalışma masası" },
+    { "src": "/img/sektor-dis/aletler.jpg", "alt": "Ünite başlıkları yakından" },
+    { "src": "/img/sektor-dis/implant.jpg", "alt": "Hastaya implantı anlatmak için kullanılan diş modeli" },
+    { "src": "/img/sektor-dis/alet-seti.jpg", "alt": "Her hasta için açılan steril muayene seti" }
+  ],
+  "puan": { "ortalama": 4.8, "adet": 236 },
+  "yorumlar": [
+    { "ad": "Serap A.", "puan": 5, "metin": "Röntgeni ekranda açıp hangi dişte ne olduğunu tek tek gösterdiler. Ne yapılacağını anlayarak karar verdim." },
+    { "ad": "Murat E.", "puan": 5, "metin": "Kanal tedavisinden çok korkuyordum. Her adımda ne yapılacağını söylediler, ara vermek istediğimde bekledim." },
+    { "ad": "Gülşen T.", "puan": 5, "metin": "Oğlumun ilk diş hekimi ziyaretiydi. Aletleri önce eline verip tanıttılar, ağlamadan çıktı." },
+    { "ad": "Kemal Ö.", "puan": 4, "metin": "Randevu saatinde içeri alındım, bekleme olmadı. Cumartesi de açık olmaları işim için çok uygun." },
+    { "ad": "Dilek Y.", "puan": 5, "metin": "Diş çekiminden sonraki gün arayıp nasıl olduğumu sordular. Dikkat etmem gerekenleri kâğıda da yazmışlardı." }
+  ],
+  "garanti": "Her tedaviden önce plan ve seçenekler size anlatılır; onayınız olmadan başlanmaz."
+}
