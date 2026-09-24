@@ -1,0 +1,42 @@
+{
+  "preset": "dingil",
+  "hero": {
+    "ust": "Ağır vasıta servisi",
+    "cagri": "Yol yardım: konum gönder"
+  },
+  "yolYardimBlok": {
+    "baslik": "Yolda mı kaldınız?",
+    "metin": "Hattımız 7 gün 24 saat açık. Servis aracımız yola çıkar, arızayı mümkünse yerinde onarırız.",
+    "mesaj": "Merhaba, aracım yolda kaldı. Konumumu gönderiyorum:",
+    "not": "WhatsApp'ta ataç simgesine basıp Konum seçerek yerinizi gönderin.",
+    "maddeler": [
+      "Konumunuzu atın",
+      "Servis aracı yola çıksın",
+      "Yerinde onaralım"
+    ]
+  },
+  "sasi": {
+    "baslik": "Aracın altında neye bakarız",
+    "metin": "Çekicinin şasisine yukarıdan bakın. Arıza nerede olursa olsun, önce ölçer, sonra söyleriz."
+  },
+  "kantar": {
+    "baslik": "Kantardan geçtik"
+  },
+  "markaBaslik": "Mercedes'ten BMC'ye her marka",
+  "galeri": [
+    {
+      "src": "/img/dingil/motor.jpg",
+      "alt": "Ustamız kabini yatırılmış kamyonun motorunda çalışıyor"
+    },
+    {
+      "src": "/img/tonaj/kaput.jpg",
+      "alt": "Kamyonun altında seyyar lambayla kontrol"
+    },
+    {
+      "src": "/img/tonaj/usta.jpg",
+      "alt": "Atölyede kırmızı çekicinin yanında ustamız"
+    }
+  ],
+  "finalBaslik": "Aracınız yatmasın.",
+  "finalMetin": "Getirin, ne kadar süreceğini baştan söyleyelim. Yoldaysanız biz gelelim."
+}

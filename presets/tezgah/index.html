@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#202327" />
+  <title>Motor Rektifiye ve Torna | Şaşmaz, Ankara</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='4' fill='%23efece2'/%3E%3Cpath d='M4 16h24M16 4v24' stroke='%23c53a25' stroke-width='2' stroke-dasharray='6 2 1 2'/%3E%3Ccircle cx='16' cy='16' r='8' fill='none' stroke='%23202327' stroke-width='2.5'/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Chivo:ital,wght@0,400..900;1,400&family=Chivo+Mono:wght@400;500;600&display=swap&subset=latin-ext" rel="stylesheet" />
+  <link rel="preload" as="image" href="/img/mikron/torna.jpg" media="(min-width: 700px)" />
+  <link rel="preload" as="image" href="/img/mikron/tezgah.jpg" media="(max-width: 699px)" />
+  <link rel="stylesheet" href="../../shared/base.css" />
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <header class="top">
+    <a href="#top" class="top__brand" data-name></a>
+    <nav class="top__nav" aria-label="Sayfa bölümleri">
+      <a href="#is-emri">İşler</a>
+      <a href="#olculer">Ölçüler</a>
+      <a href="#surec">Süreç</a>
+      <a href="#konum">Konum</a>
+    </nav>
+    <span class="status" data-status></span>
+    <a class="top__call" data-tel></a>
+  </header>
+
+  <main>
+    <!-- Hero: tezgâh fotoğrafının üstüne aydınger iner, krank mili çizilir -->
+    <section class="hero" id="top" aria-label="Giriş">
+      <picture class="hero__photo">
+        <source media="(max-width: 699px)" srcset="/img/mikron/tezgah.jpg" />
+        <img src="/img/mikron/torna.jpg" alt="Atölyede eski bir torna tezgâhı ve aynası, üstünde yanan lamba" fetchpriority="high" />
+      </picture>
+      <div class="hero__tint" aria-hidden="true"></div>
+
+      <div class="hero__copy">
+        <p class="hero__since" data-since></p>
+        <h1 class="hero__title" data-name></h1>
+        <p class="hero__slogan" data-slogan></p>
+        <div class="hero__actions">
+          <a class="btn btn--paper" data-tel-btn>Hemen ara</a>
+          <a class="btn btn--line-light" data-wa>WhatsApp'tan yaz</a>
+        </div>
+        <p class="hero__hint" aria-hidden="true">Kaydırın, parçayı çizelim</p>
+      </div>
+
+      <div class="sheet" aria-label="Örnek teknik resim: krank mili">
+        <div class="sheet__frame" aria-hidden="true">
+          <svg class="sheet__border" preserveAspectRatio="none" viewBox="0 0 100 100"><rect x="0.5" y="0.5" width="99" height="99" /></svg>
+          <span class="zone zone--t">A</span><span class="zone zone--t zone--2">B</span><span class="zone zone--t zone--3">C</span>
+          <span class="zone zone--l">1</span><span class="zone zone--l zone--2">2</span>
+        </div>
+        <div class="sheet__head">
+          <p class="sheet__kicker">Pafta 01: Krank mili</p>
+          <p class="sheet__title">Ölçüsüne getiririz.</p>
+        </div>
+        <div class="sheet__drawing" data-drawing></div>
+        <dl class="antet" data-antet></dl>
+        <p class="sheet__note">Örnek çizim. Ölçüler temsilîdir; motorunuzun ölçüsünü tezgâhta alırız.</p>
+      </div>
+    </section>
+
+    <!-- Hakkında ve rakamlar -->
+    <section class="intro" aria-labelledby="intro-t">
+      <div class="wrap intro__grid">
+        <div>
+          <h2 class="h2" id="intro-t">Ölçmeden işlemeyiz, işledikten sonra yine ölçeriz.</h2>
+          <p class="lead" data-hakkinda></p>
+        </div>
+        <dl class="stats" data-stats></dl>
+      </div>
+    </section>
+
+    <!-- İş emri tablosu -->
+    <section class="orders" id="is-emri" aria-labelledby="orders-t">
+      <div class="wrap">
+        <div class="sec-head">
+          <h2 class="h2" id="orders-t">Tezgâhta ne işleriz?</h2>
+          <p class="sec-head__d">Tolerans, işlemden sonra ölçü raporuna yazdığımız sınırdır. Süreler ortalamadır; parça gelmeden önce haber veririz.</p>
+        </div>
+        <div class="order" role="table" aria-label="Hizmetler">
+          <div class="order__row order__row--head" role="row">
+            <span role="columnheader">No</span>
+            <span role="columnheader">İş</span>
+            <span role="columnheader">Tolerans</span>
+            <span role="columnheader">Süre</span>
+            <span role="columnheader"><span class="sr-only">Sor</span></span>
+          </div>
+          <div data-orders></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Fotoğraf eki, balon numaralı -->
+    <section class="plates" aria-labelledby="plates-t">
+      <div class="wrap">
+        <div class="sec-head">
+          <h2 class="h2" id="plates-t">Tezgâhlar, aletler, eller.</h2>
+        </div>
+        <div class="plates__grid" data-plates></div>
+      </div>
+    </section>
+
+    <!-- Büyütme ölçüleri -->
+    <section class="sizes" id="olculer" aria-labelledby="sizes-t">
+      <div class="wrap sizes__grid">
+        <div>
+          <h2 class="h2" id="sizes-t">Silindir hangi ölçüye iner?</h2>
+          <p class="lead">Aşınmış silindir standart ölçüden büyütülür, piston ona göre seçilir. Hangi sınıfa ineceğini motoru ölçünce söyleriz. Sınıfı bilen ustalar buradan doğrudan sorabilir.</p>
+          <p class="sizes__krank" data-krank></p>
+        </div>
+        <div class="sizes__table">
+          <div class="sizes__row sizes__row--head"><span>Sınıf</span><span>Silindir çapı</span><span>Piston</span></div>
+          <div data-sizes role="radiogroup" aria-label="Büyütme sınıfı"></div>
+          <a class="btn btn--red sizes__cta" data-size-cta target="_blank" rel="noopener"></a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Süreç: zincir ölçülendirme -->
+    <section class="process" id="surec" aria-labelledby="process-t">
+      <div class="wrap">
+        <div class="sec-head">
+          <h2 class="h2" id="process-t">Motor gelir, rapor döner.</h2>
+        </div>
+        <div class="chain" aria-hidden="true"><svg class="chain__svg" preserveAspectRatio="none" viewBox="0 0 1000 40" data-chain></svg></div>
+        <ol class="steps" data-steps></ol>
+      </div>
+    </section>
+
+    <!-- Ölçü raporu -->
+    <section class="report" aria-labelledby="report-t">
+      <div class="wrap report__grid">
+        <div>
+          <h2 class="h2" id="report-t">Parçayla birlikte ölçü raporu.</h2>
+          <p class="lead">Motoru toplayacak usta ikinci kez ölçmekle uğraşmasın diye her silindirin ölçüsünü ve ovalitesini kâğıda yazarız.</p>
+          <p class="report__garanti" data-garanti></p>
+        </div>
+        <article class="card-report" data-report></article>
+      </div>
+    </section>
+
+    <!-- Yorumlar -->
+    <section class="reviews" id="yorumlar" aria-labelledby="reviews-t">
+      <div class="wrap">
+        <div class="reviews__head">
+          <div>
+            <h2 class="h2" id="reviews-t">Motorcular işini bize getirir.</h2>
+          </div>
+          <div class="score" data-score></div>
+        </div>
+        <ul class="reviews__list" data-reviews></ul>
+      </div>
+    </section>
+
+    <!-- Motor kodları -->
+    <section class="codes" aria-label="Sık işlediğimiz motorlar">
+      <p class="codes__label">Sık işlediğimiz motorlar</p>
+      <div class="codes__track" data-codes></div>
+    </section>
+
+    <!-- Saatler ve konum -->
+    <section class="visit" id="konum" aria-labelledby="visit-t">
+      <div class="wrap visit__grid">
+        <div>
+          <h2 class="h2" id="visit-t">Şaşmaz'da, tezgâhın başında.</h2>
+          <p class="visit__status" data-status-big></p>
+          <dl class="hours" data-hours></dl>
+          <p class="visit__addr" data-address></p>
+          <div class="visit__actions">
+            <a class="btn btn--ink" data-maps target="_blank" rel="noopener">Yol tarifi al</a>
+            <a class="btn btn--line" data-tel-btn>Ara</a>
+          </div>
+        </div>
+        <div class="visit__map" data-map><span class="visit__map-hint">Harita yükleniyor</span></div>
+      </div>
+    </section>
+
+    <!-- Final -->
+    <section class="final" aria-labelledby="final-t">
+      <div class="wrap final__inner">
+        <h2 class="final__t" id="final-t">Getirin, önce ölçelim.</h2>
+        <p class="final__d">Ölçüyü, fiyatı ve teslim gününü işe başlamadan söyleriz.</p>
+        <div class="final__actions">
+          <a class="btn btn--paper" data-tel-btn>Hemen ara</a>
+          <a class="btn btn--line-light" data-wa>WhatsApp'tan yaz</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <div class="wrap foot__inner">
+      <p class="foot__name" data-name></p>
+      <p data-address></p>
+      <p>© <span data-year></span> <span data-name></span>. Fotoğraflar: Pexels.</p>
+    </div>
+  </footer>
+
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

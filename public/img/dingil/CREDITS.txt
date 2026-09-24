@@ -1,0 +1,5 @@
+motor.jpg: "Mechanic Repairing a Truck Engine" — cottonbro studio, Pexels, https://www.pexels.com/photo/mechanic-repairing-a-truck-engine-7564861/ (Pexels lisansı)
+filo-havadan.jpg: "Aerial Shot of Parked Trucks" — Pexels, https://www.pexels.com/photo/aerial-shot-of-parked-trucks-5047147/ (Pexels lisansı)
+kamyonlar.jpg: "Photo of Trucks in a Row on a Car Park" — Pexels, https://www.pexels.com/photo/photo-of-trucks-in-a-row-on-a-car-park-17824889/ (Pexels lisansı)
+park.jpg: "Aerial Photography Of Trucks Parked" — Pexels, https://www.pexels.com/photo/aerial-photography-of-trucks-parked-2800121/ (Pexels lisansı)
+Ayrıca public/img/tonaj/ altındaki usta.jpg, beyaz.jpg, kaput.jpg kullanılır (kaynakları orada).

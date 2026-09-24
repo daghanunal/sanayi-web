@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#e3e0d8" />
+  <title>Ağır Vasıta Servisi | Şaşmaz</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='4' fill='%231e2023'/%3E%3Crect x='6' y='20' width='20' height='5' fill='%23d4202c'/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=League+Gothic&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet" />
+  <link rel="preload" as="image" href="/img/dingil/kamyonlar.jpg" />
+</head>
+<body>
+  <header class="top" data-top>
+    <a class="top__brand" href="#" data-bind="ad"></a>
+    <p class="top__status" data-status></p>
+    <a class="top__yardim" data-tel><span class="top__yardim-dot" aria-hidden="true"></span>7/24 yol yardım</a>
+    <a class="top__call" data-tel aria-label="Telefonla ara"><span data-icon="phone"></span><span class="top__call-no" data-bind="telefon"></span></a>
+  </header>
+
+  <main>
+    <!-- Hero: tenteli tır sahneye girer, dörtlüleri yanar; kaydırınca yoluna devam eder -->
+    <section class="hero" data-hero>
+      <div class="hero__copy">
+        <p class="hero__ust" data-hero-ust></p>
+        <h1 class="hero__title" data-hero-title></h1>
+        <p class="hero__slogan" data-bind="slogan"></p>
+        <div class="hero__cta">
+          <a class="btn btn--kirmizi" data-tel><span data-icon="phone"></span>Hemen ara</a>
+          <a class="btn btn--cizgi" data-wa-yardim target="_blank" rel="noopener"><span data-icon="pin"></span><span data-hero-cagri></span></a>
+        </div>
+      </div>
+      <div class="hero__yol" aria-hidden="true">
+        <div class="hero__serit" data-serit></div>
+      </div>
+      <div class="hero__tir" data-tir></div>
+    </section>
+
+    <!-- 7/24 yol yardım -->
+    <section class="yardim" id="yardim" aria-labelledby="yardim-baslik">
+      <div class="yardim__ic">
+        <h2 id="yardim-baslik" class="yardim__baslik" data-yardim-baslik></h2>
+        <p class="yardim__metin" data-yardim-metin></p>
+        <a class="yardim__tel" data-tel><span class="yardim__tel-ust">Yol yardım hattı, 7 gün 24 saat</span><span data-bind="telefon"></span></a>
+        <a class="btn btn--beyaz yardim__wa" data-wa-yardim target="_blank" rel="noopener"><span data-icon="whatsapp"></span>Konumumu WhatsApp'tan gönder</a>
+        <p class="yardim__not" data-yardim-not></p>
+        <ol class="yardim__adim" data-yardim-adim></ol>
+      </div>
+    </section>
+
+    <!-- Hizmetler -->
+    <section class="hizmet" id="hizmetler" aria-labelledby="hizmet-baslik">
+      <div class="kap">
+        <h2 id="hizmet-baslik" class="bas">Motordan körüğe,<br />her işine bakarız</h2>
+        <p class="hizmet__giris" data-bind="hakkinda"></p>
+        <ul class="hizmet__liste" data-hizmetler></ul>
+      </div>
+    </section>
+
+    <!-- Şasi: üstten görünüş, noktalar -->
+    <section class="sasi" aria-labelledby="sasi-baslik">
+      <div class="kap sasi__kap">
+        <div class="sasi__yapiskan">
+          <h2 id="sasi-baslik" class="bas" data-sasi-baslik></h2>
+          <p class="sasi__metin" data-sasi-metin></p>
+          <div class="sasi__cizim" data-sasi></div>
+        </div>
+        <ol class="sasi__kartlar" data-sasi-kartlar></ol>
+      </div>
+    </section>
+
+    <!-- Fotoğraf bandı + markalar -->
+    <section class="bant" aria-labelledby="marka-baslik">
+      <div class="bant__foto"><img src="/img/dingil/kamyonlar.jpg" alt="Yan yana park etmiş renkli kamyonlar" loading="lazy" data-parallax /></div>
+      <div class="kap bant__ic">
+        <h2 id="marka-baslik" class="bas bas--beyaz" data-marka-baslik></h2>
+        <ul class="plakalar" data-markalar></ul>
+      </div>
+    </section>
+
+    <!-- Kantar fişi: istatistikler -->
+    <section class="kantar" aria-labelledby="kantar-baslik">
+      <div class="kap kantar__kap">
+        <div class="kantar__yazi">
+          <h2 id="kantar-baslik" class="bas" data-kantar-baslik></h2>
+          <p data-bind="garanti"></p>
+        </div>
+        <div class="kantar__yazici">
+          <div class="kantar__agiz" aria-hidden="true"></div>
+          <div class="fis" data-fis></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Filo -->
+    <section class="filo" id="filo" aria-labelledby="filo-baslik">
+      <div class="filo__foto"><img src="/img/dingil/park.jpg" alt="Havadan görünüş: park alanında sıra sıra tırlar" loading="lazy" /></div>
+      <div class="kap filo__ic">
+        <h2 id="filo-baslik" class="bas bas--beyaz" data-filo-baslik></h2>
+        <p class="filo__metin" data-filo-metin></p>
+        <ul class="filo__liste" data-filo-liste></ul>
+        <a class="btn btn--beyaz" data-wa-filo target="_blank" rel="noopener"><span data-icon="whatsapp"></span>Filo için teklif isteyin</a>
+      </div>
+    </section>
+
+    <!-- Takograf -->
+    <section class="tako" aria-labelledby="tako-baslik">
+      <div class="kap tako__kap">
+        <figure class="tako__foto"><img src="/img/tonaj/kaput.jpg" alt="Kamyon kabininde seyyar lambayla kontrol yapan ustamız" loading="lazy" /></figure>
+        <div>
+          <h2 id="tako-baslik" class="bas" data-tako-baslik></h2>
+          <p class="tako__metin" data-tako-metin></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Süreç -->
+    <section class="surec" aria-labelledby="surec-baslik">
+      <div class="kap">
+        <h2 id="surec-baslik" class="bas">Aracınız bize geldiğinde</h2>
+        <div class="surec__yol">
+          <div class="surec__cizgi" aria-hidden="true"><i data-surec-dolum></i></div>
+          <ol class="surec__adim" data-surec></ol>
+        </div>
+      </div>
+    </section>
+
+    <!-- Galeri -->
+    <section class="galeri" aria-label="Atölyeden">
+      <div class="galeri__serit" data-galeri></div>
+    </section>
+
+    <!-- Yorumlar -->
+    <section class="yorum" aria-labelledby="yorum-baslik">
+      <div class="kap">
+        <div class="yorum__bas">
+          <p class="yorum__puan"><span data-puan></span><span class="yorum__yildiz" data-yildiz></span></p>
+          <h2 id="yorum-baslik" class="bas">Şoförler ve filo sahipleri anlatıyor</h2>
+          <p class="yorum__adet" data-puan-adet></p>
+        </div>
+      </div>
+      <ul class="yorum__liste" data-yorumlar></ul>
+    </section>
+
+    <!-- Saatler ve konum -->
+    <section class="konum" id="konum" aria-labelledby="konum-baslik">
+      <div class="kap konum__kap">
+        <div>
+          <h2 id="konum-baslik" class="bas">Şaşmaz'ın girişindeyiz</h2>
+          <p class="konum__durum" data-status-big></p>
+          <table class="saatler" data-saatler></table>
+          <p class="konum__yardim">Atölye bu saatlerde açık. Yol yardım hattı her gün, her saat.</p>
+          <p class="konum__adres" data-bind="adres"></p>
+          <div class="konum__btn">
+            <a class="btn btn--koyu" data-maps target="_blank" rel="noopener"><span data-icon="pin"></span>Yol tarifi al</a>
+            <a class="btn btn--cizgi-koyu" data-tel><span data-icon="phone"></span>Ara</a>
+          </div>
+        </div>
+        <div class="konum__harita" data-harita></div>
+      </div>
+    </section>
+
+    <!-- Final -->
+    <section class="final" aria-labelledby="final-baslik">
+      <div class="kap">
+        <h2 id="final-baslik" class="final__baslik" data-final-baslik></h2>
+        <p class="final__metin" data-final-metin></p>
+        <div class="final__btn">
+          <a class="btn btn--kirmizi btn--buyuk" data-tel><span data-icon="phone"></span>Hemen ara</a>
+          <a class="btn btn--beyaz btn--buyuk" data-wa target="_blank" rel="noopener"><span data-icon="whatsapp"></span>WhatsApp'tan yazın</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="alt">
+    <div class="kap alt__kap">
+      <p class="alt__ad" data-bind="ad"></p>
+      <p data-bind="adres"></p>
+      <p><a data-tel data-bind="telefon"></a></p>
+      <p class="alt__kucuk" data-alt-kucuk></p>
+    </div>
+  </footer>
+
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

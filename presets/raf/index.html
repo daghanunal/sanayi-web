@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#f4f5f1" />
+  <title>Oto Yedek Parça | Şaşmaz</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23d7262e'/%3E%3Ccircle cx='16' cy='16' r='8' fill='none' stroke='%23fff' stroke-width='3'/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Chivo:ital,wght@0,400..900;1,400..900&family=Chivo+Mono:wght@400;500;700&display=swap&subset=latin-ext" rel="stylesheet" />
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <a class="skip" href="#katalog">İçeriğe geç</a>
+
+  <header class="top" id="top">
+    <a class="top__brand" href="#top"><span class="top__mark" aria-hidden="true"></span><span data-bind="ad"></span></a>
+    <nav class="top__nav" aria-label="Sayfa içi">
+      <a href="#katalog">Katalog</a>
+      <a href="#sasi">Şasi no ile sor</a>
+      <a href="#teslimat">Teslimat</a>
+      <a href="#iletisim">İletişim</a>
+    </nav>
+    <span class="top__status"><span class="dot" data-status-dot></span><span data-status-short></span></span>
+    <a class="top__call" data-href="tel"><span data-icon="phone"></span><span class="top__num" data-bind="telefon"></span></a>
+  </header>
+
+  <main>
+    <!-- HERO: raf ızgarası -->
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero__text">
+        <p class="hero__kicker" data-bind="since"></p>
+        <h1 class="hero__title" id="hero-title" data-bind="ad"></h1>
+        <p class="hero__lead" data-bind="slogan"></p>
+        <div class="hero__actions">
+          <a class="btn btn--red" href="#sasi">Şasi no ile parça sor</a>
+          <a class="btn btn--line" data-href="tel"><span data-icon="phone"></span>Hemen ara</a>
+        </div>
+        <dl class="hero__spec" data-hero-spec></dl>
+      </div>
+      <div class="hero__shelf" aria-hidden="true">
+        <div class="shelf" data-shelf></div>
+        <p class="shelf__caption">Şekil 1. Rafta en çok sorulan yedi grup</p>
+      </div>
+    </section>
+
+    <!-- KATALOG -->
+    <section class="sec katalog" id="katalog" aria-labelledby="katalog-title">
+      <header class="sec__head">
+        <p class="sec__code">Bölüm A</p>
+        <h2 class="sec__title" id="katalog-title">Katalog</h2>
+        <p class="sec__lead">Orijinal ve muadil, binek ve hafif ticari. Aradığınız grubu seçin, raftaki stoku yazalım.</p>
+      </header>
+      <div class="cat__thead" aria-hidden="true">
+        <span>Poz.</span><span>Grup</span><span>Raf</span><span>Stok</span><span></span>
+      </div>
+      <ol class="cat" data-catalog></ol>
+      <p class="katalog__note" data-bind="garanti"></p>
+    </section>
+
+    <!-- ŞASİ NO İLE SOR -->
+    <section class="sec sasi" id="sasi" aria-labelledby="sasi-title">
+      <div class="sasi__intro">
+        <p class="sec__code">Bölüm B</p>
+        <h2 class="sec__title" id="sasi-title">Şasi numarasını yazın, parçayı biz bulalım.</h2>
+        <p class="sec__lead">Ruhsatın ön yüzündeki 17 haneli numara. Parçanın adını bilmeniz gerekmez, hangi araca ne takılacağını numaradan çıkarırız.</p>
+        <ol class="steps" data-steps></ol>
+      </div>
+      <form class="slip" data-slip novalidate>
+        <div class="slip__head">
+          <span>Parça sorgu fişi</span>
+          <span class="slip__no" data-slip-no></span>
+        </div>
+        <label class="slip__label" for="vin">Şasi numarası</label>
+        <div class="vin">
+          <div class="vin__cells" aria-hidden="true" data-vin-cells></div>
+          <input class="vin__input" id="vin" name="vin" maxlength="17" autocomplete="off" autocapitalize="characters" spellcheck="false" inputmode="text" aria-describedby="vin-help" />
+        </div>
+        <p class="vin__help" id="vin-help"><span data-vin-count>0</span>/17 hane. I, O ve Q harfleri şasi numarasında kullanılmaz; 1 ve 0 olarak düzeltiyoruz.</p>
+        <fieldset class="slip__parts">
+          <legend class="slip__label">Hangi parça lazım?</legend>
+          <div class="chips" data-chips></div>
+        </fieldset>
+        <label class="slip__label" for="not">Not (isteğe bağlı)</label>
+        <input class="slip__note" id="not" name="not" placeholder="Örn. ön takım, sol taraf" autocomplete="off" />
+        <button class="btn btn--wa slip__send" type="submit"><span data-icon="whatsapp"></span>WhatsApp'tan sor</button>
+        <p class="slip__alt">Numarayı yazmakla uğraşmayın: <a data-href="wa-ruhsat" target="_blank" rel="noopener">ruhsatın fotoğrafını gönderin</a>.</p>
+      </form>
+    </section>
+
+    <!-- RAKAMLAR -->
+    <section class="sec stats" aria-label="Rakamlarla">
+      <ul class="stats__grid" data-stats></ul>
+      <p class="stats__about" data-bind="hakkinda"></p>
+    </section>
+
+    <!-- TESLİMAT -->
+    <section class="sec teslim" id="teslimat" aria-labelledby="teslim-title">
+      <header class="sec__head">
+        <p class="sec__code">Bölüm C</p>
+        <h2 class="sec__title" id="teslim-title">Parça size gelsin.</h2>
+        <p class="sec__lead">Sanayi içindeyseniz dükkânınıza kadar getiriyoruz. Uzaktaysanız aynı gün yola çıkarıyoruz.</p>
+      </header>
+      <div class="teslim__body">
+        <svg class="rings" viewBox="0 0 400 400" aria-hidden="true" data-rings>
+          <g class="rings__grid">
+            <line x1="200" y1="10" x2="200" y2="390" /><line x1="10" y1="200" x2="390" y2="200" />
+          </g>
+          <circle class="ring" cx="200" cy="200" r="188" />
+          <circle class="ring" cx="200" cy="200" r="140" />
+          <circle class="ring" cx="200" cy="200" r="92" />
+          <circle class="ring ring--in" cx="200" cy="200" r="44" />
+          <circle class="rings__pin" cx="200" cy="200" r="9" />
+          <path class="rings__route" d="M200 200 C 240 170, 250 120, 300 96 S 360 60, 372 44" />
+          <g class="rings__labels" data-ring-labels></g>
+        </svg>
+        <ol class="zones" data-zones></ol>
+      </div>
+    </section>
+
+    <!-- MARKALAR -->
+    <section class="sec brands" aria-labelledby="brands-title">
+      <header class="sec__head">
+        <p class="sec__code">Dizin</p>
+        <h2 class="sec__title" id="brands-title">Hangi araca bakıyoruz?</h2>
+      </header>
+      <ul class="brands__grid" data-brands></ul>
+      <div class="partbrands" aria-label="Çalıştığımız parça markaları">
+        <p class="partbrands__label">Raftaki parça markaları</p>
+        <div class="partbrands__track" data-partbrands></div>
+      </div>
+    </section>
+
+    <!-- GALERİ -->
+    <section class="sec gal" aria-label="Dükkândan">
+      <div class="gal__grid" data-gallery></div>
+    </section>
+
+    <!-- YORUMLAR -->
+    <section class="sec reviews" aria-labelledby="rev-title">
+      <header class="reviews__head">
+        <div class="score">
+          <span class="score__num" data-score></span>
+          <span class="score__stars" data-stars></span>
+          <span class="score__count" data-score-count></span>
+        </div>
+        <h2 class="sec__title" id="rev-title">Ustalar ne diyor?</h2>
+      </header>
+      <ul class="reviews__list" data-reviews></ul>
+    </section>
+
+    <!-- İLETİŞİM -->
+    <section class="sec visit" id="iletisim" aria-labelledby="visit-title">
+      <div class="visit__info">
+        <p class="sec__code">Bölüm D</p>
+        <h2 class="sec__title" id="visit-title">Tezgâha gelin.</h2>
+        <p class="visit__status" data-status></p>
+        <table class="hours" data-hours></table>
+        <p class="visit__addr" data-bind="adres"></p>
+        <div class="visit__actions">
+          <a class="btn btn--red" data-href="maps" target="_blank" rel="noopener"><span data-icon="pin"></span>Yol tarifi al</a>
+          <a class="btn btn--line" data-href="tel"><span data-icon="phone"></span>Ara</a>
+        </div>
+      </div>
+      <div class="visit__map" data-map></div>
+    </section>
+
+    <!-- FİNAL -->
+    <section class="final" aria-labelledby="final-title">
+      <h2 class="final__title" id="final-title">Parçanın adını bilmeniz gerekmez.</h2>
+      <p class="final__lead">Şasi numarasını ya da ruhsatın fotoğrafını gönderin. Orijinal ve muadil fiyatı, stok ve teslim saatini tek mesajda yazalım.</p>
+      <div class="final__actions">
+        <a class="btn btn--wa btn--big" data-href="wa" target="_blank" rel="noopener"><span data-icon="whatsapp"></span>WhatsApp'tan yaz</a>
+        <a class="btn btn--line btn--big" data-href="tel"><span data-icon="phone"></span><span data-bind="telefon"></span></a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <p class="foot__name" data-bind="ad"></p>
+    <p data-bind="adres"></p>
+    <p class="foot__small"><span data-bind="copy"></span>. Fotoğraflar: Pexels. Parça çizimleri bu site için çizildi.</p>
+  </footer>
+
+  <script type="module" src="./main.js"></script>
+</body>
+</html>
