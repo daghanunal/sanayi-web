@@ -1,0 +1,115 @@
+{
+  "preset": "tonaj",
+  "isletme": {
+    "ad": "Anka Ağır Vasıta",
+    "sektor": "Ağır Vasıta Servisi",
+    "slogan": "Tır, kamyon, otobüs. Yolda kalmasın diye.",
+    "kurulus": 1995,
+    "hakkinda": "İstanbul yolunun kenarında, Şaşmaz'ın girişindeyiz. Çekici, kamyon, otobüs ve midibüsün motorundan freninin havasına kadar her işine bakıyoruz. Aracınız yatarsa para kaybedersiniz; biz de işi o hesapla yaparız: önce ne kadar süreceğini söyler, sonra sözünde teslim ederiz."
+  },
+  "iletisim": {
+    "telefon": "0532 555 12 34",
+    "whatsapp": "905325551234",
+    "adres": "Şaşmaz Oto Sanayi Sitesi, Ağır Vasıta Bölümü, 2. Cadde No: 8, Etimesgut/Ankara",
+    "mapsQuery": "Şaşmaz Oto Sanayi Sitesi Etimesgut Ankara"
+  },
+  "saatler": [null, "08:00-19:00", "08:00-19:00", "08:00-19:00", "08:00-19:00", "08:00-19:00", "08:00-17:00"],
+  "yolYardim": "Yol yardım hattımız 7 gün 24 saat açık.",
+  "alt": [
+    {
+      "id": "motor",
+      "durak": "Motor",
+      "baslik": "Motoru kasadan indirmeden dinleriz.",
+      "metin": "Kabini yatırır, arıza cihazını bağlar, yağ basıncını ve blow-by'ı ölçeriz. Revizyon gerekiyorsa söyleriz; gerekmiyorsa söktürmeyiz.",
+      "hizmet": "Motor",
+      "olcum": { "etiket": "Yağ basıncı", "birim": "bar", "once": 1.2, "sonra": 4.6, "iyi": 3.0 }
+    },
+    {
+      "id": "sanziman",
+      "durak": "Şanzıman",
+      "baslik": "Vites kaçırıyorsa sebebi burada.",
+      "metin": "Manuel ve otomatik (AMT) şanzıman, retarder ve debriyaj. Şaftı söküp istavroz ve askı rulmanına da bakarız.",
+      "hizmet": "Şanzıman",
+      "olcum": { "etiket": "Şaft titreşimi", "birim": "mm/s", "once": 11.4, "sonra": 2.1, "iyi": 4.5, "ters": true }
+    },
+    {
+      "id": "diferansiyel",
+      "durak": "Diferansiyel",
+      "baslik": "Arka köprüden gelen uğultuya bakarız.",
+      "metin": "Diferansiyel, ayna-mahruti, göbek rulmanı ve aks keçesi. Çift köprülü çekicilerde iki köprüyü birlikte ölçeriz.",
+      "hizmet": "Diferansiyel",
+      "olcum": { "etiket": "Dişli boşluğu", "birim": "mm", "once": 0.62, "sonra": 0.2, "iyi": 0.3, "ters": true }
+    },
+    {
+      "id": "fren",
+      "durak": "Havalı fren",
+      "baslik": "Havayı tutmayan fren, en pahalı arızadır.",
+      "metin": "Kompresör, kurutucu, valfler, fren körükleri ve balata. Hattı basınçla test eder, kaçağı kulakla değil cihazla buluruz. EBS ve ABS arızaları da bizde.",
+      "hizmet": "Havalı fren",
+      "olcum": { "etiket": "Hat basıncı", "birim": "bar", "once": 4.1, "sonra": 8.5, "iyi": 7.5 }
+    },
+    {
+      "id": "adblue",
+      "durak": "AdBlue",
+      "baslik": "Motor arızası lambası AdBlue'dan yanıyorsa.",
+      "metin": "AdBlue pompası, enjektörü, NOx sensörü ve SCR katalizörü. Güç düşürme (limp mode) arızasını kaldırmak için sistemi söküp temizleriz; iptal yapmayız.",
+      "hizmet": "AdBlue ve SCR",
+      "olcum": { "etiket": "NOx", "birim": "ppm", "once": 1250, "sonra": 180, "iyi": 400, "ters": true }
+    },
+    {
+      "id": "korug",
+      "durak": "Körük ve aks",
+      "baslik": "Yük yamuk basıyorsa körüğe bakarız.",
+      "metin": "Havalı süspansiyon körükleri, seviye valfi, amortisör, makas ve dingil. Dingil ayarı ve lastik aşınması bir arada kontrol edilir.",
+      "hizmet": "Körük ve dingil",
+      "olcum": { "etiket": "Sürüş yüksekliği", "birim": "mm", "once": 205, "sonra": 262, "iyi": 250 }
+    }
+  ],
+  "hizmetler": [
+    { "baslik": "Motor bakım ve revizyon", "aciklama": "Periyodik bakım, enjektör ve yakıt pompası, turbo, motor revizyonu.", "sure": "1-5 gün" },
+    { "baslik": "Şanzıman ve diferansiyel", "aciklama": "Manuel ve AMT şanzıman, retarder, debriyaj, arka köprü.", "sure": "1-3 gün" },
+    { "baslik": "Havalı fren sistemi", "aciklama": "Kompresör, kurutucu, valf, körük, balata; EBS ve ABS.", "sure": "Aynı gün" },
+    { "baslik": "AdBlue ve SCR", "aciklama": "Pompa, enjektör, NOx sensörü, katalizör temizliği.", "sure": "Aynı gün" },
+    { "baslik": "Takograf", "aciklama": "Dijital ve analog takograf arızası, kalibrasyon yönlendirmesi, sensör değişimi.", "sure": "2-4 saat" },
+    { "baslik": "Süspansiyon ve dingil", "aciklama": "Havalı körük, seviye valfi, makas, amortisör, dingil ayarı.", "sure": "Aynı gün" },
+    { "baslik": "Elektrik ve arıza tespit", "aciklama": "Marka cihazlarıyla arıza okuma, tesisat, far, akü ve şarj.", "sure": "1-3 saat" },
+    { "baslik": "Yol yardım ve mobil servis", "aciklama": "Yolda kalan araca servis aracıyla gelir, mümkünse yerinde onarırız.", "sure": "7/24" }
+  ],
+  "surec": [
+    { "baslik": "Arayın ya da getirin", "aciklama": "Yolda kaldıysanız konum atın, servis aracımız yola çıksın." },
+    { "baslik": "Ölçer, süre veririz", "aciklama": "Arızayı cihazla tespit eder, parça ve süreyi baştan söyleriz." },
+    { "baslik": "Onarırız", "aciklama": "Çıkan parçayı saklarız. Onayınız olmadan ek iş yapmayız." },
+    { "baslik": "Yükle deneriz", "aciklama": "Fren ve süspansiyon işlerini yükte test edip teslim ederiz." }
+  ],
+  "istatistikler": [
+    { "deger": "kurulus", "sonek": " yıl", "etiket": "Şaşmaz'da" },
+    { "deger": 9, "sonek": "", "etiket": "araçlık kanal ve lift" },
+    { "deger": 64, "sonek": "", "etiket": "filo anlaşması" },
+    { "deger": 24, "sonek": "/7", "etiket": "yol yardım" }
+  ],
+  "filo": {
+    "baslik": "Filonuz yatmasın.",
+    "metin": "Nakliye ve servis filoları için bakım takvimi tutar, aracı sefer aralarına göre alırız. Her aracın dosyası bizde; ne zaman ne değişti, bir mesajla öğrenirsiniz.",
+    "maddeler": [
+      "Araç başına bakım dosyası ve hatırlatma",
+      "Sefer arasına göre randevu, gece teslim",
+      "Aylık tek fatura",
+      "Yolda kalan filo aracına öncelik"
+    ]
+  },
+  "takograf": {
+    "baslik": "Takograf da bizden sorulur.",
+    "metin": "Dijital takografın sensörü, kablosu ve ekran arızaları. Sürücü kartı okunmuyorsa ya da hız kaydı tutmuyorsa getirin; kalibrasyon gerekiyorsa yetkili istasyona yönlendiririz."
+  },
+  "markalar": ["Mercedes-Benz", "Ford Trucks", "MAN", "Scania", "Volvo", "DAF", "Iveco", "BMC", "Isuzu", "Otokar"],
+  "puan": { "ortalama": 4.8, "adet": 187 },
+  "yorumlar": [
+    { "ad": "Murat Ö.", "puan": 5, "metin": "Gece 2'de Polatlı çıkışında hava kaçırdım. Kırk dakikada geldiler, sabah yüküme yetiştim.", "arac": "Actros 1845" },
+    { "ad": "Kemal B.", "puan": 5, "metin": "AdBlue arızasına üç yerde iptal dediler. Burada sensörü değiştirip temizlediler, muayeneden de geçti.", "arac": "F-MAX 500" },
+    { "ad": "Tuncay Lojistik", "puan": 5, "metin": "On iki araçlık filomuzun bakımını burada yaptırıyoruz. Randevuyu sefere göre veriyorlar, araç boş beklemiyor.", "arac": "Filo" },
+    { "ad": "Selim K.", "puan": 4, "metin": "Şanzıman işi söyledikleri günden bir gün uzun sürdü ama arayıp haber verdiler. İşçilik sağlam.", "arac": "TGX 18.480" },
+    { "ad": "Hüsnü A.", "puan": 5, "metin": "Servis otobüsümüzün körükleri sürekli iniyordu. Seviye valfini buldular, parayı gereksiz parçaya vermedik.", "arac": "Otokar Sultan" }
+  ],
+  "finalBaslik": "Yolda mı kaldınız?",
+  "garanti": "Yapılan işçiliğe 1 yıl ya da 50.000 km garanti."
+}

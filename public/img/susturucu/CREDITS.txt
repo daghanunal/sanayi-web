@@ -1,0 +1,3 @@
+Tüm görseller Pexels lisansıyla (ücretsiz, ticari kullanım serbest):
+egzoz-bw.jpg: https://www.pexels.com/photo/black-and-white-abstract-photo-of-a-vehicle-with-exhaust-pipe-10508827/
+Diğer görseller public/img/manifold/ klasöründen (bkz. oradaki CREDITS.txt).

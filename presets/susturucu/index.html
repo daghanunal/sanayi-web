@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#f2f1ec" />
+  <title>Egzoz | Şaşmaz, Ankara</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2317191b'/%3E%3Cpath d='M6 20h14a6 6 0 0 0 0-12' fill='none' stroke='%231f9d6b' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Chivo:ital,wght@0,400;0,500;0,700;0,800;0,900;1,400&family=Chivo+Mono:wght@400;500;700&display=swap&subset=latin-ext" rel="stylesheet" />
+  <link rel="preload" as="image" href="/img/manifold/duman.jpg" />
+  <link rel="stylesheet" href="../../shared/base.css" />
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <header class="top">
+    <a href="#top" class="top__brand"><span class="top__mark" aria-hidden="true"></span><span data-name></span></a>
+    <nav class="top__nav" aria-label="Sayfa bölümleri">
+      <a href="#muayene">Muayene</a>
+      <a href="#hizmetler">Hizmetler</a>
+      <a href="#yorumlar">Yorumlar</a>
+      <a href="#konum">Konum</a>
+    </nav>
+    <span class="status status--top" data-status></span>
+    <a class="top__call" data-tel></a>
+  </header>
+
+  <main>
+    <!-- Hero: kurum dumanı temizlenir, egzoz hattı çizilir -->
+    <section class="hero" id="top" aria-label="Giriş">
+      <div class="hero__stage">
+        <div class="hero__photo" aria-hidden="true">
+          <img class="hero__img hero__img--kirli" src="/img/manifold/duman.jpg" alt="" fetchpriority="high" />
+          <img class="hero__img hero__img--temiz" src="/img/manifold/duman.jpg" alt="" />
+        </div>
+        <div class="soot" aria-hidden="true">
+          <i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+        </div>
+
+        <div class="hero__copy">
+          <p class="hero__since" data-since></p>
+          <h1 class="hero__title" data-name></h1>
+          <p class="hero__slogan" data-slogan></p>
+          <div class="hero__actions">
+            <a class="btn btn--clean" data-tel-btn>Hemen ara</a>
+            <a class="btn btn--line" data-wa>WhatsApp'tan yaz</a>
+          </div>
+        </div>
+
+        <div class="line" aria-label="Egzoz hattı">
+          <div class="line__read" aria-hidden="true">
+            <span class="line__label">Duman</span>
+            <span class="line__val"><b data-k>2,9</b> m⁻¹</span>
+            <span class="line__verdict" data-verdict>Muayeneden kalır</span>
+          </div>
+          <div class="line__track">
+          <svg class="line__svg" viewBox="0 0 1000 120" preserveAspectRatio="none" aria-hidden="true">
+            <path class="line__base" d="M10 60 C 80 60, 90 30, 160 30 L 300 30 C 350 30, 350 90, 400 90 L 560 90 C 610 90, 610 40, 660 40 L 820 40 C 870 40, 880 70, 930 70 L 990 70" />
+            <path class="line__flow" d="M10 60 C 80 60, 90 30, 160 30 L 300 30 C 350 30, 350 90, 400 90 L 560 90 C 610 90, 610 40, 660 40 L 820 40 C 870 40, 880 70, 930 70 L 990 70" />
+          </svg>
+          <ol class="line__stops" data-stops></ol>
+          </div>
+        </div>
+
+        <p class="hero__hint" aria-hidden="true">Kaydırın, duman temizlensin</p>
+      </div>
+    </section>
+
+    <!-- Muayene raporu -->
+    <section class="muayene" id="muayene">
+      <div class="muayene__intro">
+        <h2 class="h2">Muayeneden<br />geçemedi mi?</h2>
+        <p>Raporunuzun fotoğrafını gönderin, hangi değerden kaldığınıza bakalım. Ölçümü sizin önünüzde yapar, sebebini bulur, muayeneye hazır teslim ederiz.</p>
+        <a class="btn btn--clean" data-wa-muayene>Raporun fotoğrafını gönder</a>
+      </div>
+      <figure class="rapor" aria-label="Örnek emisyon ölçümü">
+        <figcaption class="rapor__head">
+          <span class="rapor__title" data-rapor-title></span>
+          <span class="rapor__no" data-rapor-no></span>
+        </figcaption>
+        <table class="rapor__table">
+          <thead><tr><th scope="col">Ölçüm</th><th scope="col">Gelişte</th><th scope="col">Teslimde</th><th scope="col">Sınır</th></tr></thead>
+          <tbody data-olcumler></tbody>
+        </table>
+        <p class="rapor__foot">Örnek değerlerdir. Aracınızın sınırları yakıt tipine ve model yılına göre değişir.</p>
+        <span class="stamp" aria-hidden="true">GEÇTİ</span>
+      </figure>
+    </section>
+
+    <!-- Hat boyunca: 5 durak -->
+    <section class="duraklar" aria-labelledby="duraklar-h">
+      <div class="duraklar__head">
+        <h2 class="h2" id="duraklar-h">Motordan uca,<br />parça parça.</h2>
+        <p>Egzoz tek bir boru değil. Gaz beş duraktan geçer; arıza hangisindeyse orayı onarırız, bütün hattı değiştirmeyiz.</p>
+      </div>
+      <ol class="duraklar__list" data-duraklar></ol>
+    </section>
+
+    <!-- Hizmetler -->
+    <section class="hizmetler" id="hizmetler" aria-labelledby="hizmetler-h">
+      <div class="hizmetler__head">
+        <h2 class="h2" id="hizmetler-h">Yaptığımız işler</h2>
+        <p>Süreler ortalamadır. Parça gerekiyorsa önce haber veririz.</p>
+      </div>
+      <ul class="hizmetler__list" data-hizmetler></ul>
+    </section>
+
+    <!-- Hakkımızda ve rakamlar -->
+    <section class="hakkinda" aria-label="Hakkımızda">
+      <figure class="hakkinda__photo"><img src="/img/manifold/kaynak.jpg" alt="Egzoz borusunun argon kaynağı" loading="lazy" /></figure>
+      <div class="hakkinda__copy">
+        <h2 class="h2" data-years-title></h2>
+        <p data-hakkinda></p>
+        <dl class="stats" data-stats></dl>
+      </div>
+    </section>
+
+    <!-- Süreç -->
+    <section class="surec" id="surec" aria-labelledby="surec-h">
+      <h2 class="h2" id="surec-h">Nasıl çalışırız</h2>
+      <ol class="surec__list" data-surec></ol>
+    </section>
+
+    <!-- Galeri -->
+    <section class="galeri" aria-label="Atölyeden">
+      <div class="galeri__grid" data-galeri></div>
+    </section>
+
+    <!-- Yorumlar -->
+    <section class="yorumlar" id="yorumlar" aria-labelledby="yorumlar-h">
+      <div class="yorumlar__head">
+        <h2 class="h2" id="yorumlar-h">Sanayide ne diyorlar</h2>
+        <p class="puan" data-puan></p>
+      </div>
+      <ul class="yorumlar__list" data-yorumlar></ul>
+    </section>
+
+    <!-- Markalar -->
+    <section class="markalar" aria-label="Çalıştığımız markalar">
+      <div class="markalar__track" data-markalar></div>
+    </section>
+
+    <!-- Saatler ve konum -->
+    <section class="konum" id="konum" aria-labelledby="konum-h">
+      <div class="konum__info">
+        <h2 class="h2" id="konum-h">Şaşmaz'da,<br />4. Cadde'de.</h2>
+        <p class="status status--big" data-status></p>
+        <table class="hours" data-hours></table>
+        <p class="konum__addr" data-address></p>
+        <div class="konum__actions">
+          <a class="btn btn--clean" data-maps target="_blank" rel="noopener">Yol tarifi al</a>
+          <a class="btn btn--line" data-tel-btn>Ara</a>
+        </div>
+      </div>
+      <div class="konum__map" data-map><span>Harita yükleniyor</span></div>
+    </section>
+
+    <!-- Final -->
+    <section class="final" aria-labelledby="final-h">
+      <h2 class="final__title" id="final-h" data-final></h2>
+      <p class="final__sub" data-garanti></p>
+      <div class="final__actions">
+        <a class="btn btn--clean btn--big" data-tel-btn>Hemen ara</a>
+        <a class="btn btn--light btn--big" data-wa>WhatsApp'tan yaz</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <p><strong data-name></strong>, <span data-address></span></p>
+    <p><a data-tel-plain></a></p>
+    <p class="foot__small">© <span data-year></span> <span data-name></span>. Fotoğraflar: Pexels.</p>
+  </footer>
+
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

@@ -49,8 +49,8 @@ export const PRESETS = [
   { id: 'usta', grup: 'klasik', sektor: 'doseme', ad: 'Usta', icin: 'Döşeme, köklü aile işletmeleri', renk: '#a8552f' },
   { id: 'raf', grup: 'klasik', sektor: 'yedekparca', ad: 'Raf', icin: 'Yedek parça', renk: '#d9a441' },
   { id: 'tezgah', grup: 'klasik', sektor: 'rektifiye', ad: 'Tezgâh', icin: 'Rektifiye ve torna', renk: '#7fb2d9' },
-  { id: 'susturucu', grup: 'klasik', sektor: 'egzoz', ad: 'Susturucu', icin: 'Egzoz, DPF, katalitik', renk: '#9b7fd9' },
-  { id: 'seffaf', grup: 'klasik', sektor: 'cam', ad: 'Şeffaf', icin: 'Oto cam', renk: '#8fe3e0' },
+  { id: 'susturucu', grup: 'klasik', sektor: 'egzoz', ad: 'Susturucu', icin: 'Egzoz, DPF, katalitik', renk: '#1f9d6b' },
+  { id: 'seffaf', grup: 'klasik', sektor: 'cam', ad: 'Şeffaf', icin: 'Oto cam', renk: '#f2a60c' },
   { id: 'dingil', grup: 'klasik', sektor: 'agirvasita', ad: 'Dingil', icin: 'Ağır vasıta servisi', renk: '#e0b22f' },
   { id: 'recete', grup: 'klasik', sektor: 'eczane', ad: 'Reçete', icin: 'Mahalle eczanesi', renk: '#1c6f40' },
   { id: 'perdah', grup: 'klasik', sektor: 'alci', ad: 'Perdah', icin: 'Alçıbay için sade yeniden tasarım', renk: '#f29d20' },
@@ -71,7 +71,7 @@ export const PRESETS = [
 ];
 
 // Henüz yapılmamış ya da yayına alınmamış presetler burada gizlenir.
-export const HAZIR_OLMAYAN = new Set(['tonaj', 'raf', 'tezgah', 'susturucu', 'seffaf', 'dingil', 'perdah', 'kurumsal-motor', 'kurumsal-boya', 'kurumsal-lastik', 'kurumsal-elektrik', 'kurumsal-doseme', 'kurumsal-yedekparca', 'kurumsal-rektifiye', 'kurumsal-egzoz', 'kurumsal-cam', 'kurumsal-agirvasita', 'kurumsal-eczane', 'kurumsal-alci']);
+export const HAZIR_OLMAYAN = new Set(['raf', 'tezgah', 'dingil', 'kurumsal-motor', 'kurumsal-boya', 'kurumsal-lastik', 'kurumsal-elektrik', 'kurumsal-doseme', 'kurumsal-yedekparca', 'kurumsal-rektifiye', 'kurumsal-egzoz', 'kurumsal-cam', 'kurumsal-agirvasita', 'kurumsal-eczane', 'kurumsal-alci']);
 export const hazirPresetler = () => PRESETS.filter((p) => !HAZIR_OLMAYAN.has(p.id));
 
 export const presetById = (id) => PRESETS.find((p) => p.id === id);

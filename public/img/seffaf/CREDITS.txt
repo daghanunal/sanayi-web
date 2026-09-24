@@ -1,0 +1,5 @@
+Tüm görseller Pexels lisansı (ücretsiz ticari kullanım):
+hero.jpg: https://www.pexels.com/photo/view-of-the-road-from-the-windshield-of-a-car-12474705/
+gunes.jpg: https://www.pexels.com/photo/person-driving-a-car-looking-at-the-window-4627319/
+yol.jpg: https://www.pexels.com/photo/car-on-narrow-road-between-trees-in-daytime-7084294/
+Ayrıca public/img/kristal/ görselleri kullanılır (kaynakları orada).

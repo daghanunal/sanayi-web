@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0c0d0e" />
+  <title>Oto Cam | Şaşmaz, Ankara</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230c0d0e'/%3E%3Cpath d='M6 22 Q16 6 26 22' fill='none' stroke='%23f2a60c' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E" />
+  <link rel="preload" as="image" href="/img/seffaf/hero.jpg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:ital,wght@0,400..700;1,400..700&display=swap&subset=latin-ext" rel="stylesheet" />
+</head>
+<body>
+  <a class="skip" href="#hizmetler">İçeriğe geç</a>
+
+  <header class="top" data-top>
+    <a class="top__brand" href="#bas"><svg class="top__mark" viewBox="0 0 32 20" aria-hidden="true"><path d="M2 18 Q16 -4 30 18" /></svg><span class="top__name" data-bind="ad"></span></a>
+    <nav class="top__nav" aria-label="Bölümler">
+      <a href="#kasko">Kasko</a>
+      <a href="#hizmetler">Hizmetler</a>
+      <a href="#film">Cam filmi</a>
+      <a href="#konum">Konum</a>
+    </nav>
+    <p class="top__status" data-status></p>
+    <a class="top__call" data-tel><span data-icon="phone"></span><span class="top__call-num" data-bind="telefon"></span></a>
+  </header>
+
+  <main>
+    <!-- Hero: ekranın kendisi ön cam. Silecek buğuyu siler; kaydırınca taş çarpar, çatlak yayılır, reçine kapatır. -->
+    <section class="hero" id="bas" data-hero>
+      <div class="hero__glass">
+        <img class="hero__img hero__img--fog" src="/img/seffaf/hero.jpg" alt="" aria-hidden="true" />
+        <div class="hero__haze" aria-hidden="true"></div>
+        <img class="hero__img hero__img--clear" data-clear src="/img/seffaf/hero.jpg" alt="Ön camdan görünen, ufka uzanan boş bir yol" fetchpriority="high" />
+        <div class="hero__shade"></div>
+        <div class="hero__wiper" data-wiper aria-hidden="true"><span></span></div>
+        <svg class="hero__crack" data-crack viewBox="0 0 1000 1000" preserveAspectRatio="xMidYMid slice" aria-hidden="true"></svg>
+        <div class="hero__frit" aria-hidden="true"></div>
+        <div class="hero__stamp" aria-hidden="true">
+          <span class="hero__emark">E<b>43</b></span>
+          <span class="hero__stamp-txt"><span data-bind="ad"></span><span data-stamp-since></span></span>
+        </div>
+      </div>
+
+      <div class="hero__copy">
+        <p class="hero__kicker" data-since></p>
+        <div class="hero__captions">
+          <div class="cap is-on" data-cap="0">
+            <h1 class="cap__title" data-hero-title></h1>
+            <p class="cap__text" data-bind="slogan"></p>
+          </div>
+          <div class="cap" data-cap="1" aria-hidden="true">
+            <p class="cap__title">Küçük bir taş, <br />büyük bir çatlak.</p>
+            <p class="cap__text">Soğukta ve yol titreşiminde iz büyür. Bozuk para boyundaysa camı değiştirmeden kurtarırız.</p>
+          </div>
+          <div class="cap" data-cap="2" aria-hidden="true">
+            <p class="cap__title">Reçineyle <br />yarım saatte kapanır.</p>
+            <p class="cap__text">İzi temizler, reçineyle doldurur, sertleştiririz. Bakınca yerini bulamazsınız.</p>
+          </div>
+        </div>
+        <div class="hero__actions">
+          <a class="btn btn--amber" data-wa-foto target="_blank" rel="noopener"><span data-icon="whatsapp"></span>Camın fotoğrafını gönder</a>
+          <a class="btn btn--ghost" data-tel><span data-icon="phone"></span>Hemen ara</a>
+        </div>
+      </div>
+      <p class="hero__hint" aria-hidden="true">Kaydırın</p>
+    </section>
+
+    <!-- Kasko -->
+    <section class="kasko" id="kasko">
+      <div class="kasko__inner">
+        <div class="kasko__head">
+          <h2 class="kasko__title">Kaskonuz varsa cebinizden para çıkmayabilir.</h2>
+          <p class="kasko__text">Eksper ve kasko onayını biz takip ederiz. Siz aracı getirin, gerisini dosya kapanana kadar biz yürütelim.</p>
+          <a class="btn btn--ink" data-wa-kasko target="_blank" rel="noopener"><span data-icon="whatsapp"></span>Kasko için fotoğraf gönder</a>
+        </div>
+        <ol class="steps" data-steps></ol>
+      </div>
+    </section>
+
+    <!-- Hizmetler -->
+    <section class="svcs" id="hizmetler">
+      <div class="wrap">
+        <header class="sec-head">
+          <h2 class="sec-title">Aracın bütün camları</h2>
+          <p class="sec-lede" data-bind="hakkinda"></p>
+        </header>
+        <ul class="svc-list" data-services></ul>
+      </div>
+    </section>
+
+    <!-- Cam filmi -->
+    <section class="film" id="film">
+      <div class="wrap film__grid">
+        <div class="film__view">
+          <div class="film__window">
+            <img src="/img/seffaf/gunes.jpg" alt="Güneşli bir yolda, yan camdan görünen dağlar" loading="lazy" />
+            <div class="film__tint" data-tint></div>
+            <div class="film__glare" data-glare></div>
+          </div>
+          <p class="film__note">Temsili görünüm. Ön cam ve ön yan camlar için yasal ışık geçirgenliği sınırlarını birlikte kontrol ederiz.</p>
+        </div>
+        <div class="film__panel">
+          <h2 class="sec-title">Güneşi kesin, içerisi serin kalsın.</h2>
+          <p class="sec-lede">Film koyuluğunu seçin, farkı görün. Hangi cama hangisinin uygun olduğunu biz söyleriz.</p>
+          <div class="film__opts" role="radiogroup" aria-label="Film koyuluğu" data-film-opts></div>
+          <dl class="film__meters">
+            <div><dt>Işık geçirgenliği</dt><dd data-m-gec></dd></div>
+            <div><dt>UV engelleme</dt><dd data-m-uv></dd></div>
+            <div><dt>Isı kesme</dt><dd class="film__heat" data-m-isi></dd></div>
+          </dl>
+          <p class="film__pick" data-film-not></p>
+          <a class="btn btn--amber" data-wa-film target="_blank" rel="noopener"><span data-icon="whatsapp"></span><span data-film-cta>Bu film için fiyat al</span></a>
+        </div>
+      </div>
+    </section>
+
+    <!-- İstatistik -->
+    <section class="stats" aria-label="Rakamlarla">
+      <ul class="wrap stats__list" data-stats></ul>
+    </section>
+
+    <!-- Galeri -->
+    <section class="gallery" aria-label="Atölyeden">
+      <div class="wrap">
+        <header class="sec-head sec-head--row">
+          <h2 class="sec-title">Atölyeden</h2>
+          <p class="sec-lede" data-bind="garanti"></p>
+        </header>
+      </div>
+      <ul class="gallery__strip" data-gallery></ul>
+    </section>
+
+    <!-- Yorumlar -->
+    <section class="reviews" aria-labelledby="yorum-baslik">
+      <div class="wrap">
+        <header class="reviews__head">
+          <p class="reviews__score"><span data-score></span><span class="reviews__stars" data-stars></span></p>
+          <div>
+            <h2 class="sec-title" id="yorum-baslik">Müşterilerimiz ne diyor</h2>
+            <p class="sec-lede" data-score-count></p>
+          </div>
+        </header>
+      </div>
+      <ul class="reviews__list" data-reviews></ul>
+      <div class="brands" aria-label="Çalıştığımız markalar"><div class="brands__track" data-brands></div></div>
+    </section>
+
+    <!-- Saatler ve konum -->
+    <section class="visit" id="konum">
+      <div class="wrap visit__grid">
+        <div class="visit__info">
+          <h2 class="sec-title">Şaşmaz Oto Sanayi'nde</h2>
+          <p class="visit__status" data-status-big></p>
+          <table class="hours"><tbody data-hours></tbody></table>
+          <p class="visit__addr" data-bind="adres"></p>
+          <div class="visit__actions">
+            <a class="btn btn--ink" data-maps target="_blank" rel="noopener"><span data-icon="pin"></span>Yol tarifi al</a>
+            <a class="btn btn--ghost-dark" data-tel><span data-icon="phone"></span>Ara</a>
+          </div>
+        </div>
+        <div class="visit__map" data-map></div>
+      </div>
+    </section>
+
+    <!-- Final -->
+    <section class="final" data-final>
+      <div class="final__bg">
+        <img class="final__img final__img--fog" src="/img/seffaf/yol.jpg" alt="" aria-hidden="true" loading="lazy" />
+        <div class="hero__haze" aria-hidden="true"></div>
+        <img class="final__img final__img--clear" data-final-clear src="/img/seffaf/yol.jpg" alt="Ağaçların arasından geçen yol, ön camdan" loading="lazy" />
+        <div class="final__shade"></div>
+      </div>
+      <div class="wrap final__copy">
+        <h2 class="final__title">Cam derdini <br />bir fotoğrafla anlatın.</h2>
+        <p class="final__text">Tamir mi değişim mi, hemen söyleyelim. <span data-bind="garanti"></span></p>
+        <div class="final__actions">
+          <a class="btn btn--amber" data-wa-foto target="_blank" rel="noopener"><span data-icon="whatsapp"></span>WhatsApp'tan yaz</a>
+          <a class="btn btn--ghost" data-tel><span data-icon="phone"></span><span data-bind="telefon"></span></a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <div class="wrap foot__grid">
+      <p class="foot__brand" data-bind="ad"></p>
+      <p data-bind="adres"></p>
+      <p class="foot__small">© <span data-year></span> <span data-bind="ad"></span>. Fotoğraflar: Pexels.</p>
+    </div>
+  </footer>
+
+  <script type="module" src="./main.js"></script>
+</body>
+</html>
