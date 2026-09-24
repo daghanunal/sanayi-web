@@ -1,0 +1,39 @@
+{
+  "preset": "pigment",
+  "isletme": {
+    "hakkinda": "Şaşmaz'da boya, kaporta ve detaylı bakım yapıyoruz. Kabinimiz fırınlı, boyamız renk ölçüm cihazıyla karışıyor. Aracınızı teslim etmeden önce gün ışığı lambasının altında son bir kez biz kontrol ediyoruz."
+  },
+  "heroGorsel": "/img/pigment/mavi-yakin.jpg",
+  "renkler": [
+    { "kod": "RAL 3020", "ad": "Trafik kırmızısı", "hex": "#c1121c" },
+    { "kod": "RAL 2004", "ad": "Saf turuncu", "hex": "#e75b12" },
+    { "kod": "RAL 1023", "ad": "Trafik sarısı", "hex": "#f0c800" },
+    { "kod": "RAL 6018", "ad": "Sarı yeşil", "hex": "#57a639" },
+    { "kod": "RAL 5015", "ad": "Gök mavisi", "hex": "#2874b2" },
+    { "kod": "RAL 4010", "ad": "Tele magenta", "hex": "#bc4077" },
+    { "kod": "RAL 7016", "ad": "Antrasit gri", "hex": "#383e42" }
+  ],
+  "eslestirme": {
+    "gorsel": "/img/showroom/kaput.jpg",
+    "baslangic": "#d9602e",
+    "deltaBaslangic": 7.8,
+    "deltaSon": 0.4
+  },
+  "katmanlar": [
+    { "ad": "Sac", "kalinlik": "0,8 mm", "renk": "#8b949b" },
+    { "ad": "Macun", "kalinlik": "gerektiği kadar", "renk": "#d8c9a3" },
+    { "ad": "Astar", "kalinlik": "40 µm", "renk": "#a9adb0" },
+    { "ad": "Boya", "kalinlik": "20 µm", "renk": "#c1121c" },
+    { "ad": "Vernik", "kalinlik": "50 µm", "renk": "#ffffff" }
+  ],
+  "bantNotlari": ["Kaput: boyanacak", "Çıtalar söküldü", "Vernik yaş, dokunmayın", "Renk kodu okundu", "Teslime hazır"],
+  "galeri": [
+    { "src": "/img/pigment/sari-araba.jpg", "alt": "Turuncu spor otomobil, ön görünüm", "baslik": "Komple boya", "detay": "Saf turuncu, fırınlı kabin", "renk": "#e75b12" },
+    { "src": "/img/pigment/mavi-ust.jpg", "alt": "Lacivert spor otomobil, üstten görünüm", "baslik": "Tavan ve kaput", "detay": "3 aşamalı pasta", "renk": "#1f3f8f" },
+    { "src": "/img/showroom/kaput.jpg", "alt": "Kırmızı kaputta ayna gibi yansıma", "baslik": "Kaput boyası", "detay": "Renk cihazla eşlendi", "renk": "#c1121c" },
+    { "src": "/img/pigment/sari-kaput.jpg", "alt": "Hardal sarısı kaputun yakın çekimi", "baslik": "Göçük ve lokal boya", "detay": "Parça değişmiş gibi durmaz", "renk": "#c8961a" },
+    { "src": "/img/pigment/mavi-yakin.jpg", "alt": "Mavi spor otomobil, açık gökyüzü altında", "baslik": "Seramik kaplama", "detay": "2 kat, 2 gün", "renk": "#2874b2" },
+    { "src": "/img/pigment/sari-livery.jpg", "alt": "Sarı gövdede siyah şerit detayı", "baslik": "Şerit ve PPF", "detay": "Kesim kenarı görünmez", "renk": "#f0c800" }
+  ],
+  "finalBaslik": "Rengini söyle, gerisi bizde."
+}

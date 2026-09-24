@@ -1,0 +1,21 @@
+{
+  "preset": "asfalt",
+  "fren": {
+    "hiz": 80,
+    "zemin": "Islak asfalt",
+    "yeni": { "etiket": "Yeni lastik", "dis": "8 mm diş", "mesafe": 31 },
+    "asinmis": { "etiket": "Aşınmış lastik", "dis": "1,6 mm diş", "mesafe": 46 },
+    "gecit": 34,
+    "not": "Değerler yaklaşıktır; lastiğe, araca ve yola göre değişir. Bağımsız ıslak zemin fren testlerinde yeni lastikle yasal sınırdaki aşınmış lastik arasında genelde 10 ila 20 metre fark çıkar."
+  },
+  "desenler": [
+    { "id": "yaz", "kisa": "YAZ", "baslik": "Yaz lastiği", "sicaklik": "7°C üstü", "metin": "Sert hamur, geniş bloklar. Sıcak ve kuru asfaltta yolu en iyi tutan, en kısa fren eden lastik.", "zaman": "Nisan ortasında takılır" },
+    { "id": "kis", "kisa": "KIŞ", "baslik": "Kış lastiği", "sicaklik": "7°C altı", "metin": "Yumuşak hamur, sık lameller. Dişler karı tutar, soğukta sertleşmez. Ankara kışında şart.", "zaman": "Kasım başında takılır" },
+    { "id": "dortmevsim", "kisa": "4 MEVSİM", "baslik": "Dört mevsim", "sicaklik": "Her hava", "metin": "Yazın ve kışın arası bir desen. Şehir içinde az kilometre yapana değiştirme derdi olmadan yeter.", "zaman": "Yıl boyu takılı kalır" }
+  ],
+  "rot": {
+    "once": { "baslik": "Rot bozuksa", "metin": "Araç düz yolda bir tarafa çeker, direksiyon ortada durmaz. Lastik tek kenarından yer, yarı ömründe biter.", "deger": "+0°38′" },
+    "sonra": { "baslik": "Rot ayarından sonra", "metin": "3D ölçüm cihazıyla dört teker fabrika değerine alınır. Direksiyon ortada, araç çizgisinde.", "deger": "0°00′" }
+  },
+  "balans": "Balans bozuksa 90 km/s üstünde direksiyon titrer. Her tekeri makinede döndürüp gram hassasiyetinde ağırlık takıyoruz."
+}
