@@ -4,7 +4,7 @@
 import { hazirPresetler, SEKTORLER, GRUP_SIRASI, SATIS_WHATSAPP, presetById, toWhatsapp, zayifCihaz } from '../shared/katalog.js';
 
 // Vitrinde yalnızca oto sanayi tasarımları (özel işler hariç) ve tasarımı olan sektörler.
-const PRESETS = hazirPresetler().filter((p) => p.grup !== 'ozel');
+const PRESETS = hazirPresetler().filter((p) => SEKTORLER.some((k) => k.id === p.sektor));
 const SEKTORLER_V = SEKTORLER.filter((k) => PRESETS.some((p) => p.sektor === k.id));
 
 const app = document.getElementById('app');
@@ -48,10 +48,11 @@ const siraliTasarimlar = (sektor) => {
 
 const TANIM = {
   sinematik: 'Kaydırdıkça canlanan 3D sahneler. Müşteriniz ilk bakışta etkilenir.',
+  kurumsal: 'Menülü, sayfalı, ciddi bir firma sitesi. Filo ve sigorta müşterisi için.',
   kinetik: 'Hareketli yazılar ve fotoğraflar. Hafif, her telefonda akıcı.',
   klasik: 'Sade, hızlı açılan, her telefonda akıcı.',
 };
-const ETIKET = { sinematik: '3D, hareketli', kinetik: 'Hareketli, hafif', klasik: 'Sade, hızlı' };
+const ETIKET = { sinematik: '3D, hareketli', kurumsal: 'Kurumsal', kinetik: 'Hareketli, hafif', klasik: 'Sade, hızlı' };
 
 // --- Ekranlar --------------------------------------------------------------
 

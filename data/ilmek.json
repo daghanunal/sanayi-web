@@ -1,0 +1,130 @@
+{
+  "preset": "ilmek",
+  "isletme": {
+    "slogan": "Kalıbını biz çıkarır, dikişini biz atarız.",
+    "hakkinda": "Dükkânı tek bir dikiş makinesiyle açtık. Bugün aynı tezgâhta ikinci kuşak olarak çalışıyoruz: derisini kendimiz seçiyor, kalıbını kendimiz çıkarıyor, dikişini kendimiz atıyoruz. Aracınız fabrikadan nasıl çıktıysa ya da nasıl hayal ettiyseniz, öyle teslim ediyoruz."
+  },
+  "malzemeler": [
+    {
+      "id": "deri",
+      "ad": "Hakiki deri",
+      "gorsel": "/img/usta/deri-doku.jpg",
+      "nerede": "Koltuk, direksiyon, kapı paneli",
+      "dayanim": 5,
+      "bakim": "Üç ayda bir deri kremi yeter.",
+      "not": "Yıllar geçtikçe güzelleşir. Isıtmalı koltukla sorunsuz çalışır."
+    },
+    {
+      "id": "nappa",
+      "ad": "Nappa deri",
+      "gorsel": "/img/ilmek/beyaz-deri.jpg",
+      "nerede": "Koltuk, orta konsol, kolçak",
+      "dayanim": 4,
+      "bakim": "Nemli bezle silin, ayda bir kremleyin.",
+      "not": "Daha yumuşak ve ince. Açık renklerde en temiz görünen deri."
+    },
+    {
+      "id": "nubuk",
+      "ad": "Nubuk",
+      "gorsel": "/img/ilmek/nubuk.jpg",
+      "nerede": "Koltuk ortası, tavan, direksiyon",
+      "dayanim": 3,
+      "bakim": "Kuru fırçayla tüyü kaldırın, suyla silmeyin.",
+      "not": "Mat, kadifemsi yüzey. Sıcakta kaydırmaz, kışın soğuk tutmaz."
+    },
+    {
+      "id": "alcantara",
+      "ad": "Alcantara",
+      "gorsel": "/img/ilmek/alcantara.jpg",
+      "nerede": "Direksiyon, tavan, koltuk ortası",
+      "dayanim": 4,
+      "bakim": "Hafif nemli mikrofiber bezle silin.",
+      "not": "Tutuşu sağlam, parlamaz. Spor koltuklarda deriyle birlikte kullanıyoruz."
+    },
+    {
+      "id": "kumas",
+      "ad": "Döşemelik kumaş",
+      "gorsel": "/img/ilmek/kumas.jpg",
+      "nerede": "Koltuk, servis ve minibüs koltukları",
+      "dayanim": 4,
+      "bakim": "Leke tutmayan kaplamalı. Köpüklü temizleyiciyle silinir.",
+      "not": "En ekonomik seçenek. Filo araçlarında yıllarca dayanır."
+    }
+  ],
+  "desenler": [
+    { "id": "kapitone", "ad": "Kapitone", "aciklama": "Baklava dilimli klasik dikiş. Koltuğa dolgun, lüks bir görünüm verir." },
+    { "id": "dilim", "ad": "Dikey dilim", "aciklama": "Sırtta paralel kanallar. Sportif ve derli toplu durur." },
+    { "id": "petek", "ad": "Petek", "aciklama": "Altıgen dikiş. Göz alıcıdır, özel sipariş çalışıyoruz." },
+    { "id": "duz", "ad": "Düz", "aciklama": "Tek parça, sade yüzey. Fabrika çıkışına en yakın görünüm." }
+  ],
+  "tarihce": [
+    {
+      "yil": 1987,
+      "baslik": "Tek makine, tek tezgâh",
+      "metin": "Şaşmaz'daki ilk dükkânımızı bir el makinesi ve bir top suniyle açtık. İlk işimiz komşu dükkânın Murat 131'iydi.",
+      "gorsel": "/img/usta/t-1987.jpg"
+    },
+    {
+      "yil": 1994,
+      "baslik": "Klasiklerin adresi",
+      "metin": "Eski araç meraklıları orijinal desenleri bizde bulmaya başladı. Kalıp arşivimizin ilk sayfaları o yıllardan.",
+      "gorsel": "/img/usta/t-1994.jpg"
+    },
+    {
+      "yil": 2003,
+      "baslik": "Servis filoları",
+      "metin": "Ankara'daki servis firmalarıyla çalışmaya başladık. Bir hafta sonunda kırk koltuk diktiğimiz oldu.",
+      "gorsel": "/img/usta/t-2003.jpg"
+    },
+    {
+      "yil": 2011,
+      "baslik": "Deriye geçiş",
+      "metin": "Çift iğneli sanayi makinesini aldık, İtalyan ve yerli hakiki deriyle çalışmaya başladık.",
+      "gorsel": "/img/usta/t-2011.jpg"
+    },
+    {
+      "yil": 2018,
+      "baslik": "İkinci kuşak",
+      "metin": "Tezgâhı ikinci kuşak devraldı. Dükkânı kuran ustamız hâlâ her sabah gelip dikişlere bakıyor.",
+      "gorsel": "/img/usta/t-2018.jpg"
+    },
+    {
+      "yil": null,
+      "baslik": "Bugün",
+      "metin": "Alcantara, nappa, kapitone ve ısıtmalı koltuklar. Değişmeyen tek şey: her dikişi elimizle kontrol ediyoruz.",
+      "gorsel": "/img/usta/t-bugun.jpg"
+    }
+  ],
+  "yorumlar": [
+    {
+      "ad": "Murat D.",
+      "puan": 5,
+      "metin": "Passat'ın koltukları çökmüştü. Süngeriyle birlikte yenilediler, fabrika çıkışından daha iyi oldu. Dikişler milim milim düzgün.",
+      "arac": "2014 Passat"
+    },
+    {
+      "ad": "Ayşe T.",
+      "puan": 5,
+      "metin": "Tavan sarkmıştı, sabah bıraktım akşam aldım. Fiyatını önceden söylediler, bir kuruş fazla çıkmadı.",
+      "arac": "2011 Corolla"
+    },
+    {
+      "ad": "Kemal Y.",
+      "puan": 5,
+      "metin": "Babamdan kalan Anadol'un döşemesini orijinal desenine göre yaptılar. Eski kalıbı arşivlerinden çıkardılar.",
+      "arac": "1978 Anadol SL"
+    },
+    {
+      "ad": "Onur S.",
+      "puan": 5,
+      "metin": "Servis filomuzdaki 12 minibüsün koltuklarını bir hafta sonunda bitirdiler. Pazartesi araçlar yoldaydı.",
+      "arac": "Sprinter filosu"
+    },
+    {
+      "ad": "Selin A.",
+      "puan": 4,
+      "metin": "Direksiyona kırmızı iplikli deri kaplattım, çok şık oldu. Yoğun oldukları için bir gün beklettiler ama değdi.",
+      "arac": "2019 Egea"
+    }
+  ]
+}

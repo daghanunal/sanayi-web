@@ -1,0 +1,11 @@
+Tüm görseller Pexels lisansı (ücretsiz ticari kullanım, atıf gerekmez).
+kirmizi-koltuk.jpg: https://www.pexels.com/photo/11968579/
+beyaz-deri.jpg: https://www.pexels.com/photo/5213023/
+alcantara.jpg: https://www.pexels.com/photo/15269292/
+kumas.jpg: https://www.pexels.com/photo/29060193/
+nubuk.jpg: https://www.pexels.com/photo/6045262/
+deri-masa.jpg: https://www.pexels.com/photo/5962645/
+kalip.jpg: https://www.pexels.com/photo/7147578/
+makaralar.jpg: https://www.pexels.com/photo/4614211/
+kesim.jpg: https://www.pexels.com/photo/6765056/
+Ayrıca public/img/usta/ altındaki görseller kullanılır (bkz. o klasördeki CREDITS.txt).

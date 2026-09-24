@@ -1,10 +1,14 @@
 import QRCode from 'qrcode';
-import { hazirPresetler, toWhatsapp } from '../shared/katalog.js';
+import { hazirPresetler, toWhatsapp, OZEL_SEKTORLER } from '../shared/katalog.js';
 
-const PRESETS = hazirPresetler();
+// Özel işlerin (eczane, Alçıbay) bütün sürümleri kendi grubunda durur.
+const PRESETS = hazirPresetler().map((p) =>
+  OZEL_SEKTORLER.some((k) => k.id === p.sektor) ? { ...p, grup: 'ozel' } : p
+);
 
 const GRUPLAR = [
   ['sinematik', 'Sinematik', 'Baştan sona 3D ve scroll filmi. Etkilemek için önce bunları göster.'],
+  ['kurumsal', 'Kurumsal', 'Menülü, sayfalı firma sitesi. Filo, sigorta ve kurumsal müşterisi olanlara.'],
   ['kinetik', 'Kinetik', '3D yok; hareketli yazı ve fotoğraf. Eski telefonlarda da akıcı.'],
   ['klasik', 'Klasik', 'Daha sade ve hafif. Hızlı açılır.'],
   ['ozel', 'Özel işler', 'Oto sanayi dışı: eczane ve Alçıbay yeniden tasarım önerisi.'],
