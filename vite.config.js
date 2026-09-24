@@ -1,11 +1,12 @@
 import { defineConfig } from 'vite';
 import { readdirSync, existsSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { HAZIR_OLMAYAN } from './shared/katalog.js';
+import { hazirPresetler } from './shared/katalog.js';
 
-// Her presets/<ad>/index.html ayrı bir sayfa olarak derlenir; katalogda hazır olmayanlar hariç.
+// Yalnızca katalogda hazır işaretli presetler derlenir; yapımı süren klasörler yayını bozmasın.
+const hazir = new Set(hazirPresetler().map((p) => p.id));
 const presets = readdirSync(resolve(import.meta.dirname, 'presets')).filter(
-  (p) => existsSync(resolve(import.meta.dirname, 'presets', p, 'index.html')) && !HAZIR_OLMAYAN.has(p)
+  (p) => hazir.has(p) && existsSync(resolve(import.meta.dirname, 'presets', p, 'index.html'))
 );
 
 export default defineConfig({

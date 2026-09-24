@@ -6,6 +6,7 @@
   <meta name="robots" content="noindex">
   <meta name="theme-color" content="#1b1d20">
   <title>Saha Kiti</title>
+  <link rel="icon" href="data:,">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&display=swap&subset=latin-ext" rel="stylesheet">
@@ -15,10 +16,11 @@
   <main class="kit">
     <header class="kit__head">
       <h1>Saha kiti</h1>
-      <p>Dükkanın adını ve telefonunu gir. Demolar o dükkanın adıyla açılır. Ustaya seçim yaptırmak için vitrin QR'ını göster.</p>
+      <p>Dükkanı yaz, sektörünü seç. Demolar o dükkanın adıyla açılır; vitrin QR'ını ustaya okut, seçimi kendi yapsın.</p>
     </header>
 
     <form class="kit__form" id="form" autocomplete="off">
+      <h2 class="kit__baslik">Ziyaret edilen dükkan</h2>
       <label>Dükkan adı
         <input name="ad" placeholder="Örn. Yıldız Oto Elektrik" enterkeyhint="next">
       </label>
@@ -26,14 +28,29 @@
         <label>Telefon
           <input name="tel" type="tel" inputmode="tel" placeholder="0532 123 45 67" enterkeyhint="next">
         </label>
-        <label>Kuruluş yılı
+        <label>Kuruluş
           <input name="kurulus" inputmode="numeric" maxlength="4" placeholder="1998" enterkeyhint="done">
         </label>
       </div>
-      <button type="button" class="kit__vitrin" data-vitrin>Ustaya vitrin QR'ını göster</button>
-      <button type="reset" class="kit__clear">Temizle</button>
+      <label>Sektör
+        <select name="sektor" id="sektor"></select>
+      </label>
+      <div class="kit__aksiyon">
+        <button type="button" class="kit__btn kit__btn--ana" data-vitrin>Bu dükkan için vitrin QR</button>
+        <button type="button" class="kit__btn" data-sunum>Sunum modu</button>
+      </div>
+      <button type="reset" class="kit__clear">Dükkanı temizle</button>
     </form>
 
+    <div class="kit__suzgec" id="suzgec">
+      <label class="kit__ara">
+        <span class="gizli">Tasarım ara</span>
+        <input type="search" id="ara" placeholder="Ara: tasarım, sektör, klimacı…" autocomplete="off" spellcheck="false" enterkeyhint="search">
+      </label>
+      <div class="kit__cipler" id="aileler" role="group" aria-label="Aile"></div>
+    </div>
+
+    <p class="kit__sayi" id="sayi" aria-live="polite"></p>
     <div id="list"></div>
   </main>
 
@@ -41,8 +58,20 @@
     <p class="qr__title"></p>
     <canvas></canvas>
     <p class="qr__hint">Usta kendi telefonunun kamerasıyla okutsun.</p>
+    <p class="qr__url"></p>
     <button type="button" data-close>Kapat</button>
   </dialog>
+
+  <div class="sunum" id="sunum" hidden>
+    <iframe title="Tasarım sunumu" allow="fullscreen; autoplay"></iframe>
+    <div class="sunum__bar">
+      <button type="button" class="sunum__btn" data-sunum-kapat aria-label="Sunumu kapat">✕</button>
+      <button type="button" class="sunum__btn" data-sunum-git="-1" aria-label="Önceki tasarım">‹</button>
+      <p class="sunum__ad"><b></b><span></span></p>
+      <button type="button" class="sunum__btn" data-sunum-qr>QR</button>
+      <button type="button" class="sunum__btn sunum__btn--ileri" data-sunum-git="1">Sonraki ›</button>
+    </div>
+  </div>
 
   <script type="module" src="/kit/kit.js"></script>
 </body>
