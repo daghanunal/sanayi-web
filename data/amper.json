@@ -1,0 +1,25 @@
+{
+  "preset": "amper",
+  "hero": {
+    "baslik": "Arıza karanlıkta kalmaz.",
+    "anahtar": "Dükkân ışığı",
+    "ipucu": "Kaydırın, ışığı yakın"
+  },
+  "fener": {
+    "adimlar": [
+      { "baslik": "Önce bakarız.", "metin": "Kaputu açar, feneri tutar, kabloyu gözle takip ederiz. Yanık, kemirilmiş, oksitli ne varsa önce görürüz." },
+      { "baslik": "Sonra ölçeriz.", "metin": "Cihazı bağlar, voltajı ve direnci tek tek ölçeriz. Hata kodu yol gösterir, asıl sebebi ölçü söyler." },
+      { "baslik": "Tahmin etmeyiz.", "metin": "Arızayı bulmadan parça değiştirmeyiz. Neyi neden değiştireceğimizi size gösteririz." }
+    ],
+    "bulgu": "Bulundu: oksitli toprak kablosu",
+    "yol": [[0.18, 0.62], [0.42, 0.55], [0.66, 0.47], [0.83, 0.36], [0.74, 0.58]]
+  },
+  "tabela": {
+    "baslik": "Hata kodunu okur, Türkçesini söyleriz.",
+    "metin": "Arıza lambası yandığında beyin bir kod kaydeder. Kodu okumak işin başı; biz kabloyu ve sensörü ölçüp asıl sebebi buluruz."
+  },
+  "final": {
+    "baslik": "Lamba mı yandı? Getirin, söndürelim.",
+    "metin": "Arıza tespiti 30 dakika. Fiyatı işe başlamadan söyleriz."
+  }
+}

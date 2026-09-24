@@ -1,0 +1,16 @@
+{
+  "preset": "tork",
+  "olcum": {
+    "baslik": "Bakımdan önce, bakımdan sonra.",
+    "aciklama": "Tıkalı hava filtresi, yorgun buji, kirli enjektör. Motor bozulmadan önce sessizce güç kaybeder. Bakımla geri gelen farkı böyle görürsünüz.",
+    "not": "Temsili ölçüm eğrisi. Her aracın değeri farklıdır.",
+    "once": { "hp": 142, "nm": 231 },
+    "sonra": { "hp": 168, "nm": 262 }
+  },
+  "surecDevir": [1500, 3000, 4500, 6000],
+  "kelime": "MOTOR",
+  "kelimeGorsel": "/img/garaj/motor-bw.jpg",
+  "finalBaslik": "Getirin, bir ölçelim.",
+  "hizGorsel": "/img/tork/hiz.jpg",
+  "vitesGorsel": "/img/tork/vites.jpg"
+}

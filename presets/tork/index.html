@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#1630e8" />
+  <title>Motor ve Mekanik | Şaşmaz, Ankara</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%231630e8'/%3E%3Cpath d='M5 25 C11 24 13 9 18 8 S25 14 27 20' fill='none' stroke='%23ffe14d' stroke-width='3.5' stroke-linecap='round'/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Sofia+Sans+Extra+Condensed:wght@600..900&family=Sofia+Sans:wght@400..700&family=Red+Hat+Mono:wght@500;700&display=swap" rel="stylesheet" />
+  <link rel="preload" as="image" href="/img/garaj/motor-bw.jpg" />
+  <link rel="stylesheet" href="../../shared/base.css" />
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <!-- Sayfanın tamamı bir dinamometre çıktısı: arkadaki eğri kaydırdıkça çizilir. -->
+  <div class="dyno" aria-hidden="true">
+    <svg class="dyno__svg" viewBox="0 0 1000 1000" preserveAspectRatio="none">
+      <path class="dyno__hp" pathLength="1" vector-effect="non-scaling-stroke" />
+      <path class="dyno__tq" pathLength="1" vector-effect="non-scaling-stroke" />
+    </svg>
+    <span class="dyno__dot"></span>
+  </div>
+
+  <div class="hud" aria-hidden="true">
+    <span><b data-hud="rpm">850</b> d/d</span>
+    <span><b data-hud="nm">0</b> Nm</span>
+    <span><b data-hud="hp">0</b> HP</span>
+  </div>
+
+  <header class="top">
+    <a href="#top" class="top__brand" data-name></a>
+    <nav class="top__nav" aria-label="Sayfa bölümleri">
+      <a href="#hizmetler">Hizmetler</a>
+      <a href="#olcum">Ölçüm</a>
+      <a href="#yorumlar">Yorumlar</a>
+      <a href="#konum">Konum</a>
+    </nav>
+    <span class="status" data-status></span>
+    <a class="top__call" data-tel></a>
+  </header>
+
+  <main>
+    <section class="hero" id="top" aria-label="Giriş">
+      <p class="hero__devir" aria-hidden="true"><span data-hero-rpm>850</span><small>d/d</small></p>
+      <p class="hero__since" data-since></p>
+      <h1 class="board" data-board></h1>
+      <p class="hero__slogan" data-slogan></p>
+      <div class="hero__actions">
+        <a class="btn btn--sari" data-tel-btn>Hemen ara</a>
+        <a class="btn btn--cizgi" data-wa>WhatsApp'tan yaz</a>
+      </div>
+      <p class="hero__hint">Kaydırın, gaza basın</p>
+    </section>
+
+    <!-- Dev kelimenin harflerinden motor görünür, sonra harfin içine girilir. -->
+    <section class="kelime" aria-label="Hakkımızda">
+      <div class="kelime__pin">
+        <img class="kelime__img" data-kelime-img alt="" />
+        <div class="kelime__kapak"><span class="kelime__yazi" data-kelime></span></div>
+        <div class="kelime__icerik">
+          <h2 class="kelime__baslik"><span data-years></span> yıldır aynı tezgâh.</h2>
+          <p data-hakkinda></p>
+        </div>
+      </div>
+    </section>
+
+    <section class="sayac" aria-label="Rakamlarla">
+      <dl class="sayac__liste" data-stats></dl>
+    </section>
+
+    <section class="hizmetler" id="hizmetler">
+      <div class="bolum-bas">
+        <h2>Tezgâhta ne var?</h2>
+        <p>Süreler ortalamadır. Parça değişecekse önce size haber veririz.</p>
+      </div>
+      <ul class="hizmet-liste" data-services></ul>
+    </section>
+
+    <section class="olcum" id="olcum" aria-label="Bakımdan önce ve sonra">
+      <div class="olcum__pin">
+        <div class="olcum__metin">
+          <h2 data-olcum-baslik></h2>
+          <p data-olcum-aciklama></p>
+          <dl class="olcum__degerler">
+            <div><dt>Güç</dt><dd><b data-olc="hp">0</b> HP</dd></div>
+            <div><dt>Tork</dt><dd><b data-olc="nm">0</b> Nm</dd></div>
+            <div class="olcum__fark"><dt>Fark</dt><dd><b data-olc="fark">+0</b>%</dd></div>
+          </dl>
+          <p class="olcum__not" data-olcum-not></p>
+        </div>
+        <figure class="grafik" aria-hidden="true">
+          <svg viewBox="0 0 600 380" class="grafik__svg">
+            <g class="grafik__izgara"></g>
+            <path class="grafik__alan" />
+            <path class="grafik__once" pathLength="1" />
+            <path class="grafik__sonra" pathLength="1" />
+            <g class="grafik__eksen"></g>
+          </svg>
+          <figcaption class="grafik__lejant">
+            <span class="lej lej--once">Bakımdan önce</span>
+            <span class="lej lej--sonra">Bakımdan sonra</span>
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="surec" aria-label="Nasıl çalışırız">
+      <div class="bolum-bas">
+        <h2>Rölantiden kırmızı çizgiye, dört adım.</h2>
+      </div>
+      <ol class="surec__liste" data-steps></ol>
+    </section>
+
+    <section class="galeri" aria-label="Atölyeden">
+      <div class="galeri__izgara" data-gallery></div>
+    </section>
+
+    <section class="yorumlar" id="yorumlar">
+      <div class="yorumlar__puan">
+        <p class="puan" data-puan></p>
+        <p class="puan__alt" data-puan-alt></p>
+      </div>
+      <div class="serit" data-reviews></div>
+    </section>
+
+    <section class="markalar" aria-label="Çalıştığımız markalar">
+      <div class="marquee" data-brands></div>
+    </section>
+
+    <section class="konum" id="konum">
+      <article class="rapor">
+        <header class="rapor__bas">
+          <h2>Test raporu</h2>
+          <span class="status status--rapor" data-status></span>
+        </header>
+        <div class="rapor__govde">
+          <div>
+            <h3>Çalışma saatleri</h3>
+            <dl class="saatler" data-hours></dl>
+            <h3>Adres</h3>
+            <p data-address></p>
+            <div class="rapor__butonlar">
+              <a class="btn btn--sari" data-maps target="_blank" rel="noopener">Yol tarifi al</a>
+              <a class="btn btn--koyu" data-tel-btn></a>
+            </div>
+          </div>
+          <div class="harita" data-map></div>
+        </div>
+      </article>
+    </section>
+
+    <section class="final" aria-label="Bize ulaşın">
+      <img class="final__img" data-hiz-img alt="" loading="lazy" />
+      <div class="final__icerik">
+        <p class="final__redline">7.000 d/d</p>
+        <h2 class="final__baslik" data-final></h2>
+        <p data-garanti></p>
+        <div class="hero__actions">
+          <a class="btn btn--sari" data-tel-btn>Hemen ara</a>
+          <a class="btn btn--cizgi" data-wa>WhatsApp'tan yaz</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="alt">
+    <p><span data-name></span>, <span data-address></span></p>
+    <p>© <span data-year></span> <span data-name></span>. Fotoğraflar: Pexels.</p>
+  </footer>
+
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

@@ -37,10 +37,10 @@ export const PRESETS = [
   { id: 'manifold', grup: 'sinematik', sektor: 'egzoz', ad: 'Manifold', icin: 'Egzoz, DPF, katalitik', renk: '#9b7fd9' },
   { id: 'kristal', grup: 'sinematik', sektor: 'cam', ad: 'Kristal', icin: 'Oto cam', renk: '#8fe3e0' },
   { id: 'tonaj', grup: 'sinematik', sektor: 'agirvasita', ad: 'Tonaj', icin: 'Ağır vasıta servisi', renk: '#e0b22f' },
-  { id: 'tork', grup: 'kinetik', sektor: 'motor', ad: 'Tork', icin: 'Motor, mekanik, şanzıman', renk: '#ff7a3d' },
+  { id: 'tork', grup: 'kinetik', sektor: 'motor', ad: 'Tork', icin: 'Motor, mekanik, şanzıman', renk: '#1630e8' },
   { id: 'pigment', grup: 'kinetik', sektor: 'boya', ad: 'Pigment', icin: 'Boya, kaporta, detaylı temizlik', renk: '#ff4f8b' },
   { id: 'asfalt', grup: 'kinetik', sektor: 'lastik', ad: 'Asfalt', icin: 'Lastik, jant, rot-balans', renk: '#f5f5f0' },
-  { id: 'amper', grup: 'kinetik', sektor: 'elektrik', ad: 'Amper', icin: 'Oto elektrik, arıza tespit', renk: '#c6ff3d' },
+  { id: 'amper', grup: 'kinetik', sektor: 'elektrik', ad: 'Amper', icin: 'Oto elektrik, arıza tespit', renk: '#ffab1f' },
   { id: 'ilmek', grup: 'kinetik', sektor: 'doseme', ad: 'İlmek', icin: 'Döşeme', renk: '#e2a36b' },
   { id: 'garaj', grup: 'klasik', sektor: 'motor', ad: 'Garaj', icin: 'Motor, mekanik, şanzıman', renk: '#e8742a' },
   { id: 'showroom', grup: 'klasik', sektor: 'boya', ad: 'Showroom', icin: 'Boya, kaporta, detaylı temizlik, seramik kaplama', renk: '#c9d6df' },
@@ -52,7 +52,7 @@ export const PRESETS = [
 ];
 
 // Henüz yapılmamış ya da yayına alınmamış presetler burada gizlenir.
-export const HAZIR_OLMAYAN = new Set(['tonaj', 'tork', 'pigment', 'asfalt', 'amper', 'ilmek']);
+export const HAZIR_OLMAYAN = new Set(['tonaj', 'pigment', 'asfalt', 'ilmek']);
 export const hazirPresetler = () => PRESETS.filter((p) => !HAZIR_OLMAYAN.has(p.id));
 
 export const presetById = (id) => PRESETS.find((p) => p.id === id);

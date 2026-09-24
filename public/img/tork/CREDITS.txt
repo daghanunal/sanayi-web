@@ -1,0 +1,3 @@
+vites.jpg: "Close-up of Hand Holding Manual Gear Box", Pexels, https://www.pexels.com/photo/close-up-of-hand-holding-manual-gear-box-15526437/
+hiz.jpg: "Selective Focus Photography of Red Nissan Gt-r R34 Skyline Running on Road", Pexels, https://www.pexels.com/photo/selective-focus-photography-of-red-nissan-gt-r-r34-skyline-running-on-road-1383834/
+Diğer görseller: public/img/garaj/ (kaynaklar oradaki CREDITS.txt dosyasında)
