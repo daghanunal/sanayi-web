@@ -1,5 +1,5 @@
 /* Vantuz: oto cam, klasik aile. Beton grisi atölye zemini, vantuz kırmızısı, siyah üretan.
-   Anton (dar, ağır afiş başlıkları) + Golos Text. İmza: ön cam scroll ile katmanlarına ayrılır. */
+   Anton (dar, ağır afiş başlıkları) + Onest. İmza: ön cam scroll ile katmanlarına ayrılır. */
 :root {
   --bg: #e4e5e0;
   --paper: #f4f4f1;
@@ -25,7 +25,7 @@
 body {
   background: var(--bg);
   color: var(--ink);
-  font: 400 17px/1.55 'Golos Text', system-ui, sans-serif;
+  font: 400 17px/1.55 'Onest', system-ui, sans-serif;
 }
 .wrap { width: min(100% - var(--gutter) * 2, var(--maxw)); margin-inline: auto; }
 .skip { position: absolute; left: -999px; top: 8px; z-index: 200; background: var(--red); color: #fff; padding: 8px 14px; }
@@ -39,7 +39,7 @@ body {
 .eyebrow::before { content: ''; width: 14px; height: 14px; border-radius: 50%; background: var(--red); box-shadow: inset 0 0 0 4px rgb(0 0 0 / .18); }
 .eyebrow--red { color: #ff8b91; }
 .h2 {
-  font: 400 clamp(44px, 6.4vw, 96px)/.98 var(--display);
+  font: 400 clamp(44px, 6.4vw, 96px)/1.12 var(--display);
   text-transform: uppercase; letter-spacing: .005em; padding-top: .06em;
 }
 .lede { margin-top: 18px; max-width: 58ch; color: var(--muted); font-size: 17px; }
@@ -117,7 +117,7 @@ body {
 .hero__titles, .hero__subs { display: grid; }
 .hero__titles > *, .hero__subs > * { grid-area: 1 / 1; }
 .ttl {
-  font: 400 clamp(52px, 15vw, 150px)/.9 var(--display); text-transform: uppercase; letter-spacing: .005em;
+  font: 400 clamp(52px, 15vw, 150px)/1.06 var(--display); text-transform: uppercase; letter-spacing: .005em;
   padding-top: .08em; transition: opacity .45s ease, transform .6s cubic-bezier(.2, .8, .2, 1), clip-path .6s cubic-bezier(.2, .8, .2, 1);
   clip-path: inset(-20% -5% 100% -5%); transform: translateY(12px); opacity: 0;
 }
@@ -250,7 +250,7 @@ body {
 .test__svg [data-break] path { fill: none; stroke: #f4f4f1; stroke-linecap: round; stroke-linejoin: round; }
 .test__svg .chip { fill: rgb(255 255 255 / .9); }
 .test__coin { fill: rgb(227 32 44 / .12); stroke: var(--red); stroke-width: .8; stroke-dasharray: 2.4 1.6; }
-.test__coin-t { fill: #fff; font: 700 4.4px 'Golos Text', sans-serif; text-anchor: middle; letter-spacing: .1px; }
+.test__coin-t { fill: #fff; font: 700 4.4px 'Onest', sans-serif; text-anchor: middle; letter-spacing: .1px; }
 .test__scale { position: absolute; left: 14px; bottom: 12px; font-size: 12px; font-weight: 600; color: #c9cdd1; }
 .test__ctrl { display: grid; gap: 18px; align-content: start; }
 .test__label { display: flex; justify-content: space-between; align-items: baseline; font-weight: 700; }
@@ -283,7 +283,7 @@ body {
 }
 .svc::after { content: ''; position: absolute; left: 0; bottom: -1px; height: 2px; width: 100%; background: var(--red); transform: scaleX(var(--sx, 0)); transform-origin: 0 50%; }
 .svc__no { font: 400 30px/1 var(--display); color: var(--red); padding-top: 2px; }
-.svc__name { font: 400 clamp(28px, 3.4vw, 44px)/1.02 var(--display); text-transform: uppercase; padding-top: .06em; }
+.svc__name { font: 400 clamp(28px, 3.4vw, 44px)/1.1 var(--display); text-transform: uppercase; padding-top: .06em; }
 .svc__desc { grid-column: 2; color: var(--muted); max-width: 52ch; }
 .svc__time { grid-column: 2; justify-self: start; margin-top: 6px; font-size: 13px; font-weight: 800; letter-spacing: .06em; padding: 5px 10px; background: var(--ink); color: #fff; border-radius: 3px; }
 @media (min-width: 900px) {
@@ -317,7 +317,7 @@ body {
 .step { position: relative; }
 .step::before { content: ''; position: absolute; left: -30px; top: 6px; width: 16px; height: 16px; border-radius: 50%; background: var(--ink); border: 3px solid var(--red); }
 .step__no { font: 400 20px/1 var(--display); color: var(--red); letter-spacing: .06em; }
-.step__title { margin-top: 6px; font: 400 clamp(28px, 3vw, 40px)/1.02 var(--display); text-transform: uppercase; padding-top: .06em; }
+.step__title { margin-top: 6px; font: 400 clamp(28px, 3vw, 40px)/1.1 var(--display); text-transform: uppercase; padding-top: .06em; }
 .step__text { margin-top: 8px; color: #a9afb5; max-width: 40ch; }
 .kasko .btn { white-space: normal; text-align: left; }
 @media (min-width: 900px) {
@@ -400,7 +400,7 @@ body {
 /* --- Final ----------------------------------------------------------------- */
 .final { background: var(--red); color: #fff; padding: clamp(80px, 11vw, 150px) 0; overflow: hidden; }
 .final__inner { display: grid; gap: 30px; }
-.final__big { font: 400 clamp(64px, 19vw, 210px)/.88 var(--display); text-transform: uppercase; padding-top: .08em; }
+.final__big { font: 400 clamp(64px, 17vw, 180px)/1.08 var(--display); text-transform: uppercase; padding-top: .08em; }
 .final__text { font-size: 18px; max-width: 42ch; }
 .final__actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
 .final .btn--line { color: #fff; }
@@ -415,3 +415,7 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .ttl, .sub, .tag { transition: none; }
 }
+
+/* Konum başlığı: dar sütunda "7. Cadde'deyiz" bölünmesin */
+.visit__info .h2 { font-size: clamp(40px, 4.6vw, 72px); }
+.visit__info .h2 .nw { white-space: nowrap; }

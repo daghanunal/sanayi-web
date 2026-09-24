@@ -104,7 +104,7 @@ a { text-decoration: none; }
   position: absolute; inset: 0; opacity: 0;
   background: radial-gradient(80% 70% at 50% 50%, #1e1a2e 0%, var(--gece) 72%);
 }
-.backdrop.is-final .backdrop__dark { opacity: 1 !important; }
+.backdrop.is-final .backdrop__dark { opacity: 1; }
 .backdrop.is-off, .stage.is-off { visibility: hidden; }
 .stage { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
 .flash {
@@ -165,6 +165,13 @@ main, .foot { position: relative; z-index: 3; }
 .is-dark .chap__title { color: #fff; }
 .is-dark .chap__kick { color: rgb(255 255 255 / .6); }
 .is-dark .chap__txt { color: #e3e5ec; background: rgb(18 18 28 / .5); }
+/* sahne üstünde okunurluk: başlığa hale, üst yazıya cam zemin */
+.chap .chap__kick { justify-self: start; padding: 6px 12px 6px 10px; border-radius: 999px; color: var(--ink-2); background: rgb(241 243 246 / .72); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+.chap .chap__title { text-shadow: 0 0 22px rgb(236 238 242 / .95), 0 0 3px rgb(236 238 242 / .9); }
+.is-dark .chap .chap__kick { color: rgb(255 255 255 / .82); background: rgb(18 18 28 / .55); }
+.is-dark .chap .chap__title { text-shadow: 0 0 24px rgb(8 8 14 / .95), 0 0 3px rgb(8 8 14 / .9); }
+.chap--hero .chap__kick { background: none; backdrop-filter: none; -webkit-backdrop-filter: none; padding: 0; }
+.hero__lead { text-shadow: 0 0 14px rgb(236 238 242 / .95); }
 .chap--hero { top: calc(92px + env(safe-area-inset-top)); bottom: auto; opacity: 1; visibility: visible; max-width: 760px; }
 .hero__title {
   font: 400 clamp(34px, 10.4vw, 112px)/1.02 var(--f-disp); letter-spacing: -.035em;
@@ -182,9 +189,14 @@ main, .foot { position: relative; z-index: 3; }
 }
 
 .hud {
-  position: absolute; top: calc(78px + env(safe-area-inset-top)); right: 16px; opacity: 0;
+  position: absolute; top: calc(84px + env(safe-area-inset-top)); right: 16px; opacity: 0;
   display: grid; justify-items: end; gap: 2px; text-align: right; pointer-events: none;
+  padding: 10px 14px 12px; border-radius: 18px; background: rgb(241 243 246 / .66);
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
 }
+.is-dark .hud { background: rgb(18 18 28 / .55); }
+.hud__lbl, .hud__unit { color: var(--ink-2); }
+.is-dark .hud__lbl, .is-dark .hud__unit { color: rgb(255 255 255 / .75); }
 .hud__lbl { font: 500 11px var(--f-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--mute); }
 .hud__val { font: 400 clamp(26px, 7vw, 64px)/1.05 var(--f-disp); letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
 .hud__val span { background: var(--tav); -webkit-background-clip: text; background-clip: text; color: transparent; }

@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#16241d" />
+  <title>Dizel Enjektör | Şaşmaz, Ankara</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%2316241d'/%3E%3Crect x='5' y='9' width='4' height='16' fill='%23c9d3c4'/%3E%3Crect x='11' y='5' width='4' height='20' fill='%23e0362c'/%3E%3Crect x='17' y='9' width='4' height='16' fill='%23c9d3c4'/%3E%3Crect x='23' y='9' width='4' height='16' fill='%23c9d3c4'/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Asap+Condensed:ital,wght@0,600;0,800;1,600&family=Asap:wght@400;500;600&family=Stick+No+Bills:wght@500;700&display=swap&subset=latin-ext" rel="stylesheet" />
+  <link rel="preload" as="image" href="/img/dizel-klasik/giris-m.jpg" media="(max-width: 899px)" />
+  <link rel="preload" as="image" href="/img/dizel-klasik/giris.jpg" media="(min-width: 900px)" />
+</head>
+<body>
+  <header class="top">
+    <a href="#top" class="top__brand">
+      <svg class="top__mark" viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="7" width="4" height="13" /><rect class="is-hot" x="7.5" y="3" width="4" height="17" /><rect x="13" y="7" width="4" height="13" /><rect x="18.5" y="7" width="4" height="13" /></svg>
+      <span data-bind="ad"></span>
+    </a>
+    <nav class="top__nav" aria-label="Sayfa bölümleri">
+      <a href="#hizmetler">Hizmetler</a>
+      <a href="#surec">Nasıl çalışırız</a>
+      <a href="#agir">Ağır vasıta</a>
+      <a href="#yorumlar">Yorumlar</a>
+      <a href="#konum">Konum</a>
+    </nav>
+    <a class="top__call" data-tel><span data-icon="phone"></span><span data-bind="telefon"></span></a>
+  </header>
+
+  <main>
+    <!-- İMZA: ateşleme sırası. Hero fotoğrafı dört silindire bölünmüştür. Kaydırdıkça 1-3-4-2 sırasıyla
+         her şerit "ateşler" (stroke + kırmızı alev çizgisi); tempo artar. Sonunda şeritler ayrılır,
+         her biri bir enjektör olur: üçü sağlam, 3 numara arızalı. "Dördünü değil, arızalı olanı." -->
+    <section class="hero" id="top" aria-label="Giriş">
+      <div class="hero__pin">
+        <div class="cyl" data-cyl aria-hidden="true">
+          <!-- şeritler JS ile üretilir -->
+        </div>
+        <div class="hero__shade"></div>
+
+        <div class="hero__copy">
+          <p class="hero__since tag" data-since></p>
+          <h1 class="hero__name" data-bind="ad"></h1>
+          <p class="hero__slogan" data-bind="slogan"></p>
+          <div class="hero__cta">
+            <a class="btn btn--red" data-tel><span data-icon="phone"></span>Hemen ara</a>
+            <a class="btn btn--ghost" href="#hizmetler">Neler yapıyoruz</a>
+          </div>
+        </div>
+
+        <div class="order" aria-hidden="true">
+          <p class="order__k tag">Ateşleme sırası</p>
+          <ol class="order__n" data-order><li>1</li><li>3</li><li>4</li><li>2</li></ol>
+        </div>
+
+        <div class="hero__mid" aria-hidden="true">
+          <p class="hero__midk tag">Dört silindir, dört enjektör</p>
+          <p class="hero__midt">Her biri <em>ayrı ayrı</em> ölçülür.</p>
+        </div>
+
+        <div class="hero__end">
+          <p class="hero__endk tag">Tezgâh sonucu</p>
+          <p class="hero__endt">Dördünü birden değil, <em>arızalı olanı</em> söyleriz.</p>
+          <p class="hero__endd">Her enjektörün rölanti, kısmi yük, tam yük debisi ve geri dönüş kaçağı tezgâhta ölçülür. Ölçüm çıktısı elinize verilir.</p>
+          <a class="btn btn--red hero__endb" data-wa target="_blank" rel="noopener"><span data-icon="whatsapp"></span>Enjektörümü ölçtüreyim</a>
+        </div>
+        <p class="hero__hint tag" aria-hidden="true"><span></span>Kaydırın, motor çalışsın</p>
+      </div>
+    </section>
+
+    <!-- Rakamlar -->
+    <section class="band" aria-label="Rakamlarla">
+      <ul class="band__list" data-stats></ul>
+    </section>
+
+    <!-- Hakkında -->
+    <section class="about" aria-labelledby="about-h">
+      <div class="about__copy">
+        <p class="eyebrow tag" data-years></p>
+        <h2 class="h2" id="about-h">Yalnızca dizel yakıt sistemi. <em>Başka iş yok.</em></h2>
+        <p class="lead" data-bind="hakkinda"></p>
+      </div>
+      <figure class="about__photo">
+        <img src="/img/dizel-klasik/tezgah.jpg" alt="Tezgâhta sökülmüş parçalar üzerinde çalışan usta" loading="lazy" decoding="async" width="1500" height="1000" />
+        <figcaption class="tag">Tezgâh, Şaşmaz</figcaption>
+      </figure>
+    </section>
+
+    <!-- Hizmetler -->
+    <section class="hizmet" id="hizmetler" aria-labelledby="hizmet-h">
+      <div class="hizmet__head">
+        <p class="eyebrow tag">Enjektörden depoya</p>
+        <h2 class="h2" id="hizmet-h">Yakıtın geçtiği <em>her yer</em> bizim işimiz.</h2>
+        <p class="lead">Süreler ortalamadır. Fiyatı işe başlamadan söyleriz; ek parça gerekirse önce size sorarız.</p>
+      </div>
+      <ol class="hizmet__grid" data-services></ol>
+    </section>
+
+    <!-- Süreç -->
+    <section class="surec" id="surec" aria-labelledby="surec-h">
+      <div class="surec__side">
+        <p class="eyebrow tag">Beş zaman</p>
+        <h2 class="h2" id="surec-h">Önce ölçeriz, <em>sonra konuşuruz.</em></h2>
+        <figure class="surec__photo"><img src="/img/dizel-klasik/k-manometre.jpg" alt="Test düzeneğindeki basınç göstergeleri" loading="lazy" decoding="async" width="800" height="1200" /></figure>
+      </div>
+      <ol class="steps" data-steps></ol>
+    </section>
+
+    <!-- Ağır vasıta -->
+    <section class="agir" id="agir" aria-labelledby="agir-h">
+      <img class="agir__bg" src="/img/dizel-klasik/agir.jpg" alt="" loading="lazy" decoding="async" />
+      <div class="agir__in">
+        <p class="eyebrow tag">Kamyon · çekici · otobüs · iş makinesi · traktör</p>
+        <h2 class="h2" id="agir-h">Kamyon yatarsa <em>para yatar.</em> Araya alırız.</h2>
+        <p class="lead" data-agir-lead></p>
+        <blockquote class="agir__quote" data-agir-quote></blockquote>
+      </div>
+    </section>
+
+    <!-- Galeri -->
+    <section class="galeri" aria-label="Atölyeden kareler">
+      <div class="galeri__grid" data-gallery></div>
+    </section>
+
+    <!-- Yorumlar -->
+    <section class="yorum" id="yorumlar" aria-labelledby="yorum-h">
+      <div class="yorum__head">
+        <h2 class="h2" id="yorum-h">Aracı <em>yürüyenler</em> anlatıyor.</h2>
+        <div class="score">
+          <p class="score__num" data-score></p>
+          <div>
+            <p class="score__stars" data-stars></p>
+            <p class="score__count tag" data-review-count></p>
+          </div>
+        </div>
+      </div>
+      <ul class="yorum__list" data-reviews></ul>
+    </section>
+
+    <!-- Markalar -->
+    <section class="marka" aria-label="Çalıştığımız sistem ve araç markaları">
+      <div class="marka__track" data-brands></div>
+    </section>
+
+    <!-- Saatler + konum -->
+    <section class="konum" id="konum" aria-labelledby="konum-h">
+      <div class="konum__info">
+        <p class="eyebrow tag">Şaşmaz Oto Sanayi</p>
+        <h2 class="h2" id="konum-h">Enjektörü getirin, <em>önünüzde ölçelim.</em></h2>
+        <p class="konum__status" data-status-big></p>
+        <dl class="hours" data-hours></dl>
+        <p class="konum__addr" data-bind="adres"></p>
+        <div class="konum__btns">
+          <a class="btn btn--dark" data-maps target="_blank" rel="noopener"><span data-icon="pin"></span>Yol tarifi al</a>
+          <a class="btn btn--line" data-tel><span data-icon="phone"></span>Ara</a>
+        </div>
+      </div>
+      <div class="konum__map" data-map><span class="tag">Harita yükleniyor</span></div>
+    </section>
+
+    <!-- Final -->
+    <section class="final" aria-labelledby="final-h">
+      <img class="final__bg" src="/img/dizel-klasik/eski-motor.jpg" alt="" loading="lazy" decoding="async" />
+      <div class="final__in">
+        <ol class="final__order tag" aria-hidden="true"><li>1</li><li>3</li><li>4</li><li>2</li></ol>
+        <h2 class="final__title" id="final-h" data-final></h2>
+        <p class="final__sub">Aracın modelini ve şikâyeti yazın; gelmeden önce neye bakacağımızı söyleyelim.</p>
+        <div class="final__btns">
+          <a class="btn btn--red btn--big" data-tel><span data-icon="phone"></span>Hemen ara</a>
+          <a class="btn btn--light btn--big" data-wa target="_blank" rel="noopener"><span data-icon="whatsapp"></span>WhatsApp'tan yaz</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <p class="foot__name" data-bind="ad"></p>
+    <p data-bind="adres"></p>
+    <p><a data-tel data-bind="telefon"></a> · <span data-status></span></p>
+    <p class="foot__small">© <span data-year></span> <span data-bind="ad"></span>. Fotoğraflar: Pexels.</p>
+  </footer>
+
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

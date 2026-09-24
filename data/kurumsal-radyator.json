@@ -1,0 +1,88 @@
+{
+  "kurumsal": {
+    "hero": {
+      "baslik": "Hararetin sebebini bulmadan radyatör değiştirmeyiz.",
+      "metin": "Sistemi basınçla test eder, suyun nereden kaçtığını, fanın ne zaman devreye girdiğini, termostatın açılıp açılmadığını ölçeriz. Tamiri mümkünse tamir ederiz; değişim gerekiyorsa nedenini gösterip fiyatı işe başlamadan söyleriz.",
+      "birincil": "Arızayı yazın",
+      "ikincil": "Hararet haritası",
+      "ikincilRota": "hizmetler"
+    },
+    "hizmetOzetBaslik": "Soğutma sisteminde yaptığımız işler",
+    "anlasmalar": [
+      {
+        "baslik": "Kamyon, çekici ve otobüs",
+        "kisa": "Yolda kalan ağır vasıta sıraya girmeden sökülür.",
+        "metin": "Büyük radyatörler atölyede sökülüp petek ve tank olarak ayrı ayrı onarılır. Aracınızın ne kadar yatacağını baştan söyler, parça beklenecekse aynı gün haber veririz. Intercooler ve yağ soğutucusu da aynı tezgâhta.",
+        "maddeler": ["Aynı gün söküm ve basınç testi", "Petek, tank ve intercooler ayrı ayrı onarım", "Yatış süresi işe başlamadan", "Araç bazında yapılan iş kaydı"],
+        "buton": "Ağır vasıtam için yazın"
+      },
+      {
+        "baslik": "Servis, taksi ve ticari araç",
+        "kisa": "Sabah bırakılan iş aracı mümkünse akşam yolda.",
+        "metin": "Minibüs, servis, taksi ya da hafif ticari; aracın yatması ekmeğin gitmesi demek. Termostat, devirdaim, fan ve hortum işlerini sabah alıp aynı gün teslim etmeye çalışırız; olmuyorsa nedenini baştan söyleriz.",
+        "maddeler": ["Sabah kabul, mümkünse aynı gün teslim", "Fiyat ve süre işe başlamadan", "Kış öncesi antifriz ve donma ölçümü"],
+        "buton": "Ticari aracım için yazın"
+      },
+      {
+        "baslik": "Şirket filoları",
+        "kisa": "Yaz ve kış öncesi bütün araçların soğutma kontrolü.",
+        "metin": "Filonuzdaki araçları sıcaklar ya da ayazlar başlamadan sırayla kontrol eder; su eksilten, fanı geç devreye giren ya da antifrizi zayıf olan aracı tek listede size bildiririz. Her araç için ayrı döküm, ayda tek fatura.",
+        "maddeler": ["Mevsim öncesi toplu kontrol planı", "Araç bazında ölçüm ve iş dökümü", "Aylık tek fatura"],
+        "buton": "Filo görüşmesi isteyin"
+      }
+    ],
+    "anlasmaNotu": "Anlaşma koşulları araç sayısına ve tipine göre konuşulur; teklifimizi yazılı veririz.",
+    "hakkimizda": {
+      "baslik": "Yalnızca radyatör ve soğutma",
+      "paragraflar": [
+        "Şaşmaz'da tek işle uğraşıyoruz: aracın soğutma sistemi. Radyatör, petek, fan, termostat, devirdaim, hortum ve klima kondenseri. Motor ya da kaporta yapmıyoruz; tezgâhımız, su havuzumuz ve bütün vaktimiz bu işe ayrılmış.",
+        "Hararet yapan araçta en kolayı radyatörü değiştirmektir; ama sebep fan rölesi ya da bir kelepçeyse para boşa gider, hararet devam eder. Bu yüzden önce ölçeriz: basınç testi, kapak testi, fanın devreye girdiği sıcaklık. Ne bulduğumuzu size gösterir, parça gerekiyorsa işe başlamadan söyleriz."
+      ],
+      "gorsel": "/img/sektor-radyator/tezgah.jpg",
+      "gorselAlt": "Atölye tezgâhında çalışan usta"
+    },
+    "misyon": "Hararetin sebebini tahminle değil ölçerek bulmak; tamiri kurtaran radyatörü değiştirmemek.",
+    "vizyon": "Şaşmaz'da \"araç hararet yapıyor\" diyen herkesin, binekten çekiciye, ilk aklına gelen atölye olmak.",
+    "degerler": [
+      { "baslik": "Önce test", "metin": "Basınç ve kapak testi yapılmadan parça değişmez." },
+      { "baslik": "Tamir mümkünse tamir", "metin": "Kurtarılabilen radyatör lehimlenir, tankı ve contası yenilenir." },
+      { "baslik": "Fiyat baştan", "metin": "Parça ve işçilik işe başlamadan söylenir, onaysız iş yapılmaz." },
+      { "baslik": "Sıcakta deneme", "metin": "Teslimden önce motor çalışma sıcaklığında birlikte izlenir." }
+    ],
+    "kalite": {
+      "baslik": "Bir soğutma işi nasıl kapanır",
+      "metin": "Kabulden teslime kadar her araçta aynı sırayı izleriz.",
+      "maddeler": [
+        "Motor çalışırken gösterge, fanın devreye giriş sıcaklığı ve hortumların ısınması izlenir.",
+        "Sisteme basınç verilir; suyun kaçtığı yer bulunur, radyatör kapağı ayrıca test edilir.",
+        "Tamir ya da değişimden sonra doğru oranda antifriz doldurulur, sistemin havası alınır.",
+        "Teslimde motor çalışma sıcaklığına getirilir; fan ve su seviyesi birlikte kontrol edilir."
+      ]
+    },
+    "sss": [
+      { "soru": "Araç hararet yaptı, radyatör mü gitti?", "cevap": "Her zaman değil. Trafikte ısınıp yolda düzeliyorsa çoğu zaman fan ya da fan müşiridir; yolda ısınıyorsa petek tıkalı ya da termostat açılmıyor olabilir. Basınç testiyle hangisi olduğunu bulur, ondan sonra konuşuruz." },
+      { "soru": "Hararet yapınca ne yapmalıyım?", "cevap": "Güvenli bir yerde durun, motoru kapatın. Motor sıcakken radyatör ya da genleşme kabı kapağını açmayın; basınçlı sıcak su yakar. Soğuyunca bizi arayın, gelmeye uygun mu birlikte karar verelim." },
+      { "soru": "Radyatör tamir edilir mi, değişmesi mi gerekir?", "cevap": "Bakır-pirinç radyatörde delik ve çatlak çoğu zaman lehimle kapanır; plastik tanklı radyatörde tank ve conta değişebilir. Petekler çürümüşse tamir para etmez, o zaman değişim öneririz ve nedenini gösteririz." },
+      { "soru": "Antifriz ne zaman değişir?", "cevap": "Aracın bakım kitapçığında yazar; genelde birkaç yılda bir. Kış öncesi gelirseniz donma derecesini ölçer, yeterli mi değil mi söyleriz." },
+      { "soru": "Fiyatı ne zaman öğrenirim?", "cevap": "Testten sonra, işe başlamadan. Parça ve işçilik ayrı ayrı söylenir; onayınız olmadan başlamayız." }
+    ],
+    "kariyer": {
+      "baslik": "Radyatör işini bilen ya da öğrenmek isteyen",
+      "metin": "Lehim, petek ve soğutma sistemi tarafında deneyimli bir usta ya da mesleği öğrenmek isteyen çırak arkadaşlarla tanışmak isteriz. Kısa bir tanıtımla bize yazın."
+    },
+    "sayfalar": {
+      "kurumsal": { "baslik": "Kurumsal", "metin": "Kim olduğumuz, neden yalnızca soğutma sistemiyle uğraştığımız ve nasıl çalıştığımız.", "gorsel": "/img/kurumsal-radyator/kaput-ici.jpg" },
+      "hizmetler": { "baslik": "Hizmetlerimiz", "metin": "Radyatör tamirinden ağır vasıta peteğine, her işin ortalama süresi ve kapsamı. Aşağıda hararetin nereden geldiğini birlikte bulalım." },
+      "kurumsal-musteriler": { "baslik": "Filo ve ağır vasıta", "metin": "Kamyon, çekici ve otobüs radyatörleri; servis ve ticari araçlar için aynı gün önceliği; filolar için mevsim öncesi kontrol.", "gorsel": "/img/sektor-radyator/tir-usta.jpg" },
+      "referanslar": { "baslik": "Atölyeden ve müşterilerden", "metin": "Atölyeden kareler, müşterilerimizin yorumları ve baktığımız markalar." },
+      "iletisim": { "baslik": "İletişim", "metin": "Aracınız ne yapıyor, yazın; aynı gün dönüş yapalım." }
+    },
+    "konular": ["Hararet yapıyor", "Su eksiltiyor", "Radyatör tamiri / değişimi", "Fan / termostat", "Klima kondenseri", "Ağır vasıta radyatörü", "Filo / ticari araç", "Genel bilgi"],
+    "formBaslik": "Bize yazın",
+    "cta": {
+      "baslik": "İbre yukarı mı çıkıyor? Motoru yormadan yazın.",
+      "metin": "Ne zaman ısındığını anlatın; neye bakacağımızı ve fiyatı işe başlamadan söyleyelim.",
+      "buton": "Arızayı yazın"
+    }
+  }
+}

@@ -1,0 +1,14 @@
+Bu klasördeki görseller public/img/sektor-veteriner kopyalarının küçültülmüş hâlidir (kopek=kopek-portre, kedi=kedi-portre, tekir=kedi). Tüm görseller Pexels lisansıyla (ücretsiz, ticari kullanım serbest), pexels.com:
+hekim-kopek.jpg: Tima Miroshnichenko https://www.pexels.com/photo/6234633/
+steteskop.jpg: Tima Miroshnichenko https://www.pexels.com/photo/6235233/
+goz-muayene.jpg: "A Vet Checking a Dog Eyes Using a Medical Equipment", Tima Miroshnichenko https://www.pexels.com/photo/a-vet-checking-a-dog-eyes-using-a-medical-equipment-6235240/
+muayene-masasi.jpg: "Man in Blue Scrub Suit Holding Black and Brown German Shepherd", Tima Miroshnichenko https://www.pexels.com/photo/man-in-blue-scrub-suit-holding-black-and-brown-german-shepherd-6235244/
+agiz-kontrol.jpg: Tima Miroshnichenko https://www.pexels.com/photo/6234622/
+sefkat.jpg: Tima Miroshnichenko https://www.pexels.com/photo/6234624/
+pomeranyen.jpg: Tima Miroshnichenko https://www.pexels.com/photo/6235243/
+ultrason.jpg: "Veterinarian Checking Up the Dog Using an Ultrasound Machine", Tima Miroshnichenko https://www.pexels.com/photo/veterinarian-checking-up-the-dog-using-an-ultrasound-machine-6234610/
+kedi.jpg: Tima Miroshnichenko https://www.pexels.com/photo/6234620/
+kedi-portre.jpg: Tima Miroshnichenko https://www.pexels.com/photo/6234619/
+kopek-portre.jpg: Tima Miroshnichenko https://www.pexels.com/photo/6234628/
+laboratuvar.jpg: "A Person Placing a Blood Sample on a Microscope Slide", cottonbro studio https://www.pexels.com/photo/a-person-placing-a-blood-sample-on-a-microscope-slide-5721687/
+kan-ornegi.jpg: "Person Doing Blood Test", roberto carrafa https://www.pexels.com/photo/person-doing-blood-test-3908179/

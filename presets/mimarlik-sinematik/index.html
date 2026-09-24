@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0d2a4f" />
+  <title>Mimarlık Ofisi | Şaşmaz</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230d2a4f'/%3E%3Cpath d='M6 26V14l10-7 10 7v12' fill='none' stroke='%23fff' stroke-width='2'/%3E%3Cpath d='M4 26h24' stroke='%23e9ff70' stroke-width='2.4'/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@200;300;400;600;700&family=Commissioner:wght@300;400;500;600;700&family=Fragment+Mono&display=swap&subset=latin-ext" rel="stylesheet" />
+</head>
+<body class="is-loading">
+  <!-- Açılış: boş pafta, kat planı elle çizilir gibi belirir, antet dolar -->
+  <div class="intro" data-intro role="presentation">
+    <div class="intro__sheet">
+      <svg class="intro__plan" viewBox="-130 -100 260 200" aria-hidden="true" data-intro-plan>
+        <rect class="ip ip--plot" x="-120" y="-90" width="240" height="180" />
+        <rect class="ip ip--sb" x="-90" y="-60" width="180" height="100" />
+        <path class="ip ip--wall" d="M-70 -50 H50 V30 H-70 Z" />
+        <path class="ip ip--wall" d="M-22 -50 V-12 M-70 -22 H-42 M15 -50 V-6" />
+        <path class="ip ip--thin" d="M-50 38 V90 M-20 38 V90 M-50 70 H-20" />
+        <path class="ip ip--thin" d="M50 -55 H110 V42 H50" />
+        <path class="ip ip--door" d="M-22 -12 A14 14 0 0 1 -8 2" />
+        <path class="ip ip--door" d="M15 -6 A12 12 0 0 0 27 6" />
+        <path class="ip ip--dim" d="M-70 -72 H50 M-70 -76 V-68 M50 -76 V-68" />
+        <circle class="ip ip--thin" cx="-100" cy="68" r="10" />
+        <path class="ip ip--thin" d="M-100 56 L-96 68 H-104 Z" />
+      </svg>
+      <p class="intro__dim" data-intro-dim>12,00</p>
+      <div class="intro__block">
+        <p class="intro__name" data-intro-name></p>
+        <p class="intro__row"><span>Pafta</span><b>00</b><span>Ölçek</span><b data-intro-scale>1/1000</b></p>
+      </div>
+      <p class="intro__skip">Geçmek için dokunun</p>
+    </div>
+  </div>
+
+  <canvas class="stage" data-stage aria-hidden="true"></canvas>
+
+  <header class="top" data-top>
+    <a class="top__brand" href="#" data-brand><span class="top__mark" aria-hidden="true"></span><span data-bind="ad"></span></a>
+    <nav class="top__nav" aria-label="Bölümler">
+      <a href="#hizmetler">Hizmetler</a>
+      <a href="#surec">Süreç</a>
+      <a href="#yorumlar">Yorumlar</a>
+      <a href="#konum">Ofis</a>
+    </nav>
+    <p class="top__status" data-status></p>
+    <a class="top__call" data-tel><span data-icon="phone"></span><span data-bind="telefon"></span></a>
+  </header>
+
+  <main>
+    <!-- Film: arsa → imar → avan (katlar yükselir) → ruhsat (kotlar) → kesit → render → iç mekân → akşam -->
+    <section class="film" data-film>
+      <div class="film__sticky">
+        <div class="tags" data-tags aria-hidden="true"></div>
+
+        <div class="hero" data-hero>
+          <p class="hero__kicker" data-kicker></p>
+          <h1 class="hero__title" data-hero-title></h1>
+          <p class="hero__slogan" data-bind="slogan"></p>
+          <div class="hero__cta">
+            <a class="btn btn--acc" data-tel><span data-icon="phone"></span>Ofisi arayın</a>
+            <a class="btn btn--line" data-wa target="_blank" rel="noopener"><span data-icon="whatsapp"></span>WhatsApp'tan yazın</a>
+          </div>
+        </div>
+
+        <div class="cards" data-cards></div>
+
+        <ol class="sheets" data-sheets aria-label="Paftalar"></ol>
+
+        <aside class="antet" data-antet aria-hidden="true">
+          <div class="antet__compass"><svg viewBox="-20 -20 40 40" data-compass><circle r="17" /><path d="M0 -15 L5 6 L0 2 L-5 6 Z" /><text y="-8.5" text-anchor="middle">K</text></svg></div>
+          <dl class="antet__grid">
+            <div class="antet__wide"><dt>Proje</dt><dd>Müstakil konut, 3 kat</dd></div>
+            <div><dt>Pafta</dt><dd data-a-no>00</dd></div>
+            <div><dt>Ölçek</dt><dd data-a-scale>1/500</dd></div>
+            <div class="antet__wide"><dt>Çizim</dt><dd data-a-name>Vaziyet planı</dd></div>
+            <div class="antet__wide antet__firm"><dt>Çizen</dt><dd data-bind="ad"></dd></div>
+          </dl>
+        </aside>
+
+        <div class="overview" data-overview>
+          <p class="overview__kicker" data-ov-kicker></p>
+          <h2 class="overview__title" data-ov-title></h2>
+        </div>
+
+        <p class="hint" data-hint aria-hidden="true"><i></i>Kaydırın, projeyi çizelim</p>
+      </div>
+    </section>
+
+    <!-- Hakkımızda -->
+    <section class="about" data-about>
+      <div class="about__head">
+        <p class="eyebrow">Ofis</p>
+        <h2 class="sec-title" data-rise>Önce <mark>dinleriz,</mark> sonra çizeriz.</h2>
+      </div>
+      <p class="about__text" data-about-text></p>
+      <ul class="stats" data-stats></ul>
+      <figure class="about__img"><img src="/img/sektor-mimarlik/cizim-masasi.jpg" alt="Çizim masasında elle perspektif eskiz çizen mimar" loading="lazy" width="2000" height="1333" /></figure>
+    </section>
+
+    <!-- Hizmetler -->
+    <section class="services" id="hizmetler">
+      <header class="sec-head">
+        <p class="eyebrow">Hizmetler</p>
+        <h2 class="sec-title" data-rise>Arsadan anahtara, <mark>her pafta</mark> bizden.</h2>
+      </header>
+      <ol class="svc" data-services></ol>
+    </section>
+
+    <!-- Süreç: ölçü çizgisi boyunca adımlar -->
+    <section class="steps" id="surec">
+      <header class="sec-head">
+        <p class="eyebrow">Süreç</p>
+        <h2 class="sec-title" data-rise>İlk kahveden <mark>şantiyeye</mark> kadar.</h2>
+      </header>
+      <ol class="steps__list" data-steps></ol>
+    </section>
+
+    <!-- Galeri -->
+    <section class="gallery" aria-label="Ofisten ve projelerden">
+      <div class="gallery__track" data-gallery></div>
+    </section>
+
+    <!-- Yazılımlar -->
+    <section class="soft" aria-label="Kullandığımız programlar">
+      <p class="soft__lbl">Çizdiğimiz programlar</p>
+      <div class="marquee" data-marquee></div>
+    </section>
+
+    <!-- Güvence -->
+    <section class="promise">
+      <p class="promise__stamp" aria-hidden="true">SÖZ</p>
+      <p class="promise__text" data-garanti></p>
+    </section>
+
+    <!-- Yorumlar -->
+    <section class="reviews" id="yorumlar">
+      <header class="reviews__head">
+        <p class="eyebrow">Yorumlar</p>
+        <p class="reviews__score"><b data-puan>4,9</b><span class="reviews__stars" data-stars></span></p>
+        <p class="reviews__count" data-puan-adet></p>
+      </header>
+      <div class="reviews__rail" data-lenis-prevent-touch><div class="reviews__track" data-rev-track></div></div>
+    </section>
+
+    <!-- Ofis -->
+    <section class="shop" id="konum">
+      <div class="shop__info">
+        <p class="eyebrow">Ofis</p>
+        <h2 class="sec-title" data-rise>Kahve bizden, <mark>arsanın</mark> tapusu sizden.</h2>
+        <p class="shop__status" data-status-big></p>
+        <dl class="shop__hours" data-hours></dl>
+        <p class="shop__addr" data-bind="adres"></p>
+        <div class="shop__cta">
+          <a class="btn btn--ink" data-maps target="_blank" rel="noopener"><span data-icon="pin"></span>Yol tarifi alın</a>
+          <a class="btn btn--inkline" data-tel><span data-icon="phone"></span>Ofisi arayın</a>
+        </div>
+      </div>
+      <div class="shop__map" data-map></div>
+    </section>
+
+    <!-- Final: akşam, pencereler yanıyor -->
+    <section class="finale" data-finale>
+      <div class="finale__sticky">
+        <p class="finale__kicker">Pafta 08 · Sıra sizde</p>
+        <h2 class="finale__title" data-final-title></h2>
+        <p class="finale__sub">Tapu fotokopisi ya da parsel numarası yeter; imar durumunu biz çıkarırız. Proje ücretini işe başlamadan söyleriz.</p>
+        <div class="finale__cta">
+          <a class="btn btn--acc btn--xl" data-tel><span data-icon="phone"></span>Ofisi arayın</a>
+          <a class="btn btn--line btn--xl" data-wa-arsa target="_blank" rel="noopener"><span data-icon="whatsapp"></span>Arsamı anlatayım</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <p data-year></p>
+    <p data-bind="adres"></p>
+    <p class="foot__small">Fotoğraflar: Pexels. Sayfadaki 3D konut bu site için kodla çizildi.</p>
+  </footer>
+
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

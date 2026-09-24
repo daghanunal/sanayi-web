@@ -1,0 +1,11 @@
+{
+  "preset": "dizel-klasik",
+  "finalBaslik": "Motor tekliyorsa, dumanlıysa, zor çalışıyorsa: getirin, ölçelim.",
+  "agirMetin": "Ticari araçta her gün yolda kalan gündür. Kamyon, çekici, otobüs ve iş makinesi enjektörlerini sabah alır, çoğu zaman akşam kodlanmış halde teslim ederiz. Eski mekanik pompaları da hâlâ ayarlıyoruz.",
+  "tezgahSonuc": [
+    { "no": 1, "durum": "Sağlam", "not": "Debi aralıkta" },
+    { "no": 2, "durum": "Sağlam", "not": "Debi aralıkta" },
+    { "no": 3, "durum": "Arızalı", "not": "Geri dönüş yüksek" },
+    { "no": 4, "durum": "Sağlam", "not": "Debi aralıkta" }
+  ]
+}

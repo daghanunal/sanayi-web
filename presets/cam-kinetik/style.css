@@ -71,6 +71,7 @@ body {
 }
 .ust.is-solid { background: var(--is); color: var(--beyaz); box-shadow: 0 10px 30px rgb(21 17 14 / .25); }
 .ust__marka { display: flex; align-items: center; gap: 10px; font: 800 17px/1 var(--govde); letter-spacing: -.02em; text-decoration: none; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.ust__marka > span:last-child { overflow: hidden; text-overflow: ellipsis; }
 .ust__iz { width: 22px; height: 22px; flex: none; border-radius: 50%; background: currentColor;
   -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 12 2 5M12 12l9-10M12 12l11 4M12 12l-5 11M12 12l4 11M12 12 1 14' stroke='%23000' stroke-width='2.2' stroke-linecap='round'/%3E%3Ccircle cx='12' cy='12' r='3' fill='%23000'/%3E%3C/svg%3E") center / contain no-repeat;
           mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 12 2 5M12 12l9-10M12 12l11 4M12 12l-5 11M12 12l4 11M12 12 1 14' stroke='%23000' stroke-width='2.2' stroke-linecap='round'/%3E%3Ccircle cx='12' cy='12' r='3' fill='%23000'/%3E%3C/svg%3E") center / contain no-repeat;
@@ -160,7 +161,7 @@ body {
 .kirilma__pin {
   position: relative; height: 100svh; overflow: hidden;
   display: grid; grid-template-rows: 1fr auto; gap: 0;
-  padding: 80px var(--g) 100px;
+  padding: 94px var(--g) 100px;
 }
 .kirilma__sahne { position: relative; display: grid; place-items: center; min-height: 0; }
 .pano {
@@ -262,7 +263,10 @@ body {
 .film__pin { position: relative; height: 100svh; overflow: hidden; display: grid; align-items: end; padding: 80px var(--g) 110px; }
 .film__img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 .film__perde { position: absolute; inset: 0; background: #050608; opacity: .3; }
-.film__icerik { position: relative; display: grid; gap: 16px; max-width: 560px; }
+.film__pin::after { content: ''; position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  background: linear-gradient(0deg, rgb(5 6 8 / .82) 0%, rgb(5 6 8 / .45) 45%, rgb(5 6 8 / 0) 75%); }
+@media (min-width: 900px) { .film__pin::after { background: linear-gradient(90deg, rgb(5 6 8 / .8) 0%, rgb(5 6 8 / .45) 40%, rgb(5 6 8 / 0) 68%); } }
+.film__icerik { position: relative; z-index: 2; display: grid; gap: 16px; max-width: 560px; }
 .film__makara { width: max-content; max-width: calc(100vw - 2 * var(--g)); height: 1em; overflow: hidden; font: 400 clamp(88px, 20vw, 220px)/1 var(--disp); letter-spacing: -.04em; color: var(--turuncu); }
 .film__makara-ic span { line-height: 1; padding-top: .04em; box-sizing: border-box; }
 .film__makara-ic { display: grid; will-change: transform; }
@@ -356,6 +360,8 @@ body {
 
 /* --- Footer ----------------------------------------------------------------- */
 .alt { background: var(--is); color: var(--soluk-acik); padding: 28px var(--g) 34px; display: grid; gap: 6px; font-size: 13px; }
+/* Alt çubuğun altında kalan boşluk da koyu olsun (body turuncu). */
+@media (max-width: 899px) { .alt { margin-bottom: -84px; padding-bottom: calc(34px + 84px); } }
 
 /* --- Hareketsiz mod --------------------------------------------------------- */
 .is-static .kirilma__pin { height: auto; min-height: 100svh; }

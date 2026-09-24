@@ -1,0 +1,56 @@
+{
+  "preset": "kilit-klasik",
+  "kesimKodu": [3, 1, 4, 2, 5],
+  "anahtarTipleri": [
+    {
+      "ikon": "duz",
+      "ad": "Düz metal anahtar",
+      "ipucu": "Plastik başlığı yok ya da içinde çip yok. Eski model araçlar.",
+      "nasil": "Bıçak kilidinize göre kesilir, kapı ve kontakta denenir. Kodlama gerekmez.",
+      "isler": [0, 6, 7, 8],
+      "sure": "20-40 dk"
+    },
+    {
+      "ikon": "cipli",
+      "ad": "Çipli anahtar",
+      "ipucu": "Kumandası yok ama başlığın içinde çip var; çip okunmazsa marş basmaz.",
+      "nasil": "Bıçak kesilir, çip immobilizer kodlama cihazıyla araca tanıtılır.",
+      "isler": [0, 2, 1],
+      "sure": "40-90 dk"
+    },
+    {
+      "ikon": "sustali",
+      "ad": "Sustalı kumandalı",
+      "ipucu": "Bıçağı düğmeyle açılan, kapı kilitleme tuşları olan anahtar.",
+      "nasil": "Kumanda ve çip ayrı ayrı araca tanıtılır; kırık kap varsa kart yeni kaba aktarılır.",
+      "isler": [3, 4, 0],
+      "sure": "1-2 saat"
+    },
+    {
+      "ikon": "akilli",
+      "ad": "Akıllı anahtar",
+      "ipucu": "Cebinizdeyken kapı açılır, araç düğmeyle çalışır (keyless).",
+      "nasil": "Yeni akıllı anahtar araca tanıtılır, kayıp olan sistemden silinir. Tuşlar ve yaklaşım algısı birlikte denenir.",
+      "isler": [3, 1, 2],
+      "sure": "1-2 saat"
+    }
+  ],
+  "acil": {
+    "baslik": "Anahtar içeride, kapı kilitli mi?",
+    "metin": "Camı kırmayın, kapıyı zorlamayın. Arayın, konumunuzu söyleyin. Kapıyı özel açma aletleriyle, iz bırakmadan açarız.",
+    "kural": "Kapıyı açmadan önce ruhsat ve kimlik bakarız. Ruhsattaki isimle eşleşmeyen araçta iş yapmayız."
+  },
+  "finalBaslik": "Anahtarsız kalmayın.",
+  "galeri": [
+    { "src": "/img/kilit-klasik/dukkan.jpg", "alt": "Anahtar dükkânında tezgâhta anahtar işleyen usta" },
+    { "src": "/img/kilit-klasik/kilit-silindiri.jpg", "alt": "Pinleri görünen kilit silindiri yakın çekim" },
+    { "src": "/img/kilit-klasik/kodlama.jpg", "alt": "Aracın arıza tespit soketine takılı kodlama cihazı" },
+    { "src": "/img/kilit-klasik/anahtar-duvari.jpg", "alt": "Kancalara dizilmiş ham anahtarlar" },
+    { "src": "/img/kilit-klasik/kapi-acma.jpg", "alt": "Araç kapı kilidine takılmış açma aleti" },
+    { "src": "/img/kilit-klasik/silindir-parcalari.jpg", "alt": "Sökülmüş kilit silindiri, pinleri ve yayları" },
+    { "src": "/img/kilit-klasik/akilli-anahtar.jpg", "alt": "Orta konsolda duran kumandalı akıllı anahtar" },
+    { "src": "/img/kilit-klasik/kontak.jpg", "alt": "Kontaktaki anahtarı çeviren sürücü eli" },
+    { "src": "/img/kilit-klasik/start-stop.jpg", "alt": "Anahtarsız çalıştırma için start-stop düğmesi" },
+    { "src": "/img/kilit-klasik/yedek-anahtar.jpg", "alt": "Siyah zemin üzerinde sustalı araç anahtarı" }
+  ]
+}

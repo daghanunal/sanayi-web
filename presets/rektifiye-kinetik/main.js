@@ -421,9 +421,11 @@ if (reducedMotion) {
 
   // Açılıştan sonra parçalar zıt yönlere kayar.
   $$('.parca').forEach((p, i) => {
-    gsap.to(p, {
+    // fromTo + immediateRender:false: açılıştaki xPercent:-104 başlangıç değeri olarak kaydedilmesin.
+    gsap.fromTo(p, { xPercent: 0 }, {
       xPercent: i % 2 ? 9 : -9,
       ease: 'none',
+      immediateRender: false,
       scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true },
     });
   });

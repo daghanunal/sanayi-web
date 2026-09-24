@@ -54,6 +54,8 @@ body {
   -webkit-background-clip: text; background-clip: text; color: transparent;
 }
 .k-hero__baslik:has(.k-satir) { background: none; }
+/* background-clip:text yalnız kutunun içini boyar; Ö/Ü/İ noktaları satır kutusunun üstüne taşıyor. Kutuyu yukarı genişlet. */
+.k-hero__baslik .k-satir { padding-top: .14em; margin-top: -.14em; padding-bottom: .05em; margin-bottom: -.05em; }
 .k-hero .k-lead { color: var(--k-soluk); }
 [data-hero='yazi'] .k-hero__ic { gap: 36px; }
 @media (min-width: 900px) {
@@ -166,7 +168,7 @@ body {
 .tv__sahne { position: relative; margin: clamp(32px, 6vw, 72px) 0 12px; }
 .tv__krank { width: min(100% - 32px, 1240px); margin-inline: auto; }
 .tv__krank svg { width: 100%; height: auto; display: block; overflow: visible; }
-@media (max-width: 700px) { .tv__krank { width: 100%; overflow: hidden; } .tv__krank svg { width: 240%; margin-left: -45%; } }
+@media (max-width: 700px) { .tv__krank { width: 100%; overflow: hidden; } .tv__krank svg { width: 210%; max-width: none; margin-left: -42%; } }
 .tv__sahne::before { content: ''; position: absolute; left: 10%; right: 10%; top: -10%; height: 90%; background: radial-gradient(closest-side, color-mix(in srgb, var(--tv-renk) 30%, transparent), transparent); transition: background .6s; pointer-events: none; }
 .tv__krank, .tv__okuma { position: relative; }
 .tv-g { fill: url(#tv-dokum); stroke: #7a818a; stroke-width: 1.2; }
@@ -180,7 +182,7 @@ body {
 .tv__derece small { font-size: .32em; letter-spacing: 0; margin-left: 6px; color: #8f96a0; }
 .tv__ad { font: 500 clamp(14px, 1.6vw, 18px) var(--mono); text-transform: uppercase; color: var(--tv-renk); transition: color .5s; }
 .tv__skala { position: relative; display: grid; grid-template-columns: repeat(5, 1fr); gap: 0; margin-top: 28px; }
-.tv__dur { appearance: none; background: none; border: 0; color: inherit; text-align: left; padding: 0 6px 0 0; cursor: pointer; display: grid; gap: 8px; font: inherit; min-width: 0; }
+.tv__dur { appearance: none; background: none; border: 0; color: inherit; text-align: left; padding: 0 6px 0 0; cursor: pointer; display: grid; gap: 8px; align-content: start; font: inherit; min-width: 0; }
 .tv__dur i { display: block; height: 14px; background: var(--r); transition: transform .3s; transform-origin: bottom; }
 .tv__dur:first-child i { background: linear-gradient(90deg, #c8ccd2, var(--r)); }
 .tv__dur span { font-weight: 600; font-size: 15px; line-height: 1.2; }
@@ -192,7 +194,7 @@ body {
 .tv__metin { margin-top: 28px; font-size: clamp(19px, 2vw, 26px); line-height: 1.4; max-width: 40ch; font-weight: 500; min-height: 3em; }
 .tv__dip { margin-top: 14px; font-size: 14px; color: #8f96a0; max-width: 62ch; }
 @media (max-width: 600px) {
-  .tv__dur span { font-size: 12.5px; }
+  .tv__dur span { font-size: 12.5px; min-height: 2.4em; }
   .tv__dur em { font-size: 9.5px; }
 }
 
@@ -261,3 +263,6 @@ body {
 .ms__saatler div { display: flex; justify-content: space-between; gap: 16px; padding: 16px 0; border-bottom: 1px solid var(--k-cizgi); }
 .ms__saatler dt { font-weight: 600; }
 .ms__saatler dd { margin: 0; font: 500 clamp(14px, 1.5vw, 17px) var(--mono); font-variant-numeric: tabular-nums; }
+
+/* Mobilde gövdenin alt boşluğu (alt çubuk için) koyu altbilginin altında açık şerit bırakmasın. */
+@media (max-width: 899px) { .k-alt { padding-bottom: 116px; margin-bottom: -84px; } }

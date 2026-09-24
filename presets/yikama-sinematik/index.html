@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#100c2e" />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 24 24%27%3E%3Crect width=%2724%27 height=%2724%27 rx=%277%27 fill=%27%23100c2e%27/%3E%3Ccircle cx=%279%27 cy=%2713%27 r=%275%27 fill=%27%23ff5c9d%27/%3E%3Ccircle cx=%2716%27 cy=%278.5%27 r=%273.5%27 fill=%27%233ec5ff%27/%3E%3Ccircle cx=%2716.5%27 cy=%2716.5%27 r=%272.5%27 fill=%27%23ffe45c%27/%3E%3C/svg%3E" />
+    <title>Oto Yıkama | Şaşmaz, Ankara</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wdth,wght@75..125,300..700&family=Figtree:wght@400..800&display=swap" />
+  </head>
+  <body>
+    <canvas class="gl" id="gl" aria-hidden="true"></canvas>
+    <div class="flash" id="flash" aria-hidden="true"></div>
+
+    <div class="intro" id="intro" role="presentation">
+      <canvas class="intro__foam" id="foam"></canvas>
+      <p class="intro__skip">Geçmek için dokunun</p>
+    </div>
+
+    <header class="top" id="top"></header>
+    <nav class="hud" id="hud" aria-hidden="true"></nav>
+    <div class="tags" id="tags" aria-hidden="true"></div>
+
+    <main>
+      <div class="film" id="film">
+        <section class="scene" data-scene="hero" id="sahne" aria-labelledby="hero-title"></section>
+        <section class="scene" data-scene="kir" id="kir" aria-labelledby="kir-title"></section>
+        <section class="scene" data-scene="kopuk" id="kopuk" aria-labelledby="kopuk-title"></section>
+        <section class="scene" data-scene="durulama" id="durulama" aria-labelledby="durulama-title"></section>
+        <section class="scene" data-scene="jant" id="jant" aria-labelledby="jant-title"></section>
+        <section class="scene" data-scene="ic" id="ic" aria-labelledby="ic-title"></section>
+        <section class="scene" data-scene="cila" id="cila" aria-labelledby="cila-title"></section>
+        <section class="scene" data-scene="filo" id="filo" aria-labelledby="filo-title"></section>
+      </div>
+      <div class="solid">
+        <section class="programs" id="programlar" aria-labelledby="programs-title"></section>
+        <section class="steps-sec" id="surec" aria-labelledby="steps-title"></section>
+        <section class="about" id="biz" aria-labelledby="about-title"></section>
+        <section class="shop" id="bolme" aria-labelledby="shop-title"></section>
+        <section class="reviews" id="yorumlar" aria-labelledby="reviews-title"></section>
+        <section class="brands" id="markalar" aria-label="Yıkadığımız markalar"></section>
+        <section class="visit" id="ulasim" aria-labelledby="visit-title"></section>
+      </div>
+      <section class="scene scene--final" data-scene="final" id="iletisim" aria-labelledby="final-title"></section>
+    </main>
+
+    <footer class="foot" id="foot"></footer>
+
+    <script type="module" src="./main.js"></script>
+  </body>
+</html>

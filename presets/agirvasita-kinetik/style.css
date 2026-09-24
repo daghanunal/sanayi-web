@@ -71,6 +71,7 @@ p { max-width: 62ch; }
   font-weight: 850; font-stretch: 80%; font-size: 20px; text-transform: uppercase; text-decoration: none;
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
+.top__brand > [data-name] { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
 @media (max-width: 899px) { .top__brand { font-size: 17px; gap: 8px; } .top__ok { width: 26px; height: 26px; font-size: 15px; } .km small:first-child { display: none; } .top { gap: 10px; } }
 .top__ok {
   flex: none; display: grid; place-items: center; width: 30px; height: 30px; border-radius: 6px;
@@ -150,6 +151,7 @@ p { max-width: 62ch; }
 .ok { font-family: var(--disp); font-weight: 900; font-size: 1.6em; line-height: 1; }
 .hero__ad { display: flex; flex-direction: column; font-weight: 900; line-height: .93; padding-top: .08em; }
 .hero__satir { white-space: nowrap; }
+.hero__satir--ust { padding-top: .14em; } /* İ noktası, Ğ şapkası üst satıra değmesin */
 .hero__satir {
   display: block; width: max-content; font-stretch: 62%;
   transition: font-stretch 1.5s cubic-bezier(.16, .9, .2, 1) .15s;
@@ -239,7 +241,7 @@ p { max-width: 62ch; }
 }
 .konvoy__bas, .konvoy__yol, .konvoy__not { position: relative; }
 .konvoy__bas { padding: 0 var(--gutter); }
-.konvoy__bas h2 { font-size: clamp(36px, 6.4vw, 92px); max-width: 16ch; }
+.konvoy__bas h2 { font-size: clamp(36px, min(6.4vw, 8.4vh), 92px); max-width: 16ch; }
 .konvoy__yol { position: relative; }
 .konvoy__tren {
   --don: 0deg;
@@ -263,39 +265,62 @@ p { max-width: 62ch; }
   background: conic-gradient(#8f9396 0 12%, transparent 0 25%, #8f9396 0 37%, transparent 0 50%, #8f9396 0 62%, transparent 0 75%, #8f9396 0 87%, transparent 0);
 }
 
-.cekici { position: relative; width: 190px; flex: none; }
+.cekici { position: relative; width: 190px; flex: none; padding-top: 34px; margin-bottom: 30px; }
+/* Tavan rüzgarlığı: ön tarafı eğimli */
+.cekici__spoiler {
+  position: absolute; top: 0; left: 34px; right: 34px; height: 40px;
+  background: linear-gradient(180deg, #0d7d5a, var(--yesil-2));
+  clip-path: polygon(34% 0, 100% 0, 100% 100%, 0 100%);
+  border-radius: 0 6px 0 0;
+}
+.cekici__ayna {
+  position: absolute; left: -12px; top: 66px; width: 9px; height: 46px; z-index: 1;
+  background: #111; border-radius: 3px;
+  box-shadow: 9px 12px 0 -3px #111;
+}
 .cekici__kabin {
   position: relative; height: 232px; margin-right: 18px;
-  background: linear-gradient(180deg, #f4f5f3, #d9dcd8);
-  border-radius: 22px 10px 6px 6px;
+  background: linear-gradient(180deg, #11855f 0%, var(--yesil) 45%, var(--yesil-2) 100%);
+  border-radius: 20px 8px 6px 6px;
   overflow: hidden;
+  box-shadow: inset -10px 0 0 rgb(0 0 0 / .14);
 }
-.cekici__kabin::before { /* yeşil şerit */
-  content: ''; position: absolute; left: 0; right: 0; top: 136px; height: 14px; background: var(--yesil);
+.cekici__kabin::before { /* beyaz-turuncu şerit */
+  content: ''; position: absolute; left: 0; right: 0; top: 136px; height: 16px;
+  background: linear-gradient(180deg, var(--beyaz) 0 50%, var(--adr) 50%);
 }
 .cekici__cam {
-  position: absolute; left: 10px; top: 16px; width: 70px; height: 78px;
-  background: linear-gradient(160deg, #3a4a55, #111820 70%);
-  border-radius: 14px 4px 4px 4px;
+  position: absolute; left: 0; top: 16px; width: 78px; height: 82px;
+  background: linear-gradient(160deg, #6f8894 0%, #22323c 38%, #0b1117 75%);
+  border-radius: 0 6px 6px 0;
+  box-shadow: inset 0 0 0 3px rgb(0 0 0 / .35);
+}
+.cekici__kapi {
+  position: absolute; left: 92px; right: 14px; top: 58px; bottom: 26px;
+  border: 2px solid rgb(0 0 0 / .22); border-radius: 6px;
+}
+.cekici__kapi::after { /* kapı kolu */
+  content: ''; position: absolute; left: 8px; top: 60px; width: 18px; height: 5px; border-radius: 3px; background: rgb(0 0 0 / .35);
 }
 .cekici__izgara {
-  position: absolute; left: 0; bottom: 14px; width: 16px; height: 50px;
-  background: repeating-linear-gradient(180deg, #222 0 4px, #555 4px 7px);
+  position: absolute; left: 0; bottom: 18px; width: 18px; height: 56px;
+  background: repeating-linear-gradient(180deg, #1a1b1c 0 4px, #6d7174 4px 7px);
 }
 .cekici__far {
-  position: absolute; left: 0; bottom: 70px; width: 12px; height: 14px; background: var(--sari);
+  position: absolute; left: 0; bottom: 80px; width: 14px; height: 14px; background: var(--sari);
+  border-radius: 0 3px 3px 0;
   box-shadow: -30px 0 40px 16px rgb(255 210 63 / .45);
 }
+.cekici__tampon { position: absolute; left: 0; right: 0; bottom: 0; height: 16px; background: #1b1c1e; }
 .cekici__ad {
-  position: absolute; left: 92px; right: 10px; top: 24px;
-  font-weight: 900; font-stretch: 70%; font-size: 15px; line-height: 1; color: var(--yesil-koyu);
+  position: absolute; left: 92px; right: 10px; top: 20px;
+  font-weight: 900; font-stretch: 70%; font-size: 15px; line-height: 1; color: var(--beyaz);
   overflow: hidden;
 }
 .cekici__sasi { height: 14px; background: #1b1c1e; margin-top: -4px; }
 .cekici__tekerler { position: absolute; left: 20px; right: 0; bottom: -30px; display: flex; justify-content: space-between; }
 .cekici__tekerler .teker:first-child { margin-right: auto; }
 .cekici__tekerler .teker + .teker { margin-left: 4px; }
-.cekici { margin-bottom: 30px; }
 
 .dorse { flex: none; width: min(80vw, 440px); position: relative; }
 .dorse__kasa {
@@ -329,9 +354,14 @@ p { max-width: 62ch; }
 @media (min-width: 900px) {
   .cekici { width: 290px; }
   .cekici__kabin { height: 320px; }
-  .cekici__cam { width: 110px; height: 120px; }
-  .cekici__kabin::before { top: 190px; }
-  .cekici__ad { left: 134px; font-size: 22px; }
+  .cekici { padding-top: 46px; }
+  .cekici__spoiler { height: 54px; left: 50px; }
+  .cekici__ayna { top: 84px; height: 62px; }
+  .cekici__cam { width: 116px; height: 124px; }
+  .cekici__kabin::before { top: 190px; height: 20px; }
+  .cekici__kapi { left: 134px; top: 70px; }
+  .cekici__kapi::after { top: 90px; }
+  .cekici__ad { left: 134px; top: 26px; font-size: 22px; }
   .dorse { width: 540px; }
   .dorse__kasa { height: 390px; padding: 34px 32px 28px; }
   .dorse h3 { font-size: 46px; }

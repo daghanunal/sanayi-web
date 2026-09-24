@@ -199,7 +199,7 @@ export const menfez = {
               <p class="mf__durum-ust">Olası durum</p>
               <h3 class="mf__durum" data-o="ad"></h3>
               <p class="mf__metin" data-o="metin"></p>
-              <p class="mf__alt">Ustamızın ilk bakacağı yerler</p>
+              <p class="mf__alt">İlk bakacağımız yerler</p>
               <ol class="mf__bak" data-o="bak"></ol>
               <fieldset class="mf__ekler">
                 <legend>Başka bir şey var mı?</legend>

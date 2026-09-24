@@ -8,11 +8,11 @@
   },
   "bant": {
     "baslik": "Her rengin bir amperi var.",
-    "metin": "Sigortanın rengi hangi devreye baktığımızı söyler. Biz de işe oradan başlarız: hangi hat yanıyor, hangisi akım çekmiyor."
+    "metin": "Kahverengi 7,5, kırmızı 10, mavi 15, sarı 20 amper. Atan sigortanın rengi hangi hattın fazla akım çektiğini gösterir; ölçüme oradan başlarız."
   },
   "kodlar": {
     "baslik": "Beyin bir kod yazar. Asıl sebebi biz buluruz.",
-    "metin": "Hata kodu arızanın adresidir, kendisi değil. Aynı kod bazen bir sensör, bazen kemirilmiş bir kablo çıkar. Son aylarda dükkândan çıkan dört örnek:"
+    "metin": "Hata kodu arızanın adresidir, kendisi değil. Aynı kod bazen bir sensör, bazen kemirilmiş bir kablo çıkar. Sık karşılaştığımız dört örnek:"
   },
   "final": {
     "baslik": "Lamba yanıyorsa, arayın.",

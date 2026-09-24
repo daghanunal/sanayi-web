@@ -92,23 +92,30 @@ new IntersectionObserver(
 const heroAd = $('[data-hero-ad]');
 heroAd.setAttribute('aria-label', d.isletme.ad);
 const adKelime = up(d.isletme.ad).split(/\s+/).filter(Boolean);
-// Telefonda her kelime bir satır; masaüstünde en fazla iki dengeli satır.
+// Telefonda en fazla üç, masaüstünde en fazla iki dengeli satır.
 function adSatirlar() {
-  if (mobil() || adKelime.length < 3) return adKelime;
-  const top = adKelime.join(' ').length;
-  let en = 1, fark = Infinity;
-  for (let i = 1; i < adKelime.length; i++) {
-    const f = Math.abs(adKelime.slice(0, i).join(' ').length - top / 2);
-    if (f < fark) { fark = f; en = i; }
+  const k = Math.min(adKelime.length, mobil() ? 3 : adKelime.length < 3 ? adKelime.length : 2);
+  if (k === adKelime.length) return adKelime;
+  const satirlar = [];
+  let kalan = [...adKelime];
+  for (let s = k; s > 1; s--) {
+    const hedef = kalan.join(' ').length / s;
+    let i = 1;
+    while (i < kalan.length - (s - 1) && Math.abs(kalan.slice(0, i + 1).join(' ').length - hedef) < Math.abs(kalan.slice(0, i).join(' ').length - hedef)) i++;
+    satirlar.push(kalan.slice(0, i).join(' '));
+    kalan = kalan.slice(i);
   }
-  return [adKelime.slice(0, en).join(' '), adKelime.slice(en).join(' ')];
+  satirlar.push(kalan.join(' '));
+  return satirlar;
 }
 let adMod = null;
 function adKur() {
   const m = mobil();
   if (adMod === m) return;
   adMod = m;
-  heroAd.innerHTML = adSatirlar().map((k) => `<span class="hero__satir" aria-hidden="true">${esc(k)}</span>`).join('');
+  heroAd.innerHTML = adSatirlar()
+    .map((k, i) => `<span class="hero__satir${i && /[İĞÖÜÂÎÛ]/.test(k) ? ' hero__satir--ust' : ''}" aria-hidden="true">${esc(k)}</span>`)
+    .join('');
 }
 
 // Her satır levhanın iç genişliğini son (geniş) haliyle doldurur.
@@ -161,12 +168,19 @@ $('[data-stats]').innerHTML = d.istatistikler
 
 $('[data-konvoy-ust]').textContent = d.konvoy.ust;
 $('[data-arka]').textContent = 'ANKARA → ŞAŞMAZ → ETİMESGUT → ANKARA → ŞAŞMAZ → ETİMESGUT';
-$('[data-konvoy-baslik]').textContent = d.konvoy.baslik;
+// Başlıktaki {n}: hizmet sayısı yazıyla (Sekiz dorse iş…).
+const sayiYazi = ['Sıfır', 'Tek', 'İki', 'Üç', 'Dört', 'Beş', 'Altı', 'Yedi', 'Sekiz', 'Dokuz', 'On', 'On bir', 'On iki'];
+const nHiz = d.hizmetler.length;
+$('[data-konvoy-baslik]').textContent = d.konvoy.baslik.replace('{n}', sayiYazi[nHiz] ?? String(nHiz));
 const teker = (cls = '') => `<span class="teker ${cls}" aria-hidden="true"><i></i></span>`;
 const cekici = `
   <div class="cekici" aria-hidden="true">
+    <span class="cekici__spoiler"></span>
+    <span class="cekici__ayna"></span>
     <div class="cekici__kabin">
       <span class="cekici__cam"></span>
+      <span class="cekici__kapi"></span>
+      <span class="cekici__tampon"></span>
       <span class="cekici__izgara"></span>
       <span class="cekici__far"></span>
       <span class="cekici__ad">${esc(up(d.isletme.ad))}</span>

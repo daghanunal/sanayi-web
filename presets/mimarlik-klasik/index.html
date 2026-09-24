@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#eceef3" />
+  <title>Mimarlık Ofisi | Şaşmaz, Ankara</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23eceef3'/%3E%3Cpath d='M5 26V12l11-7 11 7v14z' fill='none' stroke='%233b35d4' stroke-width='2.4'/%3E%3Cpath d='M5 26h22' stroke='%2315161b' stroke-width='2.4'/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..900&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="preload" as="image" href="/img/mimarlik-klasik/villa.webp" fetchpriority="high" />
+</head>
+<body>
+  <header class="top">
+    <a href="#top" class="top__brand"><span class="top__mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 21V9l9-6 9 6v12"/><path d="M1 21h22"/><path d="M9 21v-6h6v6"/></svg></span><span data-bind="ad"></span></a>
+    <nav class="top__nav" aria-label="Sayfa bölümleri">
+      <a href="#hizmetler">Paftalar</a>
+      <a href="#imar">İmar hesabı</a>
+      <a href="#surec">Süreç</a>
+      <a href="#yorumlar">Yorumlar</a>
+      <a href="#konum">Ofis</a>
+    </nav>
+    <a class="top__call" data-tel><span data-icon="phone"></span><span data-bind="telefon"></span></a>
+  </header>
+
+  <main>
+    <!-- İMZA: ozalit makinesi. Hero bir pafta: sayfa açılınca villanın cephe çizimi çizgi çizgi
+         çizilir. Kaydırdıkça ışık çubuğu paftanın üstünden geçer; geçtiği yerde çizim gerçek
+         yapıya (fotoğrafa) döner, antetteki durum "Çizim" den "Yapı" ya ilerler, sonunda damga vurulur. -->
+    <section class="hero" id="top" aria-label="Giriş">
+      <div class="hero__pin">
+        <div class="sheet">
+          <div class="sheet__frame" data-frame aria-hidden="true">
+            <div class="sheet__art" data-art>
+              <img class="sheet__photo" src="/img/mimarlik-klasik/villa.webp" alt="" fetchpriority="high" decoding="async" width="1800" height="1202" />
+              <svg class="sheet__ink" viewBox="0 0 2000 1335" data-ink></svg>
+              <svg class="sheet__ghost" viewBox="0 0 2000 1335" data-ghost></svg>
+            </div>
+            <div class="sheet__beam" data-beam><span></span></div>
+            <span class="sheet__corner sheet__corner--tl"></span><span class="sheet__corner sheet__corner--tr"></span>
+            <span class="sheet__corner sheet__corner--bl"></span><span class="sheet__corner sheet__corner--br"></span>
+            <p class="sheet__tag mono" data-sheet-tag>GÜNEY CEPHESİ · 1/100</p>
+          </div>
+
+          <div class="antet">
+            <div class="antet__kapsam mono" aria-hidden="true">
+              <p>Pafta içeriği</p>
+              <ol data-kapsam></ol>
+              <div class="antet__olcek"><span></span><span></span><span></span><span></span><em>0</em><em>1</em><em>2</em><em>5 m</em></div>
+            </div>
+            <p class="antet__ust mono" data-hero-ust></p>
+            <h1 class="antet__ad" data-bind="ad"></h1>
+            <p class="antet__slogan" data-bind="slogan"></p>
+            <dl class="antet__tablo mono">
+              <div><dt>Proje</dt><dd data-hero-proje></dd></div>
+              <div><dt>Çizen</dt><dd data-bind="ad"></dd></div>
+              <div><dt>Pafta</dt><dd>A-00</dd></div>
+              <div><dt>Durum</dt><dd><span class="antet__durum" data-durum>Çizim</span> <b data-yuzde>%0</b></dd></div>
+            </dl>
+            <div class="antet__bar" aria-hidden="true"><span data-bar></span></div>
+            <div class="antet__cta">
+              <a class="btn btn--ink" data-tel><span data-icon="phone"></span>Hemen ara</a>
+              <a class="btn btn--line" data-wa target="_blank" rel="noopener"><span data-icon="whatsapp"></span>WhatsApp</a>
+            </div>
+            <p class="antet__damga" data-damga aria-hidden="true"><span>Çizildi</span><span>Yapıldı</span></p>
+          </div>
+        </div>
+        <p class="hero__hint mono" aria-hidden="true"><span></span><em data-hero-ipucu></em></p>
+      </div>
+    </section>
+
+    <!-- Hizmetler: pafta listesi -->
+    <section class="pafta" id="hizmetler" aria-labelledby="pafta-h">
+      <div class="pafta__head">
+        <p class="eyebrow mono"><span>01</span>Pafta listesi</p>
+        <h2 class="h2" id="pafta-h">Tek arsadan <em>tek çiviye kadar.</em></h2>
+        <p class="lead">Her iş bir pafta. Süreler ortalamadır; fiyatı işe başlamadan, yazılı olarak söyleriz.</p>
+      </div>
+      <div class="pafta__body">
+        <ol class="pafta__list" data-services></ol>
+        <figure class="pafta__view" aria-hidden="true" data-view><img alt="" decoding="async" /><figcaption class="mono" data-view-cap></figcaption></figure>
+      </div>
+    </section>
+
+    <!-- Rakamlar: ölçü çizgileri -->
+    <section class="olcu" aria-label="Rakamlarla">
+      <ul class="olcu__list" data-stats></ul>
+    </section>
+
+    <!-- Sektöre özel: imar ön hesabı -->
+    <section class="imar" id="imar" aria-labelledby="imar-h">
+      <div class="imar__head">
+        <p class="eyebrow mono"><span>02</span>İmar ön hesabı</p>
+        <h2 class="h2" id="imar-h">Arsanız ne kadar <em>ev kaldırır?</em></h2>
+        <p class="lead">Arsa alanını ve imar durumundaki iki katsayıyı girin; taban alanını ve toplam inşaat alanını kabaca görün.</p>
+      </div>
+      <div class="imar__box">
+        <form class="imar__form" data-imar onsubmit="return false">
+          <label class="field">
+            <span class="field__top"><span>Arsa alanı</span><output class="mono" data-out="arsa"></output></span>
+            <input type="range" name="arsa" min="150" max="3000" step="10" />
+          </label>
+          <label class="field">
+            <span class="field__top"><span>Emsal <small>(KAKS)</small></span><output class="mono" data-out="emsal"></output></span>
+            <input type="range" name="emsal" min="0.2" max="3" step="0.05" />
+          </label>
+          <label class="field">
+            <span class="field__top"><span>TAKS <small>(taban oranı)</small></span><output class="mono" data-out="taks"></output></span>
+            <input type="range" name="taks" min="0.1" max="0.6" step="0.01" />
+          </label>
+        </form>
+        <div class="imar__res">
+          <svg class="imar__svg" viewBox="0 0 420 260" data-imar-svg aria-hidden="true"></svg>
+          <dl class="imar__sonuc">
+            <div><dt>Taban alanı</dt><dd class="mono" data-r="taban"></dd></div>
+            <div><dt>Toplam inşaat alanı</dt><dd class="mono" data-r="toplam"></dd></div>
+            <div><dt>Yaklaşık kat</dt><dd class="mono" data-r="kat"></dd></div>
+          </dl>
+          <p class="imar__not" data-imar-not></p>
+          <a class="btn btn--ink imar__btn" data-imar-wa target="_blank" rel="noopener"><span data-icon="whatsapp"></span>Arsamı birlikte okuyalım</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Süreç: ölçek ölçek -->
+    <section class="surec" id="surec" aria-labelledby="surec-h">
+      <div class="surec__head">
+        <p class="eyebrow mono"><span>03</span>Nasıl çalışırız</p>
+        <h2 class="h2" id="surec-h">Ölçek küçülür, <em>ayrıntı büyür.</em></h2>
+        <p class="lead">Önce haritada arsayı, en son şantiyede vidayı konuşuruz. Her adımda çizim biraz daha yaklaşır.</p>
+      </div>
+      <ol class="surec__list" data-steps></ol>
+    </section>
+
+    <!-- Hakkında -->
+    <section class="ofis" aria-labelledby="ofis-h">
+      <figure class="ofis__photo"><img src="/img/mimarlik-klasik/santiye-plan.webp" alt="Şantiyede basılı projeyi birlikte inceleyen ekip" loading="lazy" decoding="async" /></figure>
+      <div class="ofis__copy">
+        <p class="eyebrow mono" data-years></p>
+        <h2 class="h2" id="ofis-h">Çizimi teslim edip <em>kaybolmayız.</em></h2>
+        <p class="lead" data-bind="hakkinda"></p>
+        <div class="rev-not">
+          <p class="rev-not__tag mono">Revizyon notu</p>
+          <p data-bind="garanti"></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Galeri -->
+    <section class="galeri" aria-labelledby="galeri-h">
+      <div class="galeri__head">
+        <p class="eyebrow mono"><span>04</span>Masadan şantiyeye</p>
+        <h2 class="h2" id="galeri-h">Eskiz, maket, <em>yapı.</em></h2>
+      </div>
+      <div class="galeri__grid" data-gallery></div>
+    </section>
+
+    <!-- Yorumlar -->
+    <section class="yorum" id="yorumlar" aria-labelledby="yorum-h">
+      <div class="yorum__head">
+        <div>
+          <p class="eyebrow mono"><span>05</span>Proje sahipleri</p>
+          <h2 class="h2" id="yorum-h">Evine taşınanlar <em>anlatıyor.</em></h2>
+        </div>
+        <div class="score">
+          <p class="score__num" data-score></p>
+          <div>
+            <p class="score__stars" data-stars></p>
+            <p class="score__count mono" data-review-count></p>
+          </div>
+        </div>
+      </div>
+      <ul class="yorum__list" data-reviews></ul>
+    </section>
+
+    <!-- Programlar -->
+    <section class="marka" aria-label="Çalıştığımız programlar">
+      <p class="marka__lbl mono">Çizim masamızdaki programlar</p>
+      <div class="marka__track" data-brands></div>
+    </section>
+
+    <!-- Saatler + konum -->
+    <section class="konum" id="konum" aria-labelledby="konum-h">
+      <div class="konum__info">
+        <p class="eyebrow mono"><span>06</span>Ofisimiz</p>
+        <h2 class="h2" id="konum-h">Bir çay için <em>uğrayın.</em></h2>
+        <p class="konum__status" data-status-big></p>
+        <dl class="hours" data-hours></dl>
+        <p class="konum__addr" data-bind="adres"></p>
+        <div class="konum__btns">
+          <a class="btn btn--ink" data-maps target="_blank" rel="noopener"><span data-icon="pin"></span>Yol tarifi al</a>
+          <a class="btn btn--line" data-tel><span data-icon="phone"></span>Ara</a>
+        </div>
+      </div>
+      <div class="konum__map" data-map><span class="mono">Harita yükleniyor</span></div>
+    </section>
+
+    <!-- Final -->
+    <section class="final" aria-labelledby="final-h">
+      <img class="final__bg" src="/img/mimarlik-klasik/plan.webp" alt="" loading="lazy" decoding="async" />
+      <div class="final__in">
+        <p class="eyebrow mono final__eyebrow"><span>07</span>İlk adım</p>
+        <h2 class="final__title" id="final-h" data-final></h2>
+        <p class="final__alt" data-final-alt></p>
+        <div class="final__btns">
+          <a class="btn btn--light btn--big" data-tel><span data-icon="phone"></span><span data-bind="telefon"></span></a>
+          <a class="btn btn--wa btn--big" data-wa target="_blank" rel="noopener"><span data-icon="whatsapp"></span>WhatsApp'tan yaz</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <div class="foot__antet mono">
+      <div><span>Ofis</span><b data-bind="ad"></b></div>
+      <div><span>Adres</span><b data-bind="adres"></b></div>
+      <div><span>Telefon</span><b><a data-tel data-bind="telefon"></a></b></div>
+      <div><span>Ölçek</span><b>1/1</b></div>
+    </div>
+    <p class="foot__small">© <span data-year></span> <span data-bind="ad"></span>. Fotoğraflar: Pexels.</p>
+  </footer>
+
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

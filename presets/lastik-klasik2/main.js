@@ -165,7 +165,8 @@ $('[data-hotel-text]').textContent = d.otel.metin;
 $('[data-hotel-list]').innerHTML = d.otel.maddeler.map((m) => `<li>${esc(m)}</li>`).join('');
 
 // Galeri
-$('[data-gallery]').innerHTML = d.galeri.map((g, i) => `
+const galeri = d.galeri.filter((g) => !/\/jant-sari\.jpg$/.test(g.src));
+$('[data-gallery]').innerHTML = (galeri.length ? galeri : d.galeri).map((g, i) => `
   <li class="shot shot--${i % 3}">
     <figure><img src="${esc(g.src)}" alt="${esc(g.alt)}" loading="lazy" decoding="async" /></figure>
     <p class="shot__cap"><span>${String(i + 1).padStart(2, '0')}</span>${esc(g.alt)}</p>
@@ -244,7 +245,11 @@ function layoutHero() {
   const cap = 0.72; // Rubik büyük harf yüksekliği / font-size
   const gap = f1 * 0.08;
   const block = f1 * cap + gap + f2 * cap;
-  const topY = mobile ? H * 0.2 : Math.max(H * 0.15, (H - block) / 2 + H * 0.01);
+  // Mobilde harf bloğu + künye, üst bar ile ipucu arasında dikeyde ortalanır
+  const labelsH = f2 * 0.14 + (H < 700 ? 90 : 215);
+  const topY = mobile
+    ? Math.max(130, 90 + (H - 230 - (block + labelsH)) / 2)
+    : Math.max(H * 0.15, (H - block) / 2 + H * 0.01);
   const b1 = topY + f1 * cap;
   const b2 = b1 + gap + f2 * cap;
   w1.setAttribute('font-size', f1.toFixed(1)); w1.setAttribute('x', pad); w1.setAttribute('y', b1.toFixed(1));
@@ -275,6 +280,7 @@ function layoutHero() {
   const stem = f1 * 0.2;
   geo.smax = (Math.hypot(W, H) * 1.25) / stem;
   const labels = $('[data-hero-labels]');
+  labels.style.setProperty('--top', `${Math.round(topY)}px`);
   labels.style.setProperty('--below', `${Math.round(b2 + f2 * 0.14)}px`);
   // masaüstünde künye JANT'ın solundaki boşluğa oturur
   probe.textContent = w2.textContent; probe.setAttribute('font-size', f2); probe.setAttribute('letter-spacing', 0);
@@ -409,6 +415,11 @@ function motion() {
       const el = $('[data-score]');
       gsap.to(o, { v: d.puan.ortalama, duration: 1.4, ease: 'power3.out', onUpdate: () => (el.textContent = mmf(o.v)) });
     },
+  });
+
+  gsap.fromTo('[data-wheel]', { rotation: -40 }, {
+    rotation: 50, ease: 'none',
+    scrollTrigger: { trigger: '.final', start: 'top bottom', end: 'bottom top', scrub: true },
   });
 
   gsap.from('.final__title', {

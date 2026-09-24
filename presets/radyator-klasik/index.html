@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0c2a2e" />
+  <title>Radyatör ve Soğutma | Şaşmaz, Ankara</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230c2a2e'/%3E%3Cpath d='M9 7v18M13 7v18M17 7v18M21 7v18' stroke='%23dfe4e2' stroke-width='2'/%3E%3Ccircle cx='23' cy='21' r='4' fill='%233fe196'/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Alumni+Sans:wght@500;700;800;900&family=Libre+Franklin:wght@400;500;600;700&family=Sono:wght@400;600&display=swap&subset=latin-ext" rel="stylesheet" />
+  <link rel="preload" as="image" href="/img/radyator-klasik/hararet-gostergesi.jpg" />
+  <link rel="preload" as="image" href="/img/radyator-klasik/klasik-petek.jpg" />
+</head>
+<body>
+  <header class="top">
+    <a href="#top" class="top__brand"><span class="top__mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span data-bind="ad"></span></a>
+    <nav class="top__nav" aria-label="Sayfa bölümleri">
+      <a href="#hizmetler">Hizmetler</a>
+      <a href="#test">Basınç testi</a>
+      <a href="#agir">Ağır vasıta</a>
+      <a href="#yorumlar">Yorumlar</a>
+      <a href="#konum">Konum</a>
+    </nav>
+    <a class="top__call" data-tel><span data-icon="phone"></span><span data-bind="telefon"></span></a>
+  </header>
+
+  <main>
+    <!-- İMZA: petek kanatları. Hero fotoğrafı dikey radyatör kanatlarına bölünmüştür. Kaydırdıkça
+         kanatlar sırayla kendi ekseninde döner: hararet göstergesinin arkasından radyatör peteği çıkar. -->
+    <section class="hero" id="top" aria-label="Giriş">
+      <div class="hero__pin">
+        <div class="fins" data-fins aria-hidden="true"></div>
+        <div class="hero__shade" aria-hidden="true"></div>
+
+        <div class="hero__a" data-a>
+          <p class="hero__eyebrow mono" data-since></p>
+          <h1 class="hero__name" data-name></h1>
+          <p class="hero__q" data-q></p>
+        </div>
+
+        <div class="hero__b" data-b>
+          <p class="hero__eyebrow mono"><span class="dot"></span>Sebep belli olmadan parça değişmez</p>
+          <p class="hero__answer" data-answer></p>
+          <ul class="hero__facts" data-facts></ul>
+        </div>
+
+        <div class="hero__foot">
+          <div class="hero__cta">
+            <a class="btn btn--pink" data-tel><span data-icon="phone"></span>Hemen ara</a>
+            <a class="btn btn--glass" data-wa target="_blank" rel="noopener"><span data-icon="whatsapp"></span>WhatsApp</a>
+          </div>
+          <p class="hero__hint mono" aria-hidden="true"><span class="hero__bar"><i data-progress></i></span>Kaydırın, petek dönsün</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Rakamlar -->
+    <section class="stats" aria-label="Rakamlarla">
+      <ul class="stats__list" data-stats></ul>
+    </section>
+
+    <!-- Belirtiler -->
+    <section class="sebep" aria-labelledby="sebep-h">
+      <div class="wrap sebep__grid">
+        <div class="sebep__head">
+          <p class="eyebrow mono">Hararetin beş sık sebebi</p>
+          <h2 class="h2" id="sebep-h">Aynı ibre, <em>beş ayrı arıza.</em></h2>
+          <p class="lead">Hepsinde gösterge yükselir, ama çaresi aynı değil. Size en yakın olanı açın; kesin sebebi aracı test edince söyleriz.</p>
+        </div>
+        <ol class="sebep__list" data-causes></ol>
+      </div>
+    </section>
+
+    <!-- Hizmetler -->
+    <section class="hizmet" id="hizmetler" aria-labelledby="hizmet-h">
+      <div class="wrap">
+        <div class="hizmet__head">
+          <div><p class="eyebrow mono">Sadece soğutma sistemi</p>
+          <h2 class="h2" id="hizmet-h">Kapaktan <em>petek sırasına.</em></h2></div>
+          <p class="lead">Süreler ortalamadır. Fiyatı işe başlamadan söyleriz; ek parça gerekirse önce sizi ararız.</p>
+        </div>
+        <ul class="hizmet__list" data-services></ul>
+      </div>
+    </section>
+
+    <!-- Basınç testi: sektöre özel imza bölümü -->
+    <section class="test" id="test" aria-labelledby="test-h">
+      <div class="test__pin">
+        <div class="test__head wrap">
+          <p class="eyebrow mono">Su havuzu · 1,4 bar</p>
+          <h2 class="h2" id="test-h">Kaçağı <em>tahminle değil, kabarcıkla</em> buluruz.</h2>
+        </div>
+        <div class="test__body wrap">
+          <figure class="rig" aria-hidden="true">
+            <svg viewBox="0 0 420 330" class="rig__svg">
+              <defs>
+                <pattern id="finpat" width="10" height="8" patternUnits="userSpaceOnUse">
+                  <path d="M0 4 L2.5 0 L5 4 L7.5 8 L10 4" fill="none" stroke="currentColor" stroke-width=".8" />
+                </pattern>
+                <clipPath id="poolclip"><rect x="14" y="60" width="392" height="256" rx="10" /></clipPath>
+              </defs>
+              <!-- havuz -->
+              <rect class="rig__pool" x="14" y="60" width="392" height="256" rx="10" />
+              <g clip-path="url(#poolclip)">
+                <g class="rig__water" data-water>
+                  <path d="M0 0 Q 26 -7 52 0 T 104 0 T 156 0 T 208 0 T 260 0 T 312 0 T 364 0 T 416 0 T 468 0 V 300 H 0 Z" />
+                </g>
+              </g>
+              <!-- radyatör -->
+              <g class="rig__rad">
+                <rect class="rig__tank" x="70" y="96" width="220" height="26" rx="5" />
+                <rect class="rig__tank" x="70" y="262" width="220" height="26" rx="5" />
+                <rect class="rig__core" x="78" y="122" width="204" height="140" />
+                <rect x="78" y="122" width="204" height="140" fill="url(#finpat)" class="rig__fins" />
+                <g class="rig__tubes" data-tubes></g>
+                <rect class="rig__neck" x="248" y="80" width="22" height="18" rx="3" />
+                <path class="rig__hose" d="M270 89 H 330 V 40" />
+              </g>
+              <!-- kabarcıklar -->
+              <g class="rig__bubbles" data-bubbles></g>
+              <circle class="rig__ring" cx="118" cy="266" r="16" data-ring />
+              <g class="rig__patch" data-patch><circle cx="118" cy="266" r="6" /></g>
+              <text class="rig__tag mono" x="140" y="309" data-tag>KAÇAK: ALT TANK CONTASI</text>
+              <!-- manometre -->
+              <g class="gauge" transform="translate(348 38)">
+                <circle r="30" class="gauge__face" />
+                <path class="gauge__arc" d="M -21.2 21.2 A 30 30 0 1 1 21.2 21.2" pathLength="1" data-arc />
+                <g data-needle><line x1="0" y1="4" x2="0" y2="-22" class="gauge__needle" /></g>
+                <circle r="3.5" class="gauge__hub" />
+              </g>
+              <!-- fan -->
+              <g class="fan" transform="translate(348 200)" data-fanwrap>
+                <circle r="38" class="fan__ring" />
+                <g data-fan>
+                  <path d="M0 0 C 8 -10 20 -30 4 -34 C -6 -30 -4 -12 0 0Z" />
+                  <path d="M0 0 C 8 -10 20 -30 4 -34 C -6 -30 -4 -12 0 0Z" transform="rotate(72)" />
+                  <path d="M0 0 C 8 -10 20 -30 4 -34 C -6 -30 -4 -12 0 0Z" transform="rotate(144)" />
+                  <path d="M0 0 C 8 -10 20 -30 4 -34 C -6 -30 -4 -12 0 0Z" transform="rotate(216)" />
+                  <path d="M0 0 C 8 -10 20 -30 4 -34 C -6 -30 -4 -12 0 0Z" transform="rotate(288)" />
+                </g>
+                <circle r="6" class="fan__hub" />
+              </g>
+            </svg>
+            <div class="rig__read mono"><span>Basınç</span><b data-bar>0,0</b><span>bar</span></div>
+          </figure>
+          <ol class="steps" data-steps></ol>
+        </div>
+      </div>
+    </section>
+
+    <!-- Ağır vasıta -->
+    <section class="agir" id="agir" aria-labelledby="agir-h">
+      <div class="agir__photos">
+        <figure class="agir__big"><img data-agir-img alt="Kamyonun ön panelinde radyatörü kontrol eden usta" loading="lazy" decoding="async" /></figure>
+        <figure class="agir__small"><img data-agir-img2 alt="İş makinesinin radyatörünü inceleyen usta" loading="lazy" decoding="async" /></figure>
+      </div>
+      <div class="agir__copy">
+        <p class="eyebrow mono" data-agir-stat></p>
+        <h2 class="h2" id="agir-h" data-agir-title></h2>
+        <p class="lead" data-agir-text></p>
+        <ul class="agir__brands" data-heavy-brands></ul>
+      </div>
+    </section>
+
+    <!-- Hakkında -->
+    <section class="about" aria-labelledby="about-h">
+      <div class="wrap about__grid">
+        <p class="about__years" aria-hidden="true" data-years-big></p>
+        <div>
+          <p class="eyebrow mono" data-years></p>
+          <h2 class="h2" id="about-h">Başka iş yapmıyoruz. <em>Sadece soğutma.</em></h2>
+          <p class="lead" data-bind="hakkinda"></p>
+          <p class="about__garanti"><span data-icon="check"></span><span data-bind="garanti"></span></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Galeri -->
+    <section class="galeri" aria-label="Atölyeden kareler">
+      <div class="galeri__track" data-gallery tabindex="0"></div>
+    </section>
+
+    <!-- Yorumlar -->
+    <section class="yorum" id="yorumlar" aria-labelledby="yorum-h">
+      <div class="wrap">
+        <div class="yorum__head">
+          <h2 class="h2" id="yorum-h">Hararetten <em>kurtulanlar.</em></h2>
+          <div class="score">
+            <p class="score__num" data-score></p>
+            <div>
+              <p class="score__stars" data-stars></p>
+              <p class="score__count mono" data-review-count></p>
+            </div>
+          </div>
+        </div>
+        <ul class="yorum__list" data-reviews></ul>
+      </div>
+    </section>
+
+    <!-- Markalar -->
+    <section class="marka" aria-label="Radyatörüne baktığımız markalar">
+      <div class="marka__track" data-brands></div>
+    </section>
+
+    <!-- Saatler + konum -->
+    <section class="konum" id="konum" aria-labelledby="konum-h">
+      <div class="konum__info">
+        <p class="eyebrow mono">Şaşmaz Oto Sanayi</p>
+        <h2 class="h2" id="konum-h">Soğukken <em>getirin.</em></h2>
+        <p class="konum__note">Motor soğukken radyatör kapağını açıp test ederiz. Hararetle geliyorsanız yolda durup motoru dinlendirin.</p>
+        <p class="konum__status" data-status></p>
+        <dl class="hours" data-hours></dl>
+        <p class="konum__addr" data-bind="adres"></p>
+        <div class="konum__btns">
+          <a class="btn btn--ink" data-maps target="_blank" rel="noopener"><span data-icon="pin"></span>Yol tarifi al</a>
+          <a class="btn btn--line" data-tel><span data-icon="phone"></span>Ara</a>
+        </div>
+      </div>
+      <div class="konum__map" data-map><span class="mono">Harita yükleniyor</span></div>
+    </section>
+
+    <!-- Final -->
+    <section class="final" aria-labelledby="final-h">
+      <img class="final__bg" src="/img/radyator-klasik/on-panel.jpg" alt="" loading="lazy" decoding="async" />
+      <div class="final__in">
+        <p class="eyebrow mono" data-status-final></p>
+        <h2 class="final__title" id="final-h" data-final></h2>
+        <div class="final__btns">
+          <a class="btn btn--pink btn--big" data-tel><span data-icon="phone"></span>Hemen ara</a>
+          <a class="btn btn--light btn--big" data-wa target="_blank" rel="noopener"><span data-icon="whatsapp"></span>WhatsApp'tan yaz</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <p class="foot__name" data-bind="ad"></p>
+    <p data-bind="adres"></p>
+    <p><a data-tel data-bind="telefon"></a></p>
+    <p class="foot__small">© <span data-year></span> <span data-bind="ad"></span>. Fotoğraflar: Pexels.</p>
+  </footer>
+
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

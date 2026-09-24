@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0d0a17" />
+  <title>Oto Kilit ve Anahtar | Şaşmaz</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230d0a17'/%3E%3Ccircle cx='16' cy='12' r='5' fill='%23e8b04e'/%3E%3Cpath d='M13 15h6l2 11h-10z' fill='%23e8b04e'/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Tilt+Warp&family=Golos+Text:wght@400;500;600;700&family=Fragment+Mono&display=swap&subset=latin-ext" rel="stylesheet" />
+</head>
+<body class="is-loading">
+  <!-- Açılış: anahtar deliği. Kod okunur, delik büyür, sahne içeriden görünür. -->
+  <div class="intro" data-intro role="presentation">
+    <svg class="intro__mask" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      <defs>
+        <mask id="kh" maskUnits="userSpaceOnUse" x="-50" y="-50" width="200" height="200">
+          <rect x="-50" y="-50" width="200" height="200" fill="#fff" />
+          <g data-kh transform="translate(50 50) scale(1)">
+            <path d="M0 -9 a5.2 5.2 0 1 1 -0.01 0 z M-2.2 -1.6 h4.4 l2 10.2 h-8.4 z" fill="#000" transform="translate(0 -3.6)" />
+          </g>
+        </mask>
+        <radialGradient id="khg" cx="50%" cy="46%" r="30%">
+          <stop offset="0" stop-color="#2a1f45" />
+          <stop offset="1" stop-color="#0d0a17" />
+        </radialGradient>
+      </defs>
+      <rect x="-50" y="-50" width="200" height="200" fill="url(#khg)" mask="url(#kh)" />
+      <g data-kh-rim transform="translate(50 50) scale(1)">
+        <path d="M0 -9 a5.2 5.2 0 1 1 -0.01 0 z M-2.2 -1.6 h4.4 l2 10.2 h-8.4 z" fill="none" stroke="#e8b04e" stroke-width="0.35" transform="translate(0 -3.6)" data-kh-line />
+      </g>
+    </svg>
+    <div class="intro__center" data-intro-center>
+      <p class="intro__name" data-intro-name></p>
+      <p class="intro__code"><span>Anahtar kodu</span><b data-intro-code>0 0 0 0 0</b></p>
+      <p class="intro__skip">Geçmek için dokunun</p>
+    </div>
+  </div>
+
+  <canvas class="stage" data-stage aria-hidden="true"></canvas>
+  <div class="grain" aria-hidden="true"></div>
+
+  <header class="top" data-top>
+    <a class="top__brand" href="#" data-brand><span class="top__kh" aria-hidden="true"></span><span data-bind="ad"></span></a>
+    <p class="top__status" data-status></p>
+    <a class="top__call" data-tel><span data-icon="phone"></span><span class="top__num" data-bind="telefon"></span></a>
+  </header>
+
+  <main>
+    <!-- Film: anahtar kesilir → silindire girer, pimler hizalanır, göbek döner → çip konuşur → kumanda açılır -->
+    <section class="film" data-film>
+      <div class="film__sticky">
+        <div class="hero" data-hero>
+          <p class="hero__since" data-since></p>
+          <h1 class="hero__title" data-hero-title></h1>
+          <p class="hero__slogan" data-bind="slogan"></p>
+          <div class="hero__cta">
+            <a class="btn btn--brass" data-tel><span data-icon="phone"></span>Hemen ara</a>
+            <a class="btn btn--ghost" data-wa target="_blank" rel="noopener"><span data-icon="whatsapp"></span>WhatsApp'tan yaz</a>
+          </div>
+        </div>
+
+        <ol class="rail" data-rail aria-label="Filmdeki bölümler"></ol>
+        <div class="cards" data-cards></div>
+
+        <!-- Kesim kodu -->
+        <div class="hud hud--code" data-hud-code aria-hidden="true">
+          <p class="hud__lbl">Kesim kodu</p>
+          <p class="hud__digits" data-code-digits></p>
+          <p class="hud__sub" data-code-sub>Freze ilerliyor</p>
+        </div>
+        <!-- Pim ölçer -->
+        <div class="hud hud--pins" data-hud-pins aria-hidden="true">
+          <p class="hud__lbl">Kesme hattı</p>
+          <div class="pinmeter" data-pinmeter></div>
+          <p class="hud__state" data-pin-state>Kilitli</p>
+        </div>
+        <!-- Çip okuma -->
+        <div class="hud hud--chip" data-hud-chip aria-hidden="true">
+          <p class="hud__lbl">Transponder</p>
+          <p class="hud__hex" data-hex>-- -- -- --</p>
+          <p class="hud__state" data-chip-state>Okunuyor</p>
+        </div>
+
+        <div class="overview" data-overview>
+          <p class="overview__kicker">Kilit, kontak, çip, kumanda</p>
+          <h2 class="overview__title">Hepsi aynı tezgâhta.</h2>
+          <p class="overview__sub">Hiç anahtarınız kalmadıysa da buradan başlarız.</p>
+        </div>
+
+        <p class="hint" data-hint aria-hidden="true"><i></i>Kaydırın, anahtarı keselim</p>
+      </div>
+    </section>
+
+    <!-- Hakkımızda -->
+    <section class="about" data-about>
+      <figure class="about__img"><img src="/img/kilit-sinematik/dukkan.jpg" alt="Anahtar dükkânında tezgâhta anahtar işleyen usta" loading="lazy" width="1300" height="909" /></figure>
+      <div class="about__body">
+        <p class="kicker" data-since-2></p>
+        <h2 class="sec-title" data-rise>Yalnızca kilit, yalnızca anahtar.</h2>
+        <p class="about__text" data-about-text></p>
+        <ul class="stats" data-stats></ul>
+      </div>
+    </section>
+
+    <!-- Hizmetler -->
+    <section class="services" id="hizmetler">
+      <header class="sec-head">
+        <p class="kicker">Hizmetler</p>
+        <h2 class="sec-title" data-rise>Anahtarın her hâli.</h2>
+        <p>Süreyi telefonda söyleriz. Fiyatı işe başlamadan söyleriz.</p>
+      </header>
+      <ol class="svc" data-services></ol>
+    </section>
+
+    <!-- İmza: anahtar tipi seçici -->
+    <section class="types" data-types>
+      <header class="sec-head">
+        <p class="kicker">Anahtarınız hangisi?</p>
+        <h2 class="sec-title" data-rise>Tipini seçin, ne yapacağımızı görün.</h2>
+      </header>
+      <div class="types__tabs" role="tablist" data-type-tabs></div>
+      <div class="types__stage">
+        <div class="types__art" data-type-art aria-hidden="true"></div>
+        <div class="types__info" data-type-info aria-live="polite"></div>
+      </div>
+    </section>
+
+    <!-- Güven + süreç -->
+    <section class="trust" data-trust>
+      <div class="trust__head">
+        <div class="trust__stamp" aria-hidden="true"><svg viewBox="0 0 200 200"><defs><path id="circ" d="M100 100 m-78 0 a78 78 0 1 1 156 0 a78 78 0 1 1 -156 0" /></defs><circle cx="100" cy="100" r="94" /><circle cx="100" cy="100" r="62" /><text><textPath href="#circ">RUHSAT · KİMLİK · RUHSAT · KİMLİK · </textPath></text><path class="trust__check" d="M72 102 l18 18 l38 -40" /></svg></div>
+        <h2 class="sec-title" data-rise data-guven-title></h2>
+        <p data-guven-text></p>
+      </div>
+      <ol class="steps" data-steps></ol>
+    </section>
+
+    <!-- Galeri -->
+    <section class="gallery" aria-label="Atölyeden kareler">
+      <div class="gallery__track" data-gallery></div>
+    </section>
+
+    <!-- Yorumlar -->
+    <section class="reviews" id="yorumlar">
+      <header class="reviews__head">
+        <p class="reviews__score"><b data-puan>4,9</b><span class="reviews__stars" data-stars></span></p>
+        <p class="reviews__count" data-puan-adet></p>
+      </header>
+      <div class="reviews__grid" data-reviews></div>
+      <p class="brands" data-brands></p>
+    </section>
+
+    <!-- Dükkân -->
+    <section class="shop" id="konum">
+      <div class="shop__info">
+        <div class="padlock" data-padlock aria-hidden="true">
+          <svg viewBox="0 0 120 150"><path class="padlock__shackle" data-shackle d="M30 68 V42 a30 30 0 0 1 60 0 V68" /><rect class="padlock__body" x="14" y="66" width="92" height="76" rx="14" /><circle class="padlock__hole" cx="60" cy="98" r="9" /><path class="padlock__hole" d="M56 104 h8 l3 20 h-14z" /></svg>
+        </div>
+        <h2 class="sec-title" data-rise>Şaşmaz'da, 4. Cadde'de.</h2>
+        <p class="shop__status" data-status-big></p>
+        <dl class="shop__hours" data-hours></dl>
+        <p class="shop__addr" data-bind="adres"></p>
+        <div class="shop__cta">
+          <a class="btn btn--brass" data-maps target="_blank" rel="noopener"><span data-icon="pin"></span>Yol tarifi al</a>
+          <a class="btn btn--ghost" data-tel><span data-icon="phone"></span>Ara</a>
+        </div>
+      </div>
+      <div class="shop__map" data-map></div>
+    </section>
+
+    <!-- Final: anahtar deliği büyür -->
+    <section class="finale" data-finale>
+      <div class="finale__sticky">
+        <div class="finale__hole" data-final-hole aria-hidden="true"><img src="/img/kilit-sinematik/kilit-silindiri.jpg" alt="" loading="lazy" /></div>
+        <div class="finale__copy">
+          <p class="finale__kicker">Anahtar içeride mi kaldı? Hepsi mi kayıp?</p>
+          <h2 class="finale__title" data-final-title></h2>
+          <p class="finale__sub"><span data-garanti></span></p>
+          <div class="finale__cta">
+            <a class="btn btn--brass btn--xl" data-tel><span data-icon="phone"></span>Hemen ara</a>
+            <a class="btn btn--ghost btn--xl" data-wa-final target="_blank" rel="noopener"><span data-icon="whatsapp"></span>Aracımı yazayım</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <p data-year></p>
+    <p data-bind="adres"></p>
+    <p class="foot__small">Fotoğraflar: Pexels. 3D kilit ve anahtar bu site için kodla çizildi.</p>
+  </footer>
+
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

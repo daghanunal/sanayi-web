@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#100a1d" />
+  <title>Radyatör ve Soğutma | Şaşmaz</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23100a1d'/%3E%3Cpath d='M16 5c4 6 7 9.6 7 13.4A7 7 0 0 1 9 18.4C9 14.6 12 11 16 5z' fill='%23ff3d7f'/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Gasoek+One&family=Readex+Pro:wght@300..700&family=Reddit+Mono:wght@400..700&display=swap&subset=latin-ext" rel="stylesheet" />
+</head>
+<body class="is-loading">
+  <!-- Açılış: hararet göstergesi kırmızıya dayanır, pembe damla düşer, su halkası sayfayı açar -->
+  <div class="intro" data-intro role="presentation">
+    <div class="intro__center" data-intro-center>
+      <svg class="intro__gauge" viewBox="-110 -110 220 150" aria-hidden="true">
+        <path class="intro__arc" d="M-86.6 50 A100 100 0 1 1 86.6 50" />
+        <path class="intro__arc intro__arc--hot" d="M70.7 -70.7 A100 100 0 0 1 86.6 50" />
+        <text class="intro__cz" x="-72" y="34">C</text>
+        <text class="intro__cz" x="62" y="34">H</text>
+        <g data-intro-needle><line x1="0" y1="0" x2="0" y2="-84" class="intro__needle" /></g>
+        <circle r="9" class="intro__hub" />
+      </svg>
+      <p class="intro__temp"><b data-intro-temp>40</b><span>°C</span></p>
+      <p class="intro__warn" data-intro-warn>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v10.5M9.5 6h2.5M9.5 9h2.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/><circle cx="12" cy="15.5" r="2.6" fill="currentColor"/><path d="M3 20c1.5 1 3 1 4.5 0s3-1 4.5 0 3 1 4.5 0 3-1 4.5 0" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg>
+        Hararet
+      </p>
+      <p class="intro__name" data-intro-name></p>
+    </div>
+    <i class="intro__drop" data-intro-drop></i>
+    <p class="intro__skip">Geçmek için dokunun</p>
+  </div>
+
+  <canvas class="stage" data-stage aria-hidden="true"></canvas>
+  <div class="waterline" data-waterline aria-hidden="true"></div>
+  <div class="cursor" data-cursor aria-hidden="true"><i></i></div>
+
+  <header class="top" data-top>
+    <a class="top__brand" href="#"><span class="top__drop" aria-hidden="true"></span><span data-bind="ad"></span></a>
+    <p class="top__status" data-status></p>
+    <a class="top__call" data-tel data-magnetic><span data-icon="phone"></span><span class="top__num" data-bind="telefon"></span></a>
+  </header>
+
+  <main>
+    <!-- Film: asılı radyatör → hararet → havuza iner, kabarcık → lehim, tekrar test → petek → fan → ağır vasıta -->
+    <section class="film" data-film>
+      <div class="film__sticky">
+        <div class="hero" data-hero>
+          <p class="hero__since" data-since></p>
+          <h1 class="hero__title" data-hero-title></h1>
+          <p class="hero__slogan" data-bind="slogan"></p>
+          <div class="hero__cta">
+            <a class="btn btn--pink" data-tel data-magnetic><span data-icon="phone"></span>Hemen ara</a>
+            <a class="btn btn--ghost" data-wa target="_blank" rel="noopener" data-magnetic><span data-icon="whatsapp"></span>WhatsApp'tan yaz</a>
+          </div>
+        </div>
+
+        <ol class="rail" data-rail aria-label="Filmdeki duraklar"></ol>
+        <div class="cards" data-cards></div>
+
+        <div class="hud" data-hud aria-hidden="true">
+          <svg class="hud__dial" viewBox="-60 -60 120 92">
+            <path class="hud__track" d="M-49.2 28.4 A56.8 56.8 0 1 1 49.2 28.4" />
+            <path class="hud__fill" data-hud-fill d="M-49.2 28.4 A56.8 56.8 0 1 1 49.2 28.4" />
+            <g data-hud-needle><line x1="0" y1="0" x2="0" y2="-46" /></g>
+            <circle r="5" />
+          </svg>
+          <p class="hud__lbl" data-hud-lbl></p>
+          <p class="hud__val"><b data-hud-val>0</b><small data-hud-unit></small></p>
+          <p class="hud__verdict" data-hud-verdict></p>
+        </div>
+
+        <div class="leak" data-leak aria-hidden="true"><i></i><span>Kaçak burada</span></div>
+
+        <div class="overview" data-overview>
+          <p class="overview__kicker">Binekten çekiciye</p>
+          <h2 class="overview__title">Radyatörün her derdi<br />aynı havuzda çözülür.</h2>
+        </div>
+
+        <p class="hint" data-hint aria-hidden="true"><i></i>Kaydırın, radyatörü havuza indirelim</p>
+      </div>
+    </section>
+
+    <!-- Hakkımızda -->
+    <section class="about" data-about>
+      <div class="about__body">
+        <p class="kicker">Şaşmaz, 4. Cadde</p>
+        <h2 class="sec-title" data-rise data-about-title></h2>
+        <p class="about__text" data-about-text></p>
+      </div>
+      <figure class="about__img"><img src="/img/radyator-sinematik/tir-usta.jpg" alt="Ustamız loş atölyede çekicinin yanında çalışıyor" loading="lazy" width="1600" height="1066" /></figure>
+      <ul class="stats" data-stats></ul>
+    </section>
+
+    <!-- Hizmetler: her satır bir boru, geçerken antifriz dolar -->
+    <section class="services" id="hizmetler">
+      <header class="sec-head">
+        <p class="kicker">Hizmetler</p>
+        <h2 class="sec-title" data-rise>Petekten fana,<br />soğutmanın hepsi.</h2>
+        <p>Süreyi baştan söyleriz. Fiyatı da işe başlamadan konuşuruz.</p>
+      </header>
+      <ol class="svc" data-services></ol>
+    </section>
+
+    <!-- İmza: belirtiye göre sebep -->
+    <section class="sym" id="belirti">
+      <div class="sym__head">
+        <p class="kicker">Aracınız ne yapıyor?</p>
+        <h2 class="sec-title" data-rise>Belirtiyi seçin,<br />sebebini söyleyelim.</h2>
+      </div>
+      <div class="sym__grid">
+        <div class="sym__list" role="tablist" aria-label="Belirtiler" data-sym-list></div>
+        <article class="sym__card" data-sym-card aria-live="polite">
+          <div class="sym__temp" aria-hidden="true"><i data-sym-bar></i></div>
+          <p class="sym__lbl">Olası sebep</p>
+          <p class="sym__cause" data-sym-cause></p>
+          <p class="sym__lbl">Biz ne yaparız</p>
+          <p class="sym__do" data-sym-do></p>
+          <a class="btn btn--pink" data-sym-wa target="_blank" rel="noopener"><span data-icon="whatsapp"></span>Bu belirtiyi yazın</a>
+        </article>
+      </div>
+    </section>
+
+    <!-- Ağır vasıta -->
+    <section class="heavy" data-heavy>
+      <figure class="heavy__img"><img src="/img/radyator-sinematik/tir-motor.jpg" alt="Ağır vasıta motoru üzerinde çalışan usta" loading="lazy" width="1600" height="1066" /></figure>
+      <div class="heavy__body">
+        <p class="kicker">Ağır vasıta</p>
+        <h2 class="heavy__title" data-rise>Kamyon yatarsa<br />iş yatar.</h2>
+        <p data-heavy-text></p>
+        <ul class="heavy__list">
+          <li>Kamyon, çekici ve otobüs radyatörü</li>
+          <li>İntercooler ve yağ soğutucu</li>
+          <li>İş makinesi radyatörü</li>
+          <li>Petek ve tank ayrı ayrı onarım</li>
+        </ul>
+        <a class="btn btn--pink" data-wa-agir target="_blank" rel="noopener" data-magnetic><span data-icon="whatsapp"></span>Ağır vasıta için yazın</a>
+      </div>
+    </section>
+
+    <!-- Süreç: hararetten normale -->
+    <section class="steps">
+      <header class="sec-head">
+        <p class="kicker">Nasıl çalışırız</p>
+        <h2 class="sec-title" data-rise>Sebep belli olmadan<br />parça değişmez.</h2>
+      </header>
+      <div class="steps__wrap">
+        <div class="thermo" aria-hidden="true"><i data-thermo></i><b data-thermo-val>118°</b></div>
+        <ol class="steps__list" data-steps></ol>
+      </div>
+    </section>
+
+    <!-- Yorumlar -->
+    <section class="reviews" id="yorumlar">
+      <header class="reviews__head">
+        <p class="reviews__score"><b data-puan>4,8</b><span class="reviews__stars" data-stars></span></p>
+        <p class="reviews__count" data-puan-adet></p>
+      </header>
+      <div class="reviews__rail"><div class="reviews__track" data-rev-track></div></div>
+    </section>
+
+    <!-- Markalar -->
+    <section class="brands" aria-label="Çalıştığımız markalar">
+      <div class="marquee" data-marquee></div>
+    </section>
+
+    <!-- Dükkân -->
+    <section class="shop" id="konum">
+      <div class="shop__info">
+        <p class="kicker">Saatler ve konum</p>
+        <h2 class="sec-title" data-rise>Havuzun başındayız.</h2>
+        <p class="shop__status" data-status-big></p>
+        <dl class="shop__hours" data-hours></dl>
+        <p class="shop__addr" data-bind="adres"></p>
+        <div class="shop__cta">
+          <a class="btn btn--pink" data-maps target="_blank" rel="noopener" data-magnetic><span data-icon="pin"></span>Yol tarifi al</a>
+          <a class="btn btn--ghost" data-tel data-magnetic><span data-icon="phone"></span>Ara</a>
+        </div>
+      </div>
+      <div class="shop__map" data-map></div>
+    </section>
+
+    <!-- Final: havuza yukarıdan bakış, halkalar -->
+    <section class="finale" data-finale>
+      <div class="finale__sticky">
+        <p class="kicker">Yolda hararet mi yaptı?</p>
+        <h2 class="finale__title" data-final-title></h2>
+        <ol class="tips" data-tips></ol>
+        <div class="finale__cta">
+          <a class="btn btn--pink btn--xl" data-tel data-magnetic><span data-icon="phone"></span>Hemen ara</a>
+          <a class="btn btn--ghost btn--xl" data-wa-yol target="_blank" rel="noopener" data-magnetic><span data-icon="whatsapp"></span>WhatsApp'tan yazın</a>
+        </div>
+        <p class="finale__garanti" data-garanti></p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <p data-year></p>
+    <p data-bind="adres"></p>
+    <p class="foot__small">Fotoğraflar: Pexels. 3D radyatör ve havuz bu site için kodla çizildi.</p>
+  </footer>
+
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

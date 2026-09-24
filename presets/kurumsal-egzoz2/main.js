@@ -19,7 +19,7 @@ kurumsal({
     gecis: 'perde',
     yer: "Şaşmaz'da",
     heroGorsel: `${import.meta.env.BASE_URL}img/kurumsal-egzoz2/lift-ozalit.jpg`,
-    heroAlt: 'Ustamız lifte kaldırılmış aracın altını kontrol ediyor',
+    heroAlt: 'Lifte kaldırılmış aracın egzoz hattı kontrol ediliyor',
     logoAlt: 'Egzoz · DPF · Katalitik',
     baslikEki: 'Egzoz, DPF ve katalitik | Şaşmaz, Ankara',
     teklifEtiketi: 'Ölçüm randevusu',

@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#f5f3fb" />
+  <title>Oto Yıkama | Şaşmaz, Ankara</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%231e0f33'/%3E%3Crect x='7' y='9' width='18' height='5' rx='2.5' fill='%23e5177e'/%3E%3Crect x='14' y='14' width='4' height='11' rx='2' fill='%23ffd23f'/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Instrument+Sans:wght@400;500;600;700&family=Red+Hat+Mono:wght@500;600&display=swap&subset=latin-ext" rel="stylesheet" />
+  <link rel="preload" as="image" href="/img/yikama-klasik/hero-kirli-dik.jpg" media="(max-width: 899px)" />
+  <link rel="preload" as="image" href="/img/yikama-klasik/hero-temiz-dik.jpg" media="(max-width: 899px)" />
+  <link rel="preload" as="image" href="/img/yikama-klasik/hero-kirli.jpg" media="(min-width: 900px)" />
+  <link rel="preload" as="image" href="/img/yikama-klasik/hero-temiz.jpg" media="(min-width: 900px)" />
+</head>
+<body>
+  <header class="top">
+    <a href="#top" class="top__brand"><span class="top__mark" aria-hidden="true"><i></i></span><span data-bind="ad"></span></a>
+    <nav class="top__nav" aria-label="Sayfa bölümleri">
+      <a href="#hizmetler">Programlar</a>
+      <a href="#planla">Ne zaman hazır?</a>
+      <a href="#filo">Filo</a>
+      <a href="#yorumlar">Yorumlar</a>
+      <a href="#konum">Konum</a>
+    </nav>
+    <span class="top__status"><i aria-hidden="true"></i><span data-status></span></span>
+    <a class="top__call" data-tel><span data-icon="phone"></span><span data-bind="telefon"></span></a>
+  </header>
+
+  <main>
+    <!-- İMZA: Çekpas. Çamurlu araç fotoğrafının üstünden çekpas geçer; kaydırdıkça çamur silinir,
+         altından parlak araç çıkar. Katmanlar yalnız transform ile hareket eder (repaint yok). -->
+    <section class="hero" id="top" aria-label="Giriş">
+      <div class="hero__pin">
+        <div class="hero__stage" aria-hidden="true">
+          <picture class="hero__img hero__img--temiz">
+            <source media="(max-width: 899px)" srcset="/img/yikama-klasik/hero-temiz-dik.jpg" />
+            <img src="/img/yikama-klasik/hero-temiz.jpg" alt="" fetchpriority="high" decoding="async" />
+          </picture>
+          <div class="hero__mud" data-mud>
+            <div class="hero__mud-in" data-mud-in>
+              <picture class="hero__img">
+                <source media="(max-width: 899px)" srcset="/img/yikama-klasik/hero-kirli-dik.jpg" />
+                <img src="/img/yikama-klasik/hero-kirli.jpg" alt="" fetchpriority="high" decoding="async" />
+              </picture>
+            </div>
+          </div>
+          <div class="cekpas" data-blade>
+            <span class="cekpas__sheen"></span>
+            <span class="cekpas__rubber"></span>
+            <span class="cekpas__frame"></span>
+            <span class="cekpas__handle"></span>
+            <span class="cekpas__drops"><i></i><i></i><i></i><i></i><i></i></span>
+          </div>
+          <div class="hero__glint" data-glint></div>
+        </div>
+        <div class="hero__scrim" aria-hidden="true"></div>
+
+        <div class="hero__copy">
+          <p class="eyebrow mono" data-since></p>
+          <h1 class="hero__name" data-bind="ad"></h1>
+          <p class="hero__slogan" data-bind="slogan"></p>
+          <div class="hero__cta">
+            <a class="btn btn--pembe" data-tel><span data-icon="phone"></span>Hemen ara</a>
+            <a class="btn btn--ghost" href="#planla">Ne zaman hazır olur?</a>
+          </div>
+        </div>
+
+        <div class="meter" aria-hidden="true">
+          <p class="meter__lbl mono" data-meter-lbl>Çamur</p>
+          <p class="meter__num"><b data-meter>0</b><small>% temiz</small></p>
+          <span class="meter__bar"><i data-meter-bar></i></span>
+        </div>
+        <p class="hero__hint mono" aria-hidden="true"><span></span>Kaydırın, çekpas geçsin</p>
+      </div>
+    </section>
+
+    <div class="serit" aria-hidden="true"><div class="serit__track" data-serit></div></div>
+
+    <!-- Hizmetler: yıkama programı panosu -->
+    <section class="prog" id="hizmetler">
+      <div class="wrap">
+        <div class="prog__head">
+          <p class="eyebrow mono">Yıkama programları</p>
+          <h2 class="h2">Dışı köpükle, <em>içi parça parça.</em></h2>
+          <p class="lead" data-bind="hakkinda"></p>
+        </div>
+        <div class="prog__grid">
+          <figure class="prog__screen" aria-hidden="true" data-screen></figure>
+          <ol class="prog__list" data-services></ol>
+        </div>
+      </div>
+    </section>
+
+    <!-- Rakamlar -->
+    <section class="rakam" aria-label="Rakamlarla">
+      <div class="rakam__bubbles" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+      <div class="wrap">
+        <ul class="rakam__list" data-stats></ul>
+      </div>
+    </section>
+
+    <!-- Ne zaman hazır? -->
+    <section class="plan" id="planla">
+      <div class="wrap plan__grid">
+        <div class="plan__intro">
+          <p class="eyebrow mono">Ne zaman hazır?</p>
+          <h2 class="h2">İşleri seçin, <em>saatini görün.</em></h2>
+          <p class="lead">Aracınıza ne yaptıracağınızı işaretleyin; şimdi getirirseniz ne zaman teslim alacağınızı hesaplayalım. Fiyatı işe başlamadan söyleriz.</p>
+          <div class="plan__chips" data-chips role="group" aria-label="Yapılacak işler"></div>
+        </div>
+        <div class="fis" aria-live="polite">
+          <div class="fis__top">
+            <p class="mono">Teslim fişi</p>
+            <p class="mono" data-fis-now></p>
+          </div>
+          <p class="fis__ready-lbl">Tahmini teslim</p>
+          <p class="fis__ready" data-ready></p>
+          <p class="fis__sub" data-ready-sub></p>
+          <div class="fis__bar" data-bar></div>
+          <ul class="fis__lines" data-lines></ul>
+          <p class="fis__note" data-note></p>
+          <a class="btn btn--ink fis__btn" data-plan-wa target="_blank" rel="noopener"><span data-icon="whatsapp"></span>Bu işler için yaz</a>
+          <p class="fis__fine">Tahminidir. Aracı görünce kesin saati söyleriz.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Süreç -->
+    <section class="surec" id="surec">
+      <div class="wrap">
+        <p class="eyebrow mono">Aracınız bizdeyken</p>
+        <h2 class="h2">Dört adım, <em>tek kural:</em> teslimde birlikte bakarız.</h2>
+        <ol class="surec__list" data-steps></ol>
+      </div>
+    </section>
+
+    <!-- Galeri -->
+    <section class="galeri" aria-label="Yıkama bölmesinden kareler">
+      <div class="wrap galeri__head">
+        <p class="eyebrow mono">Bölmeden kareler</p>
+        <h2 class="h2">Köpük, fırça, <em>mikrofiber.</em></h2>
+      </div>
+      <div class="galeri__grid" data-gallery></div>
+    </section>
+
+    <!-- Filo -->
+    <section class="filo" id="filo">
+      <div class="wrap filo__grid">
+        <figure class="filo__photo"><img src="/img/yikama-klasik/k/yikama-garaj.jpg" alt="Köpükle kaplı aracın ızgarası elle temizleniyor" loading="lazy" decoding="async" /></figure>
+        <div class="filo__copy">
+          <p class="eyebrow mono">Şirketler ve ticari araçlar</p>
+          <h2 class="h2">Filonuz <em>sıra beklemez.</em></h2>
+          <p class="lead" data-filo-text></p>
+          <ul class="filo__pts">
+            <li><b>Haftalık ya da aylık</b><span>Gün ve saati birlikte belirleriz.</span></li>
+            <li><b>Sıraya alınmaz</b><span>Randevu saatinde bölme sizin araçlarınıza ayrılır.</span></li>
+            <li><b>Araç işten kalmaz</b><span>Söylenen saatte hazır, söylenen saatte teslim.</span></li>
+          </ul>
+          <blockquote class="filo__q" data-filo-q></blockquote>
+          <a class="btn btn--pembe" data-wa-filo target="_blank" rel="noopener"><span data-icon="whatsapp"></span>Filo yıkama için yazın</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Yorumlar -->
+    <section class="yorum" id="yorumlar">
+      <div class="wrap">
+        <div class="yorum__head">
+          <div>
+            <p class="eyebrow mono">Müşterilerimiz ne diyor</p>
+            <h2 class="h2">Teslimde <em>bakıp gördüler.</em></h2>
+          </div>
+          <div class="score">
+            <p class="score__num" data-score></p>
+            <div><p class="score__stars" data-stars></p><p class="score__cnt" data-review-count></p></div>
+          </div>
+        </div>
+        <ul class="yorum__list" data-reviews></ul>
+        <div class="garanti">
+          <span class="garanti__badge mono" aria-hidden="true">Söz</span>
+          <p data-bind="garanti"></p>
+        </div>
+        <div class="marka" aria-label="Yıkadığımız markalar"><div data-brands class="marka__in"></div></div>
+      </div>
+    </section>
+
+    <!-- Saatler + Konum -->
+    <section class="konum" id="konum">
+      <div class="wrap konum__grid">
+        <div class="konum__card">
+          <p class="eyebrow mono">Çalışma saatleri</p>
+          <p class="konum__status"><i aria-hidden="true"></i><span data-status-big></span></p>
+          <dl class="hours" data-hours></dl>
+          <p class="konum__addr"><span data-icon="pin"></span><span data-bind="adres"></span></p>
+          <div class="konum__btns">
+            <a class="btn btn--ink" data-maps target="_blank" rel="noopener"><span data-icon="pin"></span>Yol tarifi al</a>
+            <a class="btn btn--line" data-tel><span data-icon="phone"></span>Ara</a>
+          </div>
+        </div>
+        <div class="konum__map" data-map><p class="mono">Harita yükleniyor…</p></div>
+      </div>
+    </section>
+
+    <!-- Final -->
+    <section class="final" aria-label="İletişim">
+      <img class="final__bg" src="/img/yikama-klasik/k/cila-2.jpg" alt="" loading="lazy" decoding="async" />
+      <div class="wrap final__in">
+        <p class="eyebrow mono" data-years></p>
+        <h2 class="final__h" data-final></h2>
+        <div class="final__btns">
+          <a class="btn btn--pembe btn--xl" data-tel><span data-icon="phone"></span><span data-bind="telefon"></span></a>
+          <a class="btn btn--white btn--xl" data-wa target="_blank" rel="noopener"><span data-icon="whatsapp"></span>WhatsApp</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <div class="wrap foot__in">
+      <p class="foot__brand" data-bind="ad"></p>
+      <p data-bind="adres"></p>
+      <p class="mono">© <span data-year></span> · Şaşmaz Oto Sanayi, Etimesgut</p>
+    </div>
+  </footer>
+
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+{
+  "preset": "restoran-klasik",
+  "heroAlt": "Meşe közünde, gözünüzün önünde pişen şiş. Öğlen sanayiye hızlı servis, akşam ailelere uzun sofra.",
+  "sofra": [
+    { "src": "/img/restoran-klasik/p-meze.jpg", "etiket": "Günlük meze" },
+    { "src": "/img/restoran-klasik/p-lahmacun.jpg", "etiket": "Lahmacun, ayran" },
+    { "src": "/img/restoran-klasik/p-meze2.jpg", "etiket": "Haydari, humus" },
+    { "src": "/img/restoran-klasik/p-adana.jpg", "etiket": "Adana, lavaş" },
+    { "src": "/img/restoran-klasik/p-sofra.jpg", "etiket": "Kalabalık sofra" },
+    { "src": "/img/restoran-klasik/p-cay.jpg", "etiket": "Demli çay" }
+  ],
+  "sofraOrta": { "src": "/img/restoran-klasik/p-kebap.jpg", "etiket": "Ocaktan şiş" },
+  "menuGorsel": [
+    "/img/restoran-klasik/p-servis.jpg",
+    "/img/restoran-klasik/p-adana.jpg",
+    "/img/restoran-klasik/p-kebap.jpg",
+    "/img/restoran-klasik/p-meze.jpg",
+    "/img/restoran-klasik/p-firin.jpg"
+  ],
+  "masaTurleri": ["Ocakbaşı tezgâhı", "Salon", "Arka salon (grup)", "Paket servis"],
+  "masaSaatleri": ["12:30", "13:30", "19:00", "20:00", "21:00"]
+}

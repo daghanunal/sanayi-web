@@ -151,7 +151,7 @@ const KF = [
   { p: 1 },
 ];
 KF[6] = { ...KF[5], p: 1 };
-const FINALE = { bg: '#101013', fg: '#f3f1ec', call: '#ff3b5c', smoke: [0.9, 0.9, 0.92], smoke2: [0.95, 0.95, 0.96], density: 0.16, push: 1.24, spread: 0.8, size: 1, count: 0.6, rise: 2.10, wind: 0.2, rim: [1, 0.23, 0.36], glow: 0, az: 0.12, el: 0.08, dist: 7, lookX: 0.4, lookY: -0.55, dirt: [0, 0, 0, 0] };
+const FINALE = { bg: '#101013', fg: '#f3f1ec', call: '#ff3b5c', smoke: [0.9, 0.9, 0.92], smoke2: [0.95, 0.95, 0.96], density: 0.16, push: 1.24, spread: 0.8, size: 1, count: 0.6, rise: 2.10, wind: 0.2, rim: [1, 0.23, 0.36], glow: 0, az: 0.12, el: 0.08, dist: 7, lookX: -2.2, lookY: -1.35, dirt: [0, 0, 0, 0] };
 const CENTERS = KF.slice(0, 6).map((k) => k.p);
 const HOLD = 0.045;
 
@@ -232,6 +232,7 @@ function setupTriggers() {
   trg.after = ScrollTrigger.create({ trigger: film, start: 'bottom bottom', end: 'bottom 35%' });
   trg.finale = ScrollTrigger.create({ trigger: finale, start: 'top top', end: 'bottom bottom' });
   trg.finaleIn = ScrollTrigger.create({ trigger: finale, start: 'top 90%', end: 'top 20%' });
+  trg.finaleOut = ScrollTrigger.create({ trigger: finale, start: 'bottom bottom', end: 'bottom top' });
   ScrollTrigger.create({ trigger: '[data-trust]', start: 'top bottom', end: 'bottom top', onToggle: (s) => root.classList.toggle('is-page', s.isActive || s.progress >= 1) });
 }
 setupTriggers();
@@ -266,7 +267,7 @@ const top = $('[data-top]');
 ScrollTrigger.create({ start: 80, onToggle: (s) => top.classList.toggle('is-scrolled', s.isActive) });
 
 // --- Döngü ---------------------------------------------------------------------
-let lastBg = '', lastFg = '', lastCall = '';
+let lastBg = '', lastFg = '', lastCall = '', lastLift = 0;
 let active = -1;
 let frames = 0, slow = 0, qualityDropped = false, lastT = performance.now();
 
@@ -283,7 +284,7 @@ function uiFilm(p, s, time) {
   let idx = 0;
   CENTERS.forEach((c, i) => {
     if (i === 0) return;
-    const w = 1 - seg(Math.abs(p - c), 0.045, 0.078);
+    const w = 1 - seg(Math.abs(p - c), 0.062, 0.089);
     const card = chaps[i - 1];
     const word = words[i - 1];
     const dir = p < c ? 1 : -1;
@@ -359,6 +360,8 @@ function tick() {
   // canvas görünürlüğü
   const vis = finaleIn > 0 ? smooth(finaleIn) : 1 - smooth(afterFilm);
   canvas.style.opacity = vis.toFixed(3);
+  const lift = Math.round((trg.finaleOut?.progress ?? 0) * innerHeight);
+  if (lift !== lastLift) { canvas.style.transform = lift ? `translate3d(0, ${-lift}px, 0)` : ''; lastLift = lift; }
   wordsBox.style.opacity = (1 - smooth(afterFilm)) * (finaleIn > 0 ? 0 : 1);
   root.classList.toggle('is-past', past === 1);
 

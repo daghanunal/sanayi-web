@@ -1,5 +1,50 @@
 {
   "preset": "doseme-klasik2",
+  "isletme": {
+    "ad": "Karaca Oto Döşeme",
+    "sektor": "Oto Döşeme",
+    "slogan": "Oturduğunuz her koltukta elimizin izi var.",
+    "kurulus": 1987,
+    "hakkinda": "Dükkânı babamız tek bir dikiş makinesiyle açtı. Bugün aynı tezgâhta ikinci kuşak olarak çalışıyoruz: derisini kendimiz seçiyor, kalıbını kendimiz çıkarıyor, dikişini kendimiz atıyoruz. Aracınız fabrikadan nasıl çıktıysa ya da nasıl hayal ettiyseniz, öyle teslim ediyoruz."
+  },
+  "tarihce": [
+    {
+      "yil": 1987,
+      "baslik": "Tek makine, tek tezgâh",
+      "metin": "Şaşmaz'daki ilk dükkân bir el makinesi ve bir top suniyle açıldı. İlk iş, komşu dükkânın Murat 131'iydi.",
+      "gorsel": "/img/usta/t-1987.jpg"
+    },
+    {
+      "yil": 1994,
+      "baslik": "Klasiklerin adresi",
+      "metin": "Eski araç meraklıları orijinal desenleri bizde bulmaya başladı. Kalıp arşivimizin ilk sayfaları o yıllardan.",
+      "gorsel": "/img/usta/t-1994.jpg"
+    },
+    {
+      "yil": 2003,
+      "baslik": "Servis filoları",
+      "metin": "Ankara'daki servis firmalarıyla çalışmaya başladık. Bir hafta sonunda kırk koltuk diktiğimiz oldu.",
+      "gorsel": "/img/usta/t-2003.jpg"
+    },
+    {
+      "yil": 2011,
+      "baslik": "Deriye geçiş",
+      "metin": "Çift iğneli sanayi makinesini aldık, İtalyan ve yerli hakiki deriyle çalışmaya başladık.",
+      "gorsel": "/img/usta/t-2011.jpg"
+    },
+    {
+      "yil": 2018,
+      "baslik": "İkinci kuşak",
+      "metin": "Tezgâhı ikinci kuşak devraldı. Babamız hâlâ her sabah gelip dikişlere bakıyor.",
+      "gorsel": "/img/usta/t-2018.jpg"
+    },
+    {
+      "yil": null,
+      "baslik": "Bugün",
+      "metin": "Alcantara, nappa, kapitone ve ısıtmalı koltuklar. Değişmeyen tek şey: her dikişi elimizle kontrol ediyoruz.",
+      "gorsel": "/img/usta/t-bugun.jpg"
+    }
+  ],
   "surec": [
     {
       "baslik": "Söküm",

@@ -86,7 +86,7 @@ body { background: var(--k-zemin); overflow-x: clip; }
   .k-hero__gorsel { transform: rotate(2deg); }
 }
 @media (max-width: 899px) {
-  .k-hero__baslik { font-size: 19.5vw !important; max-width: none !important; }
+  .k-hero__baslik { font-size: 15.5vw !important; max-width: none !important; }
   [data-hero='bolunmus'] .k-hero__gorsel { aspect-ratio: 5 / 4; padding: 12px; background-size: 12px 12px; }
   .k-hero__gorsel-ic { inset: 12px; }
   .k-hero__bilgi { grid-template-columns: 1fr 1fr; }

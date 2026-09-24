@@ -266,3 +266,23 @@ body {
 }
 .k-rakamlar dd { white-space: nowrap; font-size: clamp(34px, 4vw, 62px); }
 @media (max-width: 899px) { .k-sb__baslik { font-size: min(var(--k-h1), 8.6vw); overflow-wrap: normal; } }
+
+/* --- 3. tur (inceleme) --- */
+/* Rakamlar sütununa sığsın: 48.000+ mobilde ekrandan, masaüstünde yan sütuna taşıyordu. */
+.k-rakamlar dd { font-size: clamp(34px, 3.3vw, 52px); }
+@media (max-width: 600px) { .k-rakamlar dd { font-size: min(34px, 7vw); letter-spacing: -0.05em; } }
+/* Yorum kartı etiketi: yer tutucu gibi duran "Etiket" yerine sıra numarası. */
+.k-yorumlar__liste { counter-reset: yr; }
+.k-yorumlar__liste li { counter-increment: yr; }
+.k-yorumlar__liste li::after { content: 'Not ' counter(yr, decimal-leading-zero); }
+/* Mobilde çerez bandı ince tek şerit: çizim panelini örtmesin. */
+@media (max-width: 899px) {
+  .k-cerez { padding: 8px 8px 8px 12px; gap: 10px; font-size: 12px; line-height: 1.35; bottom: calc(92px + env(safe-area-inset-bottom)); }
+  .k-cerez .k-btn { padding: 8px 12px; min-height: 0; font-size: 13px; box-shadow: none; }
+  /* Sabit sahne bittikten sonra kalan boşluğu kapat: sonraki bölüm sahnenin boş alt kısmına biner. */
+  .k-blok:has(> .pv:not(.is-durgun)) { margin-bottom: -110px; }
+  .pv:not(.is-durgun) .pv__sahne { pointer-events: none; }
+  .pv:not(.is-durgun) .pv__alt, .pv:not(.is-durgun) .pv__cizim { pointer-events: auto; }
+  .k-blok:has(> .pv:not(.is-durgun)) + .k-blok { position: relative; z-index: 1; }
+}
+.pv.is-durgun .pv__sahne { padding-bottom: 8px; }

@@ -34,7 +34,7 @@ $$('[data-icon]').forEach((el) => (el.innerHTML = icons[el.dataset.icon]));
 
 const set = (sel, text) => $$(sel).forEach((el) => (el.textContent = text ?? ''));
 set('[data-hero-ad]', d.isletme.ad);
-set('[data-tabela-ust]', d.tabela.ust);
+$('[data-tabela-ust]').innerHTML = String(d.tabela.ust).split('·').map((t) => `<span>${esc(t.trim())}</span>`).join('<i aria-hidden="true"></i>');
 set('[data-tabela-yon]', d.tabela.yon);
 set('[data-km]', nf(d.tabela.km, 1));
 set('[data-vardin-ust]', `${d.tabela.yon} · 0 km`);
@@ -216,10 +216,12 @@ new IntersectionObserver(
 
 // Header: hero'dan sonra koyulaşır
 const top = $('[data-top]');
-ScrollTrigger.create({
-  start: () => innerHeight * 0.5, end: 'max',
-  onToggle: (self) => top.classList.toggle('is-solid', self.isActive),
-});
+const topYaz = () => top.classList.toggle('is-solid', scrollY > innerHeight * 0.5);
+addEventListener('scroll', topYaz, { passive: true });
+topYaz();
+
+// Vitrin çubuğu hero altını kaplar; ipucu gereksiz
+if (new URLSearchParams(location.search).get('vitrin') === '1') $('.hero__ipucu')?.remove();
 
 // --- Hareket ---------------------------------------------------------------
 if (reducedMotion) {

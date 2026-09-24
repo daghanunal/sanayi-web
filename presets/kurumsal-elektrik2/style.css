@@ -50,7 +50,7 @@ body { overflow-x: clip; }
 .k-hero > * { position: relative; z-index: 1; }
 .k-hero__ust { font-family: var(--mono); font-size: 13px; text-transform: uppercase; letter-spacing: .03em; color: var(--k-metin); display: inline-flex; align-items: center; gap: 10px; }
 .k-hero__ust::before { content: ''; width: 40px; height: 14px; flex: none; background: currentColor; -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 14'%3E%3Cpath d='M1 12h20l7-9h11' fill='none' stroke='%23000' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 14'%3E%3Cpath d='M1 12h20l7-9h11' fill='none' stroke='%23000' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat; }
-[data-hero='yazi'] .k-hero__baslik { font-size: clamp(52px, 11vw, 176px); max-width: 11ch; letter-spacing: -.045em; }
+[data-hero='yazi'] .k-hero__baslik { font-size: clamp(52px, 11vw, 176px); max-width: 11ch; letter-spacing: -.032em; }
 .k-hero .k-lead { color: var(--k-metin); font-size: clamp(18px, 1.5vw, 21px); }
 @media (min-width: 900px) {
   .k-hero__metin { display: grid; grid-template-columns: 7fr 4fr; column-gap: 64px; align-items: end; }
@@ -102,7 +102,7 @@ body { overflow-x: clip; }
 /* --- Koyu bölümler kesme çizgisiyle başlar --- */
 .k-rakamlar, .fp, .k-cta { clip-path: var(--kesim); --kirik: clamp(24px, 4vw, 56px); padding-top: calc(var(--k-bosluk) / 2 + var(--kirik)); }
 .k-rakamlar { background: var(--k-koyu); }
-.k-rakamlar dd { color: var(--k-zemin); font-weight: 800; letter-spacing: -.04em; font-size: clamp(48px, 7vw, 104px); }
+.k-rakamlar dd { color: var(--k-zemin); font-weight: 800; letter-spacing: -.03em; font-size: clamp(40px, 5vw, 78px); font-variant-numeric: tabular-nums; white-space: nowrap; }
 .k-rakamlar dt { font-family: var(--mono); font-size: 12.5px; text-transform: uppercase; letter-spacing: .04em; }
 .k-rakamlar__liste > div { border-top: 2px solid rgb(255 210 26 / .35); }
 .k-blok[data-bolum='rakamlar'] + .k-blok .k-bolum { padding-top: var(--k-bosluk); }
@@ -245,3 +245,9 @@ body:not(.k-ana) .k-blok[data-bolum='farPerdesi'] .fp { margin-top: 32px; }
 @media (prefers-reduced-motion: reduce) { .k-hero::before { animation: none; } }
 
 @media (max-width: 899px) { .k-alt { padding-bottom: calc(120px + env(safe-area-inset-bottom)); } }
+
+/* Telefonda perde SVG'si ~0,6 ölçekte çizilir; etiketler okunur kalsın */
+@media (max-width: 599px) {
+  .fp__yazi { font-size: 16px; letter-spacing: .03em; stroke-width: 4.5px; }
+  .fp__olcu-yazi { font-size: 19px; }
+}

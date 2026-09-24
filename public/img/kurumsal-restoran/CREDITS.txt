@@ -1,0 +1,17 @@
+Kopyalar public/img/sektor-restoran'dan küçültüldü.
+kor-adana.jpg: Pexels 31587880
+ocak.jpg: Pexels 12634876
+kor-sis.jpg: Pexels 36890237
+kor-duman.jpg: Pexels 36890236
+adana-tabak.jpg: Pexels 7439809
+servis.jpg: Pexels 16260571
+kebap-tabak.jpg: Pexels 32986491
+meze-bakir.jpg: Pexels 30726875
+meze-masa.jpg: Pexels 37328507
+sofra.jpg: Pexels 36577737
+salon.jpg: Pexels 38301339
+lahmacun.jpg: Pexels 32562202
+firin.jpg: Pexels 36916297
+cay.jpg: Pexels 36287927
+Kaynak: https://www.pexels.com/photo/<id>/
+Lisans: Pexels License (ücretsiz ticari kullanım)

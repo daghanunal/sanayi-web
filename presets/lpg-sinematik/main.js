@@ -72,7 +72,7 @@ $('[data-about]').textContent = d.isletme.hakkinda;
 $('[data-garanti]').textContent = d.garanti;
 const stats = d.istatistikler.map((s) => ({ ...s, deger: s.kurulustanHesapla ? yil : s.deger }));
 $('[data-stats]').innerHTML = stats.map((s, i) => `
-  <li class="stat" style="--i:${i}">
+  <li class="stat${(nf(s.deger) + s.sonek).length > 5 ? ' stat--long' : ''}" style="--i:${i}">
     <svg class="stat__arc" viewBox="0 0 120 120" aria-hidden="true"><circle cx="60" cy="60" r="52" class="stat__track"/><circle cx="60" cy="60" r="52" class="stat__val" pathLength="100"/></svg>
     <p class="stat__num"><b data-count="${Number(s.deger)}">0</b><span>${esc(s.sonek)}</span></p>
     <p class="stat__lbl">${esc(s.etiket)}</p>
@@ -273,7 +273,17 @@ if (!reducedMotion && innerWidth >= 760) {
 }
 
 const top = $('[data-top]');
-ScrollTrigger.create({ start: 80, onToggle: (s) => top.classList.toggle('is-scrolled', s.isActive) });
+const onScrolled = () => top.classList.toggle('is-scrolled', scrollY > 80);
+addEventListener('scroll', onScrolled, { passive: true });
+onScrolled();
+// koyu bölümlerin (süreç, final) üstünde üst bar da koyulaşsın
+const darkOn = new Set();
+$$('.path, .finale').forEach((sec) => {
+  ScrollTrigger.create({
+    trigger: sec, start: 'top 60px', end: 'bottom 60px',
+    onToggle: (st) => { st.isActive ? darkOn.add(sec) : darkOn.delete(sec); top.classList.toggle('is-dark', darkOn.size > 0); },
+  });
+});
 
 // --- Döngü ------------------------------------------------------------------------------
 let lastBg = '', lastFg = '', lastCall = '';
@@ -360,6 +370,7 @@ function tick() {
     s.flame = smooth(finaleIn);
     s.tank = 0;
     s.flat = 0;
+    s.solo = true;
     s.cam = s.pcam = [0, 0.05 - finaleQ * 0.4, 5.2 - finaleQ * 1.1];
   }
   // açılış: kıvılcımdan halka

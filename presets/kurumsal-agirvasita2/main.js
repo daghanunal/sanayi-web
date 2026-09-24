@@ -2,13 +2,17 @@ import '../../shared/base.css';
 import ana from '../../data/tonaj.json';
 import ek from '../../data/kurumsal-agirvasita2.json';
 import { kurumsal, derinBirlestir } from '../_kurumsal/engine.js';
-import { tabelaHero, yolYardim, olcumler } from './extra.js';
+import { tabelaHero, yolYardim, olcumler, sanayiSaat } from './extra.js';
 import './style.css';
 
 // Otoyol: karayolu yön tabelası dili. Otoyol yeşili, reflektif beyaz, asfalt; Overpass (otoyol yazısı soyundan).
 // Portal tabela hero'su, etkileşimli mesafe tabelası (yol yardım), yuvarlak levhalarda ölçüm.
 const v = derinBirlestir(ana, ek);
-v.istatistikler = v.istatistikler.map((s) => (s.deger === 'kurulus' ? { ...s, deger: 0, kurulustanHesapla: true } : s));
+v.istatistikler = v.istatistikler.map((s) => {
+  if (s.deger === 'kurulus') return { ...s, deger: 0, kurulustanHesapla: true };
+  if (s.deger === 24 && s.sonek === '/7') return { ...s, deger: 7, sonek: '/24' }; // Türkçede "7/24"
+  return s;
+});
 const hek = v.kurumsal.hizmetEk || {};
 v.hizmetler = v.hizmetler.map((h) => ({ ...h, ...(hek[h.baslik] || {}) }));
 
@@ -34,12 +38,12 @@ kurumsal({
     },
   },
   sayfalar: [
-    { id: 'anasayfa', baslik: 'Ana Sayfa', bolumler: ['tabelaHero', 'ozet', 'hizmetOzet', 'yolYardim', 'rakamlar', 'olcumler', 'anlasmaOzet', 'yorumlar', 'cta'] },
+    { id: 'anasayfa', baslik: 'Ana Sayfa', bolumler: ['tabelaHero', 'ozet', 'hizmetOzet', 'yolYardim', 'rakamlar', 'olcumler', 'anlasmaOzet', 'yorumlar', 'sanayiSaat', 'cta'] },
     { id: 'kurumsal', baslik: 'Kurumsal', bolumler: ['hakkimizda', 'vizyon', 'kalite', 'kariyer', 'cta'] },
     { id: 'hizmetler', baslik: 'Hizmetler', bolumler: ['hizmetler', 'olcumler', 'surec', 'markalar', 'cta'] },
     { id: 'yol-yardim', baslik: 'Yol Yardım', bolumler: ['yolYardim', 'sss', 'cta'] },
     { id: 'kurumsal-musteriler', baslik: 'Filo', menu: 'Filo', bolumler: ['anlasmalar', 'surec', 'cta'] },
     { id: 'iletisim', baslik: 'İletişim', bolumler: ['iletisim'] },
   ],
-  ekstralar: { tabelaHero, yolYardim, olcumler },
+  ekstralar: { tabelaHero, yolYardim, olcumler, sanayiSaat },
 });

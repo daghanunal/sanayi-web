@@ -187,6 +187,10 @@ const CAMS = {
   cab: [-8.5, 3.6, -9, 0, 2.6, -4],
   final: [-2.5, 3.4, 26, 3.4, 2.2, 0],
 };
+// Dikey ekranda dar açıda tır kadrajdan çıkmasın diye bazı pozlar değişir
+const CAMS_P = {
+  stop0: [-4.6, 4.2, 9, 1.4, 2.8, -30],
+};
 const K = 0.06; // metre / piksel
 let keys = [];
 let solids = [];
@@ -201,7 +205,7 @@ function layout() {
     const h = el.offsetHeight;
     // pozun tam oturduğu kaydırma değeri: bölüm ekranın ortasına geldiğinde
     const at = el.dataset.cam === 'hero' ? 0 : el.dataset.cam === 'final' ? top + h - ih : top + Math.min(h, ih) * 0.5 - ih * 0.5;
-    return { at, cam: CAMS[el.dataset.cam] };
+    return { at, cam: (portrait() && CAMS_P[el.dataset.cam]) || CAMS[el.dataset.cam] };
   }).sort((a, b) => a.at - b.at);
   solids = $$('.solid').map((el) => [y(el), y(el) + el.offsetHeight]);
   const fin = $('[data-final]');
@@ -261,7 +265,7 @@ function frame(now) {
   if (portrait() && sy < ih) {
     // telefonda tır başlığın üstünde görünsün
     const t = clamp(1 - sy / ih);
-    cam[3] += (0.4 - cam[3]) * t; cam[4] += (0.6 - cam[4]) * t;
+    cam[3] += (0.4 - cam[3]) * t; cam[4] += (-2.2 - cam[4]) * t;
   }
   let fov = 42;
   if (portrait()) {

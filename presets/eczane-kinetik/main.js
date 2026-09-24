@@ -87,7 +87,10 @@ yazi.addEventListener('click', () => {
 });
 
 // Kaydırınca üst çubuk koyulaşır
-ScrollTrigger.create({ start: 40, end: 'max', onToggle: (s) => $('#top').classList.toggle('is-scrolled', s.isActive) });
+const topBar = $('#top');
+const onTopScroll = () => topBar.classList.toggle('is-scrolled', scrollY > 40);
+addEventListener('scroll', onTopScroll, { passive: true });
+onTopScroll();
 
 // --- 1. Hero: kapsül açılır ------------------------------------------------
 const hizmet = (id) => d.hizmetler.find((h) => h.id === id) || {};
@@ -108,7 +111,7 @@ $('#hero').innerHTML = `
     <p class="hero__status" data-status-hero></p>
   </div>
   <div class="hero__after">
-    <p class="mono">Aynı köşe, aynı mahalle</p>
+    <p class="mono">Mahallenin eczanesi</p>
     <p class="hero__about">${esc(d.isletme.hakkinda)}</p>
   </div>
   <p class="hero__hint mono" aria-hidden="true">Kaydırın, kapsül açılsın</p>`;
@@ -407,9 +410,9 @@ function motion() {
   } else {
     items.forEach((li, i) => {
       ktl.fromTo(li, { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.4 }, 0.4 + i * 2.2);
-      if (i < items.length - 1) ktl.to(li, { opacity: 0, y: -30, duration: 0.4 }, 0.4 + i * 2.2 + 1.8);
+      if (i < items.length - 1) ktl.to(li, { opacity: 0, y: -14, duration: 0.4 }, 0.4 + i * 2.2 + 1.8);
     });
-    ktl.to(items.at(-1), { opacity: 0, y: -30, duration: 0.4 }, L - 0.2);
+    ktl.to(items.at(-1), { opacity: 0, y: -14, duration: 0.4 }, L - 0.2);
   }
   ktl.fromTo('.bubble', { opacity: 0, y: 40, scale: 0.9, transformOrigin: '0% 100%' }, { opacity: 1, y: 0, scale: 1, duration: 0.6, ease: 'back.out(1.6)' }, L + 0.1)
     .fromTo('.kutu__cta', { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.4 }, L + 0.3)
@@ -447,7 +450,7 @@ function motion() {
       clipPath: 'inset(0% 0% 0% 0% round 999px)', ease: 'none',
       scrollTrigger: { trigger: s, start: 'top 92%', end: 'top 40%', scrub: 0.5 },
     });
-    gsap.from($('h3', s), { xPercent: i % 2 ? 18 : -18, ease: 'none', scrollTrigger: { trigger: s, start: 'top bottom', end: 'top 45%', scrub: 0.5 } });
+    gsap.from($('h3', s), { xPercent: i % 2 ? 18 : -18, ease: 'none', scrollTrigger: { trigger: s, start: 'top bottom', end: 'top 62%', scrub: 0.5 } });
     gsap.from($$('.srv__t > :not(h3)', s), { y: 24, opacity: 0, stagger: 0.08, duration: 0.7, ease: 'power3.out', scrollTrigger: { trigger: s, start: 'top 70%' } });
   });
 

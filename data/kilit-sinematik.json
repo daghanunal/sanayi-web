@@ -1,0 +1,76 @@
+{
+  "preset": "kilit-sinematik",
+  "film": [
+    {
+      "id": "kesim",
+      "etiket": "01 · Kesim",
+      "baslik": "Bıçak, kilidinize göre kesilir.",
+      "metin": "Elinizdeki anahtar ya da şase numarası ölçü olur. Freze her dişi kilidin pimine göre açar; çipli anahtarlar kesimden sonra araca tanıtılır.",
+      "hizmet": "Yedek anahtar",
+      "sure": "20-40 dk"
+    },
+    {
+      "id": "silindir",
+      "etiket": "02 · Silindir",
+      "baslik": "Beş pim, tek çizgi.",
+      "metin": "Doğru anahtar girince her pim kesme hattına oturur ve göbek döner. Dönmeyen kontağı söker, aşınan pimi değiştirir, eski anahtarınıza uyarlarız.",
+      "hizmet": "Kontak ve kilit tamiri",
+      "sure": "1-3 saat"
+    },
+    {
+      "id": "cip",
+      "etiket": "03 · Çip",
+      "baslik": "Kesmek yetmez, araç tanımalı.",
+      "metin": "Anahtarın içindeki transponder, kontaktaki anten halkasıyla konuşur. \"Anahtar tanınmadı\" diyen aracı cihaza bağlar, çipi yeniden kodlarız.",
+      "hizmet": "İmmobilizer kodlama",
+      "sure": "1-2 saat"
+    },
+    {
+      "id": "kumanda",
+      "etiket": "04 · Kumanda",
+      "baslik": "Kap kırıldıysa kart kurtulur.",
+      "metin": "Sustalı, kumandalı ya da anahtarsız çalıştırma. Kırık kabı açar, kartı yeni kaba aktarır, pili değiştiririz. Yeni kumanda araca tanıtılır, tuşlar sizinle denenir.",
+      "hizmet": "Kumanda ve akıllı anahtar",
+      "sure": "15 dk - 2 saat"
+    }
+  ],
+  "anahtarTipleri": [
+    {
+      "id": "duz",
+      "ad": "Düz metal",
+      "yillar": "Çoğunlukla 2000 öncesi",
+      "nasil": "Sadece bıçak var, çip yok. Kopyası elinizdeki anahtardan kesilir.",
+      "yapilan": ["Kopya kesim", "Kilitten ölçü alma", "Kırık anahtar çıkarma"],
+      "sure": "20 dk"
+    },
+    {
+      "id": "cipli",
+      "ad": "Çipli",
+      "yillar": "2000 sonrası çoğu araç",
+      "nasil": "Başında transponder çipi var. Bıçak kesildikten sonra çip araca tanıtılmadan motor çalışmaz.",
+      "yapilan": ["Kesim + çip tanıtma", "İmmobilizer arıza tespiti", "Kayıp anahtarı silme"],
+      "sure": "40 dk - 1 saat"
+    },
+    {
+      "id": "sustali",
+      "ad": "Sustalı kumandalı",
+      "yillar": "Katlanır bıçaklı",
+      "nasil": "Bıçak, çip ve kumanda tek gövdede. Kap kırılırsa kart çoğu zaman sağlamdır.",
+      "yapilan": ["Kap ve tuş değişimi", "Pil değişimi", "Yeni kumanda tanıtma"],
+      "sure": "15 dk - 2 saat"
+    },
+    {
+      "id": "akilli",
+      "ad": "Akıllı anahtar",
+      "yillar": "Start-stop düğmeli araçlar",
+      "nasil": "Cepte durur, araç yaklaşınca tanır. İçinde gizli bir acil durum bıçağı bulunur.",
+      "yapilan": ["Yedek akıllı anahtar", "Keyless tanıtma", "Tüm anahtarlar kayıpsa sıfırdan"],
+      "sure": "1-2 saat"
+    }
+  ],
+  "guven": {
+    "baslik": "Ruhsat görmeden kapı açmayız.",
+    "metin": "Açtığımız her kapı, kodladığımız her anahtar bir aracın güvenliği demek. Ruhsattaki isimle kimliğiniz eşleşmezse iş yapmayız; bu kural kimse için esnemez."
+  },
+  "finalBaslik": "Anahtarınız nerede kaldıysa oradan başlarız."
+}

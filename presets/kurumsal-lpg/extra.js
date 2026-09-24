@@ -342,6 +342,11 @@ export const uygunluk = {
   },
 };
 
+const mesaiBaslik = (adres = '') => {
+  const c = adres.match(/(\d+\.\s*(?:Cadde|Sokak|Blok))/i);
+  return c ? `Şaşmaz, ${c[1]}.` : 'Şaşmaz Oto Sanayi.';
+};
+
 // --- mesai --------------------------------------------------------------------------------
 export const mesai = {
   render(d) {
@@ -352,7 +357,7 @@ export const mesai = {
         <div class="k-kap ml-mesai__ic">
           <div>
             <p class="ml-etiket">Atölye</p>
-            <h2 class="k-h2" id="ml-mesai-b" data-bol>Şaşmaz, 4. Cadde.</h2>
+            <h2 class="k-h2" id="ml-mesai-b" data-bol>${esc(mesaiBaslik(d.iletisim.adres))}</h2>
             <p class="ml-durum ${st.open ? 'is-acik' : ''}"><i></i>${esc(st.text)}</p>
             <dl class="ml-saat">${groupedHours(d.saatler).map(([g, s]) => `<div><dt>${g}</dt><dd>${s}</dd></div>`).join('')}</dl>
             <p class="ml-adres">${esc(d.iletisim.adres)}</p>

@@ -147,7 +147,7 @@ a { color: inherit; }
 }
 .kalkan--mavi { background: var(--mavi); color: #fff; box-shadow: inset 0 0 0 2px #fff; }
 .tabela__ad {
-  margin: clamp(10px, 1.6vw, 18px) 0 clamp(14px, 2vw, 22px); font-weight: 900; line-height: 0.95; letter-spacing: -0.01em;
+  margin: clamp(10px, 1.6vw, 18px) 0 clamp(14px, 2vw, 22px); font-weight: 900; line-height: 1.04; letter-spacing: -0.01em;
   font-size: calc(clamp(40px, 8.6vw, 108px) * var(--ad-k, 1)); text-transform: uppercase; padding-top: 0.06em;
 }
 .tabela__cikis {
@@ -198,7 +198,7 @@ a { color: inherit; }
 
 /* --- Yeşil: tabelanın içi --------------------------------------------- */
 .yesil { position: relative; background: var(--yesil); padding: clamp(56px, 8vw, 110px) 0 clamp(70px, 10vw, 120px); }
-.yesil::before { content: ''; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(80% 60% at 80% 0%, rgb(255 255 255 / 0.08), transparent 60%); }
+.yesil::before { content: ''; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(80% 60% at 80% 45%, rgb(255 255 255 / 0.07), transparent 60%); }
 .yesil .kap { position: relative; }
 .yesil__grid { display: grid; grid-template-columns: 1.1fr 1fr; gap: clamp(28px, 5vw, 80px); align-items: start; margin-top: 40px; }
 .yesil__metin { margin: 0; font-size: clamp(19px, 1.9vw, 24px); line-height: 1.5; color: rgb(255 255 255 / 0.92); max-width: 36ch; }
@@ -383,7 +383,7 @@ a { color: inherit; }
 .pano__ekran { position: relative; min-height: 290px; padding: 52px clamp(22px, 4vw, 56px) 70px; display: grid; align-content: center; }
 .pano__ekran::after { content: ''; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(rgb(0 0 0 / 0.5) 35%, transparent 36%) 0 0 / 4px 4px; }
 .pano__metin { margin: 0 0 18px; font: 700 clamp(20px, 2.4vw, 30px)/1.35 var(--mono); color: var(--led); text-shadow: 0 0 14px rgb(255 174 26 / 0.55); text-wrap: pretty; }
-.pano__kim { margin: 0; font: 800 clamp(16px, 1.6vw, 20px)/1.2 var(--dot); color: var(--led-yesil); text-shadow: 0 0 10px rgb(63 224 127 / 0.5); letter-spacing: 0.02em; }
+.pano__kim { margin: 0; font: 700 clamp(14px, 1.4vw, 17px)/1.3 var(--mono); color: var(--led-yesil); text-shadow: 0 0 10px rgb(63 224 127 / 0.5); letter-spacing: 0.02em; }
 .pano__nokta { position: absolute; right: 24px; bottom: 22px; display: flex; gap: 6px; z-index: 1; }
 .pano__nokta button { width: 34px; height: 34px; padding: 0; border: 0; background: transparent; cursor: pointer; display: grid; place-items: center; }
 .pano__nokta button::before { content: ''; width: 12px; height: 12px; border-radius: 50%; background: #33393d; transition: background 0.2s; }
@@ -468,3 +468,8 @@ a { color: inherit; }
 /* Hareket azaltılmışsa: tabela sabit */
 .rm .hero__ipucu { display: none; }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+
+/* tabela alt başlığı: ayraç noktaları eşit boşluklu */
+.tabela__tur { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 0 0.55em; }
+.tabela__tur i { width: 0.28em; height: 0.28em; border-radius: 50%; background: currentColor; opacity: 0.8; }
+.hero__ipucu { padding: 6px 12px; border-radius: 999px; background: rgb(0 0 0 / 0.55); color: rgb(255 255 255 / 0.8); }

@@ -161,12 +161,12 @@ body { background: var(--sis); color: var(--lac); font: 400 17px/1.55 var(--body
 
 @media (max-width: 899px) {
   .hero { --tank: min(62vw, 250px, 32svh); }
-  .hero__pin { grid-template-columns: 1fr; grid-template-rows: 60% 40%; min-height: 640px; }
+  .hero__pin { grid-template-columns: 1fr; grid-template-rows: minmax(58%, 1fr) auto; min-height: 640px; }
   .hero__photo { grid-column: 1; grid-row: 1; }
   .hero__photo img { object-position: 50% 30%; }
   .hero__photo::after { background: linear-gradient(180deg, rgb(10 22 40 / .55) 0%, rgb(10 22 40 / .05) 22%, rgb(10 22 40 / .15) 55%, rgb(10 22 40 / .85) 100%); }
   .hero__tag { display: none; }
-  .hero__panel { grid-column: 1; grid-row: 2; padding: 22px var(--pad) 0; }
+  .hero__panel { grid-column: 1; grid-row: 2; padding: 22px var(--pad) calc(100px + env(safe-area-inset-bottom)); }
   .hero__copy { max-width: none; }
   .hero__copy .eyebrow { margin-bottom: 10px; }
   .hero__name { font-size: clamp(28px, 8.4vw, 44px); letter-spacing: -0.05em; }
@@ -190,6 +190,7 @@ body { background: var(--sis); color: var(--lac); font: 400 17px/1.55 var(--body
 .uyar .h2 em { color: var(--buz); }
 .uyar .lead { color: var(--muted-d); }
 .uyar__box { display: grid; gap: 14px; }
+@media (min-width: 900px) { .uyar__head { position: sticky; top: 120px; } }
 .uyar__opts { display: grid; gap: 8px; }
 .opt {
   display: grid; grid-template-columns: 26px 1fr; gap: 14px; align-items: center; text-align: left; width: 100%;
@@ -219,6 +220,7 @@ body { background: var(--sis); color: var(--lac); font: 400 17px/1.55 var(--body
 @media (max-width: 899px) {
   .uyar { grid-template-columns: 1fr; }
   .opt { padding: 14px 14px; }
+  .res::after { width: 160px; height: 160px; right: -80px; top: -80px; border-width: 26px; }
 }
 
 /* --- Hizmetler --- */

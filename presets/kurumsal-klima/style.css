@@ -227,7 +227,8 @@
   background: linear-gradient(100deg, #e8f1f4 30%, #5fd8e2 70%, #fad746); -webkit-background-clip: text; background-clip: text; color: transparent;
 }
 .k-rakamlar dt { font-family: var(--tk-mono); font-size: 12.5px; letter-spacing: .06em; text-transform: uppercase; }
-.k-rakamlar__liste > div { border-top-color: rgb(255 255 255 / .12); }
+.k-rakamlar__liste > div { border-top-color: rgb(255 255 255 / .12); min-width: 0; }
+@media (min-width: 900px) { .k-rakamlar dd { font-size: clamp(38px, 4vw, 62px); } }
 
 /* --- Gaz ve manometre --- */
 .gz { background: var(--k-yuzey); }

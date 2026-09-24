@@ -1,0 +1,105 @@
+{
+  "galeri": [
+    { "src": "/img/kurumsal-ekspertiz/sasi-alt.jpg", "alt": "El feneriyle aracın alt şasisini inceleyen usta" },
+    { "src": "/img/kurumsal-ekspertiz/lift-suv.jpg", "alt": "Lifte kaldırılmış aracın altını kontrol eden usta" },
+    { "src": "/img/kurumsal-ekspertiz/obd-cihaz.jpg", "alt": "Araca bağlı arıza tespit cihazının ekranı" },
+    { "src": "/img/kurumsal-ekspertiz/alttan.jpg", "alt": "Lift altında ön takımı ışıkla kontrol eden usta" },
+    { "src": "/img/kurumsal-ekspertiz/alt-sasi.jpg", "alt": "Lift üzerindeki aracın alt takımı ve egzoz hattı" },
+    { "src": "/img/kurumsal-ekspertiz/kontrol.jpg", "alt": "Kaputu açık araçta motoru çalıştırıp dinleyen usta" },
+    { "src": "/img/kurumsal-ekspertiz/motor-kontrol.jpg", "alt": "Elinde tabletle motor bölmesini kontrol eden usta" },
+    { "src": "/img/kurumsal-ekspertiz/sasi-onarim.jpg", "alt": "Lift üstünde fren ve süspansiyon kontrolü" },
+    { "src": "/img/kurumsal-ekspertiz/anahtar.jpg", "alt": "Ekspertizden sonra araç anahtarı teslim ediliyor" }
+  ],
+  "kurumsal": {
+    "hero": {
+      "ust": "Oto ekspertiz · Şaşmaz Oto Sanayi",
+      "baslik": "Kaparoyu vermeden önce aracı bize getirin.",
+      "metin": "Boyasını panel panel ölçer, lifte kaldırıp şasisine bakar, silinmiş arıza kodlarını okur ve yolda deneriz. Gördüğümüzü fotoğraflı rapora yazar, araç başında tek tek anlatırız.",
+      "birincil": "Ekspertiz randevusu",
+      "ikincil": "Neleri kontrol ediyoruz",
+      "ikincilRota": "hizmetler"
+    },
+    "ozet": {
+      "baslik": "Satıcının da alıcının da değil, aracın yanındayız",
+      "metin": "İlan fotoğrafı her aracı temiz gösterir. Boyalı çamurluğu cihaz, kaynaklı podyeyi lift, silinmiş şanzıman arızasını tarama söyler. Biz yalnızca ölçtüğümüzü yazarız; kararı siz verirsiniz."
+    },
+    "hizmetOzetBaslik": "Bir ekspertizde neler var",
+    "yorumBaslik": "Aracını getirenler ne diyor",
+    "surecBaslik": "Randevudan rapora dört adım",
+    "galeriBaslik": "Lift altından",
+    "markaBaslik": "Sık incelediğimiz markalar",
+    "anlasmaBaslik": "Galeriler, filolar ve kiralama firmaları",
+    "anlasmaMetin": "Stoğuna araç alan galerilere ve filosunu yenileyen firmalara ayrı sıra ve toplu raporlama.",
+    "anlasmalar": [
+      {
+        "baslik": "Galeri ve oto alım-satım",
+        "kisa": "Stoğa almadan önce ölçün, satarken raporla gösterin.",
+        "metin": "Galerilerin alacağı araçları aynı gün sıraya alırız. Satışa çıkan her araç için hazırlanan rapor alıcıya gösterilebilir; pazarlık rapor üzerinden kısa sürer.",
+        "maddeler": ["Aynı gün ayrı sıra", "Her araç için fotoğraflı rapor, PDF olarak", "Alıcıya araç başında rapor anlatımı", "Aylık döküm ve tek fatura"],
+        "buton": "Galeri olarak yazın"
+      },
+      {
+        "baslik": "Filo ve kiralama firmaları",
+        "kisa": "İade ve devir öncesi araç durum tespiti.",
+        "metin": "Kiralama dönüşü ya da filo devrinde aracın durumunu tarafsız kayda geçiririz. Boya, kaporta, alt takım ve arıza kayıtları araç bazında saklanır; bir önceki raporla karşılaştırılabilir.",
+        "maddeler": ["İade ve devir tespiti", "Araç bazında rapor geçmişi", "Önceki raporla karşılaştırma", "Toplu randevu"],
+        "buton": "Filo için görüşelim"
+      }
+    ],
+    "anlasmaNotu": "Koşullar araç sayısına göre konuşulur; teklifimizi yazılı veririz.",
+    "hakkimizda": {
+      "baslik": "Yalnızca ekspertiz",
+      "paragraflar": [
+        "2012'den beri Şaşmaz'da aynı işi yapıyoruz: ikinci el aracın gerçek durumunu ölçmek. Tamir yapmıyor, parça satmıyoruz; bu yüzden rapora yazdığımız hiçbir şeyden kazancımız yok.",
+        "Araç incelenirken yanında durabilirsiniz. Lift kalktığında altını, cihaz öttüğünde paneli gösteririz. Raporu elinize verip her maddeyi araç başında anlatmadan işi bitmiş saymayız."
+      ],
+      "gorsel": "/img/kurumsal-ekspertiz/lift-suv.jpg",
+      "gorselAlt": "Lifte kaldırılmış aracın altını kontrol eden usta"
+    },
+    "misyon": "Aracın durumunu ölçerek, fotoğraflayarak ve tarafsız biçimde rapora geçirmek.",
+    "vizyon": "Şaşmaz'da araç alıp satan herkesin önce uğradığı yer olmak.",
+    "degerler": [
+      { "baslik": "Tarafsız", "metin": "Tamir yapmıyor, parça satmıyoruz. Rapordan kazancımız yok." },
+      { "baslik": "Ölçü ortada", "metin": "Boya değerleri mikron olarak, her panel için ayrı yazılır." },
+      { "baslik": "Göz önünde", "metin": "İnceleme boyunca aracın yanında durabilirsiniz." },
+      { "baslik": "Anlatarak teslim", "metin": "Rapor elinize verilir, her madde araç başında gösterilir." }
+    ],
+    "kalite": {
+      "baslik": "Her araç aynı sırayla incelenir",
+      "metin": "Aracın markası ya da fiyatı ne olursa olsun kontrol sırası değişmez.",
+      "maddeler": [
+        "Ruhsat, şasi numarası ve kilometre kaydedilir.",
+        "Boya kalınlığı her panelde birkaç noktadan ölçülür, değerler mikron olarak yazılır.",
+        "Araç lifte kaldırılır; şasi uçları, podye ve bagaj havuzu kaynak ve çekme izine karşı incelenir.",
+        "Kayıtlı ve silinmiş arıza kodları bütün modüllerden okunur.",
+        "Dinamometre ve yol testinden sonra rapor fotoğraflarıyla birlikte teslim edilir."
+      ]
+    },
+    "sss": [
+      { "soru": "Ekspertiz ne kadar sürer?", "cevap": "Tam ekspertiz 1,5-2 saat sürer. Yalnızca boya ölçümü ya da arıza taraması istiyorsanız 15-20 dakikada biter." },
+      { "soru": "İnceleme sırasında yanında durabilir miyim?", "cevap": "Evet. Alıcı da satıcı da inceleme boyunca aracın yanında durabilir; lift kalktığında altını birlikte bakarız." },
+      { "soru": "Tampon neden ölçülmüyor?", "cevap": "Boya kalınlık cihazı metal üzerinde ölçer, plastik tamponda doğru değer vermez. Tamponlara gözle ve ışıkla bakar, boya farkı ya da çatlak varsa rapora yazarız." },
+      { "soru": "Değişen parça boyadan nasıl anlaşılır?", "cevap": "Değişmiş bir parça fabrika boyasında da gelebilir. Bu yüzden yalnız cihaza bakmayız; cıvata başlarında söküm izi, conta ve mastik farkı ile kaynak noktalarını da kontrol ederiz." },
+      { "soru": "Fiyatı ne zaman öğrenirim?", "cevap": "Randevu alırken, aracın tipine göre söyleriz. İnceleme sırasında ek ücret çıkmaz." },
+      { "soru": "Raporu nasıl alırım?", "cevap": "Basılı rapor elinize verilir, PDF'i aynı gün WhatsApp'tan gönderilir." }
+    ],
+    "kariyer": {
+      "baslik": "Ekibimize katılın",
+      "metin": "Kaporta ya da mekanik tecrübesi olan, detaya bakmaktan sıkılmayan arkadaşlar arıyoruz. Cihaz kullanımını ve raporlamayı biz öğretiriz."
+    },
+    "cta": {
+      "baslik": "Aracı almadan önce bir saatinizi ayırın.",
+      "metin": "Marka, model ve yılı WhatsApp'tan yazın; alıcı ve satıcı için uygun saati birlikte ayarlayalım.",
+      "buton": "Randevu alın"
+    },
+    "formBaslik": "Randevu ya da bilgi için yazın",
+    "konular": ["Ekspertiz randevusu", "Yalnızca boya ölçümü", "Arıza taraması", "Galeri / filo anlaşması", "Rapor hakkında soru", "Diğer"],
+    "sayfalar": {
+      "kurumsal": { "baslik": "Tamir yapmayız, ölçeriz.", "metin": "2012'den beri Şaşmaz'da yalnızca ekspertiz.", "gorsel": "/img/kurumsal-ekspertiz/alttan.jpg" },
+      "hizmetler": { "baslik": "Aracın tamamı, tek seferde.", "metin": "Kaporta, boya, şasi, motor, şanzıman, yürüyen aksam ve elektronik.", "gorsel": "/img/kurumsal-ekspertiz/sasi-alt.jpg" },
+      "kurumsal-musteriler": { "baslik": "Galeriler ve filolar için", "metin": "Toplu araçta ayrı sıra, araç bazında rapor geçmişi." },
+      "referanslar": { "baslik": "Lift altından", "metin": "Atölyeden kareler ve aracını getirenlerin yorumları." },
+      "iletisim": { "baslik": "Randevu alın", "metin": "Marka, model ve yılı yazın; uygun saati birlikte ayarlayalım." }
+    }
+  }
+}

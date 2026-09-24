@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#120b08" />
+  <title>Ocakbaşı | Şaşmaz</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23120b08'/%3E%3Ccircle cx='16' cy='18' r='8' fill='%23ff5d1f'/%3E%3Ccircle cx='16' cy='18' r='3.5' fill='%23ffd28a'/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,400..800&family=Onest:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap&subset=latin-ext" rel="stylesheet" />
+</head>
+<body class="is-loading">
+  <!-- Açılış: karanlıkta tek kor. Saat 06:00'ya gelir, ateş tutuşur. -->
+  <div class="intro" data-intro role="presentation">
+    <div class="intro__ember" data-ember></div>
+    <div class="intro__flash" data-flash></div>
+    <div class="intro__center" data-intro-center>
+      <p class="intro__name" data-intro-name></p>
+      <p class="intro__clock"><span data-intro-clock>05:40</span></p>
+      <p class="intro__line" data-intro-line>Ocak yakılıyor</p>
+    </div>
+    <p class="intro__skip">Geçmek için dokunun</p>
+  </div>
+
+  <canvas class="stage" data-stage aria-hidden="true"></canvas>
+  <div class="heat" aria-hidden="true" data-heat></div>
+  <div class="cursor" data-cursor aria-hidden="true"><i></i></div>
+
+  <header class="top" data-top>
+    <a class="top__brand" href="#" data-bind="ad"></a>
+    <nav class="top__nav" aria-label="Bölümler">
+      <a href="#menu">Ocaktan</a>
+      <a href="#salon">Grup</a>
+      <a href="#rezervasyon">Rezervasyon</a>
+      <a href="#konum">Konum</a>
+    </nav>
+    <p class="top__status" data-status></p>
+    <a class="top__call" data-tel data-magnetic><span data-icon="phone"></span><span class="top__num" data-bind="telefon"></span></a>
+  </header>
+
+  <main>
+    <!-- Film: kor tutuşur → küllenir → kıyma → şiş ocağa → közde döner → tabağa -->
+    <section class="film" data-film>
+      <div class="film__sticky">
+        <div class="hero" data-hero>
+          <p class="hero__since" data-since></p>
+          <h1 class="hero__title" data-hero-title></h1>
+          <p class="hero__slogan" data-bind="slogan"></p>
+          <div class="hero__cta">
+            <a class="btn btn--fire" data-wa-rez target="_blank" rel="noopener" data-magnetic><span data-icon="whatsapp"></span>Masa ayırt</a>
+            <a class="btn btn--ghost" data-tel data-magnetic><span data-icon="phone"></span>Paket sipariş ver</a>
+          </div>
+        </div>
+
+        <div class="hud" data-hud aria-hidden="true">
+          <p class="hud__clock"><b data-hud-clock>06:00</b><span data-hud-kicker>Sabah</span></p>
+          <div class="done" data-done>
+            <p class="done__lbl">Pişme</p>
+            <div class="done__bar"><i data-done-fill></i></div>
+            <p class="done__state" data-done-state>Çiğ</p>
+          </div>
+        </div>
+
+        <div class="chapters" data-chapters></div>
+
+        <div class="plate" data-plate aria-hidden="true">
+          <img src="/img/sektor-restoran/adana-tabak.jpg" alt="" width="2000" height="1333" />
+        </div>
+        <div class="plate__cap" data-plate-cap>
+          <p class="plate__kicker">Afiyet olsun</p>
+          <h2 class="plate__title">Siparişten masaya <em>15-20 dakika.</em></h2>
+        </div>
+
+        <p class="hint" data-hint aria-hidden="true"><i></i>Kaydırın, ocağı yakalım</p>
+      </div>
+    </section>
+
+    <!-- Hakkımızda -->
+    <section class="about" data-about>
+      <div class="about__body">
+        <p class="kicker">Aynı ocağın başında</p>
+        <p class="about__text" data-about-text></p>
+        <ul class="stats" data-stats></ul>
+      </div>
+      <figure class="about__img"><img src="/img/sektor-restoran/ocak.jpg" alt="Uzun ocakbaşında şişleri çeviren ustalar ve yükselen duman" loading="lazy" width="1500" height="2000" /></figure>
+    </section>
+
+    <!-- Menü / hizmetler: şiş rafı -->
+    <section class="menu" id="menu">
+      <header class="sec-head">
+        <p class="kicker">Ocaktan, fırından, tezgâhtan</p>
+        <h2 class="sec-title" data-flame>Ne yemek istersiniz?</h2>
+        <p class="sec-sub" data-fiyat></p>
+      </header>
+      <ol class="rack" data-rack></ol>
+    </section>
+
+    <!-- Meze vitrini: yatay kayan fotoğraf şeridi -->
+    <section class="reel" data-reel>
+      <div class="reel__sticky">
+        <header class="reel__head">
+          <p class="kicker">Her sabah o günün sebzesiyle</p>
+          <h2 class="sec-title" data-flame>Sofra böyle kurulur.</h2>
+        </header>
+        <div class="reel__track" data-reel-track></div>
+      </div>
+    </section>
+
+    <!-- Grup ve organizasyon -->
+    <section class="salon" id="salon">
+      <figure class="salon__img"><img src="/img/sektor-restoran/sofra.jpg" alt="Meze ve ara sıcaklarla kurulmuş kalabalık sofra" loading="lazy" width="1335" height="2000" /></figure>
+      <div class="salon__body">
+        <p class="kicker">Grup, iş yemeği, davet</p>
+        <h2 class="sec-title" data-flame data-salon-title></h2>
+        <p class="salon__text" data-salon-text></p>
+        <div class="seats" data-seats aria-hidden="true"></div>
+        <ul class="salon__list" data-salon-list></ul>
+      </div>
+    </section>
+
+    <!-- Rezervasyon: mesaj hazırlayıcı -->
+    <section class="rez" id="rezervasyon">
+      <div class="rez__card">
+        <header>
+          <p class="kicker">Rezervasyon ve paket</p>
+          <h2 class="sec-title" data-flame data-rez-title></h2>
+          <p class="rez__text" data-rez-text></p>
+        </header>
+        <div class="rez__form">
+          <fieldset class="rez__group">
+            <legend>Ne için?</legend>
+            <div class="chips" data-rez-tur></div>
+          </fieldset>
+          <fieldset class="rez__group">
+            <legend>Kaç kişi?</legend>
+            <div class="stepper">
+              <button type="button" data-kisi="-1" aria-label="Bir kişi azalt">−</button>
+              <output data-kisi-out>4</output>
+              <button type="button" data-kisi="1" aria-label="Bir kişi artır">+</button>
+            </div>
+          </fieldset>
+          <fieldset class="rez__group">
+            <legend>Hangi gün?</legend>
+            <div class="chips" data-rez-gun></div>
+          </fieldset>
+          <fieldset class="rez__group">
+            <legend>Saat</legend>
+            <div class="chips" data-rez-saat></div>
+          </fieldset>
+          <div class="rez__preview">
+            <p class="rez__msg" data-rez-msg></p>
+          </div>
+          <a class="btn btn--fire btn--xl rez__send" data-rez-send target="_blank" rel="noopener" data-magnetic><span data-icon="whatsapp"></span>WhatsApp'tan gönder</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Yorumlar -->
+    <section class="reviews" id="yorumlar">
+      <header class="reviews__head">
+        <p class="reviews__score"><b data-puan>4,8</b><span class="reviews__stars" data-stars></span></p>
+        <p class="reviews__count" data-puan-adet></p>
+      </header>
+      <div class="reviews__grid" data-reviews></div>
+    </section>
+
+    <!-- Saatler ve konum -->
+    <section class="shop" id="konum">
+      <div class="shop__info">
+        <p class="kicker">Ankara Bulvarı üstünde</p>
+        <h2 class="sec-title" data-flame>Ocak her gün yanar.</h2>
+        <p class="shop__status" data-status-big></p>
+        <dl class="shop__hours" data-hours></dl>
+        <p class="shop__addr" data-bind="adres"></p>
+        <div class="shop__cta">
+          <a class="btn btn--fire" data-maps target="_blank" rel="noopener" data-magnetic><span data-icon="pin"></span>Yol tarifi al</a>
+          <a class="btn btn--ghost" data-tel data-magnetic><span data-icon="phone"></span>Ara</a>
+        </div>
+      </div>
+      <div class="shop__map" data-map></div>
+    </section>
+
+    <!-- Final: kor tekrar harlanır -->
+    <section class="finale" data-finale>
+      <div class="finale__sticky">
+        <p class="kicker">Masa, paket, davet</p>
+        <h2 class="finale__title" data-final-title></h2>
+        <div class="finale__cta">
+          <a class="btn btn--fire btn--xl" data-tel data-magnetic><span data-icon="phone"></span>Hemen ara</a>
+          <a class="btn btn--ghost btn--xl" data-wa-paket target="_blank" rel="noopener" data-magnetic><span data-icon="whatsapp"></span>Paket sipariş yaz</a>
+        </div>
+        <p class="finale__note" data-garanti></p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <p data-year></p>
+    <p data-bind="adres"></p>
+    <p class="foot__small">Fotoğraflar: Pexels. 3D ocak bu site için kodla çizildi.</p>
+  </footer>
+
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

@@ -172,11 +172,11 @@ export function createStage(canvas, { kinds, lite }) {
 
     // --- Halka parametreleri
     const Rh = mobile ? 1.5 : 2.3;
-    let R = Rh, y = mobile ? 1.7 : 1.05, s = mobile ? 0.72 : 0.7;
+    let R = Rh, y = mobile ? 1.7 : 0.88, s = mobile ? 0.72 : 0.7;
     let A = time * 0.16 + T * 1.6;
     // vitrin: halka alçalır, küçülür
     const vIn = sm(seg(T, 0.8, 1.0));
-    R = L(R, mobile ? 1.55 : 2.25, vIn);
+    R = L(R, mobile ? 1.55 : 1.75, vIn);
     y = L(y, 0.18, vIn);
     s = L(s, mobile ? 0.36 : 0.42, vIn);
     A += activeF * (TAU / N);
@@ -209,7 +209,7 @@ export function createStage(canvas, { kinds, lite }) {
 
       // rakamlar: parçalar üst üste dizilip bir sütun olur
       if (wTotem > 0) {
-        const tx = mobile ? 1.05 : 1.55;
+        const tx = mobile ? 1.15 : 1.55;
         const ty = 0.95 + k * 0.62;
         const tz = mobile ? -0.8 : 0;
         P.set(L(P.x, tx + Math.sin(time * 0.7 + k) * 0.05, wTotem), L(P.y, ty, wTotem), L(P.z, tz, wTotem));

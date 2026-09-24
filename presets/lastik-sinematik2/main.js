@@ -59,6 +59,19 @@ const words = d.isletme.ad.split(/\s+/).reduce((acc, w) => {
   else acc.push(w);
   return acc;
 }, []);
+// 3'ten fazla satır olursa kelimeleri en çok 3 dengeli satıra topla
+if (words.length > 3) {
+  const total = words.join(' ').length;
+  const target = Math.ceil(total / 3);
+  const packed = [];
+  for (const w of words) {
+    const last = packed.at(-1);
+    if (last && packed.length >= 3) packed[packed.length - 1] += ` ${w}`;
+    else if (last && (last.length + 1 + w.length <= target || last.length < 4)) packed[packed.length - 1] += ` ${w}`;
+    else packed.push(w);
+  }
+  words.splice(0, words.length, ...packed);
+}
 const heroTitle = $('[data-hero-title]');
 heroTitle.innerHTML = words.map((w) => `<span class="line"><span class="line__in">${esc(upper(w))}</span></span>`).join('');
 heroTitle.style.setProperty('--len', Math.max(5, ...words.map((w) => [...w].length)));
@@ -183,7 +196,7 @@ const P = {
   dis0: { cam: [1.5, 0.75, 2.45], target: [0, 0.3, 0.45], yaw: 1.15, off: [0.16, 0], offP: [0, 0.2], fitP: 1.6 },
   dis1: { cam: [1.1, 0.9, 2.05], target: [0, 0.35, 0.6], yaw: 1.25, off: [0.16, 0], offP: [0, 0.2], fitP: 1.55 },
   iz0: { cam: [4.6, 1.5, 3.6], target: [-0.9, -0.45, 0], yaw: 0, off: [-0.1, -0.04], offP: [0, 0.14], fitP: 1.3 },
-  final: { cam: [0, 0.7, 7.6], target: [0, -0.05, 0], yaw: -0.3, off: [0, 0.26], offP: [0, 0.18], fitP: 1.55 },
+  final: { cam: [0, 0.7, 7.6], target: [0, -0.05, 0], yaw: -0.3, off: [0, 0.3], offP: [0, 0.25], fitP: 1.7 },
 };
 function blend(a, b, t) {
   return {
@@ -231,9 +244,9 @@ function pose(id, p) {
     case 'final': {
       const drop = seg(p, 0.04, 0.26);
       const y = drop < 1 ? 4.5 * (1 - gsap.parseEase('bounce.out')(drop)) : 0;
-      const roll = gsap.parseEase('power2.in')(seg(p, 0.55, 0.95));
-      const x = roll * 12;
-      b = { ...P.final, target: [x * 0.18, -0.05, 0], cam: [x * 0.18, 0.7, innerWidth > innerHeight ? 7.6 : 6.6] };
+      const roll = gsap.parseEase('power2.inOut')(seg(p, 0.45, 0.9));
+      const x = roll * (innerWidth > innerHeight ? 2.4 : 1.2);
+      b = { ...P.final, target: [x * 0.5, -0.05, 0], cam: [x * 0.5, 0.7, innerWidth > innerHeight ? 7.6 : 6.6] };
       b.yaw = L(-0.3, 0, seg(p, 0.3, 0.55));
       o = {
         tireY: y, tireX: x, spin: 0.2, rollAngle: roll > 0 ? -x : null, trail2: x, trail2From: 0,

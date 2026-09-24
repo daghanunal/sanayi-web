@@ -67,7 +67,7 @@ export const farPerdesi = {
                   <circle r="6.5" class="fp__goz-ic"/>
                   <g class="fp__parlama"><path d="M-34 -18L-26 -12M34 -18L26 -12M0 -30V-20M-38 4H-28M38 4H28"/></g>
                 </g>
-                <text x="112" y="${H + 9}" class="fp__yazi fp__yazi--goz">KARŞI SÜRÜCÜ</text>
+                <text x="70" y="${H + 38}" text-anchor="middle" class="fp__yazi fp__yazi--goz">KARŞI SÜRÜCÜ</text>
                 <g class="fp__olcu"><line x1="560" y1="${H}" x2="560" y2="${H}" class="fp__olcu-cizgi"/><text x="548" y="${H + 16}" text-anchor="end" class="fp__yazi fp__olcu-yazi">0 cm</text></g>
               </svg>
               <svg viewBox="0 0 600 96" class="fp__yol">

@@ -1,0 +1,16 @@
+Tüm görseller Pexels lisansıyla (ücretsiz, ticari kullanım serbest, atıf gerekmez):
+atolye.jpg: "Black and white locksmith working in Istanbul" — https://www.pexels.com/photo/black-and-white-locksmith-working-in-istanbul-34286675/
+anahtar-duvari.jpg: "A variety of keys hanging on hooks" — https://www.pexels.com/photo/a-variety-of-keys-hanging-on-hooks-18101862/
+kapi-acma.jpg: "Lockpick in car" — https://www.pexels.com/photo/lockpick-in-car-17124737/
+dukkan.jpg: "Elderly locksmith working in key shop" — https://www.pexels.com/photo/elderly-locksmith-working-in-key-shop-35578808/
+kilit-silindiri.jpg: "Lock barrel" — https://www.pexels.com/photo/lock-barrel-28119421/
+silindir-parcalari.jpg: "Lock barrel" — https://www.pexels.com/photo/lock-barrel-28119417/
+anahtarlar.jpg: "Close-up of keys" — https://www.pexels.com/photo/close-up-of-keys-333837/
+akilli-anahtar.jpg: "Car Key Laying Inside the Car" — https://www.pexels.com/photo/car-key-laying-inside-the-car-11731972/
+yedek-anahtar.jpg: "Car Keys on Black Surface" — https://www.pexels.com/photo/stainless-steel-car-keys-109361/
+kapi-kilidi.jpg: "A Person Holding a Car Key Near a Car Door" — https://www.pexels.com/photo/a-person-holding-a-car-key-near-a-car-door-4930676/
+start-stop.jpg: "Engine start round button of modern car" — https://www.pexels.com/photo/engine-start-round-button-of-modern-car-5688466/
+kodlama.jpg: "Electronic Device Used in Cars" — https://www.pexels.com/photo/electronic-device-used-in-cars-12271951/
+kontak.jpg: "Car ignition turning on" — https://www.pexels.com/photo/car-ignition-turning-on-17124738/
+
+(kilit-klasik: yukarıdaki sektor-kilit görsellerinin küçültülmüş kopyaları)

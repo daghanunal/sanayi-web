@@ -168,8 +168,8 @@ h1, h2, h3 { font-family: var(--display); font-weight: 800; letter-spacing: -0.0
   .kat__actions .btn { padding: 0 22px; font-size: 16px; }
   .kat__title { font-size: clamp(56px, 6.4vw, 104px); }
   .kat__lead { font-size: 18px; }
-  .kat__caps { min-height: 360px; align-self: end; }
-  .kesit { align-self: end; }
+  .kat__caps { min-height: 360px; align-self: center; }
+  .kesit { align-self: center; }
   .kesit__box { height: 380px; }
   .band__label { display: block; position: absolute; left: 10px; bottom: 8px; font-size: 11px; white-space: nowrap; color: var(--grafit); }
   .band--3 .band__label { color: var(--kagit); }
@@ -381,3 +381,8 @@ h1, h2, h3 { font-family: var(--display); font-weight: 800; letter-spacing: -0.0
 .is-static .layer--1, .is-static .layer--2 { display: none; }
 .is-static .layer__edge { display: none; }
 .is-static .kat__caps, .is-static .kesit, .is-static .kat__hint { display: none; }
+
+/* Mobil: alt çubuk için body'nin bıraktığı pay footer rengiyle dolsun */
+@media (max-width: 899px) {
+  .foot { margin-bottom: -84px; padding-bottom: calc(40px + 84px + env(safe-area-inset-bottom)); }
+}

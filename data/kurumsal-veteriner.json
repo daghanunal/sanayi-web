@@ -1,0 +1,132 @@
+{
+  "kurumsal": {
+    "hero": {
+      "ust": "Etimesgut, Elvankent",
+      "baslik": "Aşısı, tahlili, karnesi. Hepsi tek klinikte.",
+      "metin": "Kediniz, köpeğiniz için randevulu muayene yapıyoruz. Aşı karnesini biz takip ediyor, zamanı gelince WhatsApp'tan haber veriyoruz.",
+      "birincil": "Randevu alın",
+      "ikincil": "Aşı takvimini görün",
+      "ikincilRota": "asi-karnesi"
+    },
+    "ozet": {
+      "baslik": "Acele etmeden bakarız",
+      "metin": "2011'den beri Elvankent'teyiz. Muayeneyi baştan sona yapar, ne bulduğumuzu ve ne önerdiğimizi size tek tek anlatırız. Kedi ve köpek için ayrı muayene odamız var; hayvanınız bekleme salonunda birbirini görmeden sırasını bekler."
+    },
+    "hizmetOzetBaslik": "Klinikte neler yapıyoruz",
+    "yorumBaslik": "Dostlarının sahipleri anlatıyor",
+    "hakkimizda": {
+      "baslik": "Elvankent'te bir mahalle kliniği",
+      "paragraflar": [
+        "2011'de Sakarya Caddesi'nde açıldık. O günden beri kedi ve köpeklere, arada da tavşan, muhabbet kuşu ve hamstere bakıyoruz.",
+        "Kliniğimizde iki ayrı muayene odası, kan tahlili için cihazlar ve ultrason var. Hemogram ve biyokimya sonucunu çoğu zaman aynı ziyarette görürsünüz.",
+        "Her hayvanın bir karnesi var. Aşı, tahlil ve kontrol tarihlerini biz tutar, günü gelince WhatsApp'tan hatırlatırız."
+      ],
+      "gorsel": "/img/sektor-veteriner/hekim-kopek.jpg",
+      "gorselAlt": "Muayene masasında yaşlı köpekle veteriner hekim"
+    },
+    "degerler": [
+      {
+        "baslik": "Önce muayene",
+        "metin": "Aşıdan, tahlilden ya da operasyondan önce hayvanınızı muayene ederiz."
+      },
+      {
+        "baslik": "Açık anlatım",
+        "metin": "Bulguları, önerdiğimiz yolu ve nedenini size anlatır, onayınızı alırız."
+      },
+      {
+        "baslik": "Sabır",
+        "metin": "Huzursuz ve yaşlı hayvanlarda işi aşamalara böler, zorlamayız."
+      },
+      {
+        "baslik": "Takip",
+        "metin": "Kontrol ve aşı tarihini karneye yazar, zamanı gelince haber veririz."
+      }
+    ],
+    "kalite": {
+      "baslik": "Klinikte nasıl çalışıyoruz",
+      "metin": "Her ziyaretin sonunda ne yaptığımızı ve bir sonraki adımı karneye yazarız.",
+      "maddeler": [
+        "Kedi ve köpek için ayrı muayene odası",
+        "Hemogram ve biyokimya klinik içinde, sonuç 30-45 dakikada",
+        "Operasyon öncesi kan tahlili ve anestezi görüşmesi",
+        "Evde yapılacaklar yazılı olarak verilir",
+        "Aşı ve kontrol günü WhatsApp'tan hatırlatılır"
+      ]
+    },
+    "sss": [
+      {
+        "soru": "Randevusuz gelebilir miyim?",
+        "cevap": "Gelebilirsiniz ama randevulu hastalara öncelik veririz. Beklememek için önce arayın ya da WhatsApp'tan yazın."
+      },
+      {
+        "soru": "Acil durumda ne yapmalıyım?",
+        "cevap": "Zehirlenme şüphesi, kanama, nefes darlığı, kaza ya da doğum güçlüğünde yola çıkmadan önce arayın. Hekimimiz telefonda ilk yapılacakları söyler, siz gelene kadar hazırlık yapılır."
+      },
+      {
+        "soru": "Yavru kedimi ne zaman getirmeliyim?",
+        "cevap": "Eve geldiği ilk hafta içinde bir kontrol muayenesi iyi olur. Aşı takvimini yaşına ve durumuna göre hekimimiz o gün belirler."
+      },
+      {
+        "soru": "Aşıdan önce muayene gerekli mi?",
+        "cevap": "Evet. Hasta ya da ateşli bir hayvana aşı yapılmaz. Kısa bir muayeneden sonra aşıyı yapar, bir sonraki tarihi karneye yazarız."
+      },
+      {
+        "soru": "Kısırlaştırmadan önce aç mı gelmeli?",
+        "cevap": "Operasyondan önceki gece belirli bir saatten sonra yemek verilmez. Saati ön görüşmede size yazılı olarak söyleriz."
+      },
+      {
+        "soru": "Ücret bilgisi alabilir miyim?",
+        "cevap": "Yapılacak işe göre değişir. Muayeneden sonra, işe başlamadan önce ücreti size söyleriz."
+      },
+      {
+        "soru": "Eski aşı karnesini getirmeli miyim?",
+        "cevap": "Getirin. Daha önce yapılan aşıları ve tahlilleri görmek, takvimi doğru devam ettirmemizi sağlar."
+      }
+    ],
+    "sssBaslik": "Sık sorulanlar",
+    "cta": {
+      "baslik": "Karnesine bir sonraki tarihi birlikte yazalım",
+      "metin": "Arayın ya da WhatsApp'tan yazın, türünü, yaşını ve şikâyetini kısaca belirtin. Size uygun saati birlikte belirleyelim.",
+      "buton": "Randevu alın"
+    },
+    "konular": [
+      "Muayene randevusu",
+      "Aşı takvimi",
+      "Kısırlaştırma ön görüşmesi",
+      "Diş taşı temizliği",
+      "Kan tahlili",
+      "Bakım (tırnak, kulak, tüy)",
+      "Diğer"
+    ],
+    "formBaslik": "Randevu için yazın",
+    "galeriBaslik": "Kliniğimizden",
+    "surecBaslik": "Bir ziyaret nasıl geçer",
+    "markaBaslik": "Baktığımız dostlar",
+    "sayfalar": {
+      "kurumsal": {
+        "baslik": "Kliniğimiz",
+        "metin": "2011'den beri Elvankent'te, kedi ve köpeklere ayrı odada bakan bir mahalle kliniği.",
+        "gorsel": "/img/sektor-veteriner/muayene-masasi.jpg"
+      },
+      "hizmetler": {
+        "baslik": "Hizmetlerimiz",
+        "metin": "Muayeneden laboratuvara, diş taşından acil duruma. Her birinde önce ne yapacağımızı anlatırız.",
+        "gorsel": "/img/sektor-veteriner/steteskop.jpg"
+      },
+      "asi-karnesi": {
+        "baslik": "Aşı karnesi",
+        "metin": "Türünü ve doğum tarihini girin, örnek aşı takvimi karneye dökülsün. Kesin takvimi hekimimiz muayeneden sonra belirler."
+      },
+      "sorular": {
+        "baslik": "Sık sorulanlar",
+        "metin": "Randevu, acil durum, aşı ve operasyon öncesi merak edilenler."
+      },
+      "iletisim": {
+        "baslik": "İletişim ve randevu",
+        "metin": "Arayın, WhatsApp'tan yazın ya da formu doldurun. Acil durumda önce arayın."
+      }
+    },
+    "misyon": "Hayvanınızı muayene etmeden karar vermemek, ne yaptığımızı ve nedenini size açıkça anlatmak.",
+    "vizyon": "Elvankent'te baktığımız her kedinin, her köpeğin karnesi eksiksiz, aşısı zamanında olsun."
+  }
+}

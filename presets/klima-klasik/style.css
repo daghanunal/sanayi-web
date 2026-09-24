@@ -309,6 +309,7 @@ body {
 .final__in { position: relative; z-index: 2; padding: 90px var(--pad); display: grid; justify-items: center; gap: 28px; }
 .final__temp { display: inline-flex; font-size: 14px; padding: 8px 16px; border-radius: 999px; border: 1.5px solid var(--buz); color: var(--buz-acik); }
 .final__title { font: 900 clamp(48px, 8.6vw, 140px)/.92 var(--display); letter-spacing: -0.05em; max-width: 12ch; text-wrap: balance; padding-top: .12em; }
+.final__sub { max-width: 42ch; color: var(--muted-d); font-size: clamp(16px, 1.4vw, 19px); margin-top: -10px; }
 .final__btns { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
 
 /* --- Footer --- */

@@ -1,0 +1,4 @@
+Tüm fotoğraflar Pexels lisansıyla (ücretsiz, ticari kullanım serbest); kaynaklar public/img/sektor-yikama/CREDITS.txt.
+hero-temiz*.jpg, hero-kirli*.jpg: "Car wheel washing with water jet" — https://www.pexels.com/photo/car-wheel-washing-with-water-jet-4876678/
+  (hero-kirli: aynı fotoğrafa prosedürel çamur katmanı eklendi; üretici .shots/yikama-klasik/gen/mud.py)
+k/*.jpg: public/img/sektor-yikama/ görsellerinin 1200px küçültülmüş kopyaları.

@@ -1,0 +1,93 @@
+{
+  "kurumsal": {
+    "hero": {
+      "baslik": "Aracınızı ilk günkü parlaklığıyla teslim ederiz.",
+      "metin": "Dışını köpükle, içini parça parça temizleriz: koltuk, tavan, bagaj dahil. Şirket araçlarınızı da gün ve saatini birlikte belirleyip sıraya almadan yıkarız.",
+      "birincil": "Yıkama isteyin",
+      "ikincil": "Filo yıkama",
+      "ikincilRota": "kurumsal-musteriler"
+    },
+    "hizmetOzetBaslik": "Yıkamadan cilaya, yaptığımız işler",
+    "yorumBaslik": "Aracını teslim alanlar ne diyor",
+    "anlasmalar": [
+      {
+        "baslik": "Şirket filoları",
+        "kisa": "Haftalık ya da aylık düzenli yıkama, sabit gün ve saatte.",
+        "metin": "Satış, servis ya da dağıtım araçlarınızı belirlediğimiz gün ve saatte yıkarız. Araçlar sıraya girmez; saatinde hazır olur, işten geri kalmaz. Her ay hangi aracın ne zaman yıkandığını tek listede görürsünüz.",
+        "maddeler": ["Sabit gün ve saat, sırasız yıkama", "Araç bazında yıkama kaydı", "Ayda tek fatura", "İsteğe göre ayda bir iç temizlik"],
+        "buton": "Filo görüşmesi isteyin"
+      },
+      {
+        "baslik": "Galeri ve oto kiralama",
+        "kisa": "Satışa ya da teslime çıkacak araç aynı gün hazırlanır.",
+        "metin": "Galerinize giren ya da müşteriye teslim edilecek aracın iç-dış temizliğini, jant ve motor bölmesini aynı gün hazırlarız. Fotoğraf çekimine ya da teslime hazır araç.",
+        "maddeler": ["Aynı gün iç-dış hazırlık", "Motor bölmesi ve jant temizliği", "Koku ve leke için koltuk yıkama"],
+        "buton": "Galeri için yazın"
+      },
+      {
+        "baslik": "Taksi, servis ve ticari araç",
+        "kisa": "Gün içinde yolda olan araca hızlı yıkama, uygun saatte.",
+        "metin": "Taksi, öğrenci servisi ya da hafif ticari araç gün boyu yoldadır. Aracın boş olduğu saati söyleyin, o saatte yıkayıp hemen yola çıkaralım. Koltuk ve taban yıkamayı hafta sonuna planlarız.",
+        "maddeler": ["Aracın boş saatine göre yıkama", "Koltuk ve taban için hafta sonu planı", "Süre işe başlamadan söylenir"],
+        "buton": "Ticari aracım için yazın"
+      }
+    ],
+    "anlasmaNotu": "Anlaşma koşulları araç sayısına ve yıkama sıklığına göre konuşulur; teklifimizi yazılı veririz.",
+    "ozet": {
+      "baslik": "Teslimde birlikte dolaşırız",
+      "metin": "Aracı teslim etmeden önce etrafında birlikte dolaşırız. Gözünüze takılan bir yer varsa orada tamamlarız."
+    },
+    "hakkimizda": {
+      "baslik": "2015'ten beri Şaşmaz'da",
+      "paragraflar": [
+        "Işıltı Oto Yıkama 2015'ten beri Şaşmaz Oto Sanayi Sitesi'nde araç yıkıyor. Hızlı dış yıkamadan bir gün süren pasta-cilaya kadar, işi aceleye getirmeden yaparız.",
+        "Aracı gelir gelmez birlikte inceler, lekeleri ve özellikle istediğiniz yerleri not alırız. Hangi işlemin ne kadar süreceğini baştan söyleriz; teslimde de aracın etrafında birlikte dolaşırız."
+      ],
+      "gorsel": "/img/sektor-yikama/yikama-garaj.jpg",
+      "gorselAlt": "Yıkama bölmesinde köpüklenen aracın ızgarası elle temizleniyor"
+    },
+    "misyon": "Aracı söylediğimiz saatte, söylediğimiz temizlikte teslim etmek; teslimde birlikte bakmadan anahtarı vermemek.",
+    "vizyon": "Şaşmaz'da şirketlerin araçlarını gönül rahatlığıyla bıraktığı, düzenli yıkamada ilk akla gelen yer olmak.",
+    "degerler": [
+      { "baslik": "Süre baştan", "metin": "Aracın ne zaman hazır olacağı işe başlamadan söylenir." },
+      { "baslik": "Önce dış, sonra iç", "metin": "Kurulanan araca iç temizlik; kirli su içeri taşınmaz." },
+      { "baslik": "Aksama koruma", "metin": "Motor yıkamada elektrik aksamı, cilada plastikler kapatılır." },
+      { "baslik": "Teslimde bakış", "metin": "Beğenmediğiniz nokta olursa aynı gün yeniden temizlenir." }
+    ],
+    "kalite": {
+      "baslik": "Bir yıkama nasıl kapanır",
+      "metin": "Hızlı yıkamada da detaylı temizlikte de aynı sırayı izleriz.",
+      "maddeler": [
+        "Ön yıkamayla kum ve toz alınır; boya süngerle ovulmadan önce temizlenir.",
+        "Köpük bekletilir, jant ve fren tozu ayrı fırçayla çözülür.",
+        "Durulanan araç mikrofiber bezle kurulanır, camlar ayrıca silinir.",
+        "İç temizlikte koltuk ve halılar kurumaya bırakılır, bagaj dahil kontrol edilir."
+      ]
+    },
+    "sss": [
+      { "soru": "Detaylı temizlik ne kadar sürer?", "cevap": "İç-dış detaylı temizlik ortalama 3-4 saat sürer. Koltuk ya da tavan yıkaması da varsa araç kurumaya bırakılır, genelde aynı gün akşam teslim edilir." },
+      { "soru": "Motor yıkamak arızaya yol açar mı?", "cevap": "Elektrik aksamını ve sigorta kutusunu kapatır, motoru soğukken düşük basınçla yıkarız. Motor sıcakken ya da açık aksamla yıkamayız." },
+      { "soru": "Pasta-cila çizikleri tamamen siler mi?", "cevap": "Kılcal çizik ve matlaşma büyük ölçüde gider. Boyayı aşan derin çizikler pasta ile kapanmaz; aracı gördüğümüzde bunu açıkça söyleriz." },
+      { "soru": "Fiyatı ne zaman öğrenirim?", "cevap": "Aracı birlikte inceledikten sonra, işe başlamadan. Filo yıkamada teklifimizi yazılı veririz." },
+      { "soru": "Randevusuz gelebilir miyim?", "cevap": "Hızlı dış yıkama için gelebilirsiniz. Detaylı temizlik ve pasta-cila için önceden ararsanız aracınızı bekletmeden işe alırız." }
+    ],
+    "kariyer": {
+      "baslik": "Aracı kendi aracı gibi yıkayan",
+      "metin": "Yıkama, detaylı temizlik ya da pasta-cila tarafında deneyimli ya da öğrenmek isteyen arkadaşlarla tanışmak isteriz. Kısa bir tanıtımla bize yazın."
+    },
+    "sayfalar": {
+      "kurumsal": { "baslik": "Kurumsal", "metin": "Kim olduğumuz, nasıl çalıştığımız ve bir yıkamayı nasıl teslim ettiğimiz.", "gorsel": "/img/sektor-yikama/fircalama.jpg" },
+      "hizmetler": { "baslik": "Hizmetlerimiz", "metin": "Yirmi dakikalık dış yıkamadan bir gün süren pasta-cilaya, her işin süresi ve kapsamı." },
+      "kurumsal-musteriler": { "baslik": "Filo yıkama", "metin": "Şirket araçlarınız için sabit gün ve saatte, sıraya girmeden düzenli yıkama.", "gorsel": "/img/sektor-yikama/kopuk.jpg" },
+      "referanslar": { "baslik": "Bölmeden ve müşterilerden", "metin": "Yıkama bölmesinden kareler, müşterilerimizin yorumları ve yıkadığımız markalar." },
+      "iletisim": { "baslik": "İletişim", "metin": "Aracınızı ve istediğiniz işi yazın; ne zaman hazır olacağını söyleyelim." }
+    },
+    "konular": ["Detaylı iç-dış temizlik", "Koltuk / tavan yıkama", "Pasta ve cila", "Motor yıkama", "Filo yıkama", "Galeri / kiralama", "Genel bilgi"],
+    "formBaslik": "Bize yazın",
+    "cta": {
+      "baslik": "Aracınız ne zaman parlasın?",
+      "metin": "Aracınızı ve istediğiniz işi yazın; ne zaman hazır olacağını hemen söyleyelim. Fiyatı işe başlamadan söyleriz.",
+      "buton": "Yıkama isteyin"
+    }
+  }
+}

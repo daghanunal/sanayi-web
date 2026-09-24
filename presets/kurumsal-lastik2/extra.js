@@ -351,7 +351,7 @@ export const otelBolum = {
     const metin = el.querySelector('.hl-otel__metin');
     gsap
       .timeline({ scrollTrigger: { trigger: el, start: 'top 85%', end: 'top 5%', scrub: 0.5 } })
-      .fromTo(foto, { clipPath: 'circle(14% at 50% 40%)' }, { clipPath: 'circle(80% at 50% 40%)', ease: 'none' }, 0)
+      .fromTo(foto, { clipPath: 'circle(30% at 50% 40%)' }, { clipPath: 'circle(80% at 50% 40%)', ease: 'none' }, 0)
       .fromTo(foto.querySelector('img'), { scale: 1.25, rotation: -8 }, { scale: 1, rotation: 0, ease: 'none' }, 0);
     gsap.from(metin.children, { y: 30, opacity: 0, stagger: 0.08, duration: 0.7, ease: 'power3.out', scrollTrigger: { trigger: metin, start: 'top 80%', once: true } });
   },

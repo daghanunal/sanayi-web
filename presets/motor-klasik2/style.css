@@ -23,7 +23,8 @@
 }
 
 body {
-  background: var(--alu);
+  /* alt çubuk payı (base.css) footer rengiyle dolsun */
+  background: linear-gradient(var(--alu), var(--alu)) 0 0 / 100% calc(100% - 120px) no-repeat, var(--ink);
   color: var(--ink);
   font: 400 17px/1.55 'Archivo', system-ui, sans-serif;
   font-stretch: 100%;
@@ -111,7 +112,7 @@ body {
 .hero__since { font-size: 11px; letter-spacing: .06em; text-transform: uppercase; opacity: .9; }
 .hero__title {
   margin-top: 14px; font-weight: 900; font-stretch: var(--wide); text-transform: uppercase;
-  font-size: clamp(38px, 9.4vw, 116px); line-height: .9; letter-spacing: -.03em; padding-top: .08em;
+  font-size: clamp(38px, min(9.4vw, 13vh), 116px); line-height: .9; letter-spacing: -.03em; padding-top: .08em;
 }
 .hero__title .ch { display: inline-block; }
 .hero__slogan { margin-top: 16px; font-size: clamp(18px, 2vw, 26px); font-weight: 600; font-stretch: 112%; }
@@ -201,7 +202,9 @@ body {
   font-size: clamp(20px, 2.4vw, 32px); font-weight: 750; font-stretch: 112%; line-height: 1.2; text-wrap: balance;
   text-shadow: 0 2px 20px rgb(0 0 0 / .6);
 }
-.band__cap .mono { display: block; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--red-hi); margin-bottom: 12px; text-shadow: none; font-weight: 600; }
+.band__cap .mono { display: table; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: #fff; background: var(--red); padding: 6px 9px 5px; border-radius: 2px; margin-bottom: 14px; text-shadow: none; font-weight: 600; }
+.band__frame { position: relative; }
+.band__frame::after { content: ''; position: absolute; inset: 45% 0 0; background: linear-gradient(to top, rgb(10 11 12 / .78), transparent); pointer-events: none; }
 
 /* ---------------- Süreç ---------------- */
 .seq { padding: clamp(80px, 11vw, 150px) 0; }
@@ -314,3 +317,7 @@ body {
 .foot__small { font-size: 11px; margin-top: 18px; color: var(--steel); }
 @media (min-width: 900px) { .foot__grid { grid-template-columns: 1.2fr 2fr 1fr; align-items: baseline; } .foot__small { grid-column: 1 / -1; } }
 @media (max-width: 899px) { .foot { padding-bottom: 110px; } }
+
+/* Uzun işletme adı üst çubukta üç noktayla kısalır */
+.top__brand [data-name] { overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+@media (max-width: 600px) { .top__brand { font-size: 15px; } }

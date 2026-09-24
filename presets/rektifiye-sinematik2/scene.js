@@ -563,7 +563,7 @@ export function createScene(canvas, { phone = false, low = false } = {}) {
       ox = fin ? 0.16 : inTunnel ? 0.12 * (1 - tun) : lerp(0.36, 0.2, smooth(0.1, 0.2, p));
     } else {
       const heroW = 1 - smooth(0.1, 0.18, p);
-      oy = fin ? -0.12 : inTunnel ? 0 : lerp(-0.16, 0.13, heroW);
+      oy = fin ? -0.12 : inTunnel ? 0 : lerp(-0.16, 0.2, heroW);
     }
     if (Math.abs(ox - lastOx) > 1e-4 || Math.abs(oy - lastOy) > 1e-4) {
       lastOx = ox;

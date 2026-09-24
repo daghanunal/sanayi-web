@@ -137,12 +137,34 @@ export const PRESETS = [
   { id: 'cekici-klasik', grup: 'klasik', sektor: 'cekici', ad: 'İkaz', icin: 'Çekici ve yol yardım', renk: '#e3241b' },
   { id: 'cekici-sinematik', grup: 'sinematik', sektor: 'cekici', ad: 'Gece Çağrısı', icin: 'Çekici ve yol yardım', renk: '#ffb21e' },
   { id: 'ekspertiz-sinematik', grup: 'sinematik', sektor: 'ekspertiz', ad: 'Tarama Kapısı', icin: 'Oto ekspertiz', renk: '#1ed69b' },
+  { id: 'kurumsal-radyator', grup: 'kurumsal', sektor: 'radyator', ad: 'Bakır Petek', icin: 'Radyatör ve soğutma', renk: '#c4561a' },
+  { id: 'kurumsal-cekici', grup: 'kurumsal', sektor: 'cekici', ad: 'Reflektör', icin: 'Çekici ve yol yardım', renk: '#c8f031' },
+  { id: 'radyator-klasik', grup: 'klasik', sektor: 'radyator', ad: 'Petek', icin: 'Radyatör ve soğutma', renk: '#3fe196' },
+  { id: 'yikama-klasik', grup: 'klasik', sektor: 'yikama', ad: 'Çekpas', icin: 'Oto yıkama ve detay', renk: '#e5177e' },
+  { id: 'radyator-sinematik', grup: 'sinematik', sektor: 'radyator', ad: 'Kabarcık', icin: 'Radyatör ve soğutma', renk: '#ff3d7f' },
+  { id: 'veteriner-klasik', grup: 'klasik', sektor: 'veteriner', ad: 'Burun Buruna', icin: 'Veteriner kliniği', renk: '#f2641f' },
+  { id: 'veteriner-sinematik', grup: 'sinematik', sektor: 'veteriner', ad: 'Pati Karnesi', icin: 'Veteriner kliniği', renk: '#43d6b0' },
+  { id: 'kurumsal-dizel', grup: 'kurumsal', sektor: 'dizel', ad: 'Menzür', icin: 'Dizel enjektör ve pompa', renk: '#f0a202' },
+  { id: 'kurumsal-veteriner', grup: 'kurumsal', sektor: 'veteriner', ad: 'Pati Karnesi', icin: 'Veteriner kliniği', renk: '#0b6f6a' },
+  { id: 'yikama-sinematik', grup: 'sinematik', sektor: 'yikama', ad: 'Köpük Gecesi', icin: 'Oto yıkama ve detay', renk: '#ff5c9d' },
+  { id: 'kurumsal-yikama', grup: 'kurumsal', sektor: 'yikama', ad: 'Sedef', icin: 'Oto yıkama ve detay', renk: '#ff4f93' },
+  { id: 'dizel-sinematik', grup: 'sinematik', sektor: 'dizel', ad: 'Pülverize', icin: 'Dizel enjektör ve pompa', renk: '#f5a524' },
+  { id: 'restoran-klasik', grup: 'klasik', sektor: 'restoran', ad: 'Sofra', icin: 'Ocakbaşı restoran', renk: '#1d3fc4' },
+  { id: 'dizel-klasik', grup: 'klasik', sektor: 'dizel', ad: 'Ateşleme', icin: 'Dizel enjektör ve pompa', renk: '#e0362c' },
+  { id: 'kurumsal-restoran', grup: 'kurumsal', sektor: 'restoran', ad: 'Çini Sofra', icin: 'Ocakbaşı restoran', renk: '#d8361f' },
+  { id: 'kurumsal-kilit', grup: 'kurumsal', sektor: 'kilit', ad: 'Diş Kodu', icin: 'Oto kilit ve anahtar', renk: '#00c2b3' },
+  { id: 'restoran-sinematik', grup: 'sinematik', sektor: 'restoran', ad: 'Köz Saati', icin: 'Ocakbaşı restoran', renk: '#ff5d1f' },
+  { id: 'kilit-sinematik', grup: 'sinematik', sektor: 'kilit', ad: 'Kesme Hattı', icin: 'Oto kilit ve anahtar', renk: '#e8b04e' },
+  { id: 'kilit-klasik', grup: 'klasik', sektor: 'kilit', ad: 'Pim Hizası', icin: 'Oto kilit ve anahtar', renk: '#1a2fb0' },
+  { id: 'mimarlik-klasik', grup: 'klasik', sektor: 'mimarlik', ad: 'Ozalit', icin: 'Mimarlık ofisi', renk: '#3b35d4' },
+  { id: 'mimarlik-sinematik', grup: 'sinematik', sektor: 'mimarlik', ad: 'Ozalit', icin: 'Mimarlık ofisi', renk: '#e9ff70' },
+  { id: 'kurumsal-mimarlik', grup: 'kurumsal', sektor: 'mimarlik', ad: 'Pafta', icin: 'Mimarlık ofisi', renk: '#2f3cf5' },
   { id: 'eczane', grup: 'ozel', sektor: 'eczane', ad: 'Eczane', icin: 'Mahalle eczanesi', renk: '#3fbf8a' },
   { id: 'alcibay', grup: 'ozel', sektor: 'alci', ad: 'Alçıbay', icin: 'Alçıbay için yeniden tasarım önerisi', renk: '#e8e4dc' },
 ];
 
 // Henüz yapılmamış ya da yayına alınmamış presetler burada gizlenir.
-export const HAZIR_OLMAYAN = new Set(['kurumsal-ekspertiz']);
+export const HAZIR_OLMAYAN = new Set(['kurumsal-ekspertiz', 'kurumsal-radyator', 'kurumsal-cekici', 'radyator-klasik', 'yikama-klasik', 'radyator-sinematik', 'veteriner-klasik', 'veteriner-sinematik', 'kurumsal-dizel', 'kurumsal-veteriner', 'yikama-sinematik', 'kurumsal-yikama', 'dizel-sinematik', 'restoran-klasik', 'dizel-klasik', 'kurumsal-restoran', 'kurumsal-kilit', 'restoran-sinematik', 'kilit-sinematik', 'kilit-klasik', 'mimarlik-klasik', 'mimarlik-sinematik', 'kurumsal-mimarlik']);
 export const hazirPresetler = () => PRESETS.filter((p) => !HAZIR_OLMAYAN.has(p.id));
 
 export const presetById = (id) => PRESETS.find((p) => p.id === id);

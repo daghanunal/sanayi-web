@@ -74,7 +74,7 @@ const capHtml = katlar.map((k, i) => `
     <p class="cap__text">${esc(k.not)}</p>
   </div>`).join('') + `
   <div class="cap cap--final" data-cap="${katlar.length}">
-    <p class="cap__no mono">Toplam ${toplam} µm · bir saç telinden ince</p>
+    <p class="cap__no mono">Toplam ${toplam} µm · bir kâğıt yaprağı kalınlığında</p>
     <h2 class="cap__title">Fabrikadan çıktığı gibi.</h2>
     <p class="cap__text">Dört kat, fırınlı kabin, gün ışığında son kontrol. <a data-href="wa-foto" href="${esc(hrefs['wa-foto'])}" target="_blank" rel="noopener">Fotoğraf gönderin →</a></p>
   </div>`;

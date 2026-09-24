@@ -110,7 +110,7 @@
       }
     },
     "hakkimizda": {
-      "baslik": "2002'den beri tek iş: LPG",
+      "baslik": "Tek iş: LPG",
       "paragraflar": [
         "Şaşmaz Oto Sanayi'deki atölyemizde yalnızca LPG dönüşümü, bakımı, ayarı ve tank işleri yapıyoruz. Motor tamiri, kaporta, boya yok; bütün dikkatimiz gaz sisteminde.",
         "Aracı almadan önce motorunu inceler, hangi sistemin ve hangi tankın uygun olduğunu söyleriz. Uygun değilse de bunu açıkça söyleriz; dönüşüm her araca yapılmaz.",
@@ -244,7 +244,7 @@
     "markaBaslik": "Sık dönüşüm yaptığımız markalar",
     "sayfalar": {
       "kurumsal": {
-        "baslik": "Tek iş, yirmi yılı aşkın süre",
+        "baslik": "Tek iş, tek atölye",
         "metin": "Şaşmaz Oto Sanayi'de yalnızca LPG işi yapan atölye.",
         "gorsel": "/img/kurumsal-lpg/lift-genis.jpg"
       },

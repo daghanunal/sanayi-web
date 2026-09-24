@@ -384,6 +384,7 @@ section { position: relative; }
 .rv__av { width: 40px; height: 40px; border-radius: 50%; background: var(--murekkep); color: var(--krom); display: grid; place-items: center; font: 700 15px/1 var(--f-disp); flex: none; }
 .rv__who b { display: block; font-weight: 600; }
 .rv__who span { font: 400 13px/1.3 var(--f-mono); color: var(--gri); }
+.rv__who .rv__av { font: 700 15px/1 var(--f-disp); color: var(--hon-ac); }
 @media (min-width: 900px) {
   .reviews { padding: 140px 0; }
   .reviews__head { grid-template-columns: 1fr auto; align-items: end; }
@@ -405,7 +406,7 @@ section { position: relative; }
 .hours dd { margin: 0; font-weight: 600; }
 .hours .is-today { color: var(--hon-koyu); }
 .visit__addr { margin: 22px 0 18px; font-size: 17px; max-width: 34ch; }
-.visit__map { position: relative; min-height: 340px; border-radius: 50% 50% 28px 28px / 36% 36% 28px 28px; overflow: hidden; background: var(--krom-2); display: grid; place-items: center; color: var(--gri); font-size: 13px; }
+.visit__map { position: relative; min-height: 340px; border-radius: 28px 160px 28px 28px; overflow: hidden; background: var(--krom-2); display: grid; place-items: center; color: var(--gri); font-size: 13px; }
 .visit__map iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; filter: grayscale(.85) contrast(1.05); }
 @media (min-width: 900px) {
   .visit { padding: 140px 0; }
@@ -443,3 +444,7 @@ section { position: relative; }
 @media (prefers-reduced-motion: reduce) {
   .krom { animation: none; background-position: 50% 0; }
 }
+
+/* Aksiyon çubuğu koyu bölümlerde kaybolmasın; gövde alt boşluğu footer rengiyle dolsun */
+.action-bar { box-shadow: 0 0 0 1px rgb(230 235 238 / .16), 0 10px 30px rgb(0 0 0 / .35); }
+@media (max-width: 899px) { .foot { padding-bottom: 124px; margin-bottom: -84px; } }

@@ -1,6 +1,16 @@
 {
+  "isletme": {
+    "slogan": "Lastiğiniz indiyse 20 dakikada yeniden yoldasınız."
+  },
   "otel": {
-    "gorsel": "/img/kurumsal-lastik2/depo.jpg"
+    "gorsel": "/img/kurumsal-lastik2/depo.jpg",
+    "metin": "Mevsimlik lastikleriniz balkonda, apartman boşluğunda beklemesin. Yıkar, diş derinliğini ölçer, plakanıza etiketleyip ışık almayan rafa kaldırırız. Mevsim dönünce WhatsApp'tan haber veririz; randevu saatinizde takılı olur.",
+    "maddeler": [
+      "Yıkama ve kontrol dahil",
+      "Plakaya özel etiket",
+      "Mevsim hatırlatması WhatsApp'tan",
+      "Işık almayan kapalı raf"
+    ]
   },
   "kurumsal": {
     "hero": {

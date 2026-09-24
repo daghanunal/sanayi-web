@@ -43,7 +43,8 @@ $('[data-since]').textContent = `Oto klima · Şaşmaz · ${ablative(d.isletme.k
 const yil = new Date().getFullYear() - d.isletme.kurulus;
 $('[data-years]').textContent = `${yil} yıldır Şaşmaz'da`;
 $('[data-final]').textContent = d.finalBaslik;
-$('[data-final-temp]').textContent = `${d.hero.soguk} °C`;
+$('[data-final-sub]').textContent = `Klima sezonunda sıra uzar. Arayın, gününüzü ayarlayalım. ${d.garanti ? d.garanti : ''}`.trim();
+$('[data-final-temp]').textContent = `${d.hero.soguk}°C`;
 $('[data-year]').textContent = new Date().getFullYear();
 $('[data-fis-no]').textContent = `NO ${String(d.puan.adet * 7 + d.isletme.kurulus).padStart(5, '0')}`;
 
@@ -95,16 +96,17 @@ function setTemp(p) {
   cur = p;
   const t = T0 + (T1 - T0) * p;
   tempEl.textContent = Math.round(t);
-  badge.textContent = `${Math.round(t)} °C`;
+  badge.textContent = `${Math.round(t)}°C`;
   needle.setAttribute('transform', `rotate(${(135 - 270 * p).toFixed(1)} 100 100)`);
   // Soğuk hava: ağızdan başlayıp bütün kareyi kaplayan daire
   const rad = p <= 0 ? 0 : geo.r * 0.9 + (geo.far - geo.r * 0.9) * gsap.parseEase('power2.in')(p);
   cold.style.clipPath = `circle(${rad.toFixed(1)}px at ${geo.x.toFixed(1)}px ${geo.y.toFixed(1)}px)`;
   const isCold = t <= 12;
-  if (isCold !== state) {
-    state = isCold;
+  const st = isCold ? 2 : t <= 26 ? 1 : 0;
+  if (st !== state) {
+    state = st;
     hero.classList.toggle('is-cold', isCold);
-    verdict.textContent = isCold ? d.hero.sogukDurum : d.hero.sicakDurum;
+    verdict.textContent = [d.hero.sicakDurum, d.hero.araDurum || d.hero.sicakDurum, d.hero.sogukDurum][st];
   }
 }
 
@@ -212,7 +214,7 @@ $('[data-steps]').innerHTML = d.surec.map((s, i) => `
 const gal = ['atolye', 'klima-paneli', 'motor-kontrol', 'orta-konsol', 'lift', 'usta-sb', 'motor-bolmesi', 'konsol-sb'];
 const galItems = gal.map((k) => d.galeri.find((g) => g.src.includes(`/${k}.jpg`))).filter(Boolean);
 $('[data-gallery]').innerHTML = galItems.map((g) => `
-  <figure class="shot"><img src="${esc(g.src)}" alt="${esc(g.alt)}" loading="lazy" decoding="async" /><figcaption>${esc(g.alt)}</figcaption></figure>`).join('');
+  <figure class="shot"><img src="${esc(g.src)}" alt="${esc(g.alt)}" loading="lazy" decoding="async" /></figure>`).join('');
 
 // --- Yorumlar ----------------------------------------------------------------
 const stars = (n) => Array.from({ length: 5 }, (_, i) => `<span class="${i < n ? '' : 'off'}">${icons.star}</span>`).join('');

@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#1a2fb0" />
+  <title>Oto Kilit ve Anahtar | Şaşmaz, Ankara</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231a2fb0'/%3E%3Ccircle cx='11' cy='16' r='6' fill='none' stroke='%23e8b53d' stroke-width='3'/%3E%3Cpath d='M17 16h11v4M23 16v3' stroke='%23e8b53d' stroke-width='3' fill='none'/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Rubik+Mono+One&family=Radio+Canada+Big:ital,wght@0,400;0,500;0,600;0,700;1,500&family=Victor+Mono:wght@400;600&display=swap&subset=latin-ext" rel="stylesheet" />
+  <link rel="preload" as="image" href="/img/kilit-klasik/dukkan.jpg" />
+</head>
+<body>
+  <header class="top">
+    <a href="#top" class="top__brand"><span class="top__mark" aria-hidden="true"></span><span data-bind="ad"></span></a>
+    <nav class="top__nav" aria-label="Sayfa bölümleri">
+      <a href="#anahtar">Anahtarınız</a>
+      <a href="#hizmetler">Hizmetler</a>
+      <a href="#surec">Nasıl çalışırız</a>
+      <a href="#yorumlar">Yorumlar</a>
+      <a href="#konum">Konum</a>
+    </nav>
+    <a class="top__call" data-tel><span data-icon="phone"></span><span data-bind="telefon"></span></a>
+  </header>
+
+  <main>
+    <!-- İMZA: pim hizası. Kaydırdıkça anahtar kilide girer, dişler pimleri tek tek kaldırır,
+         beş pim kesme hattında hizalanınca anahtar döner ve ekran kesme hattından ikiye ayrılır:
+         üst gövde yukarı, göbek aşağı gider, arkadan dükkân açılır. -->
+    <section class="hero" id="top" aria-label="Giriş">
+      <div class="hero__pin">
+        <div class="hero__reveal" aria-hidden="true">
+          <img class="hero__photo" src="/img/kilit-klasik/dukkan.jpg" alt="" fetchpriority="high" decoding="async" />
+        </div>
+        <div class="hero__open">
+          <p class="hero__openTag mono"><span class="dot"></span>Kilit açıldı</p>
+          <p class="hero__openTitle" data-open-title></p>
+          <div class="hero__cta">
+            <a class="btn btn--brass" data-tel><span data-icon="phone"></span>Hemen ara</a>
+            <a class="btn btn--glass" data-wa target="_blank" rel="noopener"><span data-icon="whatsapp"></span>WhatsApp</a>
+          </div>
+        </div>
+
+        <div class="half half--top">
+          <div class="half__in">
+            <p class="hero__since mono" data-since></p>
+            <h1 class="hero__name" data-bind="ad"></h1>
+          </div>
+        </div>
+        <div class="half half--bot">
+          <div class="half__in">
+            <ol class="pins" data-cells aria-hidden="true"></ol>
+            <p class="hero__slogan" data-bind="slogan"></p>
+            <div class="hero__cta">
+              <a class="btn btn--brass" data-tel><span data-icon="phone"></span>Hemen ara</a>
+              <a class="btn btn--line" href="#anahtar">Anahtarım hangisi?</a>
+            </div>
+          </div>
+        </div>
+
+        <svg class="lock" data-lock viewBox="0 0 1000 440" aria-hidden="true">
+          <defs>
+            <linearGradient id="pirinc" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#f6d27a" />
+              <stop offset=".45" stop-color="#e2ad38" />
+              <stop offset="1" stop-color="#a8761a" />
+            </linearGradient>
+            <linearGradient id="celik" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0" stop-color="#8e97ab" />
+              <stop offset=".45" stop-color="#eef1f7" />
+              <stop offset="1" stop-color="#8e97ab" />
+            </linearGradient>
+            <linearGradient id="anahtarG" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#f3f5fa" />
+              <stop offset=".6" stop-color="#b9c0cf" />
+              <stop offset="1" stop-color="#7d869a" />
+            </linearGradient>
+          </defs>
+          <g class="lock__housing" data-housing>
+            <path class="lock__body" d="M200 40 h672 a28 28 0 0 1 28 28 V190 H200 Z" />
+            <g data-chambers></g>
+            <g data-drivers></g>
+          </g>
+          <g class="lock__plug" data-plug>
+            <path class="lock__body lock__body--plug" d="M200 190 H900 V342 a28 28 0 0 1 -28 28 H200 Z" />
+            <rect class="lock__way" x="200" y="224" width="690" height="104" rx="6" />
+            <g data-plugchambers></g>
+            <g data-keypins></g>
+            <g class="key" data-key>
+              <g class="key__head" data-keyhead>
+                <rect x="-190" y="170" width="172" height="200" rx="46" />
+                <circle class="key__hole" cx="-138" cy="270" r="18" />
+                <rect class="key__btn" x="-86" y="226" width="40" height="30" rx="8" />
+                <rect class="key__btn" x="-86" y="284" width="40" height="30" rx="8" />
+              </g>
+              <rect class="key__shoulder" x="-26" y="218" width="30" height="112" rx="4" />
+              <path class="key__blade" data-blade />
+              <path class="key__groove" data-groove />
+            </g>
+          </g>
+          <line class="lock__shear" data-shear x1="190" y1="190" x2="910" y2="190" />
+          <text class="lock__label mono" x="910" y="180" text-anchor="end">KESME HATTI</text>
+        </svg>
+        <p class="hero__hint mono" aria-hidden="true"><span></span>Kaydırın, anahtar girsin</p>
+      </div>
+    </section>
+
+    <!-- Acil: kapıda kalan araç -->
+    <section class="acil" aria-labelledby="acil-h">
+      <div class="acil__in">
+        <p class="acil__tag mono"><span class="dot"></span>Acil</p>
+        <h2 class="acil__title" id="acil-h" data-acil-baslik></h2>
+        <p class="acil__text" data-acil-metin></p>
+        <p class="acil__rule"><span data-icon="id"></span><span data-acil-kural></span></p>
+        <a class="btn btn--ink btn--big" data-tel><span data-icon="phone"></span><span data-bind="telefon"></span></a>
+      </div>
+    </section>
+
+    <!-- Anahtar tipi seçici -->
+    <section class="tip" id="anahtar" aria-labelledby="tip-h">
+      <div class="tip__head">
+        <p class="eyebrow mono">Önce anahtarı tanıyalım</p>
+        <h2 class="h2" id="tip-h">Elinizdeki anahtar <em>hangisi?</em></h2>
+        <p class="lead">Seçin, ne yapacağımızı ve ne kadar süreceğini görün. Fiyatı işe başlamadan telefonda söyleriz.</p>
+      </div>
+      <div class="tip__box">
+        <div class="tip__opts" role="radiogroup" aria-label="Anahtar tipi" data-types></div>
+        <div class="tip__res" data-type-res aria-live="polite"></div>
+      </div>
+    </section>
+
+    <!-- Hizmetler: pano üzerindeki anahtar etiketleri -->
+    <section class="pano" id="hizmetler" aria-labelledby="pano-h">
+      <div class="pano__head">
+        <p class="eyebrow mono">Panodaki her etiket bir iş</p>
+        <h2 class="h2" id="pano-h">Yedek anahtardan <em>kontağa kadar.</em></h2>
+        <p class="lead">Süreler ortalamadır. Parça gerekirse önce size söyler, onayınızla başlarız.</p>
+      </div>
+      <ul class="pano__grid" data-services></ul>
+    </section>
+
+    <!-- Rakamlar: anahtar üstüne basılmış kodlar gibi -->
+    <section class="kod" aria-label="Rakamlarla">
+      <ul class="kod__list" data-stats></ul>
+    </section>
+
+    <!-- Süreç -->
+    <section class="surec" id="surec" aria-labelledby="surec-h">
+      <div class="surec__head">
+        <p class="eyebrow mono">Sırası hiç değişmez</p>
+        <h2 class="h2" id="surec-h">Önce ruhsat, <em>sonra anahtar.</em></h2>
+        <p class="lead" data-bind="garanti"></p>
+      </div>
+      <div class="surec__wrap">
+        <span class="surec__rail" aria-hidden="true"><span></span></span>
+        <ol class="surec__list" data-steps></ol>
+      </div>
+    </section>
+
+    <!-- Hakkında -->
+    <section class="atolye" aria-labelledby="atolye-h">
+      <figure class="atolye__photo"><img src="/img/kilit-klasik/atolye.jpg" alt="Duvarı anahtar boşluklarıyla dolu kilit atölyesinde çalışan usta" loading="lazy" decoding="async" /></figure>
+      <div class="atolye__copy">
+        <p class="eyebrow mono" data-years></p>
+        <h2 class="h2" id="atolye-h">Başka iş yapmıyoruz. <em>Sadece kilit ve anahtar.</em></h2>
+        <p class="lead" data-bind="hakkinda"></p>
+      </div>
+    </section>
+
+    <!-- Galeri -->
+    <section class="galeri" aria-labelledby="galeri-h">
+      <div class="galeri__head">
+        <h2 class="h2" id="galeri-h">Tezgâhtan <em>kareler.</em></h2>
+        <p class="galeri__hint mono" aria-hidden="true">Kaydırın →</p>
+      </div>
+      <div class="galeri__track" data-gallery></div>
+    </section>
+
+    <!-- Yorumlar -->
+    <section class="yorum" id="yorumlar" aria-labelledby="yorum-h">
+      <div class="yorum__head">
+        <h2 class="h2" id="yorum-h">Yolda kalmayanlar <em>anlatıyor.</em></h2>
+        <div class="score">
+          <p class="score__num" data-score></p>
+          <div>
+            <p class="score__stars" data-stars></p>
+            <p class="score__count mono" data-review-count></p>
+          </div>
+        </div>
+      </div>
+      <ul class="yorum__list" data-reviews></ul>
+    </section>
+
+    <!-- Markalar -->
+    <section class="marka" aria-label="Anahtarını çıkardığımız markalar">
+      <div class="marka__track" data-brands></div>
+    </section>
+
+    <!-- Saatler + konum -->
+    <section class="konum" id="konum" aria-labelledby="konum-h">
+      <div class="konum__info">
+        <p class="eyebrow mono">Şaşmaz Oto Sanayi</p>
+        <h2 class="h2" id="konum-h">Dükkân <em>burada.</em></h2>
+        <p class="konum__status" data-status-big></p>
+        <dl class="hours" data-hours></dl>
+        <p class="konum__addr" data-bind="adres"></p>
+        <div class="konum__btns">
+          <a class="btn btn--cobalt" data-maps target="_blank" rel="noopener"><span data-icon="pin"></span>Yol tarifi al</a>
+          <a class="btn btn--outline" data-tel><span data-icon="phone"></span>Ara</a>
+        </div>
+      </div>
+      <div class="konum__map" data-map><span class="mono">Harita yükleniyor</span></div>
+    </section>
+
+    <!-- Final -->
+    <section class="final" aria-labelledby="final-h">
+      <svg class="final__key" viewBox="0 0 600 200" aria-hidden="true">
+        <path data-final-key pathLength="1" d="M120 40 a60 60 0 1 0 0.1 0 Z M180 100 H560 V128 H520 V150 H490 V128 H460 V160 H430 V128 H395 V146 H365 V128 H180" />
+        <circle cx="90" cy="100" r="16" />
+      </svg>
+      <div class="final__in">
+        <h2 class="final__title" id="final-h" data-final></h2>
+        <p class="final__sub" data-bind="adres"></p>
+        <div class="final__btns">
+          <a class="btn btn--brass btn--big" data-tel><span data-icon="phone"></span>Hemen ara</a>
+          <a class="btn btn--glass btn--big" data-wa target="_blank" rel="noopener"><span data-icon="whatsapp"></span>WhatsApp'tan yaz</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <p class="foot__name" data-bind="ad"></p>
+    <p data-bind="adres"></p>
+    <p><a data-tel data-bind="telefon"></a></p>
+    <p class="foot__small">© <span data-year></span> <span data-bind="ad"></span>. Fotoğraflar: Pexels.</p>
+  </footer>
+
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

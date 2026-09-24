@@ -107,7 +107,7 @@ function showPart(i) {
   };
   $$('[data-vdots] li').forEach((li, k) => li.classList.toggle('is-on', k === i));
   if (first || reducedMotion) return fill();
-  gsap.killTweensOf(vcard);
+  gsap.killTweensOf(vcard, 'opacity,visibility,autoAlpha,y');
   gsap.to(vcard, {
     autoAlpha: 0, y: -14, duration: 0.18, ease: 'power2.in',
     onComplete: () => {
@@ -335,7 +335,7 @@ function frame() {
     // masaüstünde vitrin ve şasi sırasında kaideyi sağa kaydır, mobilde yukarı
     const vS = sm(seg(T, 0.85, 1.0)) * (1 - sm(seg(T, 2.86, 3.0)));
     const tS = T > 3.8 && T < 5.5 ? sm(seg(T, 3.86, 4.0)) : 0;
-    const shiftX = mobile ? 0 : vS * 0.2 + tS * 0.18;
+    const shiftX = mobile ? 0 : vS * 0.22 + tS * 0.18;
     const fS = T > 5.5 ? 1 : 0;
     const shiftY = mobile ? vS * 0.2 + tS * 0.14 + fS * 0.1 : 0;
     const time = reducedMotion ? 0 : (performance.now() - t0) / 1000;

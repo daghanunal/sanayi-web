@@ -21,10 +21,10 @@
   --mono: 'Reddit Mono', ui-monospace, monospace;
   color-scheme: light;
 }
-html { font-size: 100%; }
+html { font-size: 100%; background: var(--lila); }
 html.big { font-size: 118%; }
 body {
-  background: var(--lila);
+  background: var(--ink);
   color: var(--ink);
   font: 400 1.0625rem/1.55 'Reddit Sans', system-ui, sans-serif;
   overflow-x: clip;
@@ -102,7 +102,8 @@ img { display: block; max-width: 100%; }
 .top__size[aria-pressed="true"] { background: var(--ink); color: #fff; }
 .top__call { display: none; }
 @media (min-width: 900px) {
-  .top { --head: 76px; height: 76px; }
+  :root { --head: 76px; }
+  .top { height: 76px; }
   .top__nav { display: flex; }
   .top__status { display: inline-flex !important; }
   .top__call {
@@ -156,6 +157,7 @@ img { display: block; max-width: 100%; }
 .hero__about { font-family: var(--disp); font-weight: 700; font-size: clamp(1.5rem, 4.2vw, 2.8rem); line-height: 1.12; letter-spacing: -.02em; margin: 0; text-wrap: balance; }
 .hero__hint { position: absolute; z-index: 3; bottom: 18px; left: 50%; transform: translateX(-50%); margin: 0; color: var(--soluk); white-space: nowrap; }
 @media (max-width: 899px) {
+  .hero__photo img { object-position: 14% 50%; }
   .hero__hint { display: none; }
   .hero__cta .btn { flex: 1 1 100%; }
   .hero__cta .btn--line { display: none; }
@@ -242,10 +244,13 @@ img { display: block; max-width: 100%; }
   .kutu__list li { position: absolute; left: 0; right: 0; top: 0; }
   .kutu__end { position: absolute; left: 0; right: 0; top: 0; }
   .kutu__cta .btn { width: 100%; }
-  .kutu__talk { min-height: 230px; }
+  .kutu__talk { min-height: 250px; margin-top: 10px; }
+  .kutu__day { font-size: clamp(3.4rem, 17vw, 6.5rem); }
+  .cell::before { padding-top: 150%; }
+  .kutu__list li { font-size: clamp(1.5rem, 6.4vw, 2rem); }
 }
 @media (min-width: 900px) {
-  .kutu__pin { grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); grid-template-rows: auto 1fr; column-gap: 70px; row-gap: 10px; max-width: 1440px; margin: 0 auto; align-content: center; }
+  .kutu__pin { grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); grid-template-rows: auto auto; column-gap: 70px; row-gap: 28px; max-width: 1440px; margin: 0 auto; align-content: center; }
   .kutu__head { grid-column: 1 / -1; }
   .kutu__stage { grid-column: 1; }
   .kutu__talk { grid-column: 2; align-self: center; display: grid; gap: 22px; }
@@ -330,7 +335,7 @@ img { display: block; max-width: 100%; }
 /* 8. Yorumlar --------------------------------------------------------------- */
 .yorum { padding: clamp(80px, 11vw, 160px) 0; background: var(--lila); overflow: clip; }
 .yorum__head { display: grid; gap: 4px 30px; align-items: end; padding: 0 var(--pad); max-width: 1400px; margin: 0 auto 36px; }
-.yorum__big { font-family: var(--disp); font-weight: 900; font-size: clamp(8rem, 42vw, 18rem); letter-spacing: -.07em; line-height: .78; margin: 0; color: var(--mor); transform-origin: 0 100%; }
+.yorum__big { padding-bottom: .14em; font-family: var(--disp); font-weight: 900; font-size: clamp(8rem, 42vw, 18rem); letter-spacing: -.07em; line-height: .78; margin: 0; color: var(--mor); transform-origin: 0 100%; }
 .stars { display: inline-flex; gap: 3px; margin: 0 0 10px; }
 .stars i { width: 26px; height: 26px; color: rgb(22 15 58 / .2); }
 .stars i.on { color: var(--tur); }
@@ -387,4 +392,4 @@ img { display: block; max-width: 100%; }
 .foot a { color: #fff; }
 .foot__brand { display: flex; align-items: center; gap: 10px; color: #fff; font-family: var(--disp); font-weight: 850; font-size: 1.5rem; margin-bottom: 6px !important; }
 .foot__s { margin-top: 16px !important; font-size: .72rem; text-transform: none; line-height: 1.5; }
-@media (max-width: 899px) { .foot { padding-bottom: 110px; } }
+@media (max-width: 899px) { .foot { padding-bottom: 36px; } }

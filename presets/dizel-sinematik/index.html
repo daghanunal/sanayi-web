@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0b0d0c" />
+  <title>Dizel Enjektör ve Yakıt Pompası | Şaşmaz, Ankara</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230b0d0c'/%3E%3Cpath d='M13 4h6v12l-2 5h-2l-2-5z' fill='%23c3c8cd'/%3E%3Cpath d='M16 22 L8 30 M16 22 L16 31 M16 22 L24 30' stroke='%23f5a524' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Lexend+Exa:wght@500;700;800&family=Geist:wght@400;500;600;700&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../../shared/base.css" />
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <!-- Açılış: rail basıncı yükselir, püskürtmeyle perde açılır -->
+  <div class="intro" aria-hidden="true">
+    <div class="intro__core">
+      <svg class="intro__gauge" viewBox="0 0 240 240">
+        <path class="intro__track" d="M 45.1 194.9 A 106 106 0 1 1 194.9 194.9" />
+        <path class="intro__fill" d="M 45.1 194.9 A 106 106 0 1 1 194.9 194.9" pathLength="1" />
+        <g class="intro__ticks"></g>
+      </svg>
+      <div class="intro__read">
+        <p class="intro__lbl">Rail basıncı</p>
+        <p class="intro__num"><span data-intro-bar>0</span><small>bar</small></p>
+      </div>
+      <p class="intro__name" data-name></p>
+      <p class="intro__hint">Basınç yükseliyor. Geçmek için dokunun.</p>
+    </div>
+    <svg class="intro__burst" viewBox="-100 -100 200 200" preserveAspectRatio="xMidYMid slice"></svg>
+  </div>
+
+  <div class="cur" aria-hidden="true"><span></span></div>
+
+  <header class="hdr">
+    <a class="hdr__brand" href="#top"><i aria-hidden="true"></i><span data-name></span></a>
+    <nav class="hdr__nav" aria-label="Bölümler">
+      <a href="#hizmetler">İşler</a>
+      <a href="#cikti">Test çıktısı</a>
+      <a href="#surec">Süreç</a>
+      <a href="#konum">Konum</a>
+    </nav>
+    <p class="hdr__status" data-status></p>
+    <a class="hdr__tel btn btn--amber" data-tel></a>
+  </header>
+
+  <main id="top">
+    <!-- Film -->
+    <section class="film" aria-label="Enjektör tezgâhta">
+      <canvas class="stage" aria-hidden="true"></canvas>
+      <div class="stage-shade" aria-hidden="true"></div>
+      <div class="tags" aria-hidden="true" data-tags></div>
+      <div class="tubetags" aria-hidden="true" data-tubetags></div>
+
+      <div class="hud" aria-hidden="true">
+        <p class="hud__k" data-hud-k>Tam yük debisi</p>
+        <p class="hud__v" data-hud-v>mm³/strok · aralık 52–60</p>
+        <div class="hud__bar"><i data-hud-bar></i></div>
+      </div>
+
+      <div class="codehud" aria-hidden="true">
+        <p class="codehud__k">3 numaralı enjektör · düzeltme kodu</p>
+        <p class="codehud__code" data-code>0000 0000</p>
+        <div class="codehud__row"><span data-code-state>Beyne yazılıyor</span><b data-code-pct>0%</b></div>
+        <div class="codehud__bar"><i data-code-bar></i></div>
+      </div>
+
+      <div class="rpm" aria-hidden="true"><span data-rpm>00</span><i></i><b>5</b></div>
+
+      <div class="chap chap--hero" data-ch="0">
+        <p class="chap__since" data-since></p>
+        <h1 class="hero__title" data-name></h1>
+        <p class="hero__lead" data-slogan></p>
+        <div class="hero__cta">
+          <a class="btn btn--amber mag" data-tel-btn>Ara</a>
+          <a class="btn btn--line mag" data-wa>WhatsApp'tan yaz</a>
+        </div>
+        <p class="hero__hint"><i></i>Kaydırın, enjektörü sökelim</p>
+      </div>
+
+      <div class="chap" data-ch="1">
+        <p class="antet"><span>01</span>Sökeriz</p>
+        <h2 class="chap__title">Parça parça bakarız.</h2>
+        <p class="chap__txt">Bobinden memeye kadar her parça ayrı kontrol edilir. Temizlikle düzelecek enjektöre değişim önermeyiz.</p>
+      </div>
+
+      <div class="chap" data-ch="2">
+        <p class="antet"><span>02</span>Tezgâhta ölçeriz</p>
+        <h2 class="chap__title">Tahmin yok, ölçü var.</h2>
+        <p class="chap__txt">Dört enjektör aynı anda püskürtür, debi menzürde görünür. Hangisinin arızalı olduğunu ölçüm söyler.</p>
+      </div>
+
+      <div class="chap" data-ch="3">
+        <p class="antet"><span>03</span>Onarır, kodlarız</p>
+        <h2 class="chap__title">Kodu beyne işleriz.</h2>
+        <p class="chap__txt">Tamir edilen enjektör yeniden ölçülür. Değer aralığa girince düzeltme kodu arıza tespit cihazıyla motora yazılır.</p>
+      </div>
+
+      <div class="chap chap--end" data-ch="4">
+        <p class="antet"><span>04</span>Teslim</p>
+        <h2 class="chap__title">Çıktısı elinize verilir.</h2>
+        <p class="chap__txt" data-garanti></p>
+      </div>
+    </section>
+
+    <!-- Hakkında + manometreler -->
+    <section class="hakkinda">
+      <div class="wrap hakkinda__grid">
+        <p class="hakkinda__txt" data-hakkinda></p>
+        <div class="gauges" data-stats></div>
+      </div>
+    </section>
+
+    <!-- Hizmetler -->
+    <section class="isler" id="hizmetler">
+      <div class="wrap">
+        <div class="sec-head">
+          <p class="eyebrow">Tezgâhtaki işler</p>
+          <h2 class="sec-title" data-kin>Enjektörden pompaya, dizelin yakıt tarafı.</h2>
+        </div>
+        <ol class="isler__list" data-hizmetler></ol>
+      </div>
+    </section>
+
+    <!-- Test çıktısı: termal yazıcı -->
+    <section class="cikti" id="cikti">
+      <div class="wrap cikti__grid">
+        <div class="cikti__txt">
+          <p class="eyebrow">Test çıktısı</p>
+          <h2 class="sec-title" data-kin>Ölçüm kâğıda basılır, size verilir.</h2>
+          <p class="sec-lead">Tezgâhta ne çıktıysa o. Hangi enjektörün aralık dışında kaldığını kendi gözünüzle görürsünüz; tamirden sonra aynı kâğıt yeniden basılır.</p>
+          <div class="toggle" role="radiogroup" aria-label="Ölçüm">
+            <button type="button" role="radio" aria-checked="true" data-mode="once">Tamirden önce</button>
+            <button type="button" role="radio" aria-checked="false" data-mode="sonra">Tamirden sonra</button>
+          </div>
+          <p class="cikti__not" data-cikti-not></p>
+        </div>
+        <div class="printer">
+          <div class="printer__head" aria-hidden="true"><span></span><b>TEST TEZGÂHI</b><i></i></div>
+          <div class="printer__slot">
+            <article class="fis" data-fis></article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Süreç: yakıt hattı -->
+    <section class="surec" id="surec">
+      <div class="wrap">
+        <div class="sec-head">
+          <p class="eyebrow">Sırayla</p>
+          <h2 class="sec-title" data-kin>Araç gelir, ölçülür, kodlanıp gider.</h2>
+        </div>
+        <div class="hat">
+          <svg class="hat__svg" aria-hidden="true" preserveAspectRatio="none"><path class="hat__bg" /><path class="hat__fg" /></svg>
+          <ol class="hat__list" data-surec></ol>
+        </div>
+      </div>
+    </section>
+
+    <!-- Ağır vasıta -->
+    <section class="agir" aria-label="Ağır vasıta">
+      <div class="agir__img"><img src="/img/sektor-dizel/yolda.jpg" alt="Gece yolda ilerleyen tır" loading="lazy" /></div>
+      <div class="wrap agir__txt">
+        <p class="eyebrow">Ağır vasıta dizel</p>
+        <h2 class="agir__title" data-kin>Sefer beklemez.</h2>
+        <p class="sec-lead" data-agir></p>
+        <a class="btn btn--amber mag" data-wa-agir>Ticari araç için yaz</a>
+      </div>
+    </section>
+
+    <!-- Atölye -->
+    <section class="galeri" aria-label="Atölye">
+      <div class="wrap sec-head">
+        <p class="eyebrow">Atölye</p>
+        <h2 class="sec-title" data-kin>Şaşmaz'daki tezgâh.</h2>
+      </div>
+      <div class="galeri__track" data-galeri></div>
+    </section>
+
+    <!-- Yorumlar -->
+    <section class="yorumlar">
+      <div class="wrap yorumlar__head">
+        <div>
+          <p class="eyebrow">Müşteriler</p>
+          <h2 class="sec-title" data-kin>Ölçtük, anlattık.</h2>
+        </div>
+        <p class="puan"><span class="puan__n" data-puan>4,8</span><span class="puan__s" data-stars></span><span class="puan__c" data-puan-adet></span></p>
+      </div>
+      <div class="yorumlar__row" data-yorumlar></div>
+    </section>
+
+    <!-- Sistemler -->
+    <section class="markalar" aria-label="Çalıştığımız sistemler">
+      <p class="markalar__lead wrap">Tezgâha gelen sistemler</p>
+      <div class="marquee" data-marquee></div>
+    </section>
+
+    <!-- Konum -->
+    <section class="konum" id="konum">
+      <div class="wrap konum__grid">
+        <div>
+          <p class="eyebrow">Konum ve saatler</p>
+          <h2 class="sec-title" data-kin>Tezgâh burada.</h2>
+          <p class="konum__status" data-status-big></p>
+          <table class="saatler" data-saatler></table>
+          <p class="konum__adres" data-address></p>
+          <div class="konum__btns">
+            <a class="btn btn--amber mag" data-maps target="_blank" rel="noopener">Yol tarifi al</a>
+            <a class="btn btn--line mag" data-tel-btn>Ara</a>
+          </div>
+        </div>
+        <div class="harita" data-map></div>
+      </div>
+    </section>
+
+    <!-- Final -->
+    <section class="son">
+      <div class="son__mist" aria-hidden="true" data-mist></div>
+      <div class="wrap son__in">
+        <p class="eyebrow">Enjektör mü, pompa mı?</p>
+        <h2 class="son__title" data-kin>Tezgâha getirin, ölçelim.</h2>
+        <p class="sec-lead">Fiyatı ölçümden sonra, işe başlamadan söyleriz. Onayınız olmadan tek vida sökülmez.</p>
+        <div class="son__btns">
+          <a class="btn btn--amber btn--big mag" data-tel-btn>Hemen ara</a>
+          <a class="btn btn--line btn--big mag" data-wa>WhatsApp'tan yaz</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <div class="wrap foot__grid">
+      <p class="foot__name" data-name></p>
+      <p data-address></p>
+      <p><a data-tel-plain></a></p>
+      <p class="foot__small">© <span data-year></span> <span data-name></span>. Fotoğraflar: Pexels. Enjektör ve tezgâh sahnesi bu site için kodla çizildi.</p>
+    </div>
+  </footer>
+
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

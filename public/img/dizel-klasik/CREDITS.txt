@@ -1,0 +1,8 @@
+Pexels lisansı (ücretsiz, ticari kullanım serbest), pexels.com:
+giris.jpg, giris-m.jpg: "Hands on Vehicle Engine" https://www.pexels.com/photo/hands-on-vehicle-engine-12555016/
+tezgah.jpg: "A Man Working at the Table" https://www.pexels.com/photo/a-man-working-at-the-table-4116222/
+agir.jpg: "Mechanic Repairing a Truck Engine" https://www.pexels.com/photo/mechanic-repairing-a-truck-engine-7564861/
+eski-motor.jpg: "Pipes of Vintage Engine" https://www.pexels.com/photo/pipes-of-vintage-engine-13528013/
+parca.jpg: "Greasy Hand Holding Black Metallic Spare Parts" https://www.pexels.com/photo/greasy-hand-holding-black-metallic-spare-parts-7568431/
+pompa.jpg: "Rustic Diesel Engine on Wooden Pallet Outdoors" https://www.pexels.com/photo/rustic-diesel-engine-on-wooden-pallet-outdoors-34640514/
+k-*.jpg: public/img/sektor-dizel/ görsellerinin küçültülmüş kopyaları (kaynaklar oradaki CREDITS.txt'de).

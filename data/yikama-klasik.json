@@ -1,0 +1,14 @@
+{
+  "planlayici": [
+    { "is": 210, "kuruma": 0, "not": "Hızlı dış yıkama bunun içinde." },
+    { "is": 80, "kuruma": 150, "not": "Koltuk kururken diğer işlere geçeriz." },
+    { "is": 90, "kuruma": 150, "not": "Halı ve tavan kururken diğer işlere geçeriz." },
+    { "is": 45, "kuruma": 0 },
+    { "is": 420, "kuruma": 0, "not": "Pasta-cila tam gün sürer, aracı sabah getirin." },
+    { "is": 30, "kuruma": 0 },
+    { "is": 20, "kuruma": 0 },
+    null
+  ],
+  "seritler": ["Köpük", "Durulama", "Kurulama", "Koltuk", "Tavan", "Jant", "Motor", "Pasta-cila", "Filo"],
+  "finalBaslik": "Aracı getirin, çayınızı için, parlak alın."
+}

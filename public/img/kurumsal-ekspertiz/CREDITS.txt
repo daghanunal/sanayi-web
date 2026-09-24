@@ -1,0 +1,3 @@
+Bu klasördeki görseller public/img/sektor-ekspertiz/ altındaki Pexels görsellerinin küçültülmüş kopyalarıdır
+(Pexels Lisansı: ticari kullanım serbest, atıf gerekmez — https://www.pexels.com/license/).
+Kaynak listesi: public/img/sektor-ekspertiz/CREDITS.txt

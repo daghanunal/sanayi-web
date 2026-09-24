@@ -1,0 +1,70 @@
+{
+  "preset": "mimarlik-sinematik",
+  "film": [
+    {
+      "id": "arsa",
+      "durak": "Arsa ve imar",
+      "pafta": "01",
+      "paftaAd": "Vaziyet planı",
+      "olcek": "1/500",
+      "baslik": "Önce arsayı okuruz.",
+      "metin": "Yerinde görür, ölçer, fotoğraflarız. İmar durumu, çekme mesafeleri ve emsal belediyeden alınır; neyin yapılabileceğini baştan açıkça söyleriz.",
+      "hizmet": "Arsa ve imar durumu"
+    },
+    {
+      "id": "avan",
+      "durak": "Eskiz ve avan",
+      "pafta": "02",
+      "paftaAd": "Avan proje",
+      "olcek": "1/200",
+      "baslik": "Çizgi duvara dönüşür.",
+      "metin": "Güneşi, manzarayı ve komşu yapıları hesaba katarak birkaç plan seçeneği çizeriz. Siz onaylayana kadar değiştiririz.",
+      "hizmet": "Konut projesi"
+    },
+    {
+      "id": "ruhsat",
+      "durak": "Ruhsat projesi",
+      "pafta": "03",
+      "paftaAd": "Ruhsat projesi",
+      "olcek": "1/100",
+      "baslik": "Yükseklik sınırının altında, kat kat.",
+      "metin": "Kat yükseklikleri, kotlar ve yönetmelik başlıkları çizime işlenir. Belediyeden gelen düzeltme notlarını biz işler, dosyayı yeniden teslim ederiz.",
+      "hizmet": "Ruhsat projesi"
+    },
+    {
+      "id": "uygulama",
+      "durak": "Uygulama projesi",
+      "pafta": "04",
+      "paftaAd": "Kesit ve detay",
+      "olcek": "1/50",
+      "baslik": "Binayı ortadan keseriz.",
+      "metin": "Şantiyenin kullanacağı kesitler, döşeme ve doğrama detayları. Statik, mekanik ve elektrikle çakışmalar çizim masasında çözülür, sahada değil.",
+      "hizmet": "Uygulama projesi"
+    },
+    {
+      "id": "render",
+      "durak": "3D görselleştirme",
+      "pafta": "05",
+      "paftaAd": "Görselleştirme",
+      "olcek": "Gün ışığı",
+      "baslik": "İnşa edilmeden önce görün.",
+      "metin": "Malzemesi, gölgesi, bahçesiyle. Güneşin gün boyu evin neresine vurduğunu, taşınmadan önce ekranda izlersiniz.",
+      "hizmet": "3D görselleştirme"
+    },
+    {
+      "id": "ic",
+      "durak": "İç mimarlık",
+      "pafta": "06",
+      "paftaAd": "İç mekân",
+      "olcek": "1/20",
+      "baslik": "Sonra içeri gireriz.",
+      "metin": "Mutfak ve banyo yerleşimi, dolap ve mobilya çizimleri, aydınlatma planı ve malzeme seçimi tek dosyada. Usta hiçbir şey sormadan imalata geçer.",
+      "hizmet": "İç mimarlık"
+    }
+  ],
+  "filmSon": {
+    "ust": "Pafta 07 · Akşam",
+    "baslik": "Çizgiden yapıya."
+  },
+  "finalBaslik": "Arsanız hazırsa, kalemimiz hazır."
+}

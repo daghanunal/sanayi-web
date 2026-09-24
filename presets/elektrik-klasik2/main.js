@@ -157,7 +157,7 @@ $('#hakkimizda').innerHTML = `
   <div class="wrap olcu__grid">
     <div class="olcu__text">
       <p class="kicker rv"><i style="background:#1f5fd8"></i>Dükkân</p>
-      <h2 class="h2 rv">Tahmin etmeyiz, <span class="u">ölçeriz.</span></h2>
+      <h2 class="h2 rv">Parça atıp denemeyiz, <span class="u">sebebi buluruz.</span></h2>
       <p class="olcu__lead rv">${esc(d.isletme.hakkinda)}</p>
       <p class="olcu__garanti rv">${fuseSVG(10)}<span>${esc(d.garanti)} Değişen parçayı size geri veririz.</span></p>
     </div>
@@ -173,7 +173,7 @@ $('#hakkimizda').innerHTML = `
     ${stats.map((s, i) => `
       <li class="sleeve rv" style="--c:${PALET[i % PALET.length]}">
         <span class="sleeve__wire" aria-hidden="true"></span>
-        <span class="sleeve__tube"><b data-count="${s.deger}">${sayi(s.deger)}</b><small>${esc(s.birim || '')}</small></span>
+        <span class="sleeve__tube"><b data-count="${s.deger}">${sayi(s.deger)}</b></span>
         <span class="sleeve__lbl">${esc(s.etiket)}</span>
       </li>`).join('')}
   </ul>`;

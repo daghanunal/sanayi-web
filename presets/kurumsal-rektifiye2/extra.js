@@ -115,14 +115,30 @@ export const tavRengi = {
       muylular.forEach(({ iz, j }) => {
         const uzak = Math.abs(X[j] - merkez) / 520;
         const h = Math.max(0, Math.min(1, p * 1.25 - uzak * 0.95));
-        const { c, a } = renk(h);
+        const { c, a } = renk((h - 0.12) / 0.88);
         iz.setAttribute('fill', rgb(c));
         iz.setAttribute('opacity', (a * 0.9).toFixed(3));
       });
-      const asama = p <= 0.02 ? -1 : Math.min(s.length - 1, Math.floor(Math.min(0.999, p * 1.25) * s.length));
-      const derece = p <= 0.02 ? 20 : Math.round(20 + (s[s.length - 1].derece - 20) * Math.min(1, p * 1.25) ** 0.6);
+      // Derece ve renk adı aynı eşiklerden okunur: 200 °C altında çelik renk vermez ("Temiz çelik"),
+      // sonra her durakta derece o rengin sıcaklığından bir sonrakine doğru ilerler.
+      const q = Math.min(1, p * 1.25);
+      const ESIK = 0.12;
+      let asama, derece, konum;
+      if (q < ESIK) {
+        asama = -1;
+        derece = Math.round(20 + (s[0].derece - 20) * (q / ESIK) ** 0.7);
+        konum = 0;
+      } else {
+        const t = Math.min(s.length - 0.001, ((q - ESIK) / (1 - ESIK)) * s.length);
+        asama = Math.floor(t);
+        const f = t - asama;
+        const bu = Number(s[asama].derece);
+        const sonraki = s[asama + 1] ? Number(s[asama + 1].derece) : bu;
+        derece = Math.round(bu + (sonraki - bu) * f);
+        konum = (t / s.length) * 100;
+      }
       o('derece').textContent = derece;
-      imlec.style.left = `${Math.min(100, p * 1.25 * 100)}%`;
+      imlec.style.left = `${konum}%`;
       if (asama !== sonAsama) {
         sonAsama = asama;
         o('ad').textContent = asama < 0 ? 'Temiz çelik' : s[asama].ad;
@@ -152,7 +168,7 @@ export const tavRengi = {
     }
     durlar.forEach((b, i) =>
       b.addEventListener('click', () => {
-        const hedef = ((i + 0.5) / s.length) / 1.25;
+        const hedef = (0.12 + 0.88 * ((i + 0.4) / s.length)) / 1.25;
         durum.elle = true;
         if (reducedMotion) { durum.p = hedef; guncelle(); return; }
         gsap.to(durum, { p: hedef, duration: 0.7, ease: 'power3.out', onUpdate: guncelle, onComplete: () => { setTimeout(() => (durum.elle = false), 1200); } });

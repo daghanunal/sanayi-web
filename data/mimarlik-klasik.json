@@ -1,0 +1,18 @@
+{
+  "preset": "mimarlik-klasik",
+  "hero": {
+    "proje": "Sizin eviniz",
+    "ust": "Mimari proje · iç mimarlık · restorasyon",
+    "ipucu": "Kaydırın, çizim yapıya dönsün"
+  },
+  "paftaKodlari": ["A-01", "A-02", "R-01", "U-01", "İ-01", "RS-01", "3D-01", "T-01"],
+  "olcekler": ["1/5000", "1/1000", "1/200", "1/100", "1/50", "1/1"],
+  "imar": {
+    "arsa": 500,
+    "emsal": 1.2,
+    "taks": 0.35,
+    "not": "Bu kaba bir ön hesaptır. Kesin rakamı belediyeden alınan imar durum belgesi, çekme mesafeleri ve bölgenin yükseklik sınırı belirler; onu da biz sizin için okuruz."
+  },
+  "finalBaslik": "Arsanızı birlikte okuyalım.",
+  "finalAlt": "Tapu ya da imar durum belgesi elinizdeyse getirin; yoksa ada-parsel numarası yeter. Fiyatı işe başlamadan, yazılı olarak söyleriz."
+}

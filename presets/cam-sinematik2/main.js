@@ -343,6 +343,14 @@ if (!reducedMotion) {
   $$('.svc__row, #flow li, .gallery__item').forEach((r) => r.classList.add('is-lit', 'is-on', 'is-in'));
 }
 
+// Son film sahnesinin yazısı, sahne biterken üst çubuğun altına girmeden söner
+if (!reducedMotion) {
+  gsap.fromTo('#kalibrasyon .copy', { opacity: 1, y: 0 }, {
+    opacity: 0, y: -30, ease: 'none', immediateRender: false,
+    scrollTrigger: { trigger: '#kalibrasyon', start: 'bottom bottom', end: 'bottom 45%', scrub: true },
+  });
+}
+
 // Üst çubuk düz bölümlerde koyulaşır
 ScrollTrigger.create({
   trigger: '#solid', start: 'top 60px', end: 'bottom 60px',
@@ -631,7 +639,7 @@ function intro() {
       .fromTo('.ir', { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 0.8, stagger: 0.03, ease: 'power2.out' }, 1.2)
       .fromTo('#intro-name span', { opacity: 0, letterSpacing: '0.4em', '--disp': 12 }, { opacity: 1, letterSpacing: '0em', '--disp': 0, duration: 0.9, ease: 'power3.out' }, 1.35)
       .fromTo('#intro-name small', { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.5 }, 1.7)
-      .to({}, { duration: 0.55 });
+      .to({}, { duration: 0.3 });
   });
 }
 

@@ -1,0 +1,56 @@
+{
+  "preset": "restoran-sinematik",
+  "film": [
+    {
+      "saat": "06:00",
+      "kicker": "Sabah",
+      "baslik": "Ateş sabah yakılır.",
+      "metin": "Meşe kömürü ilk müşteriden saatler önce tutuşur. Alev sönüp köz beyazlamadan ocağa şiş girmez.",
+      "pisme": 0
+    },
+    {
+      "saat": "08:30",
+      "kicker": "Tezgâh",
+      "baslik": "Kıyma zırhla çekilir.",
+      "metin": "Kuzu eti sabah gelir, dükkânda zırhla kıyılır, kuyruk yağı ve pul biberle yoğrulur. Ertesi güne et bırakılmaz.",
+      "pisme": 0
+    },
+    {
+      "saat": "12:40",
+      "kicker": "Sipariş",
+      "baslik": "Şiş siz söyleyince sarılır.",
+      "metin": "Acılı mı acısız mı, pişmesi nasıl, yanına ne gelsin, hepsini sorarız. Şiş o anda sarılır, ocağa öyle konur.",
+      "pisme": 0.12,
+      "secenekler": ["Acılı", "Acısız", "Az pişmiş", "İyi pişmiş", "Közlemesi bol"]
+    },
+    {
+      "saat": "12:48",
+      "kicker": "Ocak",
+      "baslik": "Közde döner, dumanı siner.",
+      "metin": "Usta şişi közün üstünde durmadan çevirir. Yağ damladıkça kor parlar, dumanı ete siner. Adana 15-20 dakikada hazır.",
+      "pisme": 1
+    },
+    {
+      "saat": "12:58",
+      "kicker": "Masa",
+      "baslik": "Ocaktan doğrudan tabağa.",
+      "metin": "Kebap lavaşın üstüne, közlenmiş domates ve biberiyle birlikte sıcak sıcak gelir. Beklemez, soğumaz.",
+      "pisme": 1
+    }
+  ],
+  "pismeEtiketleri": ["Çiğ", "Ocağa girdi", "Kızarıyor", "Közde", "Servise hazır"],
+  "rezervasyon": {
+    "baslik": "Masanızı ayıralım.",
+    "metin": "Kişi sayısını ve saati seçin, mesaj hazır olsun. Hafta sonu akşamları ocakbaşı tezgâhı erken dolar.",
+    "turler": ["Akşam yemeği", "Ocakbaşı tezgâhı", "İş yemeği", "Aile daveti", "Paket sipariş"],
+    "gunler": ["Bugün", "Yarın", "Cuma", "Cumartesi", "Pazar"],
+    "saatler": ["12:30", "13:30", "19:00", "20:00", "21:00"]
+  },
+  "salon": {
+    "baslik": "Arka salonda 40 kişilik uzun masa.",
+    "metin": "Sanayi esnafının öğle yemeği, şirket yemeği, nişan, askerden gelen, doğum günü. Menüyü, meze çeşidini ve servis saatini önceden birlikte belirleriz; gün geldiğinde masa hazır bekler.",
+    "maddeler": ["Sabit menü birlikte belirlenir", "Hesap tek seferde çıkar", "Grup yemeği 1-2 gün önceden", "Davetler 3-5 gün önceden"]
+  },
+  "finalBaslik": "Köz hazır. Siz ne zaman geliyorsunuz?",
+  "fiyatNotu": "Fiyatları telefonda ya da WhatsApp'tan sorabilirsiniz; grup menüsünün fiyatını baştan söyleriz."
+}

@@ -206,7 +206,7 @@ body {
 .sec-head__p { max-width: 46ch; font-size: 17px; }
 .steps { display: grid; gap: 4px; }
 .step { display: grid; grid-template-columns: 96px 1fr; gap: 16px; align-items: start; padding: 14px 0 18px; border-bottom: 1px solid var(--cizgi); }
-.step__no { display: block; overflow: hidden; padding-top: .12em; font: 700 110px/.8 var(--disp); }
+.step__no { display: block; overflow: hidden; padding: .1em 0 .04em; font: 700 110px/.9 var(--disp); }
 .step__no span {
   display: block; color: transparent; -webkit-text-stroke: 2px var(--ink);
   transform: translateY(100%); transition: transform .8s cubic-bezier(.2,.9,.2,1), color .5s .5s;
@@ -225,12 +225,12 @@ body {
 .kat { border-top: 3px solid var(--ink); }
 .kat__row { position: relative; padding: 18px 0 28px; border-bottom: 3px solid var(--ink); overflow: hidden; }
 .kat__row:nth-child(even) { background: var(--kagit-2); }
-.kat__word { padding: 0 var(--gut); overflow: visible; }
+.kat__word { padding: 0 var(--gut); overflow: visible; min-width: 0; }
 .kat__w {
-  display: inline-block; white-space: nowrap; font: 700 100px/.86 var(--disp); padding-top: .1em;
+  display: inline-block; white-space: nowrap; font: 700 100px/.86 var(--disp); padding: .1em 0 .2em;
   color: var(--ink); text-shadow: .035em .03em 0 var(--pink); will-change: transform;
 }
-.kat__body { display: grid; gap: 10px; margin-top: 12px; }
+.kat__body { display: grid; gap: 10px; margin-top: 22px; }
 .kat__meta { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; }
 .kat__meta b { font-weight: 700; color: var(--pink-koyu); }
 .kat__body h3 { font: 800 20px/1.2 var(--sans); }
@@ -244,8 +244,8 @@ body {
 }
 .kat__ask svg { width: 18px; height: 18px; color: var(--pink-koyu); }
 @media (min-width: 900px) {
-  .kat__row { display: grid; grid-template-columns: 1.3fr 1fr; align-items: end; padding: 26px 0 30px; }
-  .kat__word { padding-right: 0; }
+  .kat__row { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); align-items: end; padding: 26px 0 30px; }
+  .kat__word { padding-right: 32px; }
   .kat__body { margin-top: 0; padding-left: 20px; }
 }
 
@@ -269,7 +269,7 @@ body {
 .panel__no { position: absolute; top: 84px; left: var(--gut); }
 .panel__yer { font: 800 24px/1.15 var(--sans); max-width: 16ch; }
 .panel__sure {
-  font: 700 var(--fs, 90px)/.94 var(--disp); padding-top: .12em; margin-top: 12px;
+  font: 700 var(--fs, 90px)/1.1 var(--disp); padding-top: .02em; margin-top: 12px;
 }
 .panel--0 .panel__sure { color: var(--pink); text-shadow: .03em .03em 0 var(--ink); }
 .panel--1 .panel__sure { color: var(--pink); }

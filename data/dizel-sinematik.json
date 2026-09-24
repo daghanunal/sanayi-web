@@ -1,0 +1,34 @@
+{
+  "cikti": {
+    "not": "Örnek çıktı. Aralıklar enjektör tipine göre değişir; sizin enjektörünüzün değerleri teslimde kâğıda basılır.",
+    "tip": "Common rail, solenoid valfli",
+    "birim": "mm³/strok",
+    "olcumler": [
+      { "kod": "TY", "ad": "Tam yük", "aralik": [52, 60] },
+      { "kod": "KY", "ad": "Kısmi yük", "aralik": [18, 24] },
+      { "kod": "RL", "ad": "Rölanti", "aralik": [3.5, 6.5] },
+      { "kod": "ÖP", "ad": "Ön püskürtme", "aralik": [1, 2.2] },
+      { "kod": "GD", "ad": "Geri dönüş", "aralik": [0, 45] }
+    ],
+    "once": [
+      [56.2, 21.4, 5.1, 1.6, 28],
+      [55.8, 20.9, 4.8, 1.5, 31],
+      [68.9, 27.3, 9.6, 3.2, 74],
+      [56.5, 21.6, 5.3, 1.7, 27]
+    ],
+    "sonra": [
+      [56.2, 21.4, 5.1, 1.6, 28],
+      [55.8, 20.9, 4.8, 1.5, 31],
+      [56.0, 21.1, 5.0, 1.5, 29],
+      [56.5, 21.6, 5.3, 1.7, 27]
+    ]
+  },
+  "parcalar": [
+    { "ad": "Elektrik soketi ve bobin", "not": "Direnç ve tepki süresi" },
+    { "ad": "Valf grubu", "not": "Bilye ve oturma yüzeyi" },
+    { "ad": "Gövde", "not": "Giriş ve geri dönüş hattı" },
+    { "ad": "Meme somunu", "not": "Sıkma torku, conta" },
+    { "ad": "Meme", "not": "Delik çapı, püskürtme açısı" },
+    { "ad": "İğne", "not": "Aşınma ve yapışma" }
+  ]
+}

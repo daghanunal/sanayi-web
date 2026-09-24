@@ -1,0 +1,31 @@
+{
+  "preset": "radyator-klasik",
+  "hero": {
+    "onGorsel": "/img/radyator-klasik/hararet-gostergesi.jpg",
+    "arkaGorsel": "/img/radyator-klasik/klasik-petek.jpg",
+    "soru": "Hararet ibresi rahat vermiyor mu?",
+    "cevap": "Radyatörü sökmeden önce suyun nereden kaçtığını buluruz."
+  },
+  "sebepler": [
+    { "baslik": "Radyatör su kaçırıyor", "ipucu": "Aracın altında yeşil ya da pembe su izi, genleşme kabı sürekli eksik.", "hizmet": "Radyatör tamiri" },
+    { "baslik": "Fan devreye girmiyor", "ipucu": "Yolda hararet yok, trafikte ibre yükseliyor.", "hizmet": "Fan ve fan müşiri" },
+    { "baslik": "Termostat takılı kalmış", "ipucu": "Motor ya hiç ısınmıyor ya da birkaç kilometrede ısınıp kalıyor.", "hizmet": "Termostat ve devirdaim" },
+    { "baslik": "Petek tıkanmış", "ipucu": "Su tam, fan dönüyor ama yokuşta ve yükte hararet yapıyor.", "hizmet": "Petek temizliği ve değişimi" },
+    { "baslik": "Conta sıkıntısı", "ipucu": "Egzozdan beyaz duman, yağ kapağında süt gibi köpük.", "hizmet": "Hararet arıza tespiti" }
+  ],
+  "agirVasita": {
+    "gorsel": "/img/radyator-klasik/tir-radyator.jpg",
+    "ikinci": "/img/radyator-klasik/is-makinesi.jpg",
+    "baslik": "Kamyon, çekici, otobüs, iş makinesi.",
+    "metin": "Büyük radyatörü atölyede söker, tankı ve peteği ayrı ayrı onarırız. İntercooler ve yağ soğutucusu da aynı tezgâhta. Yolda kalan araç için önce telefonla konuşalım, ne getireceğinizi söyleyelim."
+  },
+  "galeriEk": [
+    { "src": "/img/radyator-klasik/kondenser.jpg", "alt": "Aracın ön panelinde radyatör ve kondenser bağlantısını söken usta" },
+    { "src": "/img/radyator-klasik/on-panel.jpg", "alt": "Tampon sökülmüş araçta radyatör ve ön panel" },
+    { "src": "/img/radyator-klasik/kaynak.jpg", "alt": "Atölyede kaynak yapılan tezgâh" },
+    { "src": "/img/radyator-klasik/hortumlar.jpg", "alt": "Motor bölmesinde genleşme kabı ve su hortumları" },
+    { "src": "/img/radyator-klasik/tir-kaput.jpg", "alt": "Kamyonun motor kapağı altına lamba tutan usta" },
+    { "src": "/img/radyator-klasik/tezgah.jpg", "alt": "Atölye tezgâhında çalışan usta" }
+  ],
+  "finalBaslik": "Hararet yapıyorsa beklemeyin, motora yazık olmasın."
+}

@@ -44,6 +44,7 @@ const hrefs = {
 $$('[data-href]').forEach((el) => (el.href = hrefs[el.dataset.href]));
 $$('[data-icon]').forEach((el) => (el.outerHTML = icons[el.dataset.icon]));
 $$('[data-icon-check]').forEach((el) => (el.outerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>'));
+document.querySelector('.hero__baslik').classList.toggle('is-uzun', d.isletme.ad.length > 26);
 $('.ust__tel').setAttribute('aria-label', `Ara: ${d.iletisim.telefon}`);
 
 function refreshStatus() {

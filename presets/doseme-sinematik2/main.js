@@ -163,7 +163,7 @@ const sStart = (k) => S0 + SL * k;
 function poseHero(p) {
   const por = portrait();
   const a = por
-    ? { nx: 0.1, ny: 0.45, size: 0.5, maxW: 0.9, rx: -0.3, ry: 0.42, rz: 0.14 }
+    ? { nx: 0.1, ny: 0.64, size: 0.48, maxW: 0.9, rx: -0.3, ry: 0.42, rz: 0.14 }
     : { nx: 0.46, ny: 0.0, size: 0.88, maxW: 0.5, rx: -0.18, ry: -0.5, rz: 0.1 };
   const b = por
     ? { nx: 0, ny: 0.33, size: 0.56, maxW: 0.86, rx: -0.04, ry: 0, rz: 0 }
@@ -279,12 +279,14 @@ function textMat(p) {
 
 const finalEl = $('[data-final]');
 const finalHint = $('[data-final-hint]');
+// Örtü sahnesi (z-index 40) main'in üstünde durur; ipucu görünsün diye body'ye taşınır.
+document.body.appendChild(finalHint);
 function textFinal(p) {
   const show = seg(p, 0.5, 0.74);
   finalEl.style.opacity = show;
   finalEl.style.transform = `translate3d(0, ${((1 - show) * 30).toFixed(1)}px, 0) scale(${(0.96 + show * 0.04).toFixed(3)})`;
   finalEl.style.visibility = show <= 0 ? 'hidden' : 'visible';
-  finalHint.style.opacity = seg(p, 0.16, 0.24) * (1 - seg(p, 0.38, 0.46));
+  finalHint.style.opacity = seg(p, 0.1, 0.17) * (1 - seg(p, 0.38, 0.46));
 }
 const TEXT = { hero: textHero, mat: textMat, final: textFinal };
 

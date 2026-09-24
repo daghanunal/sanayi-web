@@ -273,7 +273,7 @@ main, .foot { position: relative; z-index: 1; }
 .nums__l { font: 500 12px/1.35 var(--f-mono); letter-spacing: .06em; text-transform: uppercase; color: var(--murekkep-2); margin-top: 10px; border-top: 2px dashed rgb(31 43 219 / .35); padding-top: 10px; }
 .nums__garanti { position: relative; font: 600 18px/1.45 var(--f-body); max-width: 40ch; padding-top: 26px; }
 .seam { position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: repeating-linear-gradient(90deg, var(--pembe-2) 0 16px, transparent 16px 26px); transform-origin: left; border-radius: 2px; }
-@media (min-width: 900px) { .nums__list { grid-template-columns: repeat(4, 1fr); } }
+@media (min-width: 900px) { .nums__list { grid-template-columns: repeat(4, 1fr); gap: 34px 40px; } .nums__v { font-size: clamp(56px, 6.4vw, 104px); } }
 
 /* --- Tarihçe ---------------------------------------------------------------------- */
 .yil { background: var(--gece); padding: 110px var(--pad) 120px; border-radius: 28px 28px 0 0; margin-top: -28px; position: relative; }
@@ -357,10 +357,14 @@ main, .foot { position: relative; z-index: 1; }
 .final__txt { max-width: 34ch; color: var(--sis); font-size: 17px; }
 .final__cta { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-top: 10px; }
 .final__hint {
-  position: absolute; z-index: 45; left: 0; right: 0; bottom: calc(118px + env(safe-area-inset-bottom)); text-align: center;
-  font: 500 11px var(--f-mono); letter-spacing: .16em; text-transform: uppercase; color: var(--murekkep); opacity: 0;
+  position: fixed; z-index: 45; left: 50%; bottom: calc(118px + env(safe-area-inset-bottom)); transform: translateX(-50%);
+  display: flex; align-items: center; gap: 10px; white-space: nowrap; pointer-events: none;
+  padding: 12px 20px; border-radius: 999px; background: rgb(11 16 82 / .86); border: 1px dashed rgb(255 140 198 / .7);
+  font: 500 12px var(--f-mono); letter-spacing: .14em; text-transform: uppercase; color: var(--tebesir); opacity: 0;
 }
-body[data-scene="final"] .final__hint { position: fixed; }
+.final__hint::after { content: '↓'; color: var(--pembe, #ff8cc6); font-size: 15px; animation: hintBob 1.2s ease-in-out infinite; }
+@keyframes hintBob { 50% { transform: translateY(4px); } }
+@media (prefers-reduced-motion: reduce) { .final__hint::after { animation: none; } }
 
 /* --- Alt bilgi -------------------------------------------------------------------------- */
 .foot { background: var(--gece); padding: 60px var(--pad) calc(120px + env(safe-area-inset-bottom)); display: grid; gap: 8px; color: var(--sis); font-size: 14px; }

@@ -4,11 +4,19 @@
 //  duman   — duman rengi seçici: uçtan çıkan dumanın rengine göre ne anlama geldiği
 //  olcu    — ölçüm föyü: önce/sonra anahtarı, değerler sayarak iner, KALDI damgası GEÇTİ olur
 //  mesai   — açık mı, saatler, adres ve yaklaşınca yüklenen harita
-import { esc, waHref, telHref, mapsHref, mapsEmbed, openStatus, groupedHours, icons, gsap, ScrollTrigger, reducedMotion } from '../../shared/core.js';
+import { esc, waHref, telHref, mapsHref, mapsEmbed, openStatus, groupedHours, icons, gsap, reducedMotion } from '../../shared/core.js';
 import { DrawSVGPlugin } from 'gsap/DrawSVGPlugin';
 import { yilEki } from '../_kurumsal/bolumler.js';
 
 gsap.registerPlugin(DrawSVGPlugin);
+
+// Sayfa geçişinde ScrollTrigger yenilemesi yarım kalmış tetikleyicilere takılıp hata veriyordu;
+// döngüleri durdurmak ve bir kerelik tetikler için IntersectionObserver yeterli.
+function gorunurken(hedef, fn) {
+  if (!hedef || !('IntersectionObserver' in window)) return;
+  const io = new IntersectionObserver((es) => es.forEach((e) => fn(e.isIntersecting)));
+  io.observe(hedef);
+}
 
 const buyuk = (s) => String(s ?? '').toLocaleUpperCase('tr-TR');
 const nf = new Intl.NumberFormat('tr-TR', { maximumFractionDigits: 2 });
@@ -155,6 +163,11 @@ export const pafta = {
       </section>`;
   },
   mount(el, d, ctx) {
+    // Başka sayfanın dibinden dönülürken sayfa hâlâ aşağıda kalıyor; motorun "once" tetikleyicileri
+    // bu konumda kurulurken hemen tetiklenip ScrollTrigger yenilemesini bozuyordu. Perde kapalıyken
+    // başa almak görünmez; motor zaten hemen ardından başa kaydırıyor.
+    if (ctx?.lenis) ctx.lenis.scrollTo(0, { immediate: true, force: true });
+    else scrollTo(0, 0);
     el.querySelector('[data-git]')?.addEventListener('click', (e) => {
       const hedef = document.querySelector(e.currentTarget.dataset.git);
       if (hedef) kaydir(ctx.lenis, hedef);
@@ -182,12 +195,7 @@ export const pafta = {
       const k = sahne.querySelector('.pz-kaydir');
       donguler.push(gsap.fromTo(k, { xPercent: 0 }, { xPercent: -(1 - 100 / 230) * 100, duration: 9, ease: 'sine.inOut', repeat: -1, yoyo: true, delay: 1.6, repeatDelay: 0.8 }));
     }
-    ScrollTrigger.create({
-      trigger: sahne,
-      start: 'top bottom',
-      end: 'bottom top',
-      onToggle: (s) => donguler.forEach((t) => (s.isActive ? t.resume() : t.pause())),
-    });
+    gorunurken(sahne, (acik) => donguler.forEach((t) => (acik ? t.resume() : t.pause())));
   },
 };
 
@@ -304,7 +312,7 @@ export const duman = {
         });
     if (reducedMotion) bulut.forEach((c, i) => gsap.set(c, { x: 40 + i * 22, y: -i * 5, scale: 1 + i * 0.12, opacity: 0.55, svgOrigin: '262 120' }));
     if (donguler.length)
-      ScrollTrigger.create({ trigger: sahne, start: 'top bottom', end: 'bottom top', onToggle: (s) => donguler.forEach((t) => (s.isActive ? t.resume() : t.pause())) });
+      gorunurken(sahne, (acik) => donguler.forEach((t) => (acik ? t.resume() : t.pause())));
 
     const sec = (id, ilk) => {
       const x = DUMAN.find((y) => y.id === id);
@@ -412,7 +420,13 @@ export const olcu = {
     dugmeler.forEach((b) => b.addEventListener('click', () => b.dataset.z !== z && uygula(b.dataset.z)));
     uygula('once', true);
     // Görünce kendiliğinden "sonra"ya geçer.
-    ScrollTrigger.create({ trigger: el.querySelector('.pz-foy'), start: 'top 70%', once: true, onEnter: () => z === 'once' && uygula('sonra', false) });
+    const foy = el.querySelector('.pz-foy');
+    if (!('IntersectionObserver' in window)) return;
+    const io = new IntersectionObserver(
+      (es) => es.some((e) => e.isIntersecting) && (io.disconnect(), z === 'once' && uygula('sonra', false)),
+      { rootMargin: '0px 0px -30% 0px' }
+    );
+    io.observe(foy);
   },
 };
 

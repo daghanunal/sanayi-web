@@ -2,7 +2,7 @@
 //  tabelaHero  — gece yolunun üstünde asılı portal tabela; kaydırınca altından geçilir.
 //  yolYardim   — etkileşimli mesafe tabelası: en yakın nokta + araç + arıza → rota çizgisi ve hazır WhatsApp mesajı.
 //  olcumler    — hız sınırı levhası gibi yuvarlak levhalarda giriş/teslim ölçümü (d.alt).
-import { esc, waHref, telHref, openStatus, icons, gsap, ScrollTrigger, reducedMotion } from '../../shared/core.js';
+import { esc, waHref, telHref, mapsHref, mapsEmbed, openStatus, groupedHours, icons, gsap, ScrollTrigger, reducedMotion } from '../../shared/core.js';
 
 const k = (d) => d.kurumsal || {};
 const B = import.meta.env.BASE_URL;
@@ -296,5 +296,46 @@ export const olcumler = {
       deger.sonra = 0;
       ScrollTrigger.create({ trigger: q('.ot-olc__panel'), start: 'top 78%', once: true, onEnter: () => goster(0, true) });
     }
+  },
+};
+
+
+// --- Sanayi saatleri: yol kenarı bilgi tabelası + yaklaşınca yüklenen harita ----------------------
+
+export const sanayiSaat = {
+  render(d) {
+    if (!d.saatler) return '';
+    const st = openStatus(d.saatler);
+    return `
+      <section class="k-bolum ot-saat" aria-labelledby="ot-saat-b">
+        <div class="k-kap ot-saat__ic">
+          <div class="ot-saat__tabela">
+            <p class="ot-etiket ot-etiket--acik"><i></i>Sanayi saatleri</p>
+            <h2 class="k-h2" id="ot-saat-b" data-bol>Kanal açık mı?</h2>
+            <p class="ot-saat__durum${st.open ? ' is-acik' : ''}"><i></i>${esc(st.text)}</p>
+            <dl class="ot-saat__liste">${groupedHours(d.saatler).map(([g, s]) => `<div><dt>${esc(g)}</dt><dd>${esc(s)}</dd></div>`).join('')}</dl>
+            <p class="ot-saat__yy"><b>Yol yardım</b><span>7 gün 24 saat</span></p>
+            <p class="ot-saat__adres">${esc(d.iletisim.adres)}</p>
+            <div class="k-butonlar">
+              <a class="k-btn ot-saat__btn" href="${mapsHref(d)}" target="_blank" rel="noopener">${icons.pin}<span>Yol tarifi</span></a>
+              <a class="k-btn k-btn--ikincil ot-saat__btn2" href="${telHref(d)}">${icons.phone}<span>${esc(d.iletisim.telefon)}</span></a>
+            </div>
+          </div>
+          <div class="ot-saat__harita" data-perde><p>Harita yaklaşınca yüklenir</p></div>
+        </div>
+      </section>`;
+  },
+  mount(el, d) {
+    const kutu = el.querySelector('.ot-saat__harita');
+    if (!kutu) return;
+    const io = new IntersectionObserver(
+      (e) => {
+        if (!e[0].isIntersecting) return;
+        kutu.innerHTML = `<iframe title="Konum haritası" src="${mapsEmbed(d)}" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>`;
+        io.disconnect();
+      },
+      { rootMargin: '300px' }
+    );
+    io.observe(kutu);
   },
 };

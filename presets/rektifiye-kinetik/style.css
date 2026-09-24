@@ -164,9 +164,9 @@ body {
 .hero__olcuok i { flex: 1; height: 10px; border: solid var(--murekkep); border-width: 0 0 0 1.5px; position: relative; }
 .hero__olcuok i::after { content: ''; position: absolute; left: 0; right: 0; top: 50%; border-top: 1.5px solid var(--murekkep); }
 .hero__olcuok i:last-child { border-width: 0 1.5px 0 0; }
-.hero__alt { display: grid; gap: 18px; margin-top: auto; max-width: 980px; }
+.hero__alt { display: grid; gap: 18px; margin-top: auto; max-width: 980px; position: relative; z-index: 5; }
 .hero__slogan {
-  font-weight: 800; font-stretch: 75%; line-height: .9; letter-spacing: -.02em;
+  font-weight: 800; font-stretch: 75%; line-height: 1.1; letter-spacing: -.02em;
   font-size: clamp(46px, 13vw, 132px); text-transform: uppercase;
   padding-top: .08em;
 }
@@ -275,7 +275,7 @@ body {
 .bolum-bas { display: grid; gap: 18px; margin-bottom: clamp(32px, 5vw, 64px); }
 .buyuk {
   font-weight: 850; font-stretch: 78%; text-transform: uppercase;
-  font-size: clamp(46px, 12vw, 150px); line-height: .88; letter-spacing: -.025em;
+  font-size: clamp(46px, 12vw, 150px); line-height: 1.06; letter-spacing: -.025em;
   padding-top: .08em;
 }
 
@@ -448,7 +448,7 @@ body {
 .final { padding: clamp(90px, 12vw, 180px) var(--gut); background: var(--turuncu); display: grid; gap: 26px; }
 .final__baslik {
   font-weight: 900; font-stretch: 80%; text-transform: uppercase;
-  font-size: clamp(56px, 15.5vw, 200px); line-height: .88; letter-spacing: -.03em;
+  font-size: clamp(56px, 15.5vw, 200px); line-height: 1.1; letter-spacing: -.03em;
   perspective: 600px; padding-top: .1em;
 }
 .fk { display: inline-block; white-space: nowrap; }

@@ -1,0 +1,92 @@
+{
+  "kurumsal": {
+    "hero": {
+      "baslik": "Enjektörü değiştirmeden önce tezgâha bağlayalım.",
+      "metin": "Common rail enjektörü ve pompayı test tezgâhında ölçeriz: debi, geri dönüş kaçağı, basınç. Sonucu size çıktı olarak verir, fiyatı işe başlamadan söyleriz.",
+      "birincil": "Enjektörümü test ettireyim",
+      "ikincil": "Hizmetlerimiz",
+      "ikincilRota": "hizmetler"
+    },
+    "ozet": {
+      "baslik": "Dört enjektörden çoğu zaman biri arızalıdır",
+      "metin": "Zor çalışma, tekleme, duman: belirti aynı olabilir, arızalı enjektör farklıdır. Hepsini değiştirmek yerine her birini tezgâhta tek tek ölçer, yalnızca değeri tutmayana dokunuruz."
+    },
+    "hizmetOzetBaslik": "Tezgâhtaki işler",
+    "yorumBaslik": "Enjektörü ölçülenler ne diyor",
+    "surecBaslik": "Bir enjektör tezgâhta nasıl ilerler",
+    "galeriBaslik": "Atölyeden",
+    "markaBaslik": "Enjektör ve pompasına baktığımız markalar",
+    "anlasmaBaslik": "Filolar ve sanayideki meslektaşlar",
+    "anlasmaMetin": "Seferdeki aracı bekletmemek için ticari araçlara, söküp getiren servis ustalarına ayrı sıra açıyoruz.",
+    "anlasmalar": [
+      {
+        "baslik": "Servislere tezgâh testi",
+        "kisa": "Söktüğünüz enjektörü getirin, ölçülmüş ve çıktısıyla teslim alın.",
+        "metin": "Sanayideki servisler ve motor ustaları enjektörü ya da pompayı söküp getirir; biz tezgâhta ölçer, gerekiyorsa tamir eder, ölçüm çıktısıyla teslim ederiz. Düzeltme kodlarını da yazılı veririz.",
+        "maddeler": ["Söküm yapılmış enjektöre aynı gün ölçüm", "Her enjektör için ayrı test çıktısı", "Düzeltme kodu (IMA/QR/C2I) yazılı", "Toplu işte ayrı sıra"],
+        "buton": "Servis olarak yazın"
+      },
+      {
+        "baslik": "Kamyon, otobüs ve iş makinesi",
+        "kisa": "Ağır vasıta enjektör ve pompasında işi araya alırız.",
+        "metin": "Yolda para kazanan araç atölyede beklememeli. Çekici, kamyon, otobüs ve iş makinesi enjektörlerini sabah alıp mümkünse akşam kodlanmış teslim ederiz. İşin ne kadar süreceğini baştan söyleriz.",
+        "maddeler": ["Sabah bırakılan enjektöre aynı gün ölçüm", "Süre ve fiyat işe başlamadan", "Araç bazında ölçüm geçmişi", "Aylık tek fatura ve döküm"],
+        "buton": "Filo için görüşelim"
+      }
+    ],
+    "anlasmaNotu": "Koşullar araç sayısına ve iş tipine göre konuşulur; teklifimizi yazılı veririz.",
+    "hakkimizda": {
+      "baslik": "Yalnızca dizel yakıt sistemi",
+      "paragraflar": [
+        "Açıldığımız günden beri Şaşmaz'da tek işle uğraşıyoruz: dizelin yakıt tarafı. Enjektör, pompa, rail ve hatlar. Aynı işi yıllarca yapınca hangi belirtinin hangi parçadan geldiğini motoru dinlerken tahmin etmeye başlıyorsunuz.",
+        "Ama tahminle iş yapmıyoruz. Her enjektör test tezgâhına bağlanır, ölçüm çıktısı size verilir. Temizlikle düzelecek enjektöre değişim, tamirle kurtulacak pompaya yenisini önermeyiz."
+      ],
+      "gorsel": "/img/sektor-dizel/usta.jpg",
+      "gorselAlt": "Anahtar takımını seçen usta"
+    },
+    "misyon": "Dizel yakıt sistemindeki arızayı ölçerek bulmak, yalnızca bozuk olan parçaya dokunmak.",
+    "vizyon": "Şaşmaz'da enjektör denince çıktısıyla konuşan yer olmak.",
+    "degerler": [
+      { "baslik": "Önce ölçüm", "metin": "Tezgâhta ölçülmeyen enjektör için arızalı ya da sağlam demeyiz." },
+      { "baslik": "Çıktı sizin", "metin": "Test sonucunu kâğıt üstünde verir, değerleri birlikte okuruz." },
+      { "baslik": "Fiyat baştan", "metin": "Ölçümden sonra fiyatı söyleriz; onayınız olmadan başlamayız." },
+      { "baslik": "Kirin kaynağı", "metin": "Suya ya da talaşa maruz kalmış sistemde sebebi gidermeden yeni parça takmayız." }
+    ],
+    "kalite": {
+      "baslik": "Bir enjektör nasıl teslim edilir",
+      "metin": "Tezgâhtan çıkan her enjektör ve pompa aynı kontrol sırasından geçer.",
+      "maddeler": [
+        "Rölanti, kısmi yük ve tam yükte püskürtme debisi ölçülür.",
+        "Geri dönüş kaçağı ölçülür; valf grubu bu değere göre değerlendirilir.",
+        "Tamirden sonra enjektör yeniden tezgâha bağlanır, değerler tutmadan takılmaz.",
+        "Düzeltme kodu motor beynine işlenir, arıza kayıtları silinip yeniden okunur.",
+        "Motor çalıştırılır, rail basıncı izlenir ve yol denemesi yapılır."
+      ]
+    },
+    "sss": [
+      { "soru": "Dört enjektörü birden mi değiştirmem gerekiyor?", "cevap": "Çoğu zaman hayır. Her enjektörü tezgâhta ayrı ölçeriz. Değeri tutmayan hangisiyse ona bakarız; sağlam olanı yerine geri takarız." },
+      { "soru": "Fiyatı ne zaman öğrenirim?", "cevap": "Tezgâh ölçümünden sonra, işe başlamadan. Temizlik mi tamir mi değişim mi gerektiğini ve fiyatını söyleriz; onayınız olmadan başlamayız." },
+      { "soru": "Enjektör kodlaması neden gerekli?", "cevap": "Her enjektörün kendine özgü bir düzeltme değeri vardır. Tamir ya da değişimden sonra bu kod motor beynine işlenmezse motor düzgün çalışmaz, duman ve tekleme olabilir." },
+      { "soru": "Aracı getirmeden sadece enjektörü getirebilir miyim?", "cevap": "Evet. Söküm yapılmış enjektör ve pompaya aynı gün ölçüm yaparız; servis ustalarıyla da bu şekilde çalışıyoruz." },
+      { "soru": "Eski mekanik pompalara da bakıyor musunuz?", "cevap": "Evet. Sıra tip ve distribütör tip pompaları, pompa enjektörleri ve traktör ile iş makinesi pompalarını ayarlıyoruz." }
+    ],
+    "kariyer": {
+      "baslik": "Tezgâha usta ve çırak arıyoruz",
+      "metin": "Dizel yakıt sistemi, test tezgâhı ya da hassas ölçüm işinde tecrübesi olan usta veya mesleği öğrenmek isteyen çırak arkadaşlarla tanışmak isteriz. Kısa bir tanıtımla bize yazın."
+    },
+    "sayfalar": {
+      "kurumsal": { "baslik": "Kurumsal", "metin": "Kim olduğumuz, neden yalnızca dizel yakıt sistemiyle uğraştığımız ve bir enjektörü nasıl teslim ettiğimiz.", "gorsel": "/img/sektor-dizel/silindir-kapak.jpg" },
+      "hizmetler": { "baslik": "Hizmetlerimiz", "metin": "Enjektör testinden pompa tamirine, kodlamadan ağır vasıtaya; her iş için ortalama süre ve kapsam." },
+      "kurumsal-musteriler": { "baslik": "Filolar ve servisler", "metin": "Sanayideki servislere tezgâh testi, kamyon, otobüs ve iş makinesine aynı gün ölçüm.", "gorsel": "/img/sektor-dizel/kamyon-atolye.jpg" },
+      "referanslar": { "baslik": "Atölyeden ve müşterilerden", "metin": "Tezgâhtan kareler, müşterilerimizin yorumları ve baktığımız markalar." },
+      "iletisim": { "baslik": "İletişim", "metin": "Şikâyeti yazın ya da enjektörü getirin; aynı gün dönüş yapalım." }
+    },
+    "konular": ["Enjektör testi", "Enjektör tamiri / kodlama", "Yüksek basınç pompası", "Mekanik pompa", "Ağır vasıta", "Servis olarak iş getirmek", "Filo / ticari araç", "Genel bilgi"],
+    "formBaslik": "Bize yazın",
+    "cta": {
+      "baslik": "Tahmin değil, çıktı. Enjektörü getirin.",
+      "metin": "Şikâyeti anlatın ya da söktüğünüz enjektörü getirin; tezgâhta ölçelim, sonucu elinize verelim, fiyatı işe başlamadan söyleyelim.",
+      "buton": "Enjektörümü test ettireyim"
+    }
+  }
+}

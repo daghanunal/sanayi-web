@@ -1,0 +1,3 @@
+Pexels lisansı (ücretsiz, ticari kullanım serbest):
+dizel-boru.jpg: "Diesel fuel sign on metal pipes" https://www.pexels.com/photo/794089/
+Diğer görseller public/img/sektor-dizel/ klasöründen (bkz. oradaki CREDITS.txt).

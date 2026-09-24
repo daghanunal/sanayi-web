@@ -1,0 +1,102 @@
+{
+  "kurumsal": {
+    "hero": {
+      "ust": "7/24 çekici ve yol yardım · Şaşmaz, Etimesgut",
+      "baslik": "Yolda kaldıysanız, bir telefon yeter.",
+      "metin": "Konumunuzu alırız, ne kadar sürede orada olacağımızı ve ücreti baştan söyleriz. Gece, bayram, kar demeden; Ankara'nın her yerine ve şehirlerarası.",
+      "birincil": "Çekici çağır",
+      "ikincil": "Hizmetlerimiz",
+      "ikincilRota": "hizmetler",
+      "bilgi": [["Hat", "7/24 açık, bayram dahil"], ["Ankara içi", "30-60 dk'da yanınızda"], ["Çıkış noktası", "Şaşmaz, Etimesgut"]]
+    },
+    "ozet": {
+      "baslik": "Aracınızı yüklemeden önce fotoğraflarız",
+      "metin": "Çekicide en çok korkulan şey, aracın gittiği gibi gelmemesidir. Biz aracın dört yanını yüklemeden önce fotoğraflayıp size göndeririz; tekerleri kayışla, gövdeyi zincirle sabitleriz ve teslimde aynı hâliyle bırakırız."
+    },
+    "hizmetOzetBaslik": "Yolda ne olduysa",
+    "yorumBaslik": "Yolda kalıp bizi arayanlar",
+    "surecBaslik": "Telefon açıldıktan sonra ne olur",
+    "galeriBaslik": "Yoldan kareler",
+    "markaBaslik": "Taşıdığımız binek, ticari ve ağır vasıta markaları",
+    "anlasmaBaslik": "Filolar, servisler ve sigortalı araçlar",
+    "anlasmaMetin": "Aracı yolda kalan filolara, sanayideki servislere ve kaza sonrası sigorta sürecindeki sürücülere ayrı sıra açıyoruz.",
+    "anlasmalar": [
+      {
+        "baslik": "Filo ve ticari araçlar",
+        "kisa": "Servis, kargo, kiralık araç filolarına öncelikli çekici ve aylık döküm.",
+        "metin": "Yolda para kazanan araç yolda beklememeli. Filo araçlarınıza öncelikli sıra açar, her çağrıyı plaka, saat ve teslim yeriyle kayda geçiririz. Ay sonunda tek fatura ve döküm göndeririz.",
+        "maddeler": ["Öncelikli çağrı hattı", "Plaka bazında çağrı ve teslim kaydı", "Yükleme ve teslim fotoğrafları", "Aylık tek fatura ve döküm"],
+        "buton": "Filo için görüşelim"
+      },
+      {
+        "baslik": "Sanayideki servisler ve ustalar",
+        "kisa": "Müşterinizin aracını kapıdan alır, dükkânınıza getiririz.",
+        "metin": "Şaşmaz'daki ya da Ankara'daki servislerin müşteri araçlarını evden, işyerinden ya da yoldan alıp servise getiririz; iş bitince aynı adrese geri bırakırız. Aracın durumunu yüklemeden önce size de fotoğrafla bildiririz.",
+        "maddeler": ["Servise getirme ve geri bırakma", "Müşteriye ve servise fotoğraflı bildirim", "Anahtar teslim kaydı"],
+        "buton": "Servis olarak yazın"
+      },
+      {
+        "baslik": "Kaza sonrası ve sigorta süreci",
+        "kisa": "Tutanaktan sonra aracı eksperin göreceği servise taşırız.",
+        "metin": "Kaza sonrası aracı olay yerinden alır, sigorta eksperinin inceleyeceği servise ya da kaportacınıza götürürüz. Sigortanızın çekici hizmetinden yararlanıp yararlanamayacağınızı poliçenize göre birlikte kontrol ederiz; güncel anlaşmalar için bizi arayın.",
+        "maddeler": ["Olay yerinden aynı gün alım", "Eksper servisine ya da kaportacınıza teslim", "Hasar fotoğrafları size ve servise"],
+        "buton": "Kaza sonrası için arayın"
+      }
+    ],
+    "anlasmaNotu": "Koşullar araç sayısına ve iş tipine göre konuşulur; teklifimizi yazılı veririz.",
+    "hakkimizda": {
+      "baslik": "2008'den beri telefonu biz açıyoruz",
+      "paragraflar": [
+        "Şaşmaz'da bir çekiciyle başladık. Bugün kayar kasalı çekiciler, vinçli kurtarma aracı ve ağır vasıta çekicisiyle Ankara'nın dört bir yanına ve şehir dışına çıkıyoruz.",
+        "İşimizin yarısı yolda, yarısı telefonda. Telefonu açan kişi nerede olduğunuzu, aracın ne hâlde olduğunu sorar; ne kadar sürede geleceğimizi ve ücreti baştan söyler. Söylediğimiz saatte gelmek, bu işte verebileceğimiz en önemli sözdür."
+      ],
+      "gorsel": "/img/sektor-cekici/cekici-yukleme.jpg",
+      "gorselAlt": "Kayar kasalı çekiciye beyaz bir pikap yükleniyor"
+    },
+    "misyon": "Yolda kalan sürücüye en kısa sürede ulaşmak, aracı aldığı gibi teslim etmek.",
+    "vizyon": "Ankara'da yolda kalan birinin aklına gelen ilk numara olmak.",
+    "degerler": [
+      { "baslik": "Süre baştan", "metin": "Ne kadar sürede orada olacağımızı telefonda söyleriz; gecikirsek biz ararız." },
+      { "baslik": "Ücret baştan", "metin": "Mesafeye ve işe göre ücreti yola çıkmadan söyleriz; yolda fiyat değişmez." },
+      { "baslik": "Fotoğraflı teslim", "metin": "Yüklemeden önce ve teslimde aracın fotoğrafları size gönderilir." },
+      { "baslik": "Yerinde çözülüyorsa yüklemeyiz", "metin": "Akü, lastik ya da yakıtsa orada hallederiz; gereksiz çekici parası ödetmeyiz." }
+    ],
+    "kalite": {
+      "baslik": "Bir araç nasıl yüklenir, nasıl teslim edilir",
+      "metin": "Her çağrıda aynı sıra, gece de gündüz de.",
+      "maddeler": [
+        "Yüklemeden önce aracın dört yanı ve göstergeleri fotoğraflanır, size gönderilir.",
+        "Araç kayar kasaya vinçle, yere sürtmeden alınır; alçak araçlarda rampa uzatılır.",
+        "Tekerler kayışla, gövde zincirle dört noktadan sabitlenir.",
+        "Yolda sürücüyle konum paylaşılır, teslim saatinde haber verilir.",
+        "Teslimde yeniden fotoğraf çekilir, anahtarın kimde kaldığı yazılı bildirilir."
+      ]
+    },
+    "sss": [
+      { "soru": "Ne kadar sürede gelirsiniz?", "cevap": "Ankara içinde çoğunlukla 30-60 dakika. Kesin süreyi konumunuzu aldıktan sonra telefonda söyleriz; yolda bir gecikme olursa sizi biz ararız." },
+      { "soru": "Ücreti ne zaman öğrenirim?", "cevap": "Yola çıkmadan önce. Mesafeye, aracın tipine ve işin durumuna göre ücreti telefonda söyleriz; yolda değişmez." },
+      { "soru": "Gece ya da bayramda da geliyor musunuz?", "cevap": "Evet. Hat 7/24 açık; gece, hafta sonu ve bayram fark etmez." },
+      { "soru": "Aracım zarar görür mü?", "cevap": "Aracı yüklemeden önce fotoğraflarız, kayar kasaya yere sürtmeden alırız, tekerleri kayışla, gövdeyi zincirle sabitleriz. Teslimde aynı hâliyle bırakırız." },
+      { "soru": "Sigortam çekiciyi karşılar mı?", "cevap": "Poliçenize bağlı. Kasko ya da trafik sigortanızın yol yardım teminatı olabilir; birlikte kontrol ederiz. Güncel anlaşmalar için bizi arayın." },
+      { "soru": "Araçta ben de gidebilir miyim?", "cevap": "Çekicinin kabininde yer varsa sizi de aracınızla birlikte götürürüz. Arama sırasında kaç kişi olduğunuzu söyleyin." }
+    ],
+    "kariyer": {
+      "baslik": "Ekibimize çekici şoförü arıyoruz",
+      "metin": "Ağır vasıta ehliyeti olan, gece çalışmaktan çekinmeyen, aracı kendi aracı gibi taşıyan şoför arkadaşlarla tanışmak isteriz. Kısa bir tanıtımla bize yazın."
+    },
+    "sayfalar": {
+      "kurumsal": { "baslik": "Kurumsal", "metin": "Kim olduğumuz, telefonu nasıl açtığımız ve bir aracı nasıl teslim ettiğimiz.", "gorsel": "/img/sektor-cekici/arac-tasima.jpg" },
+      "hizmetler": { "baslik": "Hizmetlerimiz", "metin": "Çekiciden akü takviyesine, yolda lastik değişiminden ağır vasıta kurtarmaya; her iş için ortalama süre." },
+      "kurumsal-musteriler": { "baslik": "Filo ve sigorta", "metin": "Filolara öncelikli çağrı, servislere araç getirme, kaza sonrası sigorta sürecinde taşıma.", "gorsel": "/img/sektor-cekici/agir-vasita.jpg" },
+      "referanslar": { "baslik": "Yoldan ve müşterilerden", "metin": "Yoldan kareler, müşterilerimizin yorumları ve taşıdığımız markalar." },
+      "iletisim": { "baslik": "İletişim", "metin": "Acilse arayın. Acil değilse, şehirlerarası taşıma ya da filo için buradan yazın." }
+    },
+    "konular": ["Çekici çağırmak", "Akü takviye", "Yolda lastik", "Kaza sonrası taşıma", "Şehirlerarası taşıma", "Ağır vasıta kurtarma", "Filo / servis anlaşması", "Genel bilgi"],
+    "formBaslik": "Acil değilse yazın",
+    "cta": {
+      "baslik": "Yoldaysanız, beklemeyin. Arayın.",
+      "metin": "Konumunuzu alalım, ne kadar sürede orada olacağımızı ve ücreti hemen söyleyelim.",
+      "buton": "Çekici çağır"
+    }
+  }
+}

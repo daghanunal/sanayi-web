@@ -1,0 +1,160 @@
+{
+  "preset": "radyator-sinematik",
+  "film": [
+    {
+      "id": "hararet",
+      "durak": "Hararet",
+      "baslik": "İbre kırmızıya dayandı.",
+      "metin": "Önce motoru çalıştırıp dinleriz. Hararet göstergesi, fanın hangi sıcaklıkta devreye girdiği, üst ve alt hortumun ne kadar ısındığı: sebep genelde burada kendini belli eder.",
+      "hizmet": "Hararet arıza tespiti",
+      "hud": {
+        "etiket": "Su sıcaklığı",
+        "once": 92,
+        "sonra": 118,
+        "min": 40,
+        "max": 130,
+        "birim": "°C",
+        "oncesi": "Isınıyor",
+        "sonrasi": "Hararet",
+        "iyi": false
+      }
+    },
+    {
+      "id": "havuz",
+      "durak": "Havuz testi",
+      "baslik": "Suyun altında kaçak saklanmaz.",
+      "metin": "Radyatörü söker, basınç verip su havuzuna indiririz. Delik ne kadar küçük olursa olsun kabarcık yolu gösterir. Tahminle parça değiştirmeyiz, kaçağın yerini size de gösteririz.",
+      "hizmet": "Radyatör tamiri",
+      "hud": {
+        "etiket": "Test basıncı",
+        "once": 1.4,
+        "sonra": 0.6,
+        "min": 0,
+        "max": 2,
+        "birim": "bar",
+        "oncesi": "Basınç verildi",
+        "sonrasi": "Basınç düşüyor",
+        "iyi": false
+      }
+    },
+    {
+      "id": "onarim",
+      "durak": "Onarım",
+      "baslik": "Kaçak kapanır, kabarcık durur.",
+      "metin": "Bakır-pirinç radyatörde lehim, plastik tanklıda tank ve conta değişimi. Onarımdan sonra aynı havuzda aynı basınçla bir daha test ederiz. Tek kabarcık çıkarsa teslim etmeyiz.",
+      "hizmet": "Radyatör tamiri",
+      "hud": {
+        "etiket": "Tekrar test",
+        "once": 0.6,
+        "sonra": 1.4,
+        "min": 0,
+        "max": 2,
+        "birim": "bar",
+        "oncesi": "Lehimleniyor",
+        "sonrasi": "Basınç sabit",
+        "iyi": true
+      }
+    },
+    {
+      "id": "petek",
+      "durak": "Petek",
+      "baslik": "Kireç tıkadıysa petek açılır.",
+      "metin": "Tortuyla dolmuş petekler kimyasal banyoda açılır, su yeniden her borudan akar. Çürümüş petek kurtarmıyorsa yenisi örülür; tanklar ve bağlantılar yerinde kalır.",
+      "hizmet": "Petek temizliği",
+      "hud": {
+        "etiket": "Akan boru",
+        "once": 11,
+        "sonra": 34,
+        "min": 0,
+        "max": 34,
+        "birim": "/34",
+        "oncesi": "Tıkalı",
+        "sonrasi": "Hepsi akıyor",
+        "iyi": true
+      }
+    },
+    {
+      "id": "fan",
+      "durak": "Fan ve termostat",
+      "baslik": "Fan zamanında dönmeli.",
+      "metin": "Fan motoru, röle ve müşiri ölçeriz; fanın kaç derecede devreye girdiğini görürsünüz. Termostat açılmıyorsa ya da devirdaim su kaçırıyorsa aynı gün değişir.",
+      "hizmet": "Fan ve termostat",
+      "hud": {
+        "etiket": "Su sıcaklığı",
+        "once": 106,
+        "sonra": 90,
+        "min": 40,
+        "max": 130,
+        "birim": "°C",
+        "oncesi": "Fan dönmüyor",
+        "sonrasi": "Fan devrede",
+        "iyi": true
+      }
+    },
+    {
+      "id": "agir",
+      "durak": "Ağır vasıta",
+      "baslik": "Kamyonunki de bu havuza girer.",
+      "metin": "Kamyon, çekici, otobüs ve iş makinesi radyatörü; intercooler ve yağ soğutucu. Büyük radyatörü atölyede söker, petek ve tank olarak ayrı ayrı onarırız.",
+      "hizmet": "Ağır vasıta radyatörü",
+      "hud": {
+        "etiket": "Su sıcaklığı",
+        "once": 90,
+        "sonra": 88,
+        "min": 40,
+        "max": 130,
+        "birim": "°C",
+        "oncesi": "Normal",
+        "sonrasi": "Normal",
+        "iyi": true
+      }
+    }
+  ],
+  "belirtiler": [
+    {
+      "id": "trafik",
+      "soru": "Trafikte hararet yapıyor, yolda düzeliyor",
+      "sebep": "Yolda rüzgâr radyatörü soğutuyor, trafikte bu işi fan yapmalı. Büyük ihtimalle fan, fan rölesi ya da müşir devreye girmiyor.",
+      "yapariz": "Motoru ısıtıp fanın kaç derecede döndüğünü ölçeriz. Arızalı parçayı gösterir, aynı gün değiştiririz."
+    },
+    {
+      "id": "eksiltiyor",
+      "soru": "Suyu eksiltiyor, altına damlıyor",
+      "sebep": "Radyatörde delik, tank contasında kaçak, gevşek kelepçe ya da çatlak hortum. Devirdaim pompasının kaçırdığı da olur.",
+      "yapariz": "Sisteme basınç verip kaçağın yerini buluruz. Çoğu zaman radyatör değişmeden, kelepçe ya da hortumla biter."
+    },
+    {
+      "id": "kalorifer",
+      "soru": "Kalorifer ısıtmıyor, ibre geç yükseliyor",
+      "sebep": "Termostat açık kalmış olabilir; motor çalışma sıcaklığına çıkamıyor. Sistemde hava kalmışsa da kalorifer soğuk üfler.",
+      "yapariz": "Termostatı test ederiz, gerekiyorsa değiştirip sistemin havasını alırız."
+    },
+    {
+      "id": "duman",
+      "soru": "Egzozdan beyaz duman, yağda köpük",
+      "sebep": "Suyun yanma odasına ya da yağa karıştığını gösterir. Silindir kapak contası şüphesi var; bu durumda araç kullanılmamalı.",
+      "yapariz": "Kapak testi ve egzozda su kontrolü yaparız. Sonucu açıkça söyler, gerekiyorsa motorcuya yönlendiririz."
+    },
+    {
+      "id": "klima",
+      "soru": "Klima eskisi kadar soğutmuyor",
+      "sebep": "Kondenser taş yemiş, delinmiş ya da petekleri tıkanmış olabilir. Radyatörün önündeki kondenser ısıyı atamıyorsa klima zorlanır.",
+      "yapariz": "Kondenseri kontrol eder, tamir ya da değişim yaparız. Değişimden sonra sistem vakumlanıp gazı doldurulur."
+    }
+  ],
+  "yoldaIpucu": [
+    {
+      "baslik": "Güvenli yerde durun",
+      "metin": "İbre kırmızıya çıktıysa motoru zorlamayın; kenara çekip kontağı kapatın."
+    },
+    {
+      "baslik": "Kapağı sıcakken açmayın",
+      "metin": "Sistem basınçlıdır, kaynar su fışkırır. Motorun soğumasını bekleyin."
+    },
+    {
+      "baslik": "Bizi arayın",
+      "metin": "Belirtiyi telefonda anlatın, yolda devam edilip edilmeyeceğini söyleyelim."
+    }
+  ],
+  "finalBaslik": "Hararet yaptıysa bekletmeyin."
+}

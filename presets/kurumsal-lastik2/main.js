@@ -28,7 +28,7 @@ kurumsal({
       vurgu: '#5a3cf0', 'vurgu-metin': '#ffffff', koyu: '#141238', 'koyu-metin': '#eef0f7', 'koyu-soluk': '#a5a7cc',
       gecis: 'repeating-radial-gradient(circle at 50% 50%, #5a3cf0 0 46px, #141238 46px 92px)',
       'font-baslik': "'Unbounded', system-ui, sans-serif", 'font-govde': "'Manrope', system-ui, sans-serif",
-      'baslik-agirlik': '700', 'baslik-genislik': '100%', 'baslik-harf': '-0.035em', 'baslik-satir': '1.02',
+      'baslik-agirlik': '700', 'baslik-genislik': '100%', 'baslik-harf': '-0.035em', 'baslik-satir': '1.07',
       radius: '999px', 'radius-buyuk': '32px', h1: 'clamp(38px, 5.6vw, 88px)', h2: 'clamp(28px, 3.6vw, 52px)',
     },
   },

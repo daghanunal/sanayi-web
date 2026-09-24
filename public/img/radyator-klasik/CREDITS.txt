@@ -1,0 +1,7 @@
+Tüm görseller Pexels lisansıyla (ücretsiz, ticari kullanım serbest).
+klasik-petek.jpg: Pexels 34950807 — https://www.pexels.com/photo/34950807/
+kondenser.jpg: Pexels 33074473 — https://www.pexels.com/photo/33074473/
+tir-radyator.jpg: Pexels 6720532 — https://www.pexels.com/photo/6720532/
+on-panel.jpg: Pexels 34351909 — https://www.pexels.com/photo/34351909/
+is-makinesi.jpg: Pexels 5622425 — https://www.pexels.com/photo/5622425/
+Diğerleri public/img/sektor-radyator/ klasöründen yeniden sıkıştırılmış kopyalar (kaynaklar orada CREDITS.txt içinde).

@@ -36,7 +36,7 @@ body {
 .eyebrow::before { content: ''; width: 22px; height: 10px; flex: none;
   background: repeating-linear-gradient(90deg, var(--sig) 0 3px, transparent 3px 5px); }
 .h2 {
-  font: 900 clamp(46px, 7.4vw, 104px)/0.9 var(--display);
+  font: 900 clamp(46px, 7.4vw, 104px)/1 var(--display);
   text-transform: uppercase; letter-spacing: -0.005em; text-wrap: balance;
   padding-top: 0.08em;
 }
@@ -113,12 +113,13 @@ body {
 .hero__copy, .meter, .hero__cta, .hero__hint { position: relative; z-index: 1; }
 .hero__since { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .04em; opacity: .85; }
 .hero__name {
-  font: 900 clamp(64px, 11.5vw, 190px)/0.84 var(--display); text-transform: uppercase;
+  font: 900 clamp(64px, 11.5vw, 190px)/1.04 var(--display); text-transform: uppercase;
+  font-size: max(52px, min(11.5vw, 190px, calc(170vw / var(--n, 12))));
   letter-spacing: -0.01em; margin-top: 14px; padding-top: .1em; max-width: 12ch; text-wrap: balance;
 }
 .hero__slogan { font-size: clamp(17px, 1.6vw, 22px); font-weight: 500; max-width: 30ch; margin-top: 16px; opacity: .92; }
 
-.meter { margin-top: auto; }
+.meter { margin-top: auto; padding-top: clamp(24px, 4vh, 44px); }
 .meter__read { display: flex; align-items: flex-end; gap: clamp(14px, 3vw, 40px); }
 .meter__num { font: 900 clamp(110px, 17vw, 250px)/0.78 var(--display); display: flex; align-items: flex-start; gap: 6px;
   color: var(--beyaz); transition: color .35s ease; font-variant-numeric: tabular-nums; }
@@ -200,7 +201,7 @@ body {
 .stop__no { display: flex; align-items: baseline; gap: 14px; }
 .stop__no span { font: 900 clamp(72px, 9vw, 132px)/0.8 var(--display); color: var(--sig); }
 .stop__no em { font-style: normal; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .04em; color: var(--muted-d); }
-.stop__title { font: 800 clamp(32px, 3.8vw, 54px)/0.95 var(--display); text-transform: uppercase; margin-top: 18px; text-wrap: balance; padding-top: .06em; }
+.stop__title { font: 800 clamp(32px, 3.8vw, 54px)/1.02 var(--display); text-transform: uppercase; margin-top: 18px; text-wrap: balance; padding-top: .06em; }
 .stop__text { color: rgb(244 244 240 / .78); margin-top: 14px; max-width: 46ch; }
 .stop__svc { display: inline-flex; margin-top: 18px; font-size: 12px; padding: 7px 10px; border: 1px solid var(--cizgi-d); }
 @media (min-width: 900px) {
@@ -254,7 +255,7 @@ body {
 .surec__list { --line: 0; position: relative; display: grid; gap: 34px; margin-top: 48px; padding-left: 64px; }
 .surec__list::before { content: ''; position: absolute; left: 21px; top: 0; bottom: 0; width: 2px; background: var(--cizgi); }
 .surec__list::after { content: ''; position: absolute; left: 21px; top: 0; bottom: 0; width: 2px; background: var(--sig); transform: scaleY(var(--line)); transform-origin: top; }
-.step { position: relative; }
+.step { position: relative; z-index: 1; }
 .step__no { position: absolute; left: -64px; top: 0; width: 44px; height: 44px; display: grid; place-items: center; z-index: 1;
   background: var(--is); color: var(--beyaz); font: 900 26px/1 var(--display); }
 .step__title { font: 800 30px/1 var(--display); text-transform: uppercase; padding-top: 8px; }
@@ -321,7 +322,7 @@ body {
 .final__flat { display: flex; align-items: center; gap: 14px; margin-bottom: 28px; }
 .final__flat span { font-size: 12px; font-weight: 600; }
 .final__flat i { flex: 1; height: 2px; background: var(--sig); transform-origin: left; }
-.final__title { font: 900 clamp(60px, 11vw, 176px)/0.84 var(--display); text-transform: uppercase; max-width: 11ch; padding-top: .08em; text-wrap: balance; }
+.final__title { font: 900 clamp(60px, 11vw, 176px)/1.04 var(--display); text-transform: uppercase; max-width: 11ch; padding-top: .08em; text-wrap: balance; }
 .final__btns { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 40px; }
 @media (max-width: 480px) { .final__btns .btn { width: 100%; } }
 

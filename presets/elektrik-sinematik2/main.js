@@ -244,7 +244,7 @@ const KEYS = [
   { el: '#surec', at: 0.35, v: { camR: 6, camYaw: Math.PI / 2 - 0.02, camPitch: 0.02, vx: P ? 0 : 0.28, vy: 0, field: 0.35, pulse: 0.8, dim: P ? 0.45 : 0.9, roll: 0 } },
   { el: '#yorumlar', at: 0.4, v: { camR: 2.4, camYaw: 0.2, camPitch: 0.62, tx: 0.2, ty: 0.75, vx: 0, vy: 0, field: 0.15, pulse: 0.5, dim: 0.22 } },
   { el: '#dukkan', at: 0.4, v: { camR: 10, camYaw: -0.8, camPitch: 0.4, tx: 0, ty: 0, field: 0.4, pulse: 0.3, dim: 0.35 } },
-  { el: '#iletisim', at: P ? 0.25 : 0.55, v: { camR: P ? 7 : 8, camYaw: 0.6, camPitch: 0.2, vx: P ? 0 : 0.36, vy: P ? 0.3 : 0, field: 1, pulse: 1, heat: 1, dim: 1 } },
+  { el: '#iletisim', at: P ? 0.25 : 0.55, v: { camR: P ? 7 : 9.4, camYaw: 0.6, camPitch: 0.2, vx: P ? 0 : 0.44, vy: P ? 0.3 : 0, field: 1, pulse: 1, heat: 1, dim: 1 } },
   { el: '#foot', at: 0, v: { dim: P ? 0.6 : 1, vy: P ? -0.42 : 0 } },
 ];
 let keyList = [];

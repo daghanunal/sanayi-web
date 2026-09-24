@@ -27,8 +27,10 @@ function ablative(n) {
 }
 
 // --- Bağlamalar ---------------------------------------------------------------
+// Metindeki sabit kuruluş yılı ("2002'den") ?kurulus= ile güncellenir
+const hakkinda = String(d.isletme.hakkinda || '').replace(/\b(19|20)\d\d'(den|dan|ten|tan)\b/, () => ablative(d.isletme.kurulus));
 const binds = {
-  ad: d.isletme.ad, slogan: d.isletme.slogan, hakkinda: d.isletme.hakkinda,
+  ad: d.isletme.ad, slogan: d.isletme.slogan, hakkinda,
   telefon: d.iletisim.telefon, adres: d.iletisim.adres, garanti: d.garanti,
 };
 $$('[data-bind]').forEach((el) => (el.textContent = binds[el.dataset.bind] ?? ''));
@@ -263,7 +265,9 @@ new IntersectionObserver((ents, io) => {
 
 // --- Header -------------------------------------------------------------------
 const top = $('.top');
-ScrollTrigger.create({ start: () => innerHeight * 0.5, end: 'max', onToggle: (st) => top.classList.toggle('is-solid', st.isActive) });
+const solid = () => top.classList.toggle('is-solid', scrollY > innerHeight * 0.5);
+addEventListener('scroll', solid, { passive: true });
+solid();
 
 // --- Bölüm hareketleri --------------------------------------------------------
 if (!reducedMotion) {

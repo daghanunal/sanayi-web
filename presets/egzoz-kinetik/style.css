@@ -36,7 +36,7 @@ body {
 .bosluk { display: inline-block; width: .25em; }
 
 .h2 {
-  font: 800 clamp(40px, 7vw, 96px)/.92 var(--display);
+  font: 800 clamp(40px, 7vw, 96px)/1.02 var(--display);
   text-transform: uppercase; letter-spacing: -.005em; text-wrap: balance;
   padding-top: .08em;
 }
@@ -108,6 +108,7 @@ body {
 }
 .afis__satir { display: block; white-space: nowrap; width: max-content; padding-top: .1em; }
 .afis__satir:nth-child(2) { justify-self: end; }
+.afis__satir + .afis__satir { padding-top: .2em; }
 .sahne {
   position: relative; z-index: 1; margin: 0 calc(-1 * var(--pad));
   display: grid; place-items: center; min-height: 0; padding: 14px 0 4px;
@@ -176,7 +177,7 @@ body {
 .olcer__sinir { position: absolute; top: -10px; bottom: -10px; width: 3px; background: var(--smoke); }
 .olcer__sinir i { position: absolute; top: -20px; left: 50%; transform: translateX(-50%); font: 400 11px/1 var(--mono); font-style: normal; color: var(--smoke); }
 .ses__metin { display: grid; gap: 10px; max-width: 60ch; }
-.ses__metin h2 { font: 800 clamp(28px, 3.4vw, 44px)/1 var(--display); text-transform: uppercase; }
+.ses__metin h2 { font: 800 clamp(28px, 3.4vw, 44px)/1.08 var(--display); text-transform: uppercase; }
 .ses__metin p { color: var(--smoke-2); }
 @media (min-width: 900px) {
   .ses__pin { grid-template-columns: 1.1fr 1fr; grid-template-rows: auto 1fr auto; column-gap: 64px; padding-bottom: 56px; }
@@ -206,7 +207,7 @@ body {
   background: var(--smoke); border: 6px solid var(--ink); box-sizing: border-box; z-index: 1;
 }
 .durak__no { color: #d2410c; padding-top: 8px; }
-.durak__baslik { font: 800 clamp(30px, 3.6vw, 50px)/.98 var(--display); text-transform: uppercase; }
+.durak__baslik { font: 800 clamp(30px, 3.6vw, 50px)/1.05 var(--display); text-transform: uppercase; }
 .durak__metin { color: #4a4460; max-width: 52ch; }
 .durak__sor { display: inline-flex; align-items: center; gap: 8px; font-weight: 700; text-underline-offset: 4px; color: var(--ink); justify-self: start; }
 .durak__sor svg { width: 18px; height: 18px; color: #16a34a; }
@@ -322,7 +323,7 @@ body {
 /* --- Yorumlar --- */
 .yorumlar { background: var(--ink); padding: 100px 0 40px; overflow: hidden; }
 .yorumlar__bas { display: flex; align-items: flex-end; gap: 22px; padding: 0 var(--pad); }
-.puan { font: 900 clamp(130px, 22vw, 280px)/.78 var(--display); color: var(--or); padding-top: .06em; }
+.puan { font: 900 clamp(130px, 22vw, 280px)/.78 var(--display); color: var(--or); padding-top: .3em; }
 .puan__yildiz { display: flex; gap: 3px; color: var(--or); margin-bottom: 6px; }
 .puan__yildiz svg { width: 20px; height: 20px; }
 .puan__alt { color: var(--muted); margin-bottom: 14px; }

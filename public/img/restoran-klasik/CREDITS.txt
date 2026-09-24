@@ -1,0 +1,17 @@
+Tüm görseller public/img/sektor-restoran/ altındaki Pexels fotoğraflarından kırpılıp küçültülmüştür.
+p-kebap.jpg: Pexels 32986491 (kebap-tabak)
+p-meze.jpg, meze-bakir.jpg: Pexels 30726875
+p-meze2.jpg, meze-masa.jpg: Pexels 37328507
+p-lahmacun.jpg, lahmacun.jpg: Pexels 32562202
+p-adana.jpg, adana-tabak.jpg: Pexels 7439809
+p-cay.jpg, cay.jpg: Pexels 36287927
+p-sofra.jpg, sofra.jpg: Pexels 36577737
+p-firin.jpg, firin.jpg: Pexels 36916297
+p-servis.jpg, servis.jpg: Pexels 16260571
+ocak.jpg: Pexels 12634876
+kor-adana.jpg: Pexels 31587880
+kor-sis.jpg: Pexels 36890237
+kor-duman.jpg: Pexels 36890236
+salon.jpg: Pexels 38301339
+Kaynak: https://www.pexels.com/photo/<id>/
+Lisans: Pexels License (ücretsiz ticari kullanım)

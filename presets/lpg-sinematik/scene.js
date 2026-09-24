@@ -449,8 +449,16 @@ export function createScene(canvas, { lite = false } = {}) {
   const right = new THREE.Vector3();
   const up = new THREE.Vector3(0, 1, 0);
   let lastTime = 0;
+  let others = null, lastSolo = false;
 
   function render(s) {
+    // finalde yalnızca alev halkası: diğer parçalar kadraj kenarına sızmasın
+    const solo = !!s.solo;
+    if (solo !== lastSolo) {
+      if (!others) others = scene.children.filter((o) => o !== ring && !o.isLight);
+      others.forEach((o) => { o.visible = !solo; });
+      lastSolo = solo;
+    }
     const portrait = W / H < 0.85;
     const time = s.time;
     const dt = Math.min(0.05, Math.max(0, time - lastTime));

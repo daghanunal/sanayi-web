@@ -304,11 +304,17 @@ if (!reducedMotion) {
   });
 }
 
+const solidOn = { solid: false, foot: false };
+function setSolid() {
+  const on = solidOn.solid || solidOn.foot;
+  $('#top').classList.toggle('is-solid', on);
+  document.documentElement.classList.toggle('is-solid-page', on);
+}
 ScrollTrigger.create({
   trigger: '#solid',
   start: 'top 64px',
   end: 'bottom 64px',
-  onToggle: (self) => { $('#top').classList.toggle('is-solid', self.isActive); document.documentElement.classList.toggle('is-solid-page', self.isActive); },
+  onToggle: (self) => { solidOn.solid = self.isActive; setSolid(); },
 });
 
 // Sayaçlar
@@ -316,7 +322,8 @@ $$('[data-count]').forEach((el) => {
   const to = Number(el.dataset.count);
   const k = Number(el.dataset.decimals || 0);
   const suf = el.dataset.suffix || '';
-  const out = (v) => (el.textContent = (k ? dec(v, k) : fmt(v)) + suf);
+  const pre = suf.trim() === '%' ? '%' : '';
+  const out = (v) => (el.textContent = pre + (k ? dec(v, k) : fmt(v)) + (pre ? '' : suf));
   if (reducedMotion) return out(to);
   ScrollTrigger.create({
     trigger: el,
@@ -479,9 +486,32 @@ const SCENES = {
 };
 
 let active = null;
+const copies = new Map();
+function fadeCopies(y, vh) {
+  // Yapışkan metin sahneden çıkarken/girerken üst çubuğa ve alt butonlara binmesin
+  for (const l of layout) {
+    let c = copies.get(l.el);
+    if (c === undefined) { c = $('.scene__sticky', l.el); copies.set(l.el, c); }
+    if (!c) continue;
+    const rel = (y - (l.top + l.height - vh)) / vh;
+    if (l.name === 'final') {
+      // Final sahnesi yukarı kayarken (footer girince) üst çubuk da dolu olsun
+      const f = rel > 0.02;
+      if (solidOn.foot !== f) { solidOn.foot = f; setSolid(); }
+    }
+    const exit = l.name === 'final' ? 0 : rel;
+    const entry = (l.top - y) / vh;
+    const k = Math.max(exit, entry);
+    if (k > 1.2 || k < -0.2 && c._o === 1) continue;
+    const o = k <= 0 ? 1 : Math.max(0, 1 - k * 4);
+    const r = Math.round(o * 100) / 100;
+    if (c._o !== r) { c._o = r; c.style.opacity = r; }
+  }
+}
 function tick() {
   const y = scrollY;
   const vh = innerHeight;
+  fadeCopies(y, vh);
   let cur = layout[0];
   for (const l of layout) if (l.top <= y + vh * 0.5) cur = l;
   const p = clamp((y - cur.top) / Math.max(1, cur.height - vh));

@@ -1,0 +1,135 @@
+{
+  "kurumsal": {
+    "hero": {
+      "ust": "Oto kilit, anahtar ve immobilizer",
+      "baslik": "Her kilidin bir diş kodu var. Biz onu okuruz.",
+      "metin": "Yedek anahtarı kilidinize göre keser, çipini araca tanıtırız. Anahtar içeride kaldıysa kapıyı zorlamadan açarız; ama önce ruhsata ve kimliğe bakarız.",
+      "birincil": "Anahtarınızı yazın"
+    },
+    "hizmetOzetBaslik": "Kilitte ve anahtarda yaptığımız işler",
+    "anahtarTipleri": [
+      {
+        "id": "duz",
+        "ad": "Düz metal",
+        "kisa": "Çipsiz, kumandasız eski tip anahtar",
+        "baslik": "Düz metal anahtar",
+        "metin": "Elinizdeki anahtarın bıçağı kilidinize göre kesilir. Çip olmadığı için araca tanıtma gerekmez; kapı ve kontakta denenip teslim edilir.",
+        "hizmetler": [0, 8],
+        "getirin": ["Ruhsat ve kimlik", "Elinizdeki anahtar"]
+      },
+      {
+        "id": "cipli",
+        "ad": "Çipli",
+        "kisa": "Başında transponder çipi olan anahtar",
+        "baslik": "Çipli (transponder) anahtar",
+        "metin": "Bıçak kesildikten sonra çip, arıza tespit cihazıyla araca tanıtılır. \"Anahtar tanınmadı\" uyarısı ya da marş basmama çoğu zaman bu çiptendir.",
+        "hizmetler": [0, 2],
+        "getirin": ["Ruhsat ve kimlik", "Varsa çalışan anahtar", "Araç"]
+      },
+      {
+        "id": "sustali",
+        "ad": "Sustalı kumandalı",
+        "kisa": "Katlanan bıçak, tuşlu kumanda",
+        "baslik": "Sustalı kumandalı anahtar",
+        "metin": "Yeni kumanda araca tanıtılır, bütün tuşlar sizin yanınızda denenir. Kabı kırıldıysa ya da tuşu aşındıysa kart yeni kaba aktarılır, yeniden kodlama gerekmez.",
+        "hizmetler": [3, 4],
+        "getirin": ["Ruhsat ve kimlik", "Kumanda (kırık da olsa)", "Araç"]
+      },
+      {
+        "id": "akilli",
+        "ad": "Akıllı anahtar",
+        "kisa": "Cepte durur, düğmeyle çalışır",
+        "baslik": "Akıllı anahtar (anahtarsız çalıştırma)",
+        "metin": "Start-stop düğmeli araçlarda yeni akıllı anahtar araca tanıtılır. Anahtarı cebinizde tutup kapıyı açmayı ve düğmeyle çalıştırmayı birlikte deneriz.",
+        "hizmetler": [3, 4],
+        "getirin": ["Ruhsat ve kimlik", "Varsa çalışan anahtar", "Araç"]
+      },
+      {
+        "id": "yok",
+        "ad": "Hiç kalmadı",
+        "kisa": "Bütün anahtarlar kayıp ya da çalıntı",
+        "baslik": "Hiç anahtarınız kalmadıysa",
+        "metin": "Kilitten ya da şase numarasından yeni anahtar çıkarır, araca tanıtırız. Kayıp anahtarlar sistemden silinir; bulan kişi aracınızı çalıştıramaz.",
+        "hizmetler": [1, 2],
+        "getirin": ["Ruhsat ve kimlik", "Araç (çekiciyle de olur)"]
+      }
+    ],
+    "anlasmalar": [
+      {
+        "baslik": "Galeri ve alım satım",
+        "kisa": "Tek anahtarla gelen araca satıştan önce yedek anahtar.",
+        "metin": "Tek anahtarla alınan araçlar için yedek anahtar çıkarır, çipini ve kumandasını araca tanıtırız. Satışa çıkacak araç iki anahtarla teslim edilir.",
+        "maddeler": ["Aynı gün yedek anahtar ve kodlama", "Kumanda kabı ve pil yenileme", "Araç başına yapılan iş dökümü"],
+        "buton": "Galeri için yazın"
+      },
+      {
+        "baslik": "Şirket ve kiralık araç filoları",
+        "kisa": "Kaybolan anahtarı sistemden siler, yenisini tanıtırız.",
+        "metin": "Personelin kaybettiği ya da iade etmediği anahtar araçta çalışmaya devam etmesin. Eski anahtarı sistemden siler, yeni anahtarı tanıtır, her araç için ayrı kayıt tutarız.",
+        "maddeler": ["Kayıp anahtarı sistemden silme", "Araç bazında anahtar kaydı", "Ayda tek fatura"],
+        "buton": "Filo görüşmesi isteyin"
+      },
+      {
+        "baslik": "Oto servisler ve çekiciler",
+        "kisa": "Anahtarı olmadan gelen araca aynı gün çözüm.",
+        "metin": "Servisinize anahtarsız ya da immobilizer arızalı gelen aracı sıraya almadan inceleriz. Çekiciyle getirilen araçta sahiplik belgesi yine istenir.",
+        "maddeler": ["Aynı gün teşhis", "İş öncesi süre bilgisi", "Sahiplik belgesi kontrolü"],
+        "buton": "Servis olarak yazın"
+      }
+    ],
+    "anlasmaNotu": "Anlaşma koşulları araç sayısına ve işin tipine göre konuşulur; fiyatı işe başlamadan söyleriz.",
+    "hakkimizda": {
+      "baslik": "Yalnızca kilit ve anahtar",
+      "paragraflar": [
+        "1999'dan beri Şaşmaz'da tek işle uğraşıyoruz: oto kilit ve anahtar. Düz metal anahtardan akıllı anahtara, bozulan kontaktan sıkışan bagaj kilidine kadar.",
+        "Anahtar işi güven işidir. Ruhsattaki isimle kimliği eşleştirmeden hiçbir kapıyı açmaz, hiçbir anahtarı kodlamayız. Bunu soran müşteriye kızmayız; sormayan ustaya şüpheyle bakın."
+      ],
+      "gorsel": "/img/kurumsal-kilit/atolye.jpg",
+      "gorselAlt": "Duvarı anahtar boşluklarıyla dolu atölyede çalışan usta"
+    },
+    "misyon": "Anahtarı kaybolan, kapıda kalan ya da marşa basamayan sürücüyü aynı gün yola çıkarmak; bunu yaparken aracı sahibinden başkasına açmamak.",
+    "vizyon": "Şaşmaz'da \"anahtarım yok\" diyen herkesin ilk aradığı, ruhsatı sormadan iş yapmayan atölye olmak.",
+    "degerler": [
+      { "baslik": "Önce ruhsat", "metin": "Sahiplik doğrulanmadan kapı açılmaz, anahtar kodlanmaz." },
+      { "baslik": "Zorlamadan", "metin": "Kapı ve cam özel aletlerle açılır; çizik, kırık yok." },
+      { "baslik": "Süre baştan", "metin": "İşin ne kadar süreceği telefonda söylenir, fiyatı işe başlamadan." },
+      { "baslik": "Yanınızda deneme", "metin": "Kapılar, bagaj, tuşlar ve marş sizin önünüzde denenir." }
+    ],
+    "kalite": {
+      "baslik": "Bir anahtar işi nasıl kapanır",
+      "metin": "Kabulden teslime kadar her araçta aynı sırayı izleriz.",
+      "maddeler": [
+        "Ruhsat ve kimlik kontrol edilir; isim eşleşmiyorsa iş yapılmaz.",
+        "Anahtar tipi, çip ve kumanda frekansı araca göre belirlenir.",
+        "Bıçak kilidinize göre kesilir, çip ve kumanda cihazla araca tanıtılır.",
+        "Kayıp anahtar varsa sistemden silinir.",
+        "Kapılar, bagaj, kumanda tuşları ve marş sizin yanınızda denenir."
+      ]
+    },
+    "sss": [
+      { "soru": "Hiç anahtarım kalmadı, araç çalışır hale gelir mi?", "cevap": "Evet. Kilitten ya da şase numarasından yeni anahtar çıkarır, araca tanıtırız. Kayıp anahtarlar sistemden silinir. Aracı çekiciyle getirmeniz yeterli; ruhsat ve kimlik şart." },
+      { "soru": "Yetkili servis komple değişim dedi, başka yolu var mı?", "cevap": "Çoğu zaman var. Kırılan kap, aşınan tuş ya da biten pil için elektronik kart yeni kaba aktarılır. Kart arızalıysa bunu açık açık söyleriz." },
+      { "soru": "Aracım anahtarı tanımıyor, sorun ne olabilir?", "cevap": "Çip, anten halkası ya da immobilizer ünitesi. Arıza tespit cihazıyla bakar, hangisi olduğunu size gösteririz; sonra anahtarı yeniden kodlarız." },
+      { "soru": "Ruhsat neden isteniyor?", "cevap": "Kapı açmak ve anahtar kodlamak, aracı başkasına teslim etmek demektir. Ruhsattaki isimle kimliği eşleştirmeden iş yapmayız; bu sizin aracınızı korur." },
+      { "soru": "Fiyatı ne zaman öğrenirim?", "cevap": "Aracın marka, model ve yılını söylediğinizde anahtar tipini belirler, fiyatı işe başlamadan söyleriz. Onayınız olmadan kesime başlamayız." }
+    ],
+    "kariyer": {
+      "baslik": "Anahtar kesmeyi bilen ya da öğrenmek isteyen",
+      "metin": "Anahtar kesim makinesi, immobilizer ve kumanda kodlama tarafında deneyimli bir usta ya da mesleği öğrenmek isteyen çırak arkadaşlarla tanışmak isteriz. Kısa bir tanıtımla bize yazın."
+    },
+    "sayfalar": {
+      "kurumsal": { "baslik": "Kurumsal", "metin": "Kim olduğumuz, neden yalnızca kilit ve anahtarla uğraştığımız ve neden önce ruhsata baktığımız.", "gorsel": "/img/kurumsal-kilit/anahtar-duvari.jpg" },
+      "hizmetler": { "baslik": "Hizmetlerimiz", "metin": "Yedek anahtardan immobilizer kodlamaya, her iş için ortalama süre ve kapsam." },
+      "kurumsal-musteriler": { "baslik": "Galeri, filo ve servis", "metin": "Tek anahtarla gelen araca yedek, kaybolan filo anahtarına silme, servislere aynı gün teşhis.", "gorsel": "/img/kurumsal-kilit/kodlama.jpg" },
+      "referanslar": { "baslik": "Atölyeden ve müşterilerden", "metin": "Atölyeden kareler, müşterilerimizin yorumları ve anahtarını çıkardığımız markalar." },
+      "iletisim": { "baslik": "İletişim", "metin": "Aracın marka, model ve yılını yazın; anahtar tipini ve süreyi söyleyelim." }
+    },
+    "konular": ["Yedek anahtar", "Tüm anahtarlar kayıp", "İmmobilizer / çip kodlama", "Kumanda ve akıllı anahtar", "Kumanda kabı ve pil", "Kapıda kaldım", "Kontak / kilit tamiri", "Galeri / filo", "Genel bilgi"],
+    "formBaslik": "Anahtarınızı anlatın",
+    "cta": {
+      "baslik": "Anahtarınız yoksa bile aracınız yolda kalmaz.",
+      "metin": "Marka, model ve yılı söyleyin; anahtar tipini ve süreyi telefonda söyleyelim.",
+      "buton": "Bize yazın"
+    }
+  }
+}

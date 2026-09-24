@@ -1,0 +1,2 @@
+araba.glb: bu site için Blender + OpenVDB ile SDF'den üretildi (.shots/yikama-sinematik/car.py). Lisans sorunu yok.
+Fotoğraflar: public/img/sektor-yikama/ (Pexels, bkz. oradaki CREDITS.txt).

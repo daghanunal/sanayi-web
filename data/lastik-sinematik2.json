@@ -21,7 +21,7 @@
     "baslik": "Lastik oteli",
     "metin": "Mevsimlik lastiklerini balkonda, apartman boşluğunda saklama. Yıkıyoruz, dişini ölçüyoruz, plakana etiketleyip ışık almayan rafa kaldırıyoruz. Mevsim dönünce WhatsApp'tan haber veriyoruz.",
     "gorsel": "/img/pist/raf.jpg",
-    "maddeler": ["Yıkama ve kontrol dahil", "Plakaya özel etiket", "Mevsim hatırlatması WhatsApp'tan", "Sigortalı depo"]
+    "maddeler": ["Yıkama ve kontrol dahil", "Plakaya özel etiket", "Mevsim hatırlatması WhatsApp'tan", "Kuru, ışıksız raf"]
   },
   "mevsimKural": "7°C",
   "finalBaslik": "İzini bizde bırak.",

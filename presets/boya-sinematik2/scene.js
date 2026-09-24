@@ -358,7 +358,7 @@ export function createWorld(canvas, { phone, low }) {
   // --- Seramik damlaları ----------------------------------------------------------------
   const NB = low ? 70 : phone ? 110 : 180;
   const beadMat = new THREE.MeshPhysicalMaterial({
-    color: '#dfe9ff', roughness: 0.02, metalness: 0.1, clearcoat: 1, transparent: true, opacity: 0.55,
+    color: '#ffffff', roughness: 0.0, metalness: 0.0, clearcoat: 1, transmission: 0, transparent: true, opacity: 0.82,
   });
   const beads = new THREE.InstancedMesh(new THREE.SphereGeometry(1, 14, 8, 0, Math.PI * 2, 0, Math.PI / 2), beadMat, NB);
   beads.frustumCulled = false;
@@ -368,7 +368,7 @@ export function createWorld(canvas, { phone, low }) {
     return Array.from({ length: NB }, () => ({
       x: (r() - 0.5) * PW * 0.94,
       y: (r() - 0.5) * PH * 0.94,
-      r: 0.012 + Math.pow(r(), 2.2) * 0.04,
+      r: 0.022 + Math.pow(r(), 2.0) * 0.06,
       t: r() * 0.7,
       v: 0.5 + r() * 0.9,
     }));
@@ -421,7 +421,7 @@ export function createWorld(canvas, { phone, low }) {
       surfNormal(b.x, y, nv);
       q.setFromUnitVectors(up, nv);
       const stretch = 1 + S.sheet * 1.2;
-      sc.set(s, s * 0.5, s * stretch);
+      sc.set(s, s * 0.65, s * stretch);
       m4.compose(pv, q, sc);
       beads.setMatrixAt(i, m4);
     }

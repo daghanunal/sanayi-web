@@ -243,7 +243,9 @@ export const patlatma = {
     listeA.addEventListener('click', (e) => { if (!liste.size) e.preventDefault(); });
     listeGuncelle();
 
-    if (reducedMotion) { el.classList.add('is-durgun'); return; }
+    // Motor mount'a .k-blok sarmalayıcısını verir; durum sınıfları .pv'ye gitmeli.
+    const kok = el.querySelector('.pv') || el;
+    if (reducedMotion) { kok.classList.add('is-durgun'); return; }
 
     // Kaydırma filmi: toplu → patlatılmış → ölçüler ve numaralar.
     const mobil = matchMedia('(max-width: 899px)').matches;
@@ -281,7 +283,7 @@ export const patlatma = {
     // Panel görünmeden dokunulamasın.
     ScrollTrigger.create({
       trigger: el, start: 'top top', end: 'bottom bottom',
-      onUpdate: (s) => el.classList.toggle('is-acik', s.progress > 0.7),
+      onUpdate: (s) => kok.classList.toggle('is-acik', s.progress > 0.7),
     });
   },
 };

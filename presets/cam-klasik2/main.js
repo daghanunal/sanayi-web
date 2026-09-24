@@ -39,6 +39,8 @@ $('[data-wa-kasko]').href = waHref(d, `Merhaba ${ad}, kaskom var. Camım için r
 $$('[data-icon]').forEach((el) => (el.innerHTML = icons[el.dataset.icon]));
 $('.top__brand').setAttribute('aria-label', `${ad}, sayfa başı`);
 $('[data-year]').textContent = new Date().getFullYear();
+const cadde = (d.iletisim.adres || '').match(/\b(\d{1,3})\.\s*Cadde\b/i);
+if (cadde) $('[data-visit-title]').innerHTML = `Şaşmaz'da,<br /><span class="nw">${esc(cadde[1])}. Cadde'deyiz.</span>`;
 $('[data-since]').textContent = `Şaşmaz Oto Sanayi · ${ablative(d.isletme.kurulus)} beri`;
 
 // Başlık: işletme adı kelime kelime satırlara
@@ -248,7 +250,7 @@ if (reducedMotion) {
         },
       },
     });
-    tl.to('.dims, [data-dim-txt]', { opacity: 0, duration: 0.08 }, 0)
+    tl.fromTo('.dims, [data-dim-txt]', { opacity: 1 }, { opacity: 0, duration: 0.08, immediateRender: false }, 0)
       .to('[data-cup]', { y: -70, scale: 1.25, opacity: 0, duration: 0.12, stagger: 0.03, ease: 'power2.in' }, 0.02)
       .to(stackEl, { rotationX: 56, rotationZ: small ? -24 : -30, scale: small ? 0.8 : 0.82, y: small ? -26 : -30, xPercent: small ? 0 : -22, duration: 0.3 }, 0.1)
       .to(layers.out, { z: sep, duration: 0.3 }, 0.14)

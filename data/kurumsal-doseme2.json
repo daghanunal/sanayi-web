@@ -1,9 +1,10 @@
 {
+  "garanti": "Garanti süresini ve kapsamını malzemeye göre, işe başlamadan yazılı olarak söyleriz.",
   "istatistikler": [
     { "deger": 0, "sonek": "", "etiket": "yıldır Şaşmaz'da", "kurulustanHesapla": true },
     { "deger": 9400, "sonek": "+", "etiket": "yeniden dikilen koltuk" },
     { "deger": 1300, "sonek": "+", "etiket": "servis ve minibüs koltuğu" },
-    { "deger": 2, "sonek": " yıl", "etiket": "dikiş garantisi" }
+    { "deger": 3, "sonek": " gün", "etiket": "içinde koltuk takımı teslim" }
   ],
   "surec": [
     { "baslik": "Göster", "aciklama": "Aracı getirin ya da fotoğrafını atın. Yırtığı, çöken yeri, sarkan tavanı birlikte işaretleriz." },

@@ -37,6 +37,7 @@ $$('[data-tel]').forEach((a) => (a.href = telHref(d)));
 $$('[data-wa]').forEach((a) => (a.href = waHref(d)));
 $$('[data-maps]').forEach((a) => (a.href = mapsHref(d)));
 $('[data-wa-rapor]').href = waHref(d, `Merhaba ${d.isletme.ad}, aracım muayeneden egzozdan kaldı. Raporun fotoğrafını gönderiyorum.`);
+$('.hero__name').style.setProperty('--n', Math.max(12, d.isletme.ad.length));
 $('.top__brand').setAttribute('aria-label', `${d.isletme.ad}, sayfa başı`);
 $('[data-since]').textContent = `Şaşmaz Oto Sanayi · ${ablative(d.isletme.kurulus)} beri`;
 const yil = new Date().getFullYear() - d.isletme.kurulus;
@@ -86,7 +87,7 @@ function setMeter(p) {
     loud = isLoud;
     hero.classList.toggle('is-loud', isLoud);
     verdict.textContent = isLoud ? 'Muayeneden kalır' : 'Muayeneden geçer';
-    lineEl.textContent = isLoud ? `${d.sesSatiri} Sınır ${ses.sinir} dB.` : `${d.sessizSatiri} Sınırın ${ses.sinir - ses.sonra} dB altında.`;
+    lineEl.textContent = isLoud ? `${d.sesSatiri} Sınır ${ses.sinir}\u00a0dB.` : `${d.sessizSatiri} Sınırın ${ses.sinir - ses.sonra}\u00a0dB altında.`;
   }
 }
 
@@ -105,12 +106,11 @@ if (reducedMotion) {
   tl.to(m, { p: 1, duration: 1, onUpdate: () => setMeter(m.p) }, 0)
     .fromTo('.hero__photo img', { scale: 1.16 }, { scale: 1, duration: 1 }, 0)
     .fromTo('.hero__tint', { opacity: 1 }, { opacity: 0.12, duration: 0.9 }, 0)
-    .to('.hero__hint', { opacity: 0, duration: 0.15 }, 0)
-    .fromTo('.hero__cta', { y: 24, opacity: 0.0 }, { y: 0, opacity: 1, duration: 0.25 }, 0.72);
+    .to('.hero__hint', { opacity: 0, duration: 0.15 }, 0);
 
   // Açılış: isim satır satır, dalga sıfırdan kalkar
   gsap.from('.hero__name', { yPercent: 40, opacity: 0, duration: 0.9, ease: 'power3.out', delay: 0.05 });
-  gsap.from(['.hero__since', '.hero__slogan'], { y: 16, opacity: 0, duration: 0.7, stagger: 0.1, ease: 'power2.out', delay: 0.25 });
+  gsap.from(['.hero__since', '.hero__slogan', '.hero__cta'], { y: 16, opacity: 0, duration: 0.7, stagger: 0.1, ease: 'power2.out', delay: 0.25 });
   gsap.fromTo('.wave', { clipPath: 'inset(0 50% 0 50%)' }, { clipPath: 'inset(0 0% 0 0%)', duration: 1.1, ease: 'power3.inOut', delay: 0.15, clearProps: 'clipPath' });
 }
 

@@ -222,7 +222,7 @@ function wireScroll() {
   bind('land', { trigger: '.hero', start: 'top top', end: 'bottom 15%' });
   bind('serv', { trigger: '.serv', start: 'top bottom', end: 'bottom bottom' });
   bind('seqIn', { trigger: '.seq', start: 'top 85%', end: 'top top' });
-  bind('seq', { trigger: '.seq', start: 'top top-=8%', end: 'bottom bottom' });
+  bind('seq', { trigger: '.seq', start: 'top top-=8%', end: 'bottom 170%' });
   bind('statsIn', { trigger: '.stats-sec', start: 'top 95%', end: 'top 20%' });
   let fadeOut = 0;
   let finIn = 0;
@@ -236,6 +236,8 @@ function wireScroll() {
   const angleEl = $('[data-angle]');
   const meterEl = $('[data-meter]');
   const doneEl = $('[data-done]');
+  const hudBox = $('.seq__hud');
+  let lastHud = -1;
   let lastStep = -1;
   let lastBolt = -1;
   let lastAngle = -1;
@@ -269,6 +271,9 @@ function wireScroll() {
       lastAngle = hud.angle;
       angleEl.textContent = `${hud.angle}°`;
     }
+    // HUD yalnız sahne oturunca görünür; giriş/çıkışta ekran ortasında dolaşmasın
+    const hv = Math.round(Math.min(Math.max((S.seqIn - 0.8) / 0.2, 0), 1) * (1 - Math.min(1, S.statsIn * 5)) * 100) / 100;
+    if (hv !== lastHud) { lastHud = hv; hudBox.style.opacity = hv; }
     meterEl.style.transform = `scaleX(${(Math.min(1, S.seq)).toFixed(3)})`;
     doneEl.classList.toggle('is-on', hud.done >= 10);
     const step = Math.min(steps.length - 1, Math.floor(Math.min(0.999, S.seq) * steps.length));

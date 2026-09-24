@@ -75,7 +75,12 @@ main, .foot { position: relative; z-index: 3; }
   padding: 14px var(--pad); color: var(--fg);
   transition: background .3s ease, color .3s ease;
 }
-.top.is-scrolled { background: color-mix(in srgb, var(--bgc) 82%, transparent); }
+.top.is-scrolled {
+  background: color-mix(in srgb, var(--bgc) 90%, transparent);
+  -webkit-backdrop-filter: blur(14px) saturate(1.2); backdrop-filter: blur(14px) saturate(1.2);
+  box-shadow: 0 1px 0 color-mix(in srgb, var(--fg) 10%, transparent);
+}
+.top.is-dark { --bgc: #04061a; --fg: #eef3ff; }
 .top__brand { display: flex; align-items: center; gap: 10px; text-decoration: none; font: 700 18px/1 var(--display); letter-spacing: -.01em; min-width: 0; }
 .top__brand span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .top__mark {
@@ -271,6 +276,7 @@ section[id] { scroll-margin-top: 70px; }
 .stat.is-on .stat__val { stroke-dasharray: calc(30 + var(--i) * 12) 100; }
 .stat__num { position: relative; font: 700 clamp(30px, 3.4vw, 50px)/1 var(--display); letter-spacing: -.02em; }
 .stat__num span { color: var(--flame); }
+.stat--long .stat__num { font-size: clamp(24px, 2.5vw, 38px); }
 .stat__lbl { position: relative; font: 400 12px/1.3 var(--mono); text-transform: uppercase; letter-spacing: .04em; color: var(--muted); margin-top: 8px; max-width: 14ch; }
 
 .svc { padding: clamp(60px, 8vw, 120px) var(--pad); }
@@ -338,7 +344,6 @@ section[id] { scroll-margin-top: 70px; }
 .tile:hover figcaption { opacity: 1; }
 .tile--0 { grid-column: span 2; grid-row: span 2; }
 .tile--3 { grid-row: span 2; }
-.tile--6 { grid-column: span 2; }
 
 .reviews { padding: clamp(40px, 6vw, 90px) 0 clamp(50px, 6vw, 90px); }
 .reviews__head { padding: 0 var(--pad); display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 20px; margin-bottom: 32px; }
@@ -408,6 +413,7 @@ section[id] { scroll-margin-top: 70px; }
   .stats { gap: 10px; }
   .stat { border-radius: 18px; }
   .stat__num { font-size: 32px; }
+  .stat--long .stat__num { font-size: 25px; }
   .stat__lbl { font-size: 10.5px; }
   .svc__head { grid-template-columns: 1fr; }
   .svc__grid { grid-template-columns: 1fr; gap: 10px; }
@@ -430,7 +436,7 @@ section[id] { scroll-margin-top: 70px; }
   .tile { border-radius: 14px; }
   .tile--0 { grid-column: span 2; grid-row: span 2; }
   .tile--3 { grid-row: span 2; }
-  .tile--6 { grid-column: span 2; }
+  .tile--6, .tile--7 { grid-column: span 2; }
   .reviews__score > b { font-size: 50px; }
   .rev blockquote { font-size: 16px; }
   .visit { grid-template-columns: 1fr; }

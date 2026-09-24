@@ -64,7 +64,7 @@ $('#hero').innerHTML = `
     <div class="hero__foot">
       <div>
         <p class="hero__ad">${ad}</p>
-        <p class="hero__lead">${esc(d.isletme.slogan)}</p>
+        <p class="hero__lead">${esc(d.hero.alt || d.isletme.slogan)}</p>
       </div>
       <div class="hero__cta">
         <a class="btn btn--pink" href="${wa(`Merhaba ${d.isletme.ad}, şasi numaramı gönderiyorum, parça bakar mısınız?`)}" target="_blank" rel="noopener">${icons.whatsapp}<span>Şasi no'yu gönder</span></a>
@@ -294,7 +294,8 @@ function fitAll() {
     const box = el.closest('.ln, .kat__word') ?? el.parentElement;
     el.style.fontSize = '100px';
     const w = el.scrollWidth;
-    const avail = box.clientWidth;
+    const bs = getComputedStyle(box);
+    const avail = box.clientWidth - parseFloat(bs.paddingLeft) - parseFloat(bs.paddingRight);
     if (!w || !avail) continue;
     let fs = (avail / w) * 100 * 0.995;
     const max = Number(el.dataset.max);

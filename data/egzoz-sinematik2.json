@@ -42,5 +42,45 @@
     "kelime": "TEMİZ",
     "baslik": "Görünmüyorsa, geçer.",
     "metin": "İşten sonra ölçümü sizin önünüzde tekrarlarız. Çıktısını elinize veririz, muayeneye gönül rahatlığıyla gidersiniz."
-  }
+  },
+  "galeri": [
+    {
+      "src": "/img/manifold/lift.jpg",
+      "alt": "Lifte kaldırılmış aracın altında egzoz kontrolü"
+    },
+    {
+      "src": "/img/manifold/kaynak.jpg",
+      "alt": "Egzoz borusunun argon kaynağı, kıvılcımlar"
+    },
+    {
+      "src": "/img/manifold/cift-uc.jpg",
+      "alt": "Paslanmaz çift egzoz ucu yakın plan"
+    },
+    {
+      "src": "/img/manifold/duman.jpg",
+      "alt": "Egzoz ucundan çıkan duman"
+    }
+  ],
+  "istatistikler": [
+    {
+      "deger": "kurulus",
+      "sonek": " yıl",
+      "etiket": "Şaşmaz'da egzoz"
+    },
+    {
+      "deger": 4,
+      "sonek": " değer",
+      "etiket": "ölçüp çıktısını veririz"
+    },
+    {
+      "deger": 1,
+      "sonek": " gün",
+      "etiket": "DPF temizliği, çoğu araçta"
+    },
+    {
+      "deger": 2,
+      "sonek": " yıl",
+      "etiket": "imalat garantisi"
+    }
+  ]
 }

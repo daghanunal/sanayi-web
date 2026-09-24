@@ -25,6 +25,13 @@ const gmaps = (q) => `https://www.google.com/maps/search/?api=1&query=${encodeUR
 const upper = (s) => s.toLocaleUpperCase('tr-TR');
 const mobile = matchMedia('(max-width: 759px)').matches;
 const orijinalAd = is.ad === raw.isletme.ad;
+// Yıla doğru ayrılma eki: 1992'den, 1985'ten, 1990'dan
+const yilDen = (n) => {
+  const y = String(n);
+  if (/000$/.test(y) || /00$/.test(y)) return `${y}'den`;
+  if (y.endsWith('0')) return `${y}'${{ 1: 'dan', 2: 'den', 3: 'dan', 4: 'tan', 5: 'den', 6: 'tan', 7: 'ten', 8: 'den', 9: 'dan' }[y.at(-2)]}`;
+  return `${y}'${{ 1: 'den', 2: 'den', 3: 'ten', 4: 'ten', 5: 'ten', 6: 'dan', 7: 'den', 8: 'den', 9: 'dan' }[y.at(-1)]}`;
+};
 
 // Rengin üstüne beyaz mı koyu mu yazı gelsin
 const acikMi = (hex) => {
@@ -58,7 +65,7 @@ ld.textContent = JSON.stringify({
 });
 document.head.append(ld);
 document.title = `${is.ad} | Yapı alçıları ve alçı plaka | Ankara`;
-$('meta[name="description"]').content = `${is.ad}: ${is.kurulus}'den beri yapı alçısı ve alçı plaka. Bala ve Tarsus fabrikalarında günde ${nf.format(kapasite)} ton.`;
+$('meta[name="description"]').content = `${is.ad}: ${yilDen(is.kurulus)} beri yapı alçısı ve alçı plaka. Bala ve Tarsus fabrikalarında günde ${nf.format(kapasite)} ton.`;
 
 // Mobil çubuk: WhatsApp hattı yok; üreticiye uygun kısayollar. Vitrin modunda seçim çubuğu kalır.
 if (!vitrinModu()) {
@@ -94,7 +101,7 @@ $('#giris').innerHTML = `
     </h1>
     <figure class="hero__foto"><img src="${asset('/img/alcibay/uygulama.jpg')}" alt="Çelik mala ile duvara son kat alçı çekiliyor" width="1333" height="2000" fetchpriority="high"></figure>
     <div class="hero__alt">
-      <p class="hero__metin">${esc(is.ad)}: ${is.kurulus}'den beri yapı alçısı. Sıvadan perdaha, kartonpiyerden alçı plakaya, duvarın her katı için bir torba.</p>
+      <p class="hero__metin">${esc(is.ad)}: ${yilDen(is.kurulus)} beri yapı alçısı. Sıvadan perdaha, kartonpiyerden alçı plakaya, duvarın her katı için bir torba.</p>
       <div class="hero__btn">
         <a class="btn btn--beyaz" href="#is">${ICON_BUL}<span>Hangi torba?</span></a>
         <a class="btn btn--cizgi" href="${telHref(tel)}">${icons.phone}<span>Teknik danışmanlık</span></a>
@@ -113,7 +120,7 @@ $('.serit').innerHTML = `<div class="serit__yol" aria-hidden="true">${seritIc}${
 // --- Rakamlar ---------------------------------------------------------------------
 const rakamlar = [
   { v: kapasite, e: 'ton alçı, günde', a: fabrikalar.map((f) => `${f.id === 'bala' ? 'Bala' : f.id === 'tarsus' ? 'Tarsus' : f.ad} ${nf.format(f.kapasite)}`).join(' + ') },
-  { v: yil, e: 'yıl', a: `${is.kurulus}'den beri` },
+  { v: yil, e: 'yıl', a: `${yilDen(is.kurulus)} beri` },
   { v: urunler.length, e: 'toz alçı', a: 'sıva, perdah, kalıp, yapıştırma, derz' },
   { v: paneller.length, e: 'alçı plaka tipi', a: 'Ekopan S, W, F, W&F' },
 ];
@@ -430,7 +437,9 @@ foy.addEventListener('close', () => {
 // =================================================================================
 const lenis = initSmoothScroll();
 const ust = $('#ust');
-ScrollTrigger.create({ start: 80, end: 'max', onToggle: (s) => ust.classList.toggle('is-dolu', s.isActive) });
+const ustGuncelle = () => ust.classList.toggle('is-dolu', scrollY > 80);
+addEventListener('scroll', ustGuncelle, { passive: true });
+ustGuncelle();
 
 // Rakamlar (hareketsiz modda da doğru değer görünür)
 function sayac(el) {
@@ -503,15 +512,23 @@ if (reducedMotion) {
   });
   const tl = gsap.timeline({
     defaults: { ease: 'none' },
+    // Saat, bölüm ekrana girerken işlemeye başlar; sabitlenme ayrı tetikte. Böylece ilk torba
+    // sabitlendiği anda zaten toplanmış olur, boş ekran görünmez.
     scrollTrigger: {
       trigger: '#priz',
-      start: 'top top',
-      end: () => `+=${prizler.length * innerHeight * (mobile ? 0.9 : 0.8)}`,
-      pin,
+      start: 'top 70%',
+      end: () => `+=${prizler.length * innerHeight * (mobile ? 0.9 : 0.8) + innerHeight * 0.7}`,
       scrub: 0.6,
-      anticipatePin: 1,
       invalidateOnRefresh: true,
     },
+  });
+  ScrollTrigger.create({
+    trigger: '#priz',
+    start: 'top top',
+    end: () => `+=${prizler.length * innerHeight * (mobile ? 0.9 : 0.8)}`,
+    pin,
+    anticipatePin: 1,
+    invalidateOnRefresh: true,
   });
   gsap.set(kartlar, { autoAlpha: 0 });
   prizler.forEach((u, i) => {

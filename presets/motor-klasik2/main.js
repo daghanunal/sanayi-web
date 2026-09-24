@@ -171,9 +171,13 @@ function geometry() {
     cx = W / 2;
     cy = H * 0.54 + 1.5 * R * 2.36; // sütun ortası
   } else {
-    R = Math.min(W * 0.086, H * 0.14);
+    // Conta giriş metninin altında kalan alana oturur (butonlara ve alt kenara değmez)
+    const intro = $('.hero__intro');
+    const top = Math.min(intro.offsetTop + intro.offsetHeight + 16, H * 0.6);
+    const bottom = H - 40;
+    R = Math.min(W * 0.08, H * 0.13, (bottom - top) / 3.5);
     cx = W / 2;
-    cy = H * 0.755;
+    cy = (top + bottom) / 2;
   }
   const P = R * 2.36;
   const at = (u, v) => (vertical ? [cx + v, cy + u] : [cx + u, cy + v]);
@@ -278,6 +282,18 @@ function buildHero() {
   const stageAt = (t) =>
     t < 5.8 ? '1. aşama · 30 Nm' : t < 6.8 ? '2. aşama · +90°' : 'Tork tamam';
   const small = g.vertical;
+  // Gösterge zaman çizelgesinden beslenir (scrub gecikmesiyle birlikte güncel kalır)
+  let lastDone = -1;
+  tl.eventCallback('onUpdate', () => {
+    const t = tl.time();
+    const done = t < 0.9 ? 0 : Math.min(10, Math.floor((t - 0.9) / 0.5) + 1);
+    readStage.textContent = stageAt(t);
+    readBar.style.transform = `scaleX(${Math.min(1, t / 6.7)})`;
+    if (done === lastDone) return;
+    lastDone = done;
+    readBolt.textContent = String(done).padStart(2, '0');
+    bolts.forEach((b, i) => b.classList.toggle('is-tight', i < done));
+  });
   tl.scrollTrigger = ScrollTrigger.create({
     trigger: heroEl,
     start: 'top top',
@@ -285,14 +301,7 @@ function buildHero() {
     pin: true,
     scrub: 0.5,
     animation: tl,
-    onUpdate: () => {
-      const t = tl.time();
-      const done = t < 0.9 ? 0 : Math.min(10, Math.floor((t - 0.9) / 0.5) + 1);
-      readBolt.textContent = String(done).padStart(2, '0');
-      readStage.textContent = stageAt(t);
-      readBar.style.transform = `scaleX(${Math.min(1, t / 6.7)})`;
-      bolts.forEach((b, i) => b.classList.toggle('is-tight', i < done));
-    },
+    refreshPriority: 1, // yeniden kurulunca da diğer tetikleyicilerden önce hesaplansın
   });
   heroTl = tl;
 }
@@ -392,11 +401,13 @@ if (reducedMotion) {
 }
 
 // Üst çubuk: contadan çıkınca alüminyum zemine geçer
+const topBar = $('.top');
 ScrollTrigger.create({
-  trigger: '.spec', start: 'top 70px', end: 'max',
-  toggleClass: { targets: '.top', className: 'is-solid' },
+  trigger: '.spec', start: 'top 70px',
+  onEnter: () => topBar.classList.add('is-solid'),
+  onLeaveBack: () => topBar.classList.remove('is-solid'),
 });
 
 window.addEventListener('load', () => ScrollTrigger.refresh());
-document.fonts?.ready.then(() => ScrollTrigger.refresh());
+document.fonts?.ready.then(() => { if (!g.vertical) buildHero(); ScrollTrigger.refresh(); });
 void lenis;

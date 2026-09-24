@@ -1,0 +1,89 @@
+{
+  "film": [
+    {
+      "id": "karne",
+      "no": "01",
+      "durak": "Karne",
+      "baslik": "Karnesi bizde durur.",
+      "metin": "İlk gelişte hayvanınıza bir sağlık karnesi açarız. Muayene, aşı ve tahlillerin hepsi bu karneye işlenir; kaybolsa bile kaydı klinikte durur.",
+      "etiket": "Kimlik sayfası"
+    },
+    {
+      "id": "muayene",
+      "no": "02",
+      "durak": "Muayene",
+      "hizmet": "muayene",
+      "etiket": "Baştan sona kontrol"
+    },
+    {
+      "id": "asi",
+      "no": "03",
+      "durak": "Aşı",
+      "hizmet": "asi",
+      "etiket": "Mühür: aşı yapıldı"
+    },
+    {
+      "id": "hatirlatma",
+      "no": "04",
+      "durak": "Hatırlatma",
+      "baslik": "Günü gelince biz yazarız.",
+      "metin": "Bir sonraki aşı tarihini karneye ve kayda geçeriz. Tarih yaklaşınca WhatsApp'tan haber veririz; siz unutsanız da karne unutmaz.",
+      "etiket": "WhatsApp hatırlatma",
+      "mesaj": "Merhaba, aşı hatırlatma listesine eklenmek istiyorum."
+    },
+    {
+      "id": "laboratuvar",
+      "no": "05",
+      "durak": "Tahlil",
+      "hizmet": "laboratuvar",
+      "etiket": "Sonuç aynı ziyarette"
+    },
+    {
+      "id": "kisirlastirma",
+      "no": "06",
+      "durak": "Kısırlaştırma",
+      "hizmet": "kisirlastirma",
+      "etiket": "Önce tahlil, sonra karar"
+    },
+    {
+      "id": "dis",
+      "no": "07",
+      "durak": "Diş taşı",
+      "hizmet": "dis",
+      "etiket": "Ağız muayenesi"
+    },
+    {
+      "id": "bakim",
+      "no": "08",
+      "durak": "Bakım",
+      "hizmet": "bakim",
+      "etiket": "Tırnak, kulak, tüy"
+    },
+    {
+      "id": "acil",
+      "no": "09",
+      "durak": "Acil",
+      "hizmet": "acil",
+      "etiket": "Yola çıkmadan arayın"
+    },
+    {
+      "id": "randevu",
+      "no": "10",
+      "durak": "Randevu",
+      "baslik": "Sıradaki sayfa sizin.",
+      "metin": "Arayın ya da WhatsApp'tan türünü, yaşını ve şikâyetini yazın. Acil değilse size uygun saati birlikte belirleriz.",
+      "etiket": "Randevu saatleri",
+      "mesaj": "Merhaba, randevu almak istiyorum."
+    }
+  ],
+  "muayeneListesi": ["Kilo", "Ateş", "Kalp", "Akciğer", "Göz", "Kulak", "Deri ve tüy", "Ağız ve diş"],
+  "asiSatirlari": ["İlk aşı", "Tekrar dozu", "Yıllık tekrar"],
+  "bakimListesi": ["Tırnak kesimi", "Kulak temizliği", "Tüy düğümü", "Parazit kontrolü"],
+  "kisirAdimlari": ["Muayene", "Kan tahlili", "Operasyon", "Aynı gün eve", "10. gün kontrol"],
+  "acilListesi": ["Zehirlenme şüphesi", "Kanama", "Nefes darlığı", "Trafik kazası", "Doğum güçlüğü"],
+  "finalBaslik": "Karnenin sıradaki sayfası sizin dostunuza.",
+  "hatirlatici": {
+    "baslik": "Aşı karnesini bize bırakın.",
+    "metin": "Dostunuzun bilgilerini yazın, mesaj hazır olsun. Gönderdiğinizde hatırlatma listemize ekler, ilk muayeneyi birlikte planlarız."
+  }
+}

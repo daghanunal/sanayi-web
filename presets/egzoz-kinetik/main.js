@@ -260,6 +260,12 @@ fin.innerHTML = upper(d.finalBaslik)
 
 // --- Hareket --------------------------------------------------------------------------
 
+// Header hero'dan sonra koyulaşır (hareket azaltılmışsa da).
+const ust = $('.top');
+const ustYaz = () => ust.classList.toggle('is-solid', scrollY > innerHeight * 0.7);
+addEventListener('scroll', ustYaz, { passive: true });
+ustYaz();
+
 afisBoyutla();
 document.fonts.ready.then(() => {
   afisBoyutla();
@@ -328,12 +334,6 @@ function hareket(lenis) {
   $$('.afis__satir').forEach((s, i) => heroTl.fromTo(s, { xPercent: 0 }, { xPercent: i % 2 ? 12 : -12, ease: 'none', immediateRender: false }, 0));
   heroTl.fromTo('.boru', { scale: 1, yPercent: 0 }, { scale: 1.3, yPercent: -8, ease: 'none', immediateRender: false }, 0).to('.dalga', { scaleY: 1.8, ease: 'none' }, 0);
 
-  // Header hero'dan sonra koyulaşır.
-  ScrollTrigger.create({
-    start: () => innerHeight * 0.7,
-    end: 'max',
-    toggleClass: { targets: '.top', className: 'is-solid' },
-  });
 
   // İmza: pinli ses sahnesi.
   const gHarf = $$('.ses__kelime--once .g > span');
