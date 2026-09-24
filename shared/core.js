@@ -184,10 +184,36 @@ export function applyMeta(d) {
 }
 
 // Tek çağrıyla ortak kurulum. Preset kendi render'ını bundan sonra yapar.
+// --- Vitrin modu ---------------------------------------------------------
+// Usta demoyu vitrin sayfasından açtığında (?vitrin=1) alttaki iletişim çubuğunun yerine
+// "Diğer tasarımlar / Bunu istiyorum" çubuğu çıkar. Seçim vitrine geri döner.
+
+export const vitrinModu = () => new URLSearchParams(location.search).has('vitrin');
+
+export function mountVitrinBar() {
+  const params = new URLSearchParams(location.search);
+  const preset = location.pathname.match(/presets\/([^/]+)/)?.[1] ?? '';
+  const geri = new URLSearchParams();
+  for (const k of ['ad', 'tel', 'sektor']) if (params.get(k)) geri.set(k, params.get(k));
+  const sec = new URLSearchParams(geri);
+  sec.set('sec', preset);
+  const url = (q) => `${BASE}vitrin/?${q}`;
+  const bar = document.createElement('nav');
+  bar.className = 'vitrin-bar';
+  bar.setAttribute('aria-label', 'Tasarım seçimi');
+  bar.innerHTML = `
+    <a href="${esc(url(geri))}" class="vitrin-bar__geri">Diğer tasarımlar</a>
+    <a href="${esc(url(sec))}" class="vitrin-bar__sec">Bunu istiyorum</a>`;
+  document.body.append(bar);
+  document.documentElement.classList.add('is-vitrin');
+  return bar;
+}
+
 export function boot(base) {
   const d = loadData(base);
   applyMeta(d);
-  mountActionBar(d);
+  if (vitrinModu()) mountVitrinBar();
+  else mountActionBar(d);
   return d;
 }
 

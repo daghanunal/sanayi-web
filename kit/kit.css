@@ -30,6 +30,10 @@ body {
   background: var(--bg); color: var(--fg); font: 500 17px 'Archivo', sans-serif;
 }
 .kit__form input:focus { outline: 2px solid #6fb3ff; outline-offset: 1px; border-color: transparent; }
+.kit__vitrin {
+  min-height: 50px; border: 0; border-radius: 10px; background: #ffd23f; color: #17181a;
+  font: 800 16px 'Archivo', sans-serif; cursor: pointer;
+}
 .kit__clear {
   justify-self: start; background: none; border: 0; color: var(--muted); padding: 4px 0;
   font: 600 14px 'Archivo', sans-serif; text-decoration: underline; cursor: pointer;

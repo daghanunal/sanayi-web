@@ -39,6 +39,16 @@ node scripts/images.mjs search "<sorgu>" <klasör>     # stok görsel ara (Openv
 node scripts/images.mjs get <url> public/img/<preset>/<ad>.jpg   # indir ve küçült
 ```
 
+## Vitrin (ustanın seçim yaptığı sayfa)
+
+`/vitrin/`: usta QR'ı kendi telefonuyla okutur → sektörünü seçer → tasarımları tam ekran gezer
+(alttaki çubuk: "Diğer tasarımlar / Bunu istiyorum") → adı ve telefonuyla seçimini WhatsApp'tan gönderir.
+
+- Kişisel QR: `/vitrin/?ad=Yıldız%20Oto%20Elektrik&sektor=elektrik` (sektör adımını atlar). Saha kitindeki
+  "Ustaya vitrin QR'ını göster" butonu yazılan dükkan adıyla bu QR'ı üretir.
+- Sektörler: `motor`, `boya`, `lastik`, `elektrik`, `doseme`. Katalog ve satış WhatsApp numarası: `shared/katalog.js`.
+- Herhangi bir preset `?vitrin=1` ile açılırsa iletişim çubuğunun yerine seçim çubuğu çıkar.
+
 ## Sahada kişiselleştirme (URL parametreleri)
 
 Demo sitesi, gösterilen dükkanın adıyla açılabilir:

@@ -39,3 +39,22 @@ html.lenis, html.lenis body { height: auto; }
 .action-bar__btn--main { background: var(--bar-accent, #25d366); color: var(--bar-accent-fg, #fff); }
 @media (min-width: 900px) { .action-bar { display: none; } }
 @media (max-width: 899px) { body { padding-bottom: 84px; } }
+
+/* Vitrin modu: demo vitrinden açıldığında seçim çubuğu (her ekran boyutunda). */
+.vitrin-bar {
+  position: fixed; z-index: 95; left: 50%; transform: translateX(-50%);
+  bottom: calc(10px + env(safe-area-inset-bottom));
+  width: min(calc(100% - 20px), 520px);
+  display: grid; grid-template-columns: 1fr 1.3fr; gap: 6px; padding: 6px;
+  background: rgb(20 21 23 / .92); border: 1px solid rgb(255 255 255 / .12);
+  border-radius: 16px; box-shadow: 0 12px 34px rgb(0 0 0 / .45);
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  font: 700 15px/1.1 system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+.vitrin-bar a {
+  display: flex; align-items: center; justify-content: center; min-height: 52px;
+  border-radius: 11px; text-decoration: none; text-align: center; padding: 0 10px;
+}
+.vitrin-bar__geri { color: #e9eaec; }
+.vitrin-bar__sec { background: #ffd23f; color: #17181a; }
+@media (max-width: 899px) { .is-vitrin body { padding-bottom: 84px; } }

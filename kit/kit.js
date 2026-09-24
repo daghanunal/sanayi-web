@@ -1,22 +1,11 @@
 import QRCode from 'qrcode';
+import { PRESETS, toWhatsapp } from '../shared/katalog.js';
 
 const GRUPLAR = [
   ['sinematik', 'Sinematik', 'Baştan sona 3D ve scroll filmi. Etkilemek için önce bunları göster.'],
   ['klasik', 'Klasik', 'Daha sade ve hafif. Hızlı açılır.'],
 ];
 
-const PRESETS = [
-  { id: 'silindir', grup: 'sinematik', ad: 'Silindir', icin: 'Motor, mekanik, şanzıman', renk: '#ff5a17' },
-  { id: 'vernik', grup: 'sinematik', ad: 'Vernik', icin: 'Boya, kaporta, detaylı temizlik, seramik kaplama', renk: '#b9c7ff' },
-  { id: 'drift', grup: 'sinematik', ad: 'Drift', icin: 'Lastik, jant, rot-balans', renk: '#ffd000' },
-  { id: 'voltaj', grup: 'sinematik', ad: 'Voltaj', icin: 'Oto elektrik, elektronik, arıza tespit', renk: '#5ee6ff' },
-  { id: 'kapitone', grup: 'sinematik', ad: 'Kapitone', icin: 'Döşeme, köklü aile işletmeleri', renk: '#c0763f' },
-  { id: 'garaj', grup: 'klasik', ad: 'Garaj', icin: 'Motor, mekanik, şanzıman', renk: '#e8742a' },
-  { id: 'showroom', grup: 'klasik', ad: 'Showroom', icin: 'Boya, kaporta, detaylı temizlik, seramik kaplama', renk: '#c9d6df' },
-  { id: 'pist', grup: 'klasik', ad: 'Pist', icin: 'Lastik, jant, rot-balans', renk: '#f2c230' },
-  { id: 'devre', grup: 'klasik', ad: 'Devre', icin: 'Oto elektrik, elektronik, arıza tespit', renk: '#3fa9f5' },
-  { id: 'usta', grup: 'klasik', ad: 'Usta', icin: 'Döşeme, köklü aile işletmeleri', renk: '#a8552f' },
-];
 
 const STORE = 'saha-kiti';
 const form = document.getElementById('form');
@@ -28,14 +17,6 @@ const load = () => {
 };
 const save = (v) => {
   try { localStorage.setItem(STORE, JSON.stringify(v)); } catch {}
-};
-
-// 0532 123 45 67 → 905321234567
-const toWhatsapp = (tel) => {
-  let n = tel.replace(/\D/g, '');
-  if (n.startsWith('0')) n = n.slice(1);
-  if (n.length === 10) n = '90' + n;
-  return n;
 };
 
 function values() {
@@ -83,14 +64,33 @@ form.addEventListener('input', render);
 form.addEventListener('reset', () => setTimeout(render));
 form.addEventListener('submit', (e) => e.preventDefault());
 
+// Ustanın kendi telefonuyla okutacağı vitrin linki (adı ve telefonu dolu gelir).
+function vitrinUrl(v) {
+  const p = new URLSearchParams();
+  if (v.ad) p.set('ad', v.ad);
+  if (v.tel) p.set('tel', v.tel);
+  const q = p.toString();
+  return new URL(`vitrin/${q ? '?' + q : ''}`, location.href).href;
+}
+
+async function showQr(title, url) {
+  dialog.querySelector('.qr__title').textContent = title;
+  await QRCode.toCanvas(dialog.querySelector('canvas'), url, { width: 280, margin: 1 });
+  dialog.showModal();
+}
+
+form.addEventListener('click', (e) => {
+  if (!e.target.closest('[data-vitrin]')) return;
+  const v = values();
+  showQr(v.ad ? `${v.ad}: tasarımını seç` : 'Tasarımını seç', vitrinUrl(v));
+});
+
 list.addEventListener('click', async (e) => {
   const btn = e.target.closest('[data-qr]');
   if (!btn) return;
   const p = PRESETS.find((x) => x.id === btn.dataset.qr);
   const v = values();
-  dialog.querySelector('.qr__title').textContent = `${v.ad || 'Demo'}: ${p.ad}`;
-  await QRCode.toCanvas(dialog.querySelector('canvas'), presetUrl(p.id, v), { width: 280, margin: 1 });
-  dialog.showModal();
+  showQr(`${v.ad || 'Demo'}: ${p.ad}`, presetUrl(p.id, v));
 });
 dialog.addEventListener('click', (e) => {
   if (e.target === dialog || e.target.matches('[data-close]')) dialog.close();

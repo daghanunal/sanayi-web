@@ -14,6 +14,7 @@ export default defineConfig({
     rollupOptions: {
       input: {
         main: resolve(import.meta.dirname, 'index.html'),
+        vitrin: resolve(import.meta.dirname, 'vitrin/index.html'),
         ...Object.fromEntries(presets.map((p) => [p, resolve(import.meta.dirname, 'presets', p, 'index.html')])),
       },
     },
