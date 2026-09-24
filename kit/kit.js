@@ -1,9 +1,13 @@
 import QRCode from 'qrcode';
-import { PRESETS, toWhatsapp } from '../shared/katalog.js';
+import { hazirPresetler, toWhatsapp } from '../shared/katalog.js';
+
+const PRESETS = hazirPresetler();
 
 const GRUPLAR = [
   ['sinematik', 'Sinematik', 'Baştan sona 3D ve scroll filmi. Etkilemek için önce bunları göster.'],
+  ['kinetik', 'Kinetik', '3D yok; hareketli yazı ve fotoğraf. Eski telefonlarda da akıcı.'],
   ['klasik', 'Klasik', 'Daha sade ve hafif. Hızlı açılır.'],
+  ['ozel', 'Özel işler', 'Oto sanayi dışı: eczane ve Alçıbay yeniden tasarım önerisi.'],
 ];
 
 
@@ -50,7 +54,7 @@ function render() {
     </li>`;
   list.innerHTML = GRUPLAR.map(
     ([id, baslik, aciklama]) => `
-    <section class="kit__group">
+    <section class="kit__group" ${PRESETS.some((p) => p.grup === id) ? '' : 'hidden'}>
       <h2>${baslik}</h2>
       <p>${aciklama}</p>
       <ul class="kit__list">${PRESETS.filter((p) => p.grup === id).map(card).join('')}</ul>

@@ -1,0 +1,8 @@
+logo.png, logo-acik.png, torba-*.png, panel-*.jpg: Alçıbay (alcibay.com) — firmanın kendi ürün görselleri, tasarım önerisinde gösterim için.
+uygulama.jpg: Pexels 5691622 "Crop man preparing wall for painting" — https://www.pexels.com/photo/crop-man-preparing-wall-for-painting-5691622/
+duvar-doku.jpg: Pexels 1939485 "White Painted Wall" — https://www.pexels.com/photo/white-painted-wall-1939485/
+kose-isik.jpg: Pexels 14776962 "Close up of White Wall Corner" — https://www.pexels.com/photo/close-up-of-white-wall-corner-14776962/
+bos-mekan.jpg: Pexels 7209222 "White Walls in Empty Interior" — https://www.pexels.com/photo/white-walls-in-empty-interior-7209222/
+santiye.jpg: Pexels 11427524 "Man Doing Construction Work Inside House" — https://www.pexels.com/photo/man-doing-construction-work-inside-house-11427524/
+perdah-doku.jpg: Pexels 1774986 "White Surface" — https://www.pexels.com/photo/white-surface-1774986/
+tugla.jpg: Pexels 1022216 "Photo of Red Brickwall" — https://www.pexels.com/photo/photo-of-red-brickwall-1022216/

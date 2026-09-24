@@ -1,0 +1,61 @@
+{
+  "preset": "kristal",
+  "isletme": {
+    "ad": "Berrak Oto Cam",
+    "sektor": "Oto Cam",
+    "slogan": "Taş izini büyümeden kapatırız, camı aynı gün takarız.",
+    "kurulus": 2006,
+    "hakkinda": "Ön cam, yan cam, arka cam ve sunroof: aracın bütün camları bizden sorulur. Küçük taş izlerini reçineyle yerinde kapatır, değişmesi gereken camı orijinal kalıbına uygun takarız. Kasko ve sigorta işlemlerini biz yürütürüz, siz sadece aracı getirirsiniz."
+  },
+  "iletisim": {
+    "telefon": "0532 555 12 34",
+    "whatsapp": "905325551234",
+    "adres": "Şaşmaz Oto Sanayi Sitesi, 7. Cadde No: 15, Etimesgut/Ankara",
+    "mapsQuery": "Şaşmaz Oto Sanayi Sitesi Etimesgut Ankara"
+  },
+  "saatler": [null, "08:30-19:00", "08:30-19:00", "08:30-19:00", "08:30-19:00", "08:30-19:00", "09:00-17:00"],
+  "hizmetler": [
+    { "baslik": "Ön cam değişimi", "aciklama": "Orijinal ya da muadil cam, aracınıza uygun kalıpla. Yapıştırıcı kurur, aynı gün teslim.", "sure": "2-3 saat" },
+    { "baslik": "Taş izi ve çatlak tamiri", "aciklama": "Bozuk para boyundaki taş izini reçineyle doldurur, UV ışıkla sertleştiririz. İz büyümez.", "sure": "30 dk" },
+    { "baslik": "Yan ve arka cam", "aciklama": "Kırılan kapı camı, sabit yan cam ve rezistanslı arka cam değişimi.", "sure": "1-2 saat" },
+    { "baslik": "Cam filmi", "aciklama": "Güneşi ve ısıyı keser, UV ışınlarını durdurur. Yasal sınırlara uygun film öneririz.", "sure": "2-3 saat" },
+    { "baslik": "Sunroof ve tavan camı", "aciklama": "Kırık tavan camı, sızdıran conta ve takılan sunroof mekanizması.", "sure": "1 gün" },
+    { "baslik": "Kasko anlaşmalı değişim", "aciklama": "Eksper ve kasko onayını biz alırız. Poliçeniz uygunsa cebinizden para çıkmaz.", "sure": "Aynı gün" },
+    { "baslik": "ADAS kamera kalibrasyonu", "aciklama": "Cam değişiminden sonra şerit takip ve acil fren kamerasını cihazla yeniden ayarlarız.", "sure": "45 dk" }
+  ],
+  "surec": [
+    { "baslik": "Fotoğrafı gönderin", "aciklama": "Camın fotoğrafını ve ruhsatı WhatsApp'tan atın. Tamir mi değişim mi, hemen söyleyelim." },
+    { "baslik": "Kasko onayını biz alalım", "aciklama": "Kaskonuz varsa dosyayı biz açar, onayı biz takip ederiz." },
+    { "baslik": "Aynı gün takalım", "aciklama": "Cam stokta ise aynı gün takılır, yapıştırıcı kuruyana kadar bekletilir." },
+    { "baslik": "Kalibre edip teslim edelim", "aciklama": "Kamera ve sensörleri ayarlar, sızdırmazlık testini yapar, öyle teslim ederiz." }
+  ],
+  "istatistikler": [
+    { "deger": 20, "sonek": "", "etiket": "yıllık tecrübe", "kurulustanHesapla": true },
+    { "deger": 26500, "sonek": "+", "etiket": "takılan cam" },
+    { "deger": 9800, "sonek": "+", "etiket": "kapatılan taş izi" },
+    { "deger": 30, "sonek": " dk", "etiket": "taş izi tamiri" }
+  ],
+  "filmler": [
+    { "ad": "%70", "gecirgenlik": 70, "uv": 99, "isi": 1, "not": "Neredeyse şeffaf, ısıyı keser" },
+    { "ad": "%50", "gecirgenlik": 50, "uv": 99, "isi": 2, "not": "Hafif koyu, gündüz rahat" },
+    { "ad": "%35", "gecirgenlik": 35, "uv": 99, "isi": 3, "not": "Orta koyu, en çok tercih edilen" },
+    { "ad": "%20", "gecirgenlik": 20, "uv": 99, "isi": 4, "not": "Koyu, arka camlar için" },
+    { "ad": "%5", "gecirgenlik": 5, "uv": 99, "isi": 5, "not": "Limuzin, sadece arka camlar" }
+  ],
+  "markalar": ["Renault", "Fiat", "Volkswagen", "Ford", "Toyota", "Hyundai", "Opel", "Peugeot", "Mercedes-Benz", "BMW"],
+  "galeri": [
+    { "src": "/img/kristal/yapistirma.jpg", "alt": "Ustamız yeni camın yapıştırıcısını çekiyor" },
+    { "src": "/img/kristal/montaj.jpg", "alt": "Ön cam yerine oturtuluyor" },
+    { "src": "/img/kristal/silikon.jpg", "alt": "Cam kenarına yapıştırıcı sürülüyor" },
+    { "src": "/img/kristal/film.jpg", "alt": "Kapı camına film uygulanıyor" }
+  ],
+  "puan": { "ortalama": 4.9, "adet": 276 },
+  "yorumlar": [
+    { "ad": "Serkan A.", "puan": 5, "metin": "Taş izi yarım saatte kapandı, bakınca yerini bulamıyorum. Fiyatı da telefonda ne dediyse o.", "arac": "2019 Corolla" },
+    { "ad": "Elif T.", "puan": 5, "metin": "Kasko dosyasını onlar açtı, ben sadece aracı bıraktım. Akşam cam takılmış, kamera ayarı yapılmış teslim aldım.", "arac": "2021 Megane" },
+    { "ad": "Murat D.", "puan": 5, "metin": "Arka cama film yaptırdım. Kabarcık yok, kenarlar düzgün. Yazın klima çok daha rahat soğutuyor.", "arac": "2017 Passat" },
+    { "ad": "Hakan Y.", "puan": 4, "metin": "Cam siparişe kaldı, ertesi gün takıldı ama önceden haber verdiler. İşçilik temiz.", "arac": "2015 Doblo" },
+    { "ad": "Zeynep K.", "puan": 5, "metin": "Sunroof sızdırıyordu, contayı değiştirdiler. Yağmurda denedik, damla yok.", "arac": "2018 3008" }
+  ],
+  "garanti": "Cam montajında sızdırmazlığa 2 yıl garanti."
+}

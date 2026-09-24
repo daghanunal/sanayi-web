@@ -1,0 +1,75 @@
+{
+  "preset": "mikron",
+  "isletme": {
+    "ad": "Hassas Rektifiye",
+    "sektor": "Motor Rektifiye ve Torna",
+    "slogan": "Motoru ölçüsüne getiririz.",
+    "kurulus": 1989,
+    "hakkinda": "Şaşmaz'daki tezgâhımızda motorun ölçüsü şansa bırakılmaz. Her krankı, her silindiri işlemeden önce ölçer, işledikten sonra yine ölçeriz. Motoru getiren ustaya ölçü raporunu elden veririz."
+  },
+  "iletisim": {
+    "telefon": "0532 555 38 19",
+    "whatsapp": "905325553819",
+    "adres": "Şaşmaz Oto Sanayi Sitesi, 4. Cadde No: 11, Etimesgut/Ankara",
+    "mapsQuery": "Şaşmaz Oto Sanayi Sitesi Etimesgut Ankara"
+  },
+  "saatler": [null, "08:00-18:30", "08:00-18:30", "08:00-18:30", "08:00-18:30", "08:00-18:30", "08:30-14:00"],
+  "hizmetler": [
+    { "baslik": "Krank taşlama", "aciklama": "Ana ve kol muylularını taşlar, ovaliteyi alırız. Taşlamadan sonra krank çatlak kontrolünden geçer.", "tolerans": "±0,005 mm", "sure": "1-2 gün" },
+    { "baslik": "Silindir honlama", "aciklama": "Silindiri yeni piston ölçüsüne göre işler, yağ tutan çapraz hon izini doğru açıyla veririz.", "tolerans": "±0,005 mm", "sure": "1 gün" },
+    { "baslik": "Blok ve kafa planyası", "aciklama": "Conta yüzeyini düzleriz. Çarpılmayı cetvel ve sentilerle ölçüp raporlarız.", "tolerans": "0,02 mm", "sure": "Aynı gün" },
+    { "baslik": "Supap ve yuva işleme", "aciklama": "Supap yüzü taşlama, yuva açısı işleme, kılavuz ve lastik değişimi. Sızdırmazlık testiyle teslim.", "tolerans": "45°", "sure": "1 gün" },
+    { "baslik": "Kafa basınç testi", "aciklama": "Silindir kapağını basınçlı havayla, sıcak suda test ederiz. Çatlak varsa fotoğrafını göndeririz.", "tolerans": "4 bar", "sure": "Aynı gün" },
+    { "baslik": "Gömlek değişimi", "aciklama": "Kuru ve yaş gömlek çakma, işleme ve honlama. Blok kurtulmayacak dendiyse bir de bize gösterin.", "tolerans": "±0,01 mm", "sure": "2-3 gün" },
+    { "baslik": "Biyel ve yatak yuvası", "aciklama": "Biyel kolu yuva ve burç işleri, ana yatak yuvası hizalama.", "tolerans": "±0,008 mm", "sure": "1-2 gün" },
+    { "baslik": "Torna ve freze işleri", "aciklama": "Özel burç, flanş, mil ve adaptör. Çizim ya da numuneyle getirin, aynısını işleyelim.", "tolerans": "±0,02 mm", "sure": "İşe göre" }
+  ],
+  "surec": [
+    { "baslik": "Ölçeriz", "aciklama": "Motor gelir gelmez krank, silindir ve kafa ölçülür. Hangi ölçüye inileceğini size söyleriz." },
+    { "baslik": "Fiyatı veririz", "aciklama": "İşçilik ve gerekirse piston, yatak, supap fiyatı baştan yazılır. Onayınız olmadan tezgâha almayız." },
+    { "baslik": "İşleriz", "aciklama": "Krank taşlanır, silindir honlanır, yüzey düzlenir. Her adımdan sonra ölçü alınır." },
+    { "baslik": "Raporla teslim", "aciklama": "Parçalar yıkanıp tıpalanır. Ölçü raporu parçayla birlikte elinize verilir." }
+  ],
+  "rapor": {
+    "is": "1.6 dizel, 4 silindir",
+    "olcuSinifi": "0,25 büyütme",
+    "nominal": "75,25",
+    "silindirler": [
+      { "no": 1, "olcu": "75,252", "ovalite": "0,003" },
+      { "no": 2, "olcu": "75,251", "ovalite": "0,002" },
+      { "no": 3, "olcu": "75,253", "ovalite": "0,004" },
+      { "no": 4, "olcu": "75,250", "ovalite": "0,002" }
+    ],
+    "krank": "Ana muylu 0,25 alt ölçü, kol muylu 0,25 alt ölçü",
+    "planya": "Kafa 0,10 mm alındı, çarpılma 0,02 mm"
+  },
+  "olculer": [
+    { "ad": "Standart", "cap": 75.0, "piston": "STD" },
+    { "ad": "0,25 büyütme", "cap": 75.25, "piston": "+0,25" },
+    { "ad": "0,50 büyütme", "cap": 75.5, "piston": "+0,50" },
+    { "ad": "0,75 büyütme", "cap": 75.75, "piston": "+0,75" },
+    { "ad": "1,00 büyütme", "cap": 76.0, "piston": "+1,00" }
+  ],
+  "istatistikler": [
+    { "deger": 37, "sonek": "", "etiket": "yıldır aynı tezgâhta", "kurulustanHesapla": true },
+    { "deger": 9400, "sonek": "+", "etiket": "krank taşlandı" },
+    { "deger": 14800, "sonek": "+", "etiket": "silindir honlandı" },
+    { "deger": 5, "sonek": " µm", "etiket": "çalıştığımız tolerans" }
+  ],
+  "markalar": ["K9K", "1.3 Multijet", "1.6 TDI", "DV6", "1.5 dCi", "M9R", "2.5 TDI", "D4CB", "1.9 JTD", "OM651", "Doblo 1.3", "Transit 2.4"],
+  "galeri": [
+    { "src": "/img/mikron/torna.jpg", "alt": "Atölyede torna tezgâhı ve ayna" },
+    { "src": "/img/mikron/freze.jpg", "alt": "Soğutma sıvısı hortumuyla çalışan freze tezgâhı" },
+    { "src": "/img/mikron/tezgah.jpg", "alt": "Yağlı, yıllarca çalışmış işleme tezgâhı" },
+    { "src": "/img/mikron/atolye.jpg", "alt": "Atölyede tezgâh başında çalışan usta" }
+  ],
+  "puan": { "ortalama": 4.9, "adet": 176 },
+  "yorumlar": [
+    { "ad": "Oto Kardeşler Motor", "puan": 5, "metin": "Yıllardır kranklarımızı burada taşlatıyoruz. Rapor parçayla geliyor, motoru toplarken ikinci kez ölçmeye gerek kalmıyor.", "arac": "Motor ustası, Şaşmaz" },
+    { "ad": "Hakan D.", "puan": 5, "metin": "Kafa çatlak dediler, burada basınç testinde sadece contanın gittiği çıktı. Planyayla kurtardılar.", "arac": "2013 Doblo 1.3" },
+    { "ad": "Emre T.", "puan": 5, "metin": "Blok gitti denmişti, gömlek çaktılar. 60 bin kilometredir sorunsuz.", "arac": "2011 Transit" },
+    { "ad": "Murat Ş.", "puan": 4, "metin": "İş yoğun, bir gün geç verdiler ama önceden haber verdiler. İşçilik temiz.", "arac": "2016 Megane 1.5 dCi" },
+    { "ad": "Yücel Oto", "puan": 5, "metin": "Özel bir burç lazımdı, numuneyi bıraktım, ertesi gün aynısı hazırdı.", "arac": "Servis, Etimesgut" }
+  ],
+  "garanti": "İşçiliğe 1 yıl garanti, ölçü raporuyla."
+}

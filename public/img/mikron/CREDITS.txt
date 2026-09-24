@@ -1,0 +1,4 @@
+torna.jpg: "Black and White Industrial Machine", Pexels, https://www.pexels.com/photo/black-and-white-industrial-machine-5846132/ (Pexels License)
+freze.jpg: "Close-Up Shot of a CNC Machine", Pexels, https://www.pexels.com/photo/close-up-shot-of-a-cnc-machine-8865187/ (Pexels License)
+tezgah.jpg: "Dirty Industrial Machinery", Pexels, https://www.pexels.com/photo/dirty-industrial-machinery-12951623/ (Pexels License)
+atolye.jpg: "Self employed male mechanic working in garage", Pexels, https://www.pexels.com/photo/self-employed-male-mechanic-working-in-garage-3822900/ (Pexels License)

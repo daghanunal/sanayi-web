@@ -1,0 +1,959 @@
+{
+ "preset": "alcibay",
+ "isletme": {
+  "ad": "Alçıbay",
+  "sektor": "Yapı alçıları ve alçı plaka",
+  "slogan": "Hızlı beyaz.",
+  "kurulus": 1992,
+  "unvan": "GİPS Geliştirilmiş İnşaat Malzemeleri ve Perlitli Sıva Sanayi AŞ",
+  "hakkinda": "Alçıbay markasıyla yapı alçısı üreten GİPS AŞ 1992'de kuruldu. 2006-2008 arasında üretim kapasitesini önemli ölçüde artırdı. Bugün Ankara Bala ve Mersin Tarsus'taki iki fabrikasında toz alçı üretiyor, farklı alçı plaka modelleri de üretiyor ve yurt içi ile yurt dışı pazarlara satıyor."
+ },
+ "iletisim": {
+  "telefon": "+90 312 287 70 00",
+  "whatsapp": "",
+  "adres": "İlkbahar Mahallesi 606. Sok. No:7, Çankaya/Ankara",
+  "mapsQuery": "Alçıbay İlkbahar Mahallesi 606. Sokak No:7 Çankaya Ankara"
+ },
+ "konumlar": [
+  {
+   "id": "merkez",
+   "ad": "Merkez",
+   "adres": "İlkbahar Mahallesi 606. Sok. No:7",
+   "il": "Çankaya / Ankara",
+   "tel": "+90 312 287 70 00",
+   "faks": "+90 312 287 98 38",
+   "mapsQuery": "İlkbahar Mahallesi 606. Sokak No:7 Çankaya Ankara",
+   "xy": [
+    572,
+    240
+   ]
+  },
+  {
+   "id": "bala",
+   "ad": "Ankara Fabrika",
+   "adres": "Durmetepe Mevki Çavuşluköyü",
+   "il": "Bala / Ankara",
+   "tel": "+90 312 887 91 00",
+   "faks": "+90 312 887 90 90",
+   "mapsQuery": "Çavuşluköyü Bala Ankara",
+   "kapasite": 1100,
+   "xy": [
+    592,
+    275
+   ],
+   "not": "Perlitli sıva, makine sıvası, saten perdah, yapıştırma, derz dolgu ve kartonpiyer alçısı."
+  },
+  {
+   "id": "tarsus",
+   "ad": "Mersin Fabrika",
+   "adres": "Atalar Mah. Çiçekli Cad. No:106",
+   "il": "Yenice / Tarsus / Mersin",
+   "tel": "+90 324 651 29 39",
+   "faks": "+90 324 651 29 45",
+   "mapsQuery": "Atalar Mahallesi Çiçekli Caddesi No:106 Yenice Tarsus Mersin",
+   "kapasite": 1500,
+   "acilis": 2008,
+   "xy": [
+    730,
+    538
+   ],
+   "not": "2008'de üretime başladı."
+  }
+ ],
+ "harita": {
+  "viewBox": "0 0 1512 670",
+  "path": "M36 216 L19 219 L13 216 L19 210 L29 207 L37 212Z M1244 78 L1259 83 L1265 86 L1276 80 L1288 81 L1299 81 L1311 85 L1319 86 L1326 74 L1335 71 L1344 74 L1346 81 L1353 83 L1365 95 L1372 99 L1372 106 L1382 111 L1388 111 L1394 114 L1395 124 L1400 129 L1406 133 L1414 151 L1416 158 L1415 165 L1412 173 L1404 182 L1408 191 L1413 206 L1415 213 L1422 223 L1433 228 L1452 226 L1460 226 L1469 230 L1481 241 L1495 255 L1499 262 L1483 253 L1478 257 L1473 263 L1468 288 L1456 290 L1447 290 L1441 291 L1442 299 L1444 308 L1452 316 L1451 324 L1449 331 L1451 337 L1456 344 L1458 360 L1459 366 L1461 374 L1460 388 L1467 393 L1473 396 L1467 404 L1465 415 L1459 426 L1455 433 L1454 439 L1464 443 L1469 447 L1481 456 L1480 464 L1483 474 L1482 486 L1493 494 L1499 501 L1497 508 L1497 514 L1490 513 L1482 514 L1476 519 L1469 524 L1463 529 L1457 532 L1453 525 L1454 510 L1450 502 L1443 499 L1433 503 L1425 508 L1413 507 L1404 506 L1384 499 L1374 495 L1367 493 L1355 498 L1342 493 L1332 505 L1318 517 L1310 519 L1307 507 L1302 502 L1295 501 L1287 509 L1274 514 L1262 517 L1245 521 L1231 523 L1213 521 L1201 519 L1190 519 L1182 520 L1162 529 L1128 547 L1102 556 L1088 560 L1077 562 L1058 562 L1042 561 L1031 561 L1025 558 L1016 551 L1006 544 L995 541 L986 540 L964 550 L957 553 L950 556 L935 562 L928 566 L919 565 L908 564 L899 565 L893 560 L889 554 L876 551 L867 550 L862 560 L858 579 L866 604 L860 608 L853 608 L845 613 L843 630 L835 633 L828 647 L813 639 L813 630 L807 614 L801 599 L807 589 L818 578 L831 564 L831 556 L830 549 L820 539 L809 545 L801 552 L790 558 L787 565 L780 570 L769 573 L752 566 L734 557 L724 550 L715 548 L707 552 L684 570 L662 596 L657 600 L637 612 L623 616 L617 615 L591 620 L577 620 L567 626 L547 620 L534 612 L527 603 L515 585 L507 577 L488 569 L455 550 L446 548 L424 545 L400 543 L395 550 L393 577 L389 585 L387 599 L380 606 L373 601 L356 605 L333 613 L325 614 L299 604 L289 598 L283 590 L281 578 L277 571 L275 561 L264 563 L258 562 L250 560 L232 550 L218 549 L210 561 L203 565 L196 567 L201 555 L179 556 L168 562 L159 562 L152 559 L160 554 L166 551 L189 549 L195 547 L201 538 L212 530 L205 527 L168 529 L144 528 L137 532 L136 522 L140 517 L158 514 L157 505 L148 499 L139 495 L134 491 L132 481 L128 470 L122 464 L134 457 L136 442 L135 432 L112 424 L102 416 L92 410 L84 415 L72 409 L65 406 L66 393 L72 386 L68 374 L68 368 L79 367 L85 374 L86 381 L85 388 L89 395 L93 389 L99 391 L106 393 L124 389 L114 385 L104 374 L101 367 L98 359 L109 352 L118 341 L110 337 L102 334 L105 324 L95 304 L94 296 L102 288 L110 278 L103 274 L76 278 L66 282 L48 283 L47 273 L51 264 L50 243 L53 231 L63 228 L76 210 L96 190 L118 190 L126 185 L139 184 L142 192 L154 198 L173 197 L182 192 L174 182 L184 179 L193 181 L189 192 L217 190 L243 192 L252 191 L273 191 L270 183 L264 182 L256 177 L269 167 L276 165 L311 159 L338 156 L300 149 L292 145 L281 136 L276 129 L277 120 L279 112 L283 108 L297 107 L343 115 L377 110 L413 122 L447 119 L454 114 L463 98 L512 71 L529 57 L547 49 L579 41 L605 30 L612 28 L675 34 L719 34 L739 24 L750 27 L747 34 L748 41 L755 51 L761 57 L782 67 L810 59 L820 62 L830 87 L838 96 L848 103 L856 104 L861 97 L876 94 L893 102 L899 112 L927 119 L953 122 L964 130 L1001 137 L1015 136 L1038 128 L1082 119 L1112 132 L1120 133 L1127 132 L1137 136 L1147 134 L1180 119 L1191 111 L1201 109 L1211 104 L1237 88 L1244 78Z M195 33 L193 44 L198 57 L210 74 L221 83 L268 105 L276 107 L275 116 L272 124 L269 129 L255 133 L217 123 L208 122 L201 124 L188 131 L175 129 L155 133 L150 146 L137 161 L114 174 L99 180 L75 204 L64 218 L55 223 L56 216 L59 210 L59 199 L66 191 L74 186 L95 176 L101 167 L84 168 L67 169 L56 168 L47 169 L44 162 L47 155 L53 147 L58 142 L65 135 L66 126 L64 120 L65 106 L81 96 L87 90 L86 79 L84 70 L77 67 L71 60 L64 58 L67 50 L79 47 L81 40 L87 33 L101 32 L108 31 L114 27 L132 22 L139 22 L145 27 L153 35 L162 37 L168 34 L174 34 L181 32 L195 33Z"
+ },
+ "urunler": [
+  {
+   "id": "perlitli",
+   "ad": "Perlitli Sıva Alçısı",
+   "renk": "#009640",
+   "torba": "/img/alcibay/torba-perlitli.png",
+   "kisa": "Beton, gazbeton, tuğla vb. yüzeylerin ilk kat sıva alçısı.",
+   "artilar": [
+    "Hafif",
+    "Ekonomik",
+    "Yanmaz (A1)",
+    "Yüzey yapışması yüksek",
+    "Yüksek mukavemet"
+   ],
+   "anahtar": [
+    [
+     "Kullanım süresi",
+     "min. 30 dk"
+    ],
+    [
+     "Birim tüketim",
+     "1 cm'de 8,5-10 kg/m²"
+    ],
+    [
+     "Kalınlık",
+     "0,5-1,5 cm"
+    ]
+   ],
+   "tuketim": {
+    "birim": "cm",
+    "min": 8.5,
+    "max": 10,
+    "kalinlik": 1,
+    "kalinlikMin": 0.5,
+    "kalinlikMax": 1.5,
+    "adim": 0.1
+   },
+   "kullanim": [
+    "Temiz bir kaba temiz su konur, üzerine alçı serpilir (10 kg alçı / 6 l su). Alçının suyu emmesi için 2-3 dakika beklenir.",
+    "Homojen bir karışım elde edilinceye kadar karıştırılır. İdeal karışım için mekanik karıştırıcı kullanılmalıdır.",
+    "Yüzey terazisi ano çıtalarıyla ayarlanır.",
+    "Harç mala ile duvara atılır, mastarla düzeltilir. Harç suyunu tamamen geri vermeden mala ile düzeltilir. Uygulama kalınlığı en az 0,5 cm olmalıdır."
+   ],
+   "dikkat": [
+    "Uygulama yüzeyi toz, yağ vb. maddelerden temizlenmelidir.",
+    "Uygulamada kullanılacak tüm ekipmanlar temiz olmalıdır.",
+    "Harç karıştırılırken alçı ya da su ilave edilmemelidir.",
+    "Uygulama öncesi tuğla, beton, gazbeton yüzeyler su ile ıslatılmalıdır.",
+    "Tünel kalıp gibi çok düzgün yüzeylerde ve tavan uygulamalarında yüzey pürüzlendirilmelidir.",
+    "Farklı malzemelerin birleşme hatlarında, büyük çatlak ve boşluklarda sıva filesi uygulanmalıdır.",
+    "Kullanıma hazırdır, içine başka madde karıştırılmamalıdır.",
+    "Uygulama kalınlığı en az 0,5 cm, en fazla 1,5 cm olmalıdır."
+   ],
+   "teknik": [
+    [
+     "Teknik tanım",
+     "Bina için hafif sıva alçısı (elle uygulanan)"
+    ],
+    [
+     "Standart",
+     "TS EN 13279-1"
+    ],
+    [
+     "Fiziksel form",
+     "Beyaz toz"
+    ],
+    [
+     "İçerik",
+     "CaSO₄·½H₂O (hemihidrat gips), perlit, kalsit, geciktirici, su tutucu, hava sürükleyici vb."
+    ],
+    [
+     "Yoğunluk (ort.)",
+     "725 g/l"
+    ],
+    [
+     "Alçı / su oranı",
+     "100 g / 60 g su"
+    ],
+    [
+     "Su emiciliği",
+     "%25-35"
+    ],
+    [
+     "Kullanım süresi",
+     "min. 30 dk"
+    ],
+    [
+     "pH",
+     "13-14"
+    ],
+    [
+     "Yüzey sertliği",
+     "40 Shore D"
+    ],
+    [
+     "Birim tüketim",
+     "1 cm kalınlıkta 1 m²'de 8,5-10 kg"
+    ],
+    [
+     "Eğilme mukavemeti",
+     "min. 1 N/mm²"
+    ],
+    [
+     "Basınç mukavemeti",
+     "min. 2 N/mm²"
+    ],
+    [
+     "Aderans mukavemeti",
+     "min. 0,1 N/mm²"
+    ],
+    [
+     "Yangına tepki",
+     "A1 (yangına katkısı olmayan mamul)"
+    ],
+    [
+     "Raf ömrü",
+     "1 yıl. Ortam ve yüzey ısısı en az 5°C olmalıdır."
+    ]
+   ]
+  },
+  {
+   "id": "saten",
+   "ad": "Saten Perdah Alçısı",
+   "renk": "#c51939",
+   "torba": "/img/alcibay/torba-saten.png",
+   "kisa": "Pürüzsüz yüzeyler için son kat perdah alçısı. Boyaya hazır yüzey verir.",
+   "artilar": [
+    "Boyaya hazır yüzey",
+    "Boyadan tasarruf",
+    "Kolay uygulanır",
+    "Ekonomik"
+   ],
+   "anahtar": [
+    [
+     "Kullanım süresi",
+     "min. 50 dk"
+    ],
+    [
+     "Birim tüketim",
+     "1 mm'de 0,9-1,1 kg/m²"
+    ],
+    [
+     "Kalınlık",
+     "min. 0,5 mm"
+    ]
+   ],
+   "tuketim": {
+    "birim": "mm",
+    "min": 0.9,
+    "max": 1.1,
+    "kalinlik": 1,
+    "kalinlikMin": 0.5,
+    "kalinlikMax": 3,
+    "adim": 0.5
+   },
+   "kullanim": [
+    "Temiz bir kaba temiz su konur, üzerine alçı serpilir (10 kg alçı / 6,5 l su). Alçının suyu emmesi için 2-3 dakika beklenir.",
+    "Homojen bir karışım elde edilinceye kadar karıştırılır. İdeal karışım için mekanik karıştırıcı kullanılmalıdır.",
+    "Harç çelik mala ile yüzeye uygulanır.",
+    "Son yüzey düzeltme işlemleri çelik mala ile yapılır."
+   ],
+   "dikkat": [
+    "Uygulama yüzeyi toz, yağ vb. maddelerden temizlenmelidir.",
+    "Uygulamada kullanılacak tüm ekipmanlar temiz olmalıdır.",
+    "Harç karıştırılırken alçı ya da su ilave edilmemelidir.",
+    "Kullanıma hazırdır, içine başka madde karıştırılmamalıdır.",
+    "Uygulama kalınlığı en az 0,5 mm olmalıdır.",
+    "Yüzeyde kalan izler, harç donduktan sonra mala ile tıraşlanmalıdır."
+   ],
+   "teknik": [
+    [
+     "Teknik tanım",
+     "İnce uygulanabilir alçı"
+    ],
+    [
+     "Standart",
+     "TS EN 13279-1, TS EN 13279-2"
+    ],
+    [
+     "Tip",
+     "C6"
+    ],
+    [
+     "Fiziksel form",
+     "Beyaz toz"
+    ],
+    [
+     "İçerik",
+     "CaSO₄·½H₂O (hemihidrat gips), kalsit, geciktirici, su tutucu, hava sürükleyici vb."
+    ],
+    [
+     "Yoğunluk (ort.)",
+     "710 g/l"
+    ],
+    [
+     "Alçı / su oranı",
+     "100 g / 65 g su"
+    ],
+    [
+     "Su emiciliği",
+     "%20-25"
+    ],
+    [
+     "Kullanım süresi",
+     "min. 50 dk"
+    ],
+    [
+     "pH",
+     "7-8"
+    ],
+    [
+     "Yüzey sertliği",
+     "40 Shore D"
+    ],
+    [
+     "Birim tüketim",
+     "Sıva üzerine 1 mm'de 0,9-1,1 kg/m²; alçı plaka üzerine 0,08-0,10 kg/m²"
+    ],
+    [
+     "Eğilme mukavemeti",
+     "min. 1,1 N/mm²"
+    ],
+    [
+     "Basınç mukavemeti",
+     "min. 1,1 N/mm²"
+    ],
+    [
+     "Yangına tepki",
+     "A1 (yangına katkısı olmayan mamul)"
+    ],
+    [
+     "Raf ömrü",
+     "1 yıl. Ortam ve yüzey ısısı en az 5°C olmalıdır."
+    ]
+   ]
+  },
+  {
+   "id": "makina",
+   "ad": "Makina Sıva Alçısı",
+   "renk": "#db912a",
+   "torba": "/img/alcibay/torba-makina.png",
+   "kisa": "Makineyle uygulanan ilk kat sıva alçısı. Tek katta pürüzsüz yüzey, saten gerektirmez.",
+   "artilar": [
+    "Tek katta pürüzsüz yüzey",
+    "Saten gerektirmez",
+    "Uygulamayı hızlandırır",
+    "Yüksek mukavemet"
+   ],
+   "anahtar": [
+    [
+     "Kullanım süresi",
+     "min. 60 dk"
+    ],
+    [
+     "Birim tüketim",
+     "1 cm'de 9-9,5 kg/m²"
+    ],
+    [
+     "Kalınlık",
+     "0,8-3 cm"
+    ]
+   ],
+   "tuketim": {
+    "birim": "cm",
+    "min": 9,
+    "max": 9.5,
+    "kalinlik": 1,
+    "kalinlikMin": 0.8,
+    "kalinlikMax": 3,
+    "adim": 0.1
+   },
+   "kullanim": [
+    "Uygun karışım makine ile ayarlanır (10 kg alçı / 6 l su).",
+    "Sıva kalınlığı en az 0,8 cm olacak şekilde, mastar boyunu geçmeyecek aralıklarla anolar yerleştirilir. Sıva makinesiyle anolar arasına harç püskürtülür.",
+    "Alüminyum mastarla yüzey düzeltilir, harcın fazlası alınır. Harç priz almaya başlamadan yüzey mala ile perdahlanır.",
+    "Yaklaşık 1 saat sonra yüzeye su serpilir, trifil ile parlatılır ve mala ile perdahlanır."
+   ],
+   "dikkat": [
+    "Uygulama yüzeyi toz, yağ vb. maddelerden temizlenmelidir.",
+    "Uygulamada kullanılacak tüm ekipmanlar temiz olmalıdır.",
+    "Harç karıştırılırken alçı ya da su ilave edilmemelidir.",
+    "Farklı malzemelerin birleşme hatlarında, büyük çatlak ve boşluklarda sıva filesi uygulanmalıdır.",
+    "En az 0,8 cm, en fazla 3 cm uygulanır; daha kalın uygulamada 2 kat yapılmalıdır.",
+    "Tünel kalıp gibi çok düzgün yüzeyler pürüzlendirilmelidir.",
+    "Düzgün yüzey için trifil zamanı geçmemelidir: parmakla bastırıldığında alt tabaka sert, üst tabaka yumuşak olmalıdır."
+   ],
+   "teknik": [
+    [
+     "Teknik tanım",
+     "Bina için hafif sıva alçısı (püskürtme)"
+    ],
+    [
+     "Standart",
+     "TS EN 13279-1"
+    ],
+    [
+     "Tip",
+     "B4 (püskürtme)"
+    ],
+    [
+     "Fiziksel form",
+     "Beyaz toz"
+    ],
+    [
+     "İçerik",
+     "CaSO₄·½H₂O (hemihidrat gips), perlit, kalsit, geciktirici, su tutucu, hava sürükleyici vb."
+    ],
+    [
+     "Kuru yoğunluk (ort.)",
+     "800 g/l"
+    ],
+    [
+     "Alçı / su oranı",
+     "100 g / 60 g su"
+    ],
+    [
+     "Su emiciliği",
+     "%20-25"
+    ],
+    [
+     "Kullanım süresi",
+     "min. 60 dk"
+    ],
+    [
+     "pH",
+     "13-14"
+    ],
+    [
+     "Yüzey sertliği",
+     "45 Shore D"
+    ],
+    [
+     "Birim tüketim",
+     "1 cm kalınlıkta 1 m²'de 9-9,5 kg"
+    ],
+    [
+     "Eğilme mukavemeti",
+     "min. 1 N/mm²"
+    ],
+    [
+     "Basınç mukavemeti",
+     "min. 2 N/mm²"
+    ],
+    [
+     "Aderans mukavemeti",
+     "min. 0,1 N/mm²"
+    ],
+    [
+     "Yangına tepki",
+     "A1 (yangına katkısı olmayan mamul)"
+    ],
+    [
+     "Isıl iletkenlik",
+     "max. 0,35 W/mK"
+    ],
+    [
+     "Raf ömrü",
+     "1 yıl. Ortam ve yüzey ısısı en az 5°C olmalıdır."
+    ]
+   ]
+  },
+  {
+   "id": "bereketli",
+   "ad": "Bereketli Makina Sıva Alçısı",
+   "renk": "#1e2459",
+   "torba": "/img/alcibay/torba-bereketli.png",
+   "kisa": "Makineyle uygulanan sıva alçısı. Teknik bilgi için teknik danışmanlığımızı arayın.",
+   "artilar": [],
+   "anahtar": [],
+   "kullanim": [],
+   "dikkat": [],
+   "teknik": []
+  },
+  {
+   "id": "kartonpiyer",
+   "ad": "Kartonpiyer Alçısı",
+   "renk": "#0168a4",
+   "torba": "/img/alcibay/torba-kartonpiyer.png",
+   "kisa": "İç mekânda dekorasyon ve tadilat işleri için kalıp alçısı.",
+   "artilar": [
+    "Estetik",
+    "Hafif",
+    "Pürüzsüz yüzey",
+    "Sağlam",
+    "Kolay karışır"
+   ],
+   "anahtar": [
+    [
+     "Kullanım süresi",
+     "min. 8 dk"
+    ],
+    [
+     "Kalıptan çıkma",
+     "25-30 dk"
+    ],
+    [
+     "Yangına tepki",
+     "A1"
+    ]
+   ],
+   "kullanim": [
+    "Temiz bir kaba temiz su konur, üzerine alçı serpilir (10 kg alçı / 7 l su). Alçının suyu emmesi için 2-3 dakika beklenir.",
+    "Homojen bir karışım elde edilinceye kadar karıştırılır. İdeal karışım için düşük devirli mekanik karıştırıcı kullanılmalıdır.",
+    "Yağlanmış kalıplara harç dökülür ve donma zamanına kadar beklenir. Ortalama kullanım süresi 8-10 dakikadır.",
+    "Donan kartonpiyer kalıptan çıkarılır; kullanıma hazırdır."
+   ],
+   "dikkat": [
+    "Uygulamadan önce kalıplar tamamen kurumuş olmalıdır.",
+    "Karıştırmada kullanılan tüm ekipmanlar temiz olmalıdır.",
+    "Kalıplar mutlaka kalıp yağı ile yağlanmalıdır.",
+    "Mukavemeti artırmak için kendir ya da elyaf kullanılabilir.",
+    "Harç karıştırılırken alçı ya da su ilave edilmemelidir.",
+    "Kalıptan çıkan kartonpiyer tamamen kuruyana kadar oda sıcaklığında bekletilir.",
+    "Montajdan önce zemin pürüzlendirilmeli ve çok kuruysa nemlendirilmelidir."
+   ],
+   "teknik": [
+    [
+     "Teknik tanım",
+     "Lifle güçlendirilmiş elemanlar için yapı alçısı"
+    ],
+    [
+     "Standart",
+     "TS EN 13279-1"
+    ],
+    [
+     "Tip",
+     "C1"
+    ],
+    [
+     "Fiziksel form",
+     "Beyaz toz"
+    ],
+    [
+     "İçerik",
+     "CaSO₄·½H₂O (hemihidrat gips), geciktirici vb."
+    ],
+    [
+     "Alçı / su oranı",
+     "100 g / 70 g su"
+    ],
+    [
+     "Su emiciliği",
+     "%35-40"
+    ],
+    [
+     "Kullanım süresi",
+     "min. 8 dk"
+    ],
+    [
+     "Yayılma çapı",
+     "150-200 mm"
+    ],
+    [
+     "pH",
+     "7-8"
+    ],
+    [
+     "Yüzey sertliği",
+     "min. 4 N/mm² (2 saat), min. 10 N/mm² (7 gün)"
+    ],
+    [
+     "Eğilme mukavemeti",
+     "min. 1,5 N/mm² (2 saat), min. 3 N/mm² (7 gün)"
+    ],
+    [
+     "Yangına tepki",
+     "A1 (yangına katkısı olmayan mamul)"
+    ],
+    [
+     "Raf ömrü",
+     "1 yıl. Kalıptan çıkma süresi 25-30 dakika. Ortam ve yüzey ısısı en az 5°C olmalıdır."
+    ]
+   ]
+  },
+  {
+   "id": "yapistirma",
+   "ad": "Alçı Plaka Yapıştırma Alçısı",
+   "renk": "#3a3d40",
+   "torba": "/img/alcibay/torba-yapistirma.png",
+   "kisa": "Beton, gazbeton, tuğla vb. yüzeylere alçı plaka yapıştırmak için.",
+   "artilar": [
+    "Yüksek yapışma",
+    "Kolay uygulanır",
+    "Ekonomik"
+   ],
+   "anahtar": [
+    [
+     "Kullanım süresi",
+     "min. 30 dk"
+    ],
+    [
+     "Alçı / su",
+     "100 g / 50 g"
+    ],
+    [
+     "Su emiciliği",
+     "%15-25"
+    ]
+   ],
+   "kullanim": [
+    "Temiz bir kaba temiz su konur, üzerine alçı serpilir. Alçının suyu emmesi için 2-3 dakika beklenir.",
+    "Homojen bir karışım elde edilinceye kadar karıştırılır. İdeal karışım için mekanik karıştırıcı kullanılmalıdır.",
+    "Harç plakanın arka yüzüne yerleştirilir.",
+    "Plaka duvara yapıştırılır."
+   ],
+   "dikkat": [
+    "Uygulama yüzeyi toz, yağ vb. maddelerden temizlenmelidir.",
+    "Uygulamada kullanılacak tüm ekipmanlar temiz olmalıdır.",
+    "Harç karıştırılırken alçı ya da su ilave edilmemelidir.",
+    "Kullanıma hazırdır, içine başka madde karıştırılmamalıdır.",
+    "Uygulama yüzeyi çok düzgünse pürüzlendirilmelidir.",
+    "Uygulama yüzeyine film tabakası oluşturacak malzeme sürülmemelidir."
+   ],
+   "teknik": [
+    [
+     "Kullanım yeri",
+     "Beton, gazbeton, tuğla vb. yüzeylere alçı plaka yapıştırma"
+    ],
+    [
+     "Fiziksel form",
+     "Beyaz toz"
+    ],
+    [
+     "İçerik",
+     "CaSO₄·½H₂O (hemihidrat gips), kalsit, geciktirici, su tutucu vb."
+    ],
+    [
+     "Alçı / su oranı",
+     "100 g / 50 g su"
+    ],
+    [
+     "Su emiciliği",
+     "%15-25"
+    ],
+    [
+     "Kullanım süresi",
+     "min. 30 dk"
+    ],
+    [
+     "Raf ömrü",
+     "1 yıl. Ortam ve yüzey ısısı en az 5°C olmalıdır."
+    ]
+   ]
+  },
+  {
+   "id": "derz",
+   "ad": "Alçı Plaka Derz Dolgu Alçısı",
+   "renk": "#007d9a",
+   "torba": "/img/alcibay/torba-derz.png",
+   "kisa": "Alçı plakaların ek yerlerini ve ara boşluklarını kapatmak için.",
+   "artilar": [
+    "Kolay uygulanır",
+    "Ekonomik",
+    "Uzun kullanım süresi"
+   ],
+   "anahtar": [
+    [
+     "Kullanım süresi",
+     "min. 70 dk"
+    ],
+    [
+     "Alçı / su",
+     "100 g / 50 g"
+    ],
+    [
+     "Su emiciliği",
+     "%15-25"
+    ]
+   ],
+   "kullanim": [
+    "Temiz bir kaba temiz su konur, üzerine alçı serpilir. Alçının suyu emmesi için 2-3 dakika beklenir.",
+    "Homojen bir karışım elde edilinceye kadar karıştırılır. İdeal karışım için mekanik karıştırıcı kullanılmalıdır.",
+    "Plakanın ek yerlerine derz bandı çekilir, hazırlanan harçla dolgusu yapılır.",
+    "Harcın fazlası mala ile alınır, plaka üzerinde düzgün yüzey elde edilir."
+   ],
+   "dikkat": [
+    "Uygulama yüzeyi toz, yağ vb. maddelerden temizlenmelidir.",
+    "Uygulamada kullanılacak tüm ekipmanlar temiz olmalıdır.",
+    "Harç karıştırılırken alçı ya da su ilave edilmemelidir.",
+    "Uygulama yüzeyine film tabakası oluşturacak malzeme sürülmemelidir."
+   ],
+   "teknik": [
+    [
+     "Kullanım yeri",
+     "Alçı plakanın ara boşluklarını kapatma"
+    ],
+    [
+     "Fiziksel form",
+     "Beyaz toz"
+    ],
+    [
+     "İçerik",
+     "CaSO₄·½H₂O (hemihidrat gips), kalsit, geciktirici, su tutucu vb."
+    ],
+    [
+     "Alçı / su oranı",
+     "100 g / 50 g su"
+    ],
+    [
+     "Su emiciliği",
+     "%15-25"
+    ],
+    [
+     "Kullanım süresi",
+     "min. 70 dk"
+    ],
+    [
+     "Raf ömrü",
+     "1 yıl. Ortam ve yüzey ısısı en az 5°C olmalıdır."
+    ]
+   ]
+  }
+ ],
+ "saklama": "Torbalar hava akımı olmayan kuru ortamda, paletli, üst üste en fazla 20 torba olacak şekilde istiflenmelidir.",
+ "guvenlik": [
+  "Uygulama sırasında baret, gözlük, eldiven ve maske kullanın.",
+  "Toz göze kaçarsa gözleri bol suyla yıkayın.",
+  "Alçı yanlışlıkla yutulursa ağzınızı çalkalayın."
+ ],
+ "paneller": [
+  {
+   "id": "s",
+   "ad": "Ekopan S",
+   "tanim": "Standart alçı plaka",
+   "karton": [
+    "#9aa0a3"
+   ],
+   "kartonAd": "gri karton",
+   "gorsel": "/img/alcibay/panel-s.jpg",
+   "standart": "TS EN 520 + A1, Tip A",
+   "metin": "Yüzeyi düzgün, hafif standart plaka. Her iki yüzü, esneklik ve dayanım veren gri özel kartonla kaplı.",
+   "alanlar": "Asma tavan, bölme duvar, duvar giydirme, kuru sıva",
+   "olculer": [
+    [
+     "6,5 mm",
+     "1200 mm",
+     "3000 mm",
+     "4,8 kg/m²",
+     "80"
+    ],
+    [
+     "7 mm",
+     "1205 mm",
+     "2410 mm",
+     "5 kg/m²",
+     "80"
+    ],
+    [
+     "9,5 mm",
+     "1200 mm",
+     "2000-3000 mm",
+     "7 kg/m²",
+     "60"
+    ],
+    [
+     "12,5 mm",
+     "1200 mm",
+     "2000-3000 mm",
+     "8,4 kg/m²",
+     "50"
+    ],
+    [
+     "15 mm",
+     "1200 mm",
+     "2000-3000 mm",
+     "10,5 kg/m²",
+     "40"
+    ],
+    [
+     "18 mm",
+     "1200 mm",
+     "2000-2700 mm",
+     "12,5 kg/m²",
+     "30"
+    ]
+   ]
+  },
+  {
+   "id": "w",
+   "ad": "Ekopan W",
+   "tanim": "Su ve neme dayanımlı",
+   "karton": [
+    "#4fa672"
+   ],
+   "kartonAd": "yeşil karton",
+   "gorsel": "/img/alcibay/panel-w.jpg",
+   "standart": "TS EN 520 + A1, Tip H",
+   "metin": "Suyu itme özelliği olan plaka. Üzerine fayans ve seramik uygulanabilir.",
+   "alanlar": "Islak hacimler, bölme ve giydirme duvar, asma tavan, şaft duvarları, kuru sıva",
+   "olculer": [
+    [
+     "8 mm",
+     "1200 mm",
+     "2401 mm",
+     "6 kg/m²",
+     "80"
+    ],
+    [
+     "9,5 mm",
+     "1200 mm",
+     "2000-3000 mm",
+     "7,5 kg/m²",
+     "60"
+    ],
+    [
+     "12,5 mm",
+     "1200 mm",
+     "2000-3000 mm",
+     "8,2 kg/m²",
+     "50"
+    ],
+    [
+     "15 mm",
+     "1200 mm",
+     "2000-3000 mm",
+     "11,5 kg/m²",
+     "40"
+    ],
+    [
+     "18 mm",
+     "1200 mm",
+     "2000-2700 mm",
+     "13 kg/m²",
+     "30"
+    ]
+   ]
+  },
+  {
+   "id": "f",
+   "ad": "Ekopan F",
+   "tanim": "Yangın dayanımlı",
+   "karton": [
+    "#d0525f"
+   ],
+   "kartonAd": "kırmızı karton",
+   "gorsel": "/img/alcibay/panel-f.jpg",
+   "standart": "TS EN 520 + A1, Tip F",
+   "metin": "Cam elyaf katkılı, yangın dayanımı artırılmış plaka.",
+   "alanlar": "Bölme ve giydirme duvar, şaft duvarları, asma tavan, çelik yapılar",
+   "olculer": [
+    [
+     "12,5 mm",
+     "1200 mm",
+     "2000-3000 mm",
+     "10 kg/m²",
+     "50"
+    ],
+    [
+     "15 mm",
+     "1200 mm",
+     "2000-3000 mm",
+     "12,5 kg/m²",
+     "40"
+    ],
+    [
+     "18 mm",
+     "1200 mm",
+     "2000-2700 mm",
+     "15 kg/m²",
+     "30"
+    ]
+   ]
+  },
+  {
+   "id": "wf",
+   "ad": "Ekopan W&F",
+   "tanim": "Yangına ve suya dayanımlı",
+   "karton": [
+    "#d0525f",
+    "#4fa672"
+   ],
+   "kartonAd": "kırmızı ve yeşil karton",
+   "gorsel": "/img/alcibay/panel-wf.jpg",
+   "standart": "TS EN 520 + A1, Tip HF",
+   "metin": "Hem yangın hem su dayanımı artırılmış plaka. Üzerine fayans ve seramik uygulanabilir.",
+   "alanlar": "Çelik yapılar, ıslak hacimler, bölme duvar, şaft duvarları, asma tavan",
+   "olculer": [
+    [
+     "12,5 mm",
+     "1200 mm",
+     "2000-3000 mm",
+     "10 kg/m²",
+     "50"
+    ],
+    [
+     "15 mm",
+     "1200 mm",
+     "2000-3000 mm",
+     "12,5 kg/m²",
+     "40"
+    ],
+    [
+     "18 mm",
+     "1200 mm",
+     "2000-2700 mm",
+     "15 kg/m²",
+     "30"
+    ]
+   ]
+  }
+ ],
+ "isler": [
+  {
+   "id": "el",
+   "soru": "Duvarı elle sıvayacağım",
+   "urun": "perlitli",
+   "not": "Tuğla, beton, gazbeton üzerine ilk kat. Üstüne saten perdah."
+  },
+  {
+   "id": "makine",
+   "soru": "Makineyle sıva atacağım",
+   "urun": "makina",
+   "not": "Tek katta pürüzsüz yüzey; saten perdah gerekmez."
+  },
+  {
+   "id": "perdah",
+   "soru": "Boyaya hazır son kat istiyorum",
+   "urun": "saten",
+   "not": "Sıva ya da alçı plaka üzerine ince son kat."
+  },
+  {
+   "id": "dekor",
+   "soru": "Kartonpiyer, kalıp işi yapacağım",
+   "urun": "kartonpiyer",
+   "not": "Kalıba dökülen dekorasyon alçısı."
+  },
+  {
+   "id": "yapistir",
+   "soru": "Duvara alçı plaka yapıştıracağım",
+   "urun": "yapistirma",
+   "not": "Beton, gazbeton, tuğla üzerine."
+  },
+  {
+   "id": "derz",
+   "soru": "Plaka eklerini kapatacağım",
+   "urun": "derz",
+   "not": "Derz bandıyla birlikte."
+  },
+  {
+   "id": "plaka",
+   "soru": "Bölme duvar, asma tavan kuracağım",
+   "panel": true,
+   "not": "Ortama göre plaka seçin."
+  }
+ ],
+ "tarihce": [
+  [
+   "M.Ö. 9000",
+   "Çatalhöyük'te kireçle karıştırılarak ilk kez kullanıldı."
+  ],
+  [
+   "M.Ö. 7000",
+   "Sümer ve Asur kentlerinde yapılarda ve yollarda."
+  ],
+  [
+   "M.Ö. 2800",
+   "Mısır'da, Giza Piramidi'nin iç duvar sıvasında."
+  ],
+  [
+   "M.Ö. 350-40",
+   "Yunan ve Roma'da duvar ve ahşap tavan sıvasında."
+  ],
+  [
+   "M.S. 1200",
+   "Fransa'da ulusal malzeme ilan edildi."
+  ],
+  [
+   "19. yüzyıl",
+   "Alçı duvar levhası üretimi başladı."
+  ],
+  [
+   "1992",
+   "Alçıbay kuruldu."
+  ],
+  [
+   "2008",
+   "Mersin Tarsus fabrikası üretime başladı."
+  ]
+ ],
+ "belgeler": [
+  "TS EN ISO 9001",
+  "TS EN ISO 14001",
+  "TS ISO 45001",
+  "TS EN ISO 50001",
+  "TS EN 13279-1",
+  "TS EN 520"
+ ],
+ "kimya": {
+  "jips": "CaSO₄·2H₂O",
+  "alci": "CaSO₄·½H₂O",
+  "metin": "Alçının hammaddesi jipstir. Jips, kristal suyunun yaklaşık yarım molekülü kalacak şekilde ısıtılıp öğütülür; su ile karışınca yeniden katılaşır ve bağlayıcı olur. Priz alıp kuruduktan sonra boyut değiştirmez."
+ }
+}

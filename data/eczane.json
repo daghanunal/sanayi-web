@@ -1,0 +1,87 @@
+{
+  "preset": "eczane",
+  "isletme": {
+    "ad": "Şifa Eczanesi",
+    "sektor": "Eczane",
+    "slogan": "Reçetenizi gönderin, siz gelmeden hazırlayalım.",
+    "kurulus": 1994,
+    "hakkinda": "Aynı köşede, aynı mahallede. İlacınızı verirken nasıl ve ne zaman kullanacağınızı da anlatırız. Aklınıza takılan bir şey olursa arayın; eczacımız telefonda da yanıtlar."
+  },
+  "iletisim": {
+    "telefon": "0312 555 12 34",
+    "whatsapp": "905325551234",
+    "adres": "Şaşmaz Mah. Ankara Bulvarı No: 48/A, Etimesgut/Ankara",
+    "mapsQuery": "Şaşmaz Mahallesi Etimesgut Ankara eczane"
+  },
+  "saatler": [null, "08:30-19:00", "08:30-19:00", "08:30-19:00", "08:30-19:00", "08:30-19:00", "09:00-18:00"],
+  "nobet": {
+    "url": "https://www.aeo.org.tr/nobetci-eczaneler",
+    "kaynak": "Ankara Eczacı Odası"
+  },
+  "hizmetler": [
+    {
+      "id": "recete",
+      "baslik": "Reçete hazırlama",
+      "aciklama": "Reçetenizin ya da e-reçete numaranızın fotoğrafını WhatsApp'tan gönderin. İlaçlarınızı kontrol edip hazırlarız, geldiğinizde sıra beklemezsiniz.",
+      "gorsel": "/img/eczane/ilaclar.jpg",
+      "mesaj": "Merhaba, reçetemi göndermek istiyorum."
+    },
+    {
+      "id": "olcum",
+      "baslik": "Tansiyon ve şeker ölçümü",
+      "aciklama": "Eczanede oturup dinlenin, ölçelim. Sonucu kâğıda yazıp veririz; kontrole giderken hekiminize gösterirsiniz.",
+      "gorsel": "/img/eczane/olcum.jpg"
+    },
+    {
+      "id": "kullanim",
+      "baslik": "İlaç kullanım bilgisi",
+      "aciklama": "Aç mı tok mu, hangi ilaçla birlikte alınmaz, unutursanız ne yapılır. Kutunun üstüne yazar, sözlü de anlatırız.",
+      "gorsel": "/img/eczane/kapsul.jpg"
+    },
+    {
+      "id": "hatirlatma",
+      "baslik": "Düzenli ilaç takibi",
+      "aciklama": "Her ay kullandığınız ilaçlar bitmeden önce WhatsApp'tan haber veririz. Reçetenizin yenilenme zamanını birlikte takip ederiz.",
+      "gorsel": "/img/eczane/uygulama.jpg",
+      "mesaj": "Merhaba, düzenli kullandığım ilaçlar için hatırlatma istiyorum."
+    },
+    {
+      "id": "dermo",
+      "baslik": "Cilt bakımı danışmanlığı",
+      "aciklama": "Cilt tipinize ve mevsime göre hangi ürünün uygun olduğunu anlatırız. Denemeden önce sorun.",
+      "gorsel": "/img/eczane/dermo.jpg"
+    },
+    {
+      "id": "bebek",
+      "baslik": "Anne ve bebek",
+      "aciklama": "Mama, bez, pişik kremi ve emzirme dönemi ürünleri. Yeni anne-babaların sorularına zaman ayırırız.",
+      "gorsel": "/img/eczane/bebek.jpg"
+    },
+    {
+      "id": "takviye",
+      "baslik": "Vitamin ve takviye danışmanlığı",
+      "aciklama": "Kullandığınız ilaçlarla birlikte alınıp alınamayacağını kontrol ederiz. Gerekmeyen ürünü önermeyiz.",
+      "gorsel": "/img/eczane/tezgah.jpg"
+    }
+  ],
+  "surec": [
+    { "baslik": "Fotoğrafını gönderin", "aciklama": "Reçetenin ya da e-reçete numaranın fotoğrafını WhatsApp'tan atın." },
+    { "baslik": "Eczacımız hazırlasın", "aciklama": "İlaçlar kontrol edilir, eksik varsa size yazarız." },
+    { "baslik": "Gelip teslim alın", "aciklama": "Hazır olunca haber veririz. Kimliğinizle gelin, sıra beklemeden alın." }
+  ],
+  "istatistikler": [
+    { "deger": 32, "sonek": "", "etiket": "yıldır aynı mahallede", "kurulustanHesapla": true },
+    { "deger": 2, "sonek": "", "etiket": "eczacı, her saat bir eczacı tezgâhta" },
+    { "deger": 15, "sonek": " dk", "etiket": "reçete hazırlama süresi (ortalama)" },
+    { "deger": 6, "sonek": " gün", "etiket": "haftada açık" }
+  ],
+  "puan": { "ortalama": 4.9, "adet": 187 },
+  "yorumlar": [
+    { "ad": "Ayşe D.", "puan": 5, "metin": "Annemin reçetesini WhatsApp'tan attım, akşam uğradığımda poşette hazırdı. İlaçların saatini kutulara tek tek yazmışlar." },
+    { "ad": "Hakan T.", "puan": 5, "metin": "Sanayideki dükkanımdan çıkıp beş dakikada alıyorum. Hiç sıra beklemedim." },
+    { "ad": "Zeynep K.", "puan": 5, "metin": "Bebeğim için sorduğum her şeyi sabırla anlattılar. Gereksiz ürün önermediler." },
+    { "ad": "Mustafa Y.", "puan": 4, "metin": "Tansiyonumu ölçüp kâğıda yazdılar, doktora götürdüm. Cumartesi de açıklar, bu büyük kolaylık." },
+    { "ad": "Elif S.", "puan": 5, "metin": "Kullandığım ilaçla vitamin birlikte olur mu diye sordum, bilgisayardan kontrol edip açıkladılar." }
+  ],
+  "garanti": "Eczanemizde her zaman bir eczacı bulunur."
+}

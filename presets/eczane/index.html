@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0f1720" />
+  <title>Eczane | Etimesgut, Ankara</title>
+  <meta name="description" content="" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Crect width=%2232%22 height=%2232%22 rx=%227%22 fill=%22%23fff%22/%3E%3Cpath d=%22M10 7h12v4h-8v3h7v4h-7v3h8v4H10z%22 fill=%22%23d8141f%22/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:ital,wght@0,300..800;1,400..600&family=Atkinson+Hyperlegible+Mono:wght@400..700&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <div class="intro" id="intro" role="presentation">
+    <div class="intro__sign" aria-hidden="true"></div>
+    <p class="intro__name" data-bind="ad"></p>
+    <p class="intro__skip">Geçmek için dokunun</p>
+  </div>
+
+  <canvas class="gl" id="gl" aria-hidden="true"></canvas>
+
+  <header class="top is-night" id="top">
+    <a class="top__brand" href="#film"><span class="logo" aria-hidden="true">E</span><span data-bind="ad"></span></a>
+    <nav class="top__nav" aria-label="Bölümler">
+      <a href="#recete">Reçete gönder</a>
+      <a href="#hizmetler">Hizmetler</a>
+      <a href="#nobet">Nöbetçi eczane</a>
+      <a href="#ulasim">Ulaşım</a>
+    </nav>
+    <p class="top__status" data-status></p>
+    <button type="button" class="top__size" id="yazi" aria-pressed="false" title="Yazıları büyüt">
+      <span aria-hidden="true">A<b>A</b></span><span class="sr-only">Yazıları büyüt</span>
+    </button>
+    <a class="top__call" data-tel></a>
+  </header>
+
+  <main>
+    <section class="film" id="film" aria-label="Tanıtım">
+      <div class="film__stage">
+        <div class="ch ch--hero" data-ch="0" id="hero"></div>
+        <div class="ch ch--about" data-ch="1" id="about"></div>
+        <div class="ch ch--step" data-ch="2" id="recete"></div>
+        <div class="ch ch--step" data-ch="3"></div>
+        <div class="ch ch--step" data-ch="4"></div>
+        <div class="phone" id="phone" aria-hidden="true"></div>
+        <ol class="film__rail" id="rail" aria-hidden="true"></ol>
+      </div>
+    </section>
+
+    <section class="stats" id="stats" aria-label="Rakamlarla"></section>
+    <section class="svcs" id="hizmetler"></section>
+    <section class="olcum" id="olcum"></section>
+    <section class="nobet" id="nobet"></section>
+    <section class="reviews" id="yorumlar"></section>
+    <section class="visit" id="ulasim"></section>
+    <section class="final" id="final"></section>
+  </main>
+  <footer class="foot" id="foot"></footer>
+
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#dfe8ee" />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 24 24%27%3E%3Crect width=%2724%27 height=%2724%27 rx=%275%27 fill=%27%230b1820%27/%3E%3Cpath fill=%27%239fd9cf%27 d=%27M4 17 7 6h10l3 11z%27/%3E%3C/svg%3E" />
+    <title>Oto Cam | Şaşmaz, Ankara</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geologica:slnt,wght,CRSV,SHRP@-12..0,100..900,0..1,0..100&display=swap" />
+  </head>
+  <body>
+    <canvas class="gl" id="gl" aria-hidden="true"></canvas>
+    <div class="flash" id="flash" aria-hidden="true"></div>
+
+    <div class="intro" id="intro" role="presentation">
+      <canvas class="intro__fog" id="fog"></canvas>
+      <p class="intro__skip">Geçmek için dokunun</p>
+    </div>
+
+    <header class="top" id="top"></header>
+
+    <main>
+      <div class="film" id="film">
+        <section class="scene" data-scene="hero" id="sahne" aria-labelledby="hero-title"></section>
+        <section class="scene" data-scene="tas" id="tas" aria-labelledby="tas-title"></section>
+        <section class="scene" data-scene="recine" id="recine" aria-labelledby="recine-title"></section>
+        <section class="scene" data-scene="kasko" id="kasko" aria-labelledby="kasko-title"></section>
+        <section class="scene" data-scene="film" id="cam-filmi" aria-labelledby="film-title"></section>
+        <section class="scene" data-scene="yagmur" id="yagmur" aria-labelledby="yagmur-title"></section>
+      </div>
+      <div class="solid">
+        <section class="services" id="hizmetler" aria-labelledby="services-title"></section>
+        <section class="about" id="biz" aria-labelledby="about-title"></section>
+        <section class="shop" id="atolye" aria-labelledby="shop-gallery-title"></section>
+        <section class="reviews" id="yorumlar" aria-labelledby="reviews-title"></section>
+        <section class="brands" id="markalar" aria-label="Camını taktığımız markalar"></section>
+        <section class="visit" id="ulasim" aria-labelledby="visit-title"></section>
+      </div>
+      <section class="scene scene--final" data-scene="final" id="iletisim" aria-labelledby="final-title"></section>
+    </main>
+
+    <footer class="foot" id="foot"></footer>
+
+    <script type="module" src="./main.js"></script>
+  </body>
+</html>

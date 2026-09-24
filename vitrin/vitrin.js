@@ -1,7 +1,11 @@
 // Vitrin: ustanın QR ile kendi telefonunda açtığı sayfa.
-// Akış: sektör seç → o sektörün iki tasarımını gez → "Bunu istiyorum" → bilgileri WhatsApp'la gönder.
+// Akış: sektör seç → o sektörün tasarımlarını gez → "Bunu istiyorum" → bilgileri WhatsApp'la gönder.
 // Durum URL'de tutulur: ?ad=&tel=&sektor=&sec=  (kişisel QR'lar ad ve sektörü önceden doldurur).
-import { PRESETS, SEKTORLER, SATIS_WHATSAPP, presetById, toWhatsapp, zayifCihaz } from '../shared/katalog.js';
+import { hazirPresetler, SEKTORLER, GRUP_SIRASI, SATIS_WHATSAPP, presetById, toWhatsapp, zayifCihaz } from '../shared/katalog.js';
+
+// Vitrinde yalnızca oto sanayi tasarımları (özel işler hariç) ve tasarımı olan sektörler.
+const PRESETS = hazirPresetler().filter((p) => p.grup !== 'ozel');
+const SEKTORLER_V = SEKTORLER.filter((k) => PRESETS.some((p) => p.sektor === k.id));
 
 const app = document.getElementById('app');
 const BASE = import.meta.env.BASE_URL;
@@ -36,16 +40,18 @@ function presetUrl(id, s) {
 
 const shot = (id) => `${BASE}onizleme/${id}.jpg`;
 
-// Sinematik ya da klasik, cihaza göre önce hangisi.
+// Sektörün tasarımları aile sırasıyla; zayıf cihazda en hafifi önce.
 const siraliTasarimlar = (sektor) => {
-  const list = PRESETS.filter((p) => p.sektor === sektor);
-  return zayif ? list.reverse() : list;
+  const sira = zayif ? [...GRUP_SIRASI].reverse() : GRUP_SIRASI;
+  return PRESETS.filter((p) => p.sektor === sektor).sort((a, b) => sira.indexOf(a.grup) - sira.indexOf(b.grup));
 };
 
 const TANIM = {
   sinematik: 'Kaydırdıkça canlanan 3D sahneler. Müşteriniz ilk bakışta etkilenir.',
+  kinetik: 'Hareketli yazılar ve fotoğraflar. Hafif, her telefonda akıcı.',
   klasik: 'Sade, hızlı açılan, her telefonda akıcı.',
 };
+const ETIKET = { sinematik: '3D, hareketli', kinetik: 'Hareketli, hafif', klasik: 'Sade, hızlı' };
 
 // --- Ekranlar --------------------------------------------------------------
 
@@ -56,7 +62,7 @@ function sektorEkrani(s) {
       <p>Ne iş yapıyorsunuz? Size uygun tasarımları gösterelim.</p>
     </header>
     <ul class="sektorler">
-      ${SEKTORLER.map(
+      ${SEKTORLER_V.map(
         (k) => `
         <li><button type="button" class="sektor" data-sektor="${k.id}">
           <span class="sektor__ad">${k.ad}</span>
@@ -72,7 +78,7 @@ function kart(p, s, buyuk) {
     <li class="tasarim ${buyuk ? 'tasarim--buyuk' : ''}" style="--c:${p.renk}">
       <a class="tasarim__gor" href="${esc(presetUrl(p.id, s))}">
         <img src="${shot(p.id)}" alt="${p.ad} tasarımının telefondaki görünümü" loading="${buyuk ? 'eager' : 'lazy'}">
-        <span class="tasarim__etiket">${p.grup === 'sinematik' ? '3D, hareketli' : 'Sade, hızlı'}</span>
+        <span class="tasarim__etiket">${ETIKET[p.grup]}</span>
       </a>
       <div class="tasarim__alt">
         <h3>${p.ad}</h3>
@@ -86,13 +92,13 @@ function kart(p, s, buyuk) {
 }
 
 function tasarimEkrani(s) {
-  const sektor = SEKTORLER.find((k) => k.id === s.sektor);
+  const sektor = SEKTORLER_V.find((k) => k.id === s.sektor);
   const ana = sektor ? siraliTasarimlar(sektor.id) : [];
   const diger = PRESETS.filter((p) => !ana.includes(p));
   return `
     <header class="v__head v__head--kucuk">
       <button type="button" class="v__geri" data-sektor="">Sektörü değiştir</button>
-      <h1>${sektor ? `${sektor.ad} için tasarımlar` : 'Tüm tasarımlar'}</h1>
+      <h1>${sektor ? `${sektor.ad} için ${ana.length} tasarım` : 'Tüm tasarımlar'}</h1>
       <p>Dokunun, tam ekran gezin. Sayfayı aşağı kaydırmayı unutmayın, asıl gösteri orada.${
         s.ad ? ` Tasarımlarda <strong>${esc(s.ad)}</strong> adı yazar.` : ''
       }</p>

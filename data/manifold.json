@@ -1,0 +1,102 @@
+{
+  "preset": "manifold",
+  "isletme": {
+    "ad": "Anadolu Egzoz",
+    "sektor": "Egzoz, DPF ve Katalitik Konvertör",
+    "slogan": "Muayeneden geçemediyse, buradan geçsin.",
+    "kurulus": 1998,
+    "hakkinda": "Aracı lifte kaldırır, egzozu motordan uca kadar elimizle kontrol ederiz. Gaz ölçümünü sizin önünüzde yaparız. Değişmesi gerekmeyen parçayı değiştirmeyiz; temizlenebiliyorsa temizleriz, kaynakla kurtuluyorsa kaynak yaparız."
+  },
+  "iletisim": {
+    "telefon": "0532 555 41 98",
+    "whatsapp": "905325554198",
+    "adres": "Şaşmaz Oto Sanayi Sitesi, 4. Cadde No: 31, Etimesgut/Ankara",
+    "mapsQuery": "Şaşmaz Oto Sanayi Sitesi Etimesgut Ankara"
+  },
+  "saatler": [null, "08:30-19:00", "08:30-19:00", "08:30-19:00", "08:30-19:00", "08:30-19:00", "08:30-17:00"],
+  "yolculuk": [
+    {
+      "id": "manifold",
+      "durak": "Manifold",
+      "baslik": "Sıcaklık 700 dereceyi bulur.",
+      "metin": "Çatlak manifold ve yanmış conta motor bölmesine gaz kaçırır. Sesi tıkırtıdır, kokusu içeri girer. Kaynakla ya da yeni parçayla aynı gün çözeriz.",
+      "hizmet": "Manifold ve conta"
+    },
+    {
+      "id": "katalitik",
+      "durak": "Katalitik konvertör",
+      "baslik": "Zehirli gaz burada temizlenir.",
+      "metin": "Petek eridiyse ya da tıkandıysa araç muayeneden kalır, çekiş düşer. Ölçer, gerekiyorsa temizler, olmuyorsa uygun fiyatlı muadiliyle değiştiririz.",
+      "hizmet": "Katalitik konvertör"
+    },
+    {
+      "id": "dpf",
+      "durak": "DPF",
+      "baslik": "İs birikir, motor boğulur.",
+      "metin": "Dizelde yanan DPF lambası, çekişsizlik ve acil moda geçen motor çoğu zaman dolu partikül filtresidir. Sökmeden önce basıncı ölçer, filtreyi makinede yıkayıp fırınlarız.",
+      "hizmet": "DPF temizleme"
+    },
+    {
+      "id": "susturucu",
+      "durak": "Susturucu",
+      "baslik": "Ses buradan geçerken susar.",
+      "metin": "Delinen susturucu hem gürültü yapar hem muayenede kalır. Orta ve arka susturucuyu değiştirir, bağlantı kelepçelerini yenileriz.",
+      "hizmet": "Susturucu değişimi"
+    },
+    {
+      "id": "uc",
+      "durak": "Egzoz ucu",
+      "baslik": "Çıkan duman size her şeyi söyler.",
+      "metin": "Siyah duman yakıt, mavi duman yağ, beyaz duman su demektir. Rengini görür, sebebini buluruz. İsterseniz paslanmaz uç ve sportif susturucu da yaparız.",
+      "hizmet": "Egzoz ucu ve sportif egzoz"
+    }
+  ],
+  "muayene": {
+    "baslik": "Muayene raporu",
+    "olcumler": [
+      { "ad": "CO", "birim": "%", "once": 3.8, "sonra": 0.2, "sinir": 0.3 },
+      { "ad": "HC", "birim": "ppm", "once": 890, "sonra": 60, "sinir": 200 },
+      { "ad": "Duman (k)", "birim": "m⁻¹", "once": 2.9, "sonra": 0.4, "sinir": 1.5 },
+      { "ad": "Ses", "birim": "dB", "once": 104, "sonra": 78, "sinir": 90 }
+    ]
+  },
+  "hizmetler": [
+    { "baslik": "Egzoz emisyon hazırlığı", "aciklama": "Muayeneden önce gaz ve duman ölçümü. Kalacak değer varsa sebebini bulur, muayeneye hazır teslim ederiz.", "sure": "1 saat" },
+    { "baslik": "DPF temizleme", "aciklama": "Sökülen filtre makinede yıkanır, fırınlanır, basıncı ölçülerek takılır. Değişimden çok daha ucuzdur.", "sure": "Aynı gün" },
+    { "baslik": "Katalitik konvertör", "aciklama": "Tıkanıklık testi, temizlik ya da değişim. Orijinal ve sertifikalı muadil seçenekleri.", "sure": "Aynı gün" },
+    { "baslik": "Susturucu değişimi", "aciklama": "Ön, orta ve arka susturucu. Delinen parça tek başına değişir, bütün sistemi değiştirmeyiz.", "sure": "1-2 saat" },
+    { "baslik": "Manifold ve conta", "aciklama": "Çatlak manifold kaynağı, conta ve saplama değişimi. Kırık saplamayı motoru sökmeden çıkarırız.", "sure": "Aynı gün" },
+    { "baslik": "Paslanmaz egzoz imalatı", "aciklama": "Ölçüye göre bükülen paslanmaz boru, argon kaynağı, esnek bağlantı. Ticari araç ve klasiklere özel.", "sure": "1-2 gün" },
+    { "baslik": "Sportif egzoz ve uç", "aciklama": "Ses ayarlı sportif susturucu ve paslanmaz uçlar. Muayeneye uygun ses seviyesinde kalır.", "sure": "Aynı gün" },
+    { "baslik": "Askı ve kelepçe", "aciklama": "Tıkırdayan, sallanan egzoz çoğu zaman kopmuş bir lastik askıdır. Beş dakikada bakarız.", "sure": "15 dk" }
+  ],
+  "surec": [
+    { "baslik": "Lifte kaldırırız", "aciklama": "Egzozu motordan uca kadar elle ve gözle kontrol ederiz. Kaçağı dumanla test ederiz." },
+    { "baslik": "Gazı ölçeriz", "aciklama": "Emisyon cihazıyla CO, HC ve duman değerlerini sizin önünüzde okuruz." },
+    { "baslik": "Fiyatı söyleriz", "aciklama": "Değişim mi, temizlik mi, kaynak mı; seçenekleri ve fiyatını baştan konuşuruz." },
+    { "baslik": "Ölçüp teslim ederiz", "aciklama": "İşten sonra ölçümü tekrarlar, çıktısını size veririz." }
+  ],
+  "istatistikler": [
+    { "deger": "kurulus", "sonek": " yıl", "etiket": "Şaşmaz'da egzoz" },
+    { "deger": 9400, "sonek": "+", "etiket": "temizlenen DPF" },
+    { "deger": 21000, "sonek": "+", "etiket": "muayeneye hazırlanan araç" },
+    { "deger": 2, "sonek": " yıl", "etiket": "imalat garantisi" }
+  ],
+  "markalar": ["Fiat", "Renault", "Ford", "Volkswagen", "Opel", "Hyundai", "Toyota", "Peugeot", "Citroën", "Iveco", "Mercedes-Benz", "Isuzu"],
+  "galeri": [
+    { "src": "/img/manifold/lift.jpg", "alt": "Ustamız lifte kaldırılmış aracın altında egzozu kontrol ediyor" },
+    { "src": "/img/manifold/kaynak.jpg", "alt": "Egzoz borusunun argon kaynağı, kıvılcımlar" },
+    { "src": "/img/manifold/cift-uc.jpg", "alt": "Paslanmaz çift egzoz ucu yakın plan" },
+    { "src": "/img/manifold/duman.jpg", "alt": "Egzoz ucundan çıkan duman" }
+  ],
+  "puan": { "ortalama": 4.8, "adet": 287 },
+  "yorumlar": [
+    { "ad": "Serkan A.", "puan": 5, "metin": "DPF lambası yanıyordu, başka yerde 'değişecek' dediler. Burada yıkayıp taktılar, fiyatı dörtte biri oldu. Üç aydır sorun yok.", "arac": "2015 Fiat Doblo" },
+    { "ad": "Hülya T.", "puan": 5, "metin": "Muayeneden egzozdan kalmıştım. Ölçümü önümde yaptılar, aynı gün tekrar gittim ve geçtim.", "arac": "2011 Renault Clio" },
+    { "ad": "Murat K.", "puan": 5, "metin": "Minibüsün manifoldu çatlamıştı, kaynakla kurtardılar. Parça değiştirmeden çözdükleri için ayrıca teşekkür ederim.", "arac": "2013 Ford Transit" },
+    { "ad": "Emre D.", "puan": 4, "metin": "Paslanmaz uç ve arka susturucu yaptırdım. Ses tam istediğim gibi, rahatsız edici değil.", "arac": "2018 Volkswagen Golf" },
+    { "ad": "İsmail Ç.", "puan": 5, "metin": "Tıkırtının sebebi kopmuş bir askıymış. Beş dakikada taktılar, üstüne para bile almak istemediler.", "arac": "2009 Opel Astra" }
+  ],
+  "garanti": "İmalat ve kaynak işçiliğine 2 yıl garanti.",
+  "finalBaslik": "Temiz çıksın, sessiz çıksın."
+}

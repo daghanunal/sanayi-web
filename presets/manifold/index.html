@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0c1016" />
+  <title>Egzoz, DPF ve Katalitik | Şaşmaz</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='13' fill='none' stroke='%23e0b25b' stroke-width='5'/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@300..900&family=Figtree:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap&subset=latin-ext" rel="stylesheet" />
+</head>
+<body class="is-loading">
+  <!-- Açılış: kurum dağılır, ad belirir, gösterge dolar -->
+  <div class="intro" data-intro role="presentation">
+    <div class="intro__soot" data-intro-soot></div>
+    <div class="intro__center">
+      <p class="intro__name" data-intro-name></p>
+      <div class="intro__gauge"><i data-intro-bar></i></div>
+      <p class="intro__meta"><span data-intro-pct>0</span><span>Geçmek için dokunun</span></p>
+    </div>
+  </div>
+
+  <canvas class="stage" data-stage aria-hidden="true"></canvas>
+  <div class="cursor" data-cursor aria-hidden="true"><i></i></div>
+
+  <header class="top" data-top>
+    <a class="top__brand" href="#" data-bind="ad"></a>
+    <p class="top__status" data-status></p>
+    <a class="top__call" data-tel data-magnetic><span data-icon="phone"></span><span class="top__num" data-bind="telefon"></span></a>
+  </header>
+
+  <main>
+    <!-- Film: dışarıdan bakış → manifolddan içeri → katalitik → DPF → susturucu → uç → muayene -->
+    <section class="film" data-film>
+      <div class="film__sticky">
+        <div class="hero" data-hero>
+          <p class="hero__since" data-since></p>
+          <h1 class="hero__title" data-hero-title></h1>
+          <p class="hero__slogan" data-bind="slogan"></p>
+          <div class="hero__cta">
+            <a class="btn btn--heat" data-tel data-magnetic><span data-icon="phone"></span>Hemen ara</a>
+            <a class="btn btn--ghost" data-wa target="_blank" rel="noopener" data-magnetic><span data-icon="whatsapp"></span>WhatsApp'tan yaz</a>
+          </div>
+        </div>
+
+        <ol class="rail" data-rail aria-label="Egzozun yolu"></ol>
+
+        <div class="cards" data-cards></div>
+
+        <div class="meter" data-meter aria-hidden="true">
+          <p class="meter__row"><span>Duman</span><b data-m-soot>2,9</b><small>k</small></p>
+          <p class="meter__row"><span>CO</span><b data-m-co>3,8</b><small>%</small></p>
+          <p class="meter__row meter__row--db"><span>Ses</span><b data-m-db>104</b><small>dB</small></p>
+          <svg class="meter__wave" viewBox="0 0 200 40" preserveAspectRatio="none"><path data-wave d="M0 20 H200" /></svg>
+          <p class="meter__verdict" data-m-verdict>Muayeneden kalır</p>
+        </div>
+
+        <div class="report" data-report>
+          <div class="report__paper">
+            <p class="report__head"><span data-report-title></span><span data-report-plate></span></p>
+            <table class="report__table">
+              <thead><tr><th>Ölçüm</th><th>Önce</th><th>Sonra</th><th>Sınır</th></tr></thead>
+              <tbody data-report-rows></tbody>
+            </table>
+            <p class="report__stamp" data-stamp>Geçti</p>
+          </div>
+          <p class="report__note">Muayeneden önce gelin, ölçümü birlikte yapalım.</p>
+        </div>
+
+        <p class="hint" data-hint aria-hidden="true"><i></i>Kaydırın, egzozun içinden geçelim</p>
+      </div>
+    </section>
+
+    <!-- Hakkımızda: lift, okundukça ısınan metin -->
+    <section class="about" data-about>
+      <figure class="about__img"><img src="/img/manifold/lift.jpg" alt="Ustamız lifte kaldırılmış aracın altında egzozu kontrol ediyor" loading="lazy" width="933" height="1400" /></figure>
+      <div class="about__body">
+        <h2 class="sec-title" data-heat-title>Aracı kaldırır, egzozu elle kontrol ederiz.</h2>
+        <p class="about__text" data-about-text></p>
+        <ul class="stats" data-stats></ul>
+      </div>
+    </section>
+
+    <!-- Hizmetler: satır merkeze gelince kaynak rengine döner -->
+    <section class="services" id="hizmetler">
+      <header class="sec-head">
+        <h2 class="sec-title">Egzozda ne varsa.</h2>
+        <p>Parçayı değiştirmeden önce temizlenip temizlenmeyeceğine, kaynakla kurtulup kurtulmayacağına bakarız.</p>
+      </header>
+      <ol class="svc" data-services></ol>
+    </section>
+
+    <!-- İmalat: boru bükümü, kaynak dikişi ısı rengiyle çizilir -->
+    <section class="weld" data-weld>
+      <div class="weld__copy">
+        <h2 class="sec-title">Ölçüye göre bükülür, argonla kaynatılır.</h2>
+        <p data-imalat-text></p>
+        <a class="btn btn--heat" data-wa-imalat target="_blank" rel="noopener" data-magnetic><span data-icon="whatsapp"></span>İmalat için fotoğraf gönderin</a>
+      </div>
+      <div class="weld__art">
+        <svg class="weld__svg" viewBox="0 0 600 420" aria-hidden="true">
+          <defs>
+            <linearGradient id="mf-steel" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#eef1f3" />
+              <stop offset=".45" stop-color="#9aa3ab" />
+              <stop offset=".55" stop-color="#6f7881" />
+              <stop offset="1" stop-color="#c8ced3" />
+            </linearGradient>
+            <linearGradient id="mf-tint" gradientUnits="userSpaceOnUse" x1="120" y1="0" x2="520" y2="0">
+              <stop offset="0" stop-color="#e0b25b" />
+              <stop offset=".35" stop-color="#b0703c" />
+              <stop offset=".6" stop-color="#7a4bb0" />
+              <stop offset="1" stop-color="#3767d6" />
+            </linearGradient>
+          </defs>
+          <path class="weld__pipe" d="M-20 300 H200 C300 300 330 280 360 220 C390 160 420 120 520 120 H640" />
+          <path class="weld__pipe-hi" d="M-20 300 H200 C300 300 330 280 360 220 C390 160 420 120 520 120 H640" />
+          <path class="weld__halo" data-weld-halo d="M205 250 C215 290 215 310 205 350" />
+          <path class="weld__seam" data-weld-seam d="M205 250 C215 290 215 310 205 350" />
+          <path class="weld__halo" data-weld-halo d="M455 70 C465 110 465 130 455 170" />
+          <path class="weld__seam" data-weld-seam d="M455 70 C465 110 465 130 455 170" />
+          <circle class="weld__arc" data-weld-arc r="9" cx="205" cy="250" />
+        </svg>
+        <figure class="weld__photo"><img src="/img/manifold/kaynak.jpg" alt="Egzoz borusunun kaynağı, kıvılcımlar" loading="lazy" width="1300" height="1300" /></figure>
+      </div>
+    </section>
+
+    <!-- Süreç: gerçekten sıralı dört adım -->
+    <section class="steps">
+      <header class="sec-head">
+        <h2 class="sec-title">Önce ölçeriz, sonra konuşuruz.</h2>
+      </header>
+      <ol class="steps__list" data-steps></ol>
+    </section>
+
+    <!-- Yorumlar -->
+    <section class="reviews" id="yorumlar">
+      <header class="reviews__head">
+        <p class="reviews__score"><b data-puan>4,8</b><span class="reviews__stars" data-stars></span></p>
+        <p class="reviews__count" data-puan-adet></p>
+      </header>
+      <div class="reviews__rail" data-rev-rail>
+        <div class="reviews__track" data-rev-track></div>
+      </div>
+    </section>
+
+    <!-- Markalar -->
+    <section class="brands" aria-label="Çalıştığımız markalar">
+      <div class="marquee" data-marquee></div>
+    </section>
+
+    <!-- Dükkân -->
+    <section class="shop" id="konum">
+      <div class="shop__info">
+        <h2 class="sec-title">Şaşmaz'da, sanayinin içinde.</h2>
+        <p class="shop__status" data-status-big></p>
+        <dl class="shop__hours" data-hours></dl>
+        <p class="shop__addr" data-bind="adres"></p>
+        <div class="shop__cta">
+          <a class="btn btn--heat" data-maps target="_blank" rel="noopener" data-magnetic><span data-icon="pin"></span>Yol tarifi al</a>
+          <a class="btn btn--ghost btn--dark" data-tel data-magnetic><span data-icon="phone"></span>Ara</a>
+        </div>
+      </div>
+      <div class="shop__map" data-map></div>
+    </section>
+
+    <!-- Final: uçtan temiz buhar çıkar -->
+    <section class="finale" data-finale>
+      <div class="finale__sticky">
+        <h2 class="finale__title" data-final-title></h2>
+        <p class="finale__sub" data-garanti></p>
+        <div class="finale__cta">
+          <a class="btn btn--heat btn--xl" data-tel data-magnetic><span data-icon="phone"></span>Hemen ara</a>
+          <a class="btn btn--ghost btn--xl" data-wa target="_blank" rel="noopener" data-magnetic><span data-icon="whatsapp"></span>WhatsApp'tan yaz</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <p data-year></p>
+    <p data-bind="adres"></p>
+    <p class="foot__small">Fotoğraflar: Pexels. 3D egzoz bu site için kodla çizildi.</p>
+  </footer>
+
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

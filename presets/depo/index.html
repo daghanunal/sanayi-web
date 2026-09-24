@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#15191e" />
+  <title>Oto Yedek Parça | Şaşmaz</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23ee6a24'/%3E%3Cpath d='M7 9h2v14H7zm4 0h1v14h-1zm3 0h3v14h-3zm5 0h1v14h-1zm3 0h3v14h-3z' fill='%2316171a'/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Saira+Stencil+One&family=Hanken+Grotesk:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet" />
+</head>
+<body class="is-loading">
+  <!-- Açılış: barkod etiketi okunur, isim çözülür, etiket hero'daki raf etiketine uçar -->
+  <div class="intro" data-intro role="presentation">
+    <div class="intro__sheet">
+      <div class="tag tag--intro" data-intro-tag>
+        <p class="tag__top"><span>Raf</span><b>01</b></p>
+        <div class="tag__bars" data-bars></div>
+        <p class="tag__name" data-intro-name></p>
+        <p class="tag__code"><span data-intro-pct>000</span><span>Okutuluyor</span></p>
+        <i class="tag__laser" data-laser></i>
+      </div>
+      <p class="intro__skip">Geçmek için dokunun</p>
+    </div>
+  </div>
+
+  <canvas class="stage" data-stage aria-hidden="true"></canvas>
+  <div class="cursor" data-cursor aria-hidden="true"><i></i></div>
+
+  <header class="top" data-top>
+    <a class="top__brand" href="#" data-bind="ad"></a>
+    <p class="top__status" data-status></p>
+    <a class="top__call" data-tel data-magnetic><span data-icon="phone"></span><span class="top__num" data-bind="telefon"></span></a>
+  </header>
+
+  <main>
+    <!-- 1. Koridor girişi -->
+    <section class="ch ch--hero" data-ch="hero">
+      <div class="ch__pin">
+        <div class="scrim" aria-hidden="true"></div>
+        <div class="hero">
+          <div class="tag tag--hero" data-hero-tag>
+            <p class="tag__top"><span>Raf</span><b>01</b></p>
+            <div class="tag__bars" data-bars></div>
+            <p class="tag__name" data-bind="ad"></p>
+            <p class="tag__code"><span data-since-code></span><span>Şaşmaz Oto Sanayi</span></p>
+          </div>
+          <h1 class="hero__title" data-hero-title></h1>
+          <p class="hero__slogan" data-bind="slogan"></p>
+          <div class="hero__cta">
+            <a class="btn btn--orange" href="#sasi" data-magnetic>Şasi no ile parça sor</a>
+            <a class="btn btn--ghost" data-tel data-magnetic><span data-icon="phone"></span>Hemen ara</a>
+          </div>
+        </div>
+        <div class="hero__stock" aria-hidden="true">
+          <b data-hero-stock>0</b>
+          <span data-hero-stock-label></span>
+        </div>
+        <p class="hint" aria-hidden="true"><i></i>Kaydırın, koridora girelim</p>
+      </div>
+    </section>
+
+    <!-- 2. Raflar: her kategoride bir kutu raftan çıkar, açılır, parça yükselir -->
+    <section class="ch ch--raf" data-ch="raf" id="kategoriler" aria-label="Parça kategorileri">
+      <div class="ch__pin">
+        <ol class="rail" data-rail aria-hidden="true"></ol>
+        <div class="shelfcards" data-shelfcards></div>
+      </div>
+    </section>
+
+    <!-- 3. Katalog: parçalar raflardan uçup tek sayfada dizilir -->
+    <section class="ch ch--katalog" data-ch="katalog" aria-label="Parça kataloğu">
+      <div class="ch__pin">
+        <div class="scrim" aria-hidden="true"></div>
+        <div class="katalog__head">
+          <h2 class="katalog__title" data-katalog-title></h2>
+          <p class="katalog__sub" data-katalog-sub></p>
+        </div>
+        <div class="katalog__labels" data-cat-labels aria-hidden="true"></div>
+      </div>
+    </section>
+
+    <!-- 4. Şasi no ile sor -->
+    <section class="sasi" id="sasi">
+      <div class="sasi__inner">
+        <header class="sec-head">
+          <h2 class="stencil">Şasi numarasını yazın, parçayı biz bulalım.</h2>
+          <p>Ruhsatın ön yüzündeki 17 haneli numara. Hangi motor, hangi donanım olduğunu numaradan çıkarır, doğru parçayı söyleriz.</p>
+        </header>
+        <ol class="steps" data-steps></ol>
+        <form class="vin" data-vin novalidate>
+          <div class="vin__doc">
+            <p class="vin__doc-top"><span>Araç tescil belgesi</span><span>(E) Şasi No</span></p>
+            <label class="sr-only" for="vin-input">Şasi numarası</label>
+            <div class="vin__field">
+              <input id="vin-input" data-vin-input maxlength="17" autocomplete="off" autocapitalize="characters" spellcheck="false" inputmode="text" placeholder="VF1RFB00XG6543210" />
+              <i class="vin__laser" data-vin-laser></i>
+            </div>
+            <p class="vin__count" data-vin-count>0/17</p>
+          </div>
+          <div class="vin__chips" data-vin-chips role="group" aria-label="Aradığınız parça"></div>
+          <div class="vin__actions">
+            <button type="submit" class="btn btn--orange" data-magnetic>Numarayı oku</button>
+            <button type="button" class="vin__demo" data-vin-demo>Örnek numarayla dene</button>
+          </div>
+          <div class="vin__result" data-vin-result aria-live="polite" hidden></div>
+        </form>
+      </div>
+    </section>
+
+    <!-- 5. Teslimat rotası -->
+    <section class="rota" data-rota>
+      <div class="rota__inner">
+        <header class="sec-head">
+          <h2 class="stencil">Sanayi içinde 45 dakikada kapınızda.</h2>
+          <p>Siparişi alan kurye rafın önünden çıkar. Sanayi içindeki dükkânlara ücretsiz getiriyoruz.</p>
+        </header>
+        <div class="rota__map">
+          <svg class="map" viewBox="0 0 600 420" data-map aria-hidden="true">
+            <defs>
+              <pattern id="hatch" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+                <rect width="8" height="8" fill="#20252b" /><rect width="2" height="8" fill="#262c33" />
+              </pattern>
+            </defs>
+            <g class="map__blocks" data-blocks></g>
+            <path class="map__route-bg" d="M86 356 H232 V238 H372 V112 H514" />
+            <path class="map__route" data-route d="M86 356 H232 V238 H372 V112 H514" />
+            <g class="map__pin map__pin--depo" transform="translate(86 356)"><circle r="13" /><text y="-22">Depo</text></g>
+            <g class="map__pin map__pin--hedef" data-hedef transform="translate(514 112)"><circle r="13" /><text y="-22">Dükkânınız</text></g>
+            <g class="map__van" data-van><rect x="-18" y="-11" width="36" height="22" rx="4" /><rect x="6" y="-8" width="9" height="8" rx="1" class="map__win" /></g>
+          </svg>
+          <div class="rota__timer" aria-hidden="true"><b data-timer>00</b><span>dk</span></div>
+        </div>
+        <ul class="tiers" data-tiers></ul>
+      </div>
+    </section>
+
+    <!-- 6. Hakkında ve rakamlar -->
+    <section class="hakkinda">
+      <div class="hakkinda__inner">
+        <p class="hakkinda__text" data-hakkinda></p>
+        <ul class="stats" data-stats></ul>
+        <p class="hakkinda__garanti" data-bind="garanti"></p>
+      </div>
+    </section>
+
+    <!-- 7. Marka duvarı -->
+    <section class="markalar">
+      <header class="sec-head sec-head--in">
+        <h2 class="stencil">Hangi araç olursa olsun.</h2>
+        <p>Binek ve hafif ticari, yerli ve ithal. Orijinal ve muadil seçeneğini birlikte veriyoruz.</p>
+      </header>
+      <ul class="wall" data-wall></ul>
+      <div class="marquee" data-marquee aria-label="Çalıştığımız parça markaları"></div>
+    </section>
+
+    <!-- 8. Galeri -->
+    <section class="galeri">
+      <header class="sec-head sec-head--in">
+        <h2 class="stencil">Rafın arkası.</h2>
+      </header>
+      <div class="galeri__track" data-galeri></div>
+    </section>
+
+    <!-- 9. Yorumlar -->
+    <section class="yorumlar">
+      <header class="yorumlar__head">
+        <p class="puan"><b data-puan></b><span class="puan__stars" data-stars></span></p>
+        <p class="puan__adet" data-puan-adet></p>
+      </header>
+      <div class="yorumlar__track" data-yorumlar></div>
+    </section>
+
+    <!-- 10. Ziyaret -->
+    <section class="ziyaret" id="ziyaret">
+      <div class="ziyaret__inner">
+        <div class="ziyaret__info">
+          <h2 class="stencil" data-status-big></h2>
+          <dl class="hours" data-hours></dl>
+          <p class="ziyaret__adres" data-bind="adres"></p>
+          <div class="ziyaret__cta">
+            <a class="btn btn--orange" data-maps target="_blank" rel="noopener" data-magnetic><span data-icon="pin"></span>Yol tarifi al</a>
+            <a class="btn btn--ghost" data-tel data-magnetic><span data-icon="phone"></span>Ara</a>
+          </div>
+        </div>
+        <div class="ziyaret__map" data-map-slot></div>
+      </div>
+    </section>
+
+    <!-- 11. Final: koli kapanır, bantlanır, etiket basılır -->
+    <section class="ch ch--final" data-ch="final">
+      <div class="ch__pin">
+        <div class="scrim" aria-hidden="true"></div>
+        <div class="final">
+          <h2 class="final__title" data-final-title>Parçanız bugün yola çıksın.</h2>
+          <p class="final__sub">Şasi numarasını WhatsApp'tan atın, fiyat on dakikada gelsin.</p>
+          <div class="final__cta">
+            <a class="btn btn--orange btn--big" data-wa target="_blank" rel="noopener" data-magnetic><span data-icon="whatsapp"></span>WhatsApp'tan sor</a>
+            <a class="btn btn--ghost btn--big" data-tel data-magnetic><span data-icon="phone"></span>Hemen ara</a>
+          </div>
+        </div>
+        <footer class="footer">
+          <p class="footer__name" data-bind="ad"></p>
+          <p><span data-bind="adres"></span> <a data-tel data-bind="telefon"></a></p>
+          <p class="footer__small" data-year></p>
+        </footer>
+      </div>
+    </section>
+  </main>
+
+  <script type="module" src="./main.js"></script>
+</body>
+</html>
