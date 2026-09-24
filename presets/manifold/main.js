@@ -365,7 +365,7 @@ titleChars = split.chars;
 
 let lenis = null;
 let filmP = 0, filmTarget = 0, finaleQ = 0;
-let filmActive = true, finaleActive = false;
+const top = $('[data-top]');
 let vel = 0;
 
 function setupScroll() {
@@ -373,36 +373,20 @@ function setupScroll() {
   lenis?.stop();
   lenis?.on('scroll', (e) => (vel = Math.min(1, Math.abs(e.velocity) / 40)));
 
-  ScrollTrigger.create({
-    trigger: film, start: 'top top', end: 'bottom bottom',
-    onUpdate: (self) => (filmTarget = self.progress),
-    onToggle: (self) => (filmActive = self.isActive || self.progress < 0.001),
-  });
-  ScrollTrigger.create({
-    trigger: '[data-finale]', start: 'top bottom', end: 'bottom bottom',
-    onUpdate: (self) => (finaleQ = self.progress),
-    onToggle: (self) => (finaleActive = self.isActive),
-  });
-  // Film bitince sahne söner, final gelince geri döner
-  ScrollTrigger.create({
-    trigger: film, start: 'bottom bottom', end: 'bottom 40%',
-    onUpdate: (self) => (canvas.style.opacity = 1 - self.progress),
-  });
-  ScrollTrigger.create({
-    trigger: '[data-finale]', start: 'top bottom', end: 'top 30%',
-    onUpdate: (self) => (canvasFinale = self.progress),
-  });
-
-  $('[data-top]').classList.toggle('is-solid', false);
-  ScrollTrigger.create({
+  // Durum her karede tetikleyicilerin kendisinden okunur (onToggle, sayfa doğrudan
+  // ileriye atladığında — #konum bağlantısı, sayfa ortasında yenileme — hiç tetiklenmez).
+  trg.film = ScrollTrigger.create({ trigger: film, start: 'top top', end: 'bottom bottom' });
+  trg.finale = ScrollTrigger.create({ trigger: '[data-finale]', start: 'top bottom', end: 'bottom bottom' });
+  trg.filmOut = ScrollTrigger.create({ trigger: film, start: 'bottom bottom', end: 'bottom 40%' });
+  trg.finaleIn = ScrollTrigger.create({ trigger: '[data-finale]', start: 'top bottom', end: 'top 30%' });
+  trg.solid = ScrollTrigger.create({
     trigger: '[data-about]', start: 'top 80px',
-    onToggle: (self) => $('[data-top]').classList.toggle('is-solid', self.isActive),
     end: () => `+=${document.querySelector('[data-finale]').offsetTop - document.querySelector('[data-about]').offsetTop - 80}`,
   });
 
   contentMotion();
 }
-let canvasFinale = 0;
+const trg = {};
 
 function contentMotion() {
   // Isıyla renk değiştiren bölüm başlıkları
@@ -474,7 +458,8 @@ function contentMotion() {
     scrollTrigger: { trigger: '.steps__list', start: 'top 75%', end: 'bottom 55%', scrub: true },
   });
   $$('.step').forEach((s) => {
-    ScrollTrigger.create({ trigger: s, start: 'top 62%', onToggle: (self) => s.classList.toggle('is-lit', self.progress > 0 || self.isActive) });
+    const lit = (self) => s.classList.toggle('is-lit', self.progress > 0);
+    ScrollTrigger.create({ trigger: s, start: 'top 62%', end: 'max', onUpdate: lit, onRefresh: lit });
   });
   // Yorumlar yatay kayar
   const track = $('[data-rev-track]');
@@ -509,16 +494,28 @@ function tick(now) {
   const time = now / 1000;
   vel *= 0.92;
 
-  filmP += (filmTarget - filmP) * (1 - Math.exp(-dt * 7));
-  if (filmActive || filmP < 0.999) filmUI(filmP, time);
+  if (trg.film) {
+    filmTarget = trg.film.progress;
+    finaleQ = trg.finale.progress;
+    const filmActive = trg.film.isActive || filmTarget < 0.001;
+    const canvasFinale = trg.finaleIn.progress;
+    const filmFade = 1 - trg.filmOut.progress;
+    top.classList.toggle('is-solid', trg.solid.isActive);
 
-  const showFilm = filmActive && canvas.style.opacity !== '0';
-  const showFinale = finaleActive || canvasFinale > 0.001;
-  if (showFinale && !filmActive) {
-    canvas.style.opacity = canvasFinale;
-    S.update(finaleState(finaleQ, time), now);
-  } else if (showFilm) {
-    S.update(filmState(filmP, time, vel), now);
+    // Uzak atlamada (ör. #konum) filmi yumuşatmadan hedefe getir
+    if (Math.abs(filmTarget - filmP) > 0.25) filmP = filmTarget;
+    filmP += (filmTarget - filmP) * (1 - Math.exp(-dt * 7));
+    if (filmActive || filmP < 0.999) filmUI(filmP, time);
+
+    if (canvasFinale > 0.001 && !filmActive) {
+      canvas.style.opacity = canvasFinale;
+      S.update(finaleState(finaleQ, time), now);
+    } else if (filmActive || filmFade > 0.001) {
+      canvas.style.opacity = filmFade;
+      if (filmFade > 0.001) S.update(filmState(filmP, time, vel), now);
+    } else {
+      canvas.style.opacity = 0;
+    }
   }
 
   const w = mq.scrollWidth / 2;
