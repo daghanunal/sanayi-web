@@ -1,0 +1,55 @@
+/* Kurumsal alçı: üretici. Keskin köşeler, alçı beyazı, marka turuncusu yalnızca eylemlerde. Geçiş perdesi alçı beyazı. */
+.k-logo__img { height: 30px; }
+[data-hero='tam'] .k-hero__gorsel::after { background: linear-gradient(180deg, rgb(20 20 18 / .35) 0%, rgb(20 20 18 / .05) 40%, rgb(20 20 18 / .78) 100%); }
+@media (max-width: 899px) {
+  [data-hero='tam'] .k-hero__gorsel::after { background: linear-gradient(180deg, rgb(20 20 18 / .5) 0%, rgb(20 20 18 / .55) 45%, rgb(20 20 18 / .82) 100%); }
+  .k-hero__gorsel img { object-position: 30% center; }
+}
+.k-hero__baslik { font-size: clamp(46px, 8.4vw, 132px); max-width: 11ch; font-weight: 800; }
+.k-hero .k-btn:not(.k-btn--ikincil) { color: var(--k-vurgu-metin); }
+.k-hozet__liste a { grid-template-columns: 72px 1fr auto; }
+.k-hozet__gorsel { display: block; grid-row: 1 / span 2; width: 72px; height: 72px; background: var(--k-yuzey); }
+.k-hozet__gorsel img { width: 100%; height: 100%; object-fit: contain; padding: 6px; }
+.k-hozet__ad, .k-hozet__metin { grid-column: 2; }
+.k-hozet__liste .k-ok { grid-column: 3; }
+@media (min-width: 900px) {
+  .k-hozet__liste a { grid-template-columns: 88px 4fr 6fr auto; }
+  .k-hozet__gorsel { width: 88px; height: 88px; }
+  .k-hozet__ad { grid-column: 2; grid-row: 1; }
+  .k-hozet__metin { grid-column: 3; grid-row: 1; }
+  .k-hozet__liste .k-ok { grid-column: 4; grid-row: 1; }
+}
+.k-hizmet__gorsel { background: var(--k-yuzey); }
+.k-hizmet__gorsel img { object-fit: contain; padding: 12px; }
+.k-rakamlar dd { color: var(--k-vurgu); }
+.k-cta { background: var(--k-koyu); color: var(--k-koyu-metin); }
+.k-cta .k-lead { color: var(--k-koyu-soluk); }
+.k-cta .k-btn { background: var(--k-vurgu); color: var(--k-vurgu-metin); border-color: var(--k-vurgu); }
+.k-cta .k-btn--ikincil { background: transparent; color: var(--k-koyu-metin); border-color: rgb(255 255 255 / .3); }
+.k-belgeler li { border-color: var(--k-metin); }
+.k-link { color: var(--k-metin); }
+
+/* Ürün seçici */
+.ub { background: var(--k-yuzey); }
+.ub__bas { display: grid; gap: 8px 64px; }
+@media (min-width: 900px) { .ub__bas { grid-template-columns: 5fr 7fr; align-items: end; } }
+.ub__ic { display: grid; gap: 24px; margin-top: 40px; }
+@media (min-width: 900px) { .ub__ic { grid-template-columns: 4fr 8fr; gap: 48px; } }
+.ub__isler { display: grid; gap: 4px; align-content: start; }
+.ub__isler button {
+  text-align: left; padding: 16px 18px; border: 0; background: var(--k-zemin); cursor: pointer; font: inherit; font-weight: 600; color: var(--k-metin);
+  border-left: 4px solid transparent; transition: border-color .2s, background .2s;
+}
+.ub__isler button[aria-checked='true'] { border-left-color: var(--k-vurgu); background: #fff; }
+.ub__sonuc { display: grid; gap: 24px; background: #fff; padding: clamp(20px, 3vw, 36px); }
+@media (min-width: 700px) { .ub__sonuc { grid-template-columns: 5fr 7fr; align-items: center; } }
+.ub__gorsel { aspect-ratio: 1; background: var(--k-zemin); display: grid; place-items: center; overflow: hidden; border-bottom: 6px solid var(--c); }
+.ub__gorsel img { width: 100%; height: 100%; object-fit: cover; }
+.ub__gorsel.is-torba img { object-fit: contain; padding: 8%; }
+.ub__oneri { color: var(--k-soluk); font-weight: 600; font-size: 14px; }
+.ub__metin .k-h3 { margin: 4px 0 10px; font-size: clamp(24px, 2.6vw, 34px); }
+.ub__metin .k-btn { margin-top: 18px; }
+.ub__tablo { width: 100%; border-collapse: collapse; font-size: 15px; }
+.ub__tablo th, .ub__tablo td { text-align: left; padding: 9px 10px 9px 0; border-bottom: 1px solid var(--k-cizgi); vertical-align: top; }
+.ub__tablo th { font-weight: 600; width: 42%; }
+.ub__adim { padding-left: 20px; display: grid; gap: 8px; list-style: decimal; }

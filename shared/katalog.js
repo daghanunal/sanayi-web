@@ -54,7 +54,7 @@ export const PRESETS = [
   { id: 'dingil', grup: 'klasik', sektor: 'agirvasita', ad: 'Dingil', icin: 'Ağır vasıta servisi', renk: '#d4202c' },
   { id: 'recete', grup: 'klasik', sektor: 'eczane', ad: 'Reçete', icin: 'Mahalle eczanesi', renk: '#1c6f40' },
   { id: 'perdah', grup: 'klasik', sektor: 'alci', ad: 'Perdah', icin: 'Alçıbay için sade yeniden tasarım', renk: '#f29d20' },
-  { id: 'kurumsal-motor', grup: 'kurumsal', sektor: 'motor', ad: 'Kurumsal', icin: 'Motor ve mekanik, kurumsal görünüm', renk: '#8a94a6' },
+  { id: 'kurumsal-motor', grup: 'kurumsal', sektor: 'motor', ad: 'Kurumsal', icin: 'Motor ve mekanik, kurumsal görünüm', renk: '#0f5a45' },
   { id: 'kurumsal-boya', grup: 'kurumsal', sektor: 'boya', ad: 'Kurumsal', icin: 'Boya ve kaporta, kurumsal görünüm', renk: '#8a94a6' },
   { id: 'kurumsal-lastik', grup: 'kurumsal', sektor: 'lastik', ad: 'Kurumsal', icin: 'Lastik ve jant, kurumsal görünüm', renk: '#8a94a6' },
   { id: 'kurumsal-elektrik', grup: 'kurumsal', sektor: 'elektrik', ad: 'Kurumsal', icin: 'Oto elektrik, kurumsal görünüm', renk: '#8a94a6' },
@@ -64,14 +64,14 @@ export const PRESETS = [
   { id: 'kurumsal-egzoz', grup: 'kurumsal', sektor: 'egzoz', ad: 'Kurumsal', icin: 'Egzoz, kurumsal görünüm', renk: '#8a94a6' },
   { id: 'kurumsal-cam', grup: 'kurumsal', sektor: 'cam', ad: 'Kurumsal', icin: 'Oto cam, kurumsal görünüm', renk: '#8a94a6' },
   { id: 'kurumsal-agirvasita', grup: 'kurumsal', sektor: 'agirvasita', ad: 'Kurumsal', icin: 'Ağır vasıta, kurumsal görünüm', renk: '#8a94a6' },
-  { id: 'kurumsal-eczane', grup: 'kurumsal', sektor: 'eczane', ad: 'Kurumsal', icin: 'Eczane, kurumsal görünüm', renk: '#8a94a6' },
-  { id: 'kurumsal-alci', grup: 'kurumsal', sektor: 'alci', ad: 'Kurumsal', icin: 'Alçıbay, kurumsal görünüm', renk: '#8a94a6' },
+  { id: 'kurumsal-eczane', grup: 'kurumsal', sektor: 'eczane', ad: 'Kurumsal', icin: 'Eczane, kurumsal görünüm', renk: '#1d5c45' },
+  { id: 'kurumsal-alci', grup: 'kurumsal', sektor: 'alci', ad: 'Kurumsal', icin: 'Alçıbay, kurumsal görünüm', renk: '#f29d20' },
   { id: 'eczane', grup: 'ozel', sektor: 'eczane', ad: 'Eczane', icin: 'Mahalle eczanesi', renk: '#3fbf8a' },
   { id: 'alcibay', grup: 'ozel', sektor: 'alci', ad: 'Alçıbay', icin: 'Alçıbay için yeniden tasarım önerisi', renk: '#e8e4dc' },
 ];
 
 // Henüz yapılmamış ya da yayına alınmamış presetler burada gizlenir.
-export const HAZIR_OLMAYAN = new Set(['kurumsal-motor', 'kurumsal-boya', 'kurumsal-lastik', 'kurumsal-elektrik', 'kurumsal-doseme', 'kurumsal-yedekparca', 'kurumsal-rektifiye', 'kurumsal-egzoz', 'kurumsal-cam', 'kurumsal-agirvasita', 'kurumsal-eczane', 'kurumsal-alci']);
+export const HAZIR_OLMAYAN = new Set(['kurumsal-boya', 'kurumsal-lastik', 'kurumsal-elektrik', 'kurumsal-doseme', 'kurumsal-yedekparca', 'kurumsal-rektifiye', 'kurumsal-egzoz', 'kurumsal-cam', 'kurumsal-agirvasita']);
 export const hazirPresetler = () => PRESETS.filter((p) => !HAZIR_OLMAYAN.has(p.id));
 
 export const presetById = (id) => PRESETS.find((p) => p.id === id);

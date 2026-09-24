@@ -1,0 +1,87 @@
+{
+  "iletisim": {},
+  "kurumsal": {
+    "hero": {
+      "baslik": "Filonuzun bakımı tek elden.",
+      "metin": "Binek, hafif ticari ve minibüs filoları için motor, şanzıman ve periyodik bakım. Her aracın bakım kaydını tutar, arızayı ölçüp fiyatı işe başlamadan yazılı veririz.",
+      "birincil": "Filo teklifi isteyin",
+      "ikincil": "Hizmetlerimiz",
+      "ikincilRota": "hizmetler"
+    },
+    "ozet": {
+      "baslik": "Tek kanallı dükkândan kurumsal servise",
+      "metin": "Aynı işi, aynı titizlikle, daha geniş bir atölyede ve kayıtlı bir düzenle yapıyoruz. Motoru açmadan önce dinliyor, ölçüyor, ne olduğunu size gösteriyoruz."
+    },
+    "hizmetOzetBaslik": "Motor, şanzıman ve periyodik bakım",
+    "anlasmaBaslik": "Kurumsal müşterilerimiz için",
+    "anlasmaMetin": "Şirket araçlarınız için tek muhatap, aylık fatura ve araç bazında bakım geçmişi.",
+    "anlasmalar": [
+      {
+        "baslik": "Filo bakım anlaşması",
+        "kisa": "Araç bazında bakım takvimi, öncelikli randevu.",
+        "metin": "Filonuzdaki her aracın kilometresine göre bakım takvimi çıkarır, zamanı gelen aracı biz hatırlatırız. Arızalı araç sıraya girmeden atölyeye alınır.",
+        "maddeler": ["Araç bazında bakım ve arıza geçmişi", "Kilometreye göre bakım hatırlatması", "Arızalı araç için öncelikli giriş", "Aylık tek fatura ve iş dökümü"],
+        "buton": "Filo görüşmesi talep edin"
+      },
+      {
+        "baslik": "Sigorta ve kasko işleri",
+        "kisa": "Hasar dosyası sürecini sizin adınıza takip ederiz.",
+        "metin": "Kasko kapsamındaki mekanik hasarlarda eksper sürecini ve evrak takibini biz yürütürüz. Anlaşmalı olduğumuz sigorta şirketlerinin güncel listesi için bizi arayın.",
+        "maddeler": ["Eksper randevusu ve fotoğraflı rapor", "Parça onayı gelmeden işe başlamama", "Sürecin her adımında bilgilendirme"],
+        "buton": "Hasar dosyası için yazın"
+      },
+      {
+        "baslik": "Kiralama ve leasing firmaları",
+        "kisa": "Araç iadesi öncesi kontrol ve bakım.",
+        "metin": "Kiralık ve leasing araçlarının iade öncesi kontrolünü, periyodik bakımını ve kilometre bazlı raporlamasını yaparız.",
+        "maddeler": ["İade öncesi kontrol listesi", "Bakım belgesi ve fatura dökümü", "Toplu araç kabulü için planlama"],
+        "buton": "Görüşme talep edin"
+      }
+    ],
+    "anlasmaNotu": "Anlaşma koşulları filonun büyüklüğüne ve araç tiplerine göre belirlenir; teklifimizi yazılı olarak iletiriz.",
+    "hakkimizda": {
+      "baslik": "Biz kimiz",
+      "paragraflar": [
+        "Şaşmaz Oto Sanayi Sitesi'ndeki atölyemizde motor, şanzıman ve yürüyen aksam işleri yapıyoruz. Bireysel müşterilerimizin yanında şirket, kurum ve kiralama firmalarının araçlarına da bakıyoruz.",
+        "Çalışma biçimimiz yıllardır aynı: aracı dinler, ölçer, arızayı gösterir, fiyatı işe başlamadan yazılı veririz. Onayınız olmadan tek parça değişmez, çıkan eski parçalar size teslim edilir."
+      ],
+      "gorsel": "/img/garaj/revizyon.jpg",
+      "gorselAlt": "Revizyon için sökülmüş motor tezgâhta"
+    },
+    "misyon": "Aracı ilk seferde doğru teşhisle onarmak, müşterimize neyi neden yaptığımızı açıkça göstermek.",
+    "vizyon": "Ankara'da filo sahiplerinin gönül rahatlığıyla araç teslim ettiği, kayıtlı ve şeffaf çalışan bir motor servisi olmak.",
+    "degerler": [
+      { "baslik": "Yazılı fiyat", "metin": "İşe başlamadan parça ve işçilik fiyatını yazılı veririz." },
+      { "baslik": "Kayıtlı bakım", "metin": "Her aracın yaptığımız işleri dosyasında saklarız." },
+      { "baslik": "Ölçerek teşhis", "metin": "Tahminle parça değiştirmeyiz; ölçer, kaydeder, gösteririz." },
+      { "baslik": "Garantili işçilik", "metin": "Yaptığımız işçiliğin arkasında dururuz." }
+    ],
+    "kalite": {
+      "baslik": "Kalite anlayışımız",
+      "metin": "Standart bir iş akışıyla çalışıyoruz: kabul, teşhis, yazılı teklif, onay, onarım, test sürüşü ve teslim.",
+      "maddeler": [
+        "Araç kabulünde hasar ve kilometre kaydı alınır.",
+        "Teşhis cihaz ve ölçü aletleriyle yapılır, sonuç müşteriye gösterilir.",
+        "Parçalar orijinal ya da onaylı muadil seçenekleriyle sunulur.",
+        "Teslimden önce test sürüşü ve son kontrol yapılır."
+      ]
+    },
+    "kariyer": {
+      "baslik": "Ekibimize katılın",
+      "metin": "Motor ve şanzıman işlerinde deneyimli usta ve mesleği öğrenmek isteyen çırak arkadaşlarla tanışmak isteriz. Kısa bir tanıtımla bize yazın."
+    },
+    "sayfalar": {
+      "kurumsal": { "baslik": "Kurumsal", "metin": "Kim olduğumuz, nasıl çalıştığımız ve neye önem verdiğimiz.", "gorsel": "/img/garaj/aletler.jpg" },
+      "hizmetler": { "baslik": "Hizmetlerimiz", "metin": "Motor revizyonundan periyodik bakıma, her iş için ortalama süre ve kapsam." },
+      "kurumsal-musteriler": { "baslik": "Filo ve kurumsal müşteriler", "metin": "Şirket araçlarınız için bakım planı, öncelikli servis ve aylık fatura.", "gorsel": "/img/garaj/lift.jpg" },
+      "referanslar": { "baslik": "Atölyemiz ve müşterilerimiz", "metin": "Tezgâhtan kareler ve müşterilerimizin yorumları." },
+      "iletisim": { "baslik": "İletişim", "metin": "Filo teklifi, randevu ya da bir sorunuz için yazın; aynı gün dönüş yapalım." }
+    },
+    "konular": ["Filo bakım anlaşması", "Fiyat teklifi", "Randevu", "Sigorta / hasar dosyası", "Genel bilgi"],
+    "cta": {
+      "baslik": "Filonuz için bakım planı çıkaralım",
+      "metin": "Araç sayınızı ve tiplerini yazın, size özel bakım takvimi ve teklif hazırlayalım.",
+      "buton": "Filo teklifi isteyin"
+    }
+  }
+}

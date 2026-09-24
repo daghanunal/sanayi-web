@@ -1,0 +1,80 @@
+{
+  "kurumsal": {
+    "hero": {
+      "baslik": "Mahallenin eczanesi, aynı güvenle.",
+      "metin": "Reçetenizi hazırlar, ilacınızı nasıl ve ne zaman kullanacağınızı anlatırız. Eczanemizde her zaman bir eczacı bulunur.",
+      "birincil": "Bize yazın",
+      "ikincil": "Hizmetlerimiz",
+      "ikincilRota": "hizmetler"
+    },
+    "ozet": {
+      "baslik": "Hakkımızda",
+      "metin": "Aynı köşede, aynı mahallede hizmet veriyoruz. İlacınızı teslim ederken kullanımını anlatmak, sorularınızı yanıtlamak işimizin parçası."
+    },
+    "hizmetOzetBaslik": "Eczanemizde neler yapıyoruz",
+    "hakkimizda": {
+      "baslik": "Eczanemiz",
+      "paragraflar": [
+        "Eczanemiz, mahallemizin ilaç ve sağlık danışmanlığı ihtiyacına yıllardır hizmet veriyor. Tezgâhımızda her saat bir eczacı bulunur; reçetenizi kontrol eder, ilacınızı nasıl kullanacağınızı anlatır.",
+        "Reçetenizi WhatsApp'tan gönderebilir, hazırlandığında haber alabilirsiniz. Aklınıza takılan bir şey olursa arayın; eczacımız telefonda da yanıtlar."
+      ],
+      "gorsel": "/img/eczane/tezgah.jpg",
+      "gorselAlt": "Eczane tezgâhı ve raflar"
+    },
+    "misyon": "İlacı doğru kişiye, doğru bilgiyle teslim etmek; hastanın sorusunu yanıtsız bırakmamak.",
+    "vizyon": "Mahallemizde herkesin çekinmeden danışabildiği, güvenilir bir sağlık durağı olmak.",
+    "degerler": [
+      { "baslik": "Eczacı tezgâhta", "metin": "Açık olduğumuz her saatte bir eczacımız hizmetinizdedir." },
+      { "baslik": "Anlaşılır bilgi", "metin": "İlacın kullanımını sade bir dille, gerekirse yazılı olarak anlatırız." },
+      { "baslik": "Gizlilik", "metin": "Reçete ve sağlık bilgileriniz yalnızca hizmetiniz için kullanılır." },
+      { "baslik": "Sıra beklemeden", "metin": "Reçeteniz önceden hazırlandıysa geldiğinizde sıra beklemezsiniz." }
+    ],
+    "kalite": {
+      "baslik": "Çalışma ilkelerimiz",
+      "metin": "Eczacılık meslek kurallarına ve ilgili mevzuata uygun çalışırız.",
+      "maddeler": [
+        "Reçeteli ilaçlar yalnızca geçerli reçeteyle verilir.",
+        "Her ilacın kullanımı teslim sırasında açıklanır.",
+        "İlaçlar saklama koşullarına uygun muhafaza edilir.",
+        "İlacınızla ilgili sorularınızı telefonla da yanıtlarız."
+      ]
+    },
+    "anlasmaBaslik": "Kurumlar ve bakım merkezleri için",
+    "anlasmalar": [
+      {
+        "baslik": "SGK anlaşmalı eczane",
+        "kisa": "Reçeteleriniz SGK kapsamında karşılanır.",
+        "metin": "SGK'lı hastalarımızın reçeteleri kapsamındaki ilaçları katkı payı dışında ücret alınmadan karşılanır. Özel sağlık sigortası anlaşmaları için eczanemizi arayın.",
+        "maddeler": ["E-reçete ve kâğıt reçete", "Rapor ile verilen ilaçlar", "Katkı payı bilgilendirmesi"],
+        "buton": "Reçete için yazın"
+      },
+      {
+        "baslik": "Bakım merkezleri ve huzurevleri",
+        "kisa": "Düzenli reçete takibi ve hazırlık.",
+        "metin": "Bakım merkezleri ve huzurevlerinde kalan hastaların düzenli kullandığı ilaçların reçete takibini ve hazırlığını planlı şekilde yaparız.",
+        "maddeler": ["Hasta bazında reçete yenileme takibi", "Hazırlanan ilaçların teslim planı", "Tek muhatap eczacı"],
+        "buton": "Görüşme talep edin"
+      }
+    ],
+    "sss": [
+      { "soru": "Reçetemi WhatsApp'tan gönderebilir miyim?", "cevap": "Evet. Reçetenin ya da e-reçete numaranızın fotoğrafını gönderin; ilaçlar hazırlandığında size haber veririz. Teslim sırasında kimliğiniz gerekir." },
+      { "soru": "Gece ilaç lazım olursa ne yapmalıyım?", "cevap": "Kapalı olduğumuz saatlerde Ankara Eczacı Odası'nın güncel nöbetçi eczane listesine bakabilirsiniz. Nöbet günlerimizde kapımızda da duyurulur." },
+      { "soru": "Tansiyonumu ölçtürebilir miyim?", "cevap": "Evet, eczanemizde oturup dinlendikten sonra ölçüm yapıyoruz. Sonucu kâğıda yazarız; değerleriniz hakkında hekiminize danışın." },
+      { "soru": "İlacımı nasıl kullanacağımı unuttum, arayabilir miyim?", "cevap": "Arayın. Eczacımız ilacın kullanım şeklini ve zamanını telefonda da anlatır." }
+    ],
+    "sayfalar": {
+      "kurumsal": { "baslik": "Eczanemiz", "metin": "Kim olduğumuz ve nasıl çalıştığımız.", "gorsel": "/img/eczane/uygulama.jpg" },
+      "hizmetler": { "baslik": "Hizmetlerimiz", "metin": "Reçete hazırlamadan ölçüme, eczanemizde size nasıl yardımcı olabiliriz." },
+      "kurumlar": { "baslik": "Kurumlar ve bakım merkezleri", "metin": "SGK ve kurumlarla çalışma biçimimiz." },
+      "sss": { "baslik": "Sık sorulan sorular", "metin": "En çok sorulanları burada yanıtladık; bulamadığınızı arayıp sorun." },
+      "iletisim": { "baslik": "İletişim ve saatler", "metin": "Reçetenizi WhatsApp'tan gönderin ya da bize yazın." }
+    },
+    "konular": ["Reçete hazırlama", "İlaç kullanım bilgisi", "Kurum / bakım merkezi", "Genel bilgi"],
+    "formBaslik": "Bize yazın",
+    "cta": {
+      "baslik": "Reçetenizi gönderin, siz gelmeden hazırlayalım",
+      "metin": "Fotoğrafını WhatsApp'tan atın; hazır olunca haber verelim.",
+      "buton": "Bize yazın"
+    }
+  }
+}

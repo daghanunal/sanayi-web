@@ -1,0 +1,36 @@
+{
+  "kurumsal": {
+    "hero": {
+      "baslik": "Duvarın her katı için bir torba.",
+      "metin": "Perlitli sıvadan saten perdaha, kartonpiyerden alçı plakaya. Ankara Bala ve Mersin Tarsus'taki iki fabrikamızda yapı alçısı ve alçı plaka üretiyoruz.",
+      "birincil": "Satış ve teknik destek",
+      "ikincil": "Ürünlerimiz",
+      "ikincilRota": "urunler"
+    },
+    "ozet": { "baslik": "GİPS AŞ ve Alçıbay" },
+    "hizmetOzetBaslik": "Ürünlerimiz",
+    "hakkimizda": {
+      "baslik": "Hakkımızda",
+      "gorsel": "/img/alcibay/uygulama.jpg",
+      "gorselAlt": "Alçı perdahı uygulanan duvar"
+    },
+    "kalite": {
+      "baslik": "Belgelerimiz",
+      "metin": "Üretimimiz aşağıdaki yönetim sistemi ve ürün standartlarına göre belgelidir."
+    },
+    "tarihceBaslik": "Alçının ve Alçıbay'ın hikâyesi",
+    "sayfalar": {
+      "kurumsal": { "baslik": "Kurumsal", "metin": "GİPS Geliştirilmiş İnşaat Malzemeleri ve Perlitli Sıva Sanayi AŞ.", "gorsel": "/img/alcibay/bos-mekan.jpg" },
+      "urunler": { "baslik": "Ürünler", "metin": "Yedi yapı alçısı ve dört alçı plaka. Teknik değerler ürün föylerimizden alınmıştır." },
+      "urun-secici": { "baslik": "Ürün seçici", "metin": "Ne yapacağınızı seçin, doğru torbayı ve teknik değerlerini görün." },
+      "iletisim": { "baslik": "Fabrikalar ve iletişim", "metin": "Merkez ofisimiz ve iki fabrikamızın adres ve telefonları." }
+    },
+    "konular": ["Ürün bilgisi", "Teknik destek", "Satış ve fiyat", "Bayilik", "Diğer"],
+    "formBaslik": "Satış ve teknik destek",
+    "cta": {
+      "baslik": "Şantiyeniz için doğru alçıyı birlikte seçelim",
+      "metin": "Teknik danışmanlık hattımız sarfiyat, uygulama ve depolama sorularınızı yanıtlar.",
+      "buton": "Bize ulaşın"
+    }
+  }
+}

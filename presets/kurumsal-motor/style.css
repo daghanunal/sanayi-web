@@ -1,0 +1,49 @@
+/* Kurumsal motor: endüstriyel-kurumsal. Motorun üstüne yalnızca filo modülü ve birkaç ince ayar. */
+.k-hero__baslik { max-width: 13ch; }
+.k-hero__ust { font-family: var(--k-font-baslik); letter-spacing: .02em; color: var(--k-vurgu); }
+.k-hozet__ad { text-transform: none; }
+.k-rakamlar { background: var(--k-vurgu); }
+.k-rakamlar dt { color: color-mix(in srgb, var(--k-vurgu-metin) 72%, transparent); }
+.k-rakamlar__liste > div { border-color: color-mix(in srgb, var(--k-vurgu-metin) 25%, transparent); }
+.k-cta { background: var(--k-koyu); color: var(--k-koyu-metin); }
+.k-cta .k-lead { color: var(--k-koyu-soluk); }
+.k-cta .k-btn { background: var(--k-vurgu); color: var(--k-vurgu-metin); border-color: var(--k-vurgu); }
+.k-cta .k-btn--ikincil { background: transparent; color: var(--k-koyu-metin); border-color: rgb(255 255 255 / .3); }
+
+/* Filo planlayıcı */
+.filo { background: var(--k-yuzey); }
+.filo__bas { display: grid; gap: 8px 64px; }
+@media (min-width: 900px) { .filo__bas { grid-template-columns: 5fr 7fr; align-items: end; } }
+.filo__ic { display: grid; gap: 28px; margin-top: 40px; }
+@media (min-width: 900px) { .filo__ic { grid-template-columns: 5fr 7fr; gap: 64px; } }
+.filo__form { display: grid; gap: 26px; }
+.filo__alan { border: 0; padding: 0; margin: 0; display: grid; gap: 10px; font-weight: 600; }
+.filo__alan legend { padding: 0; margin-bottom: 10px; }
+.filo__alan > span { display: flex; justify-content: space-between; }
+.filo__alan output { font-family: var(--k-font-baslik); font-size: 28px; color: var(--k-vurgu); line-height: 1; }
+.filo__alan input[type='range'] { accent-color: var(--k-vurgu); width: 100%; height: 28px; }
+.filo__secim { display: flex; flex-wrap: wrap; gap: 8px; }
+.filo__secim label { position: relative; }
+.filo__secim input { position: absolute; opacity: 0; inset: 0; cursor: pointer; }
+.filo__secim span { display: block; padding: 10px 16px; border: 1.5px solid var(--k-cizgi); border-radius: var(--k-radius); font-weight: 500; background: var(--k-zemin); transition: background .2s, color .2s, border-color .2s; }
+.filo__secim input:checked + span { background: var(--k-metin); color: var(--k-zemin); border-color: var(--k-metin); }
+.filo__secim input:focus-visible + span { outline: 2px solid var(--k-vurgu); outline-offset: 2px; }
+.filo__sonuc { background: var(--k-koyu); color: var(--k-koyu-metin); border-radius: var(--k-radius-buyuk); padding: clamp(22px, 3vw, 36px); display: grid; gap: 28px; align-content: start; }
+.filo__rakamlar { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.filo__rakamlar span { display: block; font-family: var(--k-font-baslik); font-weight: 600; font-size: clamp(48px, 7vw, 84px); line-height: .95; font-variant-numeric: tabular-nums; }
+.filo__rakamlar small { display: block; color: var(--k-koyu-soluk); font-size: 15px; margin-top: 8px; }
+.filo__cubuk { position: relative; height: 56px; margin-top: 8px; }
+.filo__cubuk::before, .filo__dolu { content: ''; position: absolute; left: 0; right: 0; top: 10px; height: 4px; background: rgb(255 255 255 / .14); }
+.filo__dolu { background: #d9b45a; transform-origin: left; }
+.filo__noktalar span { position: absolute; top: 4px; width: 16px; height: 16px; margin-left: -8px; border-radius: 50%; background: #d9b45a; box-shadow: 0 0 0 4px var(--k-koyu); }
+.filo__noktalar em { position: absolute; top: 22px; left: 50%; transform: translateX(-50%); font-style: normal; font-size: 12px; color: var(--k-koyu-soluk); white-space: nowrap; }
+.filo__bas-km, .filo__son-km { position: absolute; bottom: -4px; font-size: 13px; color: var(--k-koyu-soluk); }
+.filo__bas-km { left: 0; }
+.filo__son-km { right: 0; }
+.filo__noktalar span:last-child em { display: none; }
+.filo__gonder { justify-self: start; }
+.filo__tablo { width: 100%; border-collapse: collapse; margin-top: 48px; font-size: 16px; }
+.filo__tablo caption { caption-side: bottom; text-align: left; color: var(--k-soluk); font-size: 14px; padding-top: 12px; }
+.filo__tablo th, .filo__tablo td { text-align: left; padding: 14px 12px 14px 0; border-bottom: 1px solid var(--k-cizgi); vertical-align: top; }
+.filo__tablo thead th { color: var(--k-soluk); font-weight: 600; font-size: 14px; }
+.filo__tablo tbody th { font-weight: 600; }
