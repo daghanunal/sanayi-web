@@ -1,0 +1,127 @@
+{
+  "kodSozluk": [
+    { "kod": "P0101", "anlam": "Hava akış sensörü (MAF) ölçümü beklenen aralıkta değil", "aciliyet": "yakinda", "not": "Çekiş düşebilir, yakıt artabilir. Sensör kirli ya da emişte kaçak olabilir." },
+    { "kod": "P0113", "anlam": "Emme havası sıcaklık sensörü devresi yüksek sinyal veriyor", "aciliyet": "yakinda", "not": "Genelde soket, kablo ya da sensör. Motor zor çalışabilir." },
+    { "kod": "P0118", "anlam": "Soğutma suyu sıcaklık sensörü devresi yüksek sinyal veriyor", "aciliyet": "yakinda", "not": "Gösterge yanlış sıcaklık gösterebilir, fan sürekli çalışabilir." },
+    { "kod": "P0128", "anlam": "Motor soğutma suyu çalışma sıcaklığına ulaşmıyor", "aciliyet": "izle", "not": "Çoğunlukla termostat açık kalmıştır. Kalorifer geç ısınır, yakıt artar." },
+    { "kod": "P0171", "anlam": "Motor fakir karışımla çalışıyor", "aciliyet": "yakinda", "not": "Vakum kaçağı, kirli hava akış sensörü ya da düşük yakıt basıncı." },
+    { "kod": "P0172", "anlam": "Motor zengin karışımla çalışıyor", "aciliyet": "yakinda", "not": "Enjektör kaçağı, sensör hatası ya da tıkalı hava filtresi. Yakıt artar." },
+    { "kod": "P0299", "anlam": "Turbo basıncı olması gerekenden düşük", "aciliyet": "yakinda", "not": "Araç çekişten düşer. Hortum kaçağı, turbo aktüatörü ya da sensör olabilir." },
+    { "kod": "P0300", "anlam": "Rastgele silindir ateşleme hatası", "aciliyet": "hemen", "not": "Motor tekler. Lamba yanıp sönüyorsa katalizör zarar görebilir; zorlamadan getirin." },
+    { "kod": "P0301", "anlam": "1. silindirde ateşleme hatası", "aciliyet": "hemen", "not": "Genelde bobin, buji ya da enjektör. Motor tekler, uzun süre sürmeyin." },
+    { "kod": "P0302", "anlam": "2. silindirde ateşleme hatası", "aciliyet": "hemen", "not": "Genelde bobin, buji ya da enjektör. Motor tekler, uzun süre sürmeyin." },
+    { "kod": "P0303", "anlam": "3. silindirde ateşleme hatası", "aciliyet": "hemen", "not": "Genelde bobin, buji ya da enjektör. Motor tekler, uzun süre sürmeyin." },
+    { "kod": "P0304", "anlam": "4. silindirde ateşleme hatası", "aciliyet": "hemen", "not": "Genelde bobin, buji ya da enjektör. Motor tekler, uzun süre sürmeyin." },
+    { "kod": "P0335", "anlam": "Krank mili konum sensörü devresinde arıza", "aciliyet": "hemen", "not": "Motor çalışmayabilir ya da yolda stop edebilir." },
+    { "kod": "P0340", "anlam": "Eksantrik mili konum sensörü devresinde arıza", "aciliyet": "yakinda", "not": "Zor çalışma ve güç kaybı yapabilir. Sensör, kablo ya da zamanlama." },
+    { "kod": "P0380", "anlam": "Kızdırma bujisi devresinde arıza", "aciliyet": "yakinda", "not": "Dizel araç soğukta zor çalışır. Buji, röle ya da kablo." },
+    { "kod": "P0401", "anlam": "EGR akışı yetersiz", "aciliyet": "yakinda", "not": "EGR valfi ya da kanalı kurumla tıkanmış olabilir." },
+    { "kod": "P0420", "anlam": "Katalizör verimi eşik değerin altında", "aciliyet": "izle", "not": "Muayenede sorun çıkarır. Önce oksijen sensörlerini ölçeriz; katalizör her zaman bozuk değildir." },
+    { "kod": "P0442", "anlam": "Yakıt buharı sisteminde küçük kaçak", "aciliyet": "izle", "not": "Sürüşü etkilemez. Yakıt kapağı contası ya da hortum." },
+    { "kod": "P0455", "anlam": "Yakıt buharı sisteminde büyük kaçak", "aciliyet": "izle", "not": "Önce yakıt kapağının tam kapandığına bakın." },
+    { "kod": "P0500", "anlam": "Araç hız sensörü arızası", "aciliyet": "yakinda", "not": "Hız göstergesi çalışmayabilir, otomatik şanzıman sert vites atabilir." },
+    { "kod": "P0562", "anlam": "Sistem voltajı düşük", "aciliyet": "yakinda", "not": "Akü ya da şarj dinamosu. Araç yolda kalabilir; şarj voltajını ölçelim." },
+    { "kod": "P0606", "anlam": "Motor beyni (ECU) iç işlemci hatası", "aciliyet": "yakinda", "not": "Önce besleme ve şaseyi ölçeriz; beyin çoğu zaman tamirle kurtulur." },
+    { "kod": "P0700", "anlam": "Şanzıman kontrol sisteminde arıza kaydı var", "aciliyet": "yakinda", "not": "Şanzıman beyninde ayrıca kod vardır; cihazla ikisini birlikte okumak gerekir." },
+    { "kod": "P2002", "anlam": "Dizel partikül filtresi (DPF) verimi düşük", "aciliyet": "yakinda", "not": "DPF, fark basınç sensörü ya da hortumları. Rejenerasyon durumu kontrol edilir." },
+    { "kod": "P242F", "anlam": "Dizel partikül filtresinde kül birikimi", "aciliyet": "yakinda", "not": "Filtre dolmuştur. Araç güç kaybına geçebilir." },
+    { "kod": "U0100", "anlam": "Motor beyniyle haberleşme yok", "aciliyet": "hemen", "not": "Araç çalışmayabilir. Genelde CAN hattında soket, kablo ya da besleme sorunu." },
+    { "kod": "U0121", "anlam": "ABS beyniyle haberleşme yok", "aciliyet": "yakinda", "not": "ABS ve ESP lambaları yanar, frenler çalışır ama ABS devrede olmaz." },
+    { "kod": "U0155", "anlam": "Gösterge paneliyle haberleşme yok", "aciliyet": "yakinda", "not": "Göstergeler donabilir ya da sönebilir. Soket ve besleme kontrol edilir." },
+    { "kod": "C0035", "anlam": "Sol ön tekerlek hız sensörü devresinde arıza", "aciliyet": "yakinda", "not": "ABS ve ESP devre dışı kalır. Sensör, kablo ya da manyetik halka." },
+    { "kod": "B0001", "anlam": "Sürücü hava yastığı ateşleme devresinde arıza", "aciliyet": "hemen", "not": "Kazada hava yastığı açılmayabilir. Direksiyon altındaki soket ve spiral kontrol edilir." }
+  ],
+  "kurumsal": {
+    "hero": {
+      "baslik": "Arızayı ölçeriz, tahmin etmeyiz.",
+      "metin": "Filo, servis ve kiralama araçları için arıza tespit, beyin onarımı, akü-şarj ve hibrit batarya testi. Her aracın hata kodu geçmişini kayıtta tutar, ne yaptığımızı raporlarız.",
+      "birincil": "Filo teklifi isteyin",
+      "ikincil": "Arıza kodu sorgula",
+      "ikincilRota": "ariza-kodu"
+    },
+    "ozet": {
+      "baslik": "Cihazla başlar, kabloyla biter",
+      "metin": "Önce cihaza bağlar, canlı veriyi okuruz. Sonra kabloyu tek tek takip eder, arızanın asıl yerini buluruz. Parça değiştirmeden önce ölçüm sonucunu size gösteririz."
+    },
+    "hizmetOzetBaslik": "Oto elektrik ve elektronik",
+    "anlasmaBaslik": "Kurumsal müşterilerimiz için",
+    "anlasmaMetin": "Şirket araçlarınızın elektrik ve elektronik arızaları için tek muhatap, araç bazında arıza kaydı ve dönemlik fatura.",
+    "anlasmalar": [
+      {
+        "baslik": "Filo arıza tespit anlaşması",
+        "kisa": "Araç bazında hata kodu geçmişi, öncelikli giriş.",
+        "metin": "Filonuzdaki araçların hata kodlarını her girişte okur, kayda alırız. Aynı arızanın tekrar edip etmediğini görür, kalıcı çözümü öneririz. Arızalı araç sıraya girmeden atölyeye alınır.",
+        "maddeler": ["Araç bazında hata kodu ve onarım geçmişi", "Arızalı araç için öncelikli giriş", "Ölçüm sonuçlarıyla yazılı rapor", "Dönemlik tek fatura ve iş dökümü"],
+        "buton": "Filo görüşmesi talep edin"
+      },
+      {
+        "baslik": "Akü ve şarj kontrol günleri",
+        "kisa": "Kış öncesi toplu akü, marş ve şarj testi.",
+        "metin": "Kış gelmeden şirket araçlarınızın akü, marş ve şarj sistemini toplu olarak test eder, zayıf aküleri raporlarız. Soğuk sabahta yolda kalan araç sayısını azaltır.",
+        "maddeler": ["Akü sağlık testi ve rapor", "Şarj voltajı ve kaçak akım ölçümü", "Araçların boş olduğu saatlere planlama"],
+        "buton": "Kontrol günü planlayın"
+      },
+      {
+        "baslik": "Hibrit ve elektrikli filolar",
+        "kisa": "Yüksek voltaj batarya testi ve hücre dengeleme.",
+        "metin": "Hibrit araç kullanan filolar için yüksek voltaj batarya testi, hücre dengeleme ve soğutma sistemi kontrolü yaparız. Test sonuçlarını hücre bazında raporlarız.",
+        "maddeler": ["Hücre bazında batarya testi", "Soğutma fanı ve kanal temizliği", "Yazılı test raporu"],
+        "buton": "Görüşme talep edin"
+      }
+    ],
+    "anlasmaNotu": "Anlaşma koşulları araç sayısına ve tiplerine göre belirlenir; teklifimizi yazılı olarak iletiriz.",
+    "hakkimizda": {
+      "baslik": "Biz kimiz",
+      "paragraflar": [
+        "Şaşmaz Oto Sanayi Sitesi'ndeki atölyemizde oto elektrik, elektronik ve arıza tespit işleri yapıyoruz. Bireysel müşterilerimizin yanında şirket, servis ve kiralama araçlarına da bakıyoruz.",
+        "Tek işimiz arızanın asıl sebebini bulmak. Tahmin edip parça değiştirmeyiz; cihazla okur, ölçü aletiyle doğrular, ne olduğunu size gösteririz. Değişen parçayı size geri veririz."
+      ],
+      "gorsel": "/img/devre/usta.jpg",
+      "gorselAlt": "Tabletle araç verilerini inceleyen usta"
+    },
+    "misyon": "Arızayı ilk seferde doğru bulmak, gereksiz parça değiştirmeden aracı yola döndürmek.",
+    "vizyon": "Ankara'da elektrik ve elektronik arızada filo sahiplerinin ilk aradığı, ölçerek ve kayıtlı çalışan servis olmak.",
+    "degerler": [
+      { "baslik": "Ölçerek teşhis", "metin": "Cihaz ve ölçü aletiyle doğrulamadan parça değiştirmeyiz." },
+      { "baslik": "Önce onarım", "metin": "Beyin ve dinamo gibi parçaları mümkünse değiştirmeden onarırız." },
+      { "baslik": "Kayıtlı iş", "metin": "Her aracın hata kodu ve onarım geçmişini saklarız." },
+      { "baslik": "Açık fiyat", "metin": "İşe başlamadan ne yapılacağını ve fiyatını söyleriz." }
+    ],
+    "kalite": {
+      "baslik": "Kalite anlayışımız",
+      "metin": "Her araçta aynı iş akışı: kabulde hata kodu okuma, ölçümle doğrulama, yazılı teklif, onay, onarım, kod silme ve yol testi.",
+      "maddeler": [
+        "Kabulde tüm beyinlerin hata kodları okunur ve kaydedilir.",
+        "Arıza ölçü aletiyle doğrulanmadan parça değiştirilmez.",
+        "Onarımdan sonra kodlar silinir, yol testiyle tekrar kontrol edilir.",
+        "Değişen parça müşteriye teslim edilir."
+      ]
+    },
+    "kariyer": {
+      "baslik": "Ekibimize katılın",
+      "metin": "Oto elektrik ve elektronikte deneyimli usta ve mesleği öğrenmek isteyen çırak arkadaşlarla tanışmak isteriz. Kısa bir tanıtımla bize yazın."
+    },
+    "sss": [
+      { "soru": "Motor arıza lambası yanıyor, araçla gelebilir miyim?", "cevap": "Lamba sabit yanıyorsa ve araç normal çekiyorsa sakin sürüşle gelebilirsiniz. Lamba yanıp sönüyorsa ya da motor tekliyorsa zorlamayın, bizi arayın." },
+      { "soru": "Kodu kendim okuttum, yine de cihaz gerekir mi?", "cevap": "Evet. Kod arızanın yerini değil hangi sistemde olduğunu söyler. Canlı veri ve ölçümle asıl sebebi buluruz." },
+      { "soru": "Arıza tespiti ne kadar sürer?", "cevap": "Çoğu araçta 30 dakika. Aralıklı arızalarda aracı bir gün tutup yol testiyle izlememiz gerekebilir." },
+      { "soru": "Beyin değişmeden tamir olur mu?", "cevap": "Çoğu arızada olur. Önce besleme ve şaseyi ölçeriz; beyin gerçekten arızalıysa onarır, gerekirse kodlarız." },
+      { "soru": "Kodu sildirince sorun çözülür mü?", "cevap": "Hayır. Sebep giderilmezse kod geri gelir. Silme işini onarımdan ve yol testinden sonra yaparız." }
+    ],
+    "sssBaslik": "Arıza lambası ve kodlar hakkında",
+    "galeriBaslik": "Atölyemizden",
+    "sayfalar": {
+      "kurumsal": { "baslik": "Kurumsal", "metin": "Kim olduğumuz, nasıl çalıştığımız ve neye önem verdiğimiz.", "gorsel": "/img/devre/aku.jpg" },
+      "hizmetler": { "baslik": "Hizmetlerimiz", "metin": "Arıza tespitten hibrit batarya testine, her iş için ortalama süre." },
+      "ariza-kodu": { "baslik": "Arıza kodu sorgulama", "metin": "Cihazın ya da uygulamanın okuduğu kodu yazın; ne anlama geldiğini sade Türkçeyle görün." },
+      "kurumsal-musteriler": { "baslik": "Filo ve kurumsal müşteriler", "metin": "Şirket araçlarınız için arıza kaydı, öncelikli servis ve dönemlik fatura.", "gorsel": "/img/devre/motor.jpg" },
+      "iletisim": { "baslik": "İletişim", "metin": "Filo teklifi, randevu ya da bir arıza kodu için yazın; aynı gün dönüş yapalım." }
+    },
+    "konular": ["Arıza / hata kodu", "Filo anlaşması", "Fiyat teklifi", "Randevu", "Genel bilgi"],
+    "cta": {
+      "baslik": "Lamba yanıyorsa ölçelim",
+      "metin": "Kodu ve aracınızı yazın; ne olabileceğini ve tespitin ne kadar süreceğini söyleyelim.",
+      "buton": "Bize yazın"
+    }
+  }
+}
