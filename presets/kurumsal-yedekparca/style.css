@@ -1,0 +1,121 @@
+/* Kurumsal yedek parça: katalog ve lojistik. Soğuk gri zemin, kobalt mavi, sinyal sarısı yalnızca vurgularda.
+   Geniş (expanded) Archivo başlıklar, mono raf/parça kodları. Geçiş perdesi barkod çizgili sarı. */
+:root { --sari: #ffd23f; --mono: 'JetBrains Mono', ui-monospace, monospace; }
+
+.k-logo__ad { font-size: 19px; text-transform: uppercase; letter-spacing: -0.01em; }
+.k-logo__alt { font-family: var(--mono); font-size: 11px; letter-spacing: .02em; }
+.k-nav a::after { height: 3px; bottom: 0; background: var(--sari); }
+.k-ust__teklif { background: var(--k-vurgu); }
+
+/* Hero: bölünmüş, masaüstünde görsel solda; başlık üstünde barkod satırı */
+.k-hero__ust { font-family: var(--mono); font-size: 13px; font-weight: 500; letter-spacing: .02em; color: var(--k-vurgu); display: inline-flex; gap: 10px; align-items: center; }
+.k-hero__ust::before { content: ''; width: 38px; height: 16px; flex: none; background: repeating-linear-gradient(90deg, var(--k-metin) 0 2px, transparent 2px 4px, var(--k-metin) 4px 5px, transparent 5px 8px); }
+.k-hero__baslik { text-transform: uppercase; max-width: 11ch; }
+@media (min-width: 900px) {
+  [data-hero='bolunmus'] .k-hero__ic { grid-template-columns: 5fr 7fr; }
+  [data-hero='bolunmus'] .k-hero__gorsel { order: -1; aspect-ratio: 4 / 5; }
+  [data-hero='bolunmus'] .k-hero__baslik { font-size: clamp(44px, 5vw, 80px); }
+}
+.k-hero__gorsel { box-shadow: 14px 14px 0 var(--sari); }
+@media (max-width: 899px) { .k-hero__gorsel { box-shadow: 8px 8px 0 var(--sari); margin-right: 8px; } }
+.k-hero__bilgi { border-top: 2px solid var(--k-metin); }
+.k-hero__bilgi dt { font-family: var(--mono); font-size: 12px; text-transform: uppercase; letter-spacing: .04em; }
+
+.k-h2 { text-transform: uppercase; }
+.k-sb__baslik { text-transform: uppercase; }
+.k-btn { font-weight: 700; }
+.k-link { color: var(--k-vurgu); }
+
+/* Ürün özeti: raf etiketi gibi satırlar */
+.k-hozet__liste { border-top: 2px solid var(--k-metin); }
+.k-hozet__ad { text-transform: uppercase; font-size: clamp(19px, 2.2vw, 28px); }
+.k-hozet__liste a:hover { background: #fff; }
+.k-hozet__liste a:hover .k-hozet__ad { color: var(--k-vurgu); }
+
+.k-rakamlar { background: var(--k-vurgu); color: #fff; }
+.k-rakamlar dd { color: #fff; }
+.k-rakamlar dt { color: rgb(255 255 255 / .78); font-family: var(--mono); font-size: 14px; }
+.k-rakamlar__liste > div { border-top: 3px solid var(--sari); }
+
+.k-aozet__liste li { background: #fff; border-left: 4px solid var(--k-vurgu); }
+.k-yorumlar__liste li { background: #fff; border: 1px solid var(--k-cizgi); }
+.k-yildiz { color: #e0a800; }
+.k-markalar__liste li { text-transform: uppercase; font-size: clamp(18px, 2vw, 26px); }
+.k-surec__no { font-family: var(--mono); font-size: 14px; background: var(--sari); color: var(--k-metin); padding: 2px 8px; border-radius: 4px; }
+.k-detay dd { font-family: var(--mono); font-weight: 500; font-size: 15px; }
+.k-detay div { background: #fff; border: 1px solid var(--k-cizgi); }
+.k-degerler li { border-top: 3px solid var(--k-vurgu); }
+
+.k-cta { background: var(--k-koyu); color: var(--k-koyu-metin); }
+.k-cta .k-lead { color: var(--k-koyu-soluk); }
+.k-cta .k-btn { background: var(--sari); color: var(--k-metin); border-color: var(--sari); }
+.k-cta .k-btn--ikincil { background: transparent; color: var(--k-koyu-metin); border-color: rgb(255 255 255 / .3); }
+
+/* Geçiş perdesi: sarı zemin, barkod çizgileri */
+.k-gecis {
+  background:
+    repeating-linear-gradient(90deg, #0b1526 0 3px, transparent 3px 7px, #0b1526 7px 8px, transparent 8px 14px, #0b1526 14px 19px, transparent 19px 23px) 50% 50% / min(70vw, 520px) 120px no-repeat,
+    var(--k-gecis);
+}
+
+/* --- Şasi sorgu modülü --- */
+.ss { padding-top: 24px; }
+[data-sayfa='sorgu'] .ss { padding-top: 8px; }
+.ss__kart { background: var(--k-koyu); color: var(--k-koyu-metin); border-radius: var(--k-radius-buyuk); padding: clamp(22px, 4vw, 56px); display: grid; gap: 32px; }
+@media (min-width: 1000px) { .ss__kart { grid-template-columns: 5fr 7fr; gap: 56px; } }
+.ss__ust { font-family: var(--mono); font-size: 13px; color: var(--k-koyu-soluk); display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+.ss__ust span { background: var(--sari); color: var(--k-metin); font-weight: 700; padding: 3px 8px; border-radius: 4px; }
+.ss__bas .k-lead { color: var(--k-koyu-soluk); }
+.ss__form { display: grid; gap: 18px; min-width: 0; }
+.ss__etiket, .ss__alan legend { font-weight: 600; font-size: 15px; display: flex; justify-content: space-between; gap: 10px; margin-bottom: 8px; padding: 0; }
+.ss__etiket output { font-family: var(--mono); color: var(--sari); }
+.ss__giris input, .ss__alan input:not([type]) {
+  width: 100%; font: 500 17px var(--k-font-govde); color: #fff; background: rgb(255 255 255 / .06);
+  border: 1.5px solid rgb(255 255 255 / .18); border-radius: var(--k-radius); padding: 14px;
+}
+.ss__giris input { font-family: var(--mono); font-size: clamp(17px, 2.2vw, 22px); letter-spacing: .08em; text-transform: uppercase; }
+.ss__giris input::placeholder { letter-spacing: .02em; text-transform: none; color: rgb(255 255 255 / .35); }
+.ss__form :is(input):focus { outline: none; border-color: var(--sari); box-shadow: 0 0 0 3px rgb(255 210 63 / .2); }
+.ss__giris { display: grid; }
+.ss__haneler { display: grid; grid-template-columns: repeat(17, 1fr); gap: 3px; }
+.ss__haneler span {
+  aspect-ratio: 3 / 4.2; border-radius: 4px; background: rgb(255 255 255 / .06); display: grid; place-items: center;
+  font: 700 clamp(10px, 1.3vw, 15px) var(--mono); color: var(--k-koyu); border-bottom: 3px solid var(--c);
+}
+.ss__haneler span.is-dolu { background: var(--c); }
+.g1 { --c: #ffd23f; } .g2 { --c: #7aa2ff; } .g3 { --c: #ff8a5b; } .g4 { --c: #b69cff; } .g5 { --c: #6fdcb4; }
+.ss__gruplar { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 13px; color: var(--k-koyu-soluk); }
+.ss__gruplar li { display: flex; align-items: center; gap: 6px; }
+.ss__gruplar li::before { content: ''; width: 10px; height: 10px; border-radius: 2px; background: var(--c); }
+.ss__gruplar b { font-family: var(--mono); color: var(--k-koyu-metin); font-weight: 500; }
+.ss__durum { font-size: 14px; color: var(--k-koyu-soluk); min-height: 1.5em; }
+.is-tamam .ss__durum { color: #6fdcb4; font-weight: 600; }
+.ss__cozum { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; border-radius: var(--k-radius); overflow: hidden; }
+.ss__cozum div { background: rgb(255 255 255 / .06); padding: 12px; min-width: 0; }
+.ss__cozum dt { font-size: 12px; color: var(--k-koyu-soluk); }
+.ss__cozum dd { margin: 2px 0 0; font-weight: 700; font-size: 15px; overflow-wrap: anywhere; }
+.ss__alan { border: 0; padding: 0; margin: 0; display: grid; min-width: 0; }
+.ss__cipler { display: flex; flex-wrap: wrap; gap: 6px; }
+.ss__cipler label { position: relative; }
+.ss__cipler input { position: absolute; inset: 0; opacity: 0; margin: 0; cursor: pointer; }
+.ss__cipler span { display: block; padding: 9px 13px; border-radius: 999px; border: 1.5px solid rgb(255 255 255 / .2); font-size: 14px; font-weight: 600; transition: background .2s, color .2s, border-color .2s; }
+.ss__cipler input:checked + span { background: var(--sari); color: var(--k-metin); border-color: var(--sari); }
+.ss__cipler input:focus-visible + span { outline: 2px solid #fff; outline-offset: 2px; }
+.ss__hata { color: #ff9b8a; font-weight: 600; }
+.ss__form .k-butonlar { margin-top: 4px; }
+.ss__gonder { background: var(--sari); color: var(--k-metin); border-color: var(--sari); }
+.ss__form .k-btn--ikincil { color: var(--k-koyu-metin); border-color: rgb(255 255 255 / .3); }
+.ss__teslim { margin-top: 20px; }
+.ss__teslim-baslik { font-family: var(--mono); font-size: 13px; color: var(--k-soluk); margin-bottom: 10px; }
+.ss__teslim ul { display: grid; gap: 8px; }
+@media (min-width: 800px) { .ss__teslim ul { grid-template-columns: repeat(4, 1fr); } }
+.ss__teslim li { background: #fff; border: 1px solid var(--k-cizgi); border-radius: var(--k-radius); padding: 14px 16px; display: grid; gap: 2px; }
+.ss__teslim li span { font-size: 14px; color: var(--k-soluk); }
+.ss__teslim li strong { font-family: var(--k-font-baslik); font-stretch: 112%; font-size: 21px; text-transform: uppercase; }
+.ss__teslim li small { font-size: 13px; color: var(--k-soluk); }
+
+/* Uzun dükkân adı (?ad=) menü düğmesini dışarı itmesin */
+.k-logo { min-width: 0; flex: 0 1 auto; }
+.k-logo__ad { overflow-wrap: anywhere; }
+@media (max-width: 600px) { .k-logo__ad { font-size: 15px; font-stretch: 105%; } .k-logo__alt { font-size: 10px; } }
+.k-rakamlar dd { font-size: clamp(34px, 4.4vw, 62px); font-stretch: 100%; }

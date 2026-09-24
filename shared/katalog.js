@@ -58,9 +58,9 @@ export const PRESETS = [
   { id: 'kurumsal-boya', grup: 'kurumsal', sektor: 'boya', ad: 'Kurumsal', icin: 'Boya ve kaporta, kurumsal görünüm', renk: '#8a94a6' },
   { id: 'kurumsal-lastik', grup: 'kurumsal', sektor: 'lastik', ad: 'Kurumsal', icin: 'Lastik ve jant, kurumsal görünüm', renk: '#8a94a6' },
   { id: 'kurumsal-elektrik', grup: 'kurumsal', sektor: 'elektrik', ad: 'Kurumsal', icin: 'Oto elektrik, kurumsal görünüm', renk: '#8a94a6' },
-  { id: 'kurumsal-doseme', grup: 'kurumsal', sektor: 'doseme', ad: 'Kurumsal', icin: 'Döşeme, kurumsal görünüm', renk: '#8a94a6' },
-  { id: 'kurumsal-yedekparca', grup: 'kurumsal', sektor: 'yedekparca', ad: 'Kurumsal', icin: 'Yedek parça, kurumsal görünüm', renk: '#8a94a6' },
-  { id: 'kurumsal-rektifiye', grup: 'kurumsal', sektor: 'rektifiye', ad: 'Kurumsal', icin: 'Rektifiye ve torna, kurumsal görünüm', renk: '#8a94a6' },
+  { id: 'kurumsal-doseme', grup: 'kurumsal', sektor: 'doseme', ad: 'Kurumsal', icin: 'Döşeme, kurumsal görünüm', renk: '#6e1b27' },
+  { id: 'kurumsal-yedekparca', grup: 'kurumsal', sektor: 'yedekparca', ad: 'Kurumsal', icin: 'Yedek parça, kurumsal görünüm', renk: '#1f3fd1' },
+  { id: 'kurumsal-rektifiye', grup: 'kurumsal', sektor: 'rektifiye', ad: 'Kurumsal', icin: 'Rektifiye ve torna, kurumsal görünüm', renk: '#f4c542' },
   { id: 'kurumsal-egzoz', grup: 'kurumsal', sektor: 'egzoz', ad: 'Kurumsal', icin: 'Egzoz, kurumsal görünüm', renk: '#8a94a6' },
   { id: 'kurumsal-cam', grup: 'kurumsal', sektor: 'cam', ad: 'Kurumsal', icin: 'Oto cam, kurumsal görünüm', renk: '#8a94a6' },
   { id: 'kurumsal-agirvasita', grup: 'kurumsal', sektor: 'agirvasita', ad: 'Kurumsal', icin: 'Ağır vasıta, kurumsal görünüm', renk: '#8a94a6' },
@@ -71,7 +71,7 @@ export const PRESETS = [
 ];
 
 // Henüz yapılmamış ya da yayına alınmamış presetler burada gizlenir.
-export const HAZIR_OLMAYAN = new Set(['kurumsal-boya', 'kurumsal-lastik', 'kurumsal-elektrik', 'kurumsal-doseme', 'kurumsal-yedekparca', 'kurumsal-rektifiye', 'kurumsal-egzoz', 'kurumsal-cam', 'kurumsal-agirvasita']);
+export const HAZIR_OLMAYAN = new Set(['kurumsal-boya', 'kurumsal-lastik', 'kurumsal-elektrik', 'kurumsal-egzoz', 'kurumsal-cam', 'kurumsal-agirvasita']);
 export const hazirPresetler = () => PRESETS.filter((p) => !HAZIR_OLMAYAN.has(p.id));
 
 export const presetById = (id) => PRESETS.find((p) => p.id === id);

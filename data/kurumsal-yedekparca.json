@@ -1,0 +1,91 @@
+{
+  "iletisim": {},
+  "kurumsal": {
+    "hero": {
+      "baslik": "Doğru parça, ilk seferde.",
+      "metin": "Binek ve hafif ticari araçlar için orijinal ve muadil yedek parça. Servislere ve ustalara cari hesapla çalışır, sanayi içinde parçayı dükkâna kadar getiririz.",
+      "birincil": "Parça sorun",
+      "ikincil": "Şasi ile sorgula",
+      "ikincilRota": "sorgu"
+    },
+    "ozet": {
+      "baslik": "Rafımız sanayinin deposu",
+      "metin": "Ustanın tezgâhı parça beklerken durur. Bu yüzden stoğu geniş tutar, rafta olmayanı aynı gün tedarik eder, yanlış gelen parçayı sorgusuz değiştiririz."
+    },
+    "hizmetOzetBaslik": "Ürün gruplarımız",
+    "anlasmaBaslik": "Servis ve kurumsal alımlar",
+    "anlasmaMetin": "Servisler, ustalar ve filo sahipleri için cari hesap, sabit iskonto ve öncelikli teslim.",
+    "anlasmalar": [
+      {
+        "baslik": "Servis ve usta cari hesabı",
+        "kisa": "Ay sonu tek ekstre, parça başına kayıt.",
+        "metin": "Sanayideki servis ve ustalara cari hesap açıyoruz. Aldığınız her parça plaka ya da iş emriyle kaydedilir, ay sonunda tek ekstre gönderilir.",
+        "maddeler": ["Plaka ya da iş emri bazında parça kaydı", "Ay sonu tek ekstre ve fatura", "Ürün grubuna göre sabit iskonto", "Sanayi içi ücretsiz teslim"],
+        "buton": "Cari hesap başvurusu"
+      },
+      {
+        "baslik": "Filo ve kurumsal alım",
+        "kisa": "Bakım setlerini araç bazında hazır tutarız.",
+        "metin": "Şirket araçlarının bakım setlerini (filtre, balata, yağ) araç bazında hazırlar, bakım günü öncesinde teslim ederiz. Parça dökümü plakaya göre raporlanır.",
+        "maddeler": ["Araç bazında bakım seti", "Plakaya göre parça dökümü", "Toplu alımda fiyat sabitleme"],
+        "buton": "Kurumsal görüşme talep edin"
+      },
+      {
+        "baslik": "Sigorta ve hasar onarım tedariki",
+        "kisa": "Eksper onaylı parça listesini hızla tamamlarız.",
+        "metin": "Hasar onarımı yapan servisler için eksper listesindeki parçaları orijinal ya da onaylı muadil seçenekleriyle fiyatlandırır, onay sonrası aynı gün göndeririz.",
+        "maddeler": ["Liste üzerinden toplu fiyat", "Parça başına orijinal / muadil seçeneği", "Faturada dosya numarası"],
+        "buton": "Parça listesi gönderin"
+      }
+    ],
+    "anlasmaNotu": "Cari hesap ve iskonto koşulları aylık alım hacmine göre belirlenir; teklifimizi yazılı olarak iletiriz.",
+    "hakkimizda": {
+      "baslik": "Sanayinin içinde, ustanın yanında",
+      "paragraflar": [
+        "Şaşmaz Oto Sanayi Sitesi'ndeki depomuzdan binek ve hafif ticari araçlar için yedek parça satıyoruz. Müşterilerimizin çoğu sanayideki servisler ve ustalar; bir kısmı da kendi aracına parça arayan araç sahipleri.",
+        "Çalışma biçimimiz basit: şasi numarasından doğru parçayı buluruz, orijinal ve muadil seçeneğini fiyatıyla birlikte yazarız, parçayı söz verdiğimiz saatte teslim ederiz."
+      ],
+      "gorsel": "/img/depo/koridor.jpg",
+      "gorselAlt": "Deponun uzun koridoru, iki yanda dolu raflar"
+    },
+    "misyon": "Ustanın tezgâhını parça beklerken durdurmamak; doğru parçayı ilk seferde, söz verilen saatte teslim etmek.",
+    "vizyon": "Ankara'daki servislerin parça için ilk aradığı, kayıtlı ve düzenli çalışan bir yedek parça deposu olmak.",
+    "degerler": [
+      { "baslik": "Şasiyle eşleştirme", "metin": "Tahminle parça vermeyiz; şasi numarasından katalogla eşleştiririz." },
+      { "baslik": "Açık seçenek", "metin": "Orijinal ve muadili yan yana yazar, farkını dürüstçe söyleriz." },
+      { "baslik": "Saatinde teslim", "metin": "Sanayi içinde teslim saatini baştan söyler, tutarız." },
+      { "baslik": "Sorgusuz değişim", "metin": "Yanlış parça gelirse aynı gün değiştiririz." }
+    ],
+    "kalite": {
+      "baslik": "Parça güvencemiz",
+      "metin": "Sattığımız her parçanın kaynağı ve faturası bellidir. Muadil parçada yalnızca bildiğimiz, denediğimiz üreticilerle çalışırız.",
+      "maddeler": [
+        "Her parça şasi numarası ya da orijinal parça numarasıyla eşleştirilir.",
+        "Orijinal ve muadil seçenekleri ayrı ayrı fiyatlandırılır ve faturada belirtilir.",
+        "Parçalar üretici garantisiyle satılır; garanti süreci bizim üzerimizden yürür.",
+        "Yanlış ya da uymayan parça aynı gün değiştirilir."
+      ]
+    },
+    "sss": [
+      { "soru": "Şasi numarasını nerede bulurum?", "cevap": "Ruhsatın ön yüzünde, \"Şase No\" satırında yazan 17 haneli numaradır. Ön camın alt köşesinde ve sürücü kapısı direğinde de bulunur. Fotoğrafını göndermeniz de yeterli." },
+      { "soru": "Orijinal ile muadil arasındaki fark nedir?", "cevap": "Orijinal parça aracın üreticisinin ambalajıyla gelir. Muadil parça başka bir üreticinin aynı ölçüdeki ürünüdür. İkisinin fiyatını ve farkını yan yana yazarız, seçimi siz yaparsınız." },
+      { "soru": "Parça yanlış gelirse ne oluyor?", "cevap": "Takılmamış ve ambalajı bozulmamış parçayı aynı gün değiştiririz. Sanayi içindeyseniz doğru parçayı getirip yanlışı biz alırız." },
+      { "soru": "Cari hesap açmak için ne gerekiyor?", "cevap": "Vergi levhası ve iletişim bilgileriniz yeterli. Başvurunuzu aldıktan sonra sizi arayıp koşulları yazılı olarak iletiriz." }
+    ],
+    "sayfalar": {
+      "kurumsal": { "baslik": "Kurumsal", "metin": "Kim olduğumuz, nasıl çalıştığımız ve parçaya nasıl güvence verdiğimiz.", "gorsel": "/img/depo/yuksek-raf.jpg" },
+      "urunler": { "baslik": "Ürün grupları", "metin": "Fren sisteminden motor parçalarına, rafta hazır tuttuğumuz gruplar." },
+      "sorgu": { "baslik": "Şasi numarasıyla parça sorgu", "metin": "Parçanın adını bilmeniz gerekmez. 17 haneli şasi numarasını yazın, parçayı biz eşleştirelim." },
+      "bayi": { "baslik": "Servis ve bayi hesabı", "metin": "Servisler, ustalar ve filolar için cari hesap, sabit iskonto ve öncelikli teslim.", "gorsel": "/img/depo/kutu-arac.jpg" },
+      "iletisim": { "baslik": "İletişim", "metin": "Parça, cari hesap ya da bir sorunuz için yazın; mesai saatinde hemen dönüş yapalım." }
+    },
+    "konular": ["Parça fiyatı", "Cari hesap başvurusu", "Kurumsal / filo alımı", "Parça değişimi", "Genel bilgi"],
+    "markaBaslik": "Parça bulduğumuz araç markaları",
+    "surecBaslik": "Parça nasıl gelir",
+    "cta": {
+      "baslik": "Şasi numarasını gönderin, fiyatı yazalım",
+      "metin": "Orijinal ve muadil seçeneği, stok durumu ve teslim saati tek mesajda.",
+      "buton": "Parça sorun"
+    }
+  }
+}

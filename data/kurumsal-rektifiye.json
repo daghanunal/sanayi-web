@@ -1,0 +1,91 @@
+{
+  "iletisim": {},
+  "kurumsal": {
+    "hero": {
+      "baslik": "Motoru ölçüsüne getiririz.",
+      "metin": "Krank taşlama, silindir honlama, kafa planyası ve torna işleri. Motor ustalarına ve servislere çalışır, her işi ölçü raporuyla teslim ederiz.",
+      "birincil": "İş gönderin",
+      "ikincil": "Servislere hizmet",
+      "ikincilRota": "servisler"
+    },
+    "ozet": {
+      "baslik": "Ölçmeden işlemeyiz",
+      "metin": "Motor tezgâha gelmeden ölçülür, işlendikten sonra yine ölçülür. Ustanın motoru toplarken ikinci kez ölçmesine gerek kalmasın diye raporu parçayla birlikte veririz."
+    },
+    "hizmetOzetBaslik": "Rektifiye ve torna işleri",
+    "anlasmaBaslik": "Usta ve servislere hizmet",
+    "anlasmaMetin": "Motor ustaları, servisler ve filo atölyeleri için sıra önceliği, cari hesap ve ölçü raporuyla teslim.",
+    "anlasmalar": [
+      {
+        "baslik": "Motor ustası ve servis ortaklığı",
+        "kisa": "Sıra önceliği, cari hesap, rapor dosyası.",
+        "metin": "Düzenli iş gönderen ustalara ve servislere sıra önceliği veriyor, cari hesapla çalışıyoruz. Her motorun ölçü raporu dosyanızda saklanır; aynı motor yeniden geldiğinde geçmişi elimizdedir.",
+        "maddeler": ["Düzenli işte sıra önceliği", "Ay sonu tek ekstre", "Motor bazında ölçü raporu arşivi", "İş bitince telefonla haber"],
+        "buton": "Ortaklık görüşmesi isteyin"
+      },
+      {
+        "baslik": "Filo ve kurumsal atölyeler",
+        "kisa": "Kendi atölyesi olan filolara parça işleme.",
+        "metin": "Kendi bakım atölyesi olan filo ve kurumların söktüğü krank, blok ve kafaları işler, raporuyla geri teslim ederiz. Toplu işte teslim takvimini baştan yazılı veririz.",
+        "maddeler": ["Toplu işte yazılı teslim takvimi", "Plaka ya da motor numarasıyla kayıt", "Faturada iş dökümü"],
+        "buton": "Görüşme talep edin"
+      },
+      {
+        "baslik": "Özel parça ve numune işleme",
+        "kisa": "Burç, flanş, mil: numuneyle getirin.",
+        "metin": "Piyasada bulunmayan burç, flanş, mil ve adaptörleri çizim ya da numuneye göre işleriz. Seri iş için adet ve malzemeyi yazın, teklifi iletelim.",
+        "maddeler": ["Çizim ya da numuneyle üretim", "Tek adet ya da küçük seri", "Malzeme seçeneğiyle teklif"],
+        "buton": "Numune için yazın"
+      }
+    ],
+    "anlasmaNotu": "Çalışma koşulları iş hacmine göre belirlenir; teklifimizi yazılı olarak iletiriz.",
+    "hakkimizda": {
+      "baslik": "Aynı tezgâh, aynı titizlik",
+      "paragraflar": [
+        "Şaşmaz Oto Sanayi Sitesi'ndeki atölyemizde motor rektifiye ve torna işleri yapıyoruz. Müşterilerimizin çoğu motor ustaları ve servisler; motoru söker, parçayı bize getirir, işlenmiş ve ölçülmüş olarak geri alırlar.",
+        "Tezgâhlarımız eski, ölçü aletlerimiz düzenli kontrol edilir. Her işin başında ve sonunda ölçü alınır, değerler rapora yazılır. Onayınız olmadan hiçbir parça tezgâha girmez."
+      ],
+      "gorsel": "/img/mikron/atolye.jpg",
+      "gorselAlt": "Atölyede tezgâh başında çalışan usta"
+    },
+    "misyon": "Motoru üreticinin öngördüğü ölçüye getirmek ve bunu ölçü raporuyla belgelemek.",
+    "vizyon": "Ankara'daki motor ustalarının gönül rahatlığıyla iş gönderdiği, ölçüsüyle bilinen bir rektifiye atölyesi olmak.",
+    "degerler": [
+      { "baslik": "Önce ölçü", "metin": "İşe başlamadan ölçer, hangi ölçüye inileceğini söyleriz." },
+      { "baslik": "Yazılı rapor", "metin": "Her iş ölçü raporuyla teslim edilir." },
+      { "baslik": "Onaysız iş yok", "metin": "Fiyat onaylanmadan parça tezgâha girmez." },
+      { "baslik": "Açık söz", "metin": "Kurtulmayacak parçayı işleyip para almayız; baştan söyleriz." }
+    ],
+    "kalite": {
+      "baslik": "Ölçü ve kalite düzenimiz",
+      "metin": "Her parça aynı sırayla ilerler: giriş ölçüsü, onay, işleme, ara ölçü, son ölçü, yıkama ve raporlu teslim.",
+      "maddeler": [
+        "Giriş ölçüsü alınır, aşınma ve ovalite rapora yazılır.",
+        "İşleme sırasında her adımdan sonra ölçü kontrol edilir.",
+        "Son ölçü üretici toleransıyla karşılaştırılır; tolerans dışı parça teslim edilmez.",
+        "Parçalar yıkanır, yağ kanalları temizlenir, tıpalanarak teslim edilir."
+      ]
+    },
+    "sss": [
+      { "soru": "Hangi ölçüye ineceğimi nasıl bilirim?", "cevap": "Silindiri ve krankı ölçer, aşınmanın üstüne temiz işleme payı kalacak ilk büyütme ölçüsünü öneririz. Piston ve yatak siparişinden önce bu ölçüyü size yazarız." },
+      { "soru": "Ölçü raporunda ne yazıyor?", "cevap": "Silindir başına işlenmiş çap ve ovalite, krank muylu ölçüleri, planyada alınan miktar ve çarpılma değeri. Rapor parçayla birlikte elden verilir." },
+      { "soru": "İş ne kadar sürer?", "cevap": "Planya ve basınç testi çoğunlukla aynı gün, krank taşlama ve honlama 1-2 gün sürer. Yoğunluğa göre teslim gününü parçayı bırakırken söyleriz." },
+      { "soru": "Parçayı getirmem mi gerekiyor?", "cevap": "Sanayi içindeki ustalarımızın parçasını yoğunluğa göre alıp geri bırakıyoruz. Arayıp saat ayarlayın." }
+    ],
+    "sayfalar": {
+      "kurumsal": { "baslik": "Kurumsal", "metin": "Atölyemiz, çalışma düzenimiz ve ölçüye neden bu kadar önem verdiğimiz.", "gorsel": "/img/mikron/torna.jpg" },
+      "hizmetler": { "baslik": "Hizmetlerimiz", "metin": "Her iş için çalıştığımız tolerans ve ortalama süre." },
+      "servisler": { "baslik": "Usta ve servislere hizmet", "metin": "Düzenli iş gönderen ustalar ve servisler için sıra önceliği, cari hesap ve rapor arşivi.", "gorsel": "/img/tezgah/eksantrik.jpg" },
+      "olcu": { "baslik": "Ölçü seçici ve rapor örneği", "metin": "Silindirinizin hangi büyütme ölçüsüne ineceğini görün; teslimde verdiğimiz ölçü raporunu inceleyin." },
+      "iletisim": { "baslik": "İletişim", "metin": "İş göndermek, ölçü sormak ya da ortaklık görüşmesi için yazın." }
+    },
+    "konular": ["İş göndermek istiyorum", "Ölçü / fiyat sorusu", "Servis ortaklığı", "Özel parça işleme", "Genel bilgi"],
+    "markaBaslik": "Sık çalıştığımız motorlar",
+    "surecBaslik": "Motorunuz tezgâhta nasıl ilerler",
+    "cta": {
+      "baslik": "Motoru getirin, önce ölçelim",
+      "metin": "Hangi ölçüye inileceğini ve fiyatı işe başlamadan söyleriz. Raporu parçayla birlikte alırsınız.",
+      "buton": "İş gönderin"
+    }
+  }
+}

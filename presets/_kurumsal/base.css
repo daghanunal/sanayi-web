@@ -97,7 +97,7 @@ a:hover > .k-ok { transform: translateX(4px); }
 .k-ust__ic { height: var(--k-ust); display: flex; align-items: center; gap: 24px; width: min(100% - 32px, calc(var(--k-kap) + 80px)); margin-inline: auto; transition: height .35s; }
 .k-ust.is-kucuk { background: color-mix(in srgb, var(--k-zemin) 92%, transparent); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); box-shadow: 0 1px 0 var(--k-cizgi); }
 .k-ust.is-kucuk .k-ust__ic { height: 60px; }
-.k-logo { display: flex; flex-direction: column; text-decoration: none; color: var(--k-metin); line-height: 1.05; flex: none; }
+.k-logo { display: flex; flex-direction: column; text-decoration: none; color: var(--k-metin); line-height: 1.05; flex: 0 1 auto; min-width: 0; }
 .k-logo__ad { font-size: 21px; }
 .k-logo__alt { font-size: 12px; color: var(--k-soluk); margin-top: 2px; }
 .k-logo__img { height: 34px; width: auto; }
