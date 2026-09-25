@@ -164,7 +164,7 @@ export const PRESETS = [
 ];
 
 // Henüz yapılmamış ya da yayına alınmamış presetler burada gizlenir.
-export const HAZIR_OLMAYAN = new Set(['kurumsal-kilit']);
+export const HAZIR_OLMAYAN = new Set([]);
 export const hazirPresetler = () => PRESETS.filter((p) => !HAZIR_OLMAYAN.has(p.id));
 
 export const presetById = (id) => PRESETS.find((p) => p.id === id);

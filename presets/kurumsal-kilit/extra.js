@@ -5,7 +5,7 @@
 // anahtarBul: "anahtarınız hangisi?" seçici → yapılan iş, süre, yanınıza alın, WhatsApp'a hazır mesaj.
 // kapida:     kapıda kalan araç + ruhsat/kimlik kontrolü (tikler sırayla çizilir).
 // saat:       çalışma saatleri anahtar etiketleri gibi askıda; canlı açık/kapalı, yol tarifi, yaklaşınca harita.
-import { esc, telHref, waHref, mapsHref, mapsEmbed, openStatus, GUNLER, icons, gsap, reducedMotion } from '../../shared/core.js';
+import { esc, asset, telHref, waHref, mapsHref, mapsEmbed, openStatus, GUNLER, icons, gsap, reducedMotion } from '../../shared/core.js';
 import { yilEki } from '../_kurumsal/bolumler.js';
 
 const ok = `<svg class="k-ok" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
@@ -371,7 +371,7 @@ export const kapida = {
             </div>
           </div>
           <div class="kp__gorsel">
-            <figure data-perde><img src="/img/kurumsal-kilit/kapi-acma.jpg" alt="Araç kapı kilidine takılmış açma aleti" loading="lazy"></figure>
+            <figure data-perde><img src="${asset('/img/kurumsal-kilit/kapi-acma.jpg')}" alt="Araç kapı kilidine takılmış açma aleti" loading="lazy"></figure>
             <div class="kp__kart" role="group" aria-label="Kapıyı açmadan önce yapılan kontrol">
               <p class="kp__kart-bas">Açmadan önce</p>
               <ol>
