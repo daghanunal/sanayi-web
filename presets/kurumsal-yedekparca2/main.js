@@ -20,6 +20,9 @@ v.hizmetler = v.hizmetler.map((h) => ({
   ],
 }));
 
+// Karşılaştırmalı fiyat iddiası taşımasın.
+v.yorumlar = (v.yorumlar || []).map((y) => ({ ...y, metin: y.metin.replace(/\s*Fiyatı da piyasanın altındaydı\./, '') }));
+
 const hedef = '<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="8"/><path d="M12 2v5M12 17v5M2 12h5M17 12h5"/></svg>';
 
 kurumsal({

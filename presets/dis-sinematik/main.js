@@ -43,6 +43,7 @@ $$('[data-wa]').forEach((a) => (a.href = waGenel));
 $$('[data-maps]').forEach((a) => (a.href = mapsHref(d)));
 $$('[data-icon]').forEach((el) => (el.innerHTML = icons[el.dataset.icon]));
 $('.top__brand').setAttribute('aria-label', `${d.isletme.ad}, sayfa başı`);
+$('[data-top]').classList.toggle('is-long', d.isletme.ad.length > 24);
 
 const yil = new Date().getFullYear() - d.isletme.kurulus;
 $('[data-since]').textContent = `Etimesgut · ${ablative(d.isletme.kurulus)} beri`;
@@ -77,7 +78,7 @@ const TAGS = [
   { id: 'fill', text: F[2].etiket, cls: 'is-cure' },
   { id: 'mine', text: d.katmanlar[0] },
   { id: 'dentin', text: d.katmanlar[1] },
-  { id: 'pulpa', text: d.katmanlar[2], cls: 'is-warn' },
+  { id: 'pulpa', text: d.katmanlar[2], cls: 'is-warn is-left' },
   { id: 'screw', text: F[4].etiket },
   { id: 'bone', text: 'Çene kemiği' },
 ];
@@ -260,7 +261,7 @@ function filmState(p, time) {
 function finaleState(q, time) {
   const m = mobile();
   return {
-    camAz: 0, camEl: 0.18, camDist: m ? 8.2 : 5.4, camY: -0.1, fov: m ? 40 : 34, shiftX: m ? 0 : 0.22, shiftY: m ? -0.25 : 0,
+    camAz: 0, camEl: 0.18, camDist: m ? 10.8 : 5.4, camY: -0.1, fov: m ? 40 : 34, shiftX: m ? 0 : 0.22, shiftY: m ? -0.21 : 0,
     tooth: 1, toothY: Math.sin(time * 0.6) * 0.04, rotX: 0.1, rotY: time * 0.3 + q * 2,
     scan: 9, ring: 0, xray: 0, cavity: 0, fill: 1, plaque: 0, clean: 9, chips: 0, cure: 0,
     cut: 9, pulpGlow: 0, canal: 0, implant: 0, implantK: 0, iRotX: 0, iRotY: 0,
@@ -362,13 +363,14 @@ function setupScroll() {
     onUpdate: (self) => (finaleIn = self.progress),
   });
   ScrollTrigger.create({
-    trigger: '.foot', start: 'top bottom', end: 'top 55%',
+    trigger: '.foot', start: 'top bottom', end: () => (mobile() ? 'top 82%' : 'top 55%'),
     onUpdate: (self) => (footOut = self.progress),
   });
   ScrollTrigger.create({
     trigger: '[data-about]', start: 'top 70px',
-    endTrigger: '[data-finale]', end: 'top 70px',
-    onToggle: (self) => $('[data-top]').classList.toggle('is-solid', self.isActive),
+    end: 'max',
+    onUpdate: (self) => $('[data-top]').classList.toggle('is-solid', self.progress > 0),
+    onToggle: (self) => $('[data-top]').classList.toggle('is-solid', self.isActive || self.progress > 0),
   });
   contentMotion();
 }

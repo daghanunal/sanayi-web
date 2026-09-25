@@ -291,12 +291,65 @@ function makeTruck({ cab = 0x1f5e57, trailer = 0xe9ebe6, lite = false, tape = 0x
 }
 
 // Yol yardım aracı (kamyonet) + turuncu tepe lambası
-function makeVan() {
+function drawVanSide(g, w, h, { tel = '' }) {
+  g.fillStyle = '#eef0ea';
+  g.fillRect(0, 0, w, h);
+  // kabin camı (ön tarafta, dokunun solu = aracın önü)
+  g.fillStyle = '#0b1418';
+  g.beginPath();
+  g.roundRect(24, 40, w * 0.2, h * 0.34, 14);
+  g.fill();
+  // yan cam şeridi
+  g.fillRect(w * 0.27, 40, w * 0.68, h * 0.2);
+  // yeşil bant + turuncu ince çizgi
+  g.fillStyle = GREEN;
+  g.fillRect(0, h * 0.5, w, h * 0.2);
+  g.fillStyle = '#ff9a1f';
+  g.fillRect(0, h * 0.72, w, h * 0.035);
+  g.fillStyle = '#f2f4ee';
+  g.textBaseline = 'middle';
+  g.font = '900 84px Overpass, sans-serif';
+  g.fillText('YOL YARDIM 7/24', w * 0.06, h * 0.605);
+  g.fillStyle = '#10181a';
+  g.font = '800 54px Overpass, sans-serif';
+  g.fillText(tel, w * 0.06, h * 0.86);
+}
+function drawVanRear(g, w, h) {
+  g.fillStyle = '#eef0ea';
+  g.fillRect(0, 0, w, h);
+  // arka kapı camları
+  g.fillStyle = '#0b1418';
+  g.fillRect(w * 0.08, h * 0.08, w * 0.39, h * 0.28);
+  g.fillRect(w * 0.53, h * 0.08, w * 0.39, h * 0.28);
+  // kırmızı-sarı reflektif şevron
+  g.save();
+  g.beginPath();
+  g.rect(0, h * 0.5, w, h * 0.5);
+  g.clip();
+  g.fillStyle = '#ffc42e';
+  g.fillRect(0, h * 0.5, w, h * 0.5);
+  g.fillStyle = '#d8261c';
+  for (let x = -h; x < w + h; x += 90) {
+    g.beginPath();
+    g.moveTo(x, h); g.lineTo(x + 45, h); g.lineTo(x + 45 + h * 0.5, h * 0.5); g.lineTo(x + h * 0.5, h * 0.5);
+    g.fill();
+  }
+  g.restore();
+  // kapı arası çizgi
+  g.fillStyle = 'rgba(0,0,0,0.35)';
+  g.fillRect(w * 0.497, 0, 4, h);
+  g.fillStyle = '#10181a';
+  g.textAlign = 'center';
+  g.textBaseline = 'middle';
+  g.font = '900 64px Overpass, sans-serif';
+  g.fillText('YOL YARDIM', w / 2, h * 0.43);
+  g.textAlign = 'left';
+}
+function makeVan(tel = '') {
   const g = new THREE.Group();
   const white = makeMat(0xeef0ea, { roughness: 0.4, metalness: 0.2 });
   const dark = makeMat(0x111315, { roughness: 0.8 });
   const glass = makeMat(0x0b1418, { metalness: 0.9, roughness: 0.1 });
-  const stripe = new THREE.MeshBasicMaterial({ color: 0x0b7a4b });
   const add = (w, h, d, m, x, y, z) => {
     const b = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), m);
     b.position.set(x, y, z);
@@ -306,13 +359,31 @@ function makeVan() {
   add(2.0, 1.9, 4.2, white, 0, 1.55, 0.4);
   add(2.0, 1.2, 1.4, white, 0, 1.2, -2.3);
   add(1.9, 0.62, 0.05, glass, 0, 2.0, -1.62).rotation.x = -0.5;
-  add(2.02, 0.22, 5.6, stripe, 0, 1.2, -0.3);
   add(2.1, 0.3, 0.3, dark, 0, 0.62, -3.0);
+  add(2.1, 0.28, 0.26, dark, 0, 0.62, 2.6);
+  // yan ve arka giydirme
+  const sideTex = canvasTex(1024, 512, (c, w, h) => drawVanSide(c, w, h, { tel }));
+  const rearTex = canvasTex(512, 512, (c, w, h) => drawVanRear(c, w, h));
+  const sideM = new THREE.MeshStandardMaterial({ map: sideTex, roughness: 0.45, metalness: 0.1 });
+  const rearM = new THREE.MeshStandardMaterial({ map: rearTex, roughness: 0.45, metalness: 0.1 });
+  // yalnız sol yüz (kameraya bakan taraf)
+  const side = new THREE.Mesh(new THREE.PlaneGeometry(4.2, 1.9), sideM);
+  side.position.set(-1.012, 1.55, 0.4);
+  side.rotation.y = -Math.PI / 2;
+  g.add(side);
+  add(0.02, 0.3, 1.38, new THREE.MeshBasicMaterial({ color: 0x0b7a4b }), -1.005, 1.2, -2.3);
+  const rear = new THREE.Mesh(new THREE.PlaneGeometry(2.0, 1.9), rearM);
+  rear.position.set(0, 1.55, 2.512);
+  g.add(rear);
   const head = new THREE.MeshBasicMaterial({ color: 0xfff6e0 });
   add(0.36, 0.16, 0.05, head, -0.66, 1.1, -3.02);
   add(0.36, 0.16, 0.05, head, 0.66, 1.1, -3.02);
+  const tail = new THREE.MeshBasicMaterial({ color: 0xff2a18 });
+  add(0.14, 0.42, 0.04, tail, -0.9, 1.05, 2.53);
+  add(0.14, 0.42, 0.04, tail, 0.9, 1.05, 2.53);
   const beaconM = new THREE.MeshBasicMaterial({ color: 0xffa21a });
-  const beacon = add(1.1, 0.16, 0.3, beaconM, 0, 2.58, -0.6);
+  add(1.3, 0.08, 0.36, dark, 0, 2.52, -0.6);
+  const beacon = add(1.1, 0.16, 0.3, beaconM, 0, 2.62, -0.6);
   const wg = new THREE.CylinderGeometry(0.38, 0.38, 0.26, 14);
   wg.rotateZ(Math.PI / 2);
   const tm = makeMat(0x0d0e0f, { roughness: 0.95 });
@@ -321,7 +392,11 @@ function makeVan() {
     w.position.set(s * 0.92, 0.38, z);
     g.add(w);
   }
-  return { root: g, beacon, beaconM };
+  const redraw = () => {
+    drawVanSide(sideTex.image.getContext('2d'), 1024, 512, { tel }); sideTex.needsUpdate = true;
+    drawVanRear(rearTex.image.getContext('2d'), 512, 512); rearTex.needsUpdate = true;
+  };
+  return { root: g, beacon, beaconM, redraw };
 }
 
 export function createScene(canvas, { lite = false, signs = [], finalSign = null, name = '', tel = '' } = {}) {
@@ -467,6 +542,7 @@ export function createScene(canvas, { lite = false, signs = [], finalSign = null
   const sodium = 0xffa34a;
   const glowTex = radialTex('rgba(255,190,110,1)');
   const poolTex = radialTex('rgba(255,160,70,0.9)');
+  const posts = []; // kameraya çok yaklaşan direk saydamlaşır (kadrajı kapatmasın)
   {
     const n = Math.ceil(ROAD_LEN / POST_GAP) + 1;
     const poleM = makeMat(0x5b6164, { metalness: 0.7, roughness: 0.4 });
@@ -480,11 +556,16 @@ export function createScene(canvas, { lite = false, signs = [], finalSign = null
     poolG.rotateX(-Math.PI / 2);
     for (let i = 0; i < n; i++) {
       const z = 60 - i * POST_GAP;
-      const pole = new THREE.Mesh(poleG, poleM);
+      const pm = poleM.clone();
+      pm.transparent = true;
+      const pole = new THREE.Mesh(poleG, pm);
       pole.position.set(-7.05, 5.5, z);
       flow.add(pole);
+      const post = { z, pm, meshes: [pole] };
+      posts.push(post);
       for (const s of [-1, 1]) {
-        const arm = new THREE.Mesh(armG, poleM);
+        const arm = new THREE.Mesh(armG, pm);
+        post.meshes.push(arm);
         arm.position.set(-7.05 + s * 1.6, 10.9, z);
         flow.add(arm);
         const head = new THREE.Mesh(headG, headM);
@@ -598,7 +679,7 @@ export function createScene(canvas, { lite = false, signs = [], finalSign = null
   }
 
   // Yol yardım aracı
-  const van = makeVan();
+  const van = makeVan(tel);
   van.root.position.set(3.3, 0, 60);
   van.root.visible = false;
   scene.add(van.root);
@@ -662,6 +743,7 @@ export function createScene(canvas, { lite = false, signs = [], finalSign = null
   // Tabelaları font yüklendikten sonra yeniden çiz
   function redrawSigns() {
     const all = [...gantries.map((x) => x.tex), exitSign?.tex].filter(Boolean);
+    van.redraw();
     { const c = sideTex.image; drawTrailerSide(c.getContext('2d'), c.width, c.height, { name, tel }); sideTex.needsUpdate = true; }
     for (const t of all) {
       const c = t.image;
@@ -758,6 +840,14 @@ export function createScene(canvas, { lite = false, signs = [], finalSign = null
     if (Math.abs(camera.fov - s.fov) > 0.01) {
       camera.fov += (s.fov - camera.fov) * k;
       camera.updateProjectionMatrix();
+    }
+    for (const p of posts) {
+      const wz = p.z + flow.position.z;
+      const dist = Math.hypot(camera.position.x + 7.05, camera.position.z - wz);
+      const o = Math.min(1, Math.max(0, (dist - 5) / 9));
+      p.pm.opacity = o;
+      p.pm.depthWrite = o > 0.99;
+      for (const m of p.meshes) m.visible = o > 0.02;
     }
     hills.position.set(camera.position.x, 0, camera.position.z);
     sky.position.copy(camera.position);

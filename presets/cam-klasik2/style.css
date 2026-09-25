@@ -117,7 +117,7 @@ body {
 .hero__titles, .hero__subs { display: grid; }
 .hero__titles > *, .hero__subs > * { grid-area: 1 / 1; }
 .ttl {
-  font: 400 clamp(52px, 15vw, 150px)/1.06 var(--display); text-transform: uppercase; letter-spacing: .005em;
+  font: 400 clamp(52px, 15vw, 150px)/1.2 var(--display); text-transform: uppercase; letter-spacing: .005em;
   padding-top: .08em; transition: opacity .45s ease, transform .6s cubic-bezier(.2, .8, .2, 1), clip-path .6s cubic-bezier(.2, .8, .2, 1);
   clip-path: inset(-20% -5% 100% -5%); transform: translateY(12px); opacity: 0;
 }
@@ -222,6 +222,7 @@ body {
   .hero__pin { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); grid-template-rows: 1fr; align-items: center; padding: 100px var(--gutter) 60px; column-gap: 40px; }
   .hero__copy { align-content: center; gap: 22px; }
   .ttl { font-size: clamp(72px, 8.4vw, 150px); }
+  .ttl--0.is-long { font-size: clamp(52px, 5.4vw, 92px); }
   .sub { font-size: 18px; max-width: 36ch; }
   .hero__actions { margin-top: 10px; }
   .hero__actions .btn { flex: 0 0 auto; }
@@ -358,7 +359,7 @@ body {
 /* --- Yorumlar -------------------------------------------------------------------- */
 .reviews { padding: clamp(80px, 11vw, 150px) 0; }
 .reviews__head { display: grid; gap: 10px; margin-bottom: 40px; }
-.reviews__score { font: 400 clamp(120px, 34vw, 260px)/.82 var(--display); color: var(--red); padding-top: .06em; }
+.reviews__score { font: 400 clamp(120px, 34vw, 260px)/.82 var(--display); color: var(--red); padding-top: .06em; padding-bottom: .08em; }
 .reviews__stars { display: flex; gap: 3px; color: var(--red); margin-bottom: 14px; }
 .reviews__stars svg { width: 22px; height: 22px; }
 .reviews__list { display: flex; gap: 14px; overflow-x: auto; scroll-snap-type: x mandatory; padding: 0 var(--gutter) 6px; scrollbar-width: none; }
@@ -373,7 +374,8 @@ body {
 .review__who { font-weight: 800; display: flex; flex-direction: column; }
 .review__who span { font-weight: 500; color: var(--muted); font-size: 14px; }
 .brands { margin-top: 44px; font: 400 22px/1.5 var(--display); text-transform: uppercase; color: var(--muted); letter-spacing: .02em; }
-.brands span + span::before { content: '/'; margin: 0 .5em; color: var(--red); }
+.brands span { white-space: nowrap; }
+.brands span:not(:last-child)::after { content: '/'; margin: 0 .25em 0 .5em; color: var(--red); }
 @media (min-width: 900px) {
   .reviews__head { grid-template-columns: auto 1fr; gap: 56px; align-items: end; }
   .reviews__list { display: grid; grid-template-columns: repeat(3, 1fr); width: min(100% - var(--gutter) * 2, var(--maxw)); margin-inline: auto; padding: 0; overflow: visible; gap: 20px; }
@@ -409,7 +411,7 @@ body {
 /* --- Footer --- */
 .foot { background: var(--ink); color: #b9bec3; padding: 40px 0 40px; font-size: 14px; }
 .foot__grid { display: grid; gap: 8px; }
-.foot__brand { font: 400 26px/1 var(--display); text-transform: uppercase; color: #fff; padding-top: 2px; }
+.foot__brand { font: 400 26px/1.2 var(--display); text-transform: uppercase; color: #fff; padding-top: 2px; }
 .foot__small { color: #7d848b; }
 
 @media (prefers-reduced-motion: reduce) {

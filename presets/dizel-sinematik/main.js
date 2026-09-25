@@ -40,7 +40,7 @@ const ablative = (y) => {
 $$('[data-name]').forEach((el) => (el.textContent = d.isletme.ad));
 $('[data-slogan]').textContent = d.isletme.slogan;
 $('[data-since]').textContent = `Şaşmaz Oto Sanayi · ${d.isletme.kurulus}${ablative(d.isletme.kurulus)} beri dizel`;
-$('[data-hakkinda]').textContent = d.isletme.hakkinda;
+$('[data-hakkinda]').textContent = String(d.isletme.hakkinda || '').replace(/\b(19|20)\d{2}'(ten|tan|den|dan)\b/, `${d.isletme.kurulus}${ablative(d.isletme.kurulus)}`);
 $('[data-garanti]').textContent = d.garanti;
 $('[data-year]').textContent = new Date().getFullYear();
 $$('[data-address]').forEach((el) => (el.textContent = d.iletisim.adres));
@@ -310,7 +310,7 @@ if (scene) {
     }
     // parça etiketleri
     const e = S.explode;
-    const showTags = e > 0.75;
+    const showTags = e > 0.55;
     tagBox.classList.toggle('is-on', showTags);
     if (e > 0.5) {
       const heroC = scene.project(scene.anchors.part(2));
@@ -439,11 +439,11 @@ function buildFilm() {
   const chaps = $$('.chap');
   const dur = phone ? 7.5 : 8;
   const W = [
-    [-1, 0.1],
-    [0.15, 0.37],
-    [0.47, 0.66],
-    [0.72, 0.87],
-    [0.9, 1.1],
+    [-1, 0.11],
+    [0.11, 0.405],
+    [0.405, 0.68],
+    [0.68, 0.87],
+    [0.87, 1.1],
   ];
   const tl = gsap.timeline({ paused: true, defaults: { ease: 'none' } });
   chaps.forEach((el, i) => {
@@ -682,6 +682,7 @@ function cursor() {
     xTo(e.clientX);
     yTo(e.clientY);
     cur.classList.toggle('is-hot', !!e.target.closest('a, button'));
+    cur.classList.add('is-live');
   });
   $$('.mag').forEach((b) => {
     const bx = gsap.quickTo(b, 'x', { duration: 0.4, ease: 'power3' });

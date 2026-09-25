@@ -165,6 +165,9 @@ body {
   .hero__cta { display: none; }
   .hero__hint { top: 92px; }
   .is-vitrin .hero__pin { padding-bottom: 104px; }
+  .hero.is-long .hero__name { font-size: min(13vw, 56px); line-height: 1.02; max-width: none; }
+  .hero.is-long .meter__num { font-size: min(28vw, 112px); }
+  .hero.is-long .hero__slogan { font-size: 15px; }
 }
 
 /* --- Ölçüm --- */

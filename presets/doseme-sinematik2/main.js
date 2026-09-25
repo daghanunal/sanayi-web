@@ -166,7 +166,7 @@ function poseHero(p) {
     ? { nx: 0.1, ny: 0.64, size: 0.48, maxW: 0.9, rx: -0.3, ry: 0.42, rz: 0.14 }
     : { nx: 0.46, ny: 0.0, size: 0.88, maxW: 0.5, rx: -0.18, ry: -0.5, rz: 0.1 };
   const b = por
-    ? { nx: 0, ny: 0.33, size: 0.56, maxW: 0.86, rx: -0.04, ry: 0, rz: 0 }
+    ? { nx: 0, ny: 0.38, size: 0.5, maxW: 0.84, rx: -0.04, ry: 0, rz: 0 }
     : { nx: 0.4, ny: 0.0, size: 0.84, maxW: 0.5, rx: 0, ry: -0.12, rz: 0 };
   const t = io(seg(p, 0.06, sStart(1)));
   const o = {};
@@ -191,7 +191,7 @@ function matValue(p) {
 function poseMat(p) {
   const por = portrait();
   const base = por
-    ? { nx: 0, ny: 0.33, size: 0.56, maxW: 0.86 }
+    ? { nx: 0, ny: 0.38, size: 0.5, maxW: 0.84 }
     : { nx: 0.4, ny: 0.0, size: 0.84, maxW: 0.5 };
   const sw = Math.sin(p * Math.PI * 2);
   return {
@@ -280,13 +280,18 @@ function textMat(p) {
 const finalEl = $('[data-final]');
 const finalHint = $('[data-final-hint]');
 // Örtü sahnesi (z-index 40) main'in üstünde durur; ipucu görünsün diye body'ye taşınır.
-document.body.appendChild(finalHint);
+const finalVeil = $('[data-final-veil]');
+document.body.append(finalHint, finalVeil);
 function textFinal(p) {
   const show = seg(p, 0.5, 0.74);
   finalEl.style.opacity = show;
   finalEl.style.transform = `translate3d(0, ${((1 - show) * 30).toFixed(1)}px, 0) scale(${(0.96 + show * 0.04).toFixed(3)})`;
   finalEl.style.visibility = show <= 0 ? 'hidden' : 'visible';
   finalHint.style.opacity = seg(p, 0.1, 0.17) * (1 - seg(p, 0.38, 0.46));
+  const veil = seg(p, 0.12, 0.22) * (1 - seg(p, 0.38, 0.45));
+  finalVeil.style.opacity = veil;
+  finalVeil.style.visibility = veil <= 0 ? 'hidden' : 'visible';
+  finalVeil.style.transform = `translate3d(-50%, calc(-50% + ${(L(24, 0, seg(p, 0.12, 0.24)) - seg(p, 0.36, 0.45) * 120).toFixed(1)}px), 0)`;
 }
 const TEXT = { hero: textHero, mat: textMat, final: textFinal };
 

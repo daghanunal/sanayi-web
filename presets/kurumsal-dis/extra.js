@@ -101,7 +101,8 @@ function dislerCumle(liste) {
 }
 
 function mesajYaz(d, disler, sikayetler, cocuk) {
-  const s = sikayetler.map((x) => SIKAYET.find((y) => y.id === x)).filter(Boolean);
+  // "Sadece kontrol" bir şikâyet değil; cümleye eklenmez, genel kontrol mesajına düşer.
+  const s = sikayetler.filter((x) => x !== 'kontrol').map((x) => SIKAYET.find((y) => y.id === x)).filter(Boolean);
   const ne = s.map((x) => x.cumle).join(', ');
   const cok = disler.length > 1;
   // Yetişkin: "… dişimde / dişlerime"; çocuk: "Çocuğumun … dişinde / dişlerine".
@@ -111,7 +112,7 @@ function mesajYaz(d, disler, sikayetler, cocuk) {
   if (disler.length && ne) govde = `${kim}${dislerCumle(disler)} ${ek('de')} ${ne}.`;
   else if (disler.length) govde = `${kim}${dislerCumle(disler)} ${ek('e')} baktırmak istiyorum.`;
   else if (ne) govde = `${cocuk ? 'çocuğumun dişlerinde' : 'dişlerimde'} ${ne}.`;
-  else govde = cocuk ? 'çocuğum için diş kontrolü istiyorum.' : 'diş kontrolü istiyorum.';
+  else return `Merhaba ${d.isletme.ad}, ${cocuk ? 'çocuğum için ' : ''}genel diş kontrolü randevusu almak istiyorum.`;
   return `Merhaba ${d.isletme.ad}, ${govde} Muayene için randevu almak istiyorum.`;
 }
 

@@ -80,7 +80,7 @@ $('#hakkimizda').innerHTML = `
     <dl class="stats">
       ${stats.map((s) => `
         <div class="stat">
-          <dd><b class="stat__n" data-to="${Number(s.deger) || 0}">0</b><span class="stat__u mono">${esc(s.birim || s.sonek || '')}</span></dd>
+          <dd><b class="stat__n" data-to="${Number(s.deger) || 0}">0</b>${s.sonek ? `<span class="stat__u mono">${esc(s.sonek)}</span>` : ''}</dd>
           <dt>${esc(s.etiket)}</dt>
         </div>`).join('')}
     </dl>
@@ -239,9 +239,9 @@ const KEYS = [
   { el: '.stage--field', at: 0.5, v: { camR: P ? 7.6 : 8.8, camYaw: 0.02, camPitch: 0.05, vx: 0, vy: P ? 0.08 : 0, field: 1, pulse: 0.4, dim: 1 } },
   { el: '#hizmetler', at: 0.12, v: { camR: 7.4, camYaw: 0.75, camPitch: 0.18, vx: P ? 0 : -0.25, vy: 0, field: 0.55, pulse: 1, dim: P ? 0.4 : 1 } },
   { el: '#hizmetler', at: 0.9, v: { camYaw: 1.35, camPitch: 0.3 } },
-  { el: '#ariza', at: 0, v: { camR: P ? 7.2 : 8.6, camYaw: 0.5, camPitch: 0.12, vx: P ? 0 : 0.2, vy: P ? 0.02 : 0, field: 1, pulse: 0, dim: 1 } },
+  { el: '#ariza', at: 0, v: { camR: P ? 7.2 : 9.4, camYaw: 0.5, camPitch: 0.12, vx: P ? 0 : 0.36, vy: P ? 0.02 : 0, field: 1, pulse: 0, dim: 1 } },
   { el: '#ariza', at: 1, v: { camYaw: -0.5, camPitch: 0.2 } },
-  { el: '#surec', at: 0.35, v: { camR: 6, camYaw: Math.PI / 2 - 0.02, camPitch: 0.02, vx: P ? 0 : 0.28, vy: 0, field: 0.35, pulse: 0.8, dim: P ? 0.45 : 0.9, roll: 0 } },
+  { el: '#surec', at: 0.35, v: { camR: 6, camYaw: Math.PI / 2 - 0.02, camPitch: 0.02, vx: P ? 0 : 0.36, vy: 0, field: 0.35, pulse: 0.8, dim: P ? 0.45 : 0.35, roll: 0 } },
   { el: '#yorumlar', at: 0.4, v: { camR: 2.4, camYaw: 0.2, camPitch: 0.62, tx: 0.2, ty: 0.75, vx: 0, vy: 0, field: 0.15, pulse: 0.5, dim: 0.22 } },
   { el: '#dukkan', at: 0.4, v: { camR: 10, camYaw: -0.8, camPitch: 0.4, tx: 0, ty: 0, field: 0.4, pulse: 0.3, dim: 0.35 } },
   { el: '#iletisim', at: P ? 0.25 : 0.55, v: { camR: P ? 7 : 9.4, camYaw: 0.6, camPitch: 0.2, vx: P ? 0 : 0.44, vy: P ? 0.3 : 0, field: 1, pulse: 1, heat: 1, dim: 1 } },
@@ -347,16 +347,16 @@ ScrollTrigger.create({
   end: () => `+=${innerHeight * (faults.length * (P ? 0.75 : 0.65))}`,
   pin: '.faults__pin',
   pinSpacing: true,
-  onUpdate: (self) => setFault(self.progress),
-  onToggle: (self) => {
-    if (!self.isActive) {
-      override = {};
-      applyFilm();
-    }
+  // Alan kontrolü yalnızca bölüm sabitliyken; dışarıda film anahtarlarına geri döner.
+  onUpdate: (self) => {
+    setFault(self.progress);
+    if (!self.isActive) override = {};
   },
-  onEnter: () => setFault(0),
-  onLeave: () => setFault(1),
-  onEnterBack: (self) => setFault(self.progress),
+  onToggle: (self) => {
+    setFault(self.isActive ? self.progress : self.progress > 0.5 ? 1 : 0);
+    if (!self.isActive) override = {};
+    applyFilm();
+  },
 });
 
 // --- Metin hareketleri -------------------------------------------------------------------

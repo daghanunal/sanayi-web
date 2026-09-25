@@ -262,8 +262,9 @@ function pose(id, p) {
 
 // Aktif bölüm: ekranın ortasındaki bölüm
 const chapters = $$('[data-ch]').map((el) => ({ id: el.dataset.ch, el }));
+let footShift = 0;
 function active() {
-  const mid = innerHeight / 2;
+  const mid = innerHeight / 2 - footShift;
   for (const c of chapters) {
     const r = c.el.getBoundingClientRect();
     if (r.top <= mid && r.bottom > mid) {
@@ -341,7 +342,7 @@ async function runIntro() {
     introMm.textContent = mmf(progress * d.dis.yeni);
   };
   intro.addEventListener('pointerdown', () => (skipped = true), { once: true });
-  const nameSplit = SplitText.create(introName, { type: 'chars', charsClass: 'c' });
+  const nameSplit = SplitText.create(introName, { type: 'words,chars', wordsClass: 'w', charsClass: 'c' });
   gsap.fromTo(nameSplit.chars, { yPercent: 60, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 0.7, ease: 'expo.out', stagger: 0.03 });
   setProgress(0.1);
 
@@ -429,11 +430,12 @@ function setupScroll() {
 
   // Otel
   const countEl = $('[data-otel-count]');
+  const otelN = { v: 0 };
   gsap.timeline({ scrollTrigger: sc('.ch--otel') })
     .fromTo('.otel > *', { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 0.1, stagger: 0.03 }, 0.06)
-    .fromTo(countEl, { '--n': 0 }, {
-      '--n': otelStat.deger, duration: 0.6, ease: 'power1.out',
-      onUpdate() { countEl.textContent = nf(gsap.getProperty(countEl, '--n')); },
+    .fromTo(otelN, { v: 0 }, {
+      v: otelStat.deger, duration: 0.5, ease: 'power1.out',
+      onUpdate() { countEl.textContent = nf(this.progress() > 0.995 ? otelStat.deger : otelN.v); },
     }, 0.06)
     .to('.otel', { opacity: 0, y: -40, duration: 0.06 }, 0.94);
 
@@ -486,9 +488,12 @@ function setupScroll() {
   gsap.fromTo('.num', { y: 50, opacity: 0 }, { y: 0, opacity: 1, duration: 0.8, stagger: 0.08, ease: 'expo.out', scrollTrigger: { trigger: '.nums', start: 'top 80%', once: true } });
 
   // Final
-  const finalSplit = SplitText.create('[data-final-title]', { type: 'words,chars', charsClass: 'c', wordsClass: 'fw' });
+  // Kelime kelime (harf bölmek Dela Gothic'te harf aralığını bozuyor)
+  const finalTitle = $('[data-final-title]');
+  finalTitle.setAttribute('aria-label', d.finalBaslik);
+  finalTitle.innerHTML = d.finalBaslik.split(/\s+/).map((w) => `<span class="fw" aria-hidden="true"><span class="fwi">${esc(w)}</span></span>`).join(' ');
   gsap.timeline({ scrollTrigger: sc('.ch--final') })
-    .fromTo(finalSplit.chars, { opacity: 0, yPercent: 90 }, { opacity: 1, yPercent: 0, duration: 0.08, stagger: 0.005 }, 0.01)
+    .fromTo('.final__title .fwi', { opacity: 0, yPercent: 105 }, { opacity: 1, yPercent: 0, duration: 0.08, stagger: 0.02, ease: 'power3.out' }, 0.01)
     .fromTo(['.final__txt', '.final__cta'], { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.06, stagger: 0.03 }, 0.08)
     .set({}, {}, 1);
 
@@ -513,6 +518,16 @@ function setupScroll() {
         word.style.transform = `translate3d(${(L(-18, 18, q)).toFixed(1)}vw,0,0)`;
       },
     });
+  });
+
+  // Footer girerken sabit sahne sayfayla birlikte yukarı kayar (final boş kalmasın)
+  ScrollTrigger.create({
+    trigger: '.foot', start: 'top bottom', end: 'bottom bottom',
+    onUpdate(self) {
+      footShift = $('.foot').offsetHeight * self.progress;
+      canvas.style.transform = footShift > 0 ? `translate3d(0,${(-footShift).toFixed(1)}px,0)` : '';
+    },
+    onLeaveBack() { footShift = 0; canvas.style.transform = ''; },
   });
 
   // Harita yakına gelince

@@ -22,6 +22,8 @@
   :root { --bottom: 96px; }
 }
 html.is-vitrin { --bottom: 100px; }
+/* Son film bölümü alt çubuk payını kendisi bırakır; gövde dolgusu kaideyi kesiyordu */
+html body, html.is-vitrin body { padding-bottom: 0; }
 
 html { background: var(--paper); }
 body {
@@ -548,13 +550,13 @@ em { font-style: normal; color: var(--violet); }
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  padding: 16vh var(--gut) calc(var(--bottom) + 28px);
+  padding: 15vh var(--gut) calc(var(--bottom) + 18px);
   text-align: center;
 }
 .final__title { margin: 0; font: 400 clamp(40px, 7vw, 116px)/0.95 var(--display); letter-spacing: -0.015em; max-width: 12ch; }
 .final__title .w { display: inline-block; }
 .final__sub { margin: 0 0 20px; font-size: clamp(16px, 1.4vw, 20px); line-height: 1.5; max-width: 42ch; color: #ece6ff; }
-.final__bottom { display: grid; justify-items: center; padding: 22px 24px 24px; border-radius: 30px; background: rgba(70, 25, 210, 0.42); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
+.final__bottom { margin-top: auto; display: grid; justify-items: center; padding: 22px 24px 24px; border-radius: 30px; background: rgba(70, 25, 210, 0.42); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
 .final__cta { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
 @media (max-width: 699px) {
   .final { padding-top: 96px; }
@@ -647,19 +649,10 @@ em { font-style: normal; color: var(--violet); }
   .ziyaret__cta .btn { flex: 1; }
 }
 
-.footer {
-  position: relative;
-  z-index: 3;
-  background: var(--ink);
-  color: #d9d1f0;
-  padding: 48px var(--gut) calc(var(--bottom) + 30px);
-  display: grid;
-  gap: 6px;
-  font-size: 14px;
-}
-.footer p { margin: 0; }
-.footer__name { font: 400 26px var(--display); color: #fff; }
-.footer__small { font: 500 12px var(--mono); opacity: 0.6; margin-top: 10px !important; }
+.final__foot { display: grid; gap: 4px; margin-top: 18px; font-size: 13px; color: #e4dcff; }
+.final__foot p { margin: 0; }
+.final__foot-name { font: 400 18px var(--display); color: #fff; }
+.final__foot-small { font: 500 11px var(--mono); opacity: 0.7; }
 
 /* WebGL yoksa */
 .no-webgl .stage { display: none; }

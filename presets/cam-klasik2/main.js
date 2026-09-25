@@ -105,7 +105,7 @@ $('[data-reviews]').innerHTML = d.yorumlar.map((r) => `
     <blockquote class="review__text">${esc(r.metin)}</blockquote>
     <p class="review__who">${esc(r.ad)}<span>${esc(r.arac)}</span></p>
   </li>`).join('');
-$('[data-brands]').innerHTML = d.markalar.map((m) => `<span>${esc(m)}</span>`).join('');
+$('[data-brands]').innerHTML = d.markalar.map((m) => `<span>${esc(m)}</span>`).join(' ');
 
 // Saatler: bugünü işaretle
 const order = [1, 2, 3, 4, 5, 6, 0];

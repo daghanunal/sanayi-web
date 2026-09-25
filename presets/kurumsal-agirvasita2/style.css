@@ -99,6 +99,7 @@ body { background: var(--k-zemin); }
 .ot-hero__baslik { color: #fff; font-size: clamp(44px, 5.4vw, 92px); max-width: 11ch; }
 .ot-hero .k-lead { color: rgb(255 255 255 / .84) !important; margin-top: 0; }
 .ot-hero .k-butonlar { margin-top: 24px; }
+.ot-hero .k-btn--ikincil { background: rgb(8 12 10 / .94); }
 @media (max-width: 899px) {
   .ot-hero__baslik { font-size: min(13.2vw, 64px); }
   .ot-hero .k-lead { margin-top: 12px; font-size: 17px; }

@@ -1,7 +1,7 @@
-// Kademe (klasik aile, otomatik şanzıman): grafit, alüminyum grisi ve ATF kırmızısı
+// Seviye (klasik aile, otomatik şanzıman): alüminyum grisi, grafit ve ATF kırmızısı
 // (otomatik şanzıman yağının kendi rengi). Fotoğraf ağırlıklı, WebGL yok.
-// İmza anı hero'da: vites kapısı. Kaydırdıkça P-R-N-D kapısında kırmızı gösterge kayar, her
-// kademeye "tık" diye oturur (snap); fotoğraf, kademe cümlesi ve header'daki gösterge değişir.
+// İmza anı hero'da: yağ çubuğu. Kaydırdıkça ekranın altından yağ yükselir; koyu, eksik yağ
+// taze ATF kırmızısına döner ve sağdaki çubukta MIN'den MAX çizgisine "tık" diye oturur (snap).
 import sektor from '../../data/sektor-sanziman.json';
 import extra from '../../data/sanziman-klasik.json';
 import '../../shared/base.css';
@@ -48,33 +48,29 @@ const status = openStatus(d.saatler);
 $('[data-status-big]').textContent = status.text;
 document.documentElement.classList.toggle('is-open', status.open);
 
-// --- Hero: vites kapısı -----------------------------------------------------------
-const V = d.vitesler;
+// --- Hero: yağ çubuğu ------------------------------------------------------------
+const S = d.seviyeler;
 const hero = $('.hero');
-const stage = $('[data-stage]');
-stage.innerHTML = V.map((v, i) => `<img class="hero__img${i === 0 ? ' is-on' : ''}" src="${esc(v.img)}" alt="" ${i === 0 ? 'fetchpriority="high"' : 'loading="eager"'} decoding="async" />`).join('');
-$('[data-gate]').innerHTML = V.map((v, i) => `<li class="gate__g${i === 0 ? ' is-on' : ''}"><b>${esc(v.harf)}</b><span class="mono">${esc(v.ad)}</span></li>`).join('');
-const imgs = $$('.hero__img', stage);
-const gates = $$('.gate__g');
-const inds = $$('[data-ind] i');
-const knob = $('[data-knob]');
-const fill = $('[data-fill]');
-const gTitle = $('[data-g-title]'), gText = $('[data-g-text]'), gHarf = $('[data-g-harf]'), gAd = $('[data-g-ad]'), gStep = $('[data-g-step]');
+const oil = $('[data-oil]');
+const oilNew = $('[data-oil-new]');
+const oilOld = $('.sivi__old');
+const lvlEl = $('[data-lvl]');
+const lvlNum = $('[data-lvl-num]');
+const gTitle = $('[data-g-title]'), gText = $('[data-g-text]'), gNo = $('[data-g-no]'), gAd = $('[data-g-ad]'), gStep = $('[data-g-step]');
 const small = matchMedia('(max-width: 899px)').matches;
+const steps = S.length - 1;
 
-let gear = -1;
-function setGear(i, animate) {
-  if (i === gear) return;
-  const prev = gear;
-  gear = i;
-  const v = V[i];
-  imgs.forEach((im, k) => im.classList.toggle('is-on', k === i));
-  gates.forEach((g, k) => g.classList.toggle('is-on', k === i));
-  inds.forEach((g, k) => g.classList.toggle('is-on', k === i));
+let stage = -1;
+function setStage(i, animate) {
+  if (i === stage) return;
+  const prev = stage;
+  stage = i;
+  const v = S[i];
+  hero.dataset.stage = String(i);
   const write = () => {
-    gHarf.textContent = v.harf;
-    gAd.textContent = v.ad;
-    gStep.textContent = `${i + 1}/${V.length}`;
+    gNo.textContent = String(i + 1);
+    gAd.textContent = v.etiket;
+    gStep.textContent = `${i + 1}/${S.length}`;
     gTitle.textContent = v.baslik;
     gText.textContent = v.metin;
   };
@@ -88,55 +84,59 @@ function setGear(i, animate) {
       gsap.fromTo('.gcard > *', { y: 14 * dir, opacity: 0 }, { y: 0, opacity: 1, duration: 0.36, stagger: 0.04, ease: 'power3.out' });
     },
   });
-  // Kademeye oturma "tık"ı
-  gsap.fromTo('.gate', { x: 0 }, { keyframes: { x: [0, 3, -2, 0] }, duration: 0.22, ease: 'none' });
+  if (i === steps) gsap.fromTo('.stick__zone', { opacity: .4 }, { opacity: 1, duration: 0.6, ease: 'power2.out' });
 }
 
-// Gösterge konumu: kademeler arası sürekli; kapı ölçüleri CSS'ten
-let pitch = 0;
-function measure() {
-  const a = gates[0].getBoundingClientRect(), b = gates[1].getBoundingClientRect();
-  pitch = b.top - a.top;
+// p: 0..1 → seviye (yüzde), kademeler arasında doğrusal
+let H = hero.querySelector('.hero__pin').offsetHeight;
+let lastLvl = -1;
+const intro = { off: 0 };
+function setLevel(p) {
+  const x = p * steps, k = Math.min(Math.floor(x), steps - 1), f = x - k;
+  const lvl = S[k].seviye + (S[k + 1].seviye - S[k].seviye) * f;
+  const y = H * (1 - lvl / 100) + intro.off;
+  oil.style.transform = `translate3d(0, ${y.toFixed(1)}px, 0)`;
+  lvlEl.style.transform = `translate3d(0, ${(-H * lvl / 100).toFixed(1)}px, 0)`;
+  const fresh = Math.min(1, Math.max(0, (p - 0.15) / 0.7));
+  oilNew.style.opacity = fresh.toFixed(3);
+  oilOld.style.opacity = (1 - fresh).toFixed(3);
+  const r = Math.round(lvl);
+  if (r !== lastLvl) { lastLvl = r; lvlNum.textContent = r; }
 }
-function setKnob(p) {
-  const y = p * (V.length - 1) * pitch;
-  knob.style.transform = `translate3d(0, ${y.toFixed(1)}px, 0)`;
-  fill.style.transform = `scaleY(${p.toFixed(4)})`;
-}
-measure();
 
+setStage(0, false);
+let prog = 0;
 if (reducedMotion) {
-  setGear(0, false);
-  setKnob(0);
+  prog = 1;
+  setStage(steps, false);
+  setLevel(1);
 } else {
-  setGear(0, false);
-  setKnob(0);
-  const steps = V.length - 1;
+  setLevel(0);
   const m = { p: 0 };
   const tl = gsap.timeline({
     defaults: { ease: 'none' },
     scrollTrigger: {
-      trigger: hero, start: 'top top', end: () => `+=${innerHeight * (small ? 2.1 : 2.6)}`,
-      pin: '.hero__pin', scrub: 0.35, anticipatePin: 1,
-      snap: { snapTo: 1 / steps, duration: { min: 0.18, max: 0.45 }, delay: 0.06, ease: 'power2.inOut' },
-      onLeave: () => { setKnob(1); setGear(steps, false); },
-      onLeaveBack: () => { setKnob(0); setGear(0, false); },
+      trigger: hero, start: 'top top', end: () => `+=${innerHeight * (small ? 1.9 : 2.3)}`,
+      pin: '.hero__pin', scrub: 0.4, anticipatePin: 1,
+      snap: { snapTo: (v, st) => Math.round((st ? st.progress : v) * steps) / steps, duration: { min: 0.2, max: 0.5 }, delay: 0.06, ease: 'power2.inOut' },
     },
   });
   tl.to(m, {
     p: 1, duration: 1,
-    onUpdate: () => { setKnob(m.p); setGear(Math.round(m.p * steps), true); },
+    onUpdate: () => { prog = m.p; setLevel(m.p); setStage(Math.round(m.p * steps), true); },
   }, 0)
-    .fromTo(stage, { scale: 1.12 }, { scale: 1, duration: 1 }, 0)
+    .fromTo('.hero__img', { scale: 1.1 }, { scale: 1, duration: 1 }, 0)
     .to('.hero__hint', { opacity: 0, duration: 0.1 }, 0);
 
-  // Açılış
+  // Açılış: yağ alttan kabarır
+  intro.off = H * 0.16;
+  setLevel(0);
+  gsap.to(intro, { off: 0, duration: 1.4, ease: 'power3.out', delay: 0.1, onUpdate: () => setLevel(prog) });
   gsap.from('.hero__name', { yPercent: 28, opacity: 0, duration: 0.9, ease: 'power3.out', delay: 0.05 });
   gsap.from(['.hero__since', '.hero__slogan', '.hero__foot > *'], { y: 16, opacity: 0, duration: 0.7, stagger: 0.08, ease: 'power2.out', delay: 0.2 });
-  gsap.from('.gate__g', { x: 30, opacity: 0, duration: 0.6, stagger: 0.07, ease: 'power3.out', delay: 0.15 });
-  gsap.from('.gate__knob', { scale: 0.4, opacity: 0, duration: 0.7, ease: 'back.out(2)', delay: 0.5 });
+  gsap.from('.stick', { opacity: 0, x: 20, duration: 0.8, ease: 'power3.out', delay: 0.3 });
 }
-addEventListener('resize', () => { measure(); setKnob(gear / (V.length - 1)); });
+addEventListener('resize', () => { H = hero.querySelector('.hero__pin').offsetHeight; setLevel(prog); });
 
 // --- Şanzıman tipleri --------------------------------------------------------
 const tabs = $('[data-tabs]');
@@ -281,8 +281,6 @@ if (!reducedMotion) {
 
   gsap.from('.svc', { y: 24, opacity: 0, duration: 0.55, stagger: 0.05, ease: 'power2.out', scrollTrigger: { trigger: '.svcs__list', start: 'top 86%' } });
 
-  // Yağ çubuğu: kırmızıdan siyaha dolar
-  gsap.fromTo('[data-dip]', { scaleX: 0 }, { scaleX: 1, ease: 'none', scrollTrigger: { trigger: '.yag__list', start: 'top 85%', end: 'bottom 60%', scrub: 0.4 } });
   $$('.oil').forEach((o) => gsap.from(o, { y: 30, opacity: 0, duration: 0.6, ease: 'power2.out', scrollTrigger: { trigger: o, start: 'top 90%' } }));
   gsap.from('.oil__drop', { scale: 0.3, y: -30, duration: 0.8, stagger: 0.12, ease: 'bounce.out', scrollTrigger: { trigger: '.yag__list', start: 'top 80%' } });
 
@@ -298,4 +296,4 @@ if (!reducedMotion) {
   $$('.step').forEach((s) => s.classList.add('is-done'));
 }
 
-addEventListener('load', () => { measure(); setKnob(Math.max(gear, 0) / (V.length - 1)); ScrollTrigger.refresh(); });
+addEventListener('load', () => { H = hero.querySelector('.hero__pin').offsetHeight; setLevel(prog); ScrollTrigger.refresh(); });

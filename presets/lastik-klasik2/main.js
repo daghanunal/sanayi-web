@@ -216,7 +216,7 @@ const hero = $('[data-hero]');
 const heroSvg = $('[data-hero-svg]');
 const zoomG = $('[data-zoom]');
 const w1 = $('[data-w1]'), w2 = $('[data-w2]'), probe = $('[data-probe]');
-const geo = { W: 0, H: 0, ox: 0, oy: 0, smax: 60 };
+const geo = { W: 0, H: 0, ox: 0, oy: 0, smax: 60, stem: 20, up: 40, down: 25 };
 
 function layoutHero() {
   const W = hero.clientWidth, H = hero.clientHeight;
@@ -278,6 +278,8 @@ function layoutHero() {
   geo.ox = ox;
   geo.oy = b1 - f1 * cap * 0.4;
   const stem = f1 * 0.2;
+  geo.stem = f1 * 0.22; // gövdenin güvenli (dar tutulmuş) mürekkep genişliği
+  geo.up = f1 * cap * 0.58; geo.down = f1 * cap * 0.38;
   geo.smax = (Math.hypot(W, H) * 1.25) / stem;
   const labels = $('[data-hero-labels]');
   labels.style.setProperty('--top', `${Math.round(topY)}px`);
@@ -295,6 +297,10 @@ function setZoom(p) {
   const tx = geo.ox + (geo.W / 2 - geo.ox) * k;
   const ty = geo.oy + (geo.H / 2 - geo.oy) * k;
   zoomG.setAttribute('transform', `translate(${tx.toFixed(2)} ${ty.toFixed(2)}) scale(${s.toFixed(4)}) translate(${-geo.ox.toFixed(2)} ${-geo.oy.toFixed(2)})`);
+  // İ'nin gövdesi ekranı tamamen kapladı mı? Kapladıysa dev maskeyi çizmeye gerek yok
+  const half = geo.stem * 0.5 * s;
+  return tx - half < -4 && tx + half > geo.W + 4
+    && ty - geo.up * s < -4 && ty + geo.down * s > geo.H + 4;
 }
 
 // --- Hareket --------------------------------------------------------------
@@ -335,9 +341,8 @@ function motion() {
     onUpdate(self) {
       const p = self.progress;
       const z = gsap.utils.clamp(0, 1, p / 0.72);
-      const on = z < 0.999;
+      const on = z < 0.999 && !setZoom(z);
       if (on !== svgOn) { heroSvg.style.visibility = on ? '' : 'hidden'; svgOn = on; }
-      if (on) setZoom(z);
       gsap.set(photo, { scale: 1.3 - 0.3 * gsap.parseEase('power2.out')(z) });
       labels.style.opacity = String(Math.max(0, 1 - p * 6));
       const c = gsap.utils.clamp(0, 1, (p - 0.66) / 0.3);

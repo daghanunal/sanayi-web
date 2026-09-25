@@ -1,38 +1,142 @@
 {
   "preset": "doseme-sinematik2",
   "surec": [
-    { "baslik": "Söküm", "aciklama": "Eski döşemeyi dikiş dikiş söküyoruz. Parçalar çöpe gitmez, yeni kalıbın ölçüsü onlardan alınır." },
-    { "baslik": "Kalıp", "aciklama": "Tebeşirle kalıbı çıkarıyoruz. Aracın fabrika hattına sadık kalıyoruz, milim kaçırmıyoruz." },
-    { "baslik": "Kesim", "aciklama": "Deri ya da kumaş, lif yönüne bakılarak kesilir. Yanlış yönde kesilen parça zamanla sarkar." },
-    { "baslik": "Dikiş", "aciklama": "Çift iğneli sanayi makinesinde, sizin seçtiğiniz iplik rengiyle dikiyoruz." },
-    { "baslik": "Gergi", "aciklama": "Kılıfı süngerin üstüne kırışıksız geriyor, koltuğu araca geri takıyoruz." }
+    {
+      "baslik": "Söküm",
+      "aciklama": "Eski döşemeyi dikiş dikiş söküyoruz. Parçalar çöpe gitmez, yeni kalıbın ölçüsü onlardan alınır."
+    },
+    {
+      "baslik": "Kalıp",
+      "aciklama": "Tebeşirle kalıbı çıkarıyoruz. Aracın fabrika hattına sadık kalıyoruz, milim kaçırmıyoruz."
+    },
+    {
+      "baslik": "Kesim",
+      "aciklama": "Deri ya da kumaş, lif yönüne bakılarak kesilir. Yanlış yönde kesilen parça zamanla sarkar."
+    },
+    {
+      "baslik": "Dikiş",
+      "aciklama": "Çift iğneli sanayi makinesinde, sizin seçtiğiniz iplik rengiyle dikiyoruz."
+    },
+    {
+      "baslik": "Gergi",
+      "aciklama": "Kılıfı süngerin üstüne kırışıksız geriyor, koltuğu araca geri takıyoruz."
+    }
   ],
   "malzemeler": [
     {
       "ad": "Kumaş",
       "alt": "Dokuma döşemelik",
       "metin": "Nefes alır; yazın yapışmaz, kışın üşütmez. Servis ve aile araçlarında en çok bunu seçiyorlar.",
-      "ozellik": ["Nefes alır", "Kolay temizlenir", "Renk seçeneği bol"]
+      "ozellik": [
+        "Nefes alır",
+        "Kolay temizlenir",
+        "Renk seçeneği bol"
+      ]
     },
     {
       "ad": "Alcantara",
       "alt": "Süet dokulu mikrofiber",
       "metin": "Elinizi gezdirince tonu değişen, kaydırmayan yüzey. Direksiyonda ve koltuk ortalarında tutuş verir.",
-      "ozellik": ["Kaydırmaz", "Mat görünüm", "Direksiyonda tutuş"]
+      "ozellik": [
+        "Kaydırmaz",
+        "Mat görünüm",
+        "Direksiyonda tutuş"
+      ]
     },
     {
       "ad": "Nappa deri",
       "alt": "Yumuşak hakiki deri",
       "metin": "İnce, yumuşak ve hafif parlak. Delikli dokusu hava aldırır; bakımı yapıldıkça yıllarca güzel kalır.",
-      "ozellik": ["Hakiki deri", "Delikli seçenek", "Silerek temizlenir"]
+      "ozellik": [
+        "Hakiki deri",
+        "Delikli seçenek",
+        "Silerek temizlenir"
+      ]
     },
     {
       "ad": "Kapitone",
       "alt": "Baklava dikişli dolgu",
       "metin": "Süngerle beraber baklava deseninde dikilir. İplik rengini siz seçersiniz, dikiş aralığını biz tuttururuz.",
-      "ozellik": ["Dolgulu yüzey", "İplik rengi sizden", "Elle kontrol"]
+      "ozellik": [
+        "Dolgulu yüzey",
+        "İplik rengi sizden",
+        "Elle kontrol"
+      ]
     }
   ],
   "finalBaslik": "Örtüyü kaldıralım.",
-  "finalAlt": "Aracınızı getirin, malzemeyi birlikte seçelim. Fiyatı işe başlamadan söyleriz."
+  "finalAlt": "Aracınızı getirin, malzemeyi birlikte seçelim. Fiyatı işe başlamadan söyleriz.",
+  "isletme": {
+    "hakkinda": "Dükkân tek bir dikiş makinesiyle açıldı. Bugün aynı tezgâhta ikinci kuşak çalışıyor: derisini kendimiz seçiyor, kalıbını kendimiz çıkarıyor, dikişini kendimiz atıyoruz. Aracınız fabrikadan nasıl çıktıysa ya da nasıl hayal ettiyseniz, öyle teslim ediyoruz."
+  },
+  "tarihce": [
+    {
+      "yil": 1987,
+      "baslik": "Tek makine, tek tezgâh",
+      "metin": "Şaşmaz'daki ilk dükkân bir el makinesi ve bir top suniyle açıldı. İlk iş komşu dükkânın Murat 131'iydi.",
+      "gorsel": "/img/usta/t-1987.jpg"
+    },
+    {
+      "yil": 1994,
+      "baslik": "Klasiklerin adresi",
+      "metin": "Eski araç meraklıları orijinal desenleri bizde bulmaya başladı. Kalıp arşivimizin ilk sayfaları o yıllardan.",
+      "gorsel": "/img/usta/t-1994.jpg"
+    },
+    {
+      "yil": 2003,
+      "baslik": "Servis filoları",
+      "metin": "Ankara'daki servis firmalarıyla çalışmaya başladık. Bir hafta sonunda kırk koltuk diktiğimiz oldu.",
+      "gorsel": "/img/usta/t-2003.jpg"
+    },
+    {
+      "yil": 2011,
+      "baslik": "Deriye geçiş",
+      "metin": "Çift iğneli sanayi makinesini aldık, İtalyan ve yerli hakiki deriyle çalışmaya başladık.",
+      "gorsel": "/img/usta/t-2011.jpg"
+    },
+    {
+      "yil": 2018,
+      "baslik": "İkinci kuşak",
+      "metin": "Tezgâhı ikinci kuşak devraldı. Dükkânı açan usta hâlâ her sabah gelip dikişlere bakıyor.",
+      "gorsel": "/img/usta/t-2018.jpg"
+    },
+    {
+      "yil": null,
+      "baslik": "Bugün",
+      "metin": "Alcantara, nappa, kapitone ve ısıtmalı koltuklar. Değişmeyen tek şey: her dikişi elimizle kontrol ediyoruz.",
+      "gorsel": "/img/usta/t-bugun.jpg"
+    }
+  ],
+  "yorumlar": [
+    {
+      "ad": "Murat D.",
+      "puan": 5,
+      "metin": "Passat'ın koltukları çökmüştü. Süngeriyle birlikte yenilediler, fabrika çıkışından daha iyi oldu. Dikişler milim milim düzgün.",
+      "arac": "2014 Passat"
+    },
+    {
+      "ad": "Ayşe T.",
+      "puan": 5,
+      "metin": "Tavan sarkmıştı, sabah bıraktım akşam aldım. Fiyatını önceden söylediler, bir kuruş fazla çıkmadı.",
+      "arac": "2011 Corolla"
+    },
+    {
+      "ad": "Kemal Y.",
+      "puan": 5,
+      "metin": "Babamdan kalan Anadol'un döşemesini orijinal desenine göre yaptılar. Eski kalıbı arşivlerinden çıkardılar.",
+      "arac": "1978 Anadol SL"
+    },
+    {
+      "ad": "Onur S.",
+      "puan": 5,
+      "metin": "Servis filomuzdaki 12 minibüsün koltuklarını bir hafta sonunda bitirdiler. Pazartesi araçlar yoldaydı.",
+      "arac": "Sprinter filosu"
+    },
+    {
+      "ad": "Selin A.",
+      "puan": 4,
+      "metin": "Direksiyona kırmızı iplikli deri kaplattım, çok şık oldu. Yoğun oldukları için bir gün beklettiler ama değdi.",
+      "arac": "2019 Egea"
+    }
+  ]
 }

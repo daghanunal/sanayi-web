@@ -24,7 +24,7 @@ function sisSvg(uzunluk = 1600, cls = '') {
   let i = 0;
   while (x < uzunluk - 60) {
     const t = sira[i++ % sira.length];
-    if (t === 'et') { parca.push(`<rect class="sis__et" x="${x}" y="13" width="46" height="30" rx="13"/>`); x += 50; }
+    if (t === 'et') { parca.push(`<rect class="sis__et" x="${x}" y="13" width="46" height="30" rx="13"/><path class="sis__iz" d="M${x + 14} 17l-6 22M${x + 27} 17l-6 22M${x + 40} 19l-5 18"/>`); x += 50; }
     else if (t === 'biber') { parca.push(`<rect class="sis__biber" x="${x}" y="17" width="30" height="22" rx="9"/>`); x += 34; }
     else if (t === 'domates') { parca.push(`<circle class="sis__domates" cx="${x + 16}" cy="28" r="16"/>`); x += 36; }
     else { parca.push(`<rect class="sis__sogan" x="${x}" y="15" width="14" height="26" rx="6"/>`); x += 18; }
@@ -472,7 +472,7 @@ export const ocakSaati = {
             <div class="os__alev">${alev}</div>
             <p class="os__ust">Şu an</p>
             <h2 class="k-h2" data-bol>${st.open ? 'Ocak yanıyor' : 'Ocak sönük'}</h2>
-            <p class="os__metin">${esc(st.text)}. Bugün ${esc(GUNLER[bugun])}.</p>
+            <p class="os__metin">${esc(st.text)}${/^bugün/i.test(st.text) ? '' : `. Bugün ${esc(GUNLER[bugun])}`}.</p>
             <dl class="os__saatler">${groupedHours(d.saatler).map(([gun, s]) => `<div><dt>${esc(gun)}</dt><dd>${esc(s)}</dd></div>`).join('')}</dl>
           </div>
           <div class="os__konum">

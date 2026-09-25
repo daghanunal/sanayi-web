@@ -107,7 +107,7 @@ const shots = [
   { src: asset('/img/motor-klasik2/atolye.jpg'), alt: 'Motor bölmesinin başında çalışan usta' },
   { src: asset('/img/motor-klasik2/temizlik.jpg'), alt: 'Eksantrik mili bezle temizleniyor' },
   ...d.galeri.filter((g) => /lift|eller/.test(g.src)),
-  { src: asset('/img/motor-klasik2/anahtar.jpg'), alt: 'Külbütör mekanizmasında anahtarla çalışan usta' },
+  { src: asset('/img/garaj/motor-bw.jpg'), alt: 'Motorun kayış ve kasnak tarafı' },
 ].slice(0, 5);
 $('[data-gallery]').innerHTML = shots
   .map((g, i) => `<figure class="shot shot--${i + 1}"><img src="${esc(g.src)}" alt="${esc(g.alt)}" loading="lazy" decoding="async" /></figure>`)
@@ -174,7 +174,7 @@ function geometry() {
     // Conta giriş metninin altında kalan alana oturur (butonlara ve alt kenara değmez)
     const intro = $('.hero__intro');
     const top = Math.min(intro.offsetTop + intro.offsetHeight + 16, H * 0.6);
-    const bottom = H - 40;
+    const bottom = H - 64;
     R = Math.min(W * 0.08, H * 0.13, (bottom - top) / 3.5);
     cx = W / 2;
     cy = (top + bottom) / 2;
@@ -182,7 +182,8 @@ function geometry() {
   const P = R * 2.36;
   const at = (u, v) => (vertical ? [cx + v, cy + u] : [cx + u, cy + v]);
   const pan = vertical ? H * 0.52 - cy : 0;
-  return { W, H, R, P, at, pan, vertical };
+  const pan2 = vertical ? 0 : H * 0.5 - cy; // masaüstü: dalıştan önce ortaya gelir
+  return { W, H, R, P, at, pan, pan2, vertical };
 }
 
 let g;
@@ -230,10 +231,10 @@ function drawGasket() {
   boltsG.innerHTML = bolts;
 }
 
-const view = { p: 0, z: 1 };
+const view = { p: 0, q: 0, z: 1 };
 function applyView() {
   const [bx, by0] = g.bores[1];
-  const pp = view.p * g.pan;
+  const pp = view.p * g.pan + view.q * g.pan2;
   const by = by0 + pp;
   plane.setAttribute('transform',
     `translate(${bx} ${by}) scale(${view.z}) translate(${-bx} ${-by}) translate(0 ${pp})`);
@@ -245,6 +246,7 @@ function buildHero() {
   heroTl?.kill();
   drawGasket();
   view.p = 0;
+  view.q = 0;
   view.z = 1;
   applyView();
 
@@ -273,6 +275,7 @@ function buildHero() {
     tl.to(heads[i], { rotation: 90, svgOrigin: svgO(heads[i]), duration: 0.42, ease: 'power2.out' }, t)
   });
   tl.to(heads, { rotation: 180, duration: 0.8, ease: 'power2.inOut', stagger: 0.02 }, 5.9)
+    .to(view, { q: 1, duration: 1.2, ease: 'power2.inOut', onUpdate: applyView }, 6.2)
     .to(view, { z: zoomTo, duration: 2, ease: 'power3.in', onUpdate: applyView }, 7)
     .fromTo('.hero__photo img', { scale: 1.18 }, { scale: 1, duration: 9, ease: 'none' }, 0)
     .to('.readout', { opacity: 0, y: 20, duration: 0.5 }, 7.6)

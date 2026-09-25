@@ -77,7 +77,8 @@ body {
 .tr-olcu__c { fill: none; stroke: #fff; stroke-width: 1.4; vector-effect: non-scaling-stroke; }
 .tr-olcu__d { font: 500 clamp(22px, 3.2vw, 40px) / 1 var(--mono); letter-spacing: -0.04em; font-variant-numeric: tabular-nums; }
 .tr-olcu__d small { font-size: .45em; opacity: .7; letter-spacing: 0; }
-.tr-olcu__e { font: 400 11px var(--mono); opacity: .75; }
+.tr-olcu__e { font: 400 11px var(--mono); opacity: .75; white-space: nowrap; }
+@media (max-width: 520px) { .tr-olcu__s { display: none; } }
 [data-hero='yazi'] .k-hero__bilgi { margin-top: 0; border-top: 0; }
 .k-hero__bilgi { display: none; }
 

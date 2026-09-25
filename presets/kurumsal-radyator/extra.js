@@ -251,7 +251,7 @@ const devreSvg = () => `
     <g class="dv-p" data-p="kalorifer">
       <rect class="dv-g" x="690" y="150" width="46" height="130" rx="6"/>
       <rect x="696" y="160" width="34" height="110" fill="url(#dv-fin)"/>
-      <text class="dv-yazi" x="713" y="302" text-anchor="middle">KALORİFER</text>
+      <text class="dv-yazi" x="738" y="302" text-anchor="end">KALORİFER</text>
     </g>
 
     <!-- numara rozetleri -->

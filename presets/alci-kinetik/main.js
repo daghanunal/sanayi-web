@@ -28,9 +28,9 @@ const orijinalAd = is.ad === raw.isletme.ad;
 // Yıla doğru ayrılma eki: 1992'den, 1985'ten, 1990'dan
 const yilDen = (n) => {
   const y = String(n);
-  if (/000$/.test(y) || /00$/.test(y)) return `${y}'den`;
-  if (y.endsWith('0')) return `${y}'${{ 1: 'dan', 2: 'den', 3: 'dan', 4: 'tan', 5: 'den', 6: 'tan', 7: 'ten', 8: 'den', 9: 'dan' }[y.at(-2)]}`;
-  return `${y}'${{ 1: 'den', 2: 'den', 3: 'ten', 4: 'ten', 5: 'ten', 6: 'dan', 7: 'den', 8: 'den', 9: 'dan' }[y.at(-1)]}`;
+  if (/000$/.test(y) || /00$/.test(y)) return `${y}’den`;
+  if (y.endsWith('0')) return `${y}’${{ 1: 'dan', 2: 'den', 3: 'dan', 4: 'tan', 5: 'den', 6: 'tan', 7: 'ten', 8: 'den', 9: 'dan' }[y.at(-2)]}`;
+  return `${y}’${{ 1: 'den', 2: 'den', 3: 'ten', 4: 'ten', 5: 'ten', 6: 'dan', 7: 'den', 8: 'den', 9: 'dan' }[y.at(-1)]}`;
 };
 
 // Rengin üstüne beyaz mı koyu mu yazı gelsin
@@ -322,7 +322,7 @@ $('#kimya').innerHTML = `
 
 // --- Tarihçe: kaydırdıkça akan yıllar ------------------------------------------
 $('#tarih').innerHTML = `
-  <div class="kap"><p class="etiket">11.000 yıllık malzeme</p><h2 id="tarih-baslik" class="dev">Çatalhöyük'ten Bala'ya.</h2></div>
+  <div class="kap"><p class="etiket">11.000 yıllık malzeme</p><h2 id="tarih-baslik" class="dev">Çatalhöyük’ten Bala’ya.</h2></div>
   <div class="tarih__cerceve"><ol class="tarih__yol">
     ${tarihce.map(([y, t], i) => `<li class="${/^(19|20)\d\d$/.test(y) ? 'bizim' : ''}"><b>${esc(y)}</b><span>${esc(t)}</span></li>`).join('')}
   </ol></div>
@@ -399,7 +399,7 @@ $('#alt').innerHTML = `
       <p class="alt__bas">Güvenlik</p><p>${d.guvenlik.map(esc).join(' ')}</p>
     </div>
   </div>
-  <p class="kap alt__not">Bu sayfa Alçıbay için hazırlanmış bir tasarım önerisidir. Ürün bilgileri alcibay.com'dan alınmıştır; uygulama değerleri şantiye koşullarına göre değişebilir. Fotoğraflar: Pexels ve Alçıbay.</p>`;
+  <p class="kap alt__not">Bu sayfa ${esc(is.ad)} için hazırlanmış bir tasarım önerisidir. Ürün bilgileri alcibay.com’dan alınmıştır; uygulama değerleri şantiye koşullarına göre değişebilir. Fotoğraflar: Pexels ve Alçıbay.</p>`;
 
 // --- Teknik föy ----------------------------------------------------------------------
 const foy = $('#foy');
@@ -467,10 +467,12 @@ if (reducedMotion) {
   });
   gsap.from('.hero__ust span, .hero__alt, .hero__formul > *', { y: 20, opacity: 0, duration: 0.7, stagger: 0.06, delay: 0.6, ease: 'power3.out' });
   gsap.from('.hero__foto', { clipPath: 'inset(100% 0 0 0 round 22px)', duration: 1.2, ease: 'expo.out', delay: 0.3 });
-  gsap.to(hh, {
+  // fromTo + immediateRender:false: başa dönünce harfler giriş animasyonunun ara hâline değil, yerine döner
+  gsap.fromTo(hh, { yPercent: 0, rotate: 0 }, {
     yPercent: (i) => ((i * 37) % 11) * -9,
     rotate: (i) => (((i * 53) % 9) - 4) * 4,
     ease: 'none',
+    immediateRender: false,
     scrollTrigger: { trigger: '#giris', start: 'top top', end: 'bottom top', scrub: 0.4 },
   });
   gsap.to('.hero__foto img', { yPercent: 12, scale: 1.08, ease: 'none', scrollTrigger: { trigger: '#giris', start: 'top top', end: 'bottom top', scrub: true } });

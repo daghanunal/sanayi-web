@@ -93,7 +93,7 @@ $('#tas').innerHTML = sticky(`
 $('#recine').innerHTML = sticky(`
   ${kicker('03', 'Tamir')}
   <h2 class="h2" id="recine-title" data-reveal>Reçine doldurur, UV ışık sertleştirir.</h2>
-  <p class="clock" aria-hidden="true"><span id="timer">00:00</span><small>/ 30:00 dk</small></p>
+  <p class="clock" aria-hidden="true"><span id="timer">00:00</span><small>/ 30 dk</small></p>
   <ol class="steps" id="resin-steps">
     <li><b>İzi temizleriz</b><span>İçindeki hava ve nem vakumla alınır.</span></li>
     <li><b>Reçineyi basarız</b><span>Şeffaf reçine çatlağın her koluna dolar.</span></li>
@@ -106,7 +106,7 @@ const DEFAULT_FILM = Math.min(2, filmler.length - 1);
 $('#cam-filmi').innerHTML = sticky(`
   ${kicker('04', 'Cam filmi')}
   <h2 class="h2" id="film-title" data-reveal>Güneşi camda durdurun.</h2>
-  <p class="lead lead--small">Yan ve arka camlara, yasal sınırlara uygun film. Koyuluğu seçin, ışığın nasıl kesildiğini görün.</p>
+  <p class="lead lead--small">Koyuluğu seçin, ışığın nasıl kesildiğini görün. Hangi cama hangi ton uygun, uygulamadan önce söyleriz.</p>
   <div class="tint" role="group" aria-label="Film koyuluğu">
     <div class="tint__opts">
       ${filmler.map((f, i) => `<button type="button" class="tint__opt" data-film="${i}" aria-pressed="false">${esc(f.ad)}</button>`).join('')}
@@ -345,10 +345,10 @@ if (!reducedMotion) {
 
 // Son film sahnesinin yazısı, sahne biterken üst çubuğun altına girmeden söner
 if (!reducedMotion) {
-  gsap.fromTo('#kalibrasyon .copy', { opacity: 1, y: 0 }, {
+  $$('.film .scene').forEach((sc) => gsap.fromTo($('.copy', sc), { opacity: 1, y: 0 }, {
     opacity: 0, y: -30, ease: 'none', immediateRender: false,
-    scrollTrigger: { trigger: '#kalibrasyon', start: 'bottom bottom', end: 'bottom 45%', scrub: true },
-  });
+    scrollTrigger: { trigger: sc, start: 'bottom bottom', end: 'bottom 45%', scrub: true },
+  }));
 }
 
 // Üst çubuk düz bölümlerde koyulaşır

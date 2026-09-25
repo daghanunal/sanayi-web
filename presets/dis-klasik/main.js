@@ -14,6 +14,8 @@ import {
 ScrollTrigger.config({ ignoreMobileResize: true });
 
 const d = boot(sektor);
+// Klinik Şaşmaz sanayisinde değil: başlıkta semti yaz
+document.title = `${d.isletme.ad} | ${d.isletme.sektor} | Etimesgut, Ankara`;
 const $ = (s, root = document) => root.querySelector(s);
 const $$ = (s, root = document) => [...root.querySelectorAll(s)];
 const nf = (n, dig = 0) => Number(n).toLocaleString('tr-TR', { minimumFractionDigits: dig, maximumFractionDigits: dig });

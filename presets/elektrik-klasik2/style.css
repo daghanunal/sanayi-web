@@ -146,8 +146,8 @@ body {
   font: 600 11px/1.2 var(--mono); white-space: nowrap; box-shadow: 0 2px 0 rgb(17 19 21 / .14);
   transition: opacity .5s ease;
 }
-.harness__tags b { padding: 3px 5px; border-radius: 4px; background: var(--c); color: #fff; font-weight: 600; }
-.harness__tags li:nth-child(n) b { text-shadow: 0 1px 0 rgb(0 0 0 / .25); }
+.harness__tags b { padding: 3px 5px; border-radius: 4px; background: var(--c); color: var(--t, #fff); font-weight: 600; }
+.harness__tags li:nth-child(n) b { text-shadow: none; }
 .hero.is-found .harness__tags li:not(.is-fault) { opacity: .3; }
 .harness__tags li.is-fault { border-color: var(--red); }
 .spark { opacity: 0; transition: opacity .3s; }

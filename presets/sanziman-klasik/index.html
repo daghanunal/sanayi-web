@@ -9,12 +9,12 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Pathway+Extreme:opsz,wdth,wght@8..144,75..100,400..900&family=Radio+Canada+Big:wght@400;500;700&family=Ubuntu+Mono:wght@400;700&display=swap" rel="stylesheet" />
-  <link rel="preload" as="image" href="/img/sanziman-klasik/vites-secici.jpg" />
+  <link rel="preload" as="image" href="/img/sanziman-klasik/vites-secici.jpg" fetchpriority="high" />
 </head>
 <body>
   <header class="top">
     <a href="#top" class="top__brand">
-      <span class="top__ind mono" aria-hidden="true" data-ind><i>P</i><i>R</i><i>N</i><i>D</i></span>
+      <span class="top__mark" aria-hidden="true"><svg viewBox="0 0 40 52"><path d="M20 3C20 3 5 22 5 33a15 15 0 0 0 30 0C35 22 20 3 20 3z"/></svg></span>
       <span class="top__name" data-bind="ad"></span>
     </a>
     <nav class="top__nav" aria-label="Sayfa bölümleri">
@@ -28,12 +28,20 @@
   </header>
 
   <main>
-    <!-- İMZA: vites kapısı. Kaydırdıkça sağdaki P-R-N-D kapısında kırmızı gösterge aşağı kayar,
-         her kademede "tık" diye oturur (snap), fotoğraf ve o kademenin cümlesi değişir. -->
+    <!-- İMZA: yağ çubuğu. Kaydırdıkça ekranın altından şanzıman yağı yükselir: koyu, eksik yağ (MIN altı)
+         sağdaki çubukta ölçülür ve taze ATF kırmızısıyla MAX çizgisine oturur. Her kademede "tık" (snap). -->
     <section class="hero" id="top" aria-label="Giriş">
       <div class="hero__pin">
-        <div class="hero__stage" aria-hidden="true" data-stage></div>
+        <img class="hero__img" src="/img/sanziman-klasik/vites-secici.jpg" alt="" fetchpriority="high" decoding="async" aria-hidden="true" />
         <div class="hero__shade" aria-hidden="true"></div>
+
+        <div class="sivi" aria-hidden="true" data-oil>
+          <svg class="sivi__wave sivi__wave--b" viewBox="0 0 1200 40" preserveAspectRatio="none"><path d="M0 20 Q150 4 300 20 T600 20 T900 20 T1200 20 V40 H0Z"/></svg>
+          <svg class="sivi__wave sivi__wave--a" viewBox="0 0 1200 40" preserveAspectRatio="none"><path d="M0 22 Q150 38 300 22 T600 22 T900 22 T1200 22 V40 H0Z"/></svg>
+          <div class="sivi__body"><span class="sivi__old"></span><span class="sivi__new" data-oil-new></span><span class="sivi__sheen"></span>
+            <i class="bub"></i><i class="bub"></i><i class="bub"></i><i class="bub"></i><i class="bub"></i><i class="bub"></i>
+          </div>
+        </div>
 
         <div class="hero__copy">
           <p class="hero__since mono" data-since></p>
@@ -41,15 +49,17 @@
           <p class="hero__slogan" data-bind="slogan"></p>
         </div>
 
-        <div class="gate" aria-hidden="true">
-          <div class="gate__slot"><span class="gate__fill" data-fill></span></div>
-          <span class="gate__knob" data-knob></span>
-          <ol class="gate__list" data-gate></ol>
+        <div class="stick" aria-hidden="true">
+          <span class="stick__rod"></span>
+          <span class="stick__zone"></span>
+          <span class="stick__mark stick__mark--max mono">MAX</span>
+          <span class="stick__mark stick__mark--min mono">MIN</span>
+          <span class="stick__lvl mono" data-lvl>%<b data-lvl-num>14</b></span>
         </div>
 
         <div class="hero__foot">
           <div class="gcard" aria-live="polite">
-            <p class="gcard__tag mono"><b data-g-harf>P</b><span data-g-ad></span><span class="gcard__step" data-g-step></span></p>
+            <p class="gcard__tag mono"><b data-g-no>1</b><span data-g-ad></span><span class="gcard__step" data-g-step></span></p>
             <p class="gcard__title" data-g-title></p>
             <p class="gcard__text" data-g-text></p>
           </div>
@@ -58,7 +68,7 @@
             <a class="btn btn--ghost" href="#tipler">Şanzımanım hangisi?</a>
           </div>
         </div>
-        <p class="hero__hint mono" aria-hidden="true"><span></span>Kaydırın, vitese alın</p>
+        <p class="hero__hint mono" aria-hidden="true"><span></span>Kaydırın, yağı doldurun</p>
       </div>
     </section>
 
@@ -95,9 +105,8 @@
         <h2 class="h2" id="yag-h">Şanzıman yağının rengi <em>çok şey söyler.</em></h2>
         <p class="lead">Otomatik şanzıman yağı yeniyken kırmızıdır. Renk koyulaştıkça içeride olan biteni anlatır.</p>
       </div>
-      <div class="dip" aria-hidden="true"><span class="dip__bar" data-dip></span><span class="dip__marks"><i>MIN</i><i>MAX</i></span></div>
       <ul class="yag__list" data-oils></ul>
-      <figure class="yag__photo"><img src="/img/sanziman-klasik/yag.jpg" alt="Araca yeni yağ dolduruluyor" loading="lazy" decoding="async" /></figure>
+      <figure class="yag__photo"><img src="/img/sanziman-klasik/kaput-alti.jpg" alt="Kaputu açık aracı inceleyen usta" loading="lazy" decoding="async" /></figure>
     </section>
 
     <!-- Süreç -->
@@ -167,7 +176,7 @@
     <!-- Final -->
     <section class="final" aria-labelledby="final-h">
       <img class="final__bg" src="/img/sanziman-klasik/gece-vites.jpg" alt="" loading="lazy" decoding="async" />
-      <span class="final__d" aria-hidden="true">D</span>
+      <svg class="final__d" viewBox="0 0 40 52" aria-hidden="true"><path d="M20 2C20 2 4 22 4 33a16 16 0 0 0 32 0C36 22 20 2 20 2z"/></svg>
       <div class="final__in">
         <p class="eyebrow mono">Kalkışta titreme · vuruntu · uğultu</p>
         <h2 class="final__title" id="final-h" data-final></h2>

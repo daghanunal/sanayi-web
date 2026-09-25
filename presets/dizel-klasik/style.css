@@ -100,11 +100,24 @@ em { font-style: normal; color: var(--red); }
   position: absolute; left: 0; right: 0; bottom: 0; opacity: 0; padding: 12px 10px 16px;
   display: grid; gap: 2px; background: linear-gradient(0deg, rgb(10 18 14 / .92), rgb(10 18 14 / 0));
 }
-.slice__label b { font: 700 clamp(44px, 7vw, 100px)/.85 var(--f-tag); color: var(--sage-2); }
+.slice__label b { font: 700 clamp(44px, 7vw, 100px)/.85 var(--f-tag); color: #e6ece2; }
 .slice.is-bad .slice__label { background: linear-gradient(0deg, rgb(150 20 14 / .95), rgb(150 20 14 / 0)); }
 .slice__label span { font: 700 clamp(15px, 1.6vw, 22px)/1.1 var(--f-head); text-transform: uppercase; letter-spacing: .03em; }
 .slice__label small { font: 500 12px/1.2 var(--f-tag); letter-spacing: .06em; text-transform: uppercase; opacity: .7; }
 .slice.is-bad .slice__label b, .slice.is-bad .slice__label span { color: #fff; }
+.slice__label span { color: #eef1ea; }
+.meter {
+  position: relative; display: block; height: 8px; margin: 0 0 12px; border-radius: 2px;
+  background: linear-gradient(90deg, rgb(240 244 236 / .14) 0 32%, rgb(163 181 160 / .75) 32% 68%, rgb(240 244 236 / .14) 68%);
+}
+.meter::before, .meter::after { content: ''; position: absolute; top: -4px; bottom: -4px; width: 1px; background: rgb(240 244 236 / .5); }
+.meter::before { left: 32%; } .meter::after { left: 68%; }
+.meter u {
+  position: absolute; top: -6px; width: 4px; height: 20px; margin-left: -2px; background: #fff; border-radius: 1px;
+  left: calc(var(--v) * var(--mp) * 100%); box-shadow: 0 0 0 2px rgb(10 18 14 / .6);
+}
+.slice.is-bad .meter { background: linear-gradient(90deg, rgb(255 255 255 / .18) 0 32%, rgb(255 255 255 / .45) 32% 68%, rgb(255 255 255 / .18) 68%); }
+.slice.is-bad .meter u { background: #ffd8c8; box-shadow: 0 0 0 2px rgb(150 20 14 / .8), 0 0 14px #ff6a4a; }
 .hero__shade {
   position: absolute; inset: 0; pointer-events: none; opacity: .55;
   background: linear-gradient(180deg, rgb(12 20 16 / .75) 0%, rgb(12 20 16 / .1) 30%, rgb(12 20 16 / .2) 55%, rgb(12 20 16 / .95) 100%);
@@ -128,6 +141,7 @@ em { font-style: normal; color: var(--red); }
 .hero__mid { position: absolute; left: var(--pad); right: var(--pad); bottom: max(116px, 14vh); opacity: 0; }
 .hero__midk { color: var(--sage-2); }
 .hero__midt { font: 800 clamp(40px, 6.5vw, 96px)/.95 var(--f-head); margin-top: 8px; text-wrap: balance; max-width: 14ch; }
+.hero__midt em { white-space: nowrap; }
 .hero__end {
   position: absolute; left: var(--pad); right: var(--pad); top: 84px; opacity: 0; max-width: 900px;
 }

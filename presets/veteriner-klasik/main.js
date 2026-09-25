@@ -76,15 +76,15 @@ function place() {
   const W = pin.clientWidth, H = pin.clientHeight, half = W / 2;
   const mobile = W < 900;
   // Yarım ekranda burundan geriye görselin ne kadarı görünsün
-  const reach = mobile ? 0.52 : 0.8;
+  const reach = mobile ? 0.43 : 0.8;
   let iw = half / reach;
   if (!mobile) iw = Math.max(iw, (H * 1.12) / RATIO);
   const ih = iw * RATIO;
-  const noseY = mobile ? H * 0.43 : H * 0.5;
+  const noseY = mobile ? H * 0.41 : H * 0.5;
   const gap = mobile ? 3 : 8;
   imgs[0].style.cssText = `width:${iw}px;height:${ih}px;left:${half - gap - NOSE[0].x * iw}px;top:${noseY - NOSE[0].y * ih}px`;
   imgs[1].style.cssText = `width:${iw}px;height:${ih}px;left:${gap - NOSE[1].x * iw}px;top:${noseY - NOSE[1].y * ih}px`;
-  geo = { half, H, sx: half * (mobile ? 0.74 : 0.66), sy: H * (mobile ? 0.3 : 0.22) };
+  geo = { half, H, sx: half * (mobile ? 0.6 : 0.66), sy: H * (mobile ? 0.26 : 0.22) };
   hero.style.setProperty('--nose-y', `${noseY}px`);
 }
 place();
@@ -234,7 +234,7 @@ $('[data-steps]').innerHTML = d.surec.map((s, i) => `
 
 // --- Acil --------------------------------------------------------------------
 const acilH = d.hizmetler.find((h) => h.id === 'acil');
-$('[data-acil-metin]').textContent = acilH ? acilH.aciklama : '';
+$('[data-acil-metin]').textContent = d.acilMetin || (acilH ? acilH.aciklama : '');
 $('[data-acil]').innerHTML = (d.acilIsaretler || []).map((a) => `<li>${esc(a)}</li>`).join('');
 
 // --- Galeri ------------------------------------------------------------------

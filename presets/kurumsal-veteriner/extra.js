@@ -166,7 +166,8 @@ function yasMetni(dogum, bugun) {
   const gun = Math.floor((bugun - dogum) / GUN);
   if (gun < 7) return `${gun} günlük`;
   if (gun < 120) return `${Math.floor(gun / 7)} haftalık`;
-  const ay = Math.floor(gun / 30.44);
+  let ay = (bugun.getFullYear() - dogum.getFullYear()) * 12 + bugun.getMonth() - dogum.getMonth();
+  if (bugun.getDate() < dogum.getDate()) ay--;
   if (ay < 24) return `${ay} aylık`;
   return `${Math.floor(ay / 12)} yaşında`;
 }
@@ -304,7 +305,7 @@ export const asiKarnesi = {
               <label class="ak__alan"><span>Doğum tarihi</span><input name="dogum" type="date" value="${isoTarih(s.dogum)}" max="${isoTarih(bugun)}"></label>
               <p class="ak__ipucu">Tam bilmiyorsanız yaklaşık bir tarih girin. Sahiplendiğiniz dostun yaşını muayenede dişlerinden de tahmin ederiz.</p>
               <div class="ak__hizli" role="group" aria-label="Hızlı yaş seçimi">
-                <button type="button" data-hafta="7">7 haftalık</button><button type="button" data-hafta="14">3 aylık</button><button type="button" data-hafta="104">2 yaşında</button>
+                <button type="button" data-hafta="7">7 haftalık</button><button type="button" data-hafta="14">3 aylık</button><button type="button" data-hafta="106">2 yaşında</button>
               </div>
             </form>
             <article class="ak__karne">
@@ -385,4 +386,10 @@ export const asiKarnesi = {
       io.observe(el.querySelector('.ak__ic'));
     }
   },
+};
+
+// Özet bölümündeki "Kurumsal" bağlantısı bu sitede "Kliniğimiz" sayfasına gidiyor; adını ona göre yaz.
+export const ozet = {
+  ...BOLUMLER.ozet,
+  render: (d, ctx, sorgu) => BOLUMLER.ozet.render(d, ctx, sorgu).replace('>Kurumsal ', '>Kliniğimiz '),
 };

@@ -404,7 +404,7 @@ new IntersectionObserver((ents, io) => {
 // Üst çubuk: hero bitince koyu zemin
 const top = $('.top');
 ScrollTrigger.create({
-  trigger: '.band', start: 'top 64px',
+  trigger: '.band', start: 'top bottom-=8',
   onEnter: () => top.classList.add('is-solid'), onLeaveBack: () => top.classList.remove('is-solid'),
 });
 

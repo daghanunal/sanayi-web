@@ -219,7 +219,7 @@ body {
 .buyutme { background: var(--nane-acik); }
 .buyutme__sahne {
   position: relative; height: 100svh; overflow: hidden;
-  display: flex; flex-direction: column; justify-content: center; gap: 14px;
+  display: flex; flex-direction: column; justify-content: center; gap: clamp(14px, 3.4svh, 34px);
   padding: 76px var(--gut) 100px;
 }
 .buyutme__baslik {
@@ -268,7 +268,7 @@ body {
 .buyutme__liste li.is-aktif { background: var(--murekkep); color: var(--nane-acik); }
 @media (min-width: 900px) {
   .buyutme__daire { right: 4vw; width: 48vw; transform: translateY(-50%); }
-  .buyutme__sahne { padding-bottom: 60px; }
+  .buyutme__sahne { padding-bottom: 60px; gap: 14px; }
 }
 
 /* --- Bölüm başlıkları ---------------------------------------------------- */
@@ -296,7 +296,7 @@ body {
 .hizmet__olcu, .hizmet__metin { grid-column: 2; }
 .hizmet__olcu { display: flex; gap: 12px; font-size: 13px; align-items: center; }
 .hizmet__olcu b { background: var(--turuncu); padding: 3px 7px; border-radius: 2px; font-weight: 700; }
-.hizmet__metin { max-width: 52ch; color: var(--murekkep-2); font-size: 16px; }
+.hizmet__metin { max-width: 52ch; color: var(--murekkep-2); font-size: 16px; margin-top: .5em; }
 .fiyat-not { margin-top: 28px; font: 500 14px var(--m); max-width: 50ch; }
 @media (min-width: 900px) {
   .hizmet { grid-template-columns: 60px 1.3fr 1fr; align-items: baseline; column-gap: 24px; }
@@ -449,7 +449,7 @@ body {
 .final__baslik {
   font-weight: 900; font-stretch: 80%; text-transform: uppercase;
   font-size: clamp(56px, 15.5vw, 200px); line-height: 1.1; letter-spacing: -.03em;
-  perspective: 600px; padding-top: .1em;
+  perspective: 600px; padding-top: .1em; word-spacing: .12em;
 }
 .fk { display: inline-block; white-space: nowrap; }
 .fh { display: inline-block; transform-origin: 50% 100%; }

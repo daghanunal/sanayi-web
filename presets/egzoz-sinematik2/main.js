@@ -153,7 +153,7 @@ const KF = [
 KF[6] = { ...KF[5], p: 1 };
 const FINALE = { bg: '#101013', fg: '#f3f1ec', call: '#ff3b5c', smoke: [0.9, 0.9, 0.92], smoke2: [0.95, 0.95, 0.96], density: 0.16, push: 1.24, spread: 0.8, size: 1, count: 0.6, rise: 2.10, wind: 0.2, rim: [1, 0.23, 0.36], glow: 0, az: 0.12, el: 0.08, dist: 7, lookX: -2.2, lookY: -1.35, dirt: [0, 0, 0, 0] };
 const CENTERS = KF.slice(0, 6).map((k) => k.p);
-const HOLD = 0.045;
+const HOLD = 0.062;
 
 function mixK(a, b, t) {
   const o = {};
@@ -335,7 +335,7 @@ function tick() {
   finaleQ = trg.finale?.progress ?? 0;
 
   let s = filmState(filmP);
-  const past = afterFilm > 0 && finaleIn <= 0 ? 1 : 0;
+  const past = afterFilm > 0 ? 1 : 0;
   if (finaleIn > 0) {
     s = mixK({ ...KF[5], bg: KF[5].bg }, FINALE, 1);
   }

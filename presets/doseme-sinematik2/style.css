@@ -363,6 +363,14 @@ main, .foot { position: relative; z-index: 1; }
   font: 500 12px var(--f-mono); letter-spacing: .14em; text-transform: uppercase; color: var(--tebesir); opacity: 0;
 }
 .final__hint::after { content: '↓'; color: var(--pembe, #ff8cc6); font-size: 15px; animation: hintBob 1.2s ease-in-out infinite; }
+.final__veil {
+  position: fixed; z-index: 44; left: 50%; top: 46%; transform: translate3d(-50%, -50%, 0);
+  width: min(92vw, 1100px); text-align: center; pointer-events: none; opacity: 0; visibility: hidden;
+  color: var(--murekkep); mix-blend-mode: multiply; display: grid; gap: 18px; justify-items: center;
+}
+.final__veil span { font: italic 500 clamp(64px, 19vw, 230px)/.92 var(--f-disp); letter-spacing: -.04em; padding-top: .12em; }
+.final__veil small { font: 500 11px/1.4 var(--f-mono); letter-spacing: .18em; text-transform: uppercase; color: var(--murekkep-2); border-top: 1.5px dashed currentColor; border-bottom: 1.5px dashed currentColor; padding: 8px 4px; }
+.no-gl .final__veil, .no-gl .final__hint { display: none; }
 @keyframes hintBob { 50% { transform: translateY(4px); } }
 @media (prefers-reduced-motion: reduce) { .final__hint::after { animation: none; } }
 

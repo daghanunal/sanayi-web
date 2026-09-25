@@ -377,7 +377,7 @@ section:not(.film):not(.finale) { padding: clamp(80px, 11vw, 150px) var(--pad); 
   padding: 0 var(--pad); gap: 18px;
 }
 .finale__kicker { font: 500 13px var(--mono); color: var(--brass); }
-.finale__title { font: 400 clamp(40px, 7.4vw, 124px)/1.05 var(--disp); max-width: 12ch; padding-top: .14em; letter-spacing: -.02em; }
+.finale__title { font: 400 clamp(40px, 7.4vw, 124px)/1.05 var(--disp); max-width: 7.5ch; padding-top: .14em; letter-spacing: -.02em; }
 .finale__title .word, .finale__title > div { clip-path: inset(-0.4em -0.1em -0.2em -0.1em); }
 .finale__title .ch { display: inline-block; }
 .finale__sub { color: #c4d3d0; max-width: 44ch; font-size: clamp(17px, 1.4vw, 20px); }
@@ -407,7 +407,7 @@ section:not(.film):not(.finale) { padding: clamp(80px, 11vw, 150px) var(--pad); 
   .stat { padding: 18px 16px; }
   .stat__num { font-size: 26px; }
   .finale__sticky { padding-bottom: 104px; }
-  .finale__title { font-size: clamp(32px, 11vw, 48px); }
+  .finale__title { font-size: clamp(32px, 11vw, 48px); max-width: 12ch; }
   .finale__cta .btn, .shop__cta .btn { flex: 1 1 100%; }
   .symp__panel .btn { justify-self: stretch; }
 }

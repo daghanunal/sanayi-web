@@ -50,9 +50,9 @@
   .kh__metin { display: contents; }
   .kh__ust { order: 1; }
   .kh .k-hero__baslik { order: 2; }
-  .kh__sahne { order: 3; margin-top: 26px; width: 100%; aspect-ratio: auto; height: min(118vw, 470px); }
-  .kh .k-lead { order: 4; margin-top: 26px; }
-  .kh .k-butonlar { order: 5; }
+  .kh__sahne { order: 4; margin-top: 26px; width: 100%; aspect-ratio: auto; height: min(104vw, 420px); }
+  .kh .k-lead { order: 5; margin-top: 26px; }
+  .kh .k-butonlar { order: 3; margin-top: 22px; }
 }
 @media (min-width: 960px) { .kh__ic { grid-template-columns: 1fr 1fr; gap: 56px; } }
 .kh__ust { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin-bottom: 22px; color: var(--k-soluk); font-family: var(--pv-mono); font-size: 13px; text-transform: uppercase; letter-spacing: .04em; }
@@ -262,3 +262,10 @@
 /* Vitrin çubuğu / mobil alt çubuk için pay */
 .k-alt { padding-bottom: calc(32px + 90px); }
 @media (min-width: 900px) { .k-alt { padding-bottom: 32px; } }
+
+/* Galeri: ilk (büyük) karede görsel %100 yükseklik alınca alt yazı sonraki satırın altına taşıyordu. */
+.k-galeri__liste li:first-child { display: flex; flex-direction: column; }
+.k-galeri__liste li:first-child figure { height: auto; flex: 1 1 auto; }
+@media (max-width: 899px) { .k-galeri__liste li:first-child figure { flex: none; aspect-ratio: 1; min-height: 0; } }
+/* Mobil hero: kemerlerde yüzler daha yukarıda görünsün. */
+@media (max-width: 959px) { .kh__foto-ic { inset: -24% 0 8%; } }

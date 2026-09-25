@@ -3,7 +3,7 @@ import ana from '../../data/sektor-veteriner.json';
 import ek from '../../data/kurumsal-veteriner.json';
 import { kurumsal, derinBirlestir } from '../_kurumsal/engine.js';
 import { telHref, waHref, mapsHref, icons, gsap, reducedMotion } from '../../shared/core.js';
-import { karneHero, asiKarnesi, hizmetler, hizmetOzet } from './extra.js';
+import { karneHero, asiKarnesi, hizmetler, hizmetOzet, ozet } from './extra.js';
 import './style.css';
 
 // "Pati karnesi" yönü: pudra pembesi zemin, derin petrol yeşili, hardal mühür.
@@ -69,7 +69,7 @@ kurumsal({
     { id: 'sorular', baslik: 'Sorular', bolumler: ['sss', 'yorumlar', 'cta'] },
     { id: 'iletisim', baslik: 'İletişim', bolumler: ['iletisim'] },
   ],
-  ekstralar: { karneHero, asiKarnesi, hizmetler, hizmetOzet },
+  ekstralar: { karneHero, asiKarnesi, hizmetler, hizmetOzet, ozet },
   aksiyon: (d) => [
     { href: telHref(d), ikon: icons.phone, etiket: 'Ara' },
     { href: waHref(d, `Merhaba ${d.isletme.ad}, randevu almak istiyorum.`), ikon: icons.whatsapp, etiket: 'WhatsApp', dis: true },

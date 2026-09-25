@@ -5,16 +5,26 @@ import { esc, waHref, gsap, ScrollTrigger, reducedMotion } from '../../shared/co
 
 // [id, ad, mikron (null = plastik, cihaz ölçmez), svg şekli]
 const PANELLER = [
-  ['arka-tampon', 'Arka tampon', null, 'M18 110 L62 102 L62 170 L26 170 Q12 142 18 110 Z'],
-  ['bagaj', 'Bagaj kapağı', 121, 'M40 92 L176 86 L182 100 L46 104 Z'],
-  ['arka-camurluk', 'Arka çamurluk', 176, 'M62 108 L200 100 L200 170 L184 170 A44 44 0 0 0 96 170 L62 170 Z'],
-  ['arka-kapi', 'Arka kapı', 412, 'M204 100 L318 100 L318 176 L204 176 Z'],
-  ['on-kapi', 'Ön kapı', 134, 'M322 100 L428 100 L428 176 L322 176 Z'],
-  ['tavan', 'Tavan', 109, 'M206 56 L232 40 L382 40 L408 56 L392 60 L222 60 Z'],
-  ['on-camurluk', 'Ön çamurluk', 238, 'M432 104 L546 112 L546 170 L516 170 A44 44 0 0 0 432 170 Z'],
-  ['kaput', 'Kaput', 127, 'M430 88 L560 98 L586 110 L546 112 L432 102 Z'],
-  ['on-tampon', 'Ön tampon', null, 'M548 114 L584 116 Q596 142 590 170 L548 170 Z'],
+  ['arka-tampon', 'Arka tampon', null, 'M62 116 L26 118 Q12 120 12 136 L14 160 Q16 172 30 172 L62 172 Z'],
+  ['bagaj', 'Bagaj kapağı', 121, 'M28 114 Q34 104 60 102 L172 98 L180 106 L64 112 Z'],
+  ['arka-camurluk', 'Arka çamurluk', 176, 'M64 114 L182 108 L204 102 L204 172 L184 172 A44 44 0 0 0 96 172 L64 172 Z'],
+  ['arka-kapi', 'Arka kapı', 412, 'M208 102 L318 102 L318 172 L208 172 Z'],
+  ['on-kapi', 'Ön kapı', 134, 'M322 102 L428 102 L428 172 L322 172 Z'],
+  ['tavan', 'Tavan', 109, 'M226 54 Q236 42 254 40 L378 40 Q396 42 406 54 Z'],
+  ['on-camurluk', 'Ön çamurluk', 238, 'M432 102 L448 102 L548 112 L548 172 L518 172 A44 44 0 0 0 430 172 L432 172 Z'],
+  ['kaput', 'Kaput', 127, 'M444 94 L540 100 L576 110 L548 112 L448 102 Z'],
+  ['on-tampon', 'Ön tampon', null, 'M550 114 L578 114 Q594 120 594 138 L590 162 Q586 172 574 172 L550 172 Z'],
 ];
+// Bazı panellerde yazı ve prob, şeklin ortasına değil daha okunur bir noktaya gider (x, y).
+// NOKTA: prob; YAZI: değer yazısı. Prob yazının üstüne binmesin diye ayrı tutulur.
+const NOKTA = {
+  tavan: [316, 48], bagaj: [104, 108], kaput: [504, 102], 'arka-camurluk': [80, 146], 'on-camurluk': [533, 146],
+  'arka-kapi': [263, 124], 'on-kapi': [375, 124], 'arka-tampon': [38, 128], 'on-tampon': [572, 128],
+};
+const YAZI = {
+  tavan: [316, 30], bagaj: [104, 90], kaput: [504, 88], 'arka-camurluk': [132, 128], 'on-camurluk': [484, 128],
+  'arka-kapi': [263, 162], 'on-kapi': [375, 162], 'arka-tampon': [38, 162], 'on-tampon': [572, 162],
+};
 
 const DURUM = {
   orijinal: { ad: 'Fabrika boyası', aralik: '160 µm altı', yorum: 'Kataforez, astar, baz boya ve vernik fabrikadan geldiği gibi. Pasta yapılabilir; vernik payı yeterli.' },
@@ -66,13 +76,17 @@ export const mikron = {
           <div class="mk__izgara">
             <div class="mk__arac">
               <div class="mk__cizim">
-                <svg class="mk__svg" viewBox="0 0 600 214" role="group" aria-label="Aracın yandan görünüşü, ölçülen paneller">
+                <svg class="mk__svg" viewBox="0 0 600 222" role="group" aria-label="Aracın yandan görünüşü, ölçülen paneller">
                   <g class="mk__olcu" aria-hidden="true">
-                    <path d="M18 200 H590 M18 194 V206 M590 194 V206 M140 196 V204 M474 196 V204"/>
+                    <path d="M12 214 H594 M12 208 V220 M594 208 V220 M140 210 V218 M474 210 V218"/>
                   </g>
-                  <path class="mk__cam" d="M184 92 L232 48 L312 48 L312 94 Z"/>
-                  <path class="mk__cam" d="M318 94 L318 48 L378 48 L426 90 Z"/>
+                  <path class="mk__govde" d="M180 106 L226 54 M406 54 L446 100 M316 58 V102 M322 58 V102" aria-hidden="true"/>
+                  <path class="mk__cam" d="M188 102 L232 58 L244 58 L212 102 Z"/>
+                  <path class="mk__cam" d="M218 102 L250 58 L316 58 L316 102 Z"/>
+                  <path class="mk__cam" d="M322 102 L322 58 L384 58 L420 102 Z"/>
+                  <path class="mk__cam" d="M426 100 L390 58 L398 58 L444 98 Z"/>
                   ${PANELLER.map(([id, ad, , d]) => `<g class="mk__p" data-p="${id}" data-d="yok" role="button" tabindex="0" aria-label="${esc(ad)}"><path d="${d}"/></g>`).join('')}
+                  <g class="mk__detay" aria-hidden="true"><path d="M298 116 H312 M404 116 H418 M556 118 L578 118 L584 126 L558 126 Z M20 124 L46 120 L46 132 L18 134 Z M422 100 L438 92 L442 102 Z"/></g>
                   <g class="mk__teker" aria-hidden="true"><circle cx="140" cy="170" r="34"/><circle cx="140" cy="170" r="14"/><circle cx="474" cy="170" r="34"/><circle cx="474" cy="170" r="14"/></g>
                   <g class="mk__yazilar" aria-hidden="true">${PANELLER.map(([id]) => `<text data-y="${id}"></text>`).join('')}</g>
                   <g class="mk__prob" aria-hidden="true"><circle r="15"/><circle r="4"/><path d="M-24 0H-9M9 0H24M0 -24V-9M0 9V24"/></g>
@@ -141,13 +155,12 @@ export const mikron = {
     const merkez = {};
     PANELLER.forEach(([id]) => {
       const b = g[id].getBBox();
-      merkez[id] = { x: b.x + b.width / 2, y: b.y + b.height / 2 };
-      yazi[id].setAttribute('x', merkez[id].x);
-      yazi[id].setAttribute('y', merkez[id].y + 6);
+      const [x, y] = NOKTA[id] || [b.x + b.width / 2, b.y + b.height / 2];
+      merkez[id] = { x, y };
+      const [yx, yy] = YAZI[id] || [x, y + 6];
+      yazi[id].setAttribute('x', yx);
+      yazi[id].setAttribute('y', yy);
     });
-    yazi.tavan.setAttribute('y', 34);
-    yazi.kaput.setAttribute('y', 84);
-    yazi.bagaj.setAttribute('y', 80);
 
     wa.href = waHref(d, `Merhaba ${d.isletme.ad}, aracımın boya kalınlık ölçümü için randevu almak istiyorum.`);
 
@@ -244,7 +257,7 @@ export const mikron = {
     durumEl.textContent = '—';
     durumEl.dataset.d = 'yok';
     sayi.textContent = '000';
-    PANELLER.forEach(([id]) => g[id].classList.remove('is-secili'));
+    PANELLER.forEach(([id]) => { g[id].classList.remove('is-secili'); cip[id].setAttribute('aria-pressed', 'false'); });
     ScrollTrigger.create({ trigger: svg, start: 'top 70%', once: true, onEnter: taramaBaslat });
   },
 };

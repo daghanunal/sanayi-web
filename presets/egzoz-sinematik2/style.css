@@ -90,7 +90,7 @@ main, .foot { position: relative; z-index: 3; }
   display: flex; align-items: center; gap: 14px; padding: 8px 8px 8px 16px;
   color: var(--fg); border-radius: 999px; transition: background .3s ease, color .3s ease;
 }
-.is-past .top { background: rgb(20 16 19 / .88); color: #f3f1ec; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+.is-past .top { background: rgb(44 38 42 / .96); box-shadow: inset 0 0 0 1px rgb(255 255 255 / .08); color: #f3f1ec; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
 .top__brand {
   display: flex; align-items: center; gap: 10px; text-decoration: none; margin-right: auto;
   font: 400 21px/1 var(--display); text-transform: uppercase; letter-spacing: .02em; padding-top: 3px;
@@ -126,11 +126,11 @@ main, .foot { position: relative; z-index: 3; }
 }
 .hero__kicker { font: 400 13px/1.3 var(--mono); letter-spacing: .03em; color: var(--hot); }
 .hero__title {
-  font: 400 clamp(64px, 12.4vw, 220px)/.86 var(--display); text-transform: uppercase;
+  font: 400 clamp(64px, 12.4vw, 220px)/.9 var(--display); text-transform: uppercase;
   letter-spacing: -.005em; padding-top: .1em; max-width: 9ch;
 }
-.hero__title.is-long { font-size: clamp(56px, 8.4vw, 150px); max-width: 12ch; }
-.hero__title .w { display: inline-block; white-space: nowrap; clip-path: inset(-0.3em -0.1em 0 -0.1em); }
+.hero__title.is-long { font-size: clamp(56px, 8.4vw, 150px); max-width: 12ch; line-height: 1.06; }
+.hero__title .w { display: inline-block; white-space: nowrap; clip-path: inset(-0.3em -0.1em -0.28em -0.1em); }
 .hero__title .ch { display: inline-block; }
 .hero__slogan { font: 500 clamp(18px, 1.8vw, 24px)/1.35 var(--body); max-width: 30ch; opacity: .9; }
 .hero__cta { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 6px; }
@@ -413,11 +413,11 @@ body:not(.is-intro) .intro-meter { opacity: 0; visibility: hidden; transition: o
   position: sticky; top: 0; height: 100vh; height: 100svh; display: grid; align-content: end; gap: 22px;
   padding: 0 var(--pad) clamp(60px, 10vh, 120px); color: #f3f1ec;
 }
-.finale__title { font: 400 clamp(64px, 11vw, 200px)/.88 var(--display); text-transform: uppercase; padding-top: .1em; max-width: 11ch; }
+.finale__title { font: 400 clamp(64px, 10vw, 180px)/1.12 var(--display); text-transform: uppercase; padding-top: .1em; max-width: 11ch; }
 .finale__cta { display: flex; gap: 12px; flex-wrap: wrap; }
 @media (max-width: 759px) {
   .finale__sticky { padding-bottom: 110px; }
-  .finale__title { font-size: 17vw; }
+  .finale__title { font-size: 15vw; }
   .finale__cta .btn { flex: 1 1 100%; }
 }
 

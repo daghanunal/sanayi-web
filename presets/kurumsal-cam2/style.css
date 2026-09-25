@@ -307,3 +307,8 @@ body { background: var(--k-zemin); }
 }
 
 #sayfa[data-sayfa='cam-kodu'] .k-sb__cizgi, #sayfa[data-sayfa='iletisim'] .k-sb__cizgi { display: none; }
+
+/* Satır maskesi: sıkı satır aralığında (0.9) ğ/ş/ç kuyrukları ve İ noktası kesilmesin */
+.k-satir-mask, [data-bol] > div { padding-top: .2em; margin-top: -.2em; padding-bottom: .24em; margin-bottom: -.24em; }
+/* Ana sayfada hero bilgisinden cam kimliğine boş kalan aralığı daralt */
+[data-hero='yazi'] .k-hero { padding-bottom: clamp(8px, 2vw, 24px); }

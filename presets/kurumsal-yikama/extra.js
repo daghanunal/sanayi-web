@@ -1,6 +1,6 @@
-// Sektör modülleri — "Sedef" yönü.
-// parlat: hero; tozlu araç içi fotoğrafı. Açılışta bir silecek bir şerit temizler, kalanını ziyaretçi parmağıyla siler.
-//         Temizlenen oran göstergede, bitince sedef ışıltısı geçer.
+// Sektör modülleri — "Karnauba" yönü.
+// parlat: hero; kontrol lambası altında siyah kaput. Lamba gezdikçe kılcal çizikler halka halka parlar,
+//         pasta pedi geçince ayna gibi kalır.
 // kopuk:  hero altı kayan şerit (yalnızca CSS transform).
 // planla: imza bölümü; aracın kuşbakışı çiziminde yerlere dokunarak yıkama planı → süre ve WhatsApp'a hazır mesaj.
 // filo:   filo yıkama planlayıcı; araç sayısı, sıklık, gün ve saat → bu ayın takvimi.
@@ -32,7 +32,10 @@ function gorununce(el, fn, esik = 0.25) {
   io.observe(el);
 }
 
-// --- Hero: parmakla silinen kir ------------------------------------------------------------
+// --- Hero: kontrol lambası ------------------------------------------------------------------
+// Siyah kaput tuvalde çizilir. Boyadaki binlerce kılcal çizik yalnızca lambaya dik (teğet) duruyorsa ışığı yakalar;
+// bu yüzden lamba gezdikçe etrafında halka halka "hare" görünür. "Pasta-cila" düğmesi pedi panel üzerinde gezdirir,
+// pedin geçtiği yerde çizikler ve mat tül kalkar, geriye tek bir keskin lamba yansıması kalır.
 
 export const parlat = {
   render(d, { tema }) {
@@ -44,236 +47,262 @@ export const parlat = {
       .map(([e, v]) => `<div><dt>${esc(e)}</dt><dd>${esc(v)}</dd></div>`)
       .join('');
     return `
-      <section class="k-hero pr" aria-label="Giriş">
-        <div class="pr__sedef" aria-hidden="true"></div>
-        <div class="k-kap k-hero__ic">
-          <div class="k-hero__metin">
-            <p class="k-hero__ust">${esc(ust)}</p>
-            <h1 class="k-h1 k-hero__baslik" data-bol>${esc(h.baslik || d.isletme.slogan)}</h1>
-            <p class="k-lead">${esc(h.metin || d.isletme.hakkinda)}</p>
-            <div class="k-butonlar">
+      <section class="lh" aria-label="Giriş">
+        <div class="k-kap lh__ic">
+          <div class="lh__metin">
+            <p class="lh__ust">${esc(ust)}</p>
+            <h1 class="k-h1 lh__baslik" data-bol>${esc(h.baslik || d.isletme.slogan)}</h1>
+            <p class="k-lead lh__lead">${esc(h.metin || d.isletme.hakkinda)}</p>
+            <div class="k-butonlar lh__btn">
               ${rota('iletisim', `${esc(h.birincil || 'Bize yazın')} ${ok}`)}
               ${rota(h.ikincilRota || 'hizmetler', esc(h.ikincil || 'Hizmetlerimiz'), 'k-btn k-btn--ikincil')}
             </div>
           </div>
-          <figure class="k-hero__gorsel pr__kare">
-            <div class="pr__ic">
-              <img src="${tema.heroGorsel}" alt="${esc(tema.heroAlt || '')}" fetchpriority="high">
-              <canvas class="pr__kir" aria-hidden="true"></canvas>
+          <figure class="lh__panel" aria-label="Kontrol lambası altında siyah kaput: pasta öncesi hareler, sonrası ayna yüzey">
+            <canvas class="lh__cv" aria-hidden="true"></canvas>
+            <div class="lh__hud" aria-hidden="true">
+              <span class="lh__led"></span>
+              <span>Kontrol lambası</span>
+              <b data-durum>Hare, kılcal çizik</b>
             </div>
-            <span class="pr__isilti" aria-hidden="true"></span>
-            <span class="pr__silecek" aria-hidden="true"><i></i></span>
-            <div class="pr__hud" aria-hidden="true">
-              <span class="pr__olcer">
-                <svg viewBox="0 0 44 44"><circle cx="22" cy="22" r="18" class="pr__olcer-iz"/><circle cx="22" cy="22" r="18" class="pr__olcer-dolu" pathLength="100"/></svg>
-                <b data-yuzde>0</b>
-              </span>
-              <span class="pr__durum" data-durum>tozlu</span>
+            <div class="lh__alt">
+              <div class="lh__olcer" aria-hidden="true">
+                <span>Mat</span><i><em data-dolu></em></i><span>Ayna</span>
+              </div>
+              <button type="button" class="lh__dugme" data-dugme>Pasta-cila at</button>
             </div>
-            <button type="button" class="pr__yeniden" hidden>Yeniden tozlandır</button>
-            <figcaption class="pr__not"><span class="pr__parmak" aria-hidden="true"></span><span data-not>Tozlu fotoğrafı parmağınızla silin</span></figcaption>
+            <figcaption class="lh__not" data-not>Lambayı parmağınızla gezdirin</figcaption>
           </figure>
         </div>
-        <div class="k-kap"><dl class="k-hero__bilgi">${bilgi}</dl></div>
+        <div class="k-kap"><dl class="lh__bilgi">${bilgi}</dl></div>
       </section>`;
   },
   mount(el) {
-    const kare = el.querySelector('.pr__kare');
-    const img = kare.querySelector('img');
-    const cv = kare.querySelector('canvas');
+    const panel = el.querySelector('.lh__panel');
+    const cv = panel.querySelector('canvas');
     const c = cv.getContext('2d');
-    const silecek = kare.querySelector('.pr__silecek');
-    const yuzdeEl = kare.querySelector('[data-yuzde]');
-    const durumEl = kare.querySelector('[data-durum]');
-    const notEl = kare.querySelector('[data-not]');
-    const dolu = kare.querySelector('.pr__olcer-dolu');
-    const yeniden = kare.querySelector('.pr__yeniden');
-    const GX = 26, GY = 26;
-    const izgara = new Uint8Array(GX * GY);
-    let W = 0, H = 0, R = 26, isaretli = 0, bitti = false, hazir = false, sonGenislik = 0;
-    let gosterilen = 0;
+    const durumEl = panel.querySelector('[data-durum]');
+    const doluEl = panel.querySelector('[data-dolu]');
+    const dugme = panel.querySelector('[data-dugme]');
+    const notEl = panel.querySelector('[data-not]');
+    const zayif = (navigator.hardwareConcurrency || 8) <= 4;
+    const N = zayif ? 2600 : 4200;
+    const sx = new Float32Array(N), sy = new Float32Array(N), dx = new Float32Array(N), dy = new Float32Array(N), sl = new Float32Array(N);
+    const canli = new Uint8Array(N);
+    let W = 0, H = 0, dpr = 1, zemin = null, sonGenislik = 0;
+    let lx = 0, ly = 0, hx = 0, hy = 0, elde = false, sonDokunus = -9;
+    let kalan = N, pasta = null, t0 = performance.now(), gorunur = false, rafId = 0, otomatik = null;
 
-    function kirle() {
-      const r = kare.getBoundingClientRect();
+    function cizikler() {
+      const rnd = tohum(7);
+      for (let i = 0; i < N; i++) {
+        sx[i] = rnd(); sy[i] = rnd();
+        const a = rnd() * Math.PI;
+        dx[i] = Math.cos(a); dy[i] = Math.sin(a);
+        sl[i] = 0.4 + rnd() * rnd() * 1.8;
+        canli[i] = 1;
+      }
+      kalan = N;
+    }
+
+    // Boya: koyu petrol-siyah degrade, garaj floresanlarının yumuşak yansıması, metalik pul, köşe gölgesi.
+    function boya() {
+      zemin = document.createElement('canvas');
+      zemin.width = cv.width; zemin.height = cv.height;
+      const z = zemin.getContext('2d');
+      z.setTransform(dpr, 0, 0, dpr, 0, 0);
+      const g = z.createLinearGradient(0, 0, W * 0.3, H);
+      g.addColorStop(0, '#1d2927'); g.addColorStop(0.45, '#0b1312'); g.addColorStop(1, '#040706');
+      z.fillStyle = g; z.fillRect(0, 0, W, H);
+      const serit = (x0, y0, x1, y1, gen, a) => {
+        z.lineCap = 'round';
+        for (let k = 5; k >= 1; k--) {
+          z.strokeStyle = `rgb(220 235 230 / ${a / (k * 1.6)})`; z.lineWidth = gen * k;
+          z.beginPath(); z.moveTo(x0, y0); z.lineTo(x1, y1); z.stroke();
+        }
+      };
+      serit(-W * 0.1, H * 0.18, W * 1.1, H * 0.02, 5, 0.22);
+      serit(-W * 0.1, H * 0.34, W * 1.1, H * 0.2, 3, 0.12);
+      // Kaput kıvrımı
+      z.strokeStyle = 'rgb(255 255 255 / .07)'; z.lineWidth = 1.2;
+      z.beginPath(); z.moveTo(-10, H * 0.78); z.bezierCurveTo(W * 0.3, H * 0.66, W * 0.7, H * 0.7, W + 10, H * 0.58); z.stroke();
+      z.strokeStyle = 'rgb(0 0 0 / .5)'; z.lineWidth = 3;
+      z.beginPath(); z.moveTo(-10, H * 0.785 + 3); z.bezierCurveTo(W * 0.3, H * 0.665 + 3, W * 0.7, H * 0.705 + 3, W + 10, H * 0.585 + 3); z.stroke();
+      const rnd = tohum(3);
+      for (let i = 0; i < (W * H) / 90; i++) {
+        z.fillStyle = `rgb(200 220 214 / ${0.03 + rnd() * 0.09})`;
+        z.fillRect(rnd() * W, rnd() * H, 1, 1);
+      }
+      const v = z.createRadialGradient(W / 2, H / 2, Math.min(W, H) * 0.3, W / 2, H / 2, Math.max(W, H) * 0.75);
+      v.addColorStop(0, 'rgb(0 0 0 / 0)'); v.addColorStop(1, 'rgb(0 0 0 / .55)');
+      z.fillStyle = v; z.fillRect(0, 0, W, H);
+    }
+
+    function olc() {
+      const r = panel.getBoundingClientRect();
+      if (!r.width || !r.height) return false;
       W = r.width; H = r.height;
-      if (!W || !H) return false;
-      const dpr = Math.min(1.5, devicePixelRatio || 1);
+      dpr = Math.min(1.5, devicePixelRatio || 1);
       cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
       c.setTransform(dpr, 0, 0, dpr, 0, 0);
-      R = Math.max(20, Math.min(W, H) * 0.075);
-      const s = Math.max(W / img.naturalWidth, H / img.naturalHeight);
-      const dw = img.naturalWidth * s, dh = img.naturalHeight * s;
-      c.globalCompositeOperation = 'source-over';
-      c.globalAlpha = 1;
-      c.drawImage(img, (W - dw) / 2, (H - dh) / 2, dw, dh);
-      // Rengi çek, toprak tonuna boğ, üstüne toz tülü.
-      c.globalCompositeOperation = 'saturation'; c.fillStyle = 'rgb(128 128 128 / .8)'; c.fillRect(0, 0, W, H);
-      c.globalCompositeOperation = 'multiply'; c.fillStyle = '#b8a384'; c.fillRect(0, 0, W, H);
-      c.globalCompositeOperation = 'source-over';
-      c.fillStyle = 'rgb(196 178 150 / .42)'; c.fillRect(0, 0, W, H);
-      const rnd = tohum(11);
-      for (let i = 0; i < 60; i++) {
-        const x = rnd() * W, y = rnd() * H, rr = 12 + rnd() * Math.min(W, H) * 0.16;
-        const g = c.createRadialGradient(x, y, 0, x, y, rr);
-        g.addColorStop(0, `rgb(112 92 66 / ${0.18 + rnd() * 0.28})`);
-        g.addColorStop(1, 'rgb(112 92 66 / 0)');
-        c.fillStyle = g; c.beginPath(); c.arc(x, y, rr, 0, Math.PI * 2); c.fill();
-      }
-      // Kuruyan su damlası izleri: açık halkalar.
-      for (let i = 0; i < 90; i++) {
-        const x = rnd() * W, y = rnd() * H, rr = 2 + rnd() * 7;
-        c.strokeStyle = `rgb(235 222 200 / ${0.25 + rnd() * 0.3})`; c.lineWidth = 0.8 + rnd();
-        c.beginPath(); c.arc(x, y, rr, 0, Math.PI * 2); c.stroke();
-      }
-      for (let i = 0; i < 420; i++) {
-        c.fillStyle = `rgb(64 50 36 / ${0.25 + rnd() * 0.45})`;
-        c.beginPath(); c.arc(rnd() * W, rnd() * H, 0.5 + rnd() * 1.8, 0, Math.PI * 2); c.fill();
-      }
-      // Akıntı izleri.
-      for (let i = 0; i < 26; i++) {
-        const x = rnd() * W, y = rnd() * H * 0.6, l = 40 + rnd() * H * 0.4, w = 2 + rnd() * 5;
-        const g = c.createLinearGradient(0, y, 0, y + l);
-        g.addColorStop(0, 'rgb(92 74 54 / .38)'); g.addColorStop(1, 'rgb(92 74 54 / 0)');
-        c.fillStyle = g; c.fillRect(x, y, w, l);
-      }
-      izgara.fill(0); isaretli = 0; bitti = false; gosterilen = 0;
-      cv.style.opacity = 1;
-      kare.classList.remove('is-temiz');
-      yeniden.hidden = true;
-      notEl.textContent = 'Tozlu fotoğrafı parmağınızla silin';
-      goster(0);
+      boya();
+      if (!lx) { lx = W * 0.62; ly = H * 0.42; hx = lx; hy = ly; }
       sonGenislik = W;
       return true;
     }
 
-    function isaretle(x, y, rr) {
-      const cw = W / GX, ch = H / GY;
-      const x0 = Math.max(0, Math.floor((x - rr) / cw)), x1 = Math.min(GX - 1, Math.floor((x + rr) / cw));
-      const y0 = Math.max(0, Math.floor((y - rr) / ch)), y1 = Math.min(GY - 1, Math.floor((y + rr) / ch));
-      for (let j = y0; j <= y1; j++) for (let i = x0; i <= x1; i++) {
-        const cx = (i + 0.5) * cw - x, cy = (j + 0.5) * ch - y;
-        if (cx * cx + cy * cy <= rr * rr && !izgara[j * GX + i]) { izgara[j * GX + i] = 1; isaretli++; }
+    function ciz(t) {
+      c.drawImage(zemin, 0, 0, W, H);
+      const m = Math.min(W, H);
+      const oran = kalan / N;
+      // Mat tül: çizikli boyada ışık yayılır; temizlendikçe daralır.
+      const tul = c.createRadialGradient(lx, ly, 0, lx, ly, m * (0.28 + oran * 0.3));
+      tul.addColorStop(0, `rgb(255 244 222 / ${0.1 + oran * 0.22})`);
+      tul.addColorStop(1, 'rgb(255 244 222 / 0)');
+      c.fillStyle = tul; c.fillRect(0, 0, W, H);
+      // Çizikler: lambaya teğet duranlar parlar.
+      const R = m * 0.62, R2 = R * R, dus = m * 0.21, L = Math.max(4.5, m * 0.013);
+      const kova = [[], [], []];
+      for (let i = 0; i < N; i++) {
+        if (!canli[i]) continue;
+        const x = sx[i] * W, y = sy[i] * H, vx = x - lx, vy = y - ly, d2 = vx * vx + vy * vy;
+        if (d2 > R2 || d2 < 60) continue;
+        const d = Math.sqrt(d2);
+        const nokta = Math.abs((vx * dx[i] + vy * dy[i]) / d);
+        if (nokta > 0.14) continue;
+        const a = (1 - nokta / 0.14) * Math.exp(-d / dus) * (1 + 18 / d);
+        if (a < 0.05) continue;
+        kova[a > 0.5 ? 2 : a > 0.22 ? 1 : 0].push(i);
+      }
+      c.lineCap = 'round';
+      const alfa = [0.3, 0.6, 0.95];
+      for (let k = 0; k < 3; k++) {
+        if (!kova[k].length) continue;
+        c.strokeStyle = `rgb(255 250 238 / ${alfa[k]})`; c.lineWidth = k === 2 ? 1.1 : 0.8;
+        c.beginPath();
+        for (const i of kova[k]) {
+          const x = sx[i] * W, y = sy[i] * H, l = L * sl[i];
+          c.moveTo(x - dx[i] * l, y - dy[i] * l); c.lineTo(x + dx[i] * l, y + dy[i] * l);
+        }
+        c.stroke();
+      }
+      // Cilalı boya: floresan yansımaları keskinleşir.
+      if (oran < 0.999) {
+        c.strokeStyle = `rgb(240 250 246 / ${(1 - oran) * 0.55})`; c.lineWidth = 1.4;
+        c.beginPath(); c.moveTo(-W * 0.1, H * 0.18); c.lineTo(W * 1.1, H * 0.02); c.stroke();
+        c.lineWidth = 0.9; c.beginPath(); c.moveTo(-W * 0.1, H * 0.34); c.lineTo(W * 1.1, H * 0.2); c.stroke();
+      }
+      // Lamba yansıması: halka LED + sıcak hale.
+      const hale = c.createRadialGradient(lx, ly, 0, lx, ly, m * 0.16);
+      hale.addColorStop(0, 'rgb(255 214 140 / .55)'); hale.addColorStop(0.25, 'rgb(242 165 22 / .2)'); hale.addColorStop(1, 'rgb(242 165 22 / 0)');
+      c.fillStyle = hale; c.beginPath(); c.arc(lx, ly, m * 0.16, 0, Math.PI * 2); c.fill();
+      c.fillStyle = '#fffaf0'; c.beginPath(); c.arc(lx, ly, m * 0.028, 0, Math.PI * 2); c.fill();
+      c.strokeStyle = 'rgb(255 250 240 / .9)'; c.lineWidth = 1.6;
+      c.beginPath(); c.arc(lx, ly, m * 0.05, 0, Math.PI * 2); c.stroke();
+      // Pasta pedi
+      if (pasta) {
+        const pr = m * 0.15;
+        c.save(); c.translate(pasta.x, pasta.y);
+        c.fillStyle = 'rgb(242 165 22 / .16)'; c.beginPath(); c.arc(0, 0, pr, 0, Math.PI * 2); c.fill();
+        c.strokeStyle = 'rgb(255 205 110 / .95)'; c.lineWidth = 3; c.stroke();
+        c.rotate(t * 0.02);
+        c.strokeStyle = 'rgb(255 205 110 / .5)'; c.lineWidth = 1.4;
+        for (let k = 0; k < 6; k++) { c.rotate(Math.PI / 3); c.beginPath(); c.moveTo(pr * 0.25, 0); c.lineTo(pr * 0.85, 0); c.stroke(); }
+        c.fillStyle = '#0b1312'; c.beginPath(); c.arc(0, 0, pr * 0.2, 0, Math.PI * 2); c.fill();
+        c.restore();
       }
     }
 
-    function goster(oran) {
-      const p = Math.round(oran * 100);
-      if (p === gosterilen && oran) return;
-      gosterilen = p;
-      yuzdeEl.textContent = p;
-      dolu.style.strokeDasharray = `${p} 100`;
-      durumEl.textContent = p >= 88 ? 'ışıl ışıl' : p >= 45 ? 'parlıyor' : p > 4 ? 'siliniyor' : 'tozlu';
+    function sil(px, py) {
+      const pr = Math.min(W, H) * 0.15, pr2 = pr * pr;
+      for (let i = 0; i < N; i++) {
+        if (!canli[i]) continue;
+        const vx = sx[i] * W - px, vy = sy[i] * H - py;
+        if (vx * vx + vy * vy < pr2) { canli[i] = 0; kalan--; }
+      }
     }
 
-    function ilerle() {
-      const oran = isaretli / izgara.length;
-      goster(oran);
-      if (!bitti && oran >= 0.86) tamamla();
+    function durum() {
+      const p = 1 - kalan / N;
+      doluEl.style.transform = `scaleX(${0.06 + p * 0.94})`;
+      durumEl.textContent = p > 0.97 ? 'Ayna gibi' : p > 0.05 ? 'Pasta atılıyor' : 'Hare, kılcal çizik';
+      panel.classList.toggle('is-ayna', p > 0.97);
     }
 
-    function tamamla() {
-      bitti = true;
-      goster(1);
-      notEl.textContent = 'Teslimde de böyle görürsünüz';
-      kare.classList.add('is-temiz');
-      if (reducedMotion) { cv.style.opacity = 0; yeniden.hidden = false; return; }
-      gsap.to(cv, { opacity: 0, duration: 0.7, ease: 'power2.out' });
-      gsap.fromTo(kare.querySelector('.pr__isilti'), { xPercent: -120, opacity: 1 }, { xPercent: 120, duration: 1.3, ease: 'power2.inOut', delay: 0.15 });
-      gsap.delayedCall(1.2, () => (yeniden.hidden = false));
+    function pastaAt() {
+      if (pasta) return;
+      if (kalan < N * 0.03) { cizikler(); durum(); dugme.textContent = 'Pasta-cila at'; notEl.textContent = 'Lambayı parmağınızla gezdirin'; if (reducedMotion) ciz(0); return; }
+      if (reducedMotion) { canli.fill(0); kalan = 0; durum(); ciz(0); dugme.textContent = 'Çizikleri geri getir'; return; }
+      clearTimeout(otomatik);
+      const yol = { s: 0 };
+      pasta = { x: -W * 0.2, y: H * 0.2 };
+      dugme.disabled = true;
+      const SIRA = 4;
+      gsap.to(yol, {
+        s: 1, duration: 2.6, ease: 'none',
+        onUpdate() {
+          const u = yol.s * SIRA, r = Math.min(SIRA - 1, Math.floor(u)), f = u - r;
+          const git = r % 2 === 0 ? f : 1 - f;
+          pasta.x = -W * 0.05 + git * W * 1.1;
+          pasta.y = H * (0.14 + (r / (SIRA - 1)) * 0.72) + Math.sin(f * Math.PI * 6) * H * 0.02;
+          sil(pasta.x, pasta.y);
+          durum();
+        },
+        onComplete() {
+          canli.fill(0); kalan = 0; durum();
+          pasta = null; dugme.disabled = false;
+          dugme.textContent = 'Çizikleri geri getir';
+          notEl.textContent = 'Teslimde kaputa lambayla birlikte bakarız';
+        },
+      });
     }
+    dugme.addEventListener('click', pastaAt);
 
-    // Parmak: yuvarlak, kenarı yumuşak fırça.
-    function surt(x0, y0, x1, y1) {
-      c.globalCompositeOperation = 'destination-out';
-      c.lineCap = 'round'; c.lineJoin = 'round';
-      c.beginPath(); c.moveTo(x0, y0); c.lineTo(x1, y1);
-      c.strokeStyle = 'rgb(0 0 0 / .35)'; c.lineWidth = R * 2.5; c.stroke();
-      c.strokeStyle = '#000'; c.lineWidth = R * 1.8; c.stroke();
-      const n = Math.max(1, Math.ceil(Math.hypot(x1 - x0, y1 - y0) / (R * 0.5)));
-      for (let k = 0; k <= n; k++) isaretle(x0 + ((x1 - x0) * k) / n, y0 + ((y1 - y0) * k) / n, R * 1.05);
-    }
-
-    let son = null;
-    const konum = (e) => { const r = cv.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
-    cv.addEventListener('pointerdown', (e) => {
-      if (bitti || !hazir) return;
-      gsap.killTweensOf(silecekTur);
-      silecek.style.opacity = 0;
-      cv.setPointerCapture(e.pointerId);
-      son = konum(e);
-      surt(...son, ...son);
-      kare.classList.add('is-dokundu');
-      ilerle();
-    });
+    // Parmak / fare: lambayı taşır. Dikey kaydırma sayfaya kalır (touch-action: pan-y).
+    const konum = (e) => { const r = cv.getBoundingClientRect(); hx = e.clientX - r.left; hy = e.clientY - r.top; };
+    cv.addEventListener('pointerdown', (e) => { elde = true; konum(e); sonDokunus = performance.now(); panel.classList.add('is-dokundu'); });
     cv.addEventListener('pointermove', (e) => {
-      if (!son || bitti) return;
-      const p = konum(e);
-      surt(...son, ...p);
-      son = p;
-      ilerle();
+      if (e.pointerType === 'mouse' || elde) { konum(e); sonDokunus = performance.now(); panel.classList.add('is-dokundu'); }
     });
-    const birak = () => (son = null);
+    const birak = () => (elde = false);
     cv.addEventListener('pointerup', birak);
     cv.addEventListener('pointercancel', birak);
-    yeniden.addEventListener('click', () => { kirle(); cv.style.opacity = 1; });
+    cv.addEventListener('pointerleave', birak);
 
-    // Silecek: düz lastik; bir önceki konumdan şimdikine dörtgen siler.
-    const silecekTur = { t: 0 };
-    let onceki = null;
-    function bicak(t) {
-      const x = -0.08 * W + t * 1.16 * W;
-      const y = H * (0.34 + Math.sin(t * Math.PI) * 0.1);
-      const L = H * 0.3;
-      const a = Math.cos(t * Math.PI) * 0.18; // bıçağın hafif eğimi
-      return { x, y, L, a, u: [Math.sin(a) * L / 2, -Math.cos(a) * L / 2] };
-    }
-    function silecekAdim() {
-      const b = bicak(silecekTur.t);
-      silecek.style.transform = `translate(${b.x}px, ${b.y}px) rotate(${b.a}rad)`;
-      silecek.style.setProperty('--L', `${b.L}px`);
-      if (onceki) {
-        c.globalCompositeOperation = 'destination-out';
-        c.fillStyle = '#000';
-        c.beginPath();
-        c.moveTo(onceki.x + onceki.u[0], onceki.y + onceki.u[1]);
-        c.lineTo(b.x + b.u[0], b.y + b.u[1]);
-        c.lineTo(b.x - b.u[0], b.y - b.u[1]);
-        c.lineTo(onceki.x - onceki.u[0], onceki.y - onceki.u[1]);
-        c.closePath(); c.fill();
-        for (let k = -3; k <= 3; k++) isaretle(b.x + (b.u[0] * k) / 3, b.y + (b.u[1] * k) / 3, b.L / 6);
-        ilerle();
+    function kare(now) {
+      rafId = 0;
+      if (!gorunur || document.hidden) return;
+      const t = (now - t0) / 1000;
+      if (now - sonDokunus > 2600) {
+        hx = W * (0.5 + 0.3 * Math.sin(t * 0.55));
+        hy = H * (0.44 + 0.2 * Math.sin(t * 0.83 + 1.2));
       }
-      onceki = b;
+      const k = now - sonDokunus < 2600 ? 0.35 : 0.06;
+      lx += (hx - lx) * k; ly += (hy - ly) * k;
+      ciz(now);
+      rafId = requestAnimationFrame(kare);
     }
+    const baslat = () => { if (!rafId && gorunur && !reducedMotion) rafId = requestAnimationFrame(kare); };
 
-    // Perde: fotoğraf ve kir katmanı birlikte açılır (motorun data-perde'si yalnızca img'yi ölçekler, kir kayardı).
-    if (!reducedMotion) {
-      gsap.fromTo(kare, { clipPath: 'inset(0% 0% 100% 0% round 32px)' }, { clipPath: 'inset(0% 0% 0% 0% round 32px)', duration: 1.1, ease: 'power3.inOut', delay: 0.2, clearProps: 'clipPath' });
-      gsap.fromTo(kare.querySelector('.pr__ic'), { scale: 1.14 }, { scale: 1, duration: 1.4, ease: 'power3.out', delay: 0.2 });
-    }
+    cizikler();
+    if (!olc()) return;
+    durum();
+    ciz(0);
+    if (reducedMotion) return;
 
-    const baslat = () => {
-      if (!kirle()) return;
-      hazir = true;
-      kare.classList.add('is-hazir');
-      if (reducedMotion) return;
-      onceki = null;
-      gsap.timeline({ delay: 1.15 })
-        .set(silecek, { opacity: 1 })
-        .fromTo(silecekTur, { t: 0 }, { t: 1, duration: 1.5, ease: 'power2.inOut', onUpdate: silecekAdim })
-        .to(silecek, { opacity: 0, duration: 0.25 })
-        .add(() => kare.classList.add('is-ipucu'));
-    };
-    (img.complete && img.naturalWidth ? Promise.resolve() : img.decode().catch(() => new Promise((r) => img.addEventListener('load', r, { once: true }))))
-      .then(baslat);
-
+    gsap.fromTo(panel, { clipPath: 'inset(8% 8% 8% 8% round 40px)', opacity: 0 }, { clipPath: 'inset(0% 0% 0% 0% round 28px)', opacity: 1, duration: 1.2, ease: 'power3.out', delay: 0.15, clearProps: 'clipPath' });
+    const io = new IntersectionObserver((e) => { gorunur = e[0].isIntersecting; baslat(); }, { threshold: 0.05 });
+    io.observe(panel);
+    const gor = () => baslat();
+    document.addEventListener('visibilitychange', gor);
+    // Bakan hiç dokunmasa da bir kez görsün: birkaç saniye hare, sonra ped geçer.
+    otomatik = setTimeout(() => { if (el.isConnected && !panel.classList.contains('is-dokundu')) pastaAt(); }, 4200);
     const ro = new ResizeObserver(() => {
-      if (!hazir) return;
-      const w = kare.getBoundingClientRect().width;
-      if (Math.abs(w - sonGenislik) > 2) kirle();
+      const w = panel.getBoundingClientRect().width;
+      if (Math.abs(w - sonGenislik) > 2 && olc()) ciz(0);
     });
-    ro.observe(kare);
-    return () => ro.disconnect();
+    ro.observe(panel);
+    return () => { io.disconnect(); ro.disconnect(); clearTimeout(otomatik); cancelAnimationFrame(rafId); rafId = 0; gorunur = false; document.removeEventListener('visibilitychange', gor); };
   },
 };
 
@@ -308,8 +337,8 @@ const ARACLAR = ['Otomobil', 'SUV', 'Hafif ticari'];
 const aracSvg = `
   <svg class="pl__svg" viewBox="0 0 470 250" role="group" aria-label="Aracın kuşbakışı çizimi; yerlere dokunarak seçin">
     <defs>
-      <linearGradient id="pl-sedef" x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0" stop-color="#ff9cc4"/><stop offset=".35" stop-color="#c9b6ff"/><stop offset=".7" stop-color="#9fe6ff"/><stop offset="1" stop-color="#ffe7a8"/>
+      <linearGradient id="pl-mum" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#ffe08a"/><stop offset=".45" stop-color="#f2a516"/><stop offset=".8" stop-color="#7fd6c2"/><stop offset="1" stop-color="#fff4d6"/>
       </linearGradient>
       <clipPath id="pl-govde"><path d="M78 36 C44 38 30 72 30 125 C30 178 44 212 78 214 L378 214 C420 212 440 178 440 125 C440 72 420 38 378 36 Z"/></clipPath>
     </defs>
@@ -318,7 +347,7 @@ const aracSvg = `
       <rect x="326" y="18" width="62" height="26" rx="10"/><rect x="326" y="206" width="62" height="26" rx="10"/>
     </g>
     <path class="pl__zon pl__govde" data-zon="kaporta" tabindex="0" role="button" aria-label="Kaporta" d="M78 36 C44 38 30 72 30 125 C30 178 44 212 78 214 L378 214 C420 212 440 178 440 125 C440 72 420 38 378 36 Z"/>
-    <path class="pl__cila" d="M78 36 C44 38 30 72 30 125 C30 178 44 212 78 214 L378 214 C420 212 440 178 440 125 C440 72 420 38 378 36 Z" fill="url(#pl-sedef)"/>
+    <path class="pl__cila" d="M78 36 C44 38 30 72 30 125 C30 178 44 212 78 214 L378 214 C420 212 440 178 440 125 C440 72 420 38 378 36 Z" fill="url(#pl-mum)"/>
     <g clip-path="url(#pl-govde)">
       <path class="pl__zon" data-zon="motor" tabindex="0" role="button" aria-label="Motor bölmesi" d="M338 42 L380 40 C418 44 434 76 434 125 C434 174 418 206 380 210 L338 208 C350 170 350 80 338 42 Z"/>
       <path class="pl__zon" data-zon="bagaj" tabindex="0" role="button" aria-label="Bagaj" d="M36 125 C36 76 50 46 80 42 L120 44 C112 80 112 170 120 206 L80 208 C50 204 36 174 36 125 Z"/>

@@ -354,7 +354,7 @@ export const saat = {
         <div class="k-kap st__ic">
           <div class="st__sol">
             <p class="mf__etiket"><span></span>Çalışma saatleri</p>
-            <h2 class="k-h2" id="st-baslik" data-bol>Şaşmaz'da, 4. Cadde üzerindeyiz.</h2>
+            <h2 class="k-h2" id="st-baslik" data-bol>Uğrayın, klimayı birlikte ölçelim.</h2>
             <p class="st__durum ${st.open ? 'is-acik' : ''}"><span></span>${esc(st.text)}</p>
             <p class="st__adres">${esc(d.iletisim.adres)}</p>
             <div class="k-butonlar">

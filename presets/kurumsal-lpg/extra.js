@@ -24,7 +24,7 @@ export const giris = {
       <section class="ml-giris" aria-label="Giriş">
         <div class="k-kap ml-giris__ic">
           <div class="ml-giris__metin">
-          <p class="ml-ust"><span class="ml-ust__kod">LPG</span><span>${esc(d.isletme.sektor)}</span><span>Şaşmaz'da ${esc(yilEki(d.isletme.kurulus))} beri</span></p>
+          <p class="ml-ust"><span class="ml-ust__kod">LPG</span><span>${esc(String(d.isletme.sektor).replace(/^LPG\s+/i, ''))}</span><span>Şaşmaz'da ${esc(yilEki(d.isletme.kurulus))} beri</span></p>
           <h1 class="k-h1 ml-giris__baslik" data-bol>${esc(h.baslik || d.isletme.slogan)}</h1>
           <div class="ml-giris__alt">
             <p class="k-lead">${esc(h.metin || d.isletme.hakkinda)}</p>

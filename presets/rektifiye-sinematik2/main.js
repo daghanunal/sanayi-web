@@ -541,6 +541,7 @@ function applyFilm(p) {
   const dk = smooth(0.58, 0.65, p);
   dark.style.opacity = dk.toFixed(3);
   document.documentElement.classList.toggle('is-dark', dk > 0.5 && p < 0.99);
+  film.classList.toggle('film--dk', dk > 0.5);
   flash.style.opacity = clamp01(1 - Math.abs(p - 0.805) / 0.022).toFixed(3);
 
   // HUD

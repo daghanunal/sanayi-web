@@ -136,7 +136,7 @@ body { background: var(--k-zemin); }
   .hc__adim--yer { grid-area: yer; }
   .hc__adim--sorun { grid-area: sorun; }
   .hc__kart { grid-area: kart; }
-  .hc__harita { grid-area: harita; position: sticky; top: 96px; }
+  .hc__ic > .hc__harita { grid-area: harita; position: sticky; top: 96px; }
 }
 .hc__no { display: flex; align-items: center; gap: 12px; font-family: var(--k-font-baslik); font-weight: 800; font-size: 26px; text-transform: uppercase; margin-bottom: 12px; }
 .hc__no b { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 6px; background: var(--hz-levha); box-shadow: inset 0 0 0 2px var(--hz-levha), inset 0 0 0 3.5px #fff; font-size: 18px; }

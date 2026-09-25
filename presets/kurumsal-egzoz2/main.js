@@ -37,7 +37,7 @@ kurumsal({
     { id: 'anasayfa', baslik: 'Ana Sayfa', bolumler: ['pafta', 'parcalar', 'duman', 'hizmetOzet', 'rakamlar', 'olcu', 'surec', 'yorumlar', 'mesai', 'cta'] },
     { id: 'kurumsal', baslik: 'Kurumsal', bolumler: ['hakkimizda', 'vizyon', 'kalite', 'galeri', 'markalar', 'kariyer', 'cta'] },
     { id: 'hizmetler', baslik: 'Hizmetler', bolumler: ['hizmetler', 'surec', 'sss', 'cta'] },
-    { id: 'muayene', baslik: 'Muayene Hazırlığı', menu: 'Muayene', bolumler: ['olcu', 'duman', 'sss', 'cta'] },
+    { id: 'muayene', baslik: 'Muayene Hazırlığı', menu: 'Muayene', bolumler: ['duman', 'olcu', 'sss', 'cta'] },
     { id: 'kurumsal-musteriler', baslik: 'Filo ve Kurumsal', menu: 'Filo', bolumler: ['anlasmalar', 'cta'] },
     { id: 'iletisim', baslik: 'İletişim', bolumler: ['iletisim'] },
   ],

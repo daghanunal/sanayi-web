@@ -2,11 +2,11 @@ import '../../shared/base.css';
 import ana from '../../data/sektor-restoran.json';
 import ek from '../../data/kurumsal-restoran.json';
 import { kurumsal, derinBirlestir } from '../_kurumsal/engine.js';
-import { telHref, waHref, mapsHref, icons } from '../../shared/core.js';
+import { telHref, waHref, mapsHref, icons, gsap, reducedMotion } from '../../shared/core.js';
 import { kemerHero, menuPano, masaKur, ocakSaati, sis, hizmetler } from './extra.js';
 import './style.css';
 
-// "Çini sofra" yönü: sırlı çini beyazı zemin, İznik laciverdi, pul biber kırmızısı.
+// "Çini sofra" yönü: sırlı çini beyazı zemin, İznik yeşili, pul biber kırmızısı.
 // Tekrarlanan motif: kemer (fotoğraflar kemer pencerede), çini şerit, köz üstünde şiş.
 const GUN = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 const g = (x) => `/img/kurumsal-restoran/${x}.jpg`;
@@ -30,8 +30,17 @@ veri.hizmetler = ana.hizmetler.map((h, i) => {
 });
 veri.kurumsal.hakkimizda.gorsel = g('salon');
 
+// Sayfa geçişi: perde ekranı kapattığı anda kaydırmayı başa al. Aksi halde yeni sayfanın tek seferlik
+// tetikleri eski (derin) kaydırma konumunda kurulup kendini silerken ScrollTrigger yenilemesi hata veriyor.
+let lenis = null;
+addEventListener('hashchange', () => {
+  if (reducedMotion) return;
+  gsap.delayedCall(0.415, () => (lenis ? lenis.scrollTo(0, { immediate: true, force: true }) : scrollTo(0, 0)));
+});
+
 kurumsal({
   veri,
+  onHazir: (ctx) => (lenis = ctx.lenis),
   tema: {
     hero: 'bolunmus',
     gecis: 'perde',
@@ -45,9 +54,9 @@ kurumsal({
     metinBoyutu: true,
     altNot: 'Güncel fiyatlar için arayın; grup menülerinde fiyatı rezervasyon onaylanmadan söyleriz.',
     css: {
-      zemin: '#f2f4f5', yuzey: '#e2e8ec', metin: '#112244', soluk: '#4a5874', cizgi: 'rgb(17 34 68 / .14)',
-      vurgu: '#d8361f', 'vurgu-metin': '#ffffff', koyu: '#112244', 'koyu-metin': '#f2f4f5', 'koyu-soluk': '#9fb0cc',
-      gecis: '#112244',
+      zemin: '#f0f3ec', yuzey: '#dde7de', metin: '#0d3b33', soluk: '#46605a', cizgi: 'rgb(13 59 51 / .14)',
+      vurgu: '#d8361f', 'vurgu-metin': '#ffffff', koyu: '#0d3b33', 'koyu-metin': '#f0f3ec', 'koyu-soluk': '#9fc3b5',
+      gecis: '#0d3b33',
       'font-baslik': "'Anton', 'Impact', sans-serif", 'font-govde': "'Be Vietnam Pro', system-ui, sans-serif",
       'baslik-agirlik': '400', 'baslik-harf': '0.005em', 'baslik-satir': '0.98',
       radius: '10px', 'radius-buyuk': '18px',

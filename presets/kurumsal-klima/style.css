@@ -228,6 +228,7 @@
 }
 .k-rakamlar dt { font-family: var(--tk-mono); font-size: 12.5px; letter-spacing: .06em; text-transform: uppercase; }
 .k-rakamlar__liste > div { border-top-color: rgb(255 255 255 / .12); min-width: 0; }
+@media (max-width: 899px) { .k-rakamlar dd { font-size: clamp(30px, 9.6vw, 60px); } }
 @media (min-width: 900px) { .k-rakamlar dd { font-size: clamp(38px, 4vw, 62px); } }
 
 /* --- Gaz ve manometre --- */
@@ -283,12 +284,12 @@
 .st__adres { margin-top: 18px; max-width: 34ch; font-size: 18px; }
 .st__kart { background: var(--tk-beyaz); border-radius: 26px; padding: clamp(14px, 2vw, 22px); box-shadow: 0 30px 60px -40px rgb(11 26 38 / .45); }
 .st__gunler { display: grid; }
-.st__gunler li { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 14px; }
-.st__gunler li + li { box-shadow: 0 -1px 0 var(--k-cizgi); }
+.st__gunler li { position: relative; display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 14px; }
+.st__gunler li + li::before { content: ''; position: absolute; left: 14px; right: 14px; top: 0; height: 1px; background: var(--k-cizgi); }
 .st__gunler b { font-family: var(--tk-mono); font-weight: 500; font-variant-numeric: tabular-nums; }
 .st__gunler li.is-kapali b { color: var(--k-soluk); font-family: inherit; }
-.st__gunler li.is-bugun { background: var(--k-koyu); color: var(--k-koyu-metin); box-shadow: none; }
-.st__gunler li.is-bugun + li { box-shadow: none; }
+.st__gunler li.is-bugun { background: var(--k-koyu); color: var(--k-koyu-metin); }
+.st__gunler li.is-bugun::before, .st__gunler li.is-bugun + li::before { display: none; }
 .st__gunler li.is-bugun span::after { content: 'bugün'; margin-left: 10px; font-family: var(--tk-mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: #5fd8e2; }
 .st__harita { margin-top: 14px; aspect-ratio: 16 / 10; overflow: hidden; background: var(--k-yuzey); display: grid; place-items: center; color: var(--k-soluk); font-size: 14px; }
 .st__harita iframe { width: 100%; height: 100%; border: 0; }

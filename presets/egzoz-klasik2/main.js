@@ -38,6 +38,7 @@ $$('[data-wa]').forEach((a) => (a.href = waHref(d)));
 $$('[data-maps]').forEach((a) => (a.href = mapsHref(d)));
 $('[data-wa-rapor]').href = waHref(d, `Merhaba ${d.isletme.ad}, aracım muayeneden egzozdan kaldı. Raporun fotoğrafını gönderiyorum.`);
 $('.hero__name').style.setProperty('--n', Math.max(12, d.isletme.ad.length));
+$('.hero').classList.toggle('is-long', d.isletme.ad.length > 18);
 $('.top__brand').setAttribute('aria-label', `${d.isletme.ad}, sayfa başı`);
 $('[data-since]').textContent = `Şaşmaz Oto Sanayi · ${ablative(d.isletme.kurulus)} beri`;
 const yil = new Date().getFullYear() - d.isletme.kurulus;

@@ -61,7 +61,8 @@ body {
 .btn:active { transform: scale(.97); }
 .btn--mint { background: var(--mint); color: #06201c; }
 .btn--mint:hover { background: var(--mint-2); }
-.btn--ghost { color: var(--white); border: 1.5px solid rgb(242 247 244 / .4); background: rgb(11 43 40 / .35); }
+.btn--ghost { color: var(--white); border: 1.5px solid rgb(242 247 244 / .4); background: rgb(11 43 40 / .82); }
+.hero .btn--ghost { background: var(--ink); }
 .btn--ghost:hover { border-color: var(--white); }
 .btn--ink { background: var(--ink); color: var(--white); }
 .btn--ink:hover { background: var(--ink-3); }
@@ -269,7 +270,8 @@ body {
 /* --- İlk ziyaret --- */
 .ilk { background: var(--paper-2); padding: clamp(80px, 10vw, 150px) var(--pad); display: grid; gap: 40px; }
 .ilk__list { margin: 28px 0 30px; display: grid; gap: 12px; }
-.ilk__list li { background: var(--white); border-radius: 18px; padding: 16px 18px; font-size: 15.5px; color: var(--muted); border-left: 5px solid var(--gum); }
+.ilk__list li { position: relative; background: var(--white); border-radius: 18px; padding: 16px 18px 16px 34px; font-size: 15.5px; color: var(--muted); }
+.ilk__list li::before { content: ''; position: absolute; left: 16px; top: 18px; bottom: 18px; width: 4px; border-radius: 4px; background: var(--gum); }
 .ilk__list b { display: block; font: 800 18px/1.2 var(--display); color: var(--ink); margin-bottom: 3px; }
 .ilk__photo { border-radius: 28px; overflow: hidden; aspect-ratio: 4 / 3; }
 .ilk__photo img { width: 100%; height: 100%; object-fit: cover; }

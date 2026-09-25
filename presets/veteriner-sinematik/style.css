@@ -13,7 +13,7 @@
   --txt: #efeaff;
   --mute: #a9a1d6;
   --red: #ff4d57;
-  --disp: 'Lilita One', 'Parkinsans', system-ui, sans-serif;
+  --disp: 'Paytone One', 'Parkinsans', system-ui, sans-serif;
   --body: 'Parkinsans', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --hand: 'Kalam', cursive;
   --mono: 'Courier Prime', ui-monospace, monospace;
@@ -95,7 +95,7 @@ body.is-loading { overflow: hidden; }
 .top__call svg { width: 17px; height: 17px; }
 @media (max-width: 759px) {
   .top { padding: 12px 16px; gap: 10px; }
-  .top__brand { font-size: 17px; }
+  .top__brand { font-size: 15.5px; gap: 8px; }
   .top__brand svg { width: 26px; height: 26px; }
   .top__num { display: none; }
   .top__call { padding: 10px; }
@@ -136,10 +136,11 @@ body.is-loading { overflow: hidden; }
 }
 .hero__since { font: 700 13px/1 var(--mono); letter-spacing: .16em; text-transform: uppercase; color: var(--mint); }
 .hero__title {
-  margin-top: 18px; font: 400 clamp(56px, 7.2vw, 118px)/.95 var(--disp); color: var(--butter);
+  margin-top: 18px; font: 400 clamp(50px, 6.6vw, 108px)/1 var(--disp); color: var(--butter);
   letter-spacing: -.01em; text-wrap: balance;
 }
-.hero__title .word { display: inline-block; overflow: hidden; padding: .14em .02em 0; margin: -.14em 0 0; vertical-align: top; }
+.hero__title.is-long { font-size: clamp(44px, 5.2vw, 84px); }
+.hero__title .word { display: inline-block; overflow: hidden; padding: .22em .02em .04em; margin: -.22em 0 -.04em; vertical-align: top; }
 .hero__title .ch { display: inline-block; }
 .hero__slogan { margin-top: 20px; font-size: clamp(17px, 1.4vw, 21px); color: var(--txt); max-width: 34ch; }
 .hero__cta { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 28px; }
@@ -219,14 +220,16 @@ body.is-loading { overflow: hidden; }
   .hero { left: 16px; right: 16px; top: 84px; translate: none; width: auto; }
   .hero__since { font-size: 11.5px; }
   .hero__title { font-size: clamp(44px, 12.4vw, 60px); margin-top: 12px; }
+  .hero__title.is-long { font-size: clamp(34px, 9.6vw, 44px); }
   .hero__slogan { font-size: 16px; margin-top: 12px; }
   .hero__cta { margin-top: 18px; }
   .hero__cta .btn { min-height: 48px; padding: 0 18px; font-size: 15px; }
+  .hero__cta .btn--ghost { display: none; }
   .hint { bottom: 110px; }
   .rail {
     right: auto; left: 16px; top: 66px; bottom: auto; translate: none; gap: 3px;
   }
-  .rail li span { display: none; }
+  .rail li span, .rail li.is-active span { display: none; }
   .rail li b { width: 26px; height: 5px; border-radius: 3px; font-size: 0; }
   .rail li.is-active b { width: 26px; }
   .cards { left: 12px; right: 12px; width: auto; top: auto; bottom: calc(94px + env(safe-area-inset-bottom)); align-items: end; }

@@ -3,7 +3,7 @@
     "once": "GÜRÜLTÜ",
     "sonra": "SESSİZ",
     "baslik": "Delik susturucu 104 desibel bağırır.",
-    "metin": "Muayenede sınır 90 desibeldir. Delinen parçayı tek başına değiştirir, askıyı ve kelepçeyi yeniler, sesi sizin önünüzde ölçeriz.",
+    "metin": "Muayenede egzoz sesi de ölçülür. Delinen parçayı tek başına değiştirir, askıyı ve kelepçeyi yeniler, sesi sizin önünüzde ölçeriz.",
     "once_db": 104,
     "sonra_db": 78,
     "sinir_db": 90

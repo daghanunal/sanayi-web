@@ -257,8 +257,28 @@ function applyZoom() {
   win.style.transform = `scale(${s.toFixed(4)})`;
   boreImg.style.transform = `scale(${(k / s).toFixed(5)})`;
 }
+// Uzun işletme adı: hero metni ölçü kartının altına sığsın (mobil) / taşmasın (masaüstü)
+const heroText = $('.hero__text'), heroTitle = $('.hero__title'), readout = $('.readout'), heroTags = $('.hero__tags');
+function fitHero() {
+  heroTitle.style.fontSize = ''; heroTags.style.display = '';
+  const desk = matchMedia('(min-width: 900px)').matches;
+  heroText.style.width = '';
+  if (desk) {
+    const room = $('.bore__ring').getBoundingClientRect().left - heroText.getBoundingClientRect().left - 24;
+    if (room < heroText.offsetWidth) heroText.style.width = `${Math.max(320, room)}px`;
+  }
+  const fits = () => desk
+    ? heroText.offsetHeight <= stage.clientHeight * 0.6 && heroTitle.offsetHeight <= parseFloat(getComputedStyle(heroTitle).fontSize) * 4.2
+    : heroText.getBoundingClientRect().top >= readout.getBoundingClientRect().bottom + 14;
+  if (fits()) return;
+  if (!desk) { heroTags.style.display = 'none'; if (fits()) return; }
+  let fs = parseFloat(getComputedStyle(heroTitle).fontSize);
+  while (!fits() && fs > 24) { fs -= 2; heroTitle.style.fontSize = `${fs}px`; }
+}
+fitHero();
+document.fonts?.ready.then(fitHero);
 layoutBore();
-addEventListener('resize', () => { layoutBore(); });
+addEventListener('resize', () => { fitHero(); layoutBore(); });
 
 const capEl = $('[data-cap]'), clsEl = $('[data-cls]');
 const cap = { v: capStart };

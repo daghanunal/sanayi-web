@@ -136,8 +136,27 @@ function heatTexture() {
   return t;
 }
 
+// Kum döküm alüminyum pürüzü: pürüzlülük + kabartma haritası
+function castTexture() {
+  const c = document.createElement('canvas');
+  c.width = c.height = 256;
+  const x = c.getContext('2d');
+  const img = x.createImageData(256, 256);
+  for (let i = 0; i < 256 * 256; i++) {
+    const px = i % 256, py = (i / 256) | 0;
+    const v = 150 + Math.random() * 70 + 25 * Math.sin(px * 0.09 + Math.sin(py * 0.05) * 2) * Math.sin(py * 0.07);
+    img.data[i * 4] = img.data[i * 4 + 1] = img.data[i * 4 + 2] = clamp(v / 255) * 255;
+    img.data[i * 4 + 3] = 255;
+  }
+  x.putImageData(img, 0, 0);
+  const t = new THREE.CanvasTexture(c);
+  t.wrapS = t.wrapT = THREE.RepeatWrapping;
+  t.repeat.set(3, 2);
+  return t;
+}
+
 export function createScene(canvas, { lite = false } = {}) {
-  const renderer = new THREE.WebGLRenderer({ canvas, antialias: !lite, alpha: true, powerPreference: 'high-performance' });
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: 'high-performance' });
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 1.1;
@@ -165,8 +184,9 @@ export function createScene(canvas, { lite = false } = {}) {
   scene.add(ember);
 
   // --- Malzemeler -----------------------------------------------------------
-  const alu = new THREE.MeshStandardMaterial({ color: 0xc4ccd4, metalness: 0.9, roughness: 0.42, side: THREE.DoubleSide });
-  const aluBright = new THREE.MeshStandardMaterial({ color: 0xeef3f8, metalness: 1, roughness: 0.16, side: THREE.DoubleSide });
+  const cast = castTexture();
+  const alu = new THREE.MeshStandardMaterial({ color: 0xaeb7c1, metalness: 1, roughness: 0.5, roughnessMap: cast, bumpMap: cast, bumpScale: 0.6, side: THREE.DoubleSide });
+  const aluBright = new THREE.MeshStandardMaterial({ color: 0xdfe6ee, metalness: 1, roughness: 0.2, side: THREE.DoubleSide });
   const heatMap = heatTexture();
   const iron = new THREE.MeshStandardMaterial({
     color: 0x3a3634, metalness: 0.75, roughness: 0.6, side: THREE.DoubleSide,

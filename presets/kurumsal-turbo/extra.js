@@ -1,322 +1,222 @@
-// Sektör modülleri:
-// (1) hero: motorun hero'su + fotoğrafın üstünde basınç göstergesi (ibre açılışta 1,8 bar'a çıkar)
-// (2) kesit: turbonun kesit çizimi. Şikâyeti seç → bakılacak parçalar yanar; parçaya dokun → ne bozulur, ne yaparız.
-//     Hava ve egzoz akışı, yağ hattı ve çark dönüşü yalnızca CSS animasyonu (kompozitörde), ekran dışında durur.
-// (3) atolye: bugün açık mı, saatler, adres, yaklaşınca yüklenen harita.
-import { esc, waHref, telHref, mapsHref, mapsEmbed, openStatus, groupedHours, GUNLER, icons, gsap, reducedMotion } from '../../shared/core.js';
+// Sektör modülleri ("Ölçü Karnesi"):
+// (1) hero: motorun hero'su + başlığın altında kaydırdıkça kayan mikrometre cetveli + fotoğrafta ölçü etiketi
+// (2) karne: revizyon karnesi. "Geldiği gibi" / "Teslimde" arasında geçiş; ibreler tolerans bandında kayar,
+//     tarama çizgisi kartın üstünden geçer, sonunda damga basılır. Değerler örnektir (kartta yazıyor).
+// (3) sebep: turboyu bitiren dört sebep ve her birinde neye baktığımız
+// (4) atolye: bugün açık mı, saatler, adres, yaklaşınca yüklenen harita
+import { esc, telHref, mapsHref, mapsEmbed, openStatus, groupedHours, GUNLER, icons, gsap, reducedMotion } from '../../shared/core.js';
 import { BOLUMLER } from '../_kurumsal/bolumler.js';
-import { DrawSVGPlugin } from 'gsap/DrawSVGPlugin';
 
-gsap.registerPlugin(DrawSVGPlugin);
+const virgul = (v, h = 2) => v.toFixed(h).replace('.', ',');
 
-// --- (1) Hero + basınç göstergesi -------------------------------------------------------------
-const gostergeSvg = () => {
-  // 0-2,5 bar, 240 derecelik yay. Merkez (100,100), yarıçap 78.
-  const aci = (v) => -210 + (v / 2.5) * 240; // derece, 0 bar = -210 (sol alt)
-  const nokta = (v, r) => {
-    const a = (aci(v) * Math.PI) / 180;
-    return [100 + r * Math.cos(a), 100 + r * Math.sin(a)];
-  };
-  const cizgiler = [];
-  for (let i = 0; i <= 25; i++) {
-    const v = i / 10;
-    const buyuk = i % 5 === 0;
-    const [x1, y1] = nokta(v, buyuk ? 64 : 69);
-    const [x2, y2] = nokta(v, 76);
-    cizgiler.push(`<line x1="${x1.toFixed(1)}" y1="${y1.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" class="${buyuk ? 'b' : ''}${v >= 2 ? ' k' : ''}"/>`);
+// --- (1) Hero ---------------------------------------------------------------------------------
+const cetvel = () => {
+  const cizgi = [];
+  for (let i = 0; i <= 240; i++) {
+    const x = i * 10;
+    const boy = i % 10 === 0 ? 26 : i % 5 === 0 ? 17 : 10;
+    cizgi.push(`<line x1="${x}" y1="0" x2="${x}" y2="${boy}"/>`);
+    if (i % 10 === 0) cizgi.push(`<text x="${x + 4}" y="38">${i / 10}</text>`);
   }
-  const rakamlar = [0, 0.5, 1, 1.5, 2, 2.5]
-    .map((v) => {
-      const [x, y] = nokta(v, 52);
-      return `<text x="${x.toFixed(1)}" y="${(y + 4).toFixed(1)}">${String(v).replace('.', ',')}</text>`;
-    })
-    .join('');
-  const [ax, ay] = nokta(0, 84);
-  const [bx, by] = nokta(2.5, 84);
-  return `
-    <div class="tb-gos" aria-hidden="true">
-      <svg viewBox="0 0 200 172">
-        <defs><linearGradient id="tb-isi" x1="0" x2="1" y1="0" y2="0"><stop offset="0" stop-color="#6c8cff"/><stop offset=".55" stop-color="#ffb347"/><stop offset=".8" stop-color="#ff6a1f"/><stop offset="1" stop-color="#e8284a"/></linearGradient></defs>
-        <circle cx="100" cy="100" r="92" class="tb-gos__kasa"/>
-        <path d="M${ax.toFixed(1)} ${ay.toFixed(1)} A84 84 0 1 1 ${bx.toFixed(1)} ${by.toFixed(1)}" class="tb-gos__yay"/>
-        <g class="tb-gos__cizgi">${cizgiler.join('')}</g>
-        <g class="tb-gos__rakam">${rakamlar}</g>
-        <g class="tb-gos__ibre"><path d="M100 104 L97 100 L100 34 L103 100 Z"/><circle cx="100" cy="100" r="7"/></g>
-      </svg>
-      <p class="tb-gos__deger"><b data-bar>0,0</b><span>bar</span></p>
-    </div>`;
+  return `<div class="tk-cetvel" aria-hidden="true"><svg viewBox="0 0 2400 44" preserveAspectRatio="xMinYMin meet"><g>${cizgi.join('')}</g></svg><span class="tk-cetvel__ok"></span></div>`;
 };
 
 export const hero = {
   render(d, ctx, sorgu) {
     const html = BOLUMLER.hero.render(d, ctx, sorgu);
-    return html.replace('</figure>', `${gostergeSvg()}</figure>`);
+    const etiket = `
+      <figcaption class="tk-etiket" aria-hidden="true">
+        <span class="tk-etiket__ust">Eksenel boşluk · teslimde</span>
+        <b><span data-mm>0,00</span> mm</b>
+        <span class="tk-etiket__alt"><i></i>Sınır içinde</span>
+      </figcaption>`;
+    return html
+      .replace('<figure class="k-hero__gorsel"', `${cetvel()}<figure class="k-hero__gorsel"`)
+      .replace('</figure>', `${etiket}</figure>`);
   },
   mount(el) {
-    const ibre = el.querySelector('.tb-gos__ibre');
-    const deger = el.querySelector('[data-bar]');
-    if (!ibre) return;
-    const hedef = 1.8;
-    const aci = (v) => (v / 2.5) * 240 - 120; // ibre 0 bar'da -120 derece
+    const mm = el.querySelector('[data-mm]');
+    const g = el.querySelector('.tk-cetvel g');
     if (reducedMotion) {
-      gsap.set(ibre, { rotation: aci(hedef), svgOrigin: '100 100' });
-      deger.textContent = hedef.toFixed(1).replace('.', ',');
+      if (mm) mm.textContent = '0,05';
       return;
     }
-    const o = { v: 0 };
-    const k = { s: 0 };
-    const yaz = () => {
-      const v = o.v + k.s;
-      gsap.set(ibre, { rotation: aci(v), svgOrigin: '100 100' });
-      deger.textContent = v.toFixed(1).replace('.', ',');
-    };
+    const o = { v: 0.19 };
+    const yaz = () => { if (mm) mm.textContent = virgul(o.v); };
     yaz();
-    gsap.timeline({ delay: 1.1 })
-      .to(o, { v: 2.25, duration: 1.1, ease: 'power3.in', onUpdate: yaz })
-      .to(o, { v: hedef, duration: 1.4, ease: 'elastic.out(1, 0.35)', onUpdate: yaz });
-    // Kaydırdıkça ibre biraz daha yükselir (gaz açılıyor).
-    gsap.fromTo(k, { s: 0 }, {
-      s: 0.25, ease: 'none', onUpdate: yaz, immediateRender: false,
-      scrollTrigger: { trigger: el, start: 'top top', end: 'bottom top', scrub: 0.6 },
-    });
+    gsap.fromTo(el.querySelector('.tk-etiket'), { y: 24, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: .8, delay: 1.1, ease: 'power3.out' });
+    gsap.to(o, { v: 0.05, duration: 1.6, delay: 1.3, ease: 'power2.inOut', onUpdate: yaz });
+    if (g) {
+      gsap.fromTo(g, { x: 0 }, {
+        x: -420, ease: 'none', immediateRender: false,
+        scrollTrigger: { trigger: el, start: 'top top', end: 'bottom top', scrub: .5 },
+      });
+    }
   },
 };
 
-// --- (2) Turbo kesiti ---------------------------------------------------------------------------
-const PARCALAR = [
-  { id: 'kompresor', no: 1, x: 236, y: 250, ad: 'Kompresör çarkı', bozulur: 'Hava filtresinden kaçan toz ya da küçük bir cisim kanatları yer; çark dengesini kaybeder.', belirti: 'Islık, siren sesi, basınç düşüklüğü', yapariz: 'Kanatlar büyüteçle kontrol edilir, çark grubu balans cihazında dengelenir; yenmişse değişir.', hizmet: 1 },
-  { id: 'mil', no: 2, x: 400, y: 250, ad: 'Mil ve yataklar', bozulur: 'Yağsız kalan ya da kirli yağla dönen mil yatakları yer; boşluk artar, çark gövdeye sürter.', belirti: 'Mavi duman, yağ yakma, metalik ses', yapariz: 'Eksenel ve radyal boşluk ölçülür. Yatak, segman ve contalar yenilenerek revizyon yapılır.', hizmet: 0 },
-  { id: 'turbin', no: 3, x: 552, y: 250, ad: 'Türbin çarkı', bozulur: 'Sıcak egzoz ve kurum çarkı aşındırır; motordan kopan parça kanatları kırabilir.', belirti: 'Çekiş kaybı, titreşim, siyah duman', yapariz: 'Çark ve mil grubu ölçülür, türbin gövdesi temizlenir, çatlak aranır.', hizmet: 0 },
-  { id: 'vnt', no: 4, x: 506, y: 140, ad: 'VNT kanatları', bozulur: 'Kısa mesafe ve düşük devir kullanımında kurum bağlar; kanatlar sıkışır, basınç ayarı kaçar.', belirti: 'Gaz verince tekleme, emniyet moduna geçme', yapariz: 'Kanat mekanizması sökülüp temizlenir, serbest hareket ettiği kontrol edilir.', hizmet: 2 },
-  { id: 'aktuator', no: 5, x: 688, y: 104, ad: 'Aktüatör', bozulur: 'Vakum ya da elektronik aktüatör konum kaybeder, kolu yanlış yerde tutar.', belirti: 'Arıza lambası, turbo basıncı düşük kaydı', yapariz: 'Aktüatör ve konum sensörü değerlere göre ayarlanır, cihazla test edilir.', hizmet: 2 },
-  { id: 'yag', no: 6, x: 400, y: 112, ad: 'Yağ besleme ve dönüş', bozulur: 'Tıkalı dönüş hattı yağı turbonun içinde bırakır; yağ contalardan kaçar ya da turbo yağsız kalır.', belirti: 'Intercooler’da yağ, egzozdan yağ, turbo tekrar tekrar bozulma', yapariz: 'Besleme ve dönüş boruları, banjo cıvataları ve süzgeçler kontrol edilir; tıkalı hat yenilenmeden turbo takılmaz.', hizmet: 4 },
-  { id: 'intercooler', no: 7, x: 262, y: 62, ad: 'Intercooler ve hortumlar', bozulur: 'Çatlak intercooler ya da gevşek kelepçe basınçlı havayı dışarı kaçırır.', belirti: 'Islık, güç kaybı, siyah duman', yapariz: 'Intercooler temizlenir, basınç testiyle kaçak aranır; hortum ve kelepçeler kontrol edilir.', hizmet: 3 },
+// --- (2) Revizyon karnesi --------------------------------------------------------------------
+// yon: 'alt' → küçük değer iyi (sınırın altı yeşil), 'ust' → büyük değer iyi.
+const OLCULER = [
+  { ad: 'Mil eksenel boşluğu', birim: 'mm', sinir: 0.10, max: 0.25, once: 0.19, sonra: 0.05, yon: 'alt', h: 2 },
+  { ad: 'Mil radyal boşluğu', birim: 'mm', sinir: 0.45, max: 0.80, once: 0.66, sonra: 0.31, yon: 'alt', h: 2 },
+  { ad: 'Çark grubu dengesizliği', birim: 'g·mm', sinir: 0.6, max: 2.4, once: 1.9, sonra: 0.3, yon: 'alt', h: 1 },
+  { ad: 'VNT kanat hareketi', durum: true, once: 'Takılıyor', sonra: 'Serbest' },
+  { ad: 'Yağ dönüş hattı', durum: true, once: 'Tıkalı', sonra: 'Yenilendi' },
+  { ad: 'Takviye basıncı, yol denemesi', birim: 'bar', sinir: 1.6, max: 2.2, once: 0.9, sonra: 1.8, yon: 'ust', h: 1 },
 ];
 
-const SIKAYETLER = [
-  { id: 'islik', ad: 'Islık ya da siren sesi', parca: ['kompresor', 'mil', 'intercooler'] },
-  { id: 'cekis', ad: 'Çekişten düştü', parca: ['vnt', 'aktuator', 'intercooler', 'turbin'] },
-  { id: 'mavi', ad: 'Mavi duman, yağ yakıyor', parca: ['mil', 'yag'] },
-  { id: 'siyah', ad: 'Siyah duman', parca: ['vnt', 'intercooler', 'turbin'] },
-  { id: 'yagli', ad: 'Intercooler’dan yağ geliyor', parca: ['yag', 'mil'] },
-  { id: 'lamba', ad: 'Arıza lambası, emniyet modu', parca: ['aktuator', 'vnt'] },
-];
-
-// Kesit çizimi (viewBox 800x480). Sınıflar: .p-<id> parçayı, .ak-* akışları işaretler.
-const kesitSvg = () => `
-  <svg class="tk__svg" viewBox="0 0 800 480" role="img" aria-labelledby="tk-svg-baslik">
-    <title id="tk-svg-baslik">Turbonun kesit çizimi: solda kompresör, ortada mil ve yataklar, sağda türbin</title>
-    <defs>
-      <pattern id="tk-izgara" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M20 0H0V20" fill="none" stroke="currentColor" stroke-width=".5" opacity=".14"/></pattern>
-      <clipPath id="tk-kc"><path d="M186 226 C214 222 262 188 300 154 L300 346 C262 312 214 278 186 274 Z"/></clipPath>
-      <clipPath id="tk-tc"><path d="M500 160 C530 196 566 220 602 226 L602 274 C566 280 530 304 500 340 Z"/></clipPath>
-    </defs>
-    <rect width="800" height="480" fill="url(#tk-izgara)"/>
-
-    <!-- Akışlar: soğuk hava (sol), sıcak egzoz (sağ), yağ (orta) -->
-    <path class="ak ak-hava" d="M6 250 H176"/>
-    <path class="ak ak-hava" d="M262 150 V26"/>
-    <path class="ak ak-egzoz" d="M550 470 V360"/>
-    <path class="ak ak-egzoz" d="M612 250 H796"/>
-    <path class="ak ak-yag" d="M400 20 V192"/>
-    <path class="ak ak-yag" d="M400 312 V470"/>
-
-    <!-- Kompresör gövdesi -->
-    <g class="p p-kompresor p-intercooler">
-      <path class="g" d="M40 196 H150 C160 150 184 116 214 104 C236 96 250 96 262 100 H290 C318 104 330 130 330 160 V340 C330 376 304 398 270 398 C230 398 190 380 164 340 C156 326 152 314 150 304 H40"/>
-      <circle class="g i" cx="262" cy="136" r="30"/>
-      <circle class="g i" cx="252" cy="366" r="22"/>
-    </g>
-    <g class="p p-intercooler"><path class="g" d="M232 106 V20 M292 106 V20"/><path class="g kel" d="M226 44 H298 M226 56 H298"/></g>
-
-    <!-- Kompresör çarkı: kanat izleri döner gibi akar -->
-    <g class="p p-kompresor">
-      <path class="c" d="M186 226 C214 222 262 188 300 154 L300 346 C262 312 214 278 186 274 Z"/>
-      <g clip-path="url(#tk-kc)"><g class="kanat kanat-k">${Array.from({ length: 16 }, (_, i) => `<path d="M180 ${130 + i * 28} C230 ${140 + i * 28} 270 ${150 + i * 28} 310 ${170 + i * 28}"/>`).join('')}</g></g>
-    </g>
-
-    <!-- Mil -->
-    <g class="p p-mil">
-      <rect class="mil" x="180" y="244" width="432" height="12" rx="3"/>
-    </g>
-
-    <!-- Yatak gövdesi, yataklar -->
-    <g class="p p-mil p-yag">
-      <path class="g" d="M330 186 H372 V176 H428 V186 H474 V314 H428 V324 H372 V314 H330 Z"/>
-      <rect class="g y" x="352" y="228" width="30" height="44" rx="4"/>
-      <rect class="g y" x="418" y="228" width="30" height="44" rx="4"/>
-    </g>
-    <!-- Yağ hattı -->
-    <g class="p p-yag">
-      <path class="g" d="M388 176 V60 M412 176 V60"/>
-      <rect class="g kel" x="378" y="54" width="44" height="16" rx="3"/>
-      <path class="g" d="M380 324 V440 M420 324 V440"/>
-    </g>
-
-    <!-- Türbin gövdesi -->
-    <g class="p p-turbin p-vnt">
-      <path class="g" d="M474 150 C490 106 530 92 566 96 C606 100 624 130 626 170 V204 H770 M770 296 H626 V330 C624 366 604 392 578 398 V470 M522 470 V396 C494 384 476 360 474 350 Z"/>
-      <circle class="g i" cx="546" cy="134" r="24"/>
-    </g>
-    <!-- VNT kanatları -->
-    <g class="p p-vnt">
-      ${[150, 166, 182, 318, 334, 350].map((y) => `<rect class="vnt" x="484" y="${y - 5}" width="30" height="7" rx="2" transform="rotate(${y < 250 ? -28 : 28} 499 ${y})"/>`).join('')}
-    </g>
-    <!-- Türbin çarkı -->
-    <g class="p p-turbin">
-      <path class="c c--sicak" d="M500 160 C530 196 566 220 602 226 L602 274 C566 280 530 304 500 340 Z"/>
-      <g clip-path="url(#tk-tc)"><g class="kanat kanat-t">${Array.from({ length: 16 }, (_, i) => `<path d="M490 ${130 + i * 28} C530 ${150 + i * 28} 570 ${140 + i * 28} 612 ${130 + i * 28}"/>`).join('')}</g></g>
-    </g>
-    <!-- Aktüatör -->
-    <g class="p p-aktuator">
-      <rect class="g" x="640" y="70" width="104" height="64" rx="14"/>
-      <path class="g" d="M666 134 L612 176"/>
-      <circle class="g" cx="610" cy="178" r="6"/>
-      <path class="g kel" d="M656 90 H728 M656 104 H728 M656 118 H728"/>
-    </g>
-
-    <!-- Etiketler -->
-    <g class="tk__etiket">
-      <text x="14" y="236">Hava girişi</text>
-      <text x="302" y="30">Intercooler’a</text>
-      <text x="446" y="44">Yağ girişi</text>
-      <text x="432" y="462">Yağ dönüşü</text>
-      <text x="590" y="462">Motordan egzoz</text>
-      <text x="656" y="236">Egzoza</text>
-    </g>
-
-    <!-- Numaralar -->
-    ${PARCALAR.map((p) => `<g class="tk__no" data-p="${p.id}" tabindex="0" role="button" aria-label="${esc(p.no + '. ' + p.ad)}"><circle cx="${p.x}" cy="${p.y}" r="17"/><circle class="halka" cx="${p.x}" cy="${p.y}" r="17"/><text x="${p.x}" y="${p.y}" dominant-baseline="central">${p.no}</text></g>`).join('')}
-  </svg>`;
-
-export const kesit = {
-  render(d) {
+const satir = (o, i) => {
+  if (o.durum) {
     return `
-      <section class="k-bolum tk" aria-labelledby="tk-baslik">
-        <div class="k-kap">
-          <div class="tk__bas">
-            <p class="tb-etiket">Turbonun içi</p>
-            <h2 class="k-h2" id="tk-baslik" data-bol>Şikâyeti seçin, turbonun neresine bakacağımızı görün.</h2>
-            <p class="k-lead">Turbo tek parça değil. Ses, duman ya da güç kaybı hangi parçadan geliyor olabilir, tezgâhta ilk neyi ölçeriz; numaralara dokunun.</p>
-          </div>
-          <div class="tk__ic">
-            <div class="tk__sol">
-              <div class="tk__cipler" role="group" aria-label="Şikâyet seçin">
-                ${SIKAYETLER.map((s, i) => `<button type="button" class="tk__cip" data-s="${s.id}" aria-pressed="${i === 0}">${esc(s.ad)}</button>`).join('')}
-              </div>
-              <figure class="tk__cizim">${kesitSvg()}
-                <figcaption class="tk__lejant"><span class="l-hava">Soğuk hava</span><span class="l-egzoz">Sıcak egzoz</span><span class="l-yag">Motor yağı</span></figcaption>
-              </figure>
+      <li class="tk-s tk-s--durum" data-i="${i}">
+        <span class="tk-s__ad">${esc(o.ad)}</span>
+        <span class="tk-s__durum"><i></i><b data-durum>${esc(o.once)}</b></span>
+      </li>`;
+  }
+  const s = (o.sinir / o.max) * 100;
+  const bant = o.yon === 'alt' ? `left:0;width:${s}%` : `left:${s}%;width:${100 - s}%`;
+  return `
+    <li class="tk-s" data-i="${i}">
+      <span class="tk-s__ad">${esc(o.ad)}</span>
+      <span class="tk-s__deger"><b data-deger>${virgul(o.once, o.h)}</b> ${esc(o.birim)}</span>
+      <span class="tk-s__bar">
+        <span class="tk-s__bant" style="${bant}"></span>
+        <span class="tk-s__sinir" style="left:${s}%"><em>${o.yon === 'alt' ? 'en çok' : 'en az'} ${virgul(o.sinir, o.h)}</em></span>
+        <span class="tk-s__ibre" style="left:${(o.once / o.max) * 100}%"></span>
+      </span>
+    </li>`;
+};
+
+export const karne = {
+  render(d) {
+    const bugun = new Date().toLocaleDateString('tr-TR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+    return `
+      <section class="k-bolum tk-karne" aria-labelledby="tk-karne-b">
+        <div class="k-kap tk-karne__ic">
+          <div class="tk-karne__sol">
+            <p class="tk-ust">Revizyon karnesi</p>
+            <h2 class="k-h2" id="tk-karne-b" data-bol>Her turbo bir karneyle teslim edilir.</h2>
+            <p class="k-lead">Söktüğümüz turbonun ölçülerini geldiği haliyle yazarız, revizyondan sonra yeniden ölçeriz. İki sütunu yan yana görürsünüz; neyi neden değiştirdiğimiz kâğıtta durur.</p>
+            <div class="tk-anahtar" role="group" aria-label="Karne görünümü">
+              <button type="button" data-g="once" aria-pressed="true">Geldiği gibi</button>
+              <button type="button" data-g="sonra" aria-pressed="false">Teslimde</button>
+              <span class="tk-anahtar__iz" aria-hidden="true"></span>
             </div>
-            <article class="tk__kart" aria-live="polite"></article>
+            <a class="k-link tk-karne__link" href="#/iletisim?konu=${encodeURIComponent('Turbo revizyonu')}" data-rota="iletisim">Turbomu ölçtürmek istiyorum <svg class="k-ok" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
           </div>
+          <article class="tk-kart" data-g="once" aria-live="polite">
+            <header class="tk-kart__bas">
+              <div><b>${esc(d.isletme.ad)}</b><span>Turbo revizyon karnesi</span></div>
+              <dl><div><dt>Tarih</dt><dd>${esc(bugun)}</dd></div><div><dt>Turbo</dt><dd>VNT'li dizel</dd></div></dl>
+            </header>
+            <p class="tk-kart__durum"><span data-baslik>Geldiği gibi</span><em data-ozet>3 ölçü sınır dışında</em></p>
+            <ol class="tk-kart__liste">${OLCULER.map(satir).join('')}</ol>
+            <footer class="tk-kart__alt">
+              <p>Ölçüler örnektir; her turbonun kendi değerleri kendi karnesine yazılır ve size fotoğrafla gönderilir.</p>
+              <span class="tk-damga" aria-hidden="true"><span data-damga>Sebep aranıyor</span></span>
+            </footer>
+            <span class="tk-tarama" aria-hidden="true"></span>
+          </article>
         </div>
       </section>`;
   },
-  mount(el, d) {
-    const svg = el.querySelector('.tk__svg');
-    const kart = el.querySelector('.tk__kart');
-    const cipler = [...el.querySelectorAll('.tk__cip')];
-    const nolar = [...el.querySelectorAll('.tk__no')];
-    let sikayet = SIKAYETLER[0];
-    let parca = null;
+  mount(el) {
+    const kart = el.querySelector('.tk-kart');
+    const sec = el.querySelector('.tk-karne');
+    const tuslar = [...el.querySelectorAll('.tk-anahtar button')];
+    const satirlar = [...kart.querySelectorAll('.tk-s')];
+    const damga = kart.querySelector('.tk-damga');
+    const baslik = kart.querySelector('[data-baslik]');
+    const ozet = kart.querySelector('[data-ozet]');
+    let simdi = 'once';
+    let dokunuldu = false;
 
-    const isaretle = (ids, secili) => {
-      PARCALAR.forEach((p) => svg.querySelectorAll(`.p-${p.id}`).forEach((g) => g.classList.toggle('is-yan', ids.includes(p.id))));
-      nolar.forEach((n) => {
-        n.classList.toggle('is-yan', ids.includes(n.dataset.p));
-        n.classList.toggle('is-secili', n.dataset.p === secili);
+    const iyiMi = (o, v) => (o.durum ? v === o.sonra : o.yon === 'alt' ? v <= o.sinir : v >= o.sinir);
+
+    const uygula = (g, anim = true) => {
+      simdi = g;
+      kart.dataset.g = g;
+      sec.dataset.g = g;
+      tuslar.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.g === g)));
+      baslik.textContent = g === 'once' ? 'Geldiği gibi' : 'Teslimde';
+      const kotu = OLCULER.filter((o) => !iyiMi(o, o[g])).length;
+      ozet.textContent = kotu ? `${kotu} ölçü sınır dışında` : 'Bütün ölçüler sınır içinde';
+      kart.querySelector('[data-damga]').textContent = g === 'once' ? 'Sebep aranıyor' : 'Teslime hazır';
+      const sure = anim && !reducedMotion ? 1 : 0;
+      satirlar.forEach((li, i) => {
+        const o = OLCULER[i];
+        const v = o[g];
+        const gecikme = sure ? i * 0.11 : 0;
+        const iyi = iyiMi(o, v);
+        const isaretle = () => { li.classList.toggle('is-iyi', iyi); li.classList.toggle('is-kotu', !iyi); };
+        if (sure) gsap.delayedCall(gecikme + sure * 0.4, isaretle); else isaretle();
+        if (o.durum) {
+          li.querySelector('[data-durum]').textContent = v;
+          return;
+        }
+        const ibre = li.querySelector('.tk-s__ibre');
+        const yazi = li.querySelector('[data-deger]');
+        const n = { v: parseFloat(yazi.textContent.replace(',', '.')) };
+        gsap.to(ibre, { left: `${(v / o.max) * 100}%`, duration: sure * 1.1, delay: gecikme, ease: 'power3.inOut' });
+        gsap.to(n, { v, duration: sure * 1.1, delay: gecikme, ease: 'power3.inOut', onUpdate: () => { yazi.textContent = virgul(n.v, o.h); } });
       });
-    };
-
-    const hizmetSatiri = (p) => {
-      const h = d.hizmetler?.[p.hizmet];
-      return h ? `<p class="tk__hizmet"><span>İlgili iş</span>${esc(h.baslik)}${h.sure ? ` <b>${esc(h.sure)}</b>` : ''}</p>` : '';
-    };
-
-    const goster = () => {
-      if (parca) {
-        const p = PARCALAR.find((x) => x.id === parca);
-        isaretle([p.id], p.id);
-        const mesaj = `Merhaba ${d.isletme.ad}, turbomda ${p.ad.toLowerCase()} tarafında sorun olabilir (${p.belirti.toLowerCase()}). Aracım: `;
-        kart.innerHTML = `
-          <p class="tk__kart-ust"><span class="tk__kart-no">${p.no}</span>Parça</p>
-          <h3 class="tk__kart-baslik">${esc(p.ad)}</h3>
-          <dl class="tk__dl">
-            <div><dt>Nasıl bozulur</dt><dd>${esc(p.bozulur)}</dd></div>
-            <div><dt>Belirtisi</dt><dd>${esc(p.belirti)}</dd></div>
-            <div><dt>Tezgâhta ne yaparız</dt><dd>${esc(p.yapariz)}</dd></div>
-          </dl>
-          ${hizmetSatiri(p)}
-          <div class="tk__kart-alt">
-            <a class="k-btn" href="${waHref(d, mesaj)}" target="_blank" rel="noopener">${icons.whatsapp}<span>Bu parça için yazın</span></a>
-            <button type="button" class="tk__geri">Şikâyete dön</button>
-          </div>`;
-      } else {
-        const ids = sikayet.parca;
-        isaretle(ids, null);
-        const mesaj = `Merhaba ${d.isletme.ad}, aracımda şu şikâyet var: ${sikayet.ad.toLowerCase()}. Turboya bakabilir misiniz? Aracım: `;
-        kart.innerHTML = `
-          <p class="tk__kart-ust">Şikâyet</p>
-          <h3 class="tk__kart-baslik">${esc(sikayet.ad)}</h3>
-          <p class="tk__kart-alt-baslik">İlk bakacağımız ${ids.length} yer</p>
-          <ol class="tk__sira">
-            ${ids
-              .map((id) => PARCALAR.find((p) => p.id === id))
-              .map((p) => `<li><button type="button" data-ac="${p.id}"><span class="tk__kart-no">${p.no}</span><span><b>${esc(p.ad)}</b><small>${esc(p.yapariz.split('.')[0])}.</small></span></button></li>`)
-              .join('')}
-          </ol>
-          <p class="tk__not">Söküp ölçmeden kesin söylemeyiz; fiyatı ölçümden sonra, işe başlamadan söyleriz.</p>
-          <div class="tk__kart-alt">
-            <a class="k-btn" href="${waHref(d, mesaj)}" target="_blank" rel="noopener">${icons.whatsapp}<span>Bu şikâyetle yazın</span></a>
-          </div>`;
+      if (sure) {
+        gsap.fromTo(kart.querySelector('.tk-tarama'), { yPercent: 0, autoAlpha: 1 }, { yPercent: 100, duration: 1.1, ease: 'power2.inOut', onComplete: () => gsap.set(kart.querySelector('.tk-tarama'), { autoAlpha: 0 }) });
+        gsap.fromTo(damga, { scale: 1.8, rotation: -24, autoAlpha: 0 }, { scale: 1, rotation: -9, autoAlpha: 1, duration: .45, delay: 1.25, ease: 'back.out(2.4)' });
       }
-      if (!reducedMotion) gsap.fromTo(kart.children, { y: 14, opacity: 0 }, { y: 0, opacity: 1, duration: 0.45, stagger: 0.04, ease: 'power2.out', overwrite: true });
     };
 
-    cipler.forEach((c) =>
-      c.addEventListener('click', () => {
-        sikayet = SIKAYETLER.find((s) => s.id === c.dataset.s);
-        parca = null;
-        cipler.forEach((x) => x.setAttribute('aria-pressed', String(x === c)));
-        goster();
-      })
-    );
-    const parcaAc = (id) => {
-      parca = id;
-      goster();
-    };
-    nolar.forEach((n) => {
-      n.addEventListener('click', () => parcaAc(n.dataset.p));
-      n.addEventListener('keydown', (e) => (e.key === 'Enter' || e.key === ' ') && (e.preventDefault(), parcaAc(n.dataset.p)));
-    });
-    kart.addEventListener('click', (e) => {
-      const ac = e.target.closest('[data-ac]');
-      if (ac) parcaAc(ac.dataset.ac);
-      if (e.target.closest('.tk__geri')) {
-        parca = null;
-        goster();
-      }
-    });
-    goster();
+    uygula('once', false);
+    tuslar.forEach((b) => b.addEventListener('click', () => { dokunuldu = true; if (b.dataset.g !== simdi) uygula(b.dataset.g); }));
 
-    // Akış animasyonları yalnızca görünürken çalışsın.
-    const cizim = el.querySelector('.tk__cizim');
-    const io = new IntersectionObserver(([e]) => cizim.classList.toggle('is-calisiyor', e.isIntersecting), { rootMargin: '80px' });
-    io.observe(cizim);
-
-    if (!reducedMotion) {
-      const g = svg.querySelectorAll('.g:not(.i), .c, .mil, .vnt');
-      gsap.timeline({ scrollTrigger: { trigger: svg, start: 'top 78%', once: true } })
-        .from(g, { drawSVG: 0, duration: 1.3, stagger: 0.02, ease: 'power2.inOut' }, 0)
-        .from(svg.querySelectorAll('.c, .mil'), { fillOpacity: 0, duration: 0.6 }, 0.9)
-        .from(svg.querySelectorAll('.g.i, .ak'), { opacity: 0, duration: 0.6 }, 0.9)
-        .from(nolar, { scale: 0, transformOrigin: '50% 50%', duration: 0.4, stagger: 0.06, ease: 'back.out(2.5)' }, 1.1);
-    }
+    if (reducedMotion) return;
+    gsap.set(damga, { autoAlpha: 0 });
+    gsap.from(kart, {
+      y: 60, rotation: 1.5, autoAlpha: 0, duration: 1, ease: 'power3.out',
+      scrollTrigger: { trigger: kart, start: 'top 85%', once: true },
+    });
+    // Kart ekranın ortasına gelince bir kez kendiliğinden "Teslimde"ye geçer.
+    gsap.timeline({ scrollTrigger: { trigger: kart, start: 'top 45%', once: true } })
+      .call(() => gsap.fromTo(damga, { scale: 1.8, rotation: -24, autoAlpha: 0 }, { scale: 1, rotation: -9, autoAlpha: 1, duration: .45, ease: 'back.out(2.4)' }))
+      .call(() => { if (!dokunuldu && simdi === 'once') uygula('sonra'); }, null, 1.6);
   },
 };
 
-// --- (3) Atölye: saatler + konum ---------------------------------------------------------------
+// --- (3) Turboyu bitiren sebepler ------------------------------------------------------------
+const SEBEPLER = [
+  { b: 'Yağsız kalma', m: 'Soğuk motorla yüklenmek, düşük yağ seviyesi, geç gelen yağ basıncı. Mil yatakları dakikalar içinde yanar.', k: 'Yağ basıncı ve besleme borusu' },
+  { b: 'Kirli yağ', m: 'Geç değişen yağ ve filtre, yatakların arasına zımpara gibi girer. Mil boşluğu büyür, çark gövdeye sürter.', k: 'Yağ, filtre, süzgeç ve banjo cıvataları' },
+  { b: 'Tıkalı dönüş hattı', m: 'Dönüş borusu ya da karter havalandırması tıkanınca yağ turboda kalır; keçelerden sızar, egzozdan mavi duman çıkar.', k: 'Dönüş hattı ve karter havalandırması' },
+  { b: 'Yabancı cisim', m: 'Hava filtresinden kaçan bir parça ya da motordan gelen bir kırıntı çark kanatlarını yer. Islık sesi buradan başlar.', k: 'Hava filtresi, emme hattı ve intercooler' },
+];
+
+export const sebep = {
+  render() {
+    return `
+      <section class="k-bolum tk-sebep" aria-labelledby="tk-sebep-b">
+        <div class="k-kap">
+          <div class="k-bolum__bas">
+            <div>
+              <p class="tk-ust">Sebep bulunmadan turbo takılmaz</p>
+              <h2 class="k-h2" id="tk-sebep-b" data-bol>Turboyu çoğu zaman turbonun kendisi bitirmez.</h2>
+            </div>
+          </div>
+          <ol class="tk-sebep__liste" data-sira>
+            ${SEBEPLER.map((s, i) => `
+              <li>
+                <span class="tk-sebep__no">${String(i + 1).padStart(2, '0')}</span>
+                <h3 class="k-h3">${esc(s.b)}</h3>
+                <p>${esc(s.m)}</p>
+                <p class="tk-sebep__bak"><span>Baktığımız yer</span>${esc(s.k)}</p>
+              </li>`).join('')}
+          </ol>
+        </div>
+      </section>`;
+  },
+};
+
+// --- (4) Atölye ------------------------------------------------------------------------------
 export const atolye = {
   render(d) {
     if (!d.saatler) return '';
@@ -324,28 +224,28 @@ export const atolye = {
     const bugun = new Date().getDay();
     const bugunSaat = d.saatler[bugun];
     return `
-      <section class="k-bolum ta" aria-labelledby="ta-baslik">
-        <div class="k-kap ta__ic">
-          <div class="ta__sol">
-            <p class="tb-etiket">Atölye</p>
-            <h2 class="k-h2" id="ta-baslik" data-bol>Turboyu getirin, beklerken sökelim.</h2>
-            <div class="ta__lamba ${st.open ? 'is-acik' : ''}">
-              <span class="ta__led" aria-hidden="true"></span>
+      <section class="k-bolum tk-atolye" aria-labelledby="tk-atolye-b">
+        <div class="k-kap tk-atolye__ic">
+          <div>
+            <p class="tk-ust">Atölye</p>
+            <h2 class="k-h2" id="tk-atolye-b" data-bol>Turboyu getirin, beklerken ölçelim.</h2>
+            <div class="tk-lamba ${st.open ? 'is-acik' : ''}">
+              <span class="tk-lamba__led" aria-hidden="true"></span>
               <div><b>${esc(st.text)}</b><small>Bugün ${GUNLER[bugun]}${bugunSaat ? `, ${esc(bugunSaat.replace('-', ' – '))}` : ', kapalı'}</small></div>
             </div>
-            <dl class="ta__saatler">${groupedHours(d.saatler).map(([g, s]) => `<div><dt>${esc(g)}</dt><dd>${esc(s)}</dd></div>`).join('')}</dl>
-            <p class="ta__adres">${esc(d.iletisim.adres)}</p>
+            <dl class="tk-saatler">${groupedHours(d.saatler).map(([g, s]) => `<div><dt>${esc(g)}</dt><dd>${esc(s)}</dd></div>`).join('')}</dl>
+            <p class="tk-adres">${esc(d.iletisim.adres)}</p>
             <div class="k-butonlar">
               <a class="k-btn" href="${mapsHref(d)}" target="_blank" rel="noopener">${icons.pin}<span>Yol tarifi</span></a>
               <a class="k-btn k-btn--ikincil" href="${telHref(d)}">${icons.phone}<span>${esc(d.iletisim.telefon)}</span></a>
             </div>
           </div>
-          <div class="ta__harita" data-q="${esc(mapsEmbed(d))}"><p>Harita yaklaşınca yüklenir</p></div>
+          <div class="tk-harita" data-q="${esc(mapsEmbed(d))}"><p>Harita yaklaşınca yüklenir</p></div>
         </div>
       </section>`;
   },
   mount(el) {
-    const h = el.querySelector('.ta__harita');
+    const h = el.querySelector('.tk-harita');
     const io = new IntersectionObserver((e) => {
       if (!e[0].isIntersecting) return;
       h.innerHTML = `<iframe title="Konum haritası" src="${h.dataset.q}" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>`;

@@ -48,10 +48,10 @@ export function runIntro(el, cv, label) {
   x.scale(r, r);
 
   const PAL = [
-    ['#ff8fbd', '#ff5c9d'],
-    ['#8fdcff', '#3ec5ff'],
-    ['#fff0a0', '#ffd83a'],
-    ['#ffffff', '#d9d4ff'],
+    ['#ffa36b', '#ff7a33'],
+    ['#8ff0f5', '#27e3f0'],
+    ['#c8ffe0', '#5cf5a0'],
+    ['#ffffff', '#d3ece9'],
   ];
   let seed = 7;
   const rand = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
@@ -75,7 +75,7 @@ export function runIntro(el, cv, label) {
 
   // yazı ölçüsü
   let size = Math.min(w * 0.15, 150);
-  const font = (s) => `600 ${s}px Fredoka, "Arial Rounded MT Bold", sans-serif`;
+  const font = (s) => `600 ${s}px "Bricolage Grotesque", "Arial Rounded MT Bold", sans-serif`;
   x.font = font(size);
   const words = label.split(' ');
   let lines = [label];
@@ -144,7 +144,7 @@ export function runIntro(el, cv, label) {
       x.translate(-w / 2, -h * 0.42);
       x.lineJoin = 'round';
       x.lineWidth = size * 0.16;
-      x.strokeStyle = '#100c2e';
+      x.strokeStyle = '#04191e';
       lines.forEach((l, i) => x.strokeText(l, w / 2, top + i * lh));
       x.fillStyle = '#ffffff';
       lines.forEach((l, i) => x.fillText(l, w / 2, top + i * lh));

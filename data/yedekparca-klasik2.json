@@ -3,17 +3,29 @@
   "parcaFoto": {
     "disk": "/img/depo/disk.jpg",
     "filtre": "/img/yedekparca-klasik2/yag.jpg",
-    "amortisor": "/img/yedekparca-klasik2/tepsi.jpg",
+    "amortisor": "/img/yedekparca-klasik2/aski.jpg",
     "triger": "/img/yedekparca-klasik2/disliler.jpg",
     "debriyaj": "/img/yedekparca-klasik2/kafa.jpg",
-    "buji": "/img/depo/raf.jpg",
+    "buji": "/img/yedekparca-klasik2/kablolar.jpg",
     "piston": "/img/yedekparca-klasik2/eksantrik.jpg"
   },
   "heroFoto": "/img/depo/koridor.jpg",
   "depoFoto": [
-    { "src": "/img/depo/yuksek-raf.jpg", "alt": "Tavana kadar yükselen raflarda parça kutuları" },
-    { "src": "/img/depo/karanlik-raf.jpg", "alt": "Akşam saatinde deponun raf aralığı" },
-    { "src": "/img/depo/kutu-arac.jpg", "alt": "Parça kutuları teslimat aracına yükleniyor" },
-    { "src": "/img/yedekparca-klasik2/tepsi.jpg", "alt": "Tezgâhta ayrılmış motor parçaları" }
+    {
+      "src": "/img/depo/yuksek-raf.jpg",
+      "alt": "Tavana kadar yükselen raflarda parça kutuları"
+    },
+    {
+      "src": "/img/depo/karanlik-raf.jpg",
+      "alt": "Akşam saatinde deponun raf aralığı"
+    },
+    {
+      "src": "/img/depo/kutu-arac.jpg",
+      "alt": "Parça kutuları teslimat aracına yükleniyor"
+    },
+    {
+      "src": "/img/yedekparca-klasik2/tepsi.jpg",
+      "alt": "Tezgâhta ayrılmış motor parçaları"
+    }
   ]
 }

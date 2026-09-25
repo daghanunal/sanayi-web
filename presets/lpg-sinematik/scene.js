@@ -136,7 +136,7 @@ export function createScene(canvas, { lite = false } = {}) {
 
   const glowTex = glowTexture();
   const mat = {
-    paint: new THREE.MeshStandardMaterial({ color: 0xe9eef3, metalness: 0.35, roughness: 0.32, transparent: true }),
+    paint: new THREE.MeshStandardMaterial({ color: 0x9aa5b3, metalness: 0.75, roughness: 0.3, transparent: true }),
     band: new THREE.MeshStandardMaterial({ color: 0x2447ff, metalness: 0.2, roughness: 0.4, transparent: true }),
     seam: new THREE.MeshStandardMaterial({ color: 0x9aa6b4, metalness: 0.8, roughness: 0.3, transparent: true }),
     brass: new THREE.MeshStandardMaterial({ color: 0xc9a14a, metalness: 1, roughness: 0.28 }),

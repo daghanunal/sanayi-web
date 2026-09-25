@@ -244,7 +244,7 @@ function finaleState(q, time) {
   const r = mobile() ? 13.5 : 9.4;
   const pos = V(Math.sin(a) * r, (mobile() ? 3.4 : 1.9) + Math.sin(time * 0.3) * 0.3, Math.cos(a) * r);
   return {
-    pos, look: mobile() ? V(0, -2.3 + q * 0.5, 0) : V(-2.3, 0.2, 0), fov: mobile() ? 44 : 36,
+    pos, look: mobile() ? V(0, -2.3 + q * 0.5, 0) : V(-3.9, 0.3, 0), fov: mobile() ? 44 : 36,
     explode: 0, far: 0, balance: 0, wobble: 0, vntShow: 0, vnt: 0, oil: 0.3, oilClean: 1,
     heat: 0.9, cool: 0.4, flow: 1, flowSpeed: 3, spin: 22, turn: 0, boost: 1,
   };
@@ -253,8 +253,10 @@ function finaleState(q, time) {
 // --- Film UI -----------------------------------------------------------------
 
 const filmEl = $('[data-film]');
+const finaleEl = $('[data-finale]');
 const hero = $('[data-hero]');
 const cards = $$('[data-card]');
+const filmEnd = $('[data-film-end]');
 const ticks = $$('[data-ticks] li');
 const hud = $('[data-hud]');
 const hint = $('[data-hint]');
@@ -292,6 +294,10 @@ function filmUI(p, time, st) {
     card.style.visibility = v > 0.01 ? 'visible' : 'hidden';
     if (p >= a && p < b) active = i;
   });
+  const endV = seg(p, 0.968, 0.985);
+  filmEnd.style.opacity = endV;
+  filmEnd.style.transform = `translate3d(${(1 - endV) * -24}px, 0, 0)`;
+  filmEnd.style.visibility = endV > 0.01 ? 'visible' : 'hidden';
   ticks.forEach((li, i) => {
     li.classList.toggle('is-active', i === active);
     li.classList.toggle('is-done', p > CARD_RANGES[i][1]);
@@ -315,8 +321,9 @@ function filmUI(p, time, st) {
   } else if (active === 2) setExtra(`<span>Kanat açıklığı</span><em data-vnt></em>`);
   else if (active === 3) setExtra(`<span>Yağ dönüşü</span><em data-oil></em>`);
   else if (active === 4) setExtra(`<span>Kaçak testi</span><em data-ic></em>`);
+  else if (p > 0.9) setExtra(`<span>Tam yük</span><em>değerler yerinde</em>`);
   else setExtra(`<span>Rölanti</span><em>dinliyoruz</em>`);
-  if (active !== 1) hExtra.classList.remove('is-ok');
+  if (active !== 1) hExtra.classList.toggle('is-ok', active === -1 && p > 0.9);
   const vEl = hExtra.querySelector('[data-vnt]');
   if (vEl) vEl.textContent = `%${Math.round(20 + st.vnt * 75)}`;
   const oEl = hExtra.querySelector('[data-oil]');
@@ -463,9 +470,12 @@ function tick(now) {
 
     if (canvasFinale > 0.001 && !filmActive) {
       canvas.style.opacity = canvasFinale;
+      const past = Math.min(0, finaleEl.getBoundingClientRect().bottom - innerHeight);
+      canvas.style.transform = past < -0.5 ? `translate3d(0, ${past.toFixed(1)}px, 0)` : '';
       S.update(finaleState(trg.finale.progress, time), now);
     } else if (filmActive || filmFade > 0.001) {
       canvas.style.opacity = filmFade;
+      if (canvas.style.transform) canvas.style.transform = '';
       const st = filmState(filmP, time, vel);
       filmUI(filmP, time, st);
       if (filmFade > 0.001) S.update(st, now);

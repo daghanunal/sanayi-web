@@ -51,6 +51,7 @@ $('[data-intro-name]').textContent = d.isletme.ad;
 $('[data-since]').textContent = `Şaşmaz Oto Sanayi · ${ablative(d.isletme.kurulus)} beri`;
 const heroTitle = $('[data-hero-title]');
 heroTitle.textContent = d.isletme.ad;
+heroTitle.classList.toggle('is-long', d.isletme.ad.length > 22);
 
 const status = openStatus(d.saatler);
 $$('[data-status]').forEach((el) => {

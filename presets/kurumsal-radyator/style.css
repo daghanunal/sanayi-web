@@ -152,7 +152,7 @@
 .dv-cip[aria-pressed='true'] { background: var(--k-koyu); color: #fff; border-color: var(--k-koyu); }
 .dv-cip[aria-pressed='true']::before { background: var(--pk-sicak); border-color: var(--pk-sicak); opacity: 1; }
 @media (max-width: 899px) {
-  .dv__secim { flex-wrap: nowrap; overflow-x: auto; margin-inline: -16px; padding: 0 16px 6px; scrollbar-width: none; scroll-snap-type: x proximity; }
+  .dv__secim { flex-wrap: nowrap; overflow-x: auto; margin-inline: -16px; padding: 0 16px 6px; scrollbar-width: none; scroll-snap-type: x proximity; scroll-padding-inline: 16px; }
   .dv__secim::-webkit-scrollbar { display: none; }
   .dv-cip { scroll-snap-align: start; }
 }

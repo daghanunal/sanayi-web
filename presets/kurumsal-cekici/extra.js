@@ -95,7 +95,7 @@ const KZ = [M.x, M.y];
 // Rota: 'h' + açı = çevre yolunda o açıya kadar git; dizi = düz nokta.
 const YERLER = [
   { id: 'kizilay', ad: 'Kızılay', km: 20, rota: [KZ], pin: KZ },
-  { id: 'eryaman', ad: 'Eryaman', km: 7, rota: [[170, 296], [128, 318]], pin: [128, 318] },
+  { id: 'eryaman', ad: 'Eryaman', km: 7, rota: [[170, 296], [128, 318]], pin: [128, 318], al: 'alt' },
   { id: 'sincan', ad: 'Sincan', km: 14, rota: [[140, 250], [70, 244]], pin: [70, 244], al: 'alt' },
   { id: 'batikent', ad: 'Batıkent', km: 12, rota: [['h', Math.PI + 0.75], [258, 124]], pin: [258, 124] },
   { id: 'umitkoy', ad: 'Ümitköy', km: 15, rota: [['h', 2.44], [222, 392]], pin: [222, 392] },
@@ -104,7 +104,7 @@ const YERLER = [
   { id: 'mamak', ad: 'Mamak', km: 28, rota: [KZ, [604, 292]], pin: [604, 292] },
   { id: 'golbasi', ad: 'Gölbaşı', km: 32, rota: [['h', Math.PI / 2 - 0.07], [450, 498]], pin: [450, 498] },
   { id: 'esenboga', ad: 'Esenboğa', km: 45, dis: true, rota: [['h', Math.PI * 1.5 + 0.16], [476, 40]], pin: [476, 40], al: 'sol' },
-  { id: 'polatli', ad: 'Polatlı yönü', km: 70, dis: true, rota: [['h', 2.44], [150, 405], [40, 462]], pin: [40, 462], al: 'sag' },
+  { id: 'polatli', ad: 'Polatlı yönü', km: 70, dis: true, rota: [['h', 2.44], [150, 428], [44, 487]], pin: [44, 487], al: 'sag' },
 ];
 
 function rotaYolu(y) {
@@ -147,16 +147,16 @@ const haritaSvg = () => `
     <ellipse class="hc-cevre" cx="${M.x}" cy="${M.y}" rx="${M.rx}" ry="${M.ry}"/>
     <g class="hc-yolad">
       <text x="14" y="204">İstanbul yolu</text>
-      <text x="30" y="500" transform="rotate(-29 30 500)">Eskişehir yolu</text>
+      <text x="296" y="366" transform="rotate(-29 296 366)">Eskişehir yolu</text>
       <text x="468" y="512">Konya yolu</text>
-      <text x="690" y="290">Samsun yolu</text>
+      <text x="788" y="290" text-anchor="end">Samsun yolu</text>
       <text x="500" y="46">Esenboğa yolu</text>
       <text x="626" y="160">Çevre yolu</text>
     </g>
     <path class="hc-rota-iz" d=""/>
     <path class="hc-rota" d=""/>
     <g class="hc-pinler">
-      ${YERLER.map((y) => `<g class="hc-pin${y.dis ? ' is-dis' : ''}" data-y="${y.id}" transform="translate(${y.pin[0]} ${y.pin[1]})"><circle class="hc-pin__halka" r="14"/><circle class="hc-pin__nokta" r="6"/><text ${y.al === 'alt' ? 'y="34"' : y.al === 'sol' ? 'x="-18" y="8" text-anchor="end" style="text-anchor:end"' : y.al === 'sag' ? 'x="-12" y="-20" text-anchor="start" style="text-anchor:start"' : 'y="-20"'}>${esc(y.ad)}</text></g>`).join('')}
+      ${YERLER.map((y) => `<g class="hc-pin${y.dis ? ' is-dis' : ''}" data-y="${y.id}" transform="translate(${y.pin[0]} ${y.pin[1]})"><circle class="hc-pin__halka" r="14"/><circle class="hc-pin__nokta" r="6"/><text ${y.al === 'alt' ? 'y="34"' : y.al === 'sol' ? 'x="-18" y="8" text-anchor="end" style="text-anchor:end"' : y.al === 'sag' ? 'x="18" y="26" text-anchor="start" style="text-anchor:start"' : 'y="-20"'}>${esc(y.ad)}</text></g>`).join('')}
     </g>
     <g class="hc-us" transform="translate(${S[0].toFixed(1)} ${S[1].toFixed(1)})">
       <rect x="-40" y="-40" width="80" height="22" rx="4"/><text y="-25">ŞAŞMAZ</text>

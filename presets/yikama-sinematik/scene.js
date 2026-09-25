@@ -13,9 +13,9 @@ const WZ = 0.8;
 const FLEET = 6;
 const FLEET_GAP = 5.4;
 
-const PINK = new THREE.Color('#ff5c9d');
-const BLUE = new THREE.Color('#3ec5ff');
-const LEMON = new THREE.Color('#ffe45c');
+const PINK = new THREE.Color('#ff7a33');
+const BLUE = new THREE.Color('#27e3f0');
+const LEMON = new THREE.Color('#7dffb4');
 
 // --- GLSL yardımcıları ---------------------------------------------------------------------
 const NOISE = /* glsl */ `
@@ -33,7 +33,7 @@ const NOISE = /* glsl */ `
 // Gövde malzemesi: cam, trim, far ve kapı çizgileri konumdan; kir, köpük, su, çizik, parıltı uniform'dan.
 function bodyMaterial(U, { fleet = false } = {}) {
   const m = new THREE.MeshPhysicalMaterial({
-    color: fleet ? '#eef1f7' : '#101a3c',
+    color: fleet ? '#eef1f7' : '#06222c',
     metalness: fleet ? 0.1 : 0.55,
     roughness: 0.32,
     clearcoat: 1,
@@ -176,7 +176,7 @@ function xrayMaterial(U) {
 }
 
 function seatMaterial(U) {
-  const m = new THREE.MeshStandardMaterial({ color: '#d7d3e6', roughness: 0.85 });
+  const m = new THREE.MeshStandardMaterial({ color: '#d3e2e2', roughness: 0.85 });
   m.onBeforeCompile = (sh) => {
     Object.assign(sh.uniforms, U);
     sh.vertexShader = sh.vertexShader
@@ -337,18 +337,18 @@ function neonTexture(label) {
     x.clearRect(0, 0, c.width, c.height);
     const txt = label.toLocaleUpperCase('tr-TR');
     let size = 240;
-    x.font = `600 ${size}px Fredoka, "Arial Rounded MT Bold", sans-serif`;
+    x.font = `600 ${size}px "Bricolage Grotesque", "Arial Rounded MT Bold", sans-serif`;
     const w = x.measureText(txt).width;
     size *= Math.min(1, 1860 / w);
-    x.font = `600 ${size}px Fredoka, "Arial Rounded MT Bold", sans-serif`;
+    x.font = `600 ${size}px "Bricolage Grotesque", "Arial Rounded MT Bold", sans-serif`;
     x.textAlign = 'center';
     x.textBaseline = 'middle';
-    x.shadowColor = '#ff5c9d';
+    x.shadowColor = '#ff7a33';
     x.shadowBlur = 60;
-    x.fillStyle = '#ff8fbd';
+    x.fillStyle = '#ffa36b';
     x.fillText(txt, 1024, 270);
     x.shadowBlur = 18;
-    x.fillStyle = '#ffe1ee';
+    x.fillStyle = '#ffe4d2';
     x.fillText(txt, 1024, 270);
     tex.needsUpdate = true;
   };
@@ -366,7 +366,7 @@ function tileTexture() {
   const c = document.createElement('canvas');
   c.width = c.height = 512;
   const x = c.getContext('2d');
-  x.fillStyle = '#16123a';
+  x.fillStyle = '#062127';
   x.fillRect(0, 0, 512, 512);
   x.strokeStyle = 'rgba(160,150,255,.16)';
   x.lineWidth = 3;
@@ -380,21 +380,21 @@ function tileTexture() {
   return t;
 }
 
-// Ortam haritası: karanlık bölme, tavanda beyaz, yanlarda pembe ve mavi LED bantlar
+// Ortam haritası: karanlık bölme, tavanda beyaz, yanlarda mandalina ve camgöbeği LED bantlar
 function envScene() {
   const s = new THREE.Scene();
-  s.add(new THREE.Mesh(new THREE.SphereGeometry(20, 32, 16), new THREE.MeshBasicMaterial({ color: '#0a0822', side: THREE.BackSide })));
+  s.add(new THREE.Mesh(new THREE.SphereGeometry(20, 32, 16), new THREE.MeshBasicMaterial({ color: '#020e11', side: THREE.BackSide })));
   const strip = (color, w, h, d, x, y, z, k = 1) => {
     const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), new THREE.MeshBasicMaterial({ color: new THREE.Color(color).multiplyScalar(k) }));
     m.position.set(x, y, z);
     s.add(m);
   };
   for (let i = -2; i <= 2; i++) strip('#ffffff', 12, 0.2, 0.5, 0, 6, i * 2.2, 3.2);
-  strip('#ff5c9d', 16, 0.5, 0.2, 0, 2.2, 7, 2.2);
-  strip('#3ec5ff', 16, 0.5, 0.2, 0, 2.2, -7, 2.2);
-  strip('#ffe45c', 0.2, 1.8, 10, -9, 1.5, 0, 1.6);
+  strip('#ff7a33', 16, 0.5, 0.2, 0, 2.2, 7, 2.2);
+  strip('#27e3f0', 16, 0.5, 0.2, 0, 2.2, -7, 2.2);
+  strip('#7dffb4', 0.2, 1.8, 10, -9, 1.5, 0, 1.6);
   strip('#ffffff', 0.2, 3, 8, 9, 3, 0, 1.4);
-  strip('#1d1850', 30, 0.1, 30, 0, -0.5, 0, 1);
+  strip('#07303a', 30, 0.1, 30, 0, -0.5, 0, 1);
   return s;
 }
 
@@ -406,7 +406,7 @@ export function createWorld(canvas, { name, phone, low, onReady }) {
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 1.1;
-  const BG = new THREE.Color('#100c2e');
+  const BG = new THREE.Color('#04191e');
   renderer.setClearColor(BG);
 
   const scene = new THREE.Scene();
@@ -415,7 +415,7 @@ export function createWorld(canvas, { name, phone, low, onReady }) {
   const pmrem = new THREE.PMREMGenerator(renderer);
   scene.environment = pmrem.fromScene(envScene(), 0.02).texture;
   scene.environmentIntensity = 1.0;
-  const hemi = new THREE.HemisphereLight('#b9b4ff', '#140f30', 0.6);
+  const hemi = new THREE.HemisphereLight('#9fe8ec', '#041d22', 0.6);
   const key = new THREE.DirectionalLight('#ffffff', 1.6);
   key.position.set(3, 7, 4);
   scene.add(hemi, key);
@@ -437,7 +437,7 @@ export function createWorld(canvas, { name, phone, low, onReady }) {
 
   // Zemin: ıslak, yarı saydam; altında aynalanmış sahne
   const floorMat = new THREE.MeshStandardMaterial({
-    color: '#120e33', roughness: 0.18, metalness: 0.3, transparent: true, opacity: low ? 1 : 0.84, map: tileTexture(),
+    color: '#041b21', roughness: 0.18, metalness: 0.3, transparent: true, opacity: low ? 1 : 0.84, map: tileTexture(),
   });
   floorMat.map.repeat.set(20, 20);
   const floor = new THREE.Mesh(new THREE.PlaneGeometry(80, 80), floorMat);
@@ -451,7 +451,7 @@ export function createWorld(canvas, { name, phone, low, onReady }) {
   if (!low) scene.add(mirror);
 
   // Arka duvar + neon ad
-  const wall = new THREE.Mesh(new THREE.PlaneGeometry(60, 12), new THREE.MeshStandardMaterial({ color: '#150f3c', roughness: 0.7 }));
+  const wall = new THREE.Mesh(new THREE.PlaneGeometry(60, 12), new THREE.MeshStandardMaterial({ color: '#05222a', roughness: 0.7 }));
   wall.position.set(0, 6, -6.5);
   scene.add(wall);
   const neonTex = neonTexture(name);
@@ -461,14 +461,14 @@ export function createWorld(canvas, { name, phone, low, onReady }) {
   // duvar LED'leri
   const ledMat = (c, k = 2) => new THREE.MeshBasicMaterial({ color: new THREE.Color(c).multiplyScalar(k), toneMapped: false });
   for (let i = -6; i <= 6; i++) {
-    const led = new THREE.Mesh(new THREE.BoxGeometry(0.05, 5.2, 0.05), ledMat(i % 3 === 0 ? '#3ec5ff' : '#6b5cff', 1.2));
+    const led = new THREE.Mesh(new THREE.BoxGeometry(0.05, 5.2, 0.05), ledMat(i % 3 === 0 ? '#27e3f0' : '#1fa9c9', 1.2));
     led.position.set(i * 2.6, 2.6, -6.4);
     if (Math.abs(i) > 1) scene.add(led);
   }
 
   // Kemerler: araç üzerinden geçen neon çerçeveler
   const arches = new THREE.Group();
-  const archCols = ['#3ec5ff', '#ff5c9d', '#ffe45c', '#ffffff'];
+  const archCols = ['#27e3f0', '#ff7a33', '#7dffb4', '#ffffff'];
   const archX = [-3.3, -1.1, 1.1, 3.3];
   const tube = new THREE.TubeGeometry(roundedRectPath(4.4, 2.9, 0.6), 60, 0.035, 8, false);
   const archMats = archCols.map((c) => ledMat(c, 2.2));
@@ -504,7 +504,7 @@ export function createWorld(canvas, { name, phone, low, onReady }) {
 
   // Pasta makinesi
   const polisher = new THREE.Group();
-  const pad = new THREE.Mesh(new THREE.CylinderGeometry(0.17, 0.17, 0.05, 28), new THREE.MeshStandardMaterial({ color: '#ffd23a', roughness: 0.8 }));
+  const pad = new THREE.Mesh(new THREE.CylinderGeometry(0.17, 0.17, 0.05, 28), new THREE.MeshStandardMaterial({ color: '#5cf5a0', roughness: 0.8 }));
   const head = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.15, 0.14, 24), new THREE.MeshStandardMaterial({ color: '#23233a', metalness: 0.4, roughness: 0.4 }));
   head.position.y = 0.1;
   const handle = new THREE.Mesh(new THREE.BoxGeometry(0.42, 0.07, 0.08), head.material);

@@ -178,7 +178,7 @@ const POSES = () => {
     cvt: stationPose(X.cvt, m, { dir: V(0.75, 0.12, 0.66), D: 10.5, Dm: 15, drop: 3.4, fov: 40 }),
     yag: m
       ? { pos: V(X.cvt + 10, 4.2, 14), look: V(X.cvt - 16, -5.5, -3), fov: 54 }
-      : { pos: V(X.cvt + 8, 3.2, 9), look: V(X.cvt - 18, -0.2, -5), fov: 42 },
+      : { pos: V(X.cvt + 8, 3.2, 9), look: V(X.cvt - 42, -0.2, -7), fov: 42 },
     over: m
       ? { pos: V(X.cvt + 9, 8, 21), look: V(X.meka + 5, -5.5, -2), fov: 52 }
       : { pos: V(X.cvt + 10, 7, 16), look: V(X.meka + 6, -1.5, -4), fov: 40 },
@@ -248,7 +248,7 @@ function finaleState(q, time) {
   const m = mobile();
   const a = 0.55 + q * 0.5 + Math.sin(time * 0.15) * 0.05;
   const dir = V(Math.cos(a), 0.22, Math.sin(a));
-  const pose = stationPose(0, m, { dir, D: 9, Dm: 14, shift: 2.6, drop: 3.4, fov: 38 });
+  const pose = stationPose(0, m, { dir, D: 9.6, Dm: 15, shift: 5.6, drop: 4.2, fov: 38 });
   return {
     ...pose,
     k: { planet: 1, tork: 0, meka: 0, dsg: 0, cvt: 0, yag: 0.6 },
@@ -372,7 +372,7 @@ let lenis = null;
 let filmP = 0, filmTarget = 0, finaleQ = 0;
 let filmActive = true, finaleActive = false;
 let vel = 0;
-let canvasFinale = 0;
+let canvasFinale = 0, canvasOut = 0;
 let filmST = null, finaleST = null;
 
 function setupScroll() {
@@ -395,6 +395,11 @@ function setupScroll() {
   ScrollTrigger.create({
     trigger: '[data-finale]', start: 'top 75%', end: 'top 15%',
     onUpdate: (self) => (canvasFinale = self.progress),
+  });
+  // Footer girerken sahne kararır; son yazı dişlinin üstüne binmesin
+  ScrollTrigger.create({
+    trigger: '.foot', start: 'top bottom', end: 'bottom bottom',
+    onUpdate: (self) => (canvasOut = self.progress),
   });
   ScrollTrigger.create({
     trigger: '[data-about]', start: 'top 80px',
@@ -494,9 +499,11 @@ function tick(now) {
   if (filmActive || filmP < 0.999) filmUI(filmP, time);
 
   const showFilm = filmActive && canvas.style.opacity !== '0';
-  const showFinale = finaleActive || canvasFinale > 0.001;
+  const fin = canvasFinale * (1 - canvasOut);
+  const showFinale = (finaleActive || canvasFinale > 0.001) && fin > 0.001;
+  if (!filmActive && !showFinale) canvas.style.opacity = 0;
   if (showFinale && !filmActive) {
-    canvas.style.opacity = canvasFinale;
+    canvas.style.opacity = fin;
     S.update(finaleState(finaleQ, time), now);
   } else if (showFilm) {
     S.update(filmState(filmP, time, vel), now);

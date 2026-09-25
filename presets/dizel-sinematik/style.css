@@ -80,7 +80,8 @@ a { text-decoration: none; }
 .intro.is-burst { background: radial-gradient(40% 30% at 50% 46%, #6a4a14, var(--ink) 70%); }
 
 /* ------------------------------------------------------------ imleç */
-.cur { position: fixed; z-index: 150; left: 0; top: 0; pointer-events: none; display: none; }
+.cur { position: fixed; z-index: 150; left: 0; top: 0; pointer-events: none; display: none; opacity: 0; transition: opacity .3s; }
+.cur.is-live { opacity: 1; }
 .cur span { display: block; width: 28px; height: 28px; margin: -14px 0 0 -14px; border-radius: 50%; border: 1.5px solid var(--amber); transition: transform .2s, background .2s; }
 .cur.is-hot span { transform: scale(1.7); background: rgb(245 165 36 / .15); }
 @media (pointer: fine) { .has-cur .cur { display: block; } }
@@ -345,7 +346,7 @@ section:not(.film) { position: relative; padding: clamp(84px, 12vw, 160px) 0; }
 
 /* ------------------------------------------------------------ galeri */
 .galeri { background: var(--ink); overflow: hidden; }
-.galeri__track { display: flex; gap: 14px; padding-inline: 16px; width: max-content; align-items: flex-end; will-change: transform; }
+.galeri__track { display: flex; gap: 14px; padding-inline: 16px; width: max-content; align-items: center; will-change: transform; }
 @media (min-width: 900px) { .galeri__track { padding-inline: 48px; gap: 22px; } }
 .foto { position: relative; width: min(74vw, 400px); aspect-ratio: 4 / 5; border-radius: 18px; overflow: hidden; background: var(--ink-3); flex: none; }
 .foto--tall { aspect-ratio: 3 / 4.6; }

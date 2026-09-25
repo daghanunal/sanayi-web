@@ -6,3 +6,5 @@ yag.jpg: https://www.pexels.com/photo/close-up-of-hand-pouring-oil-to-engine-130
 kafa.jpg: https://www.pexels.com/photo/engine-cylinder-head-with-camshafts-7565172/
 Ayrıca public/img/depo/ görselleri (bkz. public/img/depo/CREDITS.txt).
 koridor-m.jpg, koridor-d.jpg: https://www.pexels.com/photo/expansive-warehouse-aisle-filled-with-products-29454379/
+kablolar.jpg: https://www.pexels.com/photo/17072947/ (elektrik-klasik2 ile aynı kaynak, kırpıldı)
+aski.jpg: https://www.pexels.com/photo/6870302/ (Gustavo Fring; lastik-klasik2 ile aynı kaynak, kırpıldı)

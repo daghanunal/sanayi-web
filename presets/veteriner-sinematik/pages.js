@@ -9,13 +9,19 @@ export const C = {
   mint: '#43d6b0', mintDk: '#1f9c7e', pink: '#e2306c', ink: '#2743a8', red: '#d8323c', mute: '#6d6689',
 };
 const F = {
-  disp: (s) => `${s}px "Lilita One", "Parkinsans", sans-serif`,
+  disp: (s) => `${s}px "Paytone One", "Parkinsans", sans-serif`,
   body: (s, w = 500) => `${w} ${s}px "Parkinsans", system-ui, sans-serif`,
   hand: (s, w = 400) => `${w} ${s}px "Kalam", cursive`,
   mono: (s, w = 400) => `${w} ${s}px "Courier Prime", ui-monospace, monospace`,
 };
 
 const up = (s) => s.toLocaleUpperCase('tr');
+// Başlık yazısını verilen genişliğe sığdırır (uzun işletme adı / başlık taşmasın)
+function fitDisp(x, t, s, maxW) {
+  x.font = F.disp(s);
+  const w = x.measureText(t).width;
+  if (w > maxW) x.font = F.disp(Math.floor(s * maxW / w));
+}
 
 function mk(res) {
   const c = document.createElement('canvas');
@@ -148,7 +154,7 @@ function heading(x, no, kicker, title, y = 190) {
   x.fillStyle = C.indigo; rr(x, 70, y - 50, 116, 64, 18); x.fill();
   x.fillStyle = C.mint; x.font = F.disp(46); x.fillText(no, 90, y + 2);
   x.fillStyle = C.lilac; x.font = F.mono(26, 700); x.fillText(up(kicker), 210, y - 14);
-  x.fillStyle = C.indigo; x.font = F.disp(78);
+  x.fillStyle = C.indigo; fitDisp(x, title, 74, PW - 150);
   x.fillText(title, 70, y + 104);
 }
 
@@ -205,9 +211,9 @@ export function buildPages(d, img, res, onStep) {
     drawPaw(b, PW / 2, 610, 210, '#f5e7b8');
     b.textAlign = 'center';
     b.fillStyle = C.indigo; b.font = F.mono(34, 700); b.fillText('KEDİ · KÖPEK', PW / 2, 190);
-    b.font = F.disp(118); b.fillText('SAĞLIK', PW / 2, 960); b.fillText('KARNESİ', PW / 2, 1080);
+    fitDisp(b, 'KARNESİ', 112, PW - 200); b.fillText('SAĞLIK', PW / 2, 960); b.fillText('KARNESİ', PW / 2, 1080);
     b.fillStyle = 'rgba(27,20,80,.9)'; rr(b, 90, 1160, PW - 180, 130, 22); b.fill();
-    b.fillStyle = '#f5e7b8'; b.font = F.disp(Math.min(62, 1500 / Math.max(10, d.isletme.ad.length)));
+    b.fillStyle = '#f5e7b8'; fitDisp(b, d.isletme.ad, 58, PW - 240);
     b.fillText(d.isletme.ad, PW / 2, 1222);
     b.font = F.mono(26, 700); b.fillStyle = C.mint; b.fillText(`ETİMESGUT · ${yil}`, PW / 2, 1264);
     b.textAlign = 'left';
@@ -229,7 +235,7 @@ export function buildPages(d, img, res, onStep) {
     b.fillStyle = C.mute; b.font = F.body(30, 500);
     wrap(b, 'Muayene, aşı ve tahliller bu karneye ve klinik kaydına birlikte işlenir.', 70, 1150, PW - 140, 42, 3);
     drawPaw(b, 880, 1290, 70, 'rgba(143,127,240,.35)');
-    layout.tags.karne = [0.25, 0.72];
+    layout.tags.karne = [0.7, 0.17];
   });
 
   // 2: Muayene
@@ -316,7 +322,7 @@ export function buildPages(d, img, res, onStep) {
     b.fillStyle = C.mute; b.font = F.mono(24, 700); b.fillText('KLİNİKTEKİ CİHAZDA', 520, 850);
     field(b, k, 'Sonuç', 930, 'Aynı ziyarette', 70, PW - 140, 58);
     field(b, k, 'Dış laboratuvar', 1060, "WhatsApp'tan iletilir", 70, PW - 140, 50);
-    hand(k, 'Değerler ekranda gösterildi.', 80, 1290, 44, -0.02);
+    hand(k, 'Sonuçları birlikte okuruz.', 80, 1290, 44, -0.02);
     layout.tags.laboratuvar = [0.25, 0.6];
   });
 
@@ -338,7 +344,7 @@ export function buildPages(d, img, res, onStep) {
     });
     hand(k, 'Evde bakım notu yazılı verildi.', 80, 1230, 46, -0.02);
     underline(k, 80, 700, 1248);
-    layout.tags.kisirlastirma = [0.5, 0.52];
+    layout.tags.kisirlastirma = [0.55, 0.955];
   });
 
   // 7: Diş taşı
@@ -348,12 +354,12 @@ export function buildPages(d, img, res, onStep) {
     heading(b, '07', h.sure, h.baslik);
     photo(b, img.agiz, 90, 360, 820, 380, 0.012);
     // Köpek diş şeması (üst çene yayı)
-    const cx = 500, cy = 1190;
+    const cx = 500, cy = 1265;
     b.strokeStyle = C.line; b.lineWidth = 3;
-    b.beginPath(); b.ellipse(cx, cy, 360, 300, 0, Math.PI, Math.PI * 2); b.stroke();
+    b.beginPath(); b.ellipse(cx, cy, 360, 290, 0, Math.PI, Math.PI * 2); b.stroke();
     for (let i = 0; i < 20; i++) {
       const a = Math.PI + (i + 0.5) / 20 * Math.PI;
-      const px = cx + Math.cos(a) * 360, py = cy + Math.sin(a) * 300;
+      const px = cx + Math.cos(a) * 360, py = cy + Math.sin(a) * 290;
       const big = i === 3 || i === 16;
       b.fillStyle = '#fff'; b.strokeStyle = C.indigo; b.lineWidth = 3;
       b.beginPath(); b.ellipse(px, py, big ? 22 : 16, big ? 30 : 20, a + Math.PI / 2, 0, Math.PI * 2); b.fill(); b.stroke();
@@ -388,8 +394,8 @@ export function buildPages(d, img, res, onStep) {
     paper(b, d, 9, 9);
     b.fillStyle = C.red; rr(b, 70, 140, PW - 140, 470, 34); b.fill();
     b.fillStyle = '#fff'; b.font = F.mono(30, 700); b.fillText('09 · ACİL DURUM', 110, 215);
-    b.font = F.disp(104); b.fillText('Önce arayın.', 110, 340);
-    b.font = F.disp(Math.min(96, 1250 / Math.max(8, d.iletisim.telefon.length))); b.fillText(d.iletisim.telefon, 110, 480);
+    fitDisp(b, 'Önce arayın.', 100, PW - 240); b.fillText('Önce arayın.', 110, 340);
+    fitDisp(b, d.iletisim.telefon, 90, PW - 240); b.fillText(d.iletisim.telefon, 110, 480);
     b.font = F.body(30, 600); b.fillText('Hekimimiz telefonda ilk yapılacakları söyler.', 110, 560);
     d.acilListesi.forEach((t, i) => {
       const py = 700 + i * 104;
@@ -418,7 +424,7 @@ export function buildPages(d, img, res, onStep) {
     b.fillStyle = C.mute; b.font = F.mono(24, 700); b.fillText('ADRES', 70, yy + 170);
     b.fillStyle = C.indigo; b.font = F.body(32, 600); wrap(b, d.iletisim.adres, 70, yy + 220, PW - 140, 44, 3);
     hand(k, 'Görüşmek üzere!', 540, 1310, 56, -0.05);
-    layout.tags.randevu = [0.5, 0.5];
+    layout.tags.randevu = [0.5, 0.86];
   });
 
   return { pages, layout };
@@ -438,7 +444,7 @@ export function stampAtlas(res = 384) {
     x.strokeStyle = '#fff'; x.fillStyle = '#fff';
     x.lineWidth = 14; x.beginPath(); x.arc(0, 0, 180, 0, Math.PI * 2); x.stroke();
     x.lineWidth = 5; x.beginPath(); x.arc(0, 0, 150, 0, Math.PI * 2); x.stroke();
-    x.font = F.disp(64); x.textAlign = 'center'; x.fillText(a, 0, -40);
+    fitDisp(x, a, 64, 230); x.textAlign = 'center'; x.fillText(a, 0, -40);
     x.font = F.mono(40, 700); x.fillText(b2, 0, 100);
     drawPaw(x, 0, 30, 60, '#fff');
     // yıldızlar

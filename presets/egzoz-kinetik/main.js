@@ -322,7 +322,7 @@ function hareket(lenis) {
   const intro = gsap.timeline({ defaults: { ease: 'expo.out' } });
   $$('.afis__satir').forEach((s, i) => {
     intro.from(s, { xPercent: i % 2 ? 18 : -18, skewX: i % 2 ? -14 : 14, duration: 1.1 }, 0.05 + i * 0.12);
-    intro.from($$('.h > span', s), { yPercent: 105, duration: 0.9, stagger: 0.025 }, 0.05 + i * 0.12);
+    intro.from($$('.h > span', s), { yPercent: 170, duration: 0.9, stagger: 0.025 }, 0.05 + i * 0.12);
   });
   intro
     .from('.boru', { scale: 0.4, autoAlpha: 0, duration: 1.2 }, 0.25)
@@ -338,7 +338,7 @@ function hareket(lenis) {
   // İmza: pinli ses sahnesi.
   const gHarf = $$('.ses__kelime--once .g > span');
   const sHarf = $$('.ses__kelime--sonra .g > span');
-  gsap.set(sHarf, { yPercent: 150 });
+  gsap.set(sHarf, { yPercent: 180 });
   let sesAktif = false;
   const sesTl = gsap.timeline({
     scrollTrigger: {
@@ -353,7 +353,7 @@ function hareket(lenis) {
   });
   sesTl
     .fromTo('.ses__kelime--once', { scaleY: 1.25 }, { scaleY: 0.72, ease: 'none', duration: 0.62 }, 0)
-    .to(gHarf, { yPercent: -150, autoAlpha: 0, duration: 0.14, stagger: 0.012, ease: 'power2.in' }, 0.62)
+    .to(gHarf, { yPercent: -180, autoAlpha: 0, duration: 0.14, stagger: 0.012, ease: 'power2.in' }, 0.62)
     .to(sHarf, { yPercent: 0, duration: 0.16, stagger: 0.012, ease: 'power3.out' }, 0.68)
     .fromTo('.ses__metin', { autoAlpha: 0, y: 30 }, { autoAlpha: 1, y: 0, duration: 0.14 }, 0.74)
     .to({}, { duration: 0.12 });
@@ -403,7 +403,7 @@ function hareket(lenis) {
     const dev = $('.dm__dev', a);
     const yon = Number(dev.dataset.yon);
     gsap.fromTo(dev, { xPercent: 35 * yon }, { xPercent: -10 * yon, ease: 'none', scrollTrigger: { trigger: a, start: 'top bottom', end: 'bottom 30%', scrub: true } });
-    gsap.from($$('.g > span', dev), { yPercent: 110, stagger: 0.04, duration: 0.8, ease: 'power4.out', scrollTrigger: { trigger: a, start: 'top 75%', once: true } });
+    gsap.from($$('.g > span', dev), { yPercent: 170, stagger: 0.04, duration: 0.8, ease: 'power4.out', scrollTrigger: { trigger: a, start: 'top 75%', once: true } });
   });
 
   // Hizmetler: satırlar alttan, numara dönerek.
@@ -457,7 +457,7 @@ function hareket(lenis) {
   gsap.from('.puan', { yPercent: 40, autoAlpha: 0, duration: 1, ease: 'expo.out', scrollTrigger: { trigger: '.yorumlar', start: 'top 70%', once: true } });
   $$('.final__satir').forEach((s, i) => {
     gsap.from($$('.h > span', s), {
-      yPercent: 110,
+      yPercent: 170,
       duration: 0.9,
       ease: 'expo.out',
       stagger: 0.03,

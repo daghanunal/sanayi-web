@@ -1,7 +1,7 @@
 // Sektör modülü: far ayar perdesi. Kısa farın kesme çizgisi 10 metredeki perdeye düşer; eğim kaydırılınca
 // çizginin perdedeki yüksekliği, ışığın yere değdiği mesafe ve karşıdan gelen sürücünün gözü canlı hesaplanır.
 // Ayrıca ana sayfada kısa "bugün açık mıyız" şeridi.
-import { esc, waHref, telHref, mapsHref, openStatus, groupedHours, icons, gsap, reducedMotion } from '../../shared/core.js';
+import { esc, waHref, telHref, mapsHref, openStatus, groupedHours, icons, gsap, ScrollTrigger, reducedMotion } from '../../shared/core.js';
 
 const FAR_YUKSEKLIK = 0.65; // m, binek araçta far merkezinin yerden yüksekliği (yaklaşık)
 const OLCEK = 30; // perdede 30 px = 10 cm
@@ -184,9 +184,13 @@ export const farPerdesi = {
     durumTw.e = baslangic;
     ciz(baslangic);
     if (!reducedMotion) {
-      gsap.timeline({ scrollTrigger: { trigger: kok.querySelector('.fp__perde'), start: 'top 70%', once: true } })
-        .add(() => git(2.6, 1.3), 0.5)
-        .add(() => git(1.2, 1.2), 2.1);
+      // once:true kullanılmaz: tetikleyici refresh sırasında kendini öldürünce ScrollTrigger'ın dizisi kayıyor.
+      let oynadi = false;
+      const tl = gsap.timeline({ paused: true }).add(() => git(2.6, 1.3), 0.5).add(() => git(1.2, 1.2), 2.1);
+      ScrollTrigger.create({
+        trigger: kok.querySelector('.fp__perde'), start: 'top 70%',
+        onEnter: () => { if (!oynadi) { oynadi = true; tl.play(0); } },
+      });
     }
   },
 };

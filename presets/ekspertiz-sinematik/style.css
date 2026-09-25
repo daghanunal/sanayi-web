@@ -86,6 +86,7 @@ main, .foot { position: relative; z-index: 1; }
 .top.is-paper { background: rgb(230 233 237 / .9); color: var(--ink); border-color: var(--rule); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
 .top__brand { font: 800 15px/1 var(--disp); text-decoration: none; letter-spacing: -.01em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; padding: .15em 0; }
 .top__status { font: 500 12px var(--mono); color: var(--muted); display: flex; align-items: center; gap: 7px; white-space: nowrap; }
+.top.is-night { background: rgb(11 12 18 / .88); border-color: rgb(255 255 255 / .08); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
 .top.is-paper .top__status { color: var(--ink-muted); }
 .top__status::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: var(--coral); }
 .top__status.is-open::before { background: var(--mint); box-shadow: 0 0 0 4px rgb(30 214 155 / .2); }
@@ -215,10 +216,10 @@ main, .foot { position: relative; z-index: 1; }
 }
 .paper > section { padding: clamp(72px, 10vw, 140px) var(--pad); }
 .sec-kicker { font: 500 12px var(--mono); color: var(--ink-muted); letter-spacing: .08em; text-transform: uppercase; }
-.sec-title { font: 800 clamp(32px, 4.4vw, 68px)/1.02 var(--disp); letter-spacing: -.035em; text-wrap: balance; padding-top: .1em; }
+.sec-title { font: 800 clamp(32px, 4.4vw, 68px)/1.1 var(--disp); letter-spacing: -.035em; text-wrap: balance; padding-top: .1em; }
 .sec-kicker + .sec-title { margin-top: 14px; }
 .sec-title em { font-style: normal; color: var(--sheet); background: var(--ink); padding: 0 .16em; border-radius: .12em; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
-.sec-title .ln { padding-top: .12em; margin-top: -.12em; }
+.sec-title .ln, .sec-title .ln-mask { padding: .1em 0 .2em; margin: -.1em 0 -.2em; }
 .sec-lead { margin-top: 18px; max-width: 56ch; color: var(--ink-2); font-size: 18px; }
 .sec-head { max-width: 900px; margin-bottom: clamp(36px, 5vw, 64px); }
 .sec-head--row { max-width: none; display: flex; justify-content: space-between; align-items: end; gap: 16px; }

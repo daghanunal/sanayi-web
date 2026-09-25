@@ -183,7 +183,9 @@ export const icMekan = {
       gonder.classList.toggle('is-pasif', !secim.size);
     };
 
+    const ipucu = el.querySelector('.im__ipucu');
     const sec = (id) => {
+      ipucu?.classList.add('is-gizli');
       if (!secim.has(id)) secim.set(id, new Set([P[id].sorun[0]]));
       aktif = id;
       ciz();

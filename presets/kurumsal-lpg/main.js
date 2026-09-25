@@ -43,4 +43,25 @@ kurumsal({
     { id: 'iletisim', baslik: 'İletişim', bolumler: ['iletisim'] },
   ],
   ekstralar: { giris, hat, tankPulu, uygunluk, mesai, galeri },
+  onHazir: sayfaDegisinceBasaDon,
 });
+
+// Sayfa değişirken motor yeni içeriği aşağıdaki kaydırma konumunda kurup sonra başa dönüyor; o arada
+// "once" tetikleyicileri kurulurken kendini siler ve ScrollTrigger hata atar. İçerik değişmeden hemen
+// önce (geçiş perdesi ekranı kaplarken) başa dönüyoruz; motora dokunmadan.
+function sayfaDegisinceBasaDon(ctx) {
+  const main = document.getElementById('sayfa');
+  const ozellik = Object.getOwnPropertyDescriptor(Element.prototype, 'innerHTML');
+  if (!main || !ozellik?.set) return;
+  Object.defineProperty(main, 'innerHTML', {
+    configurable: true,
+    get() {
+      return ozellik.get.call(this);
+    },
+    set(html) {
+      if (window.scrollY > 0) (ctx?.lenis ? ctx.lenis.scrollTo(0, { immediate: true, force: true }) : window.scrollTo(0, 0));
+      if (window.scrollY > 0) window.scrollTo(0, 0);
+      ozellik.set.call(this, html);
+    },
+  });
+}

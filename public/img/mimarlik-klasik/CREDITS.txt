@@ -2,3 +2,5 @@ Görseller Pexels'ten alınmıştır (Pexels Lisansı: ticari kullanım serbest,
 https://www.pexels.com/license/
 Bu klasördeki dosyalar public/img/sektor-mimarlik/ görsellerinin küçültülmüş WebP kopyalarıdır; kaynaklar
 için public/img/sektor-mimarlik/CREDITS.txt dosyasına bakın.
+
+yemek-odasi.webp   https://www.pexels.com/photo/6585751/ (hero, bu presete özel)

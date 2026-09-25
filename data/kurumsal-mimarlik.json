@@ -1,32 +1,43 @@
 {
   "kurumsal": {
     "hero": {
+      "baslik": "Işığı görür, sonra çizeriz.",
       "metin": "Konut, ticari yapı ve iç mekân projeleri. Arsayı yerinde görür, imar durumunu okur, ilk eskizi sizinle birlikte masada çizeriz. Ruhsattan şantiyeye aynı ekip.",
       "birincil": "Arsanızı konuşalım",
       "ikincil": "İmar ön hesabı",
       "ikincilRota": "imar"
     },
     "ozet": {
-      "baslik": "Bir çizgiyle başlar",
-      "metin": "Her proje masaya serilen bir aydınger ve sizin anlattıklarınızla başlar. Kaç kişi yaşayacak, güneş nereden doğuyor, komşu bina ne kadar yakın, bütçe nerede duruyor. Bunları duymadan kalemi elimize almayız."
+      "baslik": "Güneşi görmeden çizmeyiz",
+      "metin": "Sabah ışığı mutfağa mı düşsün, yatak odasına mı? Komşu bina öğleden sonra bahçeyi gölgede bırakır mı? Arsayı yerinde görür, güneşin yönünü, eğimi ve imar koşullarını okuruz. Kalemi ancak sizi dinledikten sonra alırız."
     },
-    "hizmetOzetBaslik": "Pafta listesi",
+    "hizmetOzetBaslik": "Kat kat ne çiziyoruz",
     "yorumBaslik": "Projesini çizdiklerimiz anlatıyor",
     "galeriBaslik": "Eskizden anahtara",
     "surecBaslik": "Arsadan anahtara altı adım",
     "sssBaslik": "Sık sorulanlar",
     "markaBaslik": "Çizim masamızdaki programlar",
     "formBaslik": "Projenizi anlatın",
-    "konular": ["Konut projesi", "Ticari yapı projesi", "Ruhsat projesi", "Uygulama projesi", "İç mimarlık", "Restorasyon", "3D görselleştirme", "Tadilat projesi", "Diğer"],
+    "konular": [
+      "Konut projesi",
+      "Ticari yapı projesi",
+      "Ruhsat projesi",
+      "Uygulama projesi",
+      "İç mimarlık",
+      "Restorasyon",
+      "3D görselleştirme",
+      "Tadilat projesi",
+      "Diğer"
+    ],
     "sayfalar": {
       "ofis": {
         "baslik": "Aynı masa, aynı ekip",
-        "metin": "2009'dan beri Etimesgut'tayız. Eskizi çizen, ruhsatı takip eden ve şantiyeye gelen aynı ekip.",
-        "gorsel": "/img/kurumsal-mimarlik/cizim-masasi.jpg"
+        "metin": "Etimesgut'taki çizim ofisimizde eskizi çizen, ruhsatı takip eden ve şantiyeye gelen aynı ekip.",
+        "gorsel": "/img/kurumsal-mimarlik/maket-ahsap.jpg"
       },
       "hizmetler": {
         "baslik": "Ne çiziyoruz",
-        "metin": "Boş arsadan eski bir taş yapıya, tek odalı dükkândan dört katlı apartmana. Her iş için teslim edilecek paftaları ve süreyi ilk görüşmede yazılı veririz.",
+        "metin": "Boş arsadan eski bir taş yapıya, tek odalı dükkândan dört katlı apartmana. Her iş için teslim edilecek çizimleri ve süreyi ilk görüşmede yazılı veririz.",
         "gorsel": "/img/kurumsal-mimarlik/plan.jpg"
       },
       "imar": {
@@ -39,31 +50,43 @@
         "gorsel": "/img/kurumsal-mimarlik/maket.jpg"
       },
       "iletisim": {
-        "baslik": "Önce bir kahve",
+        "baslik": "Bir kahveyle başlayalım",
         "metin": "Tapu fotokopisini ya da arsanın konumunu getirin, imar durumunu birlikte açalım. Ön görüşme için ofise gelmeniz yeterli."
       }
     },
     "hakkimizda": {
       "baslik": "Kalemi, sizi dinledikten sonra alırız",
       "paragraflar": [
-        "Çizgi Mimarlık 2009'da Etimesgut'ta küçük bir çizim ofisi olarak açıldı. Bugün konut, ticari yapı, iç mimarlık ve restorasyon projelerini aynı masada hazırlıyoruz.",
+        "Etimesgut'ta küçük bir çizim ofisi olarak açıldık. Bugün konut, ticari yapı, iç mimarlık ve restorasyon projelerini aynı masada hazırlıyoruz.",
         "Her işe yer ziyaretiyle başlarız. Arsanın eğimine, güneşin yönüne, komşu yapılara ve imar koşullarına bakmadan plan çizmeyiz. İlk eskizler elde, masada, sizinle birlikte çizilir.",
         "Ruhsat dosyası belediyeye gittiğinde işimiz bitmez. İnceleme notlarını biz işler, uygulama projesini şantiyeye teslim eder, inşaat sürerken çizimle ilgili her soruya yanıt veririz."
       ],
-      "gorsel": "/img/kurumsal-mimarlik/maket-ahsap.jpg",
-      "gorselAlt": "Çatı iskeleti görünen ahşap ev maketi"
+      "gorsel": "/img/kurumsal-mimarlik/cizim-masasi.jpg",
+      "gorselAlt": "Çizim masasında elle perspektif eskiz çizen mimar"
     },
     "misyon": "Arsanın ve bütçenin elverdiği en iyi planı, sahibini dinleyerek çizmek ve o planın şantiyeye doğru aktarılmasına kadar yanında durmak.",
     "vizyon": "Etimesgut ve çevresinde ev yaptıracak ya da işyerini yenileyecek herkesin ilk arayacağı, işini yerinde gören mimarlık ofisi olmak.",
     "degerler": [
-      { "baslik": "Önce yer ziyareti", "metin": "Arsayı ya da mevcut yapıyı görmeden plan çizmeyiz; fotoğrafını, ölçüsünü, yönünü yerinde alırız." },
-      { "baslik": "Açık imar bilgisi", "metin": "İmar durumunda neyin mümkün olduğunu, neyin olmadığını ilk görüşmede açıkça söyleriz." },
-      { "baslik": "Onayınız olmadan ilerlemek yok", "metin": "Avan projede siz onaylayana kadar değiştiririz; bir sonraki aşamaya birlikte geçeriz." },
-      { "baslik": "Şantiyeye kadar", "metin": "Çizimi teslim edip kaybolmayız; kaba inşaattan ince işlere belirli aşamalarda sahadayız." }
+      {
+        "baslik": "Önce yer ziyareti",
+        "metin": "Arsayı ya da mevcut yapıyı görmeden plan çizmeyiz; fotoğrafını, ölçüsünü, yönünü yerinde alırız."
+      },
+      {
+        "baslik": "Açık imar bilgisi",
+        "metin": "İmar durumunda neyin mümkün olduğunu, neyin olmadığını ilk görüşmede açıkça söyleriz."
+      },
+      {
+        "baslik": "Onayınız olmadan ilerlemek yok",
+        "metin": "Avan projede siz onaylayana kadar değiştiririz; bir sonraki aşamaya birlikte geçeriz."
+      },
+      {
+        "baslik": "Şantiyeye kadar",
+        "metin": "Çizimi teslim edip kaybolmayız; kaba inşaattan ince işlere belirli aşamalarda sahadayız."
+      }
     ],
     "kalite": {
       "baslik": "Çizim masasının kuralları",
-      "metin": "Her projede aynı düzenle çalışırız. Teslim edeceğimiz paftaların listesi işe başlamadan yazılı olarak verilir.",
+      "metin": "Her projede aynı düzenle çalışırız. Teslim edeceğimiz çizimlerin listesi işe başlamadan yazılı olarak verilir.",
       "maddeler": [
         "Her iş yer ziyareti ve ölçüyle başlar; rölöve olmadan tadilat projesi çizilmez.",
         "İmar durumu belediyeden alınır, emsal ve çekme mesafeleri ilk eskizden önce hesaplanır.",
@@ -73,16 +96,34 @@
       ]
     },
     "sss": [
-      { "soru": "İlk görüşme için ne getirmeliyim?", "cevap": "Tapu fotokopisi ya da ada-parsel numarası yeterli. Varsa imar durum belgesi, arsanın fotoğrafları ve beğendiğiniz evlerin görselleri işimizi hızlandırır." },
-      { "soru": "Proje ücreti nasıl belirleniyor?", "cevap": "Yapının alanına, türüne ve teslim edilecek paftalara göre değişir. Yer ziyaretinden sonra fiyatı ve takvimi yazılı olarak veririz; işe başlamadan önce söyleriz." },
-      { "soru": "Ruhsat ne kadar sürer?", "cevap": "Ruhsat projesini 2-4 haftada hazırlarız. Belediyedeki inceleme süresi belediyeye ve dosyanın yoğunluğuna göre değişir; düzeltme notlarını biz takip ederiz." },
-      { "soru": "Statik ve tesisat projelerini de siz mi yapıyorsunuz?", "cevap": "Mimari projeyi biz çizeriz; statik, mekanik ve elektrik projeleri birlikte çalıştığımız mühendislerce hazırlanır. Koordinasyonu biz yürütür, çakışmaları masada çözeriz." },
-      { "soru": "İmar ön hesabındaki değerler kesin mi?", "cevap": "Hayır, yaklaşık bir fikir verir. Bodrum kat, çatı arası, balkon ve emsal dışı alanlar imar yönetmeliğine göre ayrıca hesaplanır. Kesin değeri imar durum belgesinden birlikte çıkarırız." },
-      { "soru": "Sadece iç mimarlık ya da 3D görsel için çalışıyor musunuz?", "cevap": "Evet. Mevcut dairenin mutfak ve banyo yerleşimi, dolap çizimleri ya da satış için render gibi tek başına işler de alıyoruz." }
+      {
+        "soru": "İlk görüşme için ne getirmeliyim?",
+        "cevap": "Tapu fotokopisi ya da ada-parsel numarası yeterli. Varsa imar durum belgesi, arsanın fotoğrafları ve beğendiğiniz evlerin görselleri işimizi hızlandırır."
+      },
+      {
+        "soru": "Proje ücreti nasıl belirleniyor?",
+        "cevap": "Yapının alanına, türüne ve teslim edilecek paftalara göre değişir. Yer ziyaretinden sonra fiyatı ve takvimi yazılı olarak veririz; işe başlamadan önce söyleriz."
+      },
+      {
+        "soru": "Ruhsat ne kadar sürer?",
+        "cevap": "Ruhsat projesini 2-4 haftada hazırlarız. Belediyedeki inceleme süresi belediyeye ve dosyanın yoğunluğuna göre değişir; düzeltme notlarını biz takip ederiz."
+      },
+      {
+        "soru": "Statik ve tesisat projelerini de siz mi yapıyorsunuz?",
+        "cevap": "Mimari projeyi biz çizeriz; statik, mekanik ve elektrik projeleri birlikte çalıştığımız mühendislerce hazırlanır. Koordinasyonu biz yürütür, çakışmaları masada çözeriz."
+      },
+      {
+        "soru": "İmar ön hesabındaki değerler kesin mi?",
+        "cevap": "Hayır, yaklaşık bir fikir verir. Bodrum kat, çatı arası, balkon ve emsal dışı alanlar imar yönetmeliğine göre ayrıca hesaplanır. Kesin değeri imar durum belgesinden birlikte çıkarırız."
+      },
+      {
+        "soru": "Sadece iç mimarlık ya da 3D görsel için çalışıyor musunuz?",
+        "cevap": "Evet. Mevcut dairenin mutfak ve banyo yerleşimi, dolap çizimleri ya da satış için render gibi tek başına işler de alıyoruz."
+      }
     ],
     "cta": {
-      "baslik": "Arsanızın imar durumunu birlikte açalım",
-      "metin": "Ada-parsel numarasını yazın ya da arayın; ön görüşmede neler yapılabileceğini masaya yatıralım.",
+      "baslik": "Arsanızda güneş nereden doğuyor, birlikte bakalım",
+      "metin": "Ada-parsel numarasını yazın ya da arayın; yer ziyaretinde neler yapılabileceğini masaya yatıralım.",
       "buton": "Ön görüşme isteyin"
     }
   }

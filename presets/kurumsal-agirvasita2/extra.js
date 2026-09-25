@@ -4,6 +4,13 @@
 //  olcumler    — hız sınırı levhası gibi yuvarlak levhalarda giriş/teslim ölçümü (d.alt).
 import { esc, waHref, telHref, mapsHref, mapsEmbed, openStatus, groupedHours, icons, gsap, ScrollTrigger, reducedMotion } from '../../shared/core.js';
 
+// ?tel=05321112233 gibi bitişik gelen numarayı tabelada okunur yaz: 0532 111 22 33
+const telGoster = (t) => {
+  const r = String(t || '').replace(/\D/g, '');
+  const n = r.length === 10 ? '0' + r : r.length === 12 && r.startsWith('90') ? '0' + r.slice(2) : r;
+  return n.length === 11 && n[0] === '0' ? `${n.slice(0, 4)} ${n.slice(4, 7)} ${n.slice(7, 9)} ${n.slice(9)}` : String(t || '');
+};
+
 const k = (d) => d.kurumsal || {};
 const B = import.meta.env.BASE_URL;
 const nf = (n, ondalik) => Number(n).toLocaleString('tr-TR', { minimumFractionDigits: ondalik, maximumFractionDigits: ondalik });
@@ -38,7 +45,7 @@ export const tabelaHero = {
             </div>
             <a class="ot-tabela ot-tabela--yardim" href="${telHref(d)}" data-ot-tabela>
               <span class="ot-tabela__kucuk">7/24 yol yardım</span>
-              <span class="ot-tabela__tel">${esc(d.iletisim.telefon)}</span>
+              <span class="ot-tabela__tel">${esc(telGoster(d.iletisim.telefon))}</span>
               ${st ? `<span class="ot-tabela__durum${st.open ? ' is-acik' : ''}"><i></i>Sanayi: ${esc(st.text)}</span>` : ''}
             </a>
           </div>
@@ -121,7 +128,7 @@ export const yolYardim = {
               <div class="ot-yy__dugme">
                 ${d.iletisim.whatsapp ? `<a class="k-btn ot-yy__wa" data-o="wa" target="_blank" rel="noopener">${icons.whatsapp}<span>WhatsApp'tan gönder</span></a>` : ''}
                 <button type="button" class="k-btn k-btn--ikincil ot-yy__konum" data-o="konum">${icons.pin}<span>Konumumu ekle</span></button>
-                <a class="k-btn k-btn--ikincil" href="${telHref(d)}">${icons.phone}<span>${esc(d.iletisim.telefon)}</span></a>
+                <a class="k-btn k-btn--ikincil" href="${telHref(d)}">${icons.phone}<span>${esc(telGoster(d.iletisim.telefon))}</span></a>
               </div>
               <p class="ot-yy__not">${esc(y.not || '')}</p>
             </div>
@@ -318,7 +325,7 @@ export const sanayiSaat = {
             <p class="ot-saat__adres">${esc(d.iletisim.adres)}</p>
             <div class="k-butonlar">
               <a class="k-btn ot-saat__btn" href="${mapsHref(d)}" target="_blank" rel="noopener">${icons.pin}<span>Yol tarifi</span></a>
-              <a class="k-btn k-btn--ikincil ot-saat__btn2" href="${telHref(d)}">${icons.phone}<span>${esc(d.iletisim.telefon)}</span></a>
+              <a class="k-btn k-btn--ikincil ot-saat__btn2" href="${telHref(d)}">${icons.phone}<span>${esc(telGoster(d.iletisim.telefon))}</span></a>
             </div>
           </div>
           <div class="ot-saat__harita" data-perde><p>Harita yaklaşınca yüklenir</p></div>

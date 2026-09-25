@@ -1,6 +1,6 @@
-// Çekpas (klasik aile, oto yıkama): köpük beyazı + patlıcan mürdümü + köpük pembesi, limon sarısı vurgu.
-// İmza anı hero'da: çamurlu araç fotoğrafının üzerinden kaydırdıkça bir çekpas geçer, çamur silinir,
-// altından parlak araç çıkar. Katmanlar yalnızca transform ile kayar; WebGL yok.
+// Tünel (klasik aile, oto yıkama): eski usul yıkama tüneli tabelası. Kobalt mavi + ayçiçeği sarısı + kiraz,
+// üç renkli köpük. İmza anı hero'da: kemerli pencerede araç tünelden geçer (su, fırça, köpük perdesi,
+// durulama, kurutma). Katmanlar yalnızca transform/opacity ile hareket eder; WebGL yok.
 import base from '../../data/sektor-yikama.json';
 import extra from '../../data/yikama-klasik.json';
 import '../../shared/base.css';
@@ -44,6 +44,7 @@ $$('[data-wa-filo]').forEach((a) => (a.href = waHref(d, `Merhaba ${d.isletme.ad}
 $$('[data-maps]').forEach((a) => (a.href = mapsHref(d)));
 $('.top__brand').setAttribute('aria-label', `${d.isletme.ad}, sayfa başı`);
 const yil = new Date().getFullYear() - d.isletme.kurulus;
+if (d.isletme.ad.length > 18) $('.hero__name').classList.add('is-long');
 $('[data-since]').textContent = `Şaşmaz Oto Sanayi · ${ablative(d.isletme.kurulus)} beri`;
 $('[data-years]').textContent = `${yil} yıldır Şaşmaz'da`;
 $('[data-final]').textContent = d.finalBaslik || d.isletme.slogan;
@@ -61,60 +62,137 @@ $('[data-serit]').innerHTML = `<div>${seritRow}</div><div>${seritRow}</div>`;
 const serit = $('.serit');
 new IntersectionObserver(([e]) => serit.classList.toggle('is-off', !e.isIntersecting)).observe(serit);
 
-// --- Hero: çekpas ------------------------------------------------------------
-const mud = $('[data-mud]');
-const mudIn = $('[data-mud-in]');
-const blade = $('[data-blade]');
-const meter = $('[data-meter]');
-const meterBar = $('[data-meter-bar]');
-const meterLbl = $('[data-meter-lbl]');
-const hero = $('.hero');
-let lastLbl = '';
-function setWipe(p) {
-  // p: 0 → tamamen çamurlu, 1 → tertemiz. Çamur katmanı sağa kayar, içi ters yönde kayar: sabit görünür.
-  const x = (p * 100).toFixed(3);
-  mud.style.transform = `translate3d(${x}%,0,0)`;
-  mudIn.style.transform = `translate3d(-${x}%,0,0)`;
-  blade.style.transform = `translate3d(${(p * hero.clientWidth).toFixed(1)}px,0,0)`;
-  const v = Math.round(p * 100);
-  meter.textContent = v;
-  meterBar.style.transform = `scaleX(${p.toFixed(3)})`;
-  const lbl = p < 0.02 ? 'Çamur' : p < 0.98 ? 'Çekpas geçiyor' : 'Işıl ışıl';
-  if (lbl !== lastLbl) {
-    lastLbl = lbl;
-    meterLbl.textContent = lbl;
-    hero.classList.toggle('is-clean', p >= 0.98);
-    hero.classList.toggle('is-wiping', p >= 0.02 && p < 0.98);
+// --- Köpük üretici (sabit tohumlu; her açılışta aynı köpük) ------------------------
+function rng(a) {
+  return () => {
+    a |= 0; a = (a + 0x6d2b79f5) | 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+const PASTEL = ['#ffc6cf', '#ffe38c', '#c6d9ff'];
+// w×h piksellik köpük: gövde + kabarcıklı kenarlar (üst/alt) + üç renkli lekeler + kabarcık halkaları
+function foamSvg(w, h, { seed = 7, top = true, bottom = true, edge = 0.12, patches = true } = {}) {
+  const r = rng(seed);
+  const e = Math.round(h * edge);
+  const out = [];
+  const y0 = top ? e : 0, y1 = bottom ? h - e : h;
+  out.push(`<rect x="0" y="${y0}" width="${w}" height="${y1 - y0}" fill="#fdfdff"/>`);
+  const rim = (y, dir) => {
+    let x = -20;
+    while (x < w + 20) {
+      const rad = e * (0.35 + r() * 0.65);
+      out.push(`<circle cx="${(x + rad).toFixed(1)}" cy="${(y + dir * (r() * e * 0.35)).toFixed(1)}" r="${rad.toFixed(1)}" fill="#fdfdff"/>`);
+      if (r() > 0.55) out.push(`<circle cx="${(x + rad * 0.6).toFixed(1)}" cy="${(y + dir * rad * 0.55).toFixed(1)}" r="${(rad * 0.42).toFixed(1)}" fill="#fdfdff"/>`);
+      x += rad * (1.1 + r() * 0.5);
+    }
+  };
+  if (top) rim(y0, -1);
+  if (bottom) rim(y1, 1);
+  if (patches) {
+    const n = Math.round((w * (y1 - y0)) / 26000) + 6;
+    for (let i = 0; i < n; i++) {
+      const rad = Math.min(w, h) * (0.08 + r() * 0.16);
+      const cx = r() * w, cy = y0 + rad * 0.4 + r() * Math.max(1, y1 - y0 - rad * 0.8);
+      out.push(`<circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="${rad.toFixed(1)}" fill="${PASTEL[i % 3]}" opacity="${(0.55 + r() * 0.35).toFixed(2)}"/>`);
+    }
   }
+  const b = Math.round((w * h) / 5200) + 20;
+  for (let i = 0; i < b; i++) {
+    const rad = 2 + r() * r() * 22;
+    const cx = r() * w, cy = y0 + r() * (y1 - y0);
+    out.push(`<circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="${rad.toFixed(1)}" fill="${r() > 0.7 ? '#ffffff' : 'none'}" stroke="#9fb6f2" stroke-opacity=".55" stroke-width="${(0.8 + rad * 0.06).toFixed(2)}"/>`);
+    if (rad > 7) out.push(`<circle cx="${(cx - rad * 0.35).toFixed(1)}" cy="${(cy - rad * 0.35).toFixed(1)}" r="${(rad * 0.2).toFixed(1)}" fill="#fff"/>`);
+  }
+  return `<svg viewBox="0 0 ${w} ${h}" width="100%" height="100%" preserveAspectRatio="none" aria-hidden="true">${out.join('')}</svg>`;
+}
+
+// --- Hero: yıkama tüneli ------------------------------------------------------
+const hero = $('.hero');
+const stage = $('.hero__stage');
+const kopuk = $('[data-kopuk]');
+const istasyon = $$('[data-istasyon] li');
+const FOAM_H = 1.34; // köpük perdesi = sahne yüksekliği × 1.34 (üst/alt kabarcık payı)
+function buildFoam() {
+  const w = Math.round(stage.clientWidth), h = Math.round(stage.clientHeight * FOAM_H);
+  kopuk.innerHTML = foamSvg(w, h, { seed: 11, edge: 0.13 });
+}
+buildFoam();
+let rw = innerWidth;
+addEventListener('resize', () => { if (Math.abs(innerWidth - rw) > 40) { rw = innerWidth; buildFoam(); } });
+
+// Aşama sınırları (timeline süresi 1)
+const ASAMA = [0, 0.1, 0.4, 0.6, 0.8, 1.01];
+let lastSt = -2;
+function setStation(p) {
+  let st = -1;
+  if (p > 0.005) for (let i = 0; i < 5; i++) if (p >= ASAMA[i]) st = i;
+  if (p >= 0.985) st = 5;
+  if (st === lastSt) return;
+  lastSt = st;
+  istasyon.forEach((li, i) => {
+    li.classList.toggle('is-on', i === st);
+    li.classList.toggle('is-done', i < st);
+  });
+  hero.classList.toggle('is-clean', st === 5);
 }
 
 if (reducedMotion) {
-  setWipe(1);
+  $('[data-kirli]').style.opacity = 0;
+  hero.classList.add('is-static');
+  setStation(1);
 } else {
-  setWipe(0);
-  const w = { p: 0 };
+  gsap.set(kopuk, { y: 0, yPercent: -101 });
+  gsap.set('[data-parilti]', { x: 0, xPercent: -130, opacity: 1 });
+  hero.classList.add('is-ready');
+  gsap.set('[data-firca]', { xPercent: 0, x: () => stage.clientWidth + 20 });
+  const W = () => stage.clientWidth;
   const tl = gsap.timeline({
     defaults: { ease: 'none' },
     scrollTrigger: {
-      trigger: hero, start: 'top top', end: () => `+=${innerHeight * (small ? 1.1 : 1.3)}`,
-      pin: '.hero__pin', scrub: 0.4, anticipatePin: 1,
+      trigger: hero, start: 'top top', end: () => `+=${innerHeight * (small ? 1.5 : 1.7)}`,
+      pin: '.hero__pin', scrub: 0.5, anticipatePin: 1, invalidateOnRefresh: true,
+      onUpdate: (st) => setStation(st.progress),
     },
   });
-  tl.fromTo(w, { p: 0 }, { p: 1, duration: 0.85, ease: 'power1.inOut', immediateRender: false, onUpdate: () => setWipe(w.p) }, 0)
-    .fromTo('.hero__img--temiz img', { scale: 1.08 }, { scale: 1, duration: 1 }, 0)
-    .to('.hero__hint', { opacity: 0, duration: 0.08 }, 0)
-    .fromTo('[data-glint]', { xPercent: -120 }, { xPercent: 260, duration: 0.25, ease: 'power2.inOut' }, 0.82)
-    .to({}, { duration: 0.12 });
+  tl
+    // 1 · Su: ön yıkama jetleri
+    .fromTo('[data-su]', { opacity: 0 }, { opacity: 1, duration: 0.03 }, 0.005)
+    .fromTo('[data-su] i', { yPercent: -50 }, { yPercent: 0, duration: 0.2 }, 0)
+    .to('[data-su]', { opacity: 0, duration: 0.05 }, 0.14)
+    .to('.hero__hint', { opacity: 0, duration: 0.04 }, 0)
+    // 2 · Fırça: iki rulo sağdan sola geçer, şeritleri döner
+    .fromTo('.firca--1', { x: () => W() + 20 }, { x: () => -W() * 0.55, duration: 0.28, ease: 'power1.inOut' }, 0.1)
+    .fromTo('.firca--2', { x: () => W() + 20 }, { x: () => -W() * 0.55, duration: 0.28, ease: 'power1.inOut' }, 0.16)
+    .fromTo('[data-firca] i', { yPercent: 0 }, { yPercent: -50, duration: 0.34 }, 0.1)
+    .fromTo('[data-kirli] img', { x: 0 }, { x: () => -W() * 0.015, duration: 0.3, ease: 'sine.inOut' }, 0.1)
+    // 3 · Köpük: üç renkli perde iner, kirli kare altında kaybolur
+    .fromTo(kopuk, { yPercent: -101 }, { yPercent: -9.7, duration: 0.18, ease: 'power2.in' }, 0.4)
+    .set('[data-kirli]', { opacity: 0 }, 0.6)
+    .fromTo('.hero__img--temiz img', { scale: 1.12 }, { scale: 1, duration: 0.4, ease: 'power1.out' }, 0.6)
+    // 4 · Durulama: perde süzülüp aşağı iner, temiz araç çıkar; su yeniden akar
+    .to(kopuk, { yPercent: 78, duration: 0.2, ease: 'power1.in' }, 0.61)
+    .to('[data-su]', { opacity: 0.85, duration: 0.03 }, 0.62)
+    .fromTo('[data-su] i', { yPercent: -50 }, { yPercent: 0, duration: 0.2, immediateRender: false }, 0.62)
+    .to('[data-su]', { opacity: 0, duration: 0.04 }, 0.79)
+    // 5 · Kurutma: hava bıçağı yukarıdan aşağı, sonra parıltı ve damga
+    .fromTo('[data-kurut]', { yPercent: -120, opacity: 0 }, { yPercent: 420, opacity: 1, duration: 0.13, ease: 'power1.inOut' }, 0.8)
+    .to('[data-kurut]', { opacity: 0, duration: 0.02 }, 0.93)
+    .fromTo('[data-parilti]', { x: 0, xPercent: -130 }, { xPercent: 330, duration: 0.1, ease: 'power2.inOut' }, 0.89)
+    .fromTo('[data-damga]', { scale: 2.2, rotate: -28, opacity: 0 }, { scale: 1, rotate: -12, opacity: 1, duration: 0.05, ease: 'back.out(2.2)' }, 0.935)
+    .to({}, { duration: 0.02 });
 
-  gsap.from('.hero__name', { yPercent: 40, opacity: 0, duration: 0.9, ease: 'power3.out' });
+  gsap.from('.hero__name', { y: 34, opacity: 0, duration: 0.9, ease: 'power3.out' });
   gsap.from(['.hero__copy .eyebrow', '.hero__slogan', '.hero__cta'], { y: 18, opacity: 0, duration: 0.7, stagger: 0.08, ease: 'power2.out', delay: 0.15 });
-  gsap.from('.meter', { y: 24, opacity: 0, duration: 0.7, ease: 'power3.out', delay: 0.35 });
-  // İpucu: çekpas bir kez hafifçe içeri girip geri çekilir
-  gsap.fromTo(w, { p: 0 }, {
-    p: 0.07, duration: 0.7, ease: 'power2.out', delay: 0.7, yoyo: true, repeat: 1, repeatDelay: 0.25,
-    onUpdate: () => { if (tl.progress() === 0) setWipe(w.p); },
-  });
+  gsap.from('.tunel', { y: 40, opacity: 0, duration: 0.9, ease: 'power3.out', delay: 0.1 });
+  // İstasyon ampulleri açılışta sırayla yanıp söner
+  gsap.fromTo(istasyon, { '--glow': 0 }, { '--glow': 1, duration: 0.18, stagger: 0.09, yoyo: true, repeat: 1, delay: 0.6, ease: 'power1.inOut' });
 }
+
+// Final bölümü: köpük kenarı
+const edgeEl = $('[data-foam-edge]');
+edgeEl.innerHTML = foamSvg(Math.max(360, Math.round(edgeEl.clientWidth || innerWidth)), 120, { seed: 5, top: false, bottom: true, edge: 0.5, patches: false });
 
 // --- Programlar ----------------------------------------------------------------
 const svcHtml = d.hizmetler.map((h, i) => {
@@ -167,7 +245,7 @@ if (!small) {
 // --- Rakamlar ----------------------------------------------------------------
 const stats = d.istatistikler.map((s) => ({ ...s, deger: s.kurulustanHesapla ? yil : s.deger }));
 $('[data-stats]').innerHTML = stats.map((s) => `
-  <li class="stat">
+  <li class="stat${Number(s.deger) >= 1000 ? ' stat--wide' : ''}">
     <p class="stat__val"><span data-count="${Number(s.deger)}">${reducedMotion ? nf(s.deger) : '0'}</span><small>${esc(s.sonek)}</small></p>
     <p class="stat__lbl">${esc(s.etiket)}</p>
   </li>`).join('');
@@ -353,9 +431,14 @@ if (!reducedMotion) {
   gsap.from('.chip', { y: 14, opacity: 0, duration: 0.4, stagger: 0.04, ease: 'power2.out', scrollTrigger: { trigger: '.plan__chips', start: 'top 88%' } });
   gsap.from('.fis', { y: 60, rotate: small ? 0 : 3, opacity: 0, duration: 0.9, ease: 'power3.out', scrollTrigger: { trigger: '.fis', start: 'top 90%' } });
 
-  // Süreç: damla ray boyunca akar, adımlar sırayla ıslanır
-  gsap.fromTo('.surec__list', { '--fill': 0 }, { '--fill': 1, ease: 'none', scrollTrigger: { trigger: '.surec__list', start: 'top 78%', end: 'bottom 60%', scrub: true } });
-  $$('.step').forEach((s) => ScrollTrigger.create({ trigger: s, start: small ? 'top 62%' : 'top 70%', onToggle: (st) => s.classList.toggle('is-wet', st.isActive || st.progress > 0), end: 'max' }));
+  // Süreç: araç ray boyunca ilerler, adımlar sırayla ıslanır
+  const rail = $('.surec__track');
+  const car = $('[data-car]');
+  const vertical = () => matchMedia('(max-width: 899px)').matches;
+  gsap.timeline({ defaults: { ease: 'none' }, scrollTrigger: { trigger: '.surec__rail', start: small ? 'top 70%' : 'top 75%', end: small ? 'bottom 55%' : 'bottom 45%', scrub: 0.4, invalidateOnRefresh: true } })
+    .fromTo('[data-fill]', { scaleX: () => (vertical() ? 1 : 0), scaleY: () => (vertical() ? 0 : 1) }, { scaleX: 1, scaleY: 1, duration: 1 }, 0)
+    .fromTo(car, { x: 0, y: 0 }, { x: () => (vertical() ? 0 : rail.clientWidth - car.offsetWidth), y: () => (vertical() ? rail.clientHeight - car.offsetHeight : 0), duration: 1 }, 0);
+  $$('.step').forEach((s) => ScrollTrigger.create({ trigger: s, start: small ? 'top 62%' : 'top 70%', end: 'max', onToggle: (st) => s.classList.toggle('is-wet', st.isActive) }));
   gsap.from('.step', { y: 30, opacity: 0, duration: 0.6, stagger: 0.1, ease: 'power2.out', scrollTrigger: { trigger: '.surec__list', start: 'top 86%' } });
 
   $$('.gi').forEach((g, i) => {

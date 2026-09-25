@@ -107,6 +107,7 @@ const sayiEl = $('[data-hero-sayi]');
 const stokStat = d.istatistikler.find((s) => typeof s.deger === 'number' && s.deger > 10000) ?? { deger: 48000, sonek: '+' };
 $('[data-hero-sonek]').textContent = stokStat.sonek;
 $('[data-kalem]').textContent = fmt(stokStat.deger);
+$('[data-raf-sayi]').textContent = ['', 'Bir', 'İki', 'Üç', 'Dört', 'Beş', 'Altı', 'Yedi', 'Sekiz', 'Dokuz', 'On'][d.hizmetler.length] ?? String(d.hizmetler.length);
 
 let geo = null;
 function measure() {

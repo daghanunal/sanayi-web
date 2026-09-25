@@ -174,7 +174,7 @@ $('#tarihce').innerHTML = `
   <div class="wrap">
     <header class="head">
       <p class="label"><em>05</em> Yıllar</p>
-      <h2>Babadan oğula ${yas} yıl.</h2>
+      <h2>${yas >= 20 ? `Babadan oğula ${yas} yıl.` : `${yas} yıldır aynı tezgâhta.`}</h2>
     </header>
   </div>
   <div class="rail" tabindex="0" aria-label="Tarihçe, yana kaydırın">
@@ -190,7 +190,10 @@ $('#tarihce').innerHTML = `
   </div>`;
 
 // --- Galeri ---------------------------------------------------------------------------
-const galeri = [...d.galeri, ...(d.galeriEk || [])];
+// Büyük kareler (1. ve 6.) en güçlü koltuk fotoğraflarına düşsün.
+const [ek0, ek1, ...ekRest] = d.galeriEk || [];
+const [g0, ...gRest] = d.galeri;
+const galeri = [ek0, ...gRest.slice(0, 4), ek1, ...gRest.slice(4), ...ekRest, g0].filter(Boolean);
 $('#atolye').innerHTML = `
   <div class="wrap">
     <header class="head">

@@ -69,7 +69,7 @@ body {
 }
 .eyebrow--light { color: #fff; }
 .h2 {
-  font: 800 clamp(40px, 6.4vw, 84px)/.92 var(--f-disp); letter-spacing: -.005em; text-transform: uppercase;
+  font: 800 clamp(40px, 6.4vw, 84px)/1 var(--f-disp); letter-spacing: -.005em; text-transform: uppercase;
   margin-top: 16px; padding-top: .06em;
 }
 .sec-head { margin-bottom: clamp(32px, 5vw, 60px); max-width: 900px; }
@@ -106,6 +106,8 @@ body {
   box-shadow: 0 10px 24px -12px rgb(227 36 27 / .9);
 }
 .top__call:hover { background: var(--kirmizi-2); }
+.top.on-red .top__call { background: #fff; color: var(--kirmizi); box-shadow: 0 10px 24px -14px rgb(0 0 0 / .5); }
+.top.on-red .top__dot { background: var(--kirmizi); }
 .top__call svg { width: 18px; height: 18px; }
 .top__dot { width: 8px; height: 8px; border-radius: 50%; background: #fff; animation: blink 1.4s steps(2, jump-none) infinite; }
 @keyframes blink { 50% { opacity: .15; } }
@@ -311,7 +313,7 @@ body {
 .bubble__meta { position: absolute; right: 10px; bottom: 6px; }
 .bubble__meta svg { width: 17px; height: 11px; fill: none; stroke: #36a3e6; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 .bubble__pics { display: grid; gap: 3px; margin: -4px -6px 10px -7px; border-radius: 13px; overflow: hidden; }
-.bubble__pics--4 { grid-template-columns: 1fr 1fr; }
+.bubble__pics--4, .bubble__pics--2 { grid-template-columns: 1fr 1fr; }
 .bubble__pics img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
 .bubble__pics--1 img { aspect-ratio: 16 / 10; }
 @media (min-width: 900px) {
@@ -380,7 +382,7 @@ body {
   border: 22px solid var(--kirmizi); border-radius: 6px; clip-path: none; opacity: .0;
 }
 .saat__now { font: 700 13px/1 var(--f-body); letter-spacing: .16em; text-transform: uppercase; color: #ff5a4f; }
-.saat__time { margin-top: 12px; font: 400 clamp(72px, 22vw, 190px)/.85 var(--f-sten); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.saat__time { margin-top: 12px; font: 400 clamp(72px, 22vw, 150px)/.85 var(--f-sten); white-space: nowrap; font-variant-numeric: tabular-nums; }
 .saat__time .colon { animation: blink 2s steps(2, jump-none) infinite; }
 .saat__sub { margin-top: 16px; font-size: 17px; color: var(--soluk-k); font-weight: 500; }
 @media (min-width: 900px) { .saat__grid { grid-template-columns: 1fr 1.05fr; gap: 70px; align-items: center; } .saat__clock { padding: 40px 42px 44px; } }

@@ -4,7 +4,7 @@
     "sicak": 38,
     "soguk": 6,
     "sicakDurum": "Gaz eksik, kompresör boşa yoruluyor.",
-    "araDurum": "Vakum, kaçak testi, tartılı dolum. Soğuyor.",
+    "araDurum": "Kaçak onarıldı, gaz tartılarak basılıyor.",
     "sogukDurum": "Normal. Sağlıklı klima ağızdan 4–8 °C üfler."
   },
   "belirtiler": [

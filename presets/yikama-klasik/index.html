@@ -3,12 +3,12 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#f5f3fb" />
+  <meta name="theme-color" content="#1f3fd1" />
   <title>Oto Yıkama | Şaşmaz, Ankara</title>
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%231e0f33'/%3E%3Crect x='7' y='9' width='18' height='5' rx='2.5' fill='%23e5177e'/%3E%3Crect x='14' y='14' width='4' height='11' rx='2' fill='%23ffd23f'/%3E%3C/svg%3E" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%231f3fd1'/%3E%3Crect x='7' y='9' width='18' height='5' rx='2.5' fill='%23ff3b5c'/%3E%3Crect x='14' y='14' width='4' height='11' rx='2' fill='%23ffc21a'/%3E%3C/svg%3E" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Instrument+Sans:wght@400;500;600;700&family=Red+Hat+Mono:wght@500;600&display=swap&subset=latin-ext" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Shrikhand&family=Rethink+Sans:wght@400;500;600;700&family=Sometype+Mono:wght@500;600&display=swap&subset=latin-ext" rel="stylesheet" />
   <link rel="preload" as="image" href="/img/yikama-klasik/hero-kirli-dik.jpg" media="(max-width: 899px)" />
   <link rel="preload" as="image" href="/img/yikama-klasik/hero-temiz-dik.jpg" media="(max-width: 899px)" />
   <link rel="preload" as="image" href="/img/yikama-klasik/hero-kirli.jpg" media="(min-width: 900px)" />
@@ -29,50 +29,45 @@
   </header>
 
   <main>
-    <!-- İMZA: Çekpas. Çamurlu araç fotoğrafının üstünden çekpas geçer; kaydırdıkça çamur silinir,
-         altından parlak araç çıkar. Katmanlar yalnız transform ile hareket eder (repaint yok). -->
+    <!-- İMZA: Yıkama tüneli. Kemerli pencerede çamurlu araç tünelden geçer: su, fırça, üç renkli köpük perdesi,
+         durulama, kurutma. Köpük perdesi iner, çamurlu kare altında kaybolur, perde süzülünce temiz araç çıkar.
+         Tüm katmanlar yalnız transform/opacity ile hareket eder. -->
     <section class="hero" id="top" aria-label="Giriş">
       <div class="hero__pin">
-        <div class="hero__stage" aria-hidden="true">
-          <picture class="hero__img hero__img--temiz">
-            <source media="(max-width: 899px)" srcset="/img/yikama-klasik/hero-temiz-dik.jpg" />
-            <img src="/img/yikama-klasik/hero-temiz.jpg" alt="" fetchpriority="high" decoding="async" />
-          </picture>
-          <div class="hero__mud" data-mud>
-            <div class="hero__mud-in" data-mud-in>
-              <picture class="hero__img">
-                <source media="(max-width: 899px)" srcset="/img/yikama-klasik/hero-kirli-dik.jpg" />
-                <img src="/img/yikama-klasik/hero-kirli.jpg" alt="" fetchpriority="high" decoding="async" />
-              </picture>
-            </div>
-          </div>
-          <div class="cekpas" data-blade>
-            <span class="cekpas__sheen"></span>
-            <span class="cekpas__rubber"></span>
-            <span class="cekpas__frame"></span>
-            <span class="cekpas__handle"></span>
-            <span class="cekpas__drops"><i></i><i></i><i></i><i></i><i></i></span>
-          </div>
-          <div class="hero__glint" data-glint></div>
-        </div>
-        <div class="hero__scrim" aria-hidden="true"></div>
-
         <div class="hero__copy">
           <p class="eyebrow mono" data-since></p>
           <h1 class="hero__name" data-bind="ad"></h1>
           <p class="hero__slogan" data-bind="slogan"></p>
           <div class="hero__cta">
-            <a class="btn btn--pembe" data-tel><span data-icon="phone"></span>Hemen ara</a>
+            <a class="btn btn--sari" data-tel><span data-icon="phone"></span>Hemen ara</a>
             <a class="btn btn--ghost" href="#planla">Ne zaman hazır olur?</a>
           </div>
         </div>
 
-        <div class="meter" aria-hidden="true">
-          <p class="meter__lbl mono" data-meter-lbl>Çamur</p>
-          <p class="meter__num"><b data-meter>0</b><small>% temiz</small></p>
-          <span class="meter__bar"><i data-meter-bar></i></span>
+        <div class="tunel">
+          <div class="tunel__sign" aria-hidden="true"><span>Yıkama</span><b>Tüneli</b></div>
+          <div class="hero__stage" aria-hidden="true">
+            <picture class="hero__img hero__img--temiz">
+              <source media="(max-width: 899px)" srcset="/img/yikama-klasik/hero-temiz-dik.jpg" />
+              <img src="/img/yikama-klasik/hero-temiz.jpg" alt="" fetchpriority="high" decoding="async" />
+            </picture>
+            <picture class="hero__img hero__img--kirli" data-kirli>
+              <source media="(max-width: 899px)" srcset="/img/yikama-klasik/hero-kirli-dik.jpg" />
+              <img src="/img/yikama-klasik/hero-kirli.jpg" alt="" fetchpriority="high" decoding="async" />
+            </picture>
+            <div class="su" data-su><i></i></div>
+            <div class="firca firca--1" data-firca><i></i></div>
+            <div class="firca firca--2" data-firca><i></i></div>
+            <div class="kopuk" data-kopuk></div>
+            <div class="kurut" data-kurut></div>
+            <div class="parilti" data-parilti></div>
+            <div class="damga" data-damga><span>Pırıl</span><span>pırıl</span></div>
+          </div>
+          <ol class="istasyon mono" data-istasyon aria-hidden="true">
+            <li>Su</li><li>Fırça</li><li>Köpük</li><li>Durulama</li><li>Kurutma</li>
+          </ol>
         </div>
-        <p class="hero__hint mono" aria-hidden="true"><span></span>Kaydırın, çekpas geçsin</p>
+        <p class="hero__hint mono" aria-hidden="true"><span></span>Kaydırın, araç tünelden geçsin</p>
       </div>
     </section>
 
@@ -95,7 +90,7 @@
 
     <!-- Rakamlar -->
     <section class="rakam" aria-label="Rakamlarla">
-      <div class="rakam__bubbles" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+      <div class="rakam__bubbles" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
       <div class="wrap">
         <ul class="rakam__list" data-stats></ul>
       </div>
@@ -132,7 +127,10 @@
       <div class="wrap">
         <p class="eyebrow mono">Aracınız bizdeyken</p>
         <h2 class="h2">Dört adım, <em>tek kural:</em> teslimde birlikte bakarız.</h2>
-        <ol class="surec__list" data-steps></ol>
+        <div class="surec__rail">
+          <div class="surec__track" aria-hidden="true"><i class="surec__fill" data-fill></i><span class="surec__car" data-car><svg viewBox="0 0 64 32"><path d="M6 22v-5l6-2 8-8h20l10 8 8 2v5z" fill="currentColor"/><circle cx="18" cy="23" r="5" fill="#0a1a5c" stroke="#fff" stroke-width="2.5"/><circle cx="47" cy="23" r="5" fill="#0a1a5c" stroke="#fff" stroke-width="2.5"/><path d="M23 9h8v6h-13zM35 9h5l7 6H35z" fill="#bcd2ff"/></svg></span></div>
+          <ol class="surec__list" data-steps></ol>
+        </div>
       </div>
     </section>
 
@@ -159,7 +157,7 @@
             <li><b>Araç işten kalmaz</b><span>Söylenen saatte hazır, söylenen saatte teslim.</span></li>
           </ul>
           <blockquote class="filo__q" data-filo-q></blockquote>
-          <a class="btn btn--pembe" data-wa-filo target="_blank" rel="noopener"><span data-icon="whatsapp"></span>Filo yıkama için yazın</a>
+          <a class="btn btn--sari" data-wa-filo target="_blank" rel="noopener"><span data-icon="whatsapp"></span>Filo yıkama için yazın</a>
         </div>
       </div>
     </section>
@@ -206,11 +204,12 @@
     <!-- Final -->
     <section class="final" aria-label="İletişim">
       <img class="final__bg" src="/img/yikama-klasik/k/cila-2.jpg" alt="" loading="lazy" decoding="async" />
+      <div class="final__foam" data-foam-edge aria-hidden="true"></div>
       <div class="wrap final__in">
         <p class="eyebrow mono" data-years></p>
         <h2 class="final__h" data-final></h2>
         <div class="final__btns">
-          <a class="btn btn--pembe btn--xl" data-tel><span data-icon="phone"></span><span data-bind="telefon"></span></a>
+          <a class="btn btn--sari btn--xl" data-tel><span data-icon="phone"></span><span data-bind="telefon"></span></a>
           <a class="btn btn--white btn--xl" data-wa target="_blank" rel="noopener"><span data-icon="whatsapp"></span>WhatsApp</a>
         </div>
       </div>

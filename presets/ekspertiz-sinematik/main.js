@@ -277,7 +277,7 @@ function pose(name, p) {
   const hx = hotTrack(p);
   const P = {
     hero: m
-      ? { pos: V(9.6, 3.1, 12.4), look: V(-0.7, 0.5, 0), fov: 35, shiftY: 0.16 }
+      ? { pos: V(8.7, 2.8, 11.3), look: V(-0.55, 0.55, 0), fov: 35, shiftY: 0.15 }
       : { pos: V(5.6, 1.5, 6.1), look: V(0.0, 0.72, 0), fov: 31, shiftX: 0.17, shiftY: -0.07 },
     boya: m
       ? { pos: V(sx * 0.7 + 1.0, 1.6, 8.6), look: V(sx * 0.7, 0.7, 0), fov: 44, shiftY: 0.1 }
@@ -307,7 +307,7 @@ function pose(name, p) {
       ? { pos: V(-5.5, 7.5, 5.5), look: V(0, 0.3, 0), fov: 40, shiftY: 0.05 }
       : { pos: V(-4.8, 6.4, 5.2), look: V(0, 0.4, 0), fov: 34, shiftX: 0.2 },
     rapor: m
-      ? { pos: V(0.001, 20, 0.5), look: V(0, 0.2, 0), fov: 32, up: V(1, 0, 0), shiftY: -0.01 }
+      ? { pos: V(-2.4, 16.5, 0.9), look: V(0, 0.2, 0), fov: 54, up: V(1, 0, 0), shiftY: -0.1 }
       : { pos: V(0, 11.5, 2.0), look: V(0, 0.2, 0), fov: 32, shiftX: 0.02, shiftY: 0.1 },
   };
   return P[name];
@@ -502,14 +502,24 @@ function setupScroll() {
     trigger: film, start: 'top top', end: 'bottom bottom',
     onUpdate: (self) => (filmTarget = self.progress),
   });
+  const sticky = $('.film__sticky');
   ScrollTrigger.create({
     trigger: '.paper', start: 'top bottom', end: 'top top',
-    onUpdate: (self) => (filmOn = self.progress < 1),
+    onUpdate: (self) => {
+      filmOn = self.progress < 1;
+      // film çıkarken göstergeler üst çubuğun altına kaymasın
+      const o = Math.max(0, 1 - Math.max(0, self.progress - 0.35) * 3);
+      sticky.style.opacity = o === 1 ? '' : o;
+    },
     onLeave: () => (filmOn = false), onEnterBack: () => (filmOn = true),
   });
   ScrollTrigger.create({
     trigger: '.paper', start: 'top 70px', endTrigger: '.finale', end: 'top 70px',
     onToggle: (self) => $('[data-top]').classList.toggle('is-paper', self.isActive),
+  });
+  ScrollTrigger.create({
+    trigger: '.finale', start: 'top 70px', end: 'max',
+    onToggle: (self) => $('[data-top]').classList.toggle('is-night', self.isActive),
   });
   contentMotion();
 }

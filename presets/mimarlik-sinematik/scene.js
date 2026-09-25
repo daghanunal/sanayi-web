@@ -41,7 +41,7 @@ export function createScene(canvas, { lite = false } = {}) {
   renderer.toneMappingExposure = 1.0;
   renderer.localClippingEnabled = true;
   renderer.shadowMap.enabled = true;
-  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  renderer.shadowMap.type = THREE.PCFShadowMap;
   let dpr = Math.min(devicePixelRatio || 1, lite ? 1.25 : 1.5);
   renderer.setPixelRatio(dpr);
 
@@ -351,6 +351,18 @@ export function createScene(canvas, { lite = false } = {}) {
     box(garden, x0, x1, 0, h, z0, z1, G.context, { lines: lineSoft });
   }
 
+  // Akşam gökyüzü: kubbe üzerinde yıldızlar
+  const starPos = [];
+  for (let i = 0; i < 420; i++) {
+    const a = Math.random() * Math.PI * 2, e = 0.12 + Math.random() * 1.2, r = 150;
+    starPos.push(Math.cos(a) * Math.cos(e) * r, Math.sin(e) * r, Math.sin(a) * Math.cos(e) * r);
+  }
+  const starGeo = new THREE.BufferGeometry();
+  starGeo.setAttribute('position', new THREE.Float32BufferAttribute(starPos, 3));
+  const starMat = new THREE.PointsMaterial({ color: 0xdfe8ff, size: 1.6, sizeAttenuation: false, transparent: true, opacity: 0, depthWrite: false, fog: false });
+  const stars = new THREE.Points(starGeo, starMat);
+  scene.add(stars);
+
   // --- Durum ---------------------------------------------------------------------
   const tmp = new THREE.Vector3();
   const look = new THREE.Vector3();
@@ -450,6 +462,8 @@ export function createScene(canvas, { lite = false } = {}) {
     inner.intensity = (s.inside * 6 + n * 18) * r;
     inner2.intensity = n * 14 * r;
     renderer.toneMappingExposure = L(1, 1.05, n);
+    starMat.opacity = n * 0.85;
+    stars.visible = n > 0.01;
 
     renderer.render(scene, camera);
 

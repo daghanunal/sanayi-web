@@ -156,7 +156,7 @@ main, .foot { position: relative; z-index: 1; }
 }
 .hero__since { font: 600 13px/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--ice); margin-bottom: 18px; }
 .hero__title {
-  font: italic 800 clamp(58px, 8.4vw, 148px)/.88 var(--display); text-transform: uppercase; letter-spacing: -.02em;
+  font: italic 800 clamp(58px, 8.4vw, 148px)/.95 var(--display); text-transform: uppercase; letter-spacing: -.02em;
   padding-top: .12em; margin-top: -.12em;
 }
 .hero__title .word { display: inline-block; white-space: nowrap; margin-right: .18em; }
@@ -202,6 +202,9 @@ main, .foot { position: relative; z-index: 1; }
 .hud__ticks { padding-bottom: 14px; }
 
 .cards { position: absolute; inset: 0; pointer-events: none; }
+.card--end { pointer-events: none; }
+.card--end .card__n { margin-bottom: 12px; }
+.card--end .card__n em { margin-left: 0; color: var(--heat); border-color: rgb(255 107 28 / .45); }
 .card {
   position: absolute; left: var(--pad); top: 50%; translate: 0 -50%; width: min(460px, 38vw);
   visibility: hidden; opacity: 0; pointer-events: auto; will-change: transform, opacity;
@@ -361,8 +364,9 @@ main, .foot { position: relative; z-index: 1; }
 .shop__map iframe { width: 100%; height: 100%; min-height: 420px; border: 0; filter: grayscale(.6) invert(.9) hue-rotate(180deg) contrast(.9); }
 
 .finale { height: 190svh; position: relative; }
+.finale::before { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 55svh; background: linear-gradient(var(--ink) 12%, rgb(7 10 16 / .8) 40%, rgb(7 10 16 / 0)); pointer-events: none; }
 .finale__sticky { position: sticky; top: 0; height: 100svh; display: flex; flex-direction: column; justify-content: flex-end; padding: 0 var(--pad) clamp(60px, 12vh, 130px); }
-.finale__title { font: italic 800 clamp(46px, 7.4vw, 128px)/.92 var(--display); text-transform: uppercase; max-width: 1100px; padding-top: .12em; text-shadow: 0 6px 40px rgb(7 10 16 / .7); }
+.finale__title { font: italic 800 clamp(46px, 6vw, 104px)/.98 var(--display); text-transform: uppercase; max-width: 62vw; padding-top: .12em; text-shadow: 0 6px 40px rgb(7 10 16 / .7); }
 .finale__title .word { display: inline-block; white-space: nowrap; }
 .finale__title .ch { display: inline-block; }
 .finale__sub { color: #cfd8e2; margin-top: 20px; font-size: 19px; }
@@ -467,10 +471,14 @@ main, .foot { position: relative; z-index: 1; }
   .shop { grid-template-columns: 1fr; }
   .shop__map, .shop__map iframe { min-height: 320px; }
 
-  .finale__sticky { padding-bottom: calc(110px + env(safe-area-inset-bottom)); }
-  .finale__title { font-size: clamp(32px, 9.4vw, 52px); }
-  .finale__cta { display: grid; grid-template-columns: 1fr; }
-  .finale__cta .btn { justify-content: center; }
+  .finale__sticky {
+    padding-bottom: calc(104px + env(safe-area-inset-bottom));
+    background: linear-gradient(rgb(7 10 16 / 0) 38%, rgb(7 10 16 / .72) 58%, rgb(7 10 16 / .9));
+  }
+  .finale__title { font-size: clamp(30px, 8.8vw, 50px); max-width: none; }
+  .finale__sub { font-size: 17px; margin-top: 14px; }
+  .finale__cta { display: grid; grid-template-columns: 1fr 1fr; margin-top: 20px; }
+  .finale__cta .btn { justify-content: center; padding: 0 12px; font-size: 14px; min-height: 50px; }
   .foot { padding-bottom: 120px; }
 }
 

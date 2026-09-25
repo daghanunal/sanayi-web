@@ -35,6 +35,19 @@ const veri = derinBirlestir(ana, ek);
 veri.hizmetler = ana.hizmetler.map((h, i) => ({ ...h, kisa: KISA[i], gorsel: G(GORSEL[i % GORSEL.length]), detay: DETAY[i] || [] }));
 veri.galeri = ana.galeri.map((g) => ({ ...g, src: g.src.replace('/sektor-kilit/', '/kurumsal-kilit/') }));
 
+// Sayfa değişiminde yeni içerik, eski sayfanın kaydırma konumundayken kuruluyordu; geçmiş "once" tetikleyicileri
+// kurulum sırasında kendini silip ScrollTrigger'ı çökertiyordu. Perde kapalıyken içerik yazılmadan hemen önce başa dön.
+const kok = document.getElementById('sayfa');
+const ih = Object.getOwnPropertyDescriptor(Element.prototype, 'innerHTML');
+Object.defineProperty(kok, 'innerHTML', {
+  configurable: true,
+  get() { return ih.get.call(this); },
+  set(v) {
+    if (scrollY > 0) scrollTo({ top: 0, behavior: 'instant' });
+    ih.set.call(this, v);
+  },
+});
+
 kurumsal({
   veri,
   tema: {

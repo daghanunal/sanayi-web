@@ -1,4 +1,4 @@
-// Sofra (klasik aile, ocakbaşı): kuşbakışı beyaz masa örtüsü, çini kobalt mavisi, pul biber kırmızısı.
+// Sini (klasik aile, ocakbaşı): kuşbakışı fıstık yeşili masa, bakır sini, limon sarısı.
 // Fotoğraf ağırlıklı, WebGL yok.
 // İmza anı hero'da: sofra kurulur. Ortada ocaktan gelen şiş tabağı durur; kaydırdıkça meze, lahmacun,
 // Adana ve çay tabakları ekranın kenarlarından dönerek gelip masaya oturur, sayaç 1/7'den 7/7'ye çıkar.
@@ -35,7 +35,9 @@ function ablative(n) {
 
 // --- Bağlamalar ------------------------------------------------------------------
 const binds = {
-  ad, slogan: d.isletme.slogan, hakkinda: d.isletme.hakkinda,
+  ad, slogan: d.isletme.slogan,
+  // ?kurulus= metindeki yılı da değiştirsin ("1998'den beri" → "2011'den beri")
+  hakkinda: String(d.isletme.hakkinda).replace(/\b(19|20)\d\d'[a-zçğıöşü]+ beri/i, `${ablative(d.isletme.kurulus)} beri`),
   telefon: d.iletisim.telefon, adres: d.iletisim.adres,
 };
 $$('[data-bind]').forEach((el) => (el.textContent = binds[el.dataset.bind] ?? ''));
@@ -70,6 +72,7 @@ const hero = $('.hero');
 const pin = $('.hero__pin');
 const table = $('[data-table]');
 const mainPlate = $('[data-main]');
+const sini = $('[data-sini]');
 const reveal = $('[data-reveal]');
 const nEl = $('[data-plate-n]');
 const lEl = $('[data-plate-l]');
@@ -93,11 +96,22 @@ function layout() {
   const w = pin.clientWidth, h = pin.clientHeight;
   const narrow = w < 900;
   const cx = narrow ? w / 2 : w * 0.69;
-  const cy = narrow ? h * 0.55 : h * 0.54;
-  const mainD = narrow ? Math.min(w * 0.6, h * 0.31) : Math.min(h * 0.46, w * 0.3);
-  const satD = narrow ? Math.min(w * 0.34, h * 0.17) : mainD * 0.54;
+  let cy = narrow ? h * 0.55 : h * 0.54;
+  let mainD = narrow ? Math.min(w * 0.6, h * 0.31) : Math.min(h * 0.36, w * 0.26);
+  let satD = narrow ? Math.min(w * 0.34, h * 0.17) : mainD * 0.54;
   const rx = narrow ? w * 0.38 : mainD * 0.88;
-  const ry = narrow ? mainD * 0.86 : mainD * 0.76;
+  let ry = narrow ? mainD * 0.86 : mainD * 0.76;
+  if (narrow) {
+    // Sofra, ad ile alt satır (durum + sayaç) arasındaki boşluğa sığsın; tabaklar yazının üstüne oturmasın.
+    const copy = $('.hero__copy'), foot = $('.hero__foot'), cnt = $('.count');
+    const top = copy.offsetTop + copy.offsetHeight + 10;
+    const bot = Math.min(foot.offsetTop, cnt.offsetTop) - 10;
+    const half = (bot - top) / 2;
+    const need = ry * 0.9 + satD / 2;
+    const k = clamp(half / need, 0.68, 1);
+    mainD *= k; satD *= k; ry *= k;
+    cy = half * 2 >= 2 * need * k ? (top + bot) / 2 : top + need * k;
+  }
   const far = Math.hypot(w, h) * 0.75;
   L = {
     w, h, cx, cy, mainD, satD, far,
@@ -106,6 +120,9 @@ function layout() {
       return { x: cx + Math.cos(t) * rx, y: cy + Math.sin(t) * ry, dx: Math.cos(t), dy: Math.sin(t) };
     }),
   };
+  const siniD = narrow ? Math.max(w * 1.1, 2 * ry + satD * 0.55) : 2 * rx + satD * 1.25;
+  L.siniD = siniD;
+  Object.assign(sini.style, { width: `${siniD}px`, height: `${siniD}px`, left: `${cx - siniD / 2}px`, top: `${cy - siniD / 2}px` });
   Object.assign(mainPlate.style, { width: `${mainD}px`, height: `${mainD}px`, left: `${cx - mainD / 2}px`, top: `${cy - mainD / 2}px` });
   plates.forEach((el) => Object.assign(el.style, { width: `${satD}px`, height: `${satD}px`, left: `${-satD / 2}px`, top: `${-satD / 2}px`, padding: `${(satD * 0.05).toFixed(1)}px` }));
 }
@@ -132,6 +149,7 @@ function setTable(p, g = 0) {
     if (q >= 0.82) arrived++;
   });
   mainPlate.style.transform = `rotate(${(p * 38).toFixed(1)}deg)`;
+  sini.style.transform = `rotate(${(p * -24).toFixed(1)}deg) scale(${(1 + g * 0.15).toFixed(3)})`;
   // Orta tabaktan ocakbaşı açılır
   const r0 = L.mainD / 2;
   const far = Math.hypot(Math.max(L.cx, L.w - L.cx), Math.max(L.cy, L.h - L.cy));
@@ -172,7 +190,8 @@ if (reducedMotion) {
   // Açılış
   gsap.from('.hero__name span', { yPercent: 60, opacity: 0, duration: 0.9, stagger: 0.1, ease: 'power3.out', delay: 0.05 });
   gsap.from(['.hero__since', '.hero__foot > *', '.hero__hint', '.count'], { y: 16, opacity: 0, duration: 0.7, stagger: 0.07, ease: 'power2.out', delay: 0.25 });
-  gsap.from(mainPlate, { scale: 0.6, opacity: 0, rotate: -60, duration: 1.2, ease: 'power3.out', delay: 0.1 });
+  gsap.from(mainPlate, { scale: 0.6, opacity: 0, rotate: -60, duration: 1.2, ease: 'power3.out', delay: 0.25 });
+  gsap.from(sini, { opacity: 0, duration: 1.1, ease: 'power2.out' });
 }
 let rw = innerWidth;
 addEventListener('resize', () => {
@@ -311,7 +330,9 @@ new IntersectionObserver((ents, io) => {
 
 // --- Header ------------------------------------------------------------------------
 const top = $('.top');
-const solid = () => top.classList.toggle('is-solid', scrollY > innerHeight * 0.4);
+const aboutEl = $('.about');
+// Pin bırakılınca "Sofra hazır" başlığı şeffaf header'ın altına kaymasın: header o anda katılaşır.
+const solid = () => top.classList.toggle('is-solid', scrollY > Math.min(aboutEl.getBoundingClientRect().top + scrollY - 70, hero.offsetHeight - innerHeight + 4));
 addEventListener('scroll', solid, { passive: true });
 solid();
 

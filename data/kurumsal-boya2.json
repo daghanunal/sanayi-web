@@ -91,7 +91,8 @@
       },
       "Seramik kaplama": {
         "kisa": "Pastadan sonra 2 kat seramik. Su boncuk boncuk akar, yıkaması kolaylaşır.",
-        "gorsel": "/img/kurumsal-boya2/cila-yakin.jpg"
+        "gorsel": "/img/kurumsal-boya2/cila-yakin.jpg",
+        "aciklama": "Pastadan sonra 2 kat seramik. Su boncuk boncuk akar, kir tutmaz, yıkaması kolaylaşır. Önce vernik kalınlığını ölçer, pastayı ona göre yaparız."
       },
       "Boya koruma filmi (PPF)": {
         "kisa": "Kaput, tampon ve çamurluklara şeffaf film; taş sekmesine karşı kalkan."
@@ -274,5 +275,9 @@
       "metin": "Yarım saatte bütün aracı ölçer, ne yapılması gerektiğini ve fiyatını işe başlamadan söyleriz.",
       "buton": "Randevu alın"
     }
+  },
+  "garanti": "Teslimde ölçüm dökümü ve onarım fotoğrafları size verilir. Garanti koşullarını işe başlamadan yazılı olarak konuşuruz.",
+  "isletme": {
+    "slogan": "Önce ölçeriz, sonra boyarız."
   }
 }

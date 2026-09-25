@@ -10,14 +10,14 @@
     },
     "ozet": {
       "baslik": "Acele etmeden bakarız",
-      "metin": "2011'den beri Elvankent'teyiz. Muayeneyi baştan sona yapar, ne bulduğumuzu ve ne önerdiğimizi size tek tek anlatırız. Kedi ve köpek için ayrı muayene odamız var; hayvanınız bekleme salonunda birbirini görmeden sırasını bekler."
+      "metin": "Elvankent'te bir mahalle kliniğiyiz. Muayeneyi baştan sona yapar, ne bulduğumuzu ve ne önerdiğimizi size tek tek anlatırız. Kedi ve köpek için ayrı muayene odamız var; hayvanınız bekleme salonunda birbirini görmeden sırasını bekler."
     },
     "hizmetOzetBaslik": "Klinikte neler yapıyoruz",
     "yorumBaslik": "Dostlarının sahipleri anlatıyor",
     "hakkimizda": {
       "baslik": "Elvankent'te bir mahalle kliniği",
       "paragraflar": [
-        "2011'de Sakarya Caddesi'nde açıldık. O günden beri kedi ve köpeklere, arada da tavşan, muhabbet kuşu ve hamstere bakıyoruz.",
+        "Elvankent'teki kliniğimizde kedi ve köpeklere, arada da tavşan, muhabbet kuşu ve hamstere bakıyoruz.",
         "Kliniğimizde iki ayrı muayene odası, kan tahlili için cihazlar ve ultrason var. Hemogram ve biyokimya sonucunu çoğu zaman aynı ziyarette görürsünüz.",
         "Her hayvanın bir karnesi var. Aşı, tahlil ve kontrol tarihlerini biz tutar, günü gelince WhatsApp'tan hatırlatırız."
       ],
@@ -105,7 +105,7 @@
     "sayfalar": {
       "kurumsal": {
         "baslik": "Kliniğimiz",
-        "metin": "2011'den beri Elvankent'te, kedi ve köpeklere ayrı odada bakan bir mahalle kliniği.",
+        "metin": "Elvankent'te, kedi ve köpeklere ayrı odada bakan bir mahalle kliniği.",
         "gorsel": "/img/sektor-veteriner/muayene-masasi.jpg"
       },
       "hizmetler": {
@@ -128,5 +128,28 @@
     },
     "misyon": "Hayvanınızı muayene etmeden karar vermemek, ne yaptığımızı ve nedenini size açıkça anlatmak.",
     "vizyon": "Elvankent'te baktığımız her kedinin, her köpeğin karnesi eksiksiz, aşısı zamanında olsun."
-  }
+  },
+  "istatistikler": [
+    {
+      "deger": 15,
+      "sonek": "",
+      "etiket": "yıldır Etimesgut'ta",
+      "kurulustanHesapla": true
+    },
+    {
+      "deger": 45,
+      "sonek": " dk",
+      "etiket": "içinde kan tahlili sonucu"
+    },
+    {
+      "deger": 2,
+      "sonek": "",
+      "etiket": "muayene odası, kedi ve köpek ayrı"
+    },
+    {
+      "deger": 6,
+      "sonek": " gün",
+      "etiket": "haftada açık"
+    }
+  ]
 }

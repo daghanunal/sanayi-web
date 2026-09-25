@@ -13,7 +13,7 @@
     "sayfalar": {
       "ocagimiz": {
         "baslik": "Aynı ocak, aynı köz",
-        "metin": "1998'den beri aynı adreste, aynı ocağın başındayız. Değişen tek şey salonun büyümesi oldu.",
+        "metin": "Açıldığımız günden beri aynı adreste, aynı ocağın başındayız. Değişen tek şey salonun büyümesi oldu.",
         "gorsel": "/img/kurumsal-restoran/ocak.jpg"
       },
       "menu": {
@@ -33,7 +33,7 @@
     "hakkimizda": {
       "baslik": "Sabah ocak yanmadan dükkân açılmaz",
       "paragraflar": [
-        "1998'de Ankara Bulvarı'nda altı masalık bir ocakbaşı olarak başladık. Bugün aynı adreste ocak tezgâhı, ön salon ve kırk kişilik arka salonla hizmet veriyoruz.",
+        "Ankara Bulvarı'nda altı masalık bir ocakbaşı olarak başladık. Bugün aynı adreste ocak tezgâhı, ön salon ve kırk kişilik arka salonla hizmet veriyoruz.",
         "Kıymayı dükkânda zırhla çekeriz, şişi siparişle sararız. Ertesi güne et bırakmayız; gün içinde ne kadar gerekiyorsa o kadar hazırlarız.",
         "Öğlen müşterimizin çoğu sanayiden gelir, yarım saati vardır; onun için mezeler oturur oturmaz gelir. Akşam ise acele eden olmaz, ocak son müşteriye kadar yanar."
       ],
@@ -43,14 +43,26 @@
     "misyon": "Ocağın önüne oturan herkese, siparişi alındığı anda sarılmış ve közde pişmiş kebabı sıcak getirmek.",
     "vizyon": "Şaşmaz'da iş yemeği, aile sofrası ve paket sipariş denince ilk akla gelen ocakbaşı olmayı sürdürmek.",
     "degerler": [
-      { "baslik": "Ertesi güne et kalmaz", "metin": "Et sabah gelir, gün içinde biter. Kalan kıyma ertesi gün kullanılmaz." },
-      { "baslik": "Göz önünde pişer", "metin": "Ocak salonun ortasında. Şişin nasıl piştiğini tezgâhtan izleyebilirsiniz." },
-      { "baslik": "Söz verilen saat", "metin": "Grup ve davetlerde konuşulan saatte sofra kurulu olur, mezeler masada bekler." },
-      { "baslik": "Acı sizin ayarınız", "metin": "Acılı mı acısız mı, az pişmiş mi iyi pişmiş mi; siparişte sorarız." }
+      {
+        "baslik": "Ertesi güne et kalmaz",
+        "metin": "Et sabah gelir, gün içinde biter. Kalan kıyma ertesi gün kullanılmaz."
+      },
+      {
+        "baslik": "Göz önünde pişer",
+        "metin": "Ocak salonun ortasında. Şişin nasıl piştiğini tezgâhtan izleyebilirsiniz."
+      },
+      {
+        "baslik": "Söz verilen saat",
+        "metin": "Grup ve davetlerde konuşulan saatte sofra kurulu olur, mezeler masada bekler."
+      },
+      {
+        "baslik": "Acı sizin ayarınız",
+        "metin": "Acılı mı acısız mı, az pişmiş mi iyi pişmiş mi; siparişte sorarız."
+      }
     ],
     "kalite": {
       "baslik": "Mutfakta değişmeyen kurallar",
-      "metin": "Otuz yıla yakın süredir aynı usulle çalışıyoruz. Aşağıdakiler her gün, her serviste geçerli.",
+      "metin": "Açıldığımız günden beri aynı usulle çalışıyoruz. Aşağıdakiler her gün, her serviste geçerli.",
       "maddeler": [
         "Kuzu eti her sabah gelir; kıyma dükkânda zırhla çekilir.",
         "Şiş siparişte sarılır, önceden sarılıp bekletilmez.",
@@ -64,39 +76,78 @@
         "baslik": "Sanayi öğle servisi",
         "kisa": "Yarım saatlik molaya sığan öğle yemeği.",
         "metin": "Öğlen 12:00 ile 14:00 arası tezgâh ve ön salon sanayi esnafına göre çalışır. Oturduğunuzda mezeler gelir, kebap on beş dakikada masadadır. Dükkâna toplu paket de hazırlarız.",
-        "maddeler": ["Önceden arayana masa hazır bekler", "Toplu paket siparişte tek adisyon", "Dükkâna teslim için saat birlikte belirlenir"],
+        "maddeler": [
+          "Önceden arayana masa hazır bekler",
+          "Toplu paket siparişte tek adisyon",
+          "Dükkâna teslim için saat birlikte belirlenir"
+        ],
         "buton": "Öğle servisi için yazın"
       },
       {
         "baslik": "Şirket ve ekip yemekleri",
         "kisa": "Arka salonda 40 kişiye kadar sabit menü.",
         "metin": "Arka salonu ekip yemeğine, bayram öncesi toplantıya ya da müşteri ağırlamaya göre kurarız. Menü, meze çeşidi ve servis sırası önceden konuşulur; hesap tek seferde çıkar.",
-        "maddeler": ["1-2 gün önceden haber yeterli", "Sabit menü birlikte belirlenir", "Hesap tek adisyonla"],
+        "maddeler": [
+          "1-2 gün önceden haber yeterli",
+          "Sabit menü birlikte belirlenir",
+          "Hesap tek adisyonla"
+        ],
         "buton": "Ekip yemeği için yazın"
       },
       {
         "baslik": "Aile davetleri ve organizasyon",
         "kisa": "Nişan, doğum günü, askerden gelen, mevlit sonrası.",
         "metin": "Masa düzenini, meze çeşidini ve servis saatini önceden konuşuruz. Gün geldiğinde sofra kurulu, ocak hazır bekler. Pasta ya da süsleme getirmek isterseniz yer ayırırız.",
-        "maddeler": ["3-5 gün önceden konuşmak iyi olur", "Uzun masa ya da ayrı masalar", "Çocuklu aileler için yer düzeni"],
+        "maddeler": [
+          "3-5 gün önceden konuşmak iyi olur",
+          "Uzun masa ya da ayrı masalar",
+          "Çocuklu aileler için yer düzeni"
+        ],
         "buton": "Davet için yazın"
       }
     ],
     "anlasmaNotu": "Fiyatı kişi sayısı ve menüye göre konuşuruz; kesin rakamı rezervasyon onaylanmadan söyleriz.",
     "sss": [
-      { "soru": "Rezervasyon şart mı?", "cevap": "Hafta içi genelde gerek yok. Cuma ve cumartesi akşamı ocakbaşı tezgâhı erken dolar; o saatlerde önceden yazmanızı öneririz." },
-      { "soru": "Paket servis nereye kadar geliyor?", "cevap": "Şaşmaz ve yakın mahallelere getiriyoruz. Adresinizi yazın, gelip gelemeyeceğimizi ve kaç dakikada varacağını hemen söyleyelim. Gelip almak isterseniz hazır olunca haber veririz." },
-      { "soru": "Acısız kebap yapıyor musunuz?", "cevap": "Evet. Adana kıyması acılı ve acısız ayrı yoğrulur. Siparişte hangisini istediğinizi sorarız." },
-      { "soru": "Kalabalık grup için menü nasıl belirleniyor?", "cevap": "Kişi sayısını ve bütçenizi konuşuruz, meze çeşidi, kebap ve tatlıyı birlikte seçeriz. Fiyatı menü netleşince, rezervasyon onaylanmadan söyleriz." },
-      { "soru": "Park yeri var mı?", "cevap": "Dükkânın önünde ve arka sokakta park yeri bulunur. Akşam kalabalık olursa garsonumuz yer gösterir." },
-      { "soru": "Ödemeyi nasıl yapabilirim?", "cevap": "Nakit ve kartla ödeme alıyoruz. Grup yemeklerinde hesap tek seferde çıkar." }
+      {
+        "soru": "Rezervasyon şart mı?",
+        "cevap": "Hafta içi genelde gerek yok. Cuma ve cumartesi akşamı ocakbaşı tezgâhı erken dolar; o saatlerde önceden yazmanızı öneririz."
+      },
+      {
+        "soru": "Paket servis nereye kadar geliyor?",
+        "cevap": "Şaşmaz ve yakın mahallelere getiriyoruz. Adresinizi yazın, gelip gelemeyeceğimizi ve kaç dakikada varacağını hemen söyleyelim. Gelip almak isterseniz hazır olunca haber veririz."
+      },
+      {
+        "soru": "Acısız kebap yapıyor musunuz?",
+        "cevap": "Evet. Adana kıyması acılı ve acısız ayrı yoğrulur. Siparişte hangisini istediğinizi sorarız."
+      },
+      {
+        "soru": "Kalabalık grup için menü nasıl belirleniyor?",
+        "cevap": "Kişi sayısını ve bütçenizi konuşuruz, meze çeşidi, kebap ve tatlıyı birlikte seçeriz. Fiyatı menü netleşince, rezervasyon onaylanmadan söyleriz."
+      },
+      {
+        "soru": "Park yeri var mı?",
+        "cevap": "Dükkânın önünde ve arka sokakta park yeri bulunur. Akşam kalabalık olursa garsonumuz yer gösterir."
+      },
+      {
+        "soru": "Ödemeyi nasıl yapabilirim?",
+        "cevap": "Nakit ve kartla ödeme alıyoruz. Grup yemeklerinde hesap tek seferde çıkar."
+      }
     ],
-    "konular": ["Rezervasyon", "Paket sipariş", "Grup / iş yemeği", "Aile daveti / organizasyon", "Genel bilgi"],
+    "konular": [
+      "Rezervasyon",
+      "Paket sipariş",
+      "Grup / iş yemeği",
+      "Aile daveti / organizasyon",
+      "Genel bilgi"
+    ],
     "formBaslik": "Bize yazın",
     "cta": {
       "baslik": "Ocak yanıyor, masanız hazır olsun",
       "metin": "Kaç kişi olduğunuzu ve saati yazın; paket siparişte ne istediğinizi söyleyin, hazır olunca haber verelim.",
       "buton": "Masa ayırtın"
     }
+  },
+  "isletme": {
+    "hakkinda": "Etimesgut'ta aynı ocağın başındayız. Kıymayı her sabah dükkânda zırhla çeker, şişe siparişle sararız; ızgara meşe kömürünün közünde, gözünüzün önünde pişer. Öğlen sanayiden gelen ustalara hızlı servis, akşam ailelere uzun sofra kurarız."
   }
 }

@@ -107,7 +107,7 @@ const aboutText = $('[data-about-text]');
 aboutText.innerHTML = d.isletme.hakkinda.split(' ').map((w) => `<span>${esc(w)} </span>`).join('');
 const stats = d.istatistikler.map((s) => ({ ...s, deger: s.kurulustanHesapla ? yil : s.deger }));
 $('[data-stats]').innerHTML = stats.map((s) => `
-  <li class="stat"><p class="stat__num"><b data-count="${Number(s.deger) || 0}">0</b>${esc(s.sonek)}</p><p class="stat__lbl">${esc(s.etiket)}</p></li>`).join('');
+  <li class="stat"><p class="stat__num">${/^\//.test(s.sonek || '') ? `<b>${esc(String(s.sonek).slice(1))}/${esc(s.deger)}</b>` : `<b data-count="${Number(s.deger) || 0}">0</b>${esc(s.sonek)}`}</p><p class="stat__lbl">${esc(s.etiket)}</p></li>`).join('');
 $('[data-garanti]').textContent = d.garanti;
 
 // Yolda kaldıysanız
@@ -621,7 +621,7 @@ if (finePointer && !reducedMotion) {
   const cur = $('[data-cursor]');
   const qx = gsap.quickTo(cur, 'x', { duration: 0.25, ease: 'power3' });
   const qy = gsap.quickTo(cur, 'y', { duration: 0.25, ease: 'power3' });
-  addEventListener('pointermove', (e) => { qx(e.clientX); qy(e.clientY); });
+  addEventListener('pointermove', (e) => { document.body.classList.add('cursor-live'); qx(e.clientX); qy(e.clientY); });
   document.addEventListener('pointerover', (e) => cur.classList.toggle('is-hover', !!e.target.closest('a, button')));
   document.body.classList.add('has-cursor');
   $$('[data-magnetic]').forEach((el) => {

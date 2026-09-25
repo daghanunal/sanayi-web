@@ -94,7 +94,8 @@ body {
 .top__call:hover { background: var(--mor); }
 @media (max-width: 899px) {
   .top { gap: 10px; }
-  .top__brand { font-size: 15px; }
+  .top__brand { font-size: 14px; font-variation-settings: 'wdth' 100; }
+  .top__brand span { white-space: normal; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-height: 1.12; }
   .top__long { display: none; }
   .top__short { display: inline; }
   .top__call span { display: none; }
@@ -201,6 +202,7 @@ body {
   position: absolute; left: 14px; top: -34px; white-space: nowrap; padding: 5px 8px; border-radius: 6px;
   background: var(--ink); color: #fff; font: 600 12px/1 var(--mono);
 }
+.pin[data-pin="1"] b { top: 14px; }
 .pin.is-ok i { background: var(--petrol); box-shadow: 0 0 0 5px rgb(0 184 156 / .25); }
 .pin.is-ok b { background: var(--petrol); color: var(--ink); }
 
@@ -212,6 +214,7 @@ body {
   }
   .copy { gap: 12px; }
   .beat { gap: 12px; }
+  .beat .btn--small { display: none; } /* alt çubukta WhatsApp var; panelin altına sığsın */
   .h1 { font-size: clamp(38px, 11.4vw, 60px); }
   .h2 { font-size: clamp(31px, 9.2vw, 48px); }
   .lead { font-size: 16px; }

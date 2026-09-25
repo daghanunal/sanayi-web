@@ -30,7 +30,7 @@ const DETAY = {
 const veri = derinBirlestir(ana, ek);
 veri.hizmetler = ana.hizmetler.map((h) => ({ ...h, kisa: KISA[h.id], detay: DETAY[h.id] || [] }));
 
-kurumsal({
+const ctx = kurumsal({
   veri,
   tema: {
     hero: 'bolunmus',
@@ -47,8 +47,8 @@ kurumsal({
       zemin: '#eef1f8', yuzey: '#e0e5f2', metin: '#131838', soluk: '#4d5378', cizgi: 'rgb(19 24 56 / .14)',
       vurgu: '#de3d66', 'vurgu-metin': '#ffffff', koyu: '#171b45', 'koyu-metin': '#eef0fb', 'koyu-soluk': '#a6abd2',
       gecis: '#171b45',
-      'font-baslik': "'Urbanist', system-ui, sans-serif", 'font-govde': "'Nunito Sans', system-ui, sans-serif",
-      'baslik-agirlik': '800', 'baslik-harf': '-0.035em', 'baslik-satir': '1',
+      'font-baslik': "'Livvic', system-ui, sans-serif", 'font-govde': "'Nunito Sans', system-ui, sans-serif",
+      'baslik-agirlik': '700', 'baslik-harf': '-0.03em', 'baslik-satir': '1.02',
       radius: '16px', 'radius-buyuk': '30px',
     },
   },
@@ -74,4 +74,19 @@ kurumsal({
       .filter(Boolean),
     ...(d.puan && { aggregateRating: { '@type': 'AggregateRating', ratingValue: d.puan.ortalama, reviewCount: d.puan.adet } }),
   }),
+});
+
+// Motor, yeni sayfanın ScrollTrigger'larını eski kaydırma konumundayken kurar ve ancak sonra başa
+// sarar. Sayfanın altından başka sayfaya geçince "once" tetikleyicileri kurulurken kendini silip
+// ScrollTrigger'ı hataya düşürüyordu. Sayfa içeriği yazılmadan hemen önce (perde kapalıyken) başa sarıyoruz.
+const sayfa = document.getElementById('sayfa');
+const yaz = Object.getOwnPropertyDescriptor(Element.prototype, 'innerHTML');
+Object.defineProperty(sayfa, 'innerHTML', {
+  configurable: true,
+  get() { return yaz.get.call(this); },
+  set(v) {
+    if (ctx?.lenis) ctx.lenis.scrollTo(0, { immediate: true, force: true });
+    window.scrollTo(0, 0);
+    yaz.set.call(this, v);
+  },
 });

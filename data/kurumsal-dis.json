@@ -9,7 +9,7 @@
     },
     "ozet": {
       "baslik": "Kliniğimiz",
-      "metin": "2009'dan beri Etimesgut'ta, aynı adreste hasta kabul ediyoruz. Dört tedavi odamız var; randevu saatinizde içeri alınırsınız, acele ettirilmezsiniz."
+      "metin": "Etimesgut'ta yıllardır aynı adreste hasta kabul ediyoruz. Dört tedavi odamız var; randevu saatinizde içeri alınırsınız, acele ettirilmezsiniz."
     },
     "hizmetOzetBaslik": "Kliniğimizde yapılan tedaviler",
     "yorumBaslik": "Hastalarımız ne diyor",
@@ -19,7 +19,7 @@
     "hakkimizda": {
       "baslik": "Aynı adreste, aynı özenle",
       "paragraflar": [
-        "2009'dan beri Etimesgut'ta, İstasyon Caddesi'ndeki aynı adreste hasta kabul ediyoruz. Muayeneden sonra ağzınızda ne gördüğümüzü röntgen üzerinde gösterir, tedavi seçeneklerini tek tek anlatırız.",
+        "Etimesgut'ta yıllardır aynı adreste hasta kabul ediyoruz. Muayeneden sonra ağzınızda ne gördüğümüzü röntgen üzerinde gösterir, tedavi seçeneklerini tek tek anlatırız.",
         "Hangi tedaviye başlanacağına siz karar verirsiniz; aceleye getirmeyiz. Tedavi süresince her seansta ne yapılacağını önceden söyler, sonrasında kontrol randevunuzu biz hatırlatırız."
       ],
       "gorsel": "/img/sektor-dis/muayenehane.jpg",

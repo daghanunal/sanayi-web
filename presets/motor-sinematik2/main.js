@@ -103,7 +103,7 @@ $('[data-steps]').innerHTML = steps
 
 $('[data-stats]').innerHTML = d.istatistikler
   .map((s, i) => {
-    const val = i === 0 && /yıl/.test(s.etiket) ? years : s.deger;
+    const val = /y[ıi]l/i.test(s.etiket) && !/garanti/i.test(s.etiket) ? years : s.deger;
     return `<div class="stat"><dd><span data-count="${val}">${nf.format(val)}</span><small>${esc(s.sonek)}</small></dd><dt>${esc(s.etiket)}</dt></div>`;
   })
   .join('');

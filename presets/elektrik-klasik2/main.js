@@ -100,7 +100,7 @@ $('#hero').innerHTML = `
   </div>`;
 
 // Demet: her hizmet bir kablo, rengi sigortasının rengi.
-const HAT = d.hizmetler.map((h) => ({ ad: h.baslik, a: h.sigorta, c: renk(h.sigorta)[0] }));
+const HAT = d.hizmetler.map((h) => ({ ad: h.baslik, a: h.sigorta, c: renk(h.sigorta)[0], t: renk(h.sigorta)[1] }));
 const FAULT = Math.max(0, HAT.findIndex((h) => /kablo|tesisat/i.test(h.ad)));
 const harness = $('[data-harness]');
 
@@ -139,7 +139,7 @@ function drawHarness() {
     <svg class="harness__svg" viewBox="0 0 ${W} ${h}" width="${W}" height="${h}" aria-hidden="true">${wires}${tape}
       <g class="spark" transform="translate(${fx} ${fy})"><circle r="${sw * 2.6}" class="spark__ring"/><circle r="${sw * 0.9}" class="spark__dot"/></g>
     </svg>
-    <ul class="harness__tags">${HAT.map((w, i) => `<li style="top:${lane(i)}px;left:${bx + 10}px;--c:${w.c}" class="${i === FAULT ? 'is-fault' : ''}"><b>${amp(w.a)}A</b>${esc(w.ad)}</li>`).join('')}</ul>
+    <ul class="harness__tags">${HAT.map((w, i) => `<li style="top:${lane(i)}px;left:${bx + 10}px;--c:${w.c};--t:${w.t}" class="${i === FAULT ? 'is-fault' : ''}"><b>${amp(w.a)}A</b>${esc(w.ad)}</li>`).join('')}</ul>
     <p class="harness__found" style="top:${fy}px;right:${W - fx - 8}px">${esc(H.bulgu)}</p>`;
   // Işık tarafındaki kopyada aynı yükseklik korunur (hizalama için), çizim yok.
   const plug = $('.plug');
@@ -156,13 +156,13 @@ const sayi = (n) => Number(n).toLocaleString('tr-TR');
 $('#hakkimizda').innerHTML = `
   <div class="wrap olcu__grid">
     <div class="olcu__text">
-      <p class="kicker rv"><i style="background:#1f5fd8"></i>Dükkân</p>
+      <p class="kicker rv"><i style="background:#1f5fd8"></i>Biz</p>
       <h2 class="h2 rv">Parça atıp denemeyiz, <span class="u">sebebi buluruz.</span></h2>
       <p class="olcu__lead rv">${esc(d.isletme.hakkinda)}</p>
       <p class="olcu__garanti rv">${fuseSVG(10)}<span>${esc(d.garanti)} Değişen parçayı size geri veririz.</span></p>
     </div>
     <figure class="olcu__photo rv">
-      <img src="${img('/img/elektrik-klasik2/kaput-usta.jpg')}" alt="Ustamız kaputun altında kablo soketini kontrol ediyor" width="1600" height="1066" loading="lazy" />
+      <img src="${img('/img/elektrik-klasik2/kaput-usta.jpg')}" alt="Usta kaputun altında kablo soketini kontrol ediyor" width="1600" height="1066" loading="lazy" />
       <figcaption>Önce ölçüm, sonra parça.</figcaption>
     </figure>
     <figure class="olcu__photo olcu__photo--s rv">
@@ -294,7 +294,7 @@ $('#dukkan').innerHTML = `
   <div class="wrap dukkan__grid">
     <div class="dukkan__info">
       <p class="kicker rv"><i style="background:#7b4b2a"></i>Dükkân</p>
-      <h2 class="h2 rv">Şaşmaz'da, <span class="u">4. Cadde'deyiz.</span></h2>
+      <h2 class="h2 rv">Şaşmaz'dayız, <span class="u">aracı getirin.</span></h2>
       <p class="state ${durum.open ? 'is-open' : ''} rv"><i></i><span>${esc(durum.text)}</span></p>
       <table class="hours rv">
         <caption class="sr-only">Çalışma saatleri</caption>

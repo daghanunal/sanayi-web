@@ -128,7 +128,13 @@ body { background: var(--k-zemin); }
 .mk__etiket span + span { background: transparent; color: var(--kagit); box-shadow: inset 0 0 0 1px rgb(243 244 251 / .35); }
 
 .mk__izgara { display: grid; gap: 20px; margin-top: 36px; }
-@media (min-width: 1000px) { .mk__izgara { grid-template-columns: 7fr 5fr; gap: 28px; align-items: stretch; } }
+@media (min-width: 1000px) {
+  .mk__izgara { grid-template-columns: 7fr 5fr; gap: 28px; align-items: stretch; }
+  .mk__arac { display: flex; flex-direction: column; }
+  .mk__cipler { flex: 1; grid-auto-rows: 1fr; }
+  .mk__cipler button { justify-content: space-between; padding: 14px; }
+  .mk__cipler button b { font-size: 26px; }
+}
 
 .mk__cizim {
   position: relative; padding: 18px 8px 10px;
@@ -138,6 +144,8 @@ body { background: var(--k-zemin); }
 }
 .mk__svg { display: block; width: 100%; height: auto; overflow: visible; }
 .mk__cam { fill: rgb(154 162 230 / .16); stroke: rgb(243 244 251 / .5); stroke-width: 1.2; }
+.mk__govde { fill: none; stroke: rgb(243 244 251 / .75); stroke-width: 1.5; stroke-linejoin: round; }
+.mk__detay path { fill: none; stroke: rgb(243 244 251 / .6); stroke-width: 1.5; stroke-linejoin: round; pointer-events: none; }
 .mk__olcu path { fill: none; stroke: rgb(154 162 230 / .5); stroke-width: 1; }
 .mk__teker circle { fill: #080c3f; stroke: rgb(243 244 251 / .7); stroke-width: 1.5; }
 .mk__teker circle:nth-child(2n) { fill: none; stroke-dasharray: 3 3; }

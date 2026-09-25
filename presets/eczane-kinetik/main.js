@@ -450,7 +450,8 @@ function motion() {
       clipPath: 'inset(0% 0% 0% 0% round 999px)', ease: 'none',
       scrollTrigger: { trigger: s, start: 'top 92%', end: 'top 40%', scrub: 0.5 },
     });
-    gsap.from($('h3', s), { xPercent: i % 2 ? 18 : -18, ease: 'none', scrollTrigger: { trigger: s, start: 'top bottom', end: 'top 62%', scrub: 0.5 } });
+    const sh = isDesk() ? 18 : 6;
+    gsap.from($('h3', s), { xPercent: i % 2 ? sh : -sh, ease: 'none', scrollTrigger: { trigger: s, start: 'top bottom', end: 'top 62%', scrub: 0.5 } });
     gsap.from($$('.srv__t > :not(h3)', s), { y: 24, opacity: 0, stagger: 0.08, duration: 0.7, ease: 'power3.out', scrollTrigger: { trigger: s, start: 'top 70%' } });
   });
 

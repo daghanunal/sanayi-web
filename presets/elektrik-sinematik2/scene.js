@@ -71,7 +71,7 @@ function fieldLine(s, phi, n) {
 // ---------------------------------------------------------------- sahne
 
 export function createCoil(canvas, { low = false, reduced = false } = {}) {
-  const renderer = new THREE.WebGLRenderer({ canvas, antialias: !low, alpha: true, powerPreference: 'high-performance' });
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: 'high-performance' });
   renderer.setClearColor(0x000000, 0);
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 1.05;
@@ -150,9 +150,9 @@ export function createCoil(canvas, { low = false, reduced = false } = {}) {
 
   // --- Sargı teli
   const curve = new WindingCurve();
-  const segPerTurn = low ? 18 : 26;
+  const segPerTurn = low ? 24 : 26;
   const segments = curve.total * segPerTurn;
-  const radial = low ? 5 : 7;
+  const radial = low ? 6 : 7;
   const wireGeo = new THREE.TubeGeometry(curve, segments, WIRE, radial, false);
   const idxPerSeg = radial * 6;
   const wireMat = new THREE.MeshStandardMaterial({ color: 0xd07a45, metalness: 1, roughness: 0.26, emissive: 0x000000 });
@@ -351,7 +351,7 @@ export function createCoil(canvas, { low = false, reduced = false } = {}) {
   function resize() {
     W = canvas.clientWidth || innerWidth;
     H = canvas.clientHeight || innerHeight;
-    px = Math.min(devicePixelRatio || 1, low ? 1.25 : 1.5);
+    px = Math.min(devicePixelRatio || 1, 1.5);
     renderer.setPixelRatio(px);
     renderer.setSize(W, H, false);
     camera.aspect = W / H;

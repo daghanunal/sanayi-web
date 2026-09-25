@@ -280,7 +280,7 @@ $('[data-steps]').innerHTML = d.surec.map((s, i) => `
   </li>`).join('');
 
 // --- Galeri ------------------------------------------------------------------
-const galItems = d.galeri.filter((g) => !/sasi-alt|alttan/.test(g.src));
+const galItems = d.galeri.filter((g) => !/sasi-alt|alttan|lift-suv|kontrol\.jpg/.test(g.src));
 $('[data-gallery]').innerHTML = galItems.map((g, i) => `
   <figure class="shot"><img src="${esc(img(g.src))}" alt="${esc(g.alt)}" loading="lazy" decoding="async" /><figcaption><span class="tw">${String(i + 1).padStart(2, '0')}</span>${esc(g.alt)}</figcaption></figure>`).join('');
 
@@ -323,7 +323,7 @@ new IntersectionObserver((ents, io) => {
 const top = $('.top');
 let solidState = null;
 const solid = () => {
-  const s = scrollY > hero.offsetHeight - 80;
+  const s = scrollY > hero.offsetHeight - innerHeight + 4;
   if (s !== solidState) { solidState = s; top.classList.toggle('is-solid', s); }
 };
 addEventListener('scroll', solid, { passive: true });

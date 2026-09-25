@@ -81,7 +81,7 @@ svg { overflow: visible; }
 .top.is-dark { color: var(--krom); }
 .top.is-dark .top__call { background: var(--krom); color: var(--murekkep); }
 .top.is-dark .chip { border-color: rgb(230 235 238 / .35); }
-.top__brand { display: flex; align-items: center; gap: 10px; margin-right: auto; min-width: 0; font: 700 15px/1.1 var(--f-disp); letter-spacing: -.01em; }
+.top__brand { display: flex; align-items: center; gap: 10px; margin-right: auto; padding-right: 12px; min-width: 0; font: 700 15px/1.1 var(--f-disp); letter-spacing: -.01em; }
 .top__brand span:last-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .top__mark { flex: none; width: 22px; height: 22px; border-radius: 50%; border: 2.5px solid currentColor; position: relative; }
 .top__mark::after { content: ''; position: absolute; inset: 3px; border-radius: 50%; background: repeating-linear-gradient(45deg, var(--hon) 0 1.5px, transparent 1.5px 4px), repeating-linear-gradient(-45deg, var(--hon) 0 1.5px, transparent 1.5px 4px); }
@@ -110,6 +110,7 @@ svg { overflow: visible; }
   .top__call span { display: inline; }
 }
 @media (max-width: 360px) { .chip { display: none; } }
+@media (min-width: 900px) and (max-width: 1279px) { .top__nav { gap: 18px; } .top__nav a:nth-child(n+4) { display: none; } }
 
 /* ---------------------------------------------------------------- hero (imza) */
 .hero { position: relative; height: 100svh; min-height: 560px; }

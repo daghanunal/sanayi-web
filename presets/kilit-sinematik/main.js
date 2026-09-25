@@ -80,7 +80,7 @@ $('[data-pinmeter]').innerHTML = PINS.map(() => '<i><b></b></i>').join('') + '<s
 
 // Hakkımızda + rakamlar
 const aboutText = $('[data-about-text]');
-aboutText.innerHTML = d.isletme.hakkinda.split(' ').map((w) => `<span>${esc(w)} </span>`).join('');
+aboutText.innerHTML = d.isletme.hakkinda.replace(/\b(19|20)\d\d'(dan|den|tan|ten)\b/, ablative(d.isletme.kurulus)).split(' ').map((w) => `<span>${esc(w)} </span>`).join('');
 const stats = d.istatistikler.map((s) => ({ ...s, deger: s.kurulustanHesapla ? yil : s.deger }));
 $('[data-stats]').innerHTML = stats.map((s) => `
   <li class="stat"><p class="stat__num"><b data-count="${Number(s.deger)}">0</b>${esc(s.sonek)}</p><p class="stat__lbl">${esc(s.etiket)}</p></li>`).join('');
@@ -117,8 +117,9 @@ function showType(i, animate = true) {
     <p class="types__foot"><span>Ortalama süre</span><b>${esc(t.sure)}</b></p>
     <a class="btn btn--brass" href="${esc(waHref(d, `Merhaba ${d.isletme.ad}, ${t.ad.toLocaleLowerCase('tr')} anahtarım için bilgi almak istiyorum. Araç: `))}" target="_blank" rel="noopener">${icons.whatsapp}<span>Bu anahtar için sorun</span></a>`;
   if (!animate || reducedMotion) return;
-  gsap.fromTo($$('.a-line', art), { drawSVG: '0%' }, { drawSVG: '100%', duration: 1.1, ease: 'power2.inOut', stagger: 0.1 });
-  gsap.fromTo($$('.a-fill, .a-chip, .a-btn', art), { opacity: 0 }, { opacity: 1, duration: 0.5, delay: 0.5, stagger: 0.06 });
+  const lines = $$('.a-line', art), fills = $$('.a-fill, .a-chip, .a-btn', art);
+  if (lines.length) gsap.fromTo(lines, { drawSVG: '0%' }, { drawSVG: '100%', duration: 1.1, ease: 'power2.inOut', stagger: 0.1 });
+  if (fills.length) gsap.fromTo(fills, { opacity: 0 }, { opacity: 1, duration: 0.5, delay: 0.5, stagger: 0.06 });
   gsap.fromTo('[data-type-info] > *', { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.5, stagger: 0.05, ease: 'power3.out' });
 }
 $$('[data-type-tab]').forEach((b) => b.addEventListener('click', () => showType(Number(b.dataset.typeTab))));
@@ -357,8 +358,9 @@ function setupScroll() {
     onUpdate: (self) => (canvas.style.opacity = String(1 - self.progress)),
   });
   ScrollTrigger.create({
-    trigger: '[data-about]', start: 'top 70px', endTrigger: 'body', end: 'bottom bottom',
-    onToggle: (self) => $('[data-top]').classList.toggle('is-solid', self.isActive),
+    trigger: '[data-about]', start: 'top 70px',
+    onEnter: () => $('[data-top]').classList.add('is-solid'),
+    onLeaveBack: () => $('[data-top]').classList.remove('is-solid'),
   });
   contentMotion();
 }
@@ -438,7 +440,7 @@ function contentMotion() {
   });
   gsap.fromTo('.finale__copy', { opacity: 0, y: 40 }, {
     opacity: 1, y: 0, ease: 'none',
-    scrollTrigger: { trigger: '[data-finale]', start: '35% bottom', end: '70% bottom', scrub: true },
+    scrollTrigger: { trigger: '[data-finale]', start: '15% bottom', end: '48% bottom', scrub: true },
   });
 }
 

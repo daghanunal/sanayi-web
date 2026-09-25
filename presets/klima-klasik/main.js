@@ -60,6 +60,7 @@ const tempEl = $('[data-temp]');
 const verdict = $('[data-verdict]');
 const badge = $('[data-badge]');
 const needle = $('[data-needle]');
+const fill = $('[data-fill]');
 const cold = $('.hero__img--soguk');
 const { sicak: T0, soguk: T1 } = d.hero;
 const small = matchMedia('(max-width: 899px)').matches;
@@ -97,6 +98,8 @@ function setTemp(p) {
   const t = T0 + (T1 - T0) * p;
   tempEl.textContent = Math.round(t);
   badge.textContent = `${Math.round(t)}°C`;
+  fill.style.strokeDasharray = `${p.toFixed(4)} 2`;
+  fill.style.strokeDashoffset = `${(p - 1).toFixed(4)}`;
   needle.setAttribute('transform', `rotate(${(135 - 270 * p).toFixed(1)} 100 100)`);
   // Soğuk hava: ağızdan başlayıp bütün kareyi kaplayan daire
   const rad = p <= 0 ? 0 : geo.r * 0.9 + (geo.far - geo.r * 0.9) * gsap.parseEase('power2.in')(p);
@@ -106,6 +109,7 @@ function setTemp(p) {
   if (st !== state) {
     state = st;
     hero.classList.toggle('is-cold', isCold);
+    hero.classList.toggle('is-mid', st === 1);
     verdict.textContent = [d.hero.sicakDurum, d.hero.araDurum || d.hero.sicakDurum, d.hero.sogukDurum][st];
   }
 }

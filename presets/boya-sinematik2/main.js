@@ -503,7 +503,7 @@ function fadeCopies(y, vh) {
     const entry = (l.top - y) / vh;
     const k = Math.max(exit, entry);
     if (k > 1.2 || k < -0.2 && c._o === 1) continue;
-    const o = k <= 0 ? 1 : Math.max(0, 1 - k * 4);
+    const o = k <= 0 ? 1 : Math.max(0, 1 - k * (phone ? 7 : 4));
     const r = Math.round(o * 100) / 100;
     if (c._o !== r) { c._o = r; c.style.opacity = r; }
   }
@@ -597,6 +597,7 @@ function intro() {
     return Promise.resolve();
   }
   document.documentElement.classList.add('is-intro');
+  lenis?.stop();
   const cv = $('#zebra');
   const w = innerWidth;
   const h = innerHeight;
@@ -654,6 +655,7 @@ function intro() {
         el.remove();
         document.documentElement.classList.remove('is-intro');
       } });
+      lenis?.start();
       resolve();
     };
     el.addEventListener('pointerdown', finish, { once: true });

@@ -29,7 +29,7 @@ a { color: inherit; }
 h1, h2, h3, h4, p { margin: 0; }
 .kap { width: 100%; max-width: 1320px; margin: 0 auto; padding: 0 var(--gut); box-sizing: border-box; }
 .etiket { font-family: var(--mono); font-size: 13px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; }
-.dev { font-weight: 900; font-size: clamp(44px, 9.2vw, 132px); line-height: .9; letter-spacing: -.045em; padding-top: .08em; hyphens: manual; }
+.dev { font-weight: 900; font-size: clamp(44px, 9.2vw, 132px); line-height: .98; letter-spacing: -.045em; padding-top: .08em; hyphens: manual; }
 .bolum-bas { display: grid; gap: 14px; margin-bottom: clamp(28px, 5vw, 64px); }
 .bolum-bas > p:last-child:not(.etiket) { max-width: 46ch; color: var(--gri); font-size: 18px; }
 section { position: relative; }
@@ -285,7 +285,7 @@ section { position: relative; }
 /* Tarihçe */
 .tarih { padding: clamp(64px, 9vw, 120px) 0; background: var(--murekkep); color: #fff; overflow: clip; }
 .tarih .etiket { color: #9aa6ff; }
-.tarih .dev { margin-top: 12px; }
+.tarih .dev { margin-top: 12px; line-height: 1.08; }
 .tarih__cerceve { overflow: hidden; padding: clamp(36px, 6vw, 80px) 0; }
 .tarih__yol { list-style: none; margin: 0; padding: 0; display: flex; gap: clamp(28px, 4vw, 64px); width: max-content; will-change: transform; }
 .tarih__yol li { width: max-content; min-width: min(64vw, 380px); display: grid; gap: 12px; align-content: start; border-left: 2px solid rgb(255 255 255 / .3); padding-left: 18px; }

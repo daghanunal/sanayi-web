@@ -43,7 +43,7 @@ const bugun = d.saatler[new Date().getDay()];
 
 // --- Render ----------------------------------------------------------------------------
 
-const logo = `<svg viewBox="0 0 30 24" aria-hidden="true"><circle cx="10" cy="14" r="7" fill="#ff5c9d"/><circle cx="21" cy="8" r="5" fill="#3ec5ff"/><circle cx="22" cy="19" r="3.5" fill="#ffe45c"/><circle cx="7.5" cy="11.5" r="1.8" fill="#fff" opacity=".8"/></svg>`;
+const logo = `<svg viewBox="0 0 30 24" aria-hidden="true"><circle cx="10" cy="14" r="7" fill="#ff7a33"/><circle cx="21" cy="8" r="5" fill="#27e3f0"/><circle cx="22" cy="19" r="3.5" fill="#7dffb4"/><circle cx="7.5" cy="11.5" r="1.8" fill="#fff" opacity=".8"/></svg>`;
 
 $('#top').innerHTML = `
   <a class="top__brand" href="#sahne">${logo}<span>${ad}</span></a>
@@ -98,26 +98,26 @@ $('#kopuk').innerHTML = sticky(`
     <p class="lead">Kiri bezle sürtmeden önce suyla gevşetiriz. Boyaya ilk dokunuş fırça değil, sudur.</p>
   </div>
   <div class="beat" data-beat="1">
-    <p class="kicker">3 · ${esc(sDetay.baslik)}</p>
+    <p class="kicker">2 · ${esc(sDetay.baslik)}</p>
     <h2 class="h2" data-reveal>Sonra köpük, her köşeye.</h2>
     <p class="lead">${esc(sDetay.aciklama)}</p>
     <div class="row">${chip(sDetay.sure)}${meter('m-kopuk', 'Köpük', 'foam')}</div>
   </div>`);
 
 $('#durulama').innerHTML = sticky(`
-  <p class="kicker">4 · Durulama ve kurulama</p>
+  <p class="kicker">3 · Durulama ve kurulama</p>
   <h2 class="h2" id="durulama-title" data-reveal>Durula, kurula, ışıl ışıl.</h2>
   <p class="lead">${esc(sHizli.aciklama)}</p>
   <div class="row">${chip(sHizli.sure + ' hızlı yıkama')}${meter('m-temiz', 'Temiz', 'clean')}</div>`);
 
 $('#jant').innerHTML = sticky(`
   <div class="beat" data-beat="0">
-    <p class="kicker">5 · Jant</p>
+    <p class="kicker">4 · Jant</p>
     <h2 class="h2" id="jant-title" data-reveal>Fren tozu jantı karartır.</h2>
     <p class="lead">Balata tozu jantın içine yapışır, suyla tek başına çıkmaz.</p>
   </div>
   <div class="beat" data-beat="1">
-    <p class="kicker">5 · ${esc(sJant.baslik)}</p>
+    <p class="kicker">4 · ${esc(sJant.baslik)}</p>
     <h2 class="h2" data-reveal>Jant içi fırçayla, lastiğe parlatıcı.</h2>
     <p class="lead">${esc(sJant.aciklama)}</p>
     <div class="row">${chip(sJant.sure)}</div>
@@ -130,7 +130,7 @@ const icList = [
   ['Bagaj', 'Bagaj da süpürülüp silinir, kurutularak teslim edilir.'],
 ];
 $('#ic').innerHTML = sticky(`
-  <p class="kicker">6 · İç temizlik</p>
+  <p class="kicker">5 · İç temizlik</p>
   <h2 class="h2" id="ic-title" data-reveal>Asıl kir içeride.</h2>
   <ol class="checks" id="ic-list">
     ${icList.map(([b, t]) => `<li><b>${esc(b)}</b><span>${esc(t)}</span></li>`).join('')}
@@ -138,7 +138,7 @@ $('#ic').innerHTML = sticky(`
   <div class="row">${chip(sKoltuk.sure)}</div>`);
 
 $('#cila').innerHTML = sticky(`
-  <p class="kicker">7 · ${esc(sPasta.baslik)}</p>
+  <p class="kicker">6 · ${esc(sPasta.baslik)}</p>
   <h2 class="h2" id="cila-title" data-reveal>Kılcal çiziği pasta alır, parlaklığı cila verir.</h2>
   <p class="lead">${esc(sPasta.aciklama)}</p>
   <div class="row">${chip(sPasta.sure)}${meter('m-cila', 'Parlaklık', 'gleam')}</div>`);
@@ -147,7 +147,7 @@ const filoStat = d.istatistikler.find((s) => /filo/.test(s.etiket));
 const HAFTA = ['Pzt', 'Sal', 'Çar', 'Per', 'Cum', 'Cmt', 'Paz'];
 const HAFTA_UZUN = ['Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi', 'Pazar'];
 $('#filo').innerHTML = sticky(`
-  <p class="kicker">8 · ${esc(sFilo.baslik)}</p>
+  <p class="kicker">7 · ${esc(sFilo.baslik)}</p>
   <h2 class="h2" id="filo-title" data-reveal>Şirket araçlarınız her hafta aynı gün hazır.</h2>
   <p class="lead">${esc(sFilo.aciklama)}</p>
   <div class="week" role="group" aria-label="Yıkama günü seçin">
@@ -366,7 +366,8 @@ $$('[data-count]').forEach((el) => {
   const dec = Number(el.dataset.decimals || 0);
   const suf = el.dataset.suffix || '';
   const out = (v) => (el.textContent = (dec ? v.toFixed(dec).replace('.', ',') : fmt(v)) + suf);
-  if (reducedMotion) return out(to);
+  // puan ve küçük sayılar saydırılmaz: ara değerde (4,5 / 6 gün gibi) yakalanıp yanlış okunmasın
+  if (reducedMotion || dec || to < 100) return out(to);
   ScrollTrigger.create({
     trigger: el,
     start: 'top 90%',
@@ -398,6 +399,7 @@ const world = createWorld(canvas, { name: d.isletme.ad, phone, low });
 const { S } = world;
 addEventListener('resize', () => {
   world.resize();
+  tagEls.forEach((t) => (t._w = 0));
   measure();
 });
 
@@ -409,7 +411,8 @@ let layout = [];
 function measure() {
   layout = scenes.map((el) => {
     const r = el.getBoundingClientRect();
-    return { el, name: el.dataset.scene, top: r.top + scrollY, height: el.offsetHeight };
+    const copy = el.dataset.scene === 'final' ? null : el.querySelector('.copy');
+    return { el, copy, sticky: el.querySelector('.scene__sticky'), name: el.dataset.scene, top: r.top + scrollY, height: el.offsetHeight };
   });
 }
 
@@ -464,7 +467,11 @@ function showTags(on, fade = 1) {
   if (!on) return;
   TAGS.forEach((g, i) => {
     const s = world.project(...g.p);
-    tagEls[i].style.transform = `translate3d(${s.x.toFixed(1)}px, ${s.y.toFixed(1)}px, 0)`;
+    const el = tagEls[i];
+    // etiket ekrandan taşmasın: noktası kenara yakınsa etiket içeri kaysın
+    const w = el._w || (el._w = el.offsetWidth);
+    const x = clamp(s.x, 17, innerWidth - w + 1);
+    el.style.transform = `translate3d(${x.toFixed(1)}px, ${s.y.toFixed(1)}px, 0)`;
     tagEls[i].style.opacity = String(fade);
   });
 }
@@ -576,12 +583,33 @@ function setHud(name, filmP) {
 }
 
 let active = null;
+const hint = $('.scroll-hint');
+let hintGone = false;
 function tick() {
   const y = scrollY;
   const vh = innerHeight;
   let cur = layout[0];
   for (const l of layout) if (l.top <= y + vh * 0.5) cur = l;
   const p = clamp((y - cur.top) / Math.max(1, cur.height - vh));
+  // Sahne biterken yukarı kayan metin HUD'un altına girmesin: çıkışta sönsün
+  for (const l of layout) {
+    if (!l.copy) continue;
+    const o = y - (l.top + l.height - vh);
+    const a = o <= 0 ? 1 : clamp(1 - o / (vh * 0.3));
+    const r = Math.round(a * 50) / 50;
+    if (l.a !== r) {
+      l.a = r;
+      l.copy.style.opacity = r === 1 ? '' : String(r);
+      l.copy.style.visibility = r === 0 ? 'hidden' : '';
+      // okunurluk perdesi de metinle birlikte sönsün, yoksa sonraki sahneyle arada keskin bir dikiş kalır
+      l.sticky?.style.setProperty('--fade', r === 1 ? '' : String(r));
+    }
+  }
+  const gone = y > vh * 0.15;
+  if (gone !== hintGone) {
+    hintGone = gone;
+    hint?.classList.toggle('is-gone', gone);
+  }
   reset();
   SCENES[cur.name](p, cur.el);
   if (cur.name !== 'kir') showTags(false);

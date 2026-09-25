@@ -119,5 +119,37 @@
       "src": "/img/doseme-klasik2/gece.jpg",
       "alt": "Lacivert tonlu siyah deri ön koltuk"
     }
+  ],
+  "yorumlar": [
+    {
+      "ad": "Murat D.",
+      "puan": 5,
+      "metin": "Passat'ın koltukları çökmüştü. Süngeriyle birlikte yenilediler, fabrika çıkışından daha iyi oldu. Dikişler milim milim düzgün.",
+      "arac": "2014 Passat"
+    },
+    {
+      "ad": "Ayşe T.",
+      "puan": 5,
+      "metin": "Tavan sarkmıştı, sabah bıraktım akşam aldım. Fiyatını önceden söylediler, bir kuruş fazla çıkmadı.",
+      "arac": "2011 Corolla"
+    },
+    {
+      "ad": "Kemal Y.",
+      "puan": 5,
+      "metin": "Babamdan kalan Anadol'un döşemesini orijinal desenine göre yaptılar. Eski kalıbı arşivlerinden çıkardılar.",
+      "arac": "1978 Anadol SL"
+    },
+    {
+      "ad": "Onur S.",
+      "puan": 5,
+      "metin": "Servis filomuzdaki 12 minibüsün koltuklarını bir hafta sonunda bitirdiler. Pazartesi araçlar yoldaydı.",
+      "arac": "Sprinter filosu"
+    },
+    {
+      "ad": "Selin A.",
+      "puan": 4,
+      "metin": "Direksiyona kırmızı iplikli deri kaplattım, çok şık oldu. Yoğun oldukları için bir gün beklettiler ama değdi.",
+      "arac": "2019 Egea"
+    }
   ]
 }

@@ -46,6 +46,15 @@ $('[data-since]').textContent = `Radyatör · Şaşmaz · ${ablative(d.isletme.k
 $('[data-years]').textContent = `${yil} yıldır aynı cadde, aynı iş`;
 $('[data-years-big]').textContent = yil;
 $('[data-final]').textContent = d.finalBaslik;
+// Final: hero'daki kanatların yankısı; kaydırınca petek kanatları açılıp arkadaki fotoğrafı gösterir
+const FF = small ? 8 : 14;
+const finalFins = $('[data-final-fins]');
+finalFins.innerHTML = '<i></i>'.repeat(FF);
+if (reducedMotion) finalFins.hidden = true;
+else gsap.fromTo(finalFins.children, { scaleX: 1 }, {
+  scaleX: 0.14, ease: 'none', stagger: { each: 0.04, from: 'center' },
+  scrollTrigger: { trigger: '.final', start: 'top 85%', end: 'center 55%', scrub: 0.5 },
+});
 $('[data-year]').textContent = new Date().getFullYear();
 
 // İsim: kelimeler ayrı satırda, uzunsa küçülür
@@ -166,6 +175,7 @@ $('[data-steps]').innerHTML = d.surec.map((s, i) => `
   </li>`).join('');
 const stepEls = $$('.step');
 const rig = $('.rig');
+const tagEl = $('[data-tag]');
 const needle = $('[data-needle]');
 const arc = $('[data-arc]');
 const barEl = $('[data-bar]');
@@ -179,6 +189,7 @@ function setStep(i) {
     el.classList.toggle('is-done', k < i);
   });
   rig.dataset.phase = i;
+  tagEl.textContent = i >= 3 ? 'ONARILDI: ALT TANK CONTASI' : 'KAÇAK: ALT TANK CONTASI';
 }
 function setBar(b) {
   barEl.textContent = nf(b, 1);
@@ -288,7 +299,7 @@ io.observe(mapBox);
 
 // Header: hero geçilince zemin koyulaşır
 ScrollTrigger.create({
-  trigger: '.stats', start: 'top 70px',
+  trigger: '.stats', start: 'top 85%',
   onEnter: () => document.documentElement.classList.add('is-scrolled'),
   onLeaveBack: () => document.documentElement.classList.remove('is-scrolled'),
 });

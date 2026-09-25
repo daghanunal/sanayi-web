@@ -26,7 +26,7 @@
   content: ''; grid-row: 1 / span 2; width: 38px; height: 38px; border-radius: 12px; background: var(--k-koyu) center / 22px no-repeat
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M5 8c0-4 5-4 11-2 6-2 11-2 11 2 0 4-1.5 7-2.4 11.5C23.7 24 22.8 28 21 28c-2.2 0-2-7-5-7s-2.8 7-5 7c-1.8 0-2.7-4-3.6-8.5C6.5 15 5 12 5 8z' fill='%23de3d66'/%3E%3C/svg%3E");
 }
-.k-logo__ad { font-weight: 800; font-size: 20px; letter-spacing: -.03em; }
+.k-logo__ad { font-weight: 900; font-size: 20px; letter-spacing: -.03em; }
 .k-logo__alt { font-size: 11.5px; font-weight: 700; letter-spacing: .02em; }
 .k-nav a { border-radius: 999px; font-weight: 600; }
 .k-nav a::after { height: 3px; border-radius: 3px; left: 50%; right: auto; width: 6px; transform: translateX(-50%) scale(0); transform-origin: center; }
@@ -80,15 +80,19 @@
 }
 .ah__etiket b {
   display: grid; place-items: center; width: 46px; height: 46px; border-radius: 50%; background: var(--k-vurgu); color: #fff;
-  font-family: var(--k-font-baslik); font-weight: 800; font-size: 19px; font-variant-numeric: tabular-nums; flex: none;
+  font-family: var(--k-font-baslik); font-weight: 900; font-size: 19px; font-variant-numeric: tabular-nums; flex: none;
 }
 .ah__etiket span { display: grid; font-weight: 700; font-size: 15px; line-height: 1.25; }
 .ah__etiket small { font-weight: 400; font-size: 13px; color: var(--k-soluk); }
 .ah .k-hero__bilgi { margin-top: 44px; }
 @media (max-width: 899px) {
   .ah .k-hero__ic { gap: 28px; }
-  .ah__kemer { width: min(100%, 420px); }
-  .ah__pencere { aspect-ratio: 340 / 380; }
+  .ah .k-hero__ic { display: flex; flex-direction: column; }
+  .ah__kemer { order: -1; width: min(86%, 360px); align-self: center; margin: -6px 0 22px; }
+  .ah__pencere { aspect-ratio: 340 / 285; }
+  .k-logo__ad { font-size: 17px; white-space: nowrap; }
+  .ah .k-lead { font-size: 16.5px; }
+  .ah__etiket { bottom: -26px; left: 0; right: 0; margin-inline: auto; width: max-content; }
   .ah .k-hero__bilgi { grid-template-columns: 1fr 1fr; margin-top: 32px; }
   .ah .k-hero__bilgi div:nth-child(2) { grid-column: 1 / -1; order: 3; }
 }
@@ -124,7 +128,15 @@
 .dh__ust span { width: 26px; height: 14px; border: 2.5px solid currentColor; border-top: 0; border-radius: 0 0 14px 14px; }
 .dh__bas { max-width: 760px; }
 .dh__ic { display: grid; gap: 28px; margin-top: 44px; }
-@media (min-width: 1000px) { .dh__ic { grid-template-columns: 6fr 5fr; gap: 56px; align-items: start; } }
+@media (min-width: 1000px) {
+  /* Panel sağ sütunda başlıkla aynı hizadan başlar; harita uzun olduğu için yapışkan kalır. */
+  .dh > .k-kap { display: grid; grid-template-columns: 6fr 5fr; column-gap: 56px; align-items: start; }
+  .dh__bas { grid-column: 1; grid-row: 1; }
+  .dh__ic { display: contents; }
+  .dh__harita { grid-column: 1; grid-row: 2; margin-top: 40px; }
+  .dh__panel { grid-column: 2; grid-row: 1 / span 2; }
+}
+@media (min-width: 1000px) and (min-height: 960px) { .dh__panel { position: sticky; top: 96px; } }
 
 .dh__harita { display: grid; gap: 14px; }
 .dh__mod { display: inline-flex; justify-self: start; padding: 4px; border-radius: 999px; background: rgb(255 255 255 / .08); gap: 2px; }
@@ -137,7 +149,7 @@
 .dh__svg-kutu { position: relative; border-radius: 32px; background: radial-gradient(70% 60% at 50% 50%, rgb(255 255 255 / .06), transparent 70%); }
 .dh__svg { display: block; width: 100%; height: auto; max-height: 66vh; margin-inline: auto; overflow: visible; touch-action: manipulation; user-select: none; -webkit-user-select: none; }
 .dh__rehber text { fill: var(--k-koyu-soluk); font: 700 11px var(--k-font-govde); letter-spacing: .14em; }
-.dh__odak-no { fill: #fff; font: 800 52px var(--k-font-baslik); letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
+.dh__odak-no { fill: #fff; font: 900 52px var(--k-font-baslik); letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
 .dh__odak-ad { fill: var(--k-koyu-soluk); font: 600 13.5px var(--k-font-govde); }
 .dh__dis { cursor: pointer; outline: none; -webkit-tap-highlight-color: transparent; }
 .dh__govde rect { fill: var(--dk-porselen); stroke: rgb(255 255 255 / .0); stroke-width: 2; transition: fill .25s, stroke .25s; }
@@ -156,7 +168,7 @@
 .dh__adim { display: grid; grid-template-columns: auto 1fr; gap: 14px; padding: 20px; border-radius: 24px; background: rgb(255 255 255 / .06); border: 1px solid rgb(255 255 255 / .08); }
 .dh__adim-no {
   width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; background: rgb(255 255 255 / .1);
-  font-family: var(--k-font-baslik); font-weight: 800; color: #ff8aa6;
+  font-family: var(--k-font-baslik); font-weight: 900; color: #ff8aa6;
 }
 .dh__adim .k-h3 { font-size: 19px; margin: 4px 0 12px; }
 .dh__secili { display: flex; flex-wrap: wrap; gap: 8px; }

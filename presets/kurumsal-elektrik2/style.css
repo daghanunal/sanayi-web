@@ -251,3 +251,13 @@ body:not(.k-ana) .k-blok[data-bolum='farPerdesi'] .fp { margin-top: 32px; }
   .fp__yazi { font-size: 16px; letter-spacing: .03em; stroke-width: 4.5px; }
   .fp__olcu-yazi { font-size: 19px; }
 }
+
+/* Perde (koyu) doğrudan rakamlara (koyu) bağlanınca araya sarı kama sızmasın: iki koyu bölüm tek parça akar */
+.k-blok[data-bolum='farPerdesi'] + .k-blok[data-bolum='rakamlar'] .k-rakamlar { clip-path: none; padding-top: calc(var(--k-bosluk) / 3); }
+.k-blok[data-bolum='farPerdesi']:has(+ .k-blok[data-bolum='rakamlar']) .fp { padding-bottom: calc(var(--k-bosluk) / 2); }
+
+/* Saat satırı: gün adı ile mono saat aynı taban çizgisinde */
+.bg__saat div { align-items: baseline; }
+
+/* Telefonda alt çubuğun arkasında sarı şerit kalmasın; footer zaten çubuk kadar alt boşluk taşıyor */
+@media (max-width: 899px) { html body, html.is-vitrin body { padding-bottom: 0; } }

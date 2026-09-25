@@ -1,14 +1,14 @@
-// Pim (klasik aile, oto kilit ve anahtar): anahtarcı panosu kobalt mavisi, pirinç sarısı, çelik grisi.
-// Fotoğraf ağırlıklı, WebGL yok. İmza anı hero'da: pim hizası. Kaydırdıkça anahtar kilide girer, dişler
-// beş pimi tek tek kaldırır; pimler kesme hattında hizalanınca anahtar döner ve ekran kesme hattından
-// ikiye ayrılır (üst gövde yukarı, göbek aşağı), arkadan dükkân fotoğrafı açılır.
+// Çift Flaş (klasik aile, oto kilit ve anahtar): gece asfaltı, beton grisi, sinyal turuncusu.
+// Fotoğraf ağırlıklı, WebGL yok. İmza anı hero'da: kaydırdıkça başparmak kumandanın "aç" tuşuna basar,
+// sinyal halkaları araca gider, araç iki kez sinyal verir ve karşılama ışıkları yanar.
+// Geri kaydırınca araç tek flaşla kilitlenir (gerçek araçlardaki gibi: aç = 2 flaş, kilitle = 1 flaş).
 import sektor from '../../data/sektor-kilit.json';
 import extra from '../../data/kilit-klasik.json';
 import '../../shared/base.css';
 import './style.css';
 import {
   boot, initSmoothScroll, reducedMotion, telHref, waHref, mapsHref, mapsEmbed,
-  openStatus, groupedHours, icons, esc, gsap, ScrollTrigger,
+  openStatus, groupedHours, icons, esc, asset, gsap, ScrollTrigger,
 } from '../../shared/core.js';
 
 ScrollTrigger.config({ ignoreMobileResize: true });
@@ -19,18 +19,11 @@ const $$ = (s, root = document) => [...root.querySelectorAll(s)];
 const nf = (n, dig = 0) => Number(n).toLocaleString('tr-TR', { minimumFractionDigits: dig, maximumFractionDigits: dig });
 const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
 const seg = (p, a, b) => clamp((p - a) / (b - a));
-const SVGNS = 'http://www.w3.org/2000/svg';
+const src = (p) => (/^https?:/.test(p) ? p : asset(p));
 
-icons.check = `<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5 9.5 18 20 6"/></svg>`;
 icons.id = `<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="5" width="19" height="14" rx="2.5"/><circle cx="8.5" cy="11" r="2.3"/><path d="M5 16.2c.7-1.6 2-2.4 3.5-2.4s2.8.8 3.5 2.4M14.5 10h4.5M14.5 13.5h3"/></svg>`;
-icons.key = `<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="7.5" cy="12" r="4.5"/><path d="M12 12h9.5v3M18 12v2.5"/></svg>`;
-
-const TIP_IKON = {
-  duz: `<svg viewBox="0 0 120 60" aria-hidden="true"><circle cx="24" cy="30" r="17" class="f"/><circle cx="18" cy="30" r="5" class="h"/><path class="f" d="M40 24h72l4 6-4 6H98l-3 5-4-5h-7l-3 7-4-7H40z"/></svg>`,
-  cipli: `<svg viewBox="0 0 120 60" aria-hidden="true"><rect x="4" y="12" width="40" height="36" rx="12" class="k"/><rect x="16" y="23" width="14" height="14" rx="2" class="c"/><path class="f" d="M44 25h68l4 5-4 5H98l-3 5-4-5h-7l-3 6-4-6H44z"/></svg>`,
-  sustali: `<svg viewBox="0 0 120 60" aria-hidden="true"><rect x="4" y="10" width="54" height="40" rx="14" class="k"/><circle cx="20" cy="22" r="4" class="c"/><circle cx="20" cy="38" r="4" class="c"/><circle cx="46" cy="30" r="5" class="h"/><path class="f" d="M50 26 L112 12 l4 5 -6 4 -8 1 -2 5 -5 -3 -7 2 -1 6 -5 -4 -31 7z"/></svg>`,
-  akilli: `<svg viewBox="0 0 120 60" aria-hidden="true"><rect x="30" y="4" width="60" height="52" rx="18" class="k"/><rect x="44" y="14" width="32" height="9" rx="4.5" class="c"/><rect x="44" y="27" width="32" height="9" rx="4.5" class="c"/><rect x="44" y="40" width="32" height="7" rx="3.5" class="c"/><path class="w" d="M96 20a14 14 0 0 1 0 20M104 14a22 22 0 0 1 0 32"/></svg>`,
-};
+icons.check = `<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5 9.5 18 20 6"/></svg>`;
+icons.arrow = `<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>`;
 
 // --- Bağlamalar ---------------------------------------------------------------
 const yil = new Date().getFullYear() - d.isletme.kurulus;
@@ -43,239 +36,266 @@ $$('[data-icon]').forEach((el) => el.insertAdjacentHTML('afterbegin', icons[el.d
 $$('[data-tel]').forEach((a) => (a.href = telHref(d)));
 $$('[data-wa]').forEach((a) => (a.href = waHref(d)));
 $$('[data-maps]').forEach((a) => (a.href = mapsHref(d)));
-if (d.isletme.ad.length > 16) $('.hero__name').classList.add('is-long');
-if (d.isletme.ad.length > 26) $('.hero__name').classList.add('is-xlong');
+const nameLen = d.isletme.ad.length;
+const heroName = $('.hero__name');
+if (nameLen > 14) heroName.classList.add('is-long');
+if (nameLen > 24) heroName.classList.add('is-xlong');
 $('.top__brand').setAttribute('aria-label', `${d.isletme.ad}, sayfa başı`);
-$('[data-since]').textContent = `Oto kilit · Anahtar · Şaşmaz · ${d.isletme.kurulus}`;
+$('[data-since]').textContent = 'Oto kilit · Anahtar · İmmobilizer';
 $('[data-years]').textContent = `${yil} yıldır Şaşmaz'da`;
-$('[data-open-title]').textContent = 'Kapı açıldı. Sıra sizin anahtarınızda.';
-$('[data-final]').textContent = d.finalBaslik;
+$('[data-years-short]').textContent = `${yil} yıl`;
+$('[data-final]').innerHTML = String(d.finalBaslik).split(/(?<=[.!?])\s+/).map((t) => `<span>${esc(t)}</span>`).join('');
+$('[data-plate]').textContent = `06 KLT ${d.isletme.kurulus}`;
 $('[data-acil-baslik]').textContent = d.acil.baslik;
 $('[data-acil-metin]').textContent = d.acil.metin;
 $('[data-acil-kural]').textContent = d.acil.kural;
 $('[data-year]').textContent = new Date().getFullYear();
+if (d.heroFoto) $('[data-hero-img]').src = src(d.heroFoto);
 
 const status = openStatus(d.saatler);
-$('[data-status-big]').textContent = status.text;
+$('[data-status-big] span:last-child').textContent = status.text;
+$('[data-status-short]').textContent = status.text;
 document.documentElement.classList.toggle('is-open', status.open);
 
-// --- Hero: pim hizası ---------------------------------------------------------
-// SVG birimleri: gövde x 200–900, kesme hattı y 190, anahtar yolu y 224–328.
-const SHEAR = 190;
-const CH = [360, 460, 560, 660, 760]; // pim yuvalarının x merkezi
-const KEY_IN = 160; // anahtar tam girdiğinde omuz x'i (uç 880)
-const KEY_OUT = 170 - 720; // başlangıçta uç kilidin ağzında
-const BLADE_TOP = 232, BLADE_BOT = 322;
-const code = (d.kesimKodu || [3, 1, 4, 2, 5]).slice(0, 5);
-const cutY = code.map((c) => BLADE_TOP + 12 + c * 12); // dişin dibi
-const L = cutY.map((y) => y - SHEAR); // alt pim boyu
-const REST_TOP = SHEAR + 20; // anahtarsızken alt pimin üstü
-const DRIVER = 44;
-const CH_TOP = 58;
-const LOC = CH.map((c) => c - KEY_IN); // dişlerin anahtar üstündeki yeri
-
-function bladeTop(l) {
-  let y = BLADE_TOP;
-  for (let i = 0; i < 5; i++) y = Math.max(y, cutY[i] - 1.35 * Math.abs(l - LOC[i]));
-  if (l > 686) y = Math.max(y, BLADE_TOP + (l - 686) * 2);
-  return y;
-}
-{
-  let p = `M0 ${BLADE_TOP}`;
-  for (let l = 4; l <= 720; l += 4) p += ` L${l} ${bladeTop(l).toFixed(1)}`;
-  p += ` L720 306 L706 ${BLADE_BOT} L0 ${BLADE_BOT} Z`;
-  $('[data-blade]').setAttribute('d', p);
-  $('[data-groove]').setAttribute('d', `M0 296 H660 M0 306 H640`);
-}
-
-const mk = (tag, attrs, parent) => {
-  const el = document.createElementNS(SVGNS, tag);
-  for (const k in attrs) el.setAttribute(k, attrs[k]);
-  parent.append(el);
-  return el;
-};
-const chambers = $('[data-chambers]');
-const plugCh = $('[data-plugchambers]');
-const driversG = $('[data-drivers]');
-const keypinsG = $('[data-keypins]');
-const pins = CH.map((c, i) => {
-  mk('rect', { class: 'lock__chamber', x: c - 20, y: CH_TOP - 4, width: 40, height: SHEAR - CH_TOP + 4 }, chambers);
-  mk('rect', { class: 'lock__chamber', x: c - 20, y: SHEAR, width: 40, height: 40 }, plugCh);
-  const spring = mk('polyline', { class: 'spring', 'vector-effect': 'non-scaling-stroke', points: Array.from({ length: 11 }, (_, k) => `${k % 2 ? 12 : -12},${k / 10}`).join(' ') }, driversG);
-  const driver = mk('rect', { class: 'driver', x: -16, y: 0, width: 32, height: DRIVER, rx: 5 }, driversG);
-  const kp = mk('path', { class: 'keypin', d: `M-15 0 H15 V${L[i] - 12} L0 ${L[i]} L-15 ${L[i] - 12} Z` }, keypinsG);
-  return { c, spring, driver, kp, set: false };
-});
-
+// --- Hero: çift flaş ----------------------------------------------------------
 const hero = $('.hero');
 const pinBox = $('.hero__pin');
-const lock = $('[data-lock]');
-const housing = $('[data-housing]');
-const plug = $('[data-plug]');
-const keyG = $('[data-key]');
-const keyHead = $('[data-keyhead]');
-const halfTop = $('.half--top');
-const halfBot = $('.half--bot');
-const topIn = $('.half--top .half__in');
-const photo = $('.hero__photo');
-const openBox = $('.hero__open');
+const carBox = $('[data-car]');
+const frame = $('[data-frame]');
+const dim = $('[data-dim]');
+const glows = $$('[data-glow]');
+const heads = $$('[data-head]');
+const pulse = $('[data-pulse]');
+const fob = $('[data-fob]');
+const thumb = $('[data-thumb]');
+const btnOpen = $('[data-fob-btn="open"]');
+const btnLock = $('[data-fob-btn="lock"]');
+const fobLed = $('[data-fob-led]');
+const waves = $$('[data-wave]');
+const after = $('[data-after]');
+const stateEl = $('[data-state]');
+const stateTxt = $('[data-state-txt]');
+const stateSub = $('[data-state-sub]');
 const hint = $('.hero__hint');
-const cellsBox = $('[data-cells]');
-cellsBox.innerHTML = code.map((c, i) => `<li><b>${i + 1}</b><span>${c}</span></li>`).join('');
-const cells = $$('li', cellsBox);
+const IMG_R = 1336 / 2000;
 
-let geo = { cut: 400, h: 800, s: 1 };
-function measure() {
-  const pr = pinBox.getBoundingClientRect();
-  const lr = lock.getBoundingClientRect();
-  const sr = $('[data-shear]').getBoundingClientRect();
-  const s = lr.width / 1000;
-  geo = { cut: sr.top + sr.height / 2 - pr.top, h: pr.height, s };
-  pinBox.style.setProperty('--cut', `${geo.cut.toFixed(1)}px`);
+// Fotoğraf çerçevesini alanı kaplayacak şekilde boyutlandır (ışık noktaları % ile sabit kalsın).
+function fitCar() {
+  const r = carBox.getBoundingClientRect();
+  let w = r.width, h = w / IMG_R;
+  if (h < r.height) { h = r.height; w = h * IMG_R; }
+  // Farı yatayda çerçevenin ortasına yakın tut (mobilde araç merkezde görünsün).
+  const fx = innerWidth < 900 ? 0.47 : 0.5;
+  const left = clamp(r.width * 0.5 - w * fx, r.width - w, 0);
+  const top = (r.height - h) * (innerWidth < 900 ? 0.62 : 0.5);
+  frame.style.cssText = `width:${w.toFixed(1)}px;height:${h.toFixed(1)}px;left:${left.toFixed(1)}px;top:${top.toFixed(1)}px`;
+}
+fitCar();
+
+let unlocked = false;
+let flashTl = null;
+const DIM_LOCK = 0.8, DIM_OPEN = 0.12;
+gsap.set(dim, { opacity: DIM_LOCK });
+gsap.set([...glows, pulse], { opacity: 0 });
+gsap.set(heads, { opacity: 0 });
+
+function setState(open) {
+  stateEl.classList.toggle('is-open', open);
+  stateTxt.textContent = open ? 'Kilit açık' : 'Kilitli';
+  stateSub.textContent = open ? 'İki flaş: kapılar açıldı' : 'Kumandaya basın';
+  hero.classList.toggle('is-unlocked', open);
 }
 
-let cur = -1;
-let allSet = null;
+function flash(open) {
+  if (open === unlocked) return;
+  unlocked = open;
+  setState(open);
+  flashTl?.kill();
+  if (reducedMotion) {
+    gsap.set(dim, { opacity: open ? DIM_OPEN : DIM_LOCK });
+    gsap.set(heads, { opacity: open ? 1 : 0 });
+    return;
+  }
+  const tl = gsap.timeline();
+  const blink = (at) => {
+    tl.to(glows, { opacity: 1, duration: 0.07, ease: 'none' }, at)
+      .to(pulse, { opacity: 1, duration: 0.07, ease: 'none' }, at)
+      .to(dim, { opacity: 0.42, duration: 0.07, ease: 'none' }, at)
+      .to(fobLed, { opacity: 1, duration: 0.05 }, at)
+      .to(glows, { opacity: 0, duration: 0.2, ease: 'power1.in' }, at + 0.26)
+      .to(pulse, { opacity: 0, duration: 0.24, ease: 'power1.in' }, at + 0.26)
+      .to(fobLed, { opacity: 0, duration: 0.2 }, at + 0.26)
+      .to(dim, { opacity: open ? 0.7 : DIM_LOCK, duration: 0.2, ease: 'power1.in' }, at + 0.26);
+  };
+  if (open) {
+    blink(0.05);
+    blink(0.62);
+    tl.to(dim, { opacity: DIM_OPEN, duration: 1.1, ease: 'power2.out' }, 1.15)
+      .to(heads, { opacity: 1, duration: 0.9, ease: 'power2.out', stagger: 0.12 }, 1.15);
+  } else {
+    tl.to(heads, { opacity: 0, duration: 0.25 }, 0).to(dim, { opacity: 0.7, duration: 0.25 }, 0);
+    blink(0.12);
+  }
+  flashTl = tl;
+}
+
+let cur = 0;
 function setP(p) {
   cur = p;
-  // 1) Anahtar girer
-  const ins = gsap.parseEase('power1.inOut')(seg(p, 0.04, 0.56));
-  const K = KEY_OUT + (KEY_IN - KEY_OUT) * ins;
-  keyG.setAttribute('transform', `translate(${K.toFixed(1)} 0)`);
-  let n = 0;
-  for (let i = 0; i < 5; i++) {
-    const pn = pins[i];
-    const l = pn.c - K;
-    let top = REST_TOP;
-    if (l >= 0 && l <= 720) top = Math.min(REST_TOP, bladeTop(l) - L[i]);
-    const dTop = top - DRIVER;
-    pn.kp.setAttribute('transform', `translate(${pn.c} ${top.toFixed(1)})`);
-    pn.driver.setAttribute('transform', `translate(${pn.c} ${dTop.toFixed(1)})`);
-    pn.spring.setAttribute('transform', `translate(${pn.c} ${CH_TOP}) scale(1 ${(dTop - CH_TOP).toFixed(1)})`);
-    const ok = Math.abs(top - SHEAR) < 1.2;
-    if (ok !== pn.set) { pn.set = ok; cells[i].classList.toggle('is-set', ok); }
-    if (ok) n++;
-  }
-  const set = n === 5 && p >= 0.55;
-  if (set !== allSet) { allSet = set; hero.classList.toggle('is-set', set); }
-
-  // 2) Anahtar döner (yandan bakınca başlık incelir)
-  const turn = seg(p, 0.6, 0.7);
-  keyHead.setAttribute('transform', `translate(0 270) scale(1 ${(1 - 0.72 * turn).toFixed(3)}) translate(0 -270)`);
-  hero.classList.toggle('is-turned', turn > 0.5);
-
-  // 3) Kesme hattından ayrılır
-  const sp = gsap.parseEase('power2.in')(seg(p, 0.68, 0.88));
-  hero.classList.toggle('is-split', sp > 0.04);
-  const up = (geo.cut + 40) * sp;
-  const down = (geo.h - geo.cut + 40) * sp;
-  topIn.style.opacity = (1 - clamp(sp * 2.2)).toFixed(3);
-  halfTop.style.transform = `translate3d(0,${(-up).toFixed(1)}px,0)`;
-  halfBot.style.transform = `translate3d(0,${down.toFixed(1)}px,0)`;
-  housing.setAttribute('transform', `translate(0 ${(-up / geo.s).toFixed(1)})`);
-  plug.setAttribute('transform', `translate(0 ${(down / geo.s).toFixed(1)})`);
-  photo.style.transform = `scale(${(1.14 - 0.14 * seg(p, 0.68, 1)).toFixed(4)})`;
-  const o = seg(p, 0.8, 0.94);
-  openBox.style.opacity = o.toFixed(3);
-  openBox.style.transform = `translate3d(0,${((1 - o) * 30).toFixed(1)}px,0)`;
-  openBox.style.visibility = o > 0.01 ? 'visible' : 'hidden';
+  // 1) başparmak "aç" tuşuna gider ve basar
+  const mv = gsap.parseEase('power2.inOut')(seg(p, 0.04, 0.26));
+  const press = seg(p, 0.26, 0.31) - seg(p, 0.33, 0.38);
+  thumb.style.transform = `translate3d(${(-58 * (1 - mv)).toFixed(1)}px,${(70 * (1 - mv)).toFixed(1)}px,0) scale(${(1 - 0.12 * press).toFixed(3)})`;
+  thumb.style.opacity = (seg(p, 0.02, 0.1) * (1 - seg(p, 0.5, 0.6))).toFixed(3);
+  btnOpen.style.transform = `scale(${(1 - 0.1 * press).toFixed(3)})`;
+  // 2) sinyal halkaları
+  waves.forEach((w, i) => {
+    const t = seg(p, 0.3 + i * 0.035, 0.44 + i * 0.035);
+    w.style.opacity = (t > 0 && t < 1 ? Math.sin(t * Math.PI) : 0).toFixed(3);
+    w.style.transform = `translate3d(0,${(-14 * t).toFixed(1)}px,0)`;
+  });
+  // 3) eşik: kilit açılır / kapanır
+  flash(p >= 0.4);
+  // 4) kumanda çekilir, metin açılır
+  const out = gsap.parseEase('power2.in')(seg(p, 0.5, 0.7));
+  fob.style.transform = `translate3d(0,${(out * 60).toFixed(1)}px,0) scale(${(1 - out * 0.25).toFixed(3)})`;
+  fob.style.opacity = (1 - out).toFixed(3);
+  fob.style.visibility = out > 0.99 ? 'hidden' : 'visible';
+  const a = seg(p, 0.64, 0.86);
+  after.style.opacity = a.toFixed(3);
+  after.style.transform = `translate3d(0,${((1 - a) * 26).toFixed(1)}px,0)`;
+  after.style.visibility = a > 0.01 ? 'visible' : 'hidden';
+  frame.style.transform = `scale(${(1.1 - 0.1 * seg(p, 0, 1)).toFixed(4)})`;
   hint.style.opacity = (1 - seg(p, 0, 0.06)).toFixed(3);
 }
-measure();
 
+let st = null;
 if (reducedMotion) {
-  setP(0.58);
   hero.classList.add('is-static');
+  flash(true);
+  setP(0.95);
 } else {
   setP(0);
   const m = { p: 0 };
-  gsap.timeline({
+  const tl = gsap.timeline({
     scrollTrigger: {
-      trigger: hero, start: 'top top', end: () => `+=${innerHeight * 1.9}`,
-      pin: pinBox, scrub: 0.6, anticipatePin: 1,
-      onRefresh: () => { measure(); setP(m.p); },
+      trigger: hero, start: 'top top', end: () => `+=${innerHeight * 1.7}`,
+      pin: pinBox, scrub: 0.5, anticipatePin: 1,
+      onRefresh: () => { fitCar(); setP(m.p); },
     },
   }).to(m, { p: 1, duration: 1, ease: 'none', onUpdate: () => setP(m.p) });
+  st = tl.scrollTrigger;
 
   // Açılış
-  gsap.from('.hero__name', { yPercent: 18, opacity: 0, duration: 0.9, ease: 'power3.out', delay: 0.05 });
-  gsap.from(['.hero__since', '.pins li', '.hero__slogan', '.half--bot .hero__cta'], { y: 14, opacity: 0, duration: 0.6, stagger: 0.05, ease: 'power2.out', delay: 0.2 });
-  gsap.from(lock, { opacity: 0, duration: 0.9, ease: 'power3.out', delay: 0.1 });
+  gsap.from('.hero__name', { yPercent: 30, opacity: 0, duration: 1, ease: 'power3.out', delay: 0.05 });
+  gsap.from(['.hero__eyebrow', '.hero__state'], { y: 14, opacity: 0, duration: 0.6, stagger: 0.08, ease: 'power2.out', delay: 0.25 });
+  gsap.from(fob, { y: 60, opacity: 0, duration: 0.9, ease: 'power3.out', delay: 0.35, clearProps: 'transform,opacity' });
 }
-addEventListener('resize', () => { measure(); setP(Math.max(cur, 0)); });
 
-// --- Anahtar tipi seçici ------------------------------------------------------
-const tipBox = $('[data-types]');
-const tipRes = $('[data-type-res]');
-tipBox.innerHTML = d.anahtarTipleri.map((t, i) => `
-  <button type="button" class="ktip" role="radio" aria-checked="${i === 0}" data-i="${i}">
-    <span class="ktip__art">${TIP_IKON[t.ikon] || ''}</span>
-    <span class="ktip__ad">${esc(t.ad)}</span>
-  </button>`).join('');
-function pickTip(i, animate) {
-  const t = d.anahtarTipleri[i];
-  $$('.ktip', tipBox).forEach((c, k) => c.setAttribute('aria-checked', String(k === i)));
-  const isler = t.isler.map((k) => d.hizmetler[k]).filter(Boolean);
-  const wa = waHref(d, `Merhaba ${d.isletme.ad}, elimde ${t.ad.toLocaleLowerCase('tr')} var. Aracım: `);
-  tipRes.innerHTML = `
-    <p class="res__ipucu"><span class="mono">Nasıl anlaşılır?</span>${esc(t.ipucu)}</p>
-    <p class="res__nasil">${esc(t.nasil)}</p>
-    <ul class="res__isler">${isler.map((h) => `<li>${icons.key}<span>${esc(h.baslik)}</span><b class="mono">${esc(h.sure)}</b></li>`).join('')}</ul>
-    <div class="res__foot">
-      <p class="res__sure"><span class="mono">Ortalama süre</span><b>${esc(t.sure)}</b></p>
-      <a class="btn btn--cobalt" href="${esc(wa)}" target="_blank" rel="noopener">${icons.whatsapp}Bu anahtar için yaz</a>
-    </div>`;
-  if (animate && !reducedMotion) gsap.from(tipRes.children, { y: 12, opacity: 0, duration: 0.4, stagger: 0.05, ease: 'power2.out' });
+// Kumanda tuşları dokunulabilir: aç → kilit açılana kadar kaydır, kilitle → başa dön.
+function goTo(p) {
+  if (!st) { flash(p > 0.4); return; }
+  const y = st.start + (st.end - st.start) * p;
+  if (window.__lenis) window.__lenis.scrollTo(y, { duration: 1.4 });
+  else scrollTo({ top: y, behavior: 'smooth' });
 }
-tipBox.addEventListener('click', (e) => {
-  const c = e.target.closest('.ktip');
-  if (c) pickTip(Number(c.dataset.i), true);
-});
-tipBox.addEventListener('keydown', (e) => {
-  if (!['ArrowRight', 'ArrowLeft', 'ArrowDown', 'ArrowUp'].includes(e.key)) return;
-  e.preventDefault();
-  const cs = $$('.ktip', tipBox);
-  const i = cs.findIndex((c) => c.getAttribute('aria-checked') === 'true');
-  const nx = (i + (e.key === 'ArrowRight' || e.key === 'ArrowDown' ? 1 : -1) + cs.length) % cs.length;
-  pickTip(nx, true);
-  cs[nx].focus();
-});
-pickTip(0, false);
+btnOpen.addEventListener('click', () => goTo(0.62));
+btnLock.addEventListener('click', () => goTo(0));
+addEventListener('resize', () => { fitCar(); setP(cur); });
 
-// --- Hizmetler: anahtar etiketleri ---------------------------------------------
-$('[data-services]').innerHTML = d.hizmetler.map((h, i) => `
-  <li class="etiket">
-    <span class="etiket__peg" aria-hidden="true"></span>
-    <div class="etiket__card">
-      <span class="etiket__hole" aria-hidden="true"></span>
-      <p class="etiket__no mono">Nº ${String(i + 1).padStart(2, '0')}</p>
-      <h3 class="etiket__ad">${esc(h.baslik)}</h3>
-      <p class="etiket__desc">${esc(h.aciklama)}</p>
-      <p class="etiket__sure mono"><span class="sr-only">Süre: </span>${esc(h.sure)}</p>
+// --- Hizmetler: yığın + dizin ---------------------------------------------------
+const foto = (i) => src(d.hizmetFoto?.[i] || d.galeri[i % d.galeri.length].src);
+const one = (d.oneCikan || [0, 2, 3, 5]).filter((i) => d.hizmetler[i]);
+$('[data-stack]').innerHTML = one.map((k, n) => {
+  const h = d.hizmetler[k];
+  return `
+  <li class="card" style="--n:${n}"><div class="card__inner">
+    <span class="card__veil" aria-hidden="true"></span>
+    <figure class="card__photo"><img src="${esc(foto(k))}" alt="" loading="lazy" decoding="async" /></figure>
+    <div class="card__body">
+      <p class="card__no mono">${String(n + 1).padStart(2, '0')} / ${String(one.length).padStart(2, '0')}</p>
+      <h3 class="card__title">${esc(h.baslik)}</h3>
+      <p class="card__desc">${esc(h.aciklama)}</p>
+      <p class="card__sure mono"><span class="sr-only">Süre: </span>${esc(h.sure)}</p>
     </div>
-  </li>`).join('');
+  </div></li>`;
+}).join('');
+$('[data-dizin]').innerHTML = d.hizmetler.map((h, k) => (one.includes(k) ? '' : `
+  <li class="row">
+    <img class="row__img" src="${esc(foto(k))}" alt="" loading="lazy" decoding="async" />
+    <div class="row__txt">
+      <h4 class="row__title">${esc(h.baslik)}</h4>
+      <p class="row__desc">${esc(h.aciklama)}</p>
+    </div>
+    <p class="row__sure mono">${esc(h.sure)}</p>
+  </li>`)).join('');
 
 // --- Rakamlar ------------------------------------------------------------------
 const stats = d.istatistikler.map((s) => ({ ...s, deger: s.kurulustanHesapla ? yil : s.deger }));
 $('[data-stats]').innerHTML = stats.map((s) => `
-  <li class="kod__item">
-    <p class="kod__val"><span data-count="${Number(s.deger)}">${reducedMotion ? nf(s.deger) : '0'}</span><small>${esc(s.sonek)}</small></p>
-    <p class="kod__lbl mono">${esc(s.etiket)}</p>
+  <li class="rakam__item">
+    <p class="rakam__val"><span data-count="${Number(s.deger)}">${reducedMotion ? nf(s.deger) : '0'}</span><small>${esc(s.sonek)}</small></p>
+    <p class="rakam__lbl">${esc(s.etiket)}</p>
   </li>`).join('');
 
+// --- Belirti seçici ------------------------------------------------------------
+const chips = $('[data-chips]');
+const teshis = $('[data-teshis]');
+const bel = d.belirtiler || [];
+chips.innerHTML = bel.map((b, i) => `<button type="button" class="chip" role="radio" aria-checked="${i === 0}" data-i="${i}"><span class="chip__dot" aria-hidden="true"></span>${esc(b.kisa)}</button>`).join('');
+function pick(i, animate) {
+  const b = bel[i];
+  if (!b) return;
+  $$('.chip', chips).forEach((c, k) => c.setAttribute('aria-checked', String(k === i)));
+  const h = d.hizmetler[b.hizmet] || {};
+  const wa = waHref(d, `Merhaba ${d.isletme.ad}, aracımda şu sorun var: ${b.kisa}. Aracım: `);
+  teshis.innerHTML = `
+    <figure class="teshis__photo"><img src="${esc(foto(b.hizmet))}" alt="" decoding="async" /><figcaption class="mono">${esc(h.baslik || '')}</figcaption></figure>
+    <div class="teshis__body">
+      <p class="teshis__lbl mono">Belirti</p>
+      <p class="teshis__belirti">${esc(b.belirti)}</p>
+      <p class="teshis__lbl mono">Muhtemel sebep</p>
+      <p class="teshis__sebep">${esc(b.sebep)}</p>
+      <p class="teshis__lbl mono">Ne yaparız</p>
+      <p class="teshis__cozum">${esc(b.cozum)}</p>
+      <div class="teshis__foot">
+        <p class="teshis__sure"><span class="mono">Ortalama süre</span><b>${esc(h.sure || '')}</b></p>
+        <a class="btn btn--amber" href="${esc(wa)}" target="_blank" rel="noopener">${icons.whatsapp}Bunu yazın</a>
+      </div>
+    </div>`;
+  if (animate && !reducedMotion) {
+    gsap.fromTo(teshis.querySelector('.teshis__photo img'), { scale: 1.12, opacity: 0.2 }, { scale: 1, opacity: 1, duration: 0.7, ease: 'power3.out' });
+    gsap.from(teshis.querySelectorAll('.teshis__body > *'), { y: 10, opacity: 0, duration: 0.4, stagger: 0.035, ease: 'power2.out' });
+  }
+}
+chips.addEventListener('click', (e) => {
+  const c = e.target.closest('.chip');
+  if (c) pick(Number(c.dataset.i), true);
+});
+chips.addEventListener('keydown', (e) => {
+  if (!['ArrowRight', 'ArrowLeft', 'ArrowDown', 'ArrowUp'].includes(e.key)) return;
+  e.preventDefault();
+  const cs = $$('.chip', chips);
+  const i = cs.findIndex((c) => c.getAttribute('aria-checked') === 'true');
+  const nx = (i + (e.key === 'ArrowRight' || e.key === 'ArrowDown' ? 1 : -1) + cs.length) % cs.length;
+  pick(nx, true);
+  cs[nx].focus();
+});
+pick(0, false);
+
 // --- Süreç ---------------------------------------------------------------------
-$('[data-steps]').innerHTML = (d.surec.map((s, i) => `
+$('[data-steps]').innerHTML = d.surec.map((s, i) => `
   <li class="adim${i === 1 ? ' adim--kural' : ''}">
     <span class="adim__no" aria-hidden="true">${i + 1}</span>
-    <div class="adim__body">
-      <h3 class="adim__ad">${esc(s.baslik)}${i === 1 ? '<span class="adim__tag mono">Kural</span>' : ''}</h3>
-      <p class="adim__text">${esc(s.aciklama)}</p>
-    </div>
-  </li>`).join(''));
+    <h3 class="adim__ad">${esc(s.baslik)}</h3>
+    <p class="adim__text">${esc(s.aciklama)}</p>
+    ${i === 1 ? '<span class="adim__tag mono">Kural</span>' : ''}
+  </li>`).join('');
+$('[data-teslim]').innerHTML = (d.teslimTesti || []).map((t) => `<li><span class="tick">${icons.check}</span>${esc(t)}</li>`).join('');
 
 // --- Galeri --------------------------------------------------------------------
 $('[data-gallery]').innerHTML = d.galeri.map((g, i) => `
-  <figure class="shot${i % 3 === 0 ? ' shot--wide' : ''}"><img src="${esc(g.src)}" alt="${esc(g.alt)}" loading="lazy" decoding="async" /><figcaption>${esc(g.alt)}</figcaption></figure>`).join('');
+  <figure class="shot shot--${i % 7}"><img src="${esc(src(g.src))}" alt="${esc(g.alt)}" loading="lazy" decoding="async" /></figure>`).join('');
 
 // --- Yorumlar ------------------------------------------------------------------
 const stars = (k) => Array.from({ length: 5 }, (_, i) => `<span class="${i < k ? '' : 'off'}">${icons.star}</span>`).join('');
@@ -291,8 +311,8 @@ $('[data-reviews]').innerHTML = d.yorumlar.map((y) => `
   </li>`).join('');
 
 // --- Markalar ------------------------------------------------------------------
-const brandRow = d.markalar.map((m) => `<span>${esc(m)}</span>`).join(`<i aria-hidden="true">${icons.key}</i>`);
-$('[data-brands]').innerHTML = `<div class="marka__row">${brandRow}<i aria-hidden="true">${icons.key}</i></div><div class="marka__row" aria-hidden="true">${brandRow}<i>${icons.key}</i></div>`;
+const brandRow = d.markalar.map((m) => `<span>${esc(m)}</span><i aria-hidden="true"></i>`).join('');
+$('[data-brands]').innerHTML = `<div class="marka__row">${brandRow}</div><div class="marka__row" aria-hidden="true">${brandRow}</div>`;
 new IntersectionObserver(([e]) => $('.marka').classList.toggle('is-off', !e.isIntersecting)).observe($('.marka'));
 
 // --- Saatler -------------------------------------------------------------------
@@ -314,7 +334,7 @@ new IntersectionObserver((ents, io) => {
 
 // --- Header --------------------------------------------------------------------
 const top = $('.top');
-const solid = () => top.classList.toggle('is-solid', scrollY > hero.offsetTop + hero.offsetHeight - 70);
+const solid = () => top.classList.toggle('is-solid', scrollY > 40);
 addEventListener('scroll', solid, { passive: true });
 solid();
 
@@ -323,31 +343,41 @@ if (!reducedMotion) {
   initSmoothScroll();
 
   $$('.h2, .acil__title').forEach((h) => gsap.from(h, { y: 30, opacity: 0, duration: 0.8, ease: 'power3.out', scrollTrigger: { trigger: h, start: 'top 88%' } }));
-  gsap.from('.acil__in > *:not(.acil__title)', { y: 18, opacity: 0, duration: 0.6, stagger: 0.07, ease: 'power2.out', scrollTrigger: { trigger: '.acil', start: 'top 80%' } });
-  gsap.from('.ktip', { y: 18, opacity: 0, duration: 0.5, stagger: 0.06, ease: 'power2.out', scrollTrigger: { trigger: '.tip__opts', start: 'top 88%' } });
+  gsap.from('.serit li', { y: 16, opacity: 0, duration: 0.5, stagger: 0.06, ease: 'power2.out', scrollTrigger: { trigger: '.serit', start: 'top 92%' } });
 
-  // Etiketler kancaya takılır gibi sallanarak gelir
-  $$('.etiket__card').forEach((c, i) => gsap.fromTo(c,
-    { rotate: i % 2 ? 16 : -16, y: -24, opacity: 0 },
-    { rotate: 0, y: 0, opacity: 1, duration: 1.3, ease: 'elastic.out(1, 0.38)', delay: (i % 3) * 0.08, scrollTrigger: { trigger: c, start: 'top 90%' } }));
+  // Yığın kartları: arkadaki kart küçülüp kararır
+  $$('.card').forEach((c, i, all) => {
+    if (i === all.length - 1) return;
+    const sc = { trigger: all[i + 1], start: 'top bottom', end: 'top 20%', scrub: true };
+    gsap.to(c.querySelector('.card__inner'), { scale: 0.92, ease: 'none', scrollTrigger: sc });
+    gsap.to(c.querySelector('.card__veil'), { opacity: 0.55, ease: 'none', scrollTrigger: { ...sc } });
+  });
+  $$('.card__photo img').forEach((im) => gsap.fromTo(im, { scale: 1.15 }, { scale: 1, ease: 'none', scrollTrigger: { trigger: im, start: 'top bottom', end: 'top 30%', scrub: true } }));
+  gsap.from('.row', { y: 20, opacity: 0, duration: 0.5, stagger: 0.06, ease: 'power2.out', scrollTrigger: { trigger: '.dizin', start: 'top 85%' } });
 
   $$('[data-count]').forEach((el) => {
     const to = Number(el.dataset.count);
     const o = { v: 0 };
     gsap.to(o, { v: to, duration: 1.6, ease: 'power2.out', scrollTrigger: { trigger: el, start: 'top 92%' }, onUpdate: () => (el.textContent = nf(o.v)) });
   });
-  gsap.from('.kod__item', { y: 26, opacity: 0, duration: 0.6, stagger: 0.08, ease: 'power2.out', scrollTrigger: { trigger: '.kod', start: 'top 85%' } });
+  gsap.from('.rakam__item', { y: 26, opacity: 0, duration: 0.6, stagger: 0.08, ease: 'power2.out', scrollTrigger: { trigger: '.rakam', start: 'top 85%' } });
+  gsap.from('.chip', { y: 14, opacity: 0, duration: 0.45, stagger: 0.05, ease: 'power2.out', scrollTrigger: { trigger: '.belirti__chips', start: 'top 88%' } });
 
-  gsap.fromTo('.surec__rail span', { scaleY: 0 }, { scaleY: 1, ease: 'none', scrollTrigger: { trigger: '.surec__wrap', start: 'top 70%', end: 'bottom 60%', scrub: 0.4 } });
-  $$('.adim').forEach((s) => ScrollTrigger.create({ trigger: s, start: 'top 72%', onEnter: () => s.classList.add('is-on'), onLeaveBack: () => s.classList.remove('is-on') }));
+  // Acil: iki sinyal lambası bölüm görününce iki kez yanar
+  ScrollTrigger.create({
+    trigger: '.acil', start: 'top 75%', once: true,
+    onEnter: () => gsap.timeline().to('.acil__flash i', { opacity: 1, duration: 0.06, repeat: 3, yoyo: true, repeatDelay: 0.22 }).to('.acil__flash i', { opacity: 1, duration: 0.3 }),
+  });
 
-  gsap.fromTo('.atolye__photo img', { yPercent: -8 }, { yPercent: 8, ease: 'none', scrollTrigger: { trigger: '.atolye', start: 'top bottom', end: 'bottom top', scrub: true } });
-  gsap.fromTo('.atolye__photo', { clipPath: 'inset(0 0 100% 0)' }, { clipPath: 'inset(0 0 0% 0)', duration: 1.1, ease: 'power3.inOut', scrollTrigger: { trigger: '.atolye', start: 'top 75%' } });
-  gsap.from('.shot', { x: 50, opacity: 0, duration: 0.7, stagger: 0.06, ease: 'power3.out', scrollTrigger: { trigger: '.galeri', start: 'top 80%' } });
+  gsap.from('.adim', { y: 30, opacity: 0, duration: 0.6, stagger: 0.1, ease: 'power2.out', scrollTrigger: { trigger: '.surec__list', start: 'top 82%' } });
+  gsap.from('.teslim__list li', { x: -14, opacity: 0, duration: 0.4, stagger: 0.07, ease: 'power2.out', scrollTrigger: { trigger: '.teslim', start: 'top 85%' } });
+
+  gsap.fromTo('.dukkan__photo img', { yPercent: -8 }, { yPercent: 8, ease: 'none', scrollTrigger: { trigger: '.dukkan', start: 'top bottom', end: 'bottom top', scrub: true } });
+  gsap.fromTo('.dukkan__photo', { clipPath: 'inset(0 0 100% 0)' }, { clipPath: 'inset(0 0 0% 0)', duration: 1.1, ease: 'power3.inOut', scrollTrigger: { trigger: '.dukkan', start: 'top 75%' } });
+  gsap.from('.shot', { y: 40, opacity: 0, duration: 0.7, stagger: 0.06, ease: 'power3.out', scrollTrigger: { trigger: '.galeri__grid', start: 'top 85%' } });
   gsap.from('.rev', { y: 26, opacity: 0, duration: 0.6, stagger: 0.07, ease: 'power2.out', scrollTrigger: { trigger: '.yorum__list', start: 'top 88%' } });
-  gsap.fromTo('[data-final-key]', { strokeDashoffset: 1 }, { strokeDashoffset: 0, ease: 'none', scrollTrigger: { trigger: '.final', start: 'top 85%', end: 'center 60%', scrub: 0.5 } });
-} else {
-  $$('.adim').forEach((s) => s.classList.add('is-on'));
+  gsap.fromTo('.final__glow', { opacity: 0.15 }, { opacity: 1, ease: 'none', scrollTrigger: { trigger: '.final', start: 'top 90%', end: 'center 55%', scrub: 0.5 } });
+  gsap.from('.final__plate', { rotateX: -80, opacity: 0, duration: 0.9, ease: 'back.out(1.6)', scrollTrigger: { trigger: '.final', start: 'top 70%' } });
 }
 
 addEventListener('load', () => ScrollTrigger.refresh());

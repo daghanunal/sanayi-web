@@ -111,7 +111,7 @@
       "hizmetler": { "baslik": "Hizmetler", "metin": "Koltuktan tavana, direksiyondan klasik restorasyona. Her iş için ortalama süre." },
       "ic-mekan": { "baslik": "Aracınızı işaretleyin", "metin": "Hangi parçada ne sorun var, dokunarak gösterin. İş listesi ve tahmini süre hazır mesajla bize gelsin." },
       "kurumsal-musteriler": { "baslik": "Filo ve kurumsal", "metin": "Servis filoları, galeriler ve sigorta dosyaları için planlı döşeme.", "gorsel": "/img/usta/t-2003.jpg" },
-      "referanslar": { "baslik": "Tezgâhtan", "metin": "Atölyeden kareler ve müşterilerimizin yorumları." },
+      "referanslar": { "baslik": "Referanslar", "metin": "Tezgâhtan çıkan işlerden kareler ve koltuğunu yaptıranların yorumları." },
       "iletisim": { "baslik": "İletişim", "metin": "Teklif, randevu ya da bir sorunuz için yazın; aynı gün dönüş yapalım." }
     },
     "konular": ["Koltuk döşeme teklifi", "Tavan döşeme", "Filo koltuk yenileme", "Klasik araç restorasyonu", "Sigorta / hasar dosyası", "Genel bilgi"],

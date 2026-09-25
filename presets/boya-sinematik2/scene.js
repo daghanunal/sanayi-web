@@ -244,11 +244,18 @@ export function createWorld(canvas, { phone, low }) {
           float fac = clamp(abs(dot(normal, vd)), 0.0, 1.0);
           vec3 flip = mix(uColB, uColA, smoothstep(0.5, 0.98, fac));
           flip = mix(flip, uColC, pow(1.0 - fac, 2.6) * 0.9);
-          float pd = length(vP - uPatch.xy) + sin(vP.x * 7.0 + 1.3) * sin(vP.y * 9.0) * 0.06;
-          float pm = (1.0 - smoothstep(uPatch.z - 0.05, uPatch.z + 0.05, pd)) * uPatch.w;
-          vec3 pc = mix(vec3(0.46, 0.47, 0.49), mix(uOff, flip, uMatch), uPaint);
-          diffuseColor.rgb = mix(flip, pc, pm);
-          primerK = pm * (1.0 - uPaint);
+          vec2 pq = vP - uPatch.xy;
+          float pa = atan(pq.y, pq.x);
+          float pd = length(pq) * (1.0 + 0.1 * sin(pa * 3.0 + 0.7) + 0.05 * sin(pa * 7.0 + 2.1))
+            + sin(vP.x * 7.0 + 1.3) * sin(vP.y * 9.0) * 0.03;
+          float pm = (1.0 - smoothstep(uPatch.z - 0.03, uPatch.z + 0.03, pd)) * uPatch.w;
+          // zımparalanmış halka: astarın çevresi mat, boya henüz yok
+          float sand = (1.0 - smoothstep(uPatch.z, uPatch.z + 0.22, pd)) * uPatch.w * (1.0 - uPaint);
+          float grain = fract(sin(dot(floor(vP * 260.0), vec2(12.9898, 78.233))) * 43758.5453);
+          vec3 primer = vec3(0.6, 0.61, 0.63) * (0.94 + grain * 0.08);
+          vec3 pc = mix(primer, mix(uOff, flip, uMatch), uPaint);
+          diffuseColor.rgb = mix(mix(flip, flip * 0.82 + 0.1, sand), pc, pm);
+          primerK = max(pm * (1.0 - uPaint), sand * 0.55);
         }`)
       .replace('#include <emissivemap_fragment>', `#include <emissivemap_fragment>
         {
@@ -261,7 +268,8 @@ export function createWorld(canvas, { phone, low }) {
           vec2 sp = vP - uSwirlC;
           float r = length(sp);
           float a = atan(sp.y, sp.x);
-          float rings = pow(abs(sin(r * 45.0 + sin(a * 7.0 + r * 13.0) * 3.0)), 40.0);
+          float br = step(0.35, fract(sin(floor(a * 18.0 + r * 30.0) * 91.7) * 4375.5));
+          float rings = pow(abs(sin(r * 110.0 + sin(a * 5.0 + r * 9.0) * 0.8)), 36.0) * br;
           float arc = pow(max(0.0, cos(a * 2.0 - 0.6)), 2.0);
           float fall = exp(-r * r * 1.4) * smoothstep(0.03, 0.2, r);
           vec3 rb = 0.55 + 0.45 * cos(6.2831 * (a / 6.2831 + vec3(0.0, 0.33, 0.67)));
@@ -450,11 +458,13 @@ export function createWorld(canvas, { phone, low }) {
   }
   resize();
 
+  // Telefonda göçük itme karesi metnin üstüne taşmasın: biraz geri çekil
+  const V = phone ? { ...VIEWS, pdr: { ...VIEWS.pdr, dist: 6.1, pitch: 0.3 } } : VIEWS;
   const cur = { ...VIEWS.hero };
   const goal = { ...VIEWS.hero };
   function view(name, t = 1, from) {
-    const a = VIEWS[from || name];
-    const b = VIEWS[name];
+    const a = V[from || name];
+    const b = V[name];
     for (const k in b) goal[k] = lerp(a[k], b[k], t);
   }
   function snap() {

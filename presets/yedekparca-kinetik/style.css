@@ -129,7 +129,7 @@ body {
 .vin { background: var(--ink); color: var(--kagit); }
 .vin__stage {
   position: relative; height: 100svh; overflow: hidden;
-  display: grid; grid-template-columns: minmax(0, 1fr); grid-template-rows: auto auto 1fr; align-content: start;
+  display: grid; grid-template-columns: minmax(0, 1fr); grid-template-rows: auto auto auto 1fr; align-content: start;
   padding: 84px var(--gut) 110px;
 }
 .vin__head .mono { color: var(--pink); }
@@ -417,3 +417,16 @@ body {
 .rm .vin__labels { display: grid; gap: 18px; min-height: 0; opacity: 1 !important; }
 .rm .vin__lab { position: static; opacity: 1; transform: none; }
 .rm .vin.is-done .vin__code { transform: none; opacity: 1; }
+
+/* İ noktası üst satırın harfine değmesin: afiş satırlarında biraz daha aralık. */
+.final__title .ln { line-height: 1; }
+.hero__title .ln { line-height: .93; }
+.vin__scan { margin-top: 22px; color: rgb(233 235 240 / .7); font-size: 14px; letter-spacing: .08em; text-transform: uppercase; transition: opacity .3s; }
+.vin__scan b { color: var(--pink); font-size: 1.6em; }
+.vin__scan span::after { content: ''; display: inline-block; width: .6em; height: .9em; margin-left: .3em; vertical-align: -.1em; background: var(--pink); animation: vinBlink 1s steps(2) infinite; }
+@keyframes vinBlink { to { opacity: 0; } }
+.vin__scan.is-off { opacity: 0; }
+.vin__scan + .vin__labels { margin-top: -30px; }
+.rm .vin__scan { display: none; }
+.rm .vin__scan + .vin__labels { margin-top: 22px; }
+@media (min-width: 900px) { .vin__scan { font-size: 18px; margin-top: 30px; } }

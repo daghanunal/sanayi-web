@@ -172,7 +172,7 @@ export function createStage(canvas, { kinds, lite }) {
 
     // --- Halka parametreleri
     const Rh = mobile ? 1.5 : 2.3;
-    let R = Rh, y = mobile ? 1.7 : 0.88, s = mobile ? 0.72 : 0.7;
+    let R = Rh, y = mobile ? 1.42 : 0.52, s = mobile ? 0.72 : 0.7;
     let A = time * 0.16 + T * 1.6;
     // vitrin: halka alçalır, küçülür
     const vIn = sm(seg(T, 0.8, 1.0));

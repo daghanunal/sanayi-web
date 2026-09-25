@@ -24,10 +24,13 @@ v.hizmetler = v.hizmetler.map((h) => ({
   kisa: h.aciklama.split('. ')[0].replace(/\.$/, '') + '.',
   gorsel: GORSEL[h.baslik],
 }));
+// Paylaşılan veride iki yorumun sahibi uydurma işletme adı; adı yerine rolü yazalım.
+const ROL = { 'Oto Kardeşler Motor': ['Motor ustası', 'Şaşmaz'], 'Yücel Oto': ['Servis', 'Etimesgut'] };
+v.yorumlar = (v.yorumlar || []).map((y) => (ROL[y.ad] ? { ...y, ad: ROL[y.ad][0], arac: ROL[y.ad][1] } : y));
 v.galeri = [
-  { src: '/img/kurumsal-rektifiye2/talas.jpg', alt: 'Freze ucunun altından sıçrayan talaş' },
+  { src: `${B}img/kurumsal-rektifiye2/talas.jpg`, alt: 'Freze ucunun altından sıçrayan talaş' },
   ...(v.galeri || []),
-  { src: '/img/kurumsal-rektifiye2/kafa.jpg', alt: 'Tezgâhta bekleyen eksantrik miller ve silindir kapağı' },
+  { src: `${B}img/kurumsal-rektifiye2/kafa.jpg`, alt: 'Tezgâhta bekleyen eksantrik miller ve silindir kapağı' },
 ];
 
 // Hero: motorun "yazı" hero'su + fotoğraf bandının üstüne ölçü çizgisi + altına tolerans şeridi.
@@ -39,7 +42,7 @@ const hero = {
       ? `<div class="tr-olcu" aria-hidden="true">
           <svg viewBox="0 0 400 60" preserveAspectRatio="none"><path class="tr-olcu__c" d="M2 30H398M2 12V48M398 12V48M2 30l14-7M2 30l14 7M398 30l-14-7M398 30l-14 7"/></svg>
           <span class="tr-olcu__d">Ø ${esc(r.silindirler[0].olcu)} <small>mm</small></span>
-          <span class="tr-olcu__e">Ovalite ${esc(r.silindirler[0].ovalite)} · ${esc(r.olcuSinifi)}</span>
+          <span class="tr-olcu__e">Ovalite ${esc(r.silindirler[0].ovalite)} mm<span class="tr-olcu__s"> · ${esc(r.olcuSinifi)}</span></span>
         </div>`
       : '';
     html = html.replace('</figure>', `<div class="tr-tav" aria-hidden="true"></div>${olcu}</figure>`);
@@ -91,7 +94,7 @@ kurumsal({
       vurgu: '#5a2d91', 'vurgu-metin': '#ffffff', koyu: '#0e1014', 'koyu-metin': '#e9ebee', 'koyu-soluk': '#8f96a0',
       gecis: '#0e1014',
       'font-baslik': "'Anybody', system-ui, sans-serif", 'font-govde': "'Hanken Grotesk', system-ui, sans-serif",
-      'baslik-agirlik': '800', 'baslik-genislik': '122%', 'baslik-harf': '-0.035em', 'baslik-satir': '0.94',
+      'baslik-agirlik': '800', 'baslik-genislik': '122%', 'baslik-harf': '-0.035em', 'baslik-satir': '1',
       radius: '2px', 'radius-buyuk': '2px', govde: '17px',
     },
   },

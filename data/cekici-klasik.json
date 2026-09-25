@@ -1,11 +1,11 @@
 {
   "preset": "cekici-klasik",
   "durumlar": [
-    { "etiket": "Araç çalışmıyor", "hizmet": 0, "gorsel": "/img/cekici-klasik/cekici-yukleme.jpg", "mesaj": "aracım çalışmıyor, çekici lazım" },
+    { "etiket": "Araç çalışmıyor", "hizmet": 0, "gorsel": "/img/cekici-klasik/cekici-sehir.jpg", "mesaj": "aracım çalışmıyor, çekici lazım" },
     { "etiket": "Akü bitti", "hizmet": 1, "gorsel": "/img/cekici-klasik/aku-takviye.jpg", "mesaj": "aküm bitti, takviye lazım" },
     { "etiket": "Lastik patladı", "hizmet": 2, "gorsel": "/img/cekici-klasik/yolda-lastik.jpg", "mesaj": "lastiğim patladı, yolda kaldım" },
     { "etiket": "Kaza oldu", "hizmet": 3, "gorsel": "/img/cekici-klasik/vinc-kurtarma.jpg", "mesaj": "kaza oldu, aracın taşınması lazım" },
-    { "etiket": "Başka şehre", "hizmet": 4, "gorsel": "/img/cekici-klasik/arac-tasima.jpg", "mesaj": "aracımı başka bir şehre taşıtmak istiyorum" },
+    { "etiket": "Başka şehre", "hizmet": 4, "gorsel": "/img/cekici-klasik/gece-yol.jpg", "mesaj": "aracımı başka bir şehre taşıtmak istiyorum" },
     { "etiket": "Tır, otobüs", "hizmet": 5, "gorsel": "/img/cekici-klasik/agir-kurtarma.jpg", "mesaj": "ağır vasıta için kurtarma lazım" },
     { "etiket": "Yoldan çıktım", "hizmet": 6, "gorsel": "/img/cekici-klasik/aku-yol.jpg", "mesaj": "aracım yoldan çıktı / saplandı" },
     { "etiket": "Yakıt bitti", "hizmet": 7, "gorsel": "/img/cekici-klasik/yolda-kalan.jpg", "mesaj": "yakıtım bitti, yolda kaldım" }
@@ -14,8 +14,8 @@
     { "kim": "siz", "metin": "Konumu attım. Eskişehir yolu çıkışındayım, araç hiç çalışmıyor." },
     { "kim": "biz", "metin": "Konum geldi. En yakın çekicimiz yola çıktı, 35 dakikada yanınızdayız. Ücreti de şimdi yazıyorum." },
     { "kim": "biz", "metin": "Geldik. Önce aküye bakıyoruz; takviyeyle çalışmazsa aracı yükleyeceğiz." },
-    { "kim": "biz", "metin": "Yüklemeden önce dört yandan çektik. Tekerler kayışta, gövde zincirde.", "fotolar": ["/img/cekici-klasik/cekici-yukleme.jpg", "/img/cekici-klasik/zincir-sabitleme.jpg", "/img/cekici-klasik/arac-tasima.jpg", "/img/cekici-klasik/vinc-kurtarma.jpg"] },
-    { "kim": "biz", "metin": "Teslim ettik. Anahtar servisin danışmanında, teslim fotoğrafı ekte.", "fotolar": ["/img/cekici-klasik/cekici-sehir.jpg"] }
+    { "kim": "biz", "metin": "Yüklemeden önce dört yandan çektik. Tekerler kayışta, gövde zincirde.", "fotolar": ["/img/cekici-klasik/cekici-yukleme.jpg", "/img/cekici-klasik/zincir-sabitleme.jpg"] },
+    { "kim": "biz", "metin": "Teslim ettik. Anahtar servisin danışmanında, teslim fotoğrafı ekte.", "fotolar": ["/img/cekici-klasik/arac-tasima.jpg"] }
   ],
   "yollar": ["Eskişehir yolu", "Konya yolu", "İstanbul yolu", "Samsun yolu", "Polatlı", "Sincan", "Etimesgut", "Çankaya", "Keçiören", "Gölbaşı", "Esenboğa", "Çevre yolu"]
 }

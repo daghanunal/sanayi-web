@@ -120,7 +120,7 @@ h1, h2, h3 { font-family: var(--display); font-weight: 800; letter-spacing: -0.0
   padding: 0 var(--pad) calc(100px + env(safe-area-inset-bottom));
 }
 .kat__intro { grid-column: 1 / -1; grid-row: 1; }
-.kat__caps { grid-column: 1; grid-row: 1; position: relative; min-height: 230px; }
+.kat__caps { grid-column: 1; grid-row: 1; position: relative; min-height: 230px; display: grid; align-items: end; }
 .kesit { grid-column: 2; grid-row: 1; }
 
 .kat__kicker { font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: #ffb59e; margin-bottom: 14px; }
@@ -131,7 +131,7 @@ h1, h2, h3 { font-family: var(--display); font-weight: 800; letter-spacing: -0.0
 .kat__hint { display: flex; align-items: center; gap: 10px; margin-top: 18px; font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: rgb(243 243 239 / .6); }
 .kat__hint-bar { width: 26px; height: 8px; background: linear-gradient(to right, var(--celik) 0 33%, var(--astar) 33% 66%, var(--boya) 66%); }
 
-.cap { position: absolute; left: 0; right: 0; bottom: 0; }
+.cap { grid-area: 1 / 1; min-width: 0; }
 .cap__no { font-size: 12px; color: #ffb59e; letter-spacing: .02em; }
 .cap__title { font-size: clamp(56px, 17vw, 150px); font-weight: 900; letter-spacing: -0.05em; line-height: .9; margin-top: 8px; padding-top: .08em; }
 .cap__text { margin-top: 12px; font-size: 16px; color: rgb(243 243 239 / .84); max-width: 30em; }
@@ -168,7 +168,7 @@ h1, h2, h3 { font-family: var(--display); font-weight: 800; letter-spacing: -0.0
   .kat__actions .btn { padding: 0 22px; font-size: 16px; }
   .kat__title { font-size: clamp(56px, 6.4vw, 104px); }
   .kat__lead { font-size: 18px; }
-  .kat__caps { min-height: 360px; align-self: center; }
+  .kat__caps { min-height: 360px; align-self: center; align-items: center; }
   .kesit { align-self: center; }
   .kesit__box { height: 380px; }
   .band__label { display: block; position: absolute; left: 10px; bottom: 8px; font-size: 11px; white-space: nowrap; color: var(--grafit); }

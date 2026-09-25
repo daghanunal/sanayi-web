@@ -335,5 +335,6 @@ const pause = (el, cls = 'is-paused') =>
 pause($('[data-strip]'));
 pause($('.chevron'));
 pause(triSvg.parentElement);
+ScrollTrigger.create({ trigger: '.final', start: 'top 60px', end: 'bottom 60px', toggleClass: { targets: '.top', className: 'on-red' } });
 
 window.addEventListener('load', () => ScrollTrigger.refresh());

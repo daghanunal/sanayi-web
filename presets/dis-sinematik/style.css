@@ -1,5 +1,5 @@
 /* Işık Masası: gece laciverti, mine beyazı, röntgen buzu ve diş eti mercanı.
-   Başlıklar yumuşak optik Fraunces, gövde Urbanist. */
+   Başlıklar yumuşak optik Fraunces, gövde Instrument Sans. */
 :root {
   --night: #070b16;
   --night-2: #0c1324;
@@ -17,7 +17,7 @@
   --ink-muted: #56607a;
   --ok: #4fd69a;
   --serif: 'Fraunces', 'Iowan Old Style', Georgia, serif;
-  --body: 'Urbanist', system-ui, sans-serif;
+  --body: 'Instrument Sans', system-ui, sans-serif;
   --pad: clamp(16px, 5vw, 80px);
   --bar-bg: #0c1324;
   --bar-fg: #eef2f8;
@@ -80,17 +80,18 @@ main, .foot { position: relative; z-index: 1; }
 }
 .top.is-solid { background: rgb(8 12 24 / .9); box-shadow: 0 1px 0 var(--line); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
 .top__brand { font: 500 20px/1 var(--serif); font-variation-settings: 'SOFT' 100; text-decoration: none; margin-right: auto; padding-top: 2px; }
-.top__status { font: 600 13px var(--body); color: var(--muted); display: flex; align-items: center; gap: 8px; }
+.top__status { font: 600 13px var(--body); color: var(--muted); display: flex; align-items: center; gap: 8px; white-space: nowrap; flex: none; }
 .top__status::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: #6b7590; }
 .top__status.is-open::before { background: var(--ok); box-shadow: 0 0 10px var(--ok); }
 .top__call {
   display: inline-flex; align-items: center; gap: 9px; padding: 11px 18px; border-radius: 999px;
-  background: var(--enamel); color: var(--ink); text-decoration: none; font-weight: 800;
+  background: var(--enamel); color: var(--ink); text-decoration: none; font-weight: 700;
 }
 .top__call svg { width: 18px; height: 18px; }
 @media (max-width: 759px) {
   .top { height: 60px; gap: 12px; }
-  .top__brand { font-size: 17px; }
+  .top__brand { font-size: 17px; line-height: 1.1; min-width: 0; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .top.is-long .top__status { display: none; }
   .top__num { display: none; }
   .top__call { padding: 10px; }
   .top__status { font-size: 12px; }
@@ -135,7 +136,7 @@ main, .foot { position: relative; z-index: 1; }
   font: 700 13px var(--body); color: var(--muted); background: rgb(12 19 36 / .6);
   box-shadow: inset 0 0 0 1px var(--line); transition: background .3s, color .3s, box-shadow .3s;
 }
-.rail li b { font-weight: 800; color: #5e6a86; transition: color .3s; }
+.rail li b { font-weight: 700; color: #5e6a86; transition: color .3s; }
 .rail li.is-done b { color: var(--ice); }
 .rail li.is-active { background: var(--enamel); color: var(--ink); box-shadow: none; }
 .rail li.is-active b { color: var(--gum-2); }
@@ -177,6 +178,8 @@ main, .foot { position: relative; z-index: 1; }
 .tag.is-cure i { border-color: var(--cure); }
 .tag.is-cure i::after, .tag.is-cure span::before { background: var(--cure); }
 .tag.is-cure span { background: var(--cure); color: #fff; }
+.tag.is-left span { left: auto; right: 26px; }
+.tag.is-left span::before { left: auto; right: -19px; transform-origin: left; transform: rotate(58deg) translate(-3px, 0); }
 @keyframes ping { 0% { box-shadow: 0 0 0 0 rgb(255 93 122 / .5); } 100% { box-shadow: 0 0 0 16px rgb(255 93 122 / 0); } }
 
 .overview { position: absolute; left: 0; right: 0; bottom: 14vh; text-align: center; visibility: hidden; padding: 0 16px; }
@@ -228,8 +231,10 @@ section:not(.film) { position: relative; }
 /* --- Hakkımızda --- */
 .about {
   display: grid; grid-template-columns: 1.05fr 1fr; gap: clamp(28px, 6vw, 90px); align-items: center;
-  padding: clamp(80px, 12vw, 160px) var(--pad); background: var(--night);
+  padding: clamp(80px, 12vw, 160px) var(--pad); background: var(--night); position: relative;
 }
+.about::before { content: ''; position: absolute; left: 0; right: 0; bottom: 100%; height: 36vh; pointer-events: none;
+  background: linear-gradient(to bottom, rgb(7 11 22 / 0), var(--night)); }
 .about__img { border-radius: 28px; overflow: hidden; aspect-ratio: 4 / 5; }
 .about__img img { width: 100%; height: 100%; object-fit: cover; }
 .about__text { margin-top: 24px; font: 400 clamp(20px, 2vw, 26px)/1.45 var(--serif); font-variation-settings: 'SOFT' 100; color: #dfe6f3; }
@@ -288,7 +293,7 @@ section:not(.film) { position: relative; }
 .tooth text { font: 700 11px var(--body); fill: #8a8373; transition: fill .2s; }
 .tooth:hover rect, .tooth:focus-visible rect { stroke: var(--ink); }
 .tooth.is-on rect { fill: var(--gum); stroke: var(--gum-2); }
-.tooth.is-on text { fill: var(--gum-2); font-weight: 800; }
+.tooth.is-on text { fill: var(--gum-2); font-weight: 700; }
 
 /* --- Çocuk --- */
 .kids {
@@ -340,14 +345,14 @@ section:not(.film) { position: relative; }
 
 /* --- Ziyaret --- */
 .visit { display: grid; grid-template-columns: 1fr 1.1fr; gap: clamp(28px, 5vw, 70px); padding: clamp(80px, 10vw, 140px) var(--pad); background: var(--night-2); }
-.visit__status { display: inline-flex; align-items: center; gap: 10px; margin-top: 22px; font-weight: 800; color: var(--muted); }
+.visit__status { display: inline-flex; align-items: center; gap: 10px; margin-top: 22px; font-weight: 700; color: var(--muted); }
 .visit__status::before { content: ''; width: 10px; height: 10px; border-radius: 50%; background: #6b7590; }
 .visit__status.is-open { color: var(--ok); }
 .visit__status.is-open::before { background: var(--ok); box-shadow: 0 0 12px var(--ok); }
 .visit__hours { margin-top: 22px; display: grid; gap: 1px; background: var(--line); border-radius: 16px; overflow: hidden; max-width: 480px; }
 .visit__hours div { display: flex; justify-content: space-between; gap: 16px; padding: 14px 18px; background: var(--night-3); }
 .visit__hours dt { color: var(--muted); font-weight: 600; }
-.visit__hours dd { margin: 0; font-weight: 800; font-variant-numeric: tabular-nums; }
+.visit__hours dd { margin: 0; font-weight: 700; font-variant-numeric: tabular-nums; }
 .visit__hours .is-closed dd { color: var(--gum); }
 .visit__addr { margin-top: 22px; font-size: 18px; color: #dfe6f3; max-width: 40ch; }
 .visit__cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 26px; }

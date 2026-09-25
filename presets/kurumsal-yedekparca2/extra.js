@@ -97,7 +97,7 @@ function grupBilgi(d, p) {
   const h = (d.hizmetler || []).find((x) => x.baslik?.startsWith(p.grup));
   if (!h) return '';
   const nf = new Intl.NumberFormat('tr-TR');
-  return [h.baslik, h.raf ? `Raf ${h.raf}` : '', h.stok ? `${nf.format(h.stok)} kalem stokta` : ''].filter(Boolean).join(' · ');
+  return [p.grup, h.raf ? `Raf ${h.raf}` : '', h.stok ? `${nf.format(h.stok)} stokta` : ''].filter(Boolean).join(' · ');
 }
 
 export const patlatma = {

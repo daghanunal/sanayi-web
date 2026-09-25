@@ -27,7 +27,7 @@ const fotoMesaj = `Merhaba ${d.isletme.ad}, aracımın fotoğraflarını gönder
 const binds = {
   ad: d.isletme.ad,
   slogan: d.isletme.slogan,
-  hakkinda: d.isletme.hakkinda,
+  hakkinda: String(d.isletme.hakkinda ?? '').replace(/\b(19|20)\d\d'(?:d|t)[ae]n\b/, ablative(d.isletme.kurulus)),
   telefon: d.iletisim.telefon,
   adres: d.iletisim.adres,
   garanti: d.garanti,
@@ -189,12 +189,13 @@ $('[data-brands]').innerHTML = `<div>${markaHtml}<i aria-hidden="true"></i></div
 const bugunIdx = new Date().getDay();
 const GUN = ['Pazar', 'Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi'];
 $('[data-hours] tbody').innerHTML = groupedHours(d.saatler).map(([gun, saat]) => {
-  const bugun = gun.includes(GUN[bugunIdx]) || (gun.includes('–') && (() => {
-    const [a, b] = gun.split(' – ').map((g) => GUN.indexOf(g));
+  const parca = gun.split(/\s*[–-]\s*/).map((g) => g.trim());
+  const bugun = parca.length === 1 ? parca[0] === GUN[bugunIdx] : (() => {
+    const [a, b] = parca.map((g) => GUN.indexOf(g));
     const sira = [1, 2, 3, 4, 5, 6, 0];
     const ia = sira.indexOf(a), ib = sira.indexOf(b), ic = sira.indexOf(bugunIdx);
-    return ic >= ia && ic <= ib;
-  })());
+    return ia >= 0 && ib >= 0 && ic >= ia && ic <= ib;
+  })();
   return `<tr class="${bugun ? 'is-today' : ''}"><th scope="row">${esc(gun)}</th><td class="mono">${esc(saat)}</td></tr>`;
 }).join('');
 
@@ -313,8 +314,8 @@ if (reducedMotion) {
 ScrollTrigger.create({
   trigger: '.hiz',
   start: 'top 64px',
-  end: 'max',
-  onToggle: (s) => $('[data-top]').classList.toggle('is-solid', s.isActive),
+  onEnter: () => $('[data-top]').classList.add('is-solid'),
+  onLeaveBack: () => $('[data-top]').classList.remove('is-solid'),
 });
 
 addEventListener('load', () => ScrollTrigger.refresh());

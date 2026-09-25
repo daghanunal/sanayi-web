@@ -1,33 +1,23 @@
 {
   "preset": "sanziman-klasik",
-  "vitesler": [
+  "seviyeler": [
     {
-      "harf": "P",
-      "ad": "Park",
-      "baslik": "Aracı bırakın, önce kaydı okuruz.",
-      "metin": "Teşhis cihazını bağlar, şanzıman beynindeki hata kodlarına ve canlı verilere bakarız.",
-      "img": "/img/sanziman-klasik/vites-secici.jpg"
+      "etiket": "MIN altı",
+      "seviye": 24,
+      "baslik": "Yağ eksikse vites geç atar, kayar.",
+      "metin": "Eksik ya da yorulmuş yağla balatalar kaydırır, kutu ısınır. Vuruntu şikâyetlerinin çoğu burada başlar."
     },
     {
-      "harf": "R",
-      "ad": "Geri",
-      "baslik": "Şikâyetin geçmişine gideriz.",
-      "metin": "Hangi viteste, hangi sıcaklıkta vuruyor? Sizinle aynı arabada yolda deneriz.",
-      "img": "/img/sanziman-klasik/teshis.jpg"
+      "etiket": "Ölçüyoruz",
+      "seviye": 47,
+      "baslik": "Seviyeye soğukken değil, sıcakken bakılır.",
+      "metin": "Otomatik şanzımanda seviye, yağ çalışma sıcaklığına gelince ayarlanır. Göz kararı doldurulmaz."
     },
     {
-      "harf": "N",
-      "ad": "Nötr",
-      "baslik": "Onayınız olmadan kutu inmez.",
-      "metin": "Yağ mı, mekatronik mi, revizyon mu; işi ve fiyatı baştan konuşuruz.",
-      "img": "/img/sanziman-klasik/usta-tablet.jpg"
-    },
-    {
-      "harf": "D",
-      "ad": "Sürüş",
-      "baslik": "Son sürüşle teslim ederiz.",
-      "metin": "Soğuk ve sıcak şanzımanla deneriz, hata kaydı kalmadığını görünce anahtarı veririz.",
-      "img": "/img/sanziman-klasik/vites-kolu.jpg"
+      "etiket": "MAX çizgisi",
+      "seviye": 78,
+      "baslik": "Doğru yağ, tam çizgisinde.",
+      "metin": "Üreticinin öngördüğü yağla çizgisine kadar doldururuz. Eski yağı size gösterir, öyle teslim ederiz."
     }
   ],
   "tipler": [
@@ -91,16 +81,8 @@
   "finalBaslik": "Vites vuruyorsa, beklemeyin.",
   "galeri": [
     {
-      "src": "/img/sanziman-klasik/atolye.jpg",
-      "alt": "Liftlerde araçların bulunduğu geniş atölye"
-    },
-    {
       "src": "/img/sanziman-klasik/teshis.jpg",
       "alt": "Teşhis tableti ile şanzıman arıza kaydı okunuyor"
-    },
-    {
-      "src": "/img/sanziman-klasik/yag.jpg",
-      "alt": "Araca yeni yağ dolduruluyor"
     },
     {
       "src": "/img/sanziman-klasik/lift.jpg",
@@ -109,10 +91,6 @@
     {
       "src": "/img/sanziman-klasik/devre-karti.jpg",
       "alt": "Kontrol ünitesine ait devre kartı"
-    },
-    {
-      "src": "/img/sanziman-klasik/kaput-alti.jpg",
-      "alt": "Kaputu açık aracı inceleyen usta"
     },
     {
       "src": "/img/sanziman-klasik/obd.jpg",

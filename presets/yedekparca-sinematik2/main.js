@@ -204,7 +204,11 @@ addEventListener('resize', () => {
 
 // Film zamanı
 const films = $$('[data-film]').map((el) => ({ el, i: Number(el.dataset.film), top: 0, len: 1 }));
+// Uzun işletme adında (mobilde 4+ satır) giriş parçaları harflerin altına insin
+let heroDrop = 0;
 function measure() {
+  heroDrop = innerWidth / innerHeight < 0.8
+    ? Math.max(0, (giant.offsetTop + giant.offsetHeight) / innerHeight - 0.36) : 0;
   films.forEach((f) => {
     const r = f.el.getBoundingClientRect();
     f.top = r.top + scrollY;
@@ -337,7 +341,8 @@ function frame() {
     const tS = T > 3.8 && T < 5.5 ? sm(seg(T, 3.86, 4.0)) : 0;
     const shiftX = mobile ? 0 : vS * 0.22 + tS * 0.18;
     const fS = T > 5.5 ? 1 : 0;
-    const shiftY = mobile ? vS * 0.2 + tS * 0.14 + fS * 0.1 : 0;
+    const hD = heroDrop * (1 - sm(seg(T, 0.55, 0.9)));
+    const shiftY = mobile ? vS * 0.2 + tS * 0.14 + fS * 0.1 - hD : 0;
     const time = reducedMotion ? 0 : (performance.now() - t0) / 1000;
     stage.update(T, time, { activeF: f, shiftX, shiftY, introP: introState.p });
   }

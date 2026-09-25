@@ -53,6 +53,10 @@ const heroTitle = $('[data-hero-title]');
 heroTitle.textContent = d.isletme.ad;
 $('[data-intro-name]').textContent = up(d.isletme.ad);
 
+// Konum başlığı adresten: "Şaşmaz'da, 4. Cadde'de."
+const cadde = (d.iletisim.adres || '').match(/(\d+)\.\s*Cadde/i);
+if (cadde) $('[data-shop-title]').textContent = `Şaşmaz'da, ${cadde[1]}. Cadde'de.`;
+
 const status = openStatus(d.saatler);
 $$('[data-status]').forEach((el) => {
   el.textContent = status.open ? 'Şu an açık' : 'Şu an kapalı';
@@ -293,7 +297,7 @@ function finaleState(q, time) {
   const r = m ? 16 : 11;
   return {
     pos: V(Math.sin(a) * r, m ? 1.6 : 1.2, Math.cos(a) * r),
-    look: m ? V(0.2, -3.4, 0) : V(-3.0, 0.1, 0), fov: m ? 46 : 40,
+    look: m ? V(0.2, -3.4, 0) : V(-4.4, 0.1, 0), fov: m ? 46 : 40,
     clutch: 1, fan: 1, flow: 1.15, charge: 1, heat: 0, uv: 0, leak: 0, hoses: 0,
     frost: 1, air: 1, filter: 1, highlight: null, hlAmount: 0, env: 0.9,
   };
@@ -543,6 +547,8 @@ let mqX = 0;
 let mqVisible = false;
 new IntersectionObserver((e) => (mqVisible = e[0].isIntersecting)).observe(mq);
 
+const finaleEl = $('[data-finale]');
+let lastLift = 0, lastMaskTop = null;
 let lastT = performance.now();
 function tick(now) {
   const dt = Math.min(0.05, (now - lastT) / 1000);
@@ -561,9 +567,26 @@ function tick(now) {
   const showFinale = finaleActive || canvasFinale > 0.001;
   if (showFinale && !filmActive) {
     canvas.style.opacity = canvasFinale;
+    // Yapışkan final bitince model de sayfayla birlikte yukarı kayar (footer üstüne binmesin)
+    const fr = finaleEl.getBoundingClientRect();
+    const lift = Math.max(0, innerHeight - fr.bottom);
+    // Üstteki bölümün kenarında model kesik görünmesin: canvas finalin üst kenarından yumuşakça açılır
+    const topPx = Math.round(fr.top);
+    if (topPx !== lastMaskTop) {
+      const m = topPx > -240 ? `linear-gradient(to bottom, transparent ${topPx}px, #000 ${topPx + 240}px)` : 'none';
+      canvas.style.maskImage = m;
+      canvas.style.webkitMaskImage = m;
+      lastMaskTop = topPx;
+    }
+    if (lift !== lastLift) {
+      canvas.style.transform = lift ? `translate3d(0, ${-lift}px, 0)` : '';
+      lastLift = lift;
+    }
     setSky(1, 0);
     S.update(finaleState(finaleQ, time), now);
   } else if (showFilm) {
+    if (lastLift) { canvas.style.transform = ''; lastLift = 0; }
+    if (lastMaskTop !== null) { canvas.style.maskImage = canvas.style.webkitMaskImage = 'none'; lastMaskTop = null; }
     S.update(filmState(filmP, time), now);
   }
 

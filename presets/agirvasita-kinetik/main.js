@@ -114,7 +114,7 @@ function adKur() {
   if (adMod === m) return;
   adMod = m;
   heroAd.innerHTML = adSatirlar()
-    .map((k, i) => `<span class="hero__satir${i && /[İĞÖÜÂÎÛ]/.test(k) ? ' hero__satir--ust' : ''}" aria-hidden="true">${esc(k)}</span>`)
+    .map((k, i) => `<span class="hero__satir${/[İĞÖÜÂÎÛ]/.test(k) ? ' hero__satir--ust' : ''}" aria-hidden="true">${esc(k)}</span>`)
     .join('');
 }
 

@@ -279,8 +279,8 @@ export const kayit = {
                 <text class="sz-eksen" x="${X0}" y="14">devir × 1000</text>
                 <text class="sz-eksen sz-eksen--sag" x="${X1}" y="292">zaman →</text>
                 <path class="sz-dolgu" d=""/>
-                <path class="sz-saglam" d=""/>
                 <path class="sz-cizgi" d=""/>
+                <path class="sz-saglam" d=""/>
                 <g class="sz-isaret"><circle r="15" class="h"/><circle r="5"/></g>
                 <g class="sz-oynat"><line y1="${Y1}" y2="${Y0}"/><circle r="4.5" class="n"/></g>
               </svg>

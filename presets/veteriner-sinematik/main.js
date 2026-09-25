@@ -50,6 +50,7 @@ const yil = new Date().getFullYear() - d.isletme.kurulus;
 $('[data-since]').textContent = `Etimesgut · ${ablative(d.isletme.kurulus)} beri`;
 const heroTitle = $('[data-hero-title]');
 heroTitle.textContent = d.isletme.ad;
+if (d.isletme.ad.length > 22) heroTitle.classList.add("is-long");
 $('[data-slogan]').textContent = d.isletme.slogan;
 $('[data-intro-name]').textContent = d.isletme.ad;
 
@@ -216,7 +217,7 @@ function camFor(p, time) {
     ? [0, 0.05, 4.9, 0.62, 0.0, 40, 0, 0.2]
     : [0, 0.0, 3.3, 0.55, 0.0, 34, 0.17, 0.02];
   const FLIP = m ? (x) => [x, 0, 4.5, 1.18, 0, 40, 0, -0.19] : (x) => [x, 0.02, 3.7, 1.02, 0, 34, 0.15, 0.0];
-  const PAGE = m ? (x) => [x, 0.02, port ? 3.95 : 4.1, 1.22, x * -0.05, 40, 0, -0.2] : (x) => [x * 0.3, 0.04, 3.5, 1.1, x * -0.1, 34, 0.15, 0.0];
+  const PAGE = m ? (x) => [x, 0.02, port ? 3.95 : 4.1, 1.22, x * -0.05, 40, 0, -0.2] : (x) => [x * 0.1, 0.04, 3.5, 1.1, x * -0.1, 34, 0.165, 0.0];
   const OVER = m ? [0, 0.1, 6.2, 1.0, 0.18, 40, 0, -0.08] : [0, 0.08, 4.5, 0.9, 0.2, 34, 0.18, 0.0];
 
   if (p < R.c1[0]) return HERO;
@@ -479,7 +480,7 @@ function loadImg(src) {
   });
 }
 async function fontsReady() {
-  const list = ['400 40px "Lilita One"', '600 40px "Parkinsans"', '700 40px "Parkinsans"', '700 40px "Kalam"', '700 40px "Courier Prime"'];
+  const list = ['400 40px "Paytone One"', '600 40px "Parkinsans"', '700 40px "Parkinsans"', '700 40px "Kalam"', '700 40px "Courier Prime"'];
   const t = new Promise((r) => setTimeout(r, 3500));
   await Promise.race([Promise.all(list.map((f) => document.fonts.load(f, 'ğşİıöçü'))), t]).catch(() => {});
 }

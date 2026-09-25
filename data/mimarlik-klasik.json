@@ -1,18 +1,77 @@
 {
   "preset": "mimarlik-klasik",
   "hero": {
-    "proje": "Sizin eviniz",
-    "ust": "Mimari proje · iç mimarlık · restorasyon",
-    "ipucu": "Kaydırın, çizim yapıya dönsün"
+    "ust": "Mimarlık ofisi · Etimesgut",
+    "ipucu": "Kaydırın, içeri buyurun",
+    "iceri": "İçeri buyurun.",
+    "iceriAlt": "Konut, ticari yapı, iç mekân ve restorasyon. Arsayı görmeden çizmeyiz, çizdiğimizi bırakıp gitmeyiz."
   },
-  "paftaKodlari": ["A-01", "A-02", "R-01", "U-01", "İ-01", "RS-01", "3D-01", "T-01"],
-  "olcekler": ["1/5000", "1/1000", "1/200", "1/100", "1/50", "1/1"],
-  "imar": {
-    "arsa": 500,
-    "emsal": 1.2,
-    "taks": 0.35,
-    "not": "Bu kaba bir ön hesaptır. Kesin rakamı belediyeden alınan imar durum belgesi, çekme mesafeleri ve bölgenin yükseklik sınırı belirler; onu da biz sizin için okuruz."
+  "program": {
+    "odalar": [
+      {
+        "id": "salon",
+        "ad": "Salon",
+        "m2": 32,
+        "sabit": true
+      },
+      {
+        "id": "mutfak",
+        "ad": "Mutfak",
+        "m2": 13,
+        "sabit": true
+      },
+      {
+        "id": "yatak",
+        "ad": "Yatak odası",
+        "m2": 13,
+        "adet": 2,
+        "min": 1,
+        "max": 5
+      },
+      {
+        "id": "ebeveyn",
+        "ad": "Ebeveyn banyosu",
+        "m2": 6,
+        "acik": true,
+        "kisa": "E. banyo"
+      },
+      {
+        "id": "banyo",
+        "ad": "Banyo",
+        "m2": 6,
+        "sabit": true
+      },
+      {
+        "id": "calisma",
+        "ad": "Çalışma odası",
+        "m2": 10,
+        "acik": false,
+        "kisa": "Çalışma"
+      },
+      {
+        "id": "misafir",
+        "ad": "Misafir WC",
+        "m2": 3,
+        "acik": true,
+        "kisa": "WC"
+      },
+      {
+        "id": "kiler",
+        "ad": "Kiler",
+        "m2": 4,
+        "acik": false
+      },
+      {
+        "id": "giyinme",
+        "ad": "Giyinme odası",
+        "m2": 6,
+        "acik": false,
+        "kisa": "Giyinme"
+      }
+    ],
+    "sirkulasyon": 0.28,
+    "not": "Bu kaba bir başlangıç. Duvarlar, antre ve koridor için net alana yaklaşık %28 eklendi. Gerçek plan arsanın yönüne, eğimine ve imar durumuna göre çizilir."
   },
-  "finalBaslik": "Arsanızı birlikte okuyalım.",
-  "finalAlt": "Tapu ya da imar durum belgesi elinizdeyse getirin; yoksa ada-parsel numarası yeter. Fiyatı işe başlamadan, yazılı olarak söyleriz."
+  "finalBaslik": "Arsanızı birlikte gezelim.",
+  "finalAlt": "Tapu ya da imar durum belgesi elinizdeyse getirin; yoksa ada-parsel numarası yeter. Proje ücretini işe başlamadan, yazılı olarak söyleriz."
 }

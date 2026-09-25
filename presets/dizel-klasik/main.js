@@ -28,7 +28,8 @@ function ablative(n) {
 
 // --- Bağlamalar -----------------------------------------------------------
 const binds = {
-  ad: d.isletme.ad, slogan: d.isletme.slogan, hakkinda: d.isletme.hakkinda,
+  ad: d.isletme.ad, slogan: d.isletme.slogan,
+  hakkinda: String(d.isletme.hakkinda || '').replace(new RegExp(`\\b${base.isletme.kurulus}'(ten|den|dan|tan)\\b`, 'g'), () => ablative(d.isletme.kurulus)),
   telefon: d.iletisim.telefon, adres: d.iletisim.adres,
 };
 $$('[data-bind]').forEach((el) => (el.textContent = binds[el.dataset.bind] ?? ''));
@@ -66,7 +67,7 @@ cyl.innerHTML = [0, 1, 2, 3].map((i) => {
     <div class="slice__in"><img src="${esc(heroSrc())}" alt="" decoding="async" ${i === 0 ? 'fetchpriority="high"' : ''} /></div>
     <span class="slice__flash"></span>
     <span class="slice__tint"></span>
-    <div class="slice__label"><b>${esc(s.no)}</b><span>${esc(s.durum)}</span><small>${esc(s.not)}</small></div>
+    <div class="slice__label"><i class="meter" style="--v:${bad ? 0.9 : [0.46, 0.53, 0.5, 0.44][i]}" aria-hidden="true"><u></u></i><b>${esc(s.no)}</b><span>${esc(s.durum)}</span><small>${esc(s.not)}</small></div>
   </div>`;
 }).join('');
 const slices = $$('.slice', cyl);
@@ -111,7 +112,7 @@ function render(p) {
   const mob = small();
   const W = innerWidth, H = innerHeight;
   // son durum: telefonda başlığın altı ile alt çubuğun üstü, masaüstünde sağ yarı
-  const T = mob ? Math.min(236, H * 0.28) : 108, B = mob ? 104 : 56;
+  const T = mob ? Math.min(210, H * 0.25) : 108, B = mob ? 104 : 56;
   const L = mob ? 14 : W * 0.46, R = mob ? 14 : Math.max(24, W * 0.045);
   cyl.style.inset = `${(T * sp).toFixed(1)}px ${(R * sp).toFixed(1)}px ${(B * sp).toFixed(1)}px ${(L * sp).toFixed(1)}px`;
   cyl.style.transform = `scale(${(1.06 - 0.06 * seg(p, 0, F1)).toFixed(4)})`;
@@ -124,6 +125,7 @@ function render(p) {
     flashes[i].style.opacity = (q * q).toFixed(3);
     sliceIn[i].style.filter = sp > 0.01 ? `grayscale(${(sp * 0.7).toFixed(2)})` : '';
     labels[i].style.opacity = eOut(seg(p, 0.72, 0.82)).toFixed(3);
+    labels[i].style.setProperty('--mp', eIO(seg(p, 0.76, 0.9)).toFixed(3));
     tints[i].style.opacity = (seg(p, 0.74, 0.84) * (slices[i].classList.contains('is-bad') ? 0.62 : 0.25)).toFixed(3);
   }
   // metinler
@@ -262,7 +264,7 @@ new IntersectionObserver((ents, io) => {
 // --- Üst çubuk ---------------------------------------------------------------------
 const top = $('.top');
 ScrollTrigger.create({
-  trigger: '.band', start: 'top 64px',
+  trigger: '.band', start: 'top bottom',
   onEnter: () => top.classList.add('is-solid'), onLeaveBack: () => top.classList.remove('is-solid'),
 });
 

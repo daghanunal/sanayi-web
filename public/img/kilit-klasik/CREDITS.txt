@@ -14,3 +14,5 @@ kodlama.jpg: "Electronic Device Used in Cars" — https://www.pexels.com/photo/e
 kontak.jpg: "Car ignition turning on" — https://www.pexels.com/photo/car-ignition-turning-on-17124738/
 
 (kilit-klasik: yukarıdaki sektor-kilit görsellerinin küçültülmüş kopyaları)
+
+gece-far.jpg: "Sleek sports car at night with headlights on" — https://www.pexels.com/photo/32723285/

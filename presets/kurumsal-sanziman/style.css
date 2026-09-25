@@ -142,7 +142,7 @@ body.k-ana .k-ust:not(.is-kucuk) .k-ust__teklif { background: #fff; color: var(-
 .sz-izgara text, .sz-eksen { fill: rgb(255 255 255 / .38); font: 500 11px var(--sz-mono); text-anchor: end; }
 .sz-eksen { text-anchor: start; font-size: 10px; letter-spacing: .04em; }
 .sz-eksen--sag { text-anchor: end; }
-.sz-saglam { fill: none; stroke: rgb(255 255 255 / .6); stroke-width: 1.8; stroke-dasharray: 5 5; }
+.sz-saglam { fill: none; stroke: rgb(255 255 255 / .85); stroke-width: 1.6; stroke-dasharray: 4 6; stroke-linecap: round; }
 .sz-dolgu { fill: url(#sz-dolgu); }
 .sz-cizgi { fill: none; stroke: var(--sz-parlak); stroke-width: 3; stroke-linejoin: round; stroke-linecap: round; filter: drop-shadow(0 0 6px rgb(255 166 43 / .7)); }
 .sz-isaret circle { fill: #fff; }

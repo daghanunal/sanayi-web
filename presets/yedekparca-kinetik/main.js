@@ -88,6 +88,7 @@ $('#sasi').innerHTML = `
       ${V.gruplar.map((g, gi) => `
         <span class="vin__g" data-g="${gi}">${vinChars.slice(g.bas, g.son).map((c, k) => `<span class="vin__c" data-i="${g.bas + k}" data-v="${esc(c)}">${esc(c)}</span>`).join('')}</span>`).join('')}
     </div>
+    <p class="vin__scan mono" aria-hidden="true"><span>Numara okunuyor</span> <b>00</b>/17</p>
     <ol class="vin__labels">
       ${V.gruplar.map((g, i) => `
         <li class="vin__lab" data-g="${i}">
@@ -344,7 +345,9 @@ const cells = $$('.vin__c');
 const groups = $$('.vin__g');
 const labs = $$('.vin__lab');
 const POOL = 'ABCDEFGHJKLMNPRSTUVWXYZ0123456789';
-let vinState = { locked: -1, g: -2, done: null };
+const scan = $('.vin__scan');
+const scanN = $('.vin__scan b');
+let vinState = { locked: -2, g: -2, done: null };
 function vinAt(p) {
   // 0.04–0.40: haneler soldan sağa kilitlenir
   const locked = Math.floor(gsap.utils.clamp(0, 1, (p - 0.04) / 0.36) * cells.length) - 1;
@@ -359,11 +362,16 @@ function vinAt(p) {
       c.textContent = POOL[(Math.floor(t / 60) * 7 + i * 13) % POOL.length];
     }
   });
+  if (locked !== vinState.locked) {
+    scanN.textContent = String(Math.max(0, locked + 1)).padStart(2, '0');
+    vinState.locked = locked;
+  }
   // 0.44–0.78: gruplar sırayla okunur
   const g = p < 0.44 ? -1 : p < 0.78 ? Math.min(groups.length - 1, Math.floor((p - 0.44) / 0.34 * groups.length)) : groups.length;
   if (g !== vinState.g) {
     groups.forEach((el, i) => { el.classList.toggle('is-on', i === g); el.classList.toggle('is-read', i < g); });
     labs.forEach((el, i) => { el.classList.toggle('is-on', i === g); el.classList.toggle('is-read', i < g); });
+    scan.classList.toggle('is-off', g !== -1);
     vinState.g = g;
   }
   const done = p > 0.8;

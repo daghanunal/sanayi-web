@@ -1,4 +1,4 @@
-// Dolum (klasik aile, LPG): sis grisi, gece laciverti, alev kobaltı. Fotoğraf ağırlıklı, WebGL yok.
+// Dolum (klasik aile, LPG): sis grisi, gece laciverti, propan turuncusu. Fotoğraf ağırlıklı, WebGL yok.
 // İmza anı hero'da: simit tank göstergesi. Kaydırdıkça tank dolar, ibre döner, %80'de çok valf
 // dolumu keser; kalan %20 sarı taramayla "genleşme payı" olarak belirir.
 import base from '../../data/sektor-lpg.json';

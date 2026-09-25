@@ -175,7 +175,7 @@ body { background: var(--k-zemin); }
 
 /* --- Rakamlar --- */
 .k-rakamlar { background: var(--k-koyu) linear-gradient(90deg, transparent 0 49.9%, rgb(255 255 255 / .03) 50% 100%); }
-.k-rakamlar dd { color: var(--kl-cam); }
+.k-rakamlar dd { color: var(--kl-cam); font-size: clamp(38px, 4.4vw, 64px); letter-spacing: -0.02em; }
 .k-rakamlar__liste > div { border-top-color: rgb(0 194 179 / .35); }
 
 /* --- Kapıda --- */
@@ -261,3 +261,10 @@ body { background: var(--k-zemin); }
 
 /* mobil alt çubuk için boşluk (vitrin çubuğu dahil) */
 @media (max-width: 899px) { .k-alt { padding-bottom: calc(110px + env(safe-area-inset-bottom)); } }
+@media (max-width: 899px) { body:has(.k-alt) { padding-bottom: 0; } }
+
+/* mobilde yan yana sığmayan buton çiftleri eşit genişlikte */
+@media (max-width: 599px) {
+  .kp .k-butonlar, .st__adres .k-butonlar { display: grid; grid-template-columns: 1fr; gap: 10px; }
+  .kp .k-btn, .st__adres .k-btn { width: 100%; justify-content: center; }
+}

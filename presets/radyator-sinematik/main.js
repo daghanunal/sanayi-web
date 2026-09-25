@@ -419,8 +419,7 @@ function setupScroll() {
     onUpdate: (self) => (canvasFinale = self.progress),
   });
   ScrollTrigger.create({
-    trigger: '[data-about]', start: 'top 80px',
-    endTrigger: '[data-finale]', end: 'top 80px',
+    trigger: '[data-about]', start: 'top 80px', end: 'max',
     onToggle: (self) => $('[data-top]').classList.toggle('is-solid', self.isActive),
   });
   contentMotion();

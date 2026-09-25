@@ -51,6 +51,7 @@ const yil = new Date().getFullYear() - d.isletme.kurulus;
 $('[data-kicker]').textContent = `${d.isletme.sektor} · Etimesgut · ${ablative(d.isletme.kurulus)} beri`;
 const heroTitle = $('[data-hero-title]');
 heroTitle.textContent = d.isletme.ad;
+heroTitle.classList.toggle('is-long', d.isletme.ad.length > 18);
 $('[data-intro-name]').textContent = d.isletme.ad;
 
 const status = openStatus(d.saatler);
@@ -145,16 +146,16 @@ const POSE = {
   arsa2: [[-1, 29, 23, 3, 0, 0, 40], [3, 48, 24, 0, 0, -4, 48]],
   avan: [[23, 15, 23, 1, 3, 0, 36], [26, 25, 36, 0.5, 4.5, -4, 44]],
   avan2: [[27, 11, 11, 1, 3.6, 0, 36], [31, 20, 24, 0.5, 5, -4, 44]],
-  ruhsat: [[8, 6.5, 31, -2.5, 5, 0, 34], [4, 10, 47, 0.5, 8.5, 0, 42]],
-  ruhsat2: [[-4, 6, 32, -2.5, 5, 0, 34], [-3, 10, 47, 0.5, 8.5, 0, 42]],
+  ruhsat: [[8, 6.5, 31, -2.5, 5, 0, 34], [5, 11, 55, 0.5, 7.5, 0, 42]],
+  ruhsat2: [[-4, 6, 32, -2.5, 5, 0, 34], [-4, 11, 55, 0.5, 7.5, 0, 42]],
   kesit: [[19, 7, 19, -2.5, 4, -1, 38], [21, 11, 30, 0, 6.5, -1, 46]],
   kesit2: [[11, 6, 22, -2.5, 3.6, -1, 38], [12, 10, 33, 0, 6.5, -1, 46]],
-  render: [[-22, 6.5, 20, -1.5, 4, 0, 36], [-24, 10, 35, 0, 7, 0, 44]],
+  render: [[-22, 6.5, 20, -1.5, 4, 0, 36], [-28, 10, 40, 0, 6.5, 0, 44]],
   render2: [[22, 5, 20, -1.5, 4, 0, 36], [24, 9, 33, 0, 7, 0, 44]],
   ev1: [[15, 6.5, 21, 0.5, 3.4, -1, 40], [8, 7.5, 23, -0.8, 4.6, -1, 54]],
   ev2: [[-13, 5.5, 20, -2.5, 3.2, -1, 40], [-7, 6.5, 22, -1.5, 4.4, -1, 54]],
-  gece: [[17, 5, 24, -1.5, 4.2, 0, 38], [19, 8, 37, 0, 7, 0, 46]],
-  gece2: [[-15, 4.5, 26, -1.5, 4.2, 0, 38], [-16, 7, 37, 0, 7, 0, 46]],
+  gece: [[17, 5, 24, -1.5, 4.2, 0, 38], [26, 8, 46, 0.5, 6.5, 0, 46]],
+  gece2: [[-15, 4.5, 26, -1.5, 4.2, 0, 38], [-22, 7, 46, 0.5, 6.5, 0, 46]],
 };
 const KF = [
   [0, 'plan'], [0.05, 'plan'], [0.11, 'arsa'], [0.19, 'arsa2'], [0.235, 'avan'], [0.32, 'avan2'],
@@ -200,10 +201,10 @@ function filmState(p, time) {
 
 function finaleState(q, time) {
   const m = mobile();
-  const a = 0.35 + q * 0.7 + time * 0.01;
-  const r = m ? 40 : 30;
+  const a = -0.5 + q * 0.95 + Math.sin(time * 0.15) * 0.03;
+  const r = m ? 44 : 31;
   return {
-    pos: V(Math.sin(a) * r, m ? 9 : 6, Math.cos(a) * r), look: V(-1, m ? 8.5 : 5.5, 0), fov: m ? 46 : 38,
+    pos: V(Math.sin(a) * r, m ? 9 : 6, Math.cos(a) * r), look: V(-1, m ? -3 : 5.5, 0), fov: m ? 46 : 38,
     grow: [1, 1, 1], setback: 0, hmax: 0, cut: 50, cutOn: 0, real: 1, sunA: 3, inside: 0, night: 1,
   };
 }
@@ -232,7 +233,7 @@ const TAGS = [
   { r: [0.51, 0.585], at: V(-6.1, 1.6, 0.4), t: 'Merdiven 11 basamak' },
   { r: [0.52, 0.585], at: V(2, 5, 0.4), t: 'Kesit A–A', acc: 1 },
   { r: [0.61, 0.72], at: V(3, 10.2, 1), t: sunClock, acc: 1 },
-  { r: [0.76, 0.845], at: V(0, 2.1, 0.75), t: 'Sarkıt aydınlatma' },
+  { r: [0.76, 0.845], at: V(0, 2.1, 0.75), t: 'Sarkıt aydınlatma', desk: 1, left: 1 },
   { r: [0.765, 0.845], at: V(3.4, 1.25, -2.7), t: 'Ada tezgâh, meşe', acc: 1 },
   { r: [0.775, 0.845], at: V(5.6, 4.1, -2.4), t: 'Yatak odası' },
   { r: [0.785, 0.845], at: V(-5, 0.8, 0.8), t: 'Köşe koltuk, 3,00 m' },
@@ -246,7 +247,7 @@ function drawTags(p) {
     const el = tagEls[i];
     const [a, b] = g.r;
     const v = seg(p, a, a + 0.012) * (1 - seg(p, b - 0.012, b));
-    if (v <= 0.01) {
+    if (v <= 0.01 || (g.desk && mobile())) {
       if (el.style.visibility !== 'hidden') el.style.visibility = 'hidden';
       return;
     }
@@ -256,7 +257,14 @@ function drawTags(p) {
     if (el._t !== txt) { el.lastChild.textContent = txt; el._t = txt; }
     el.style.visibility = 'visible';
     el.style.opacity = v;
-    el.style.transform = `translate3d(${s.x.toFixed(1)}px, ${s.y.toFixed(1)}px, 0)`;
+    if (el._t !== txt || !el._w) el._w = el.lastChild.offsetWidth || txt.length * 7.2 + 16;
+    // Nokta ekran dışındaysa etiketi kenara yasla, noktayı gizle
+    const edge = s.x < 10 || s.x > innerWidth - 10;
+    const x = clamp(s.x, 10, innerWidth - 10);
+    const flip = g.left ? x - el._w - 12 > 8 : x + el._w + 12 > innerWidth - 8;
+    if (el._f !== flip) { el.classList.toggle('is-flip', flip); el._f = flip; }
+    if (el._e !== edge) { el.classList.toggle('is-edge', edge); el._e = edge; }
+    el.style.transform = `translate3d(${x.toFixed(1)}px, ${s.y.toFixed(1)}px, 0)`;
   });
 }
 
@@ -339,6 +347,10 @@ function setupScroll() {
   finaleST = ScrollTrigger.create({ trigger: '[data-finale]', start: 'top bottom', end: 'bottom bottom', onUpdate: (s) => (finaleQ = s.progress) });
   ScrollTrigger.create({ trigger: '[data-finale]', start: 'top bottom', end: 'top 25%', onUpdate: (s) => (canvasFinale = s.progress) });
   ScrollTrigger.create({
+    trigger: '[data-finale]', start: 'bottom bottom', end: 'max',
+    onToggle: (s) => $('[data-top]').classList.toggle('is-ink', s.isActive),
+  });
+  ScrollTrigger.create({
     trigger: '[data-about]', start: 'top 64px', endTrigger: '[data-finale]', end: 'top 64px',
     onToggle: (s) => $('[data-top]').classList.toggle('is-light', s.isActive),
   });
@@ -403,7 +415,7 @@ function contentMotion() {
   const gt = $('[data-gallery]');
   gsap.fromTo(gt, { x: () => (mobile() ? 0 : innerWidth * 0.1) }, {
     x: () => -Math.max(0, gt.scrollWidth - innerWidth) + (mobile() ? 0 : innerWidth * 0.05),
-    ease: 'none', invalidateOnRefresh: true,
+    ease: 'none',
     scrollTrigger: { trigger: '.gallery', start: 'top bottom', end: 'bottom top', scrub: true, invalidateOnRefresh: true },
   });
   // Güvence: damga basılır

@@ -5,12 +5,28 @@ import { kurumsal, derinBirlestir, VARSAYILAN_SAYFALAR } from '../_kurumsal/engi
 import { hero, tezgah, hizmetOzet, atolye } from './extra.js';
 import './style.css';
 
-// "Menzür" yönü: milimetrik ölçüm kâğıdı zemin, derin petrol paneller, dizel yakıtı kehribarı.
+// "Menzür" yönü: milimetrik ölçüm kâğıdı zemin, derin petrol paneller, test tezgâhı kobaltı; kehribar yalnızca menzürdeki yakıtta.
 // Başlıklar dar Instrument Sans, bütün ölçü ve etiketler JetBrains Mono. İmza: enjektör test tezgâhının menzür tüpleri.
 const B = import.meta.env.BASE_URL;
 const hizmetGorsel = ['manometre', 'dijital-olcum', 'motor-ustu', 'parca-tepsisi', 'komparator', 'silindir-kapak', 'kamyon-bakim', 'eksantrik'];
 const veri = derinBirlestir(ana, ek);
 veri.hizmetler = (ana.hizmetler || []).map((h, i) => (hizmetGorsel[i] ? { ...h, gorsel: `${B}img/sektor-dizel/${hizmetGorsel[i]}.jpg` } : h));
+
+// Motor, rota değişince yeni sayfanın ScrollTrigger'larını kurar ve sayfayı ancak SONRA başa sarar. Aşağıdayken
+// kurulan `once` tetikleyicileri kurulum sırasında kendini siler ve ScrollTrigger "reading 'end'" hatası verir.
+// Perde kapalıyken, içerik değişmeden hemen önce başa sarıyoruz (yalnızca bu presetin <main>'i).
+const sayfaEl = document.getElementById('sayfa');
+const icerik = Object.getOwnPropertyDescriptor(Element.prototype, 'innerHTML');
+if (sayfaEl && icerik?.set) {
+  Object.defineProperty(sayfaEl, 'innerHTML', {
+    configurable: true,
+    get() { return icerik.get.call(this); },
+    set(v) {
+      if (scrollY > 0) scrollTo(0, 0);
+      icerik.set.call(this, v);
+    },
+  });
+}
 
 kurumsal({
   veri,
@@ -27,7 +43,7 @@ kurumsal({
     metinBoyutu: true,
     css: {
       zemin: '#e8edee', yuzey: '#f6f8f8', metin: '#0c1d22', soluk: '#4d5f64', cizgi: 'rgb(12 29 34 / .16)',
-      vurgu: '#f0a202', 'vurgu-metin': '#0c1d22', koyu: '#0b2a2f', 'koyu-metin': '#e6f0ef', 'koyu-soluk': '#8fb0b0',
+      vurgu: '#2455ff', 'vurgu-metin': '#ffffff', koyu: '#0b2a2f', 'koyu-metin': '#e6f0ef', 'koyu-soluk': '#8fb0b0',
       gecis: 'repeating-linear-gradient(90deg, #0b2a2f 0 22px, #0e3339 22px 23px)',
       'font-baslik': "'Instrument Sans', 'Arial Narrow', sans-serif", 'font-govde': "'Instrument Sans', system-ui, sans-serif",
       'baslik-agirlik': '700', 'baslik-genislik': '78%', 'baslik-harf': '-0.02em', 'baslik-satir': '0.96',
@@ -43,3 +59,11 @@ kurumsal({
   ),
   ekstralar: { hero, tezgah, hizmetOzet, atolye },
 });
+
+// Uzun işletme adı (?ad=) mobilde iki satıra iner; küçülen üst çubuğa (60px) sığsın diye alt satırı gizle, adı sıkılaştır.
+const uzunAd = () => {
+  const ad = document.querySelector('.k-logo__ad');
+  if (ad) document.documentElement.classList.toggle('dz-uzun-ad', ad.textContent.trim().length > 16);
+};
+uzunAd();
+requestAnimationFrame(uzunAd);

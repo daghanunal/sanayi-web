@@ -317,7 +317,7 @@ body { background: var(--papir); color: var(--ink); font: 400 17px/1.55 var(--bo
 /* --- Hakkında --- */
 .biz { display: grid; gap: 36px; padding: 88px var(--pad); }
 .biz__photo { border-radius: 14px; overflow: hidden; aspect-ratio: 3 / 4; max-height: 78vh; background: var(--papir-2); }
-.biz__photo img { width: 100%; height: 100%; object-fit: cover; }
+.biz__photo img { width: 100%; height: 100%; object-fit: cover; object-position: 78% 50%; }
 .biz__garanti { display: flex; gap: 14px; align-items: flex-start; margin-top: 28px; padding: 18px; border: 2.5px solid var(--mor); border-radius: 12px; color: var(--mor-ink); font-weight: 600; background: rgb(91 52 224 / .05); }
 .biz__seal { width: 34px; height: 24px; border: 3px solid currentColor; border-radius: 5px; transform: rotate(-10deg); flex: none; margin-top: 3px; }
 @media (min-width: 900px) { .biz { grid-template-columns: .8fr 1.2fr; gap: 72px; align-items: center; } }

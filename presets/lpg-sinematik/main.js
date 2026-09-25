@@ -132,8 +132,8 @@ const KF = [
   { ...base, p: 0.32, bg: '#ffb21e', fg: INK, call: INK, cam: [2.3, 1.6, 2.2], look: [1.0, 0.4, 0.05], pd: 1.6, fx: 1.1, fy: 1.35, fill: 0.5, flow: 1, speed: 0.08, env: 1 },
   { ...base, p: 0.48, bg: '#2447ff', fg: '#ffffff', call: INK, cam: [5.4, 1.5, 1.0], look: [3.75, 0.55, -0.6], pd: 1.9, fx: 1.0, fy: 1.35, flow: 1, speed: 0.08, regGlow: 1, rim: 1, env: 0.9 },
   { ...base, p: 0.64, bg: '#070a18', fg: LIGHT, call: '#2447ff', cam: [8.4, 1.95, 3.0], look: [6.95, 0.45, -0.35], pd: 2.1, fx: 1.1, fy: 1.35, flow: 1, speed: 0.1, inj: 1, rim: 3.5, env: 0.55 },
-  { ...base, p: 0.8, bg: '#e6eef5', fg: INK, call: '#2447ff', cam: [12.7, 1.4, 3.4], look: [11.6, 0.35, -0.3], pd: 2.1, fx: 1.0, fy: 1.35, flow: 0.4, inj: 0.4, burn: 1, amber: 0.3, env: 1 },
-  { ...base, p: 0.95, bg: NIGHT, fg: LIGHT, call: '#2447ff', cam: [6.4, 7.8, 15.8], look: [5.8, 0.2, -0.3], pcam: [15.5, 6.5, 7.5], pd: 1, fx: 0.75, fy: 1.2, flow: 1, inj: 1, burn: 1, regGlow: 0.7, rim: 3, env: 0.6 },
+  { ...base, p: 0.8, bg: '#e6eef5', fg: INK, call: '#2447ff', cam: [12.95, 1.65, 4.15], look: [11.6, 0.5, -0.3], pd: 2.25, fx: 1.0, fy: 1.35, flow: 0.4, inj: 0.4, burn: 1, amber: 0.3, env: 1 },
+  { ...base, p: 0.95, bg: NIGHT, fg: LIGHT, call: '#2447ff', cam: [6.6, 10.5, 21.4], look: [5.8, 0.2, -0.3], pcam: [15.5, 6.5, 7.5], pd: 1, fx: 1.95, fy: 1.2, flow: 1, inj: 1, burn: 1, regGlow: 0.7, rim: 3, env: 0.6 },
 ];
 KF.forEach((k) => { k.pcam ||= k.cam; });
 KF.push({ ...KF[6], p: 1 });
@@ -349,6 +349,7 @@ function uiFilm(p, s) {
   }
 }
 
+const mobileQ = matchMedia('(max-width: 759px)');
 function tick() {
   const now = performance.now();
   const time = (now - t0) / 1000;
@@ -389,7 +390,7 @@ function tick() {
   const vis = finaleIn > 0 ? smooth(finaleIn) : 1 - smooth(afterFilm);
   canvas.style.opacity = vis.toFixed(3);
   chapBox.style.opacity = String(1 - seg(afterFilm, 0, 0.25));
-  route.style.opacity = String(introDone ? 1 - smooth(seg(afterFilm, 0, 0.3)) : 0);
+  route.style.opacity = String(introDone ? (mobileQ.matches ? smooth(seg(filmP, 0.03, 0.09)) : 1) * (1 - smooth(seg(afterFilm, 0, 0.3))) : 0);
 
   if (S && vis > 0.01 && !document.hidden) {
     S.render(s);

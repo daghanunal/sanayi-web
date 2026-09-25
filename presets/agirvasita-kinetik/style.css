@@ -538,7 +538,7 @@ p { max-width: 62ch; }
 .levha--cikis h2 { font-size: clamp(38px, 8vw, 78px); font-stretch: 90%; }
 .cikis__alt { margin-top: 10px; font-weight: 600; font-size: 18px; }
 .konum__govde { display: grid; gap: 30px; }
-.durum { display: inline-flex; align-items: center; gap: 10px; font-weight: 700; font-size: 18px; margin-bottom: 18px; }
+.durum { margin-left: 5px; display: inline-flex; align-items: center; gap: 10px; font-weight: 700; font-size: 18px; margin-bottom: 18px; }
 .durum::before { content: ''; width: 12px; height: 12px; border-radius: 50%; background: var(--kirmizi); }
 .durum.is-open::before { background: #1fa463; box-shadow: 0 0 0 5px rgb(31 164 99 / .2); }
 .saatler { display: grid; gap: 0; margin: 0 0 22px; font: 500 15px/1.3 var(--mono); }

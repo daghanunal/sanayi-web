@@ -8,6 +8,7 @@
   --dz-kirmizi: #e5382b;
   --dz-petrol-2: #0f363c;
   --dz-kagit: #fbfbf6;
+  --dz-vurgu-acik: #8fa9ff;
 }
 
 body {
@@ -31,6 +32,7 @@ body {
     linear-gradient(var(--k-vurgu), var(--k-vurgu)) 0 100% / 100% 2px no-repeat;
 }
 .dz-etiket--acik { color: var(--k-koyu-soluk); }
+.dz-etiket--acik::before, .k-rakamlar .dz-etiket::before { filter: brightness(1.6); }
 .dz-led { width: 8px; height: 8px; border-radius: 50%; background: var(--dz-yesil); box-shadow: 0 0 0 3px rgb(34 182 115 / .22), 0 0 10px var(--dz-yesil); flex: none; display: inline-block; }
 
 /* --- Başlıklar ve üst çubuk --- */
@@ -42,7 +44,7 @@ body {
 .k-nav a { font-weight: 600; font-size: 15px; }
 .k-nav a::after { height: 3px; bottom: 2px; }
 .k-ust__tel { font-family: var(--dz-mono); font-weight: 700; font-size: 14.5px; background: var(--k-koyu); color: var(--k-koyu-metin) !important; padding: 10px 14px; border-radius: var(--k-radius); }
-.k-ust__tel svg { color: var(--k-vurgu); }
+.k-ust__tel svg { color: var(--dz-vurgu-acik); }
 .k-ust.is-kucuk { background: color-mix(in srgb, var(--k-zemin) 90%, transparent); }
 .k-ust.is-kucuk::after {
   content: ''; position: absolute; left: 0; right: 0; bottom: -6px; height: 6px; pointer-events: none;
@@ -50,7 +52,7 @@ body {
     repeating-linear-gradient(90deg, rgb(12 29 34 / .5) 0 1px, transparent 1px 40px) 0 0 / 100% 6px no-repeat;
 }
 .k-btn { font-weight: 700; }
-.k-btn:not(.k-btn--ikincil) { box-shadow: 0 1px 0 rgb(255 255 255 / .4) inset, 0 8px 22px -12px rgb(194 120 0 / .9); }
+.k-btn:not(.k-btn--ikincil) { box-shadow: 0 1px 0 rgb(255 255 255 / .4) inset, 0 8px 22px -12px rgb(36 85 255 / .9); }
 .k-link { font-weight: 700; }
 .k-link .k-ok { color: var(--k-vurgu); }
 
@@ -58,7 +60,7 @@ body {
 .k-menu { background-color: var(--k-koyu); background-image: linear-gradient(rgb(255 255 255 / .04) 1px, transparent 1px); background-size: 100% 40px; }
 .k-menu ul { counter-reset: m; }
 .k-menu a { font-stretch: 75%; text-transform: uppercase; }
-.k-menu li a::before { content: 'T-' counter(m, decimal-leading-zero); counter-increment: m; font: 500 12px var(--dz-mono); color: var(--k-vurgu); vertical-align: top; margin-right: 12px; letter-spacing: .06em; }
+.k-menu li a::before { content: 'T-' counter(m, decimal-leading-zero); counter-increment: m; font: 500 12px var(--dz-mono); color: var(--dz-vurgu-acik); vertical-align: top; margin-right: 12px; letter-spacing: .06em; }
 .k-menu__tel { font-family: var(--dz-mono); }
 
 /* --- Hero --- */
@@ -68,7 +70,8 @@ body {
 .k-ana .k-hero__baslik > div:last-child .k-satir,
 .k-ana .k-hero__baslik > .k-satir:last-child {
   width: fit-content;
-  background: linear-gradient(transparent 62%, color-mix(in srgb, var(--k-vurgu) 85%, transparent) 62% 92%, transparent 92%);
+  background: linear-gradient(transparent 64%, color-mix(in srgb, var(--k-vurgu) 30%, transparent) 64% 92%, transparent 92%);
+  box-shadow: inset 0 -.08em 0 var(--k-vurgu);
   padding-right: .06em;
 }
 .k-hero__gorsel { border-radius: var(--k-radius-buyuk); background: #050b0c; box-shadow: 0 0 0 1px rgb(12 29 34 / .2), 0 40px 70px -40px rgb(11 42 47 / .9); }
@@ -97,7 +100,7 @@ body {
 }
 .dz-ekran__ust { display: flex; align-items: center; gap: 8px; font-size: 10.5px; letter-spacing: .06em; text-transform: uppercase; color: #8fb0b0; }
 .dz-ekran__ust b { color: #fff; font-weight: 700; }
-.dz-ekran__rpm { margin-left: auto; font-variant-numeric: tabular-nums; color: var(--k-vurgu); }
+.dz-ekran__rpm { margin-left: auto; font-variant-numeric: tabular-nums; color: var(--dz-vurgu-acik); }
 .dz-ekran__tupler { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; height: 74px; margin-top: 10px; padding: 0 6px; }
 .dz-mini {
   position: relative; border: 1px solid rgb(230 240 239 / .38); border-radius: 3px 3px 8px 8px; overflow: hidden;
@@ -129,7 +132,7 @@ body {
   background-image:
     linear-gradient(rgb(230 240 239 / .05) 1px, transparent 1px),
     linear-gradient(90deg, rgb(230 240 239 / .05) 1px, transparent 1px),
-    radial-gradient(60% 50% at 30% 100%, rgb(240 162 2 / .14), transparent 70%);
+    radial-gradient(60% 50% at 30% 100%, rgb(36 85 255 / .22), transparent 70%);
   background-size: 40px 40px, 40px 40px, 100% 100%;
 }
 .dz-tz .k-lead { color: var(--k-koyu-soluk); }
@@ -303,7 +306,7 @@ body {
 .dz-at__harita { min-height: 320px; border-radius: var(--k-radius-buyuk); overflow: hidden; background: var(--k-yuzey); border: 1px solid var(--k-cizgi); display: grid; place-items: center; color: var(--k-soluk); font-family: var(--dz-mono); font-size: 13px; }
 .dz-at__harita iframe { width: 100%; height: 100%; min-height: 320px; border: 0; display: block; }
 
-/* --- CTA: yakıt kehribarı, alt kenarda menzür cetveli --- */
+/* --- CTA: kobalt, alt kenarda menzür cetveli --- */
 .k-cta { position: relative; overflow: hidden; }
 .k-cta::after {
   content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 18px; opacity: .55;
@@ -334,3 +337,29 @@ body {
   .dz-ekran__deger b { font-size: 21px; }
   .dz-ekran__ust { font-size: 9.5px; }
 }
+
+/* Uzun ad: mobilde iki satır + alt etiket küçük üst çubuğa sığmıyordu. */
+@media (max-width: 899px) {
+  .dz-uzun-ad .k-logo__ad { font-size: 19px; line-height: .98; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; padding-top: .12em; }
+  .dz-uzun-ad .k-logo__alt { display: none; }
+}
+
+/* 1081–1499px: menü, telefon ve teklif düğmesi tek satıra sığmıyor, "Ana Sayfa" ve düğme iki satıra kırılıyordu. */
+.k-nav a, .k-ust__teklif { white-space: nowrap; }
+@media (min-width: 1081px) and (max-width: 1419px) {
+  .k-ust__ic { gap: 16px; }
+  .k-nav ul { gap: 0; }
+  .k-nav a { padding: 8px 9px; font-size: 14.5px; }
+  .k-nav a::after { left: 9px; right: 9px; }
+  .k-ust__tel span { display: none; }
+  .k-ust__sag { gap: 10px; }
+}
+@media (min-width: 1081px) and (max-width: 1260px) {
+  .k-logo__alt { display: none; }
+  .dz-uzun-ad .k-nav a { padding: 8px 7px; font-size: 14px; }
+}
+@media (min-width: 900px) {
+  .dz-uzun-ad .k-logo__ad { font-size: 19px; max-width: 22ch; line-height: 1; }
+  .dz-uzun-ad .k-logo__alt { display: none; }
+}
+@media (min-width: 1081px) and (max-width: 1599px) { .dz-uzun-ad .k-ust__tel span { display: none; } }

@@ -87,7 +87,7 @@ $('[data-rack]').innerHTML = d.hizmetler.map((s, i) => `
     <span class="rack__n">${String(i + 1).padStart(2, '0')}</span>
     <div class="rack__body">
       <h3 class="rack__name">${esc(s.baslik)}</h3>
-      <p class="rack__desc">${esc(s.aciklama)}</p>
+      <p class="rack__desc">${esc(s.aciklama.replace(/ustamız/g, "usta"))}</p>
     </div>
     <p class="rack__time">${esc(s.sure)}</p>
     <span class="rack__sis" aria-hidden="true"><i></i></span>
@@ -248,10 +248,10 @@ function filmState(p, time, vel) {
 function finaleState(q, time) {
   const m = mobile();
   const a = time * 0.05 + q * 0.6;
-  const r = m ? 3.6 : 5;
+  const r = m ? 4.6 : 5;
   return {
-    pos: V(Math.sin(a) * r * 0.7, m ? 1.4 : 1.7, Math.cos(a) * r * 0.55 + 1.2),
-    look: V(0, -0.1, 0), fov: m ? 60 : 42,
+    pos: V(Math.sin(a) * r * 0.7, m ? 2.7 : 1.7, Math.cos(a) * r * 0.55 + 1.2),
+    look: V(0, m ? -0.5 : -0.1, -0.2), fov: m ? 56 : 42,
     heat: 1, ash: 0.35, skewersIn: 0, hover: 0, skewersOut: 1, cook: 1, spin: 0, drip: 0,
     sparks: 1, smoke: 0.5, koz: 1,
   };
@@ -445,7 +445,7 @@ function contentMotion() {
   });
   const fsplit = new SplitText('[data-final-title]', { type: 'words,chars', wordsClass: 'fw', charsClass: 'fc' });
   gsap.fromTo(fsplit.chars, { '--lit': 0, opacity: 0.2, yPercent: 30 }, {
-    '--lit': 1, opacity: 1, yPercent: 0, duration: 1, stagger: { each: 0.03, from: 'center' }, ease: 'power3.out',
+    '--lit': 1, opacity: 1, yPercent: 0, duration: 0.8, stagger: { each: 0.016, from: 'center' }, ease: 'power3.out',
     scrollTrigger: { trigger: '[data-finale]', start: 'top 45%', once: true },
   });
 }
@@ -532,7 +532,7 @@ function runIntro() {
     clock.textContent = CH[0].saat;
     const ih = { v: 0 };
     gsap.timeline({ onComplete: () => { intro.remove(); lenis?.start(); } })
-      .to('[data-intro-line]', { opacity: 0, duration: 0.2 }, 0)
+      .to(['[data-intro-line]', '.intro__skip'], { opacity: 0, duration: 0.2 }, 0)
       .to('[data-ember]', { scale: 60, duration: 0.9, ease: 'power3.in' }, 0.05)
       .to('[data-flash]', { opacity: 1, duration: 0.35, ease: 'power2.in' }, 0.55)
       .to(ih, { v: 0.85, duration: 1.4, ease: 'power2.out', onUpdate: () => (introHeat = ih.v) }, 0.7)

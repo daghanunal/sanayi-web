@@ -1,56 +1,76 @@
 {
   "preset": "kilit-klasik",
-  "kesimKodu": [3, 1, 4, 2, 5],
-  "anahtarTipleri": [
+  "heroFoto": "/img/kilit-klasik/gece-far.jpg",
+  "hizmetFoto": [
+    "/img/kilit-klasik/yedek-anahtar.jpg",
+    "/img/kilit-klasik/anahtar-duvari.jpg",
+    "/img/kilit-klasik/kodlama.jpg",
+    "/img/kilit-klasik/start-stop.jpg",
+    "/img/kilit-klasik/akilli-anahtar.jpg",
+    "/img/kilit-klasik/kapi-acma.jpg",
+    "/img/kilit-klasik/kontak.jpg",
+    "/img/kilit-klasik/kapi-kilidi.jpg",
+    "/img/kilit-klasik/silindir-parcalari.jpg"
+  ],
+  "oneCikan": [0, 2, 3, 5],
+  "belirtiler": [
     {
-      "ikon": "duz",
-      "ad": "Düz metal anahtar",
-      "ipucu": "Plastik başlığı yok ya da içinde çip yok. Eski model araçlar.",
-      "nasil": "Bıçak kilidinize göre kesilir, kapı ve kontakta denenir. Kodlama gerekmez.",
-      "isler": [0, 6, 7, 8],
-      "sure": "20-40 dk"
+      "kisa": "Kumanda yakından açıyor",
+      "belirti": "Tuşa birkaç kez basınca açıyor, ancak araca yaklaşınca çalışıyor.",
+      "sebep": "Büyük ihtimalle pil bitiyor.",
+      "cozum": "Pil değişir, tuşlar denenir. Kodlama gerekmez.",
+      "hizmet": 4
     },
     {
-      "ikon": "cipli",
-      "ad": "Çipli anahtar",
-      "ipucu": "Kumandası yok ama başlığın içinde çip var; çip okunmazsa marş basmaz.",
-      "nasil": "Bıçak kesilir, çip immobilizer kodlama cihazıyla araca tanıtılır.",
-      "isler": [0, 2, 1],
-      "sure": "40-90 dk"
+      "kisa": "Kap kırıldı, tuş çöktü",
+      "belirti": "Anahtarın plastiği çatladı, tuş içeri göçtü ya da bıçak sallanıyor.",
+      "sebep": "Elektronik kart çoğu zaman sağlamdır.",
+      "cozum": "Kart yeni kaba aktarılır. Anahtarınız yeniden kodlanmadan çalışır.",
+      "hizmet": 4
     },
     {
-      "ikon": "sustali",
-      "ad": "Sustalı kumandalı",
-      "ipucu": "Bıçağı düğmeyle açılan, kapı kilitleme tuşları olan anahtar.",
-      "nasil": "Kumanda ve çip ayrı ayrı araca tanıtılır; kırık kap varsa kart yeni kaba aktarılır.",
-      "isler": [3, 4, 0],
-      "sure": "1-2 saat"
+      "kisa": "“Anahtar tanınmadı” diyor",
+      "belirti": "Kapıyı açıyor ama marş basmıyor, göstergede anahtar ya da kilit işareti yanıp sönüyor.",
+      "sebep": "Çip okunmuyor ya da immobilizer anahtarı unutmuş.",
+      "cozum": "Arıza cihazla okunur, anahtar yeniden kodlanır.",
+      "hizmet": 2
     },
     {
-      "ikon": "akilli",
-      "ad": "Akıllı anahtar",
-      "ipucu": "Cebinizdeyken kapı açılır, araç düğmeyle çalışır (keyless).",
-      "nasil": "Yeni akıllı anahtar araca tanıtılır, kayıp olan sistemden silinir. Tuşlar ve yaklaşım algısı birlikte denenir.",
-      "isler": [3, 1, 2],
-      "sure": "1-2 saat"
+      "kisa": "Kontak dönmüyor",
+      "belirti": "Anahtar kontağa giriyor ama dönmüyor, takılıyor ya da zor çıkıyor.",
+      "sebep": "Silindirdeki pinler aşınmış ya da kirlenmiş olabilir.",
+      "cozum": "Silindir sökülür, temizlenir, aşınan pinler değişir. Gerekirse kontak yenilenir.",
+      "hizmet": 6
+    },
+    {
+      "kisa": "Hiç anahtarım kalmadı",
+      "belirti": "Tek anahtar vardı, o da kayboldu ya da çalındı.",
+      "sebep": "Aracın hafızasında eski anahtar hâlâ kayıtlı.",
+      "cozum": "Kilitten ya da şase numarasından yeni anahtar çıkar, kayıp olan sistemden silinir.",
+      "hizmet": 1
+    },
+    {
+      "kisa": "Anahtar içeride kaldı",
+      "belirti": "Kapı kilitlendi, anahtar koltukta ya da kontakta.",
+      "sebep": "Camı kırmayın, kapıyı zorlamayın.",
+      "cozum": "Kapıyı özel açma aletleriyle, iz bırakmadan açarız. Önce ruhsat ve kimlik bakılır.",
+      "hizmet": 5
     }
   ],
   "acil": {
     "baslik": "Anahtar içeride, kapı kilitli mi?",
-    "metin": "Camı kırmayın, kapıyı zorlamayın. Arayın, konumunuzu söyleyin. Kapıyı özel açma aletleriyle, iz bırakmadan açarız.",
+    "metin": "Camı kırmayın, kapıyı zorlamayın. Arayın, konumunuzu söyleyin. Kapıyı iz bırakmadan açarız.",
     "kural": "Kapıyı açmadan önce ruhsat ve kimlik bakarız. Ruhsattaki isimle eşleşmeyen araçta iş yapmayız."
   },
-  "finalBaslik": "Anahtarsız kalmayın.",
+  "teslimTesti": ["Sürücü kapısı", "Yolcu kapıları", "Bagaj", "Kilitle tuşu", "Aç tuşu", "Marş"],
+  "finalBaslik": "Yolda kalmayın. Bir telefon yeter.",
   "galeri": [
     { "src": "/img/kilit-klasik/dukkan.jpg", "alt": "Anahtar dükkânında tezgâhta anahtar işleyen usta" },
     { "src": "/img/kilit-klasik/kilit-silindiri.jpg", "alt": "Pinleri görünen kilit silindiri yakın çekim" },
+    { "src": "/img/kilit-klasik/atolye.jpg", "alt": "Duvarı anahtar boşluklarıyla dolu kilit atölyesinde çalışan usta" },
+    { "src": "/img/kilit-klasik/anahtarlar.jpg", "alt": "Üst üste duran metal anahtarlar" },
     { "src": "/img/kilit-klasik/kodlama.jpg", "alt": "Aracın arıza tespit soketine takılı kodlama cihazı" },
     { "src": "/img/kilit-klasik/anahtar-duvari.jpg", "alt": "Kancalara dizilmiş ham anahtarlar" },
-    { "src": "/img/kilit-klasik/kapi-acma.jpg", "alt": "Araç kapı kilidine takılmış açma aleti" },
-    { "src": "/img/kilit-klasik/silindir-parcalari.jpg", "alt": "Sökülmüş kilit silindiri, pinleri ve yayları" },
-    { "src": "/img/kilit-klasik/akilli-anahtar.jpg", "alt": "Orta konsolda duran kumandalı akıllı anahtar" },
-    { "src": "/img/kilit-klasik/kontak.jpg", "alt": "Kontaktaki anahtarı çeviren sürücü eli" },
-    { "src": "/img/kilit-klasik/start-stop.jpg", "alt": "Anahtarsız çalıştırma için start-stop düğmesi" },
     { "src": "/img/kilit-klasik/yedek-anahtar.jpg", "alt": "Siyah zemin üzerinde sustalı araç anahtarı" }
   ]
 }

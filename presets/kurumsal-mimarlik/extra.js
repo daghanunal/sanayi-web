@@ -1,206 +1,225 @@
-// Kurumsal mimarlık — "Pafta" yönü.
-// paftaHero:  site bir proje paftası gibi açılır. Aks balonları (A-D / 1-3) ve kesik aks çizgileri, fotoğrafın
-//             çevresinde ölçü çizgileri çizilir; fotoğraf önce kurşun kalem eskizi olarak görünür, tarama çizgisi
-//             geçtikçe gerçek yapıya dönüşür. Altta antet (proje künyesi): müellif, ölçek, tarih, pafta, bugünkü durum.
-//             Masaüstünde imleç, koordinat okuyan bir artı imlecine dönüşür.
-// paftaListe: hizmet özeti bir çizim listesi gibi: pafta kodu, başlık, süre; üzerine gelince küçük fotoğraf.
-// olcuBand:   rakamlar ölçü çizgisi olarak: iki uçta kesme işareti, ortada değer.
-// imarHesap:  imza modülü. Arsa alanı, TAKS, KAKS kaydırıcıları; izometrik kütle canlı yükselir (kat kat),
-//             taban alanı, toplam inşaat alanı, kat sayısı, yaklaşık yükseklik; sonuç WhatsApp mesajına dönüşür.
+// Kurumsal mimarlık — "Gün Işığı" yönü.
+// gunesHero:  imza anı. Beyaz, yüksek tavanlı bir salon fotoğrafı bir gün ışığı etüdüne dönüşür: üstte güneşin
+//             yay çizdiği gök yarım dairesi, altında saat kaydırıcısı. Sayfa açılınca güneş sabah 06:00'dan
+//             öğleden sonraya yürür; oda sabah turuncusundan öğle beyazına, akşam kızıllığına ve alacakaranlık
+//             mavisine geçer, gölge yönü ve boyu güneşle döner. Kaydırıcıyla ya da fotoğrafta parmakla sürükleyerek
+//             günün her saatini deneyebilirsiniz. Okumalar: saat, güneş yüksekliği, yön, gölge boyu.
+// katKesit:   hizmet özeti bir yapı kesiti gibi: her hizmet bir kat, solunda kot (+21,00 … ±0,00), içinde
+//             pencereden görünen küçük fotoğraf; altta taralı zemin.
+// imarHesap:  TAKS/KAKS ile izometrik kütle; kütle güneşe göre zemine gölge düşürür.
 import { esc, telHref, waHref, openStatus, icons, gsap, ScrollTrigger, reducedMotion } from '../../shared/core.js';
 import { yilEki } from '../_kurumsal/bolumler.js';
 
-const ok = `<svg class="k-ok" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square"/></svg>`;
+const ok = `<svg class="k-ok" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 const rota = (id, metin, cls = 'k-btn') => `<a class="${cls}" href="#/${id}" data-rota="${id}">${metin}</a>`;
-const img = (p) => `${import.meta.env.BASE_URL}img/kurumsal-mimarlik/${p}.jpg`;
 const sayi = (n, b = 0) => Number(n).toLocaleString('tr-TR', { minimumFractionDigits: b, maximumFractionDigits: b });
 
-export const ikonGonye = `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21V3l18 18z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M7 17v-5l5 5z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M3 8h2M3 12h3M3 16h2" stroke="currentColor" stroke-width="1.6"/></svg>`;
+export const ikonGunes = `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 17a7 7 0 0 1 14 0" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M2 20h20M12 4v3M4.9 8.9l2.1 2.1M19.1 8.9 17 11" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>`;
+export const ikonGonye = `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 21V3l18 18z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M7 17v-5l5 5z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>`;
+
+// --- Güneş modeli ------------------------------------------------------------------------
+// f: 0 = 06:00, 1 = 20:00. Basit yaz günü yayı; tepe noktası 62°.
+const SAAT0 = 6, SAAT1 = 20;
+const karis = (a, b, t) => a.map((x, i) => Math.round(x + (b[i] - x) * t));
+const YON = [[0, 'K'], [45, 'KD'], [90, 'D'], [135, 'GD'], [180, 'G'], [225, 'GB'], [270, 'B'], [315, 'KB'], [360, 'K']];
+export function gunes(f) {
+  const yuk = Math.sin(Math.PI * f); // 0..1
+  const derece = yuk * 62;
+  const az = 75 + f * 210; // doğudan batıya
+  const yon = YON.reduce((a, b) => (Math.abs(b[0] - az) < Math.abs(a[0] - az) ? b : a))[1];
+  const golge = derece > 4 ? 1 / Math.tan((derece * Math.PI) / 180) : null;
+  const dk = Math.round((SAAT0 + f * (SAAT1 - SAAT0)) * 60);
+  const saat = `${String(Math.floor(dk / 60)).padStart(2, '0')}:${String(dk % 60).padStart(2, '0')}`;
+  return { f, yuk, derece, az, yon, golge, saat };
+}
 
 // --- Hero --------------------------------------------------------------------------------
 
-export const paftaHero = {
+export const gunesHero = {
   render(d, { tema }) {
     const h = d.kurumsal?.hero || {};
     const st = d.saatler ? openStatus(d.saatler) : null;
-    const bugun = new Date();
-    const tarih = `${String(bugun.getDate()).padStart(2, '0')}.${String(bugun.getMonth() + 1).padStart(2, '0')}.${bugun.getFullYear()}`;
-    const antet = [
-      ['Müellif', d.isletme.ad, 'ph__antet-genis'],
-      ['Proje', 'Sizin eviniz, işyeriniz'],
-      ['Ölçek', '1/100'],
-      ['Tarih', tarih],
-      ['Pafta', 'A-01'],
-      ['Ofis', st ? st.text : 'Etimesgut', 'ph__antet-durum' + (st?.open ? ' is-acik' : '')],
-    ];
-    const akslar = ['A', 'B', 'C', 'D'];
+    const saatler = [6, 9, 12, 15, 18];
+    const tik = saatler
+      .map((s) => {
+        const th = Math.PI * (1 - (s - SAAT0) / (SAAT1 - SAAT0));
+        const x = 200 + 176 * Math.cos(th), y = 112 - 96 * Math.sin(th);
+        const x2 = 200 + 188 * Math.cos(th), y2 = 112 - 106 * Math.sin(th);
+        return `<line x1="${x.toFixed(1)}" y1="${y.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}"/><text x="${(200 + 158 * Math.cos(th)).toFixed(1)}" y="${(104 - 76 * Math.sin(th)).toFixed(1)}">${String(s).padStart(2, '0')}</text>`;
+      })
+      .join('');
     return `
-      <section class="k-hero ph" aria-label="Giriş">
-        <div class="k-kap ph__pafta">
-          <span class="ph__kose ph__kose--1" aria-hidden="true"></span><span class="ph__kose ph__kose--2" aria-hidden="true"></span>
-          <div class="ph__ic">
-            <div class="ph__bas">
-              <p class="ph__ust"><span class="ph__kod">A-01</span><span>${esc(d.isletme.sektor)}<span class="ph__yer"> · ${esc(tema.yer || 'Etimesgut')}</span>${d.isletme.kurulus ? ` · ${esc(yilEki(d.isletme.kurulus))} beri` : ''}</span></p>
-              <h1 class="k-h1 ph__baslik" data-bol>${esc(h.baslik || d.isletme.slogan)}</h1>
+      <section class="k-hero gh" aria-label="Giriş">
+        <div class="k-kap gh__ic">
+          <div class="gh__metin">
+            <p class="gh__ust"><span class="gh__ust-isaret" aria-hidden="true"></span>${esc(d.isletme.sektor)} · ${esc(tema.yer || 'Etimesgut')}${d.isletme.kurulus ? ` · ${esc(yilEki(d.isletme.kurulus))} beri` : ''}</p>
+            <h1 class="k-h1 gh__baslik" data-bol>${esc(h.baslik || d.isletme.slogan)}</h1>
+            <p class="k-lead gh__lead">${esc(h.metin || d.isletme.hakkinda)}</p>
+            <div class="k-butonlar">
+              ${rota('iletisim', `<span>${esc(h.birincil || 'Ön görüşme isteyin')}</span>${ok}`)}
+              ${rota(h.ikincilRota || 'imar', `${ikonGonye}<span>${esc(h.ikincil || 'İmar ön hesabı')}</span>`, 'k-btn k-btn--ikincil')}
             </div>
-            <div class="ph__cizim">
-              <div class="ph__olcu ph__olcu--yatay" aria-hidden="true"><span class="ph__olcu-cizgi"></span><span class="ph__olcu-yazi">18,60</span></div>
-              <div class="ph__olcu ph__olcu--dikey" aria-hidden="true"><span class="ph__olcu-cizgi"></span><span class="ph__olcu-yazi">12,40</span></div>
-              <figure class="ph__cerceve" style="--p:100%">
-                <div class="ph__foto" data-paralaks><img src="${tema.heroGorsel}" alt="${esc(tema.heroAlt || '')}" fetchpriority="high"></div>
-                <div class="ph__eskiz" aria-hidden="true" data-paralaks><img src="${tema.heroGorsel}" alt=""></div>
-                <div class="ph__akslar" aria-hidden="true">${akslar.map((a, i) => `<span class="ph__aks" style="--x:${12 + i * 25.3}%"><b>${a}</b></span>`).join('')}</div>
-                <div class="ph__akslar ph__akslar--y" aria-hidden="true">${[1, 2, 3].map((a, i) => `<span class="ph__aks ph__aks--y" style="--y:${22 + i * 28}%"><b>${a}</b></span>`).join('')}</div>
-                <span class="ph__etiket ph__etiket--eskiz" aria-hidden="true">Eskiz</span><span class="ph__etiket ph__etiket--yapi" aria-hidden="true">Yapı</span>
-                <span class="ph__tarama" aria-hidden="true"><span class="ph__tutamak"><svg viewBox="0 0 24 24"><path d="M9 7l-5 5 5 5M15 7l5 5-5 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"/></svg></span></span>
-                <span class="ph__kuzey" aria-hidden="true"><svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="17" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M20 5l7 22-7-5-7 5z" fill="currentColor"/></svg><b>K</b></span>
-              </figure>
-              <p class="ph__ipucu" aria-hidden="true">Çizgiyi sürükleyin: eskizden yapıya</p>
+            <ul class="gh__bilgi">
+              ${st ? `<li class="gh__durum${st.open ? ' is-acik' : ''}"><i aria-hidden="true"></i>${esc(st.text)}</li>` : ''}
+              <li><a href="${telHref(d)}">${icons.phone}<span>${esc(d.iletisim.telefon)}</span></a></li>
+            </ul>
+          </div>
+          <div class="gh__etut">
+            <div class="gh__gok" aria-hidden="true">
+              <svg viewBox="0 0 400 124">
+                <path class="gh__yay" d="M24 112 A176 96 0 0 1 376 112"/>
+                <path class="gh__yay gh__yay--dolu" d="M24 112 A176 96 0 0 1 376 112" pathLength="1"/>
+                <g class="gh__tik">${tik}</g>
+                <line class="gh__ufuk" x1="0" y1="112" x2="400" y2="112"/>
+                <g class="gh__gunes"><circle r="15" class="gh__hale"/><circle r="8.5"/></g>
+              </svg>
             </div>
-            <div class="ph__alt">
-              <p class="k-lead">${esc(h.metin || d.isletme.hakkinda)}</p>
-              <div class="k-butonlar">
-                ${rota('iletisim', `${esc(h.birincil || 'Ön görüşme isteyin')} ${ok}`)}
-                ${rota(h.ikincilRota || 'imar', `${ikonGonye}<span>${esc(h.ikincil || 'İmar ön hesabı')}</span>`, 'k-btn k-btn--ikincil')}
-              </div>
+            <figure class="gh__foto">
+              <div class="gh__foto-ic" data-paralaks><img src="${tema.heroGorsel}" alt="${esc(tema.heroAlt || '')}" fetchpriority="high" draggable="false"></div>
+              <span class="gh__renk" aria-hidden="true"></span>
+              <span class="gh__golge" aria-hidden="true"></span>
+              <span class="gh__isik" aria-hidden="true"></span>
+              <span class="gh__huzme" aria-hidden="true"></span>
+              <span class="gh__gece" aria-hidden="true"></span>
+              <figcaption class="gh__okuma" aria-live="off">
+                <span class="gh__etiket">Gün ışığı etüdü</span>
+                <b class="gh__saat" data-g="saat">06:00</b>
+              </figcaption>
+              <span class="gh__ipucu" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 8l-4 4 4 4M16 8l4 4-4 4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Günü sürükleyin</span>
+            </figure>
+            <div class="gh__kontrol">
+              <label class="gh__kaydir"><span class="sr-only">Saat</span>
+                <input type="range" min="0" max="1" step="0.002" value="0.02" data-g="aralik" aria-valuetext="06:00">
+              </label>
+              <dl class="gh__degerler">
+                <div><dt>Güneş</dt><dd data-g="derece">0°</dd></div>
+                <div><dt>Yön</dt><dd data-g="yon">D</dd></div>
+                <div><dt>Gölge boyu</dt><dd data-g="golge">uzun</dd></div>
+              </dl>
             </div>
           </div>
-          <dl class="ph__antet">
-            ${antet.map(([e, v, c]) => `<div class="${c || ''}"><dt>${esc(e)}</dt><dd>${c?.startsWith('ph__antet-durum') ? '<i></i>' : ''}${esc(v)}</dd></div>`).join('')}
-            <div class="ph__antet-tel"><dt>Telefon</dt><dd><a href="${telHref(d)}">${esc(d.iletisim.telefon)}</a></dd></div>
-          </dl>
         </div>
-        <div class="ph__arti" aria-hidden="true"><span class="ph__arti-x"></span><span class="ph__arti-y"></span><span class="ph__arti-yazi">x 00,00 · y 00,00</span></div>
       </section>`;
   },
   mount(el) {
-    const cerceve = el.querySelector('.ph__cerceve');
-    const tarama = el.querySelector('.ph__tarama');
-    const DURAK = 34; // intro sonunda eskizin kapladığı yüzde
-    // Karşılaştırma çizgisi: çerçevede yatay sürükleme, dikey kaydırma serbest (touch-action: pan-y).
-    let surukle = false;
-    const konum = (e) => {
-      const r = cerceve.getBoundingClientRect();
-      const p = Math.max(0, Math.min(100, ((e.clientX - r.left) / r.width) * 100));
-      if (gsap.isTweening(cerceve)) {
-        gsap.killTweensOf(cerceve);
-        gsap.set(cerceve, { clearProps: 'clipPath' });
-        tarama.style.opacity = 1;
-      }
-      cerceve.style.setProperty('--p', `${p}%`);
-    };
-    cerceve.addEventListener('pointerdown', (e) => {
-      surukle = true;
-      cerceve.classList.add('is-surukle');
-      try { cerceve.setPointerCapture(e.pointerId); } catch {}
-      if (e.pointerType === 'mouse') konum(e);
-    });
-    cerceve.addEventListener('pointermove', (e) => surukle && konum(e));
-    const birak = () => { surukle = false; cerceve.classList.remove('is-surukle'); };
-    cerceve.addEventListener('pointerup', birak);
-    cerceve.addEventListener('pointercancel', birak);
-    if (reducedMotion) {
-      cerceve.style.setProperty('--p', `${DURAK}%`);
-      tarama.style.opacity = 1;
-      return;
-    }
-    const tl = gsap.timeline({ delay: 0.25 });
-    tl.fromTo(cerceve, { clipPath: 'inset(0 100% 0 0)' }, { clipPath: 'inset(0 0% 0 0)', duration: 0.9, ease: 'power3.inOut', clearProps: 'clipPath' })
-      .fromTo(el.querySelectorAll('.ph__aks'), { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.45, stagger: 0.06, ease: 'back.out(2.4)' }, 0.55)
-      .fromTo(el.querySelector('.ph__olcu--yatay .ph__olcu-cizgi'), { scaleX: 0 }, { scaleX: 1, duration: 0.8, ease: 'power2.inOut' }, 0.7)
-      .fromTo(el.querySelector('.ph__olcu--dikey .ph__olcu-cizgi'), { scaleY: 0 }, { scaleY: 1, duration: 0.8, ease: 'power2.inOut' }, 0.8)
-      .fromTo(el.querySelectorAll('.ph__olcu-yazi'), { opacity: 0 }, { opacity: 1, duration: 0.3, stagger: 0.1 }, 1.3)
-      // Eskizden yapıya: tarama çizgisi sağa geçer, arkasında gerçek yapı kalır; sonra geri gelip durur.
-      .fromTo(tarama, { opacity: 0 }, { opacity: 1, duration: 0.2 }, 1.4)
-      .fromTo(cerceve, { '--p': '100%' }, { '--p': '0%', duration: 1.3, ease: 'power2.inOut', immediateRender: false }, 1.5)
-      .fromTo(cerceve, { '--p': '0%' }, { '--p': `${DURAK}%`, duration: 0.9, ease: 'power3.out', immediateRender: false }, 2.85)
-      .fromTo(el.querySelectorAll('.ph__etiket, .ph__ipucu'), { opacity: 0 }, { opacity: 1, duration: 0.4, stagger: 0.08 }, 3.2)
-      .fromTo(el.querySelectorAll('.ph__antet > div'), { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.5, stagger: 0.05, ease: 'power2.out' }, 0.6)
-      .fromTo(el.querySelector('.ph__kuzey'), { rotate: -120, opacity: 0 }, { rotate: 0, opacity: 1, duration: 1, ease: 'power3.out' }, 1);
+    const foto = el.querySelector('.gh__foto');
+    const aralik = el.querySelector('[data-g="aralik"]');
+    const gunesG = el.querySelector('.gh__gunes');
+    const dolu = el.querySelector('.gh__yay--dolu');
+    const q = (k) => el.querySelector(`[data-g="${k}"]`);
+    const renk = [
+      [255, 178, 110], // şafak
+      [255, 253, 246], // öğle
+      [255, 160, 52], // gün batımı: altın saat
+      [84, 104, 170], // alacakaranlık
+    ];
+    const durum = { f: Number(aralik.value) };
 
-    // Masaüstü: artı imleci + koordinat okuma.
-    if (!matchMedia('(pointer: fine) and (min-width: 900px)').matches) return;
-    const arti = el.querySelector('.ph__arti');
-    const yazi = el.querySelector('.ph__arti-yazi');
-    let hx = 0, hy = 0, bekliyor = false;
-    const ciz = () => {
-      bekliyor = false;
-      arti.style.setProperty('--ax', `${hx}px`);
-      arti.style.setProperty('--ay', `${hy}px`);
-      yazi.textContent = `x ${sayi(hx / 50, 2)} · y ${sayi(hy / 50, 2)}`;
-    };
-    const hareket = (e) => {
-      const r = el.getBoundingClientRect();
-      hx = e.clientX - r.left;
-      hy = e.clientY - r.top;
-      if (!bekliyor) { bekliyor = true; requestAnimationFrame(ciz); }
-    };
-    el.addEventListener('pointermove', hareket);
-    el.addEventListener('pointerenter', () => el.classList.add('is-arti'));
-    el.addEventListener('pointerleave', () => el.classList.remove('is-arti'));
+    function uygula(f) {
+      const g = gunes(f);
+      // Gök yayında güneşin yeri
+      const th = Math.PI * (1 - f);
+      gunesG.setAttribute('transform', `translate(${(200 + 176 * Math.cos(th)).toFixed(1)} ${(112 - 96 * Math.sin(th)).toFixed(1)})`);
+      dolu.style.strokeDashoffset = String(1 - f);
+      // Oda ışığı: sabah ve akşam sıcak, öğle nötr, gün batımından sonra mavi.
+      const sicak = Math.pow(1 - g.yuk, 0.85);
+      let c = karis(renk[1], f < 0.5 ? renk[0] : renk[2], sicak);
+      if (f > 0.86) c = karis(c, renk[3], Math.min(1, (f - 0.86) / 0.12));
+      if (f < 0.05) c = karis(c, renk[3], (0.05 - f) / 0.05 * 0.6);
+      const s = foto.style;
+      s.setProperty('--g-renk', `rgb(${c.join(' ')})`);
+      s.setProperty('--g-aci', `${(90 + f * 180).toFixed(1)}deg`);
+      s.setProperty('--g-golge', (0.12 + sicak * 0.5).toFixed(3));
+      s.setProperty('--g-x', `${((1 - f) * 100).toFixed(1)}%`);
+      s.setProperty('--g-y', `${(92 - g.yuk * 80).toFixed(1)}%`);
+      s.setProperty('--g-isik', ((0.2 + sicak * 0.55) * Math.min(1, g.derece / 12)).toFixed(3));
+      const gece = Math.max(0, f - 0.9) / 0.1 * 0.45 + Math.max(0, 0.04 - f) / 0.04 * 0.35;
+      s.setProperty('--g-gece', gece.toFixed(3));
+      // Pencereden giren ışık huzmesi: alçak güneşte belirgin, gece yok.
+      const huzme = g.derece > 3 ? 0.18 + sicak * 0.5 : Math.max(0, g.derece / 3) * 0.18;
+      s.setProperty('--g-huzme', huzme.toFixed(3));
+      s.setProperty('--g-hx', `${(f * 100).toFixed(1)}%`);
+      el.style.setProperty('--g-yuk', g.yuk.toFixed(3));
+      q('saat').textContent = g.saat;
+      q('derece').textContent = `${Math.round(g.derece)}°`;
+      q('yon').textContent = g.yon;
+      q('golge').textContent = g.golge == null ? 'çok uzun' : g.golge > 6 ? 'çok uzun' : `${sayi(g.golge, 1)} × boy`;
+      aralik.setAttribute('aria-valuetext', g.saat);
+      aralik.style.setProperty('--dolu', `${(f * 100).toFixed(1)}%`);
+    }
+
+    let tl;
+    const dur = () => { if (tl) { tl.kill(); tl = null; } };
+    aralik.addEventListener('input', () => { dur(); durum.f = Number(aralik.value); uygula(durum.f); });
+
+    // Fotoğrafta yatay sürükleme saati değiştirir; dikey kaydırma serbest (touch-action: pan-y).
+    let basX = null, basF = 0;
+    foto.addEventListener('pointerdown', (e) => {
+      dur(); basX = e.clientX; basF = durum.f;
+      foto.classList.add('is-surukle');
+      try { foto.setPointerCapture(e.pointerId); } catch {}
+    });
+    foto.addEventListener('pointermove', (e) => {
+      if (basX == null) return;
+      const w = foto.getBoundingClientRect().width;
+      durum.f = Math.max(0, Math.min(1, basF + (e.clientX - basX) / (w * 1.1)));
+      aralik.value = durum.f;
+      uygula(durum.f);
+    });
+    const birak = () => { basX = null; foto.classList.remove('is-surukle'); };
+    foto.addEventListener('pointerup', birak);
+    foto.addEventListener('pointercancel', birak);
+
+    if (reducedMotion) { durum.f = 0.58; aralik.value = durum.f; uygula(durum.f); return; }
+    uygula(durum.f);
+    // Açılış: güneş doğar, öğleyi geçip öğleden sonra durur; ipucu yanıp söner.
+    tl = gsap.timeline({ delay: 0.35 });
+    tl.fromTo(el.querySelector('.gh__gok svg'), { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out' }, 0)
+      .fromTo(foto, { clipPath: 'inset(100% 0 0 0)' }, { clipPath: 'inset(0% 0 0 0)', duration: 1.0, ease: 'power3.inOut', clearProps: 'clipPath' }, 0)
+      .fromTo(el.querySelectorAll('.gh__degerler > div, .gh__kaydir'), { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.5, stagger: 0.07, ease: 'power2.out' }, 0.5)
+      .to(durum, { f: 0.8, duration: 3.6, ease: 'power2.inOut', onUpdate: () => { aralik.value = durum.f; uygula(durum.f); } }, 0.7)
+      .fromTo(el.querySelector('.gh__ipucu'), { opacity: 0, x: -8 }, { opacity: 1, x: 0, duration: 0.5 }, 3.4);
   },
 };
 
-// --- Pafta listesi (hizmet özeti) --------------------------------------------------------
+// --- Kat kesiti (hizmet özeti) -----------------------------------------------------------
 
-export const paftaListe = {
+export const katKesit = {
   render(d) {
     const list = d.hizmetler || [];
     if (!list.length) return '';
+    const n = list.length;
+    const kot = (i) => {
+      const v = (n - 1 - i) * 3;
+      return v === 0 ? '±0,00' : `+${sayi(v, 2)}`;
+    };
     return `
-      <section class="k-bolum pl">
+      <section class="k-bolum kk">
         <div class="k-kap">
           <div class="k-bolum__bas">
-            <h2 class="k-h2" data-bol>${esc(d.kurumsal?.hizmetOzetBaslik || 'Hizmetlerimiz')}</h2>
+            <div>
+              <p class="kk__ust">Yapı kesiti · ${n} kat</p>
+              <h2 class="k-h2" data-bol>${esc(d.kurumsal?.hizmetOzetBaslik || 'Hizmetlerimiz')}</h2>
+            </div>
             ${rota('hizmetler', `Tüm hizmetler ${ok}`, 'k-link')}
           </div>
-          <div class="pl__tablo" role="list">
-            <div class="pl__bas" aria-hidden="true"><span>Pafta</span><span>İş</span><span>Kapsam</span><span>Süre</span></div>
-            <div data-sira>
-            ${list
-              .map(
-                (h, i) => `<a class="pl__satir" role="listitem" href="#/hizmetler" data-rota="hizmetler" style="--i:${i}">
-                  <span class="pl__kod">${esc(h.kod || String(i + 1).padStart(2, '0'))}</span>
-                  <span class="pl__ad">${esc(h.baslik)}</span>
-                  <span class="pl__kisa">${esc(h.kisa || h.aciklama)}</span>
-                  <span class="pl__sure">${esc(h.sure || '')}</span>
-                  ${h.gorsel ? `<span class="pl__foto" aria-hidden="true"><img src="${esc(h.gorsel)}" alt="" loading="lazy"></span>` : ''}
-                </a>`
-              )
-              .join('')}
-            </div>
+          <div class="kk__bina">
+            <div class="kk__cati" aria-hidden="true"><span></span></div>
+            <ol class="kk__katlar" data-sira>
+              ${list
+                .map(
+                  (h, i) => `<li><a class="kk__kat" href="#/hizmetler" data-rota="hizmetler">
+                    <span class="kk__kot">${kot(i)}</span>
+                    ${h.gorsel ? `<span class="kk__pencere" aria-hidden="true"><img src="${esc(h.gorsel)}" alt="" loading="lazy"></span>` : '<span class="kk__pencere" aria-hidden="true"></span>'}
+                    <span class="kk__metin"><span class="kk__ad">${esc(h.baslik)}</span><span class="kk__kisa">${esc(h.kisa || h.aciklama)}</span></span>
+                    <span class="kk__sure">${esc(h.sure || '')}</span>
+                  </a></li>`
+                )
+                .join('')}
+            </ol>
+            <div class="kk__zemin" aria-hidden="true"><span>Zemin</span></div>
           </div>
-          <p class="pl__not">Teslim edilecek paftaların listesi ve fiyat, yer ziyaretinden sonra işe başlamadan yazılı verilir.</p>
-        </div>
-      </section>`;
-  },
-};
-
-// --- Ölçü bandı (rakamlar) ---------------------------------------------------------------
-
-export const olcuBand = {
-  render(d) {
-    const buYil = new Date().getFullYear();
-    const s = (d.istatistikler || []).map((x) => ({
-      ...x,
-      deger: (x.kurulustanHesapla || /yıldır/.test(x.etiket)) && d.isletme.kurulus ? buYil - d.isletme.kurulus : x.deger,
-    }));
-    if (!s.length) return '';
-    return `
-      <section class="k-bolum ob">
-        <div class="k-kap">
-          <p class="ob__ust"><span>Ölçüler</span><span>Birim: adet, m², yıl</span></p>
-          <dl class="ob__liste">
-            ${s
-              .map(
-                (x) => `<div class="ob__olcu">
-                  <dd><span data-sayac="${x.deger}">${x.deger.toLocaleString('tr-TR')}</span><small>${esc(x.sonek || '')}</small></dd>
-                  <span class="ob__cizgi" data-cizgi aria-hidden="true"></span>
-                  <dt>${esc(x.etiket)}</dt>
-                </div>`
-              )
-              .join('')}
-          </dl>
+          <p class="kk__not">Hangi çizimlerin teslim edileceği ve fiyat, yer ziyaretinden sonra işe başlamadan yazılı verilir.</p>
         </div>
       </section>`;
   },
@@ -223,7 +242,7 @@ export const imarHesap = {
         <div class="k-kap">
           ${ana ? `<div class="k-bolum__bas ih__bas">
             <div>
-              <p class="ih__ust"><span class="ph__kod">A-02</span>İmar ön hesabı</p>
+              <p class="ih__ust">İmar ön hesabı</p>
               <h2 class="k-h2" data-bol>Arsanıza ne sığar?</h2>
             </div>
             <p class="ih__giris">Üç değer girin, kütle yükselsin. Kesin değerleri imar durum belgesinden birlikte okuruz.</p>
@@ -308,6 +327,10 @@ export const imarHesap = {
       s += `<polygon class="ih__arsa" points="${P(0, 0, 0)} ${P(A, 0, 0)} ${P(A, A, 0)} ${P(0, A, 0)}"/>`;
       for (let i = 1; i < 8; i++) s += `<line class="ih__izgara" x1="${P((A / 8) * i, 0, 0).split(',')[0]}" y1="${P((A / 8) * i, 0, 0).split(',')[1]}" x2="${P((A / 8) * i, A, 0).split(',')[0]}" y2="${P((A / 8) * i, A, 0).split(',')[1]}"/>`;
       s += `<polygon class="ih__cekme" points="${P(14, 14, 0)} ${P(A - 14, 14, 0)} ${P(A - 14, A - 14, 0)} ${P(14, A - 14, 0)}"/>`;
+      // Öğleden sonra güneşi: kütlenin gölgesi zemine sol-öne düşer.
+      const L = r.katSayisi * katH * 0.55;
+      const a = -0.35 * L, b = 0.95 * L, x0 = ofs, y0 = ofs, x1 = ofs + w, y1 = ofs + w;
+      s += `<polygon class="ih__golge" points="${P(x1, y0, 0)} ${P(x1, y1, 0)} ${P(x1 + a, y1 + b, 0)} ${P(x0 + a, y1 + b, 0)} ${P(x0 + a, y0 + b, 0)} ${P(x0, y0, 0)}"/>`;
       s += `<polygon class="ih__taban" points="${P(ofs, ofs, 0)} ${P(ofs + w, ofs, 0)} ${P(ofs + w, ofs + w, 0)} ${P(ofs, ofs + w, 0)}"/>`;
       // Katlar: tam katlar aynı, kesirli son kat çatı katı gibi geri çekilir.
       for (let k = 0; k < r.katSayisi; k++) {

@@ -4,6 +4,7 @@
 // Sahne durumu dışarıdan `update(state)` ile verilir; kamera kurgusu main.js'te.
 import * as THREE from 'three';
 import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js';
+import { mergeVertices } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 
 const V = (x, y, z) => new THREE.Vector3(x, y, z);
 export const MANGAL = { len: 8.2, w: 1.5, rail: 0.1 };
@@ -61,16 +62,20 @@ export function createScene(canvas, { lite = false } = {}) {
   };
 
   // --- Kömür yatağı ------------------------------------------------------------
+  // Kömür parçası: yumuşak gürültüyle ezilmiş, yassı ve köşeli ama kristal gibi değil
   const coalGeo = (() => {
-    const g = new THREE.IcosahedronGeometry(1, lite ? 0 : 1);
+    let g = new THREE.IcosahedronGeometry(1, lite ? 1 : 2);
+    g.deleteAttribute('normal');
+    g.deleteAttribute('uv');
+    g = mergeVertices(g);
     const pos = g.attributes.position;
-    const key = (i) => `${pos.getX(i).toFixed(3)},${pos.getY(i).toFixed(3)},${pos.getZ(i).toFixed(3)}`;
-    const jit = new Map();
+    const v = new THREE.Vector3();
     for (let i = 0; i < pos.count; i++) {
-      const k = key(i);
-      if (!jit.has(k)) jit.set(k, lite ? 0.7 + Math.random() * 0.55 : 0.8 + Math.random() * 0.4);
-      const s = jit.get(k);
-      pos.setXYZ(i, pos.getX(i) * s, pos.getY(i) * s * 0.8, pos.getZ(i) * s);
+      v.fromBufferAttribute(pos, i);
+      const n = Math.sin(v.x * 3.1 + 1.3) * Math.cos(v.y * 2.7 - 0.4) * Math.sin(v.z * 3.4 + 2.1);
+      const c = Math.max(Math.abs(v.x), Math.abs(v.y), Math.abs(v.z)); // kübe yakın: kırık kenarlar
+      const r = 0.8 + n * 0.22 + (c - 0.75) * 0.5;
+      pos.setXYZ(i, v.x * r * 1.25, v.y * r * 0.72, v.z * r);
     }
     g.computeVertexNormals();
     return g;
@@ -106,7 +111,7 @@ export function createScene(canvas, { lite = false } = {}) {
         float fl = uFlare * exp(-pow((vW.x - uFlareX) * 1.6, 2.0));
         float hot = smoothstep(0.3, 0.8, big);
         float deep = smoothstep(-0.12, -0.3, vW.y);
-        float heat = uHeat * ((0.25 + 0.75 * hot) * (1.0 - up * 0.4) + deep * 0.45) * flick + fl * 0.9;
+        float heat = uHeat * (0.5 + 0.5 * fract(vSeed * 7.31)) * ((0.25 + 0.75 * hot) * (1.0 - up * 0.4) + deep * 0.45) * flick + fl * 0.9;
         heat = clamp(heat, 0.0, 1.0);
         float ash = uAsh * smoothstep(0.45, 0.9, up + (fine - 0.5) * 0.7);
         vec3 base = mix(vec3(0.02, 0.016, 0.014), vec3(0.12, 0.115, 0.11), ash);
@@ -115,27 +120,27 @@ export function createScene(canvas, { lite = false } = {}) {
         float edge = 1.0 - smoothstep(0.0, 0.7, up);           // yanlara ve alta bakan yüzler daha kızgın
         float vis = mix(0.5 + 0.5 * edge, edge * 0.7 + crack * 0.25, ash);
         vec3 e = ramp(heat * (0.55 + 0.45 * edge));
-        col += e * vis * (0.9 + heat * 1.1);
+        col += e * vis * (0.75 + heat * 0.8);
         col += base * vec3(1.0, 0.4, 0.12) * uHeat * 0.3;      // külün üstüne vuran kor ışığı
         gl_FragColor = vec4(col, 1.0);
         #include <tonemapping_fragment>
         #include <colorspace_fragment>
       }`,
   });
-  const COALS = lite ? 900 : 1700;
+  const COALS = lite ? 1500 : 2600;
   const coals = new THREE.InstancedMesh(coalGeo, coalMat, COALS);
   const seeds = new Float32Array(COALS);
   const dummy = new THREE.Object3D();
   for (let i = 0; i < COALS; i++) {
     const layer = i < COALS * 0.45 ? 0 : 1;
-    const s = 0.065 + Math.random() * 0.075;
+    const s = 0.042 + Math.pow(Math.random(), 1.6) * 0.07;
     dummy.position.set(
       (Math.random() - 0.5) * (MANGAL.len - 0.35),
-      -0.3 + layer * 0.11 + Math.random() * 0.1,
+      -0.26 + layer * 0.08 + Math.random() * 0.08,
       (Math.random() - 0.5) * (MANGAL.w - 0.3)
     );
     dummy.rotation.set(Math.random() * 6, Math.random() * 6, Math.random() * 6);
-    dummy.scale.setScalar(s);
+    dummy.scale.set(s * (0.8 + Math.random() * 0.5), s, s * (0.8 + Math.random() * 0.5));
     dummy.updateMatrix();
     coals.setMatrixAt(i, dummy.matrix);
     seeds[i] = Math.random();
@@ -221,6 +226,9 @@ export function createScene(canvas, { lite = false } = {}) {
           float speck = step(0.8, vn(vPL * 90.0));
           vec3 raw = vec3(${raw.join(',')}) * (0.85 + nn * 0.3);
           vec3 ck = vec3(${cooked.join(',')}) * (0.7 + nn * 0.6);
+          float fat = smoothstep(0.6, 0.72, vn(vPL * vec3(34.0, 12.0, 34.0) + 3.0));
+          raw = mix(raw, vec3(0.78, 0.62, 0.55), fat * 0.55);
+          ck = mix(ck, vec3(0.42, 0.2, 0.06), fat * 0.5);
           vec3 c = mix(raw, ck, smoothstep(0.0, 0.75, uCook));
           float ch = smoothstep(0.55, 0.8, nn + speck * 0.3) * smoothstep(0.45, 1.0, uCook) * ${charAmt.toFixed(2)};
           c = mix(c, vec3(0.04, 0.02, 0.012), ch);
@@ -234,9 +242,9 @@ export function createScene(canvas, { lite = false } = {}) {
     };
     return m;
   }
-  const adanaMat = meatMaterial([0.5, 0.17, 0.17], [0.19, 0.07, 0.028], 0.9, 0.72);
-  const kusMat = meatMaterial([0.45, 0.13, 0.14], [0.18, 0.065, 0.025], 0.8, 0.7);
-  const tavukMat = meatMaterial([0.82, 0.6, 0.5], [0.6, 0.32, 0.1], 0.6, 0.65);
+  const adanaMat = meatMaterial([0.36, 0.075, 0.07], [0.17, 0.06, 0.024], 0.9, 0.6);
+  const kusMat = meatMaterial([0.33, 0.06, 0.065], [0.16, 0.055, 0.022], 0.8, 0.55);
+  const tavukMat = meatMaterial([0.74, 0.5, 0.4], [0.55, 0.28, 0.08], 0.6, 0.55);
   const bladeMat = new THREE.MeshStandardMaterial({ color: 0xb9bcc0, roughness: 0.28, metalness: 1 });
   const pepperG = new THREE.MeshStandardMaterial({ color: 0x2f7a1e, roughness: 0.35 });
   const tomatoM = new THREE.MeshStandardMaterial({ color: 0xc8261a, roughness: 0.3 });
@@ -261,7 +269,17 @@ export function createScene(canvas, { lite = false } = {}) {
   })();
   const bladeGeo = new THREE.BoxGeometry(0.075, 0.012, 2.25);
   const handleGeo = new THREE.TorusGeometry(0.075, 0.013, 8, 20);
-  const cubeGeo = new RoundedBoxGeometry(0.17, 0.15, 0.15, 2, 0.04);
+  const cubeGeo = (() => {
+    const g = new RoundedBoxGeometry(0.17, 0.15, 0.15, 3, 0.035);
+    const p = g.attributes.position;
+    for (let i = 0; i < p.count; i++) {
+      const x = p.getX(i), y = p.getY(i), z = p.getZ(i);
+      const k = 1 + 0.12 * Math.sin(x * 41 + y * 23) * Math.cos(z * 37 - x * 11);
+      p.setXYZ(i, x * k, y * k, z * (1 + 0.06 * Math.sin(y * 50)));
+    }
+    g.computeVertexNormals();
+    return g;
+  })();
   const chunkGeo = new RoundedBoxGeometry(0.03, 0.13, 0.12, 1, 0.012);
 
   function makeSkewer(type) {
