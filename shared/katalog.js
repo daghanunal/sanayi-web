@@ -164,7 +164,7 @@ export const PRESETS = [
 ];
 
 // Henüz yapılmamış ya da yayına alınmamış presetler burada gizlenir.
-export const HAZIR_OLMAYAN = new Set(['kurumsal-ekspertiz', 'kurumsal-radyator', 'kurumsal-cekici', 'radyator-klasik', 'yikama-klasik', 'radyator-sinematik', 'veteriner-klasik', 'veteriner-sinematik', 'kurumsal-dizel', 'kurumsal-veteriner', 'yikama-sinematik', 'kurumsal-yikama', 'dizel-sinematik', 'restoran-klasik', 'dizel-klasik', 'kurumsal-restoran', 'kurumsal-kilit', 'restoran-sinematik', 'kilit-sinematik', 'kilit-klasik', 'mimarlik-klasik', 'mimarlik-sinematik', 'kurumsal-mimarlik']);
+export const HAZIR_OLMAYAN = new Set(['kurumsal-kilit']);
 export const hazirPresetler = () => PRESETS.filter((p) => !HAZIR_OLMAYAN.has(p.id));
 
 export const presetById = (id) => PRESETS.find((p) => p.id === id);
