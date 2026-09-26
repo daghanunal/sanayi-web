@@ -49,10 +49,12 @@ export function initSmoothScroll(options = {}) {
   document.addEventListener('click', (e) => {
     const a = e.target.closest('a[href^="#"]');
     if (!a || a.getAttribute('href') === '#') return;
-    const target = document.querySelector(a.getAttribute('href'));
+    let target = null;
+    try { target = document.querySelector(a.getAttribute('href')); } catch { return; }
     if (target) {
       e.preventDefault();
-      lenis.scrollTo(target, { offset: 0 });
+      // Hedef başlık sabit üst çubuğun altında kalmasın: scroll-margin-top (varsayılanı --header-h).
+      lenis.scrollTo(target, { offset: -topOffsetFor(target) });
     }
   });
   return lenis;
@@ -143,7 +145,188 @@ export function mountActionBar(d) {
     <a href="${waHref(d)}" class="action-bar__btn action-bar__btn--main" target="_blank" rel="noopener">${icons.whatsapp}<span>WhatsApp</span></a>
     <a href="${mapsHref(d)}" class="action-bar__btn" target="_blank" rel="noopener">${icons.pin}<span>Yol tarifi</span></a>`;
   document.body.append(bar);
+  markBar('action');
   return bar;
+}
+
+// --- Telefon sözleşmesi --------------------------------------------------
+// Ayrıntılar ve örnekler: docs/phone-contract.md
+//  * Tek üst öğe (başlık), tek alt öğe (alt çubuk YA DA hikâye kartı), hiçbir şey içeriği örtmez.
+//  * CSS değişkenleri (html üzerinde):
+//      --bar-h       alt çubuğun yüksekliği (yoksa 0)
+//      --bar-reserve sayfa sonunda çubuğa ayrılan sabit boşluk (body padding-bottom bunu kullanır)
+//      --bar-space   yüzen kartların alttan bırakması gereken boşluk; hikâye modunda küçülür
+//      --header-h       sabit üst başlığın yüksekliği (otomatik ölçülür; scroll-margin varsayılanı)
+//  * html[data-phone-bar="action|vitrin"], html[data-phone-story] (hikâye modu açıkken) kancaları.
+//  * Hikâye modu: pinli bir sahne ekranı kaplarken alt çubuk aşağı kayar (yukarı kaydırınca döner).
+//    Otomatik algılanır (GSAP pin / ekran boyu sticky sahne); preset ayrıca
+//    <section data-pinned> ya da <body data-pinned> ile ya da setStoryMode(true) ile bildirebilir.
+//    Otomatiği kapatmak: <html data-phone-story-auto="off"> ya da setStoryMode(false).
+
+const root = document.documentElement;
+
+function markBar(kind) {
+  root.dataset.phoneBar = kind;
+  const bar = document.querySelector(kind === 'vitrin' ? '.vitrin-bar' : '.action-bar');
+  if (!bar || typeof ResizeObserver === 'undefined') return;
+  // Preset çubuğu yeniden biçimlendirirse gerçek yüksekliği ölç (masaüstünde gizliyse 0).
+  new ResizeObserver(() => {
+    const h = bar.offsetHeight;
+    if (h) root.style.setProperty('--bar-h', `${h}px`);
+    else root.style.removeProperty('--bar-h');
+  }).observe(bar);
+}
+
+// Sabit/yapışkan üst başlığın alt kenarı (px). Tam ekran sahneler ve yarım ekrandan büyükler sayılmaz.
+export function topObstruction() {
+  const vw = innerWidth, vh = innerHeight;
+  let bottom = 0;
+  for (const x of [vw / 2, 24, vw - 24]) {
+    for (const el of document.elementsFromPoint(x, 2)) {
+      for (let e = el; e && e !== document.body && e !== root; e = e.parentElement) {
+        const pos = getComputedStyle(e).position;
+        if (pos !== 'fixed' && pos !== 'sticky') continue;
+        const r = e.getBoundingClientRect();
+        if (r.top <= 2 && r.height < vh * 0.35 && r.width >= vw * 0.5) bottom = Math.max(bottom, r.bottom);
+        break;
+      }
+    }
+  }
+  return Math.round(bottom);
+}
+
+function topOffsetFor(target) {
+  const m = parseFloat(getComputedStyle(target).scrollMarginTop);
+  return m > 0 ? m : topObstruction();
+}
+
+function measureTop() {
+  const h = topObstruction();
+  if (h) root.style.setProperty('--header-h', `${h}px`);
+}
+
+// Hikâye modu --------------------------------------------------------------
+let storyForced = null; // true/false: preset zorladı; null: otomatik
+let stages = [];        // { el, box } — el ekranı kaplayan sahne, box onu taşıyan (pin-spacer / ebeveyn)
+let storyOn = false, peek = false, lastY = 0, travel = 0, storyTick = 0;
+
+// setStoryMode(true)  → alt çubuk gizli (pinli hikâye başladı)
+// setStoryMode(false) → hiçbir zaman gizleme (otomatiği de kapatır)
+// setStoryMode(null)  → otomatiğe dön
+export function setStoryMode(on) {
+  storyForced = on == null || on === 'auto' ? null : !!on;
+  updateStory();
+}
+
+// Bir bölümü pinli hikâye olarak bildir: ekranı kapladığı sürece hikâye modu açık.
+export function storyZone(el) {
+  el?.setAttribute('data-pinned', '');
+  updateStory();
+}
+
+function findStages() {
+  const vh = innerHeight, out = [];
+  // GSAP pinleri (pinSpacing: false dahil): başlangıç/bitiş doğrudan ScrollTrigger'dan.
+  for (const st of ScrollTrigger.getAll()) {
+    if (st.pin && st.end - st.start >= vh * 0.5) out.push({ el: st.pin, st });
+  }
+  // Ekran boyu position: sticky sahneler (ebeveyni en az yarım ekran daha uzun).
+  for (const el of document.body.getElementsByTagName('*')) {
+    if (el.offsetHeight < vh * 0.85 || !el.parentElement) continue;
+    if (getComputedStyle(el).position !== 'sticky') continue;
+    if (el.parentElement.offsetHeight - el.offsetHeight >= vh * 0.5) out.push({ el, box: el.parentElement });
+  }
+  stages = out;
+}
+
+function stageActive() {
+  const vh = innerHeight, y = scrollY;
+  if (document.body.hasAttribute('data-pinned') || root.hasAttribute('data-pinned')) return true;
+  for (const el of document.querySelectorAll('[data-pinned]')) {
+    const r = el.getBoundingClientRect();
+    if (r.top <= 1 && r.bottom >= vh - 1) return true;
+  }
+  if (root.dataset.phoneStoryAuto === 'off') return false;
+  // Sahneye çeyrek ekran girilmiş ve bitişine en az 0,1 ekran var: ilk ekran (hero) ve
+  // bölüm sonu çubuklu kalır, arası hikâye.
+  for (const s of stages) {
+    if (s.st) {
+      if (!s.st.isActive || y < s.st.start + vh * 0.25 || y > s.st.end - vh * 0.1) continue;
+      const r = s.el.getBoundingClientRect();
+      // Tam ekran sahne ya da alt çubuk bölgesine inen pinli kart
+      if ((r.height >= vh * 0.85 && r.top <= 1 && r.bottom >= vh - 1) || (r.bottom >= vh - 200 && r.top < vh)) return true;
+      continue;
+    }
+    const b = s.box.getBoundingClientRect();
+    if (b.top > -vh * 0.25 || b.bottom < vh * 1.1) continue;
+    const r = s.el.getBoundingClientRect();
+    if (r.top <= 1 && r.bottom >= vh - 1) return true;
+  }
+  return false;
+}
+
+function updateStory() {
+  const on = storyForced ?? stageActive();
+  if (on !== storyOn) { storyOn = on; peek = false; travel = 0; }
+  const hide = storyOn && !peek;
+  if (hide) root.setAttribute('data-phone-story', '');
+  else root.removeAttribute('data-phone-story');
+}
+
+function onStoryScroll() {
+  if (storyTick) return;
+  storyTick = requestAnimationFrame(() => {
+    storyTick = 0;
+    const y = scrollY, dy = y - lastY;
+    lastY = y;
+    // Hikâye sırasında yukarı kaydırmak çubuğu geri getirir, aşağı devam etmek yine saklar.
+    travel = Math.sign(dy) === Math.sign(travel) ? travel + dy : dy;
+    if (storyOn && travel < -40) peek = true;
+    if (storyOn && travel > 40) peek = false;
+    updateStory();
+  });
+}
+
+function initPhoneContract() {
+  if (initPhoneContract.done) return;
+  initPhoneContract.done = true;
+  let rt = 0;
+  const refresh = () => { findStages(); measureTop(); updateStory(); };
+  const later = () => { clearTimeout(rt); rt = setTimeout(refresh, 250); };
+  addEventListener('scroll', onStoryScroll, { passive: true });
+  addEventListener('resize', later, { passive: true });
+  addEventListener('load', () => setTimeout(refresh, 600), { once: true });
+  ScrollTrigger.addEventListener('refresh', later);
+  setTimeout(refresh, 1500);
+}
+
+// Aşağı kaydırınca başlığı saklar, yukarı kaydırınca gösterir. --header-h'yi günceller.
+// autoHideHeader(el, { offset: 80, tolerance: 8 }) → durdurmak için dönen fonksiyonu çağır.
+export function autoHideHeader(el, { offset = 80, tolerance = 8 } = {}) {
+  if (!el) return () => {};
+  el.setAttribute('data-autohide', '');
+  let last = scrollY, raf = 0;
+  const set = () => root.style.setProperty('--header-h', `${el.offsetHeight}px`);
+  set();
+  const ro = typeof ResizeObserver !== 'undefined' ? new ResizeObserver(set) : null;
+  ro?.observe(el);
+  const tick = () => {
+    raf = 0;
+    const y = scrollY, dy = y - last;
+    if (Math.abs(dy) < tolerance) return;
+    const hide = dy > 0 && y > offset && !el.contains(document.activeElement);
+    el.toggleAttribute('data-autohide-hidden', hide);
+    root.style.setProperty('--header-h', hide ? '0px' : `${el.offsetHeight}px`);
+    last = y;
+  };
+  const on = () => { if (!raf) raf = requestAnimationFrame(tick); };
+  addEventListener('scroll', on, { passive: true });
+  return () => {
+    removeEventListener('scroll', on);
+    ro?.disconnect();
+    el.removeAttribute('data-autohide');
+    el.removeAttribute('data-autohide-hidden');
+  };
 }
 
 // --- SEO -----------------------------------------------------------------
@@ -206,6 +389,7 @@ export function mountVitrinBar() {
     <a href="${esc(url(sec))}" class="vitrin-bar__sec">Bunu istiyorum</a>`;
   document.body.append(bar);
   document.documentElement.classList.add('is-vitrin');
+  markBar('vitrin');
   return bar;
 }
 
@@ -214,6 +398,7 @@ export function boot(base) {
   applyMeta(d);
   if (vitrinModu()) mountVitrinBar();
   else mountActionBar(d);
+  initPhoneContract();
   return d;
 }
 

@@ -38,7 +38,9 @@ html.lenis, html.lenis body { height: auto; }
 .action-bar__btn svg { width: 20px; height: 20px; }
 .action-bar__btn--main { background: var(--bar-accent, #25d366); color: var(--bar-accent-fg, #fff); }
 @media (min-width: 900px) { .action-bar { display: none; } }
-@media (max-width: 899px) { body { padding-bottom: 84px; } }
+/* Sayfa sonu çubuğun altında kalmasın. Sabit değer (hikâye modunda da değişmez, düzen kaymaz);
+   iPhone ev çubuğu için safe-area dahil. Preset `body { padding-bottom }` ile ezebilir. */
+@media (max-width: 899px) { body { padding-bottom: var(--bar-reserve, 84px); } }
 
 /* Vitrin modu: demo vitrinden açıldığında seçim çubuğu (her ekran boyutunda). */
 .vitrin-bar {
@@ -57,4 +59,43 @@ html.lenis, html.lenis body { height: auto; }
 }
 .vitrin-bar__geri { color: #e9eaec; }
 .vitrin-bar__sec { background: #ffd23f; color: #17181a; }
-@media (max-width: 899px) { .is-vitrin body { padding-bottom: 84px; } }
+@media (max-width: 899px) { .is-vitrin body { padding-bottom: var(--bar-reserve, 84px); } }
+@media (min-width: 900px) { .is-vitrin body { padding-bottom: var(--bar-reserve, 96px); } }
+
+/* --- Telefon sözleşmesi (docs/phone-contract.md) --------------------------------------
+   --bar-h: alt çubuk yüksekliği (JS gerçek değeri ölçer) · --bar-reserve: sayfa sonu boşluğu
+   --bar-space: yüzen kartların alttan bırakacağı boşluk (hikâye modunda küçülür) · --header-h: üst başlık */
+@property --bar-space { syntax: '<length>'; inherits: true; initial-value: 0px; }
+:root {
+  --bar-h: 0px; --header-h: 0px;
+  --bar-reserve: calc(var(--bar-h) + 20px + env(safe-area-inset-bottom, 0px));
+  --bar-space: var(--bar-reserve);
+  transition: --bar-space .35s cubic-bezier(.2, .7, .2, 1);
+}
+@media (max-width: 899px) { html[data-phone-bar='action'] { --bar-h: 64px; } }
+html[data-phone-bar='vitrin'] { --bar-h: 66px; }
+html[data-phone-story] { --bar-space: calc(12px + env(safe-area-inset-bottom, 0px)); }
+
+/* Hikâye modu: pinli sahne ekranı kaplarken alt çubuk aşağı kayar; tek alt öğe hikâye kartıdır. */
+.action-bar, .vitrin-bar { transition: transform .35s cubic-bezier(.2, .7, .2, 1), opacity .25s, visibility 0s; }
+html[data-phone-story] .action-bar {
+  transform: translateY(calc(100% + 24px + env(safe-area-inset-bottom, 0px)));
+  opacity: 0; visibility: hidden; pointer-events: none;
+  transition: transform .35s cubic-bezier(.2, .7, .2, 1), opacity .25s, visibility 0s .35s;
+}
+html[data-phone-story] .vitrin-bar {
+  transform: translate(-50%, calc(100% + 24px + env(safe-area-inset-bottom, 0px)));
+  opacity: 0; visibility: hidden; pointer-events: none;
+  transition: transform .35s cubic-bezier(.2, .7, .2, 1), opacity .25s, visibility 0s .35s;
+}
+
+/* Otomatik gizlenen başlık: autoHideHeader(el) */
+[data-autohide] { transition: transform .3s cubic-bezier(.2, .7, .2, 1); }
+[data-autohide][data-autohide-hidden] { transform: translateY(calc(-100% - 8px)); }
+
+/* Kaydırma kenar boşlukları: çapa hedefi üst başlığın, odaklanan öğe alt çubuğun altında kalmasın. */
+:where([id]) { scroll-margin-top: var(--header-h); }
+:where(a, button, input, select, textarea, summary, [tabindex]) { scroll-margin-bottom: var(--bar-reserve); }
+@media (prefers-reduced-motion: reduce) {
+  :root, .action-bar, .vitrin-bar, [data-autohide] { transition: none; }
+}
