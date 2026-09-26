@@ -31,6 +31,7 @@ $('[data-year]').textContent = new Date().getFullYear();
 $$('[data-address]').forEach((el) => (el.textContent = d.iletisim.adres));
 $('[data-kelime-img]').src = d.kelimeGorsel;
 $('[data-hiz-img]').src = d.hizGorsel;
+if (d.hizGorselDar) $('[data-hiz-dar]').srcset = d.hizGorselDar;
 
 $$('[data-tel]').forEach((a) => {
   a.href = telHref(d);
@@ -164,7 +165,12 @@ $('[data-steps]').innerHTML = d.surec
 
 // --- Galeri, yorumlar, markalar ----------------------------------------------
 
-$('[data-gallery]').innerHTML = d.galeri
+// Galeri: işletme galerisinin ilk karesi (soluk revizyon fotoğrafı) yerine net bir eksantrik yakın çekimi
+const galeri = [
+  { src: asset('/img/tork/eksantrik.jpg'), alt: 'Silindir kapağında eksantrik mili ve supap yayları' },
+  ...d.galeri.filter((g) => !/revizyon/.test(g.src)),
+];
+$('[data-gallery]').innerHTML = galeri
   .slice(0, 4)
   .map(
     (g, i) => `
@@ -345,10 +351,13 @@ function hareket(lenis) {
   }
 
   // Header hero'dan sonra koyulaşır.
+  // (onEnter/onLeaveBack: 'max'a varınca sınıf düşmesin; sayfa sonunda ad başlığın üstüne binmesin)
+  const topBar = $('.top');
   ScrollTrigger.create({
     start: () => innerHeight * 0.6,
     end: 'max',
-    toggleClass: { targets: '.top', className: 'is-solid' },
+    onEnter: () => topBar.classList.add('is-solid'),
+    onLeaveBack: () => topBar.classList.remove('is-solid'),
   });
 
   // Dev kelime: harflerden motor görünür, M'nin gövdesine girilir, fotoğraf ekranı kaplar.
@@ -438,9 +447,13 @@ function hareket(lenis) {
   const olcTl = gsap.timeline({
     scrollTrigger: { trigger: '.olcum', start: 'top top', end: '+=220%', pin: '.olcum__pin', scrub: 0.6 },
   });
+  // Metin bölüm ekrana girerken belirir (pin başlamadan boş bir mavi ekran kalmasın)
+  gsap.from('.olcum__metin > *', {
+    autoAlpha: 0, y: 30, stagger: 0.06, duration: 0.6, ease: 'power3.out',
+    scrollTrigger: { trigger: '.olcum', start: 'top 70%', once: true },
+  });
   const sayi = { t: 0 };
   olcTl
-    .fromTo('.olcum__metin > *', { autoAlpha: 0, y: 30 }, { autoAlpha: 1, y: 0, stagger: 0.05, duration: 0.3 }, 0)
     .fromTo('.grafik__once', { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 1, ease: 'none' }, 0.1)
     .fromTo('.lej--once', { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.2 }, 0.1)
     .fromTo('.grafik__sonra', { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 1, ease: 'none' }, 1.1)

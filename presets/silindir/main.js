@@ -1,7 +1,7 @@
 import raw from '../../data/garaj.json';
 import {
   boot, initSmoothScroll, reducedMotion, gsap, ScrollTrigger, esc,
-  telHref, waHref, mapsHref, mapsEmbed, openStatus, groupedHours, icons,
+  telHref, waHref, mapsHref, mapsEmbed, openStatus, groupedHours, icons, setStoryMode,
 } from '../../shared/core.js';
 import { SplitText } from 'gsap/SplitText';
 import { ScrambleTextPlugin } from 'gsap/ScrambleTextPlugin';
@@ -160,16 +160,15 @@ new IntersectionObserver(
 
 // --- Motor ----------------------------------------------------------------
 
-const low = (navigator.hardwareConcurrency || 8) <= 4 || (navigator.deviceMemory || 8) <= 4;
 const fontsReady = Promise.race([
   document.fonts.load("900 100px 'Anybody'").then(() => document.fonts.ready),
-  new Promise((r) => setTimeout(r, 1400)),
+  new Promise((r) => setTimeout(r, 900)),
 ]);
 
 fontsReady.then(init);
 
 function init() {
-const engine = createEngine($('.stage'), { name: d.isletme.ad, low, reducedMotion });
+const engine = createEngine($('.stage'), { reducedMotion });
 const S = engine.state;
 engine.setStops(stopKeys);
 
@@ -180,6 +179,7 @@ const cLine = $('.callout__line line');
 const cDot = $('.callout__dot');
 const cLabel = $('.callout__label');
 let lastStop = -1;
+const wide = matchMedia('(min-width: 900px)');
 engine.onFrame((p, rpm) => {
   // Devir saati: 0..8000 → -90°..90°
   const deg = -90 + (Math.min(8000, rpm) / 8000) * 180;
@@ -193,12 +193,13 @@ engine.onFrame((p, rpm) => {
       cLabel.textContent = STOPS[stopKeys[p.stop]].label;
     }
     const w = innerWidth;
+    cDot.style.transform = `translate(${p.x}px, ${p.y}px)`;
+    if (!wide.matches) return; // telefonda yalnız nokta: etiket zaten kartın üstünde yazıyor
     const left = p.x > w * 0.55;
     const lw = cLabel.offsetWidth;
     let lx = p.x + (left ? -1 : 1) * Math.min(90, w * 0.16);
     lx = left ? Math.max(lw + 10, lx) : Math.min(w - lw - 10, lx);
     const ly = Math.max(70 + cLabel.offsetHeight, p.y - Math.min(90, innerHeight * 0.1));
-    cDot.style.transform = `translate(${p.x}px, ${p.y}px)`;
     cLabel.style.transform = `translate(${left ? `calc(${lx}px - 100%)` : `${lx}px`}, calc(${ly}px - 100%))`;
     cLine.setAttribute('x1', p.x);
     cLine.setAttribute('y1', p.y);
@@ -223,8 +224,12 @@ function runFilm() {
   const lenis = initSmoothScroll();
   lenis?.stop();
   lenis?.on('scroll', (e) => (S.velocity = e.velocity));
-  engine.compile();
   engine.start();
+  // Parça turu: kartlar alt çubuğun yerine iner (hikâye modu, ilk kart girmeden başlar)
+  ScrollTrigger.create({
+    trigger: '.parts__stops', start: 'top 92%', end: 'bottom 90%',
+    onToggle: (st) => setStoryMode(st.isActive ? true : null),
+  });
 
   // --- Yazı bölme ---
   const heroSplit = new SplitText('.hero__title', { type: 'words,chars', charsClass: 'ch', wordsClass: 'wd' });
@@ -236,25 +241,36 @@ function runFilm() {
   const introName = $('.intro__name');
   const nameText = d.isletme.ad;
   introName.textContent = '';
+  // Perde en fazla ~1 sn kaydırmayı kilitler; dokunma, tekerlek ya da tuş anında geçer.
+  let unlocked = false;
+  const unlock = () => {
+    if (unlocked) return;
+    unlocked = true;
+    intro.style.pointerEvents = 'none';
+    lenis?.start();
+  };
   const tl = gsap.timeline({
     onComplete: () => {
+      unlock();
       intro.remove();
-      lenis?.start();
       ScrollTrigger.refresh();
     },
   });
-  tl.to(introName, { duration: 0.9, scrambleText: { text: nameText, chars: TR_CHARS, speed: 0.6 }, ease: 'none' })
-    .to('.intro__bar span', { scaleX: 1, duration: 1.1, ease: 'power2.inOut' }, 0)
-    .to('.intro__core', { opacity: 0, scale: 0.96, duration: 0.3 }, 1.25)
-    .to('.intro__half--top', { yPercent: -100, duration: 0.8, ease: 'expo.inOut' }, 1.3)
-    .to('.intro__half--bottom', { yPercent: 100, duration: 0.8, ease: 'expo.inOut' }, 1.3)
-    .fromTo(S, { intro: 1 }, { intro: 0, duration: 1.4, ease: 'expo.out' }, 1.35)
-    .to(heroSplit.chars, { yPercent: 0, opacity: 1, '--w': 100, duration: 0.9, stagger: 0.025, ease: 'expo.out' }, 1.55)
-    .to('.hero__kicker, .hero__slogan, .hero__actions, .top', { opacity: 1, y: 0, duration: 0.6, stagger: 0.07, ease: 'power3.out' }, 1.8)
-    .to('.hero__hint', { opacity: 1, y: 0, duration: 0.6 }, 2.1);
+  tl.to(introName, { duration: 0.6, scrambleText: { text: nameText, chars: TR_CHARS, speed: 0.7 }, ease: 'none' })
+    .to('.intro__bar span', { scaleX: 1, duration: 0.75, ease: 'power2.inOut' }, 0)
+    .to('.intro__core', { opacity: 0, scale: 0.96, duration: 0.25 }, 0.8)
+    .add(unlock, 0.9)
+    .to('.intro__half--top', { yPercent: -100, duration: 0.7, ease: 'expo.inOut' }, 0.85)
+    .to('.intro__half--bottom', { yPercent: 100, duration: 0.7, ease: 'expo.inOut' }, 0.85)
+    .fromTo(S, { intro: 1 }, { intro: 0, duration: 1.3, ease: 'expo.out' }, 0.9)
+    .to(heroSplit.chars, { yPercent: 0, opacity: 1, '--w': 100, duration: 0.8, stagger: 0.022, ease: 'expo.out' }, 1.05)
+    .to('.hero__kicker, .hero__slogan, .hero__actions, .top', { opacity: 1, y: 0, duration: 0.5, stagger: 0.06, ease: 'power3.out' }, 1.25)
+    .to('.hero__hint', { opacity: 1, y: 0, duration: 0.5 }, 1.5);
   const skip = () => tl.progress() < 0.95 && tl.progress(1);
   intro.addEventListener('pointerdown', skip);
   addEventListener('keydown', skip, { once: true });
+  addEventListener('wheel', skip, { once: true, passive: true });
+  addEventListener('touchstart', skip, { once: true, passive: true });
 
   // --- 1. Hero'dan çıkış ---
   gsap.timeline({ scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } })
@@ -303,13 +319,19 @@ function runFilm() {
     const text = t.textContent;
     const run = () => gsap.to(t, { duration: 0.8, scrambleText: { text, chars: TR_CHARS, speed: 0.5 }, overwrite: true });
     ScrollTrigger.create({ trigger: stop, start: 'top 75%', end: 'bottom 25%', onEnter: run, onEnterBack: run });
-    gsap.fromTo($('.tag', stop), { rotation: -6, y: 60, opacity: 0 }, {
-      rotation: 0, y: 0, opacity: 1, ease: 'back.out(1.6)', duration: 0.8,
-      scrollTrigger: { trigger: stop, start: 'top 80%', toggleActions: 'play none none reverse' },
+    const tag = $('.tag', stop);
+    // Giriş ve çıkış ayrı özellikleri sürer (--in / --out), hızlı kaydırmada birbirini ezmez
+    gsap.fromTo(tag, { '--in': 0, y: 60, rotation: wide.matches ? -4 : 0 }, {
+      '--in': 1, y: 0, rotation: 0, ease: 'power2.out',
+      scrollTrigger: { trigger: stop, start: 'top 88%', end: 'top 58%', scrub: 0.5 },
     });
-    gsap.fromTo($('.tag', stop), { opacity: 1, xPercent: 0 }, {
-      opacity: 0, xPercent: -30, rotation: -4, ease: 'power1.in', immediateRender: false,
-      scrollTrigger: { trigger: stop, start: 'bottom 75%', end: 'bottom 45%', scrub: true },
+    // Çıkış: yerinde solar (yana kayıp ekran dışına taşmaz). Telefonda kart ekranın altına
+    // yapışık: bölüm sonu kartın altına gelince hemen solsun.
+    gsap.fromTo(tag, { '--out': 0, scale: 1 }, {
+      '--out': 1, scale: 0.97, ease: 'power1.in', immediateRender: false,
+      scrollTrigger: wide.matches
+        ? { trigger: stop, start: 'bottom 75%', end: 'bottom 50%', scrub: 0.3 }
+        : { trigger: stop, start: 'bottom bottom', end: 'bottom 84%', scrub: 0.3 },
     });
   });
 
@@ -334,7 +356,7 @@ function runFilm() {
     scrollTrigger: { trigger: words[0].parentElement, start: 'top 80%', end: 'center 45%', scrub: true },
   });
   // Sıkıştırma: kelimenin kendisi sıkışır
-  gsap.fromTo(words[1], { '--w': 150, scaleY: 1 }, {
+  gsap.fromTo(words[1], { '--w': 108, scaleY: 1 }, {
     '--w': 50, scaleY: 0.72, ease: 'none',
     scrollTrigger: { trigger: words[1].parentElement, start: 'top 70%', end: 'bottom 40%', scrub: true },
   });
@@ -366,11 +388,15 @@ function runFilm() {
         S.re = p >= 0.2;
         S.covered = p > 0.24 && p < 0.76;
       },
+      // Kepenk ekranı kaplarken üst başlık saklanır (tek üst öğe; kepenk yazısı başlığın altında kalmaz)
+      onToggle: (self) => $('.top').classList.toggle('is-tucked', self.isActive),
     },
   });
   shutterTl
     .fromTo('.shutter', { yPercent: -100 }, { yPercent: 0, ease: 'bounce.out', duration: 0.2 })
     .fromTo('.plate', { rotation: -8, y: -60, opacity: 0 }, { rotation: -1.5, y: 0, opacity: 1, duration: 0.1, ease: 'back.out(2)' }, 0.2)
+    // Sayaçlar kepenk inerken "0" olarak görünmesin: plaka oturduktan sonra belirir
+    .fromTo('.stats', { autoAlpha: 0, y: 16 }, { autoAlpha: 1, y: 0, duration: 0.06, ease: 'power2.out' }, 0.22)
     .fromTo(counters, { '--w': 50 }, { '--w': innerWidth < 900 ? 100 : 112, duration: 0.3, stagger: 0.03, ease: 'expo.out' }, 0.26)
     .to({}, { duration: 0.25 })
     .to('.shutter', { yPercent: -100, ease: 'power2.in', duration: 0.22 }, 0.78);

@@ -11,6 +11,7 @@
   "kelime": "MOTOR",
   "kelimeGorsel": "/img/garaj/motor-bw.jpg",
   "finalBaslik": "Getirin, bir ölçelim.",
-  "hizGorsel": "/img/tork/hiz.jpg",
+  "hizGorsel": "/img/tork/lift-wide.webp",
+  "hizGorselDar": "/img/tork/lift-tall.webp",
   "vitesGorsel": "/img/tork/vites.jpg"
 }

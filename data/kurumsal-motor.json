@@ -20,21 +20,34 @@
         "baslik": "Filo bakım anlaşması",
         "kisa": "Araç bazında bakım takvimi, öncelikli randevu.",
         "metin": "Filonuzdaki her aracın kilometresine göre bakım takvimi çıkarır, zamanı gelen aracı biz hatırlatırız. Arızalı araç sıraya girmeden atölyeye alınır.",
-        "maddeler": ["Araç bazında bakım ve arıza geçmişi", "Kilometreye göre bakım hatırlatması", "Arızalı araç için öncelikli giriş", "Aylık tek fatura ve iş dökümü"],
+        "maddeler": [
+          "Araç bazında bakım ve arıza geçmişi",
+          "Kilometreye göre bakım hatırlatması",
+          "Arızalı araç için öncelikli giriş",
+          "Aylık tek fatura ve iş dökümü"
+        ],
         "buton": "Filo görüşmesi talep edin"
       },
       {
         "baslik": "Sigorta ve kasko işleri",
         "kisa": "Hasar dosyası sürecini sizin adınıza takip ederiz.",
         "metin": "Kasko kapsamındaki mekanik hasarlarda eksper sürecini ve evrak takibini biz yürütürüz. Anlaşmalı olduğumuz sigorta şirketlerinin güncel listesi için bizi arayın.",
-        "maddeler": ["Eksper randevusu ve fotoğraflı rapor", "Parça onayı gelmeden işe başlamama", "Sürecin her adımında bilgilendirme"],
+        "maddeler": [
+          "Eksper randevusu ve fotoğraflı rapor",
+          "Parça onayı gelmeden işe başlamama",
+          "Sürecin her adımında bilgilendirme"
+        ],
         "buton": "Hasar dosyası için yazın"
       },
       {
         "baslik": "Kiralama ve leasing firmaları",
         "kisa": "Araç iadesi öncesi kontrol ve bakım.",
         "metin": "Kiralık ve leasing araçlarının iade öncesi kontrolünü, periyodik bakımını ve kilometre bazlı raporlamasını yaparız.",
-        "maddeler": ["İade öncesi kontrol listesi", "Bakım belgesi ve fatura dökümü", "Toplu araç kabulü için planlama"],
+        "maddeler": [
+          "İade öncesi kontrol listesi",
+          "Bakım belgesi ve fatura dökümü",
+          "Toplu araç kabulü için planlama"
+        ],
         "buton": "Görüşme talep edin"
       }
     ],
@@ -45,16 +58,28 @@
         "Şaşmaz Oto Sanayi Sitesi'ndeki atölyemizde motor, şanzıman ve yürüyen aksam işleri yapıyoruz. Bireysel müşterilerimizin yanında şirket, kurum ve kiralama firmalarının araçlarına da bakıyoruz.",
         "Çalışma biçimimiz yıllardır aynı: aracı dinler, ölçer, arızayı gösterir, fiyatı işe başlamadan yazılı veririz. Onayınız olmadan tek parça değişmez, çıkan eski parçalar size teslim edilir."
       ],
-      "gorsel": "/img/garaj/revizyon.jpg",
-      "gorselAlt": "Revizyon için sökülmüş motor tezgâhta"
+      "gorsel": "/img/kurumsal-motor/krank.jpg",
+      "gorselAlt": "Motor bloğuna krank mili yerleştiren usta"
     },
     "misyon": "Aracı ilk seferde doğru teşhisle onarmak, müşterimize neyi neden yaptığımızı açıkça göstermek.",
     "vizyon": "Ankara'da filo sahiplerinin gönül rahatlığıyla araç teslim ettiği, kayıtlı ve şeffaf çalışan bir motor servisi olmak.",
     "degerler": [
-      { "baslik": "Yazılı fiyat", "metin": "İşe başlamadan parça ve işçilik fiyatını yazılı veririz." },
-      { "baslik": "Kayıtlı bakım", "metin": "Her aracın yaptığımız işleri dosyasında saklarız." },
-      { "baslik": "Ölçerek teşhis", "metin": "Tahminle parça değiştirmeyiz; ölçer, kaydeder, gösteririz." },
-      { "baslik": "Garantili işçilik", "metin": "Yaptığımız işçiliğin arkasında dururuz." }
+      {
+        "baslik": "Yazılı fiyat",
+        "metin": "İşe başlamadan parça ve işçilik fiyatını yazılı veririz."
+      },
+      {
+        "baslik": "Kayıtlı bakım",
+        "metin": "Her aracın yaptığımız işleri dosyasında saklarız."
+      },
+      {
+        "baslik": "Ölçerek teşhis",
+        "metin": "Tahminle parça değiştirmeyiz; ölçer, kaydeder, gösteririz."
+      },
+      {
+        "baslik": "Garantili işçilik",
+        "metin": "Yaptığımız işçiliğin arkasında dururuz."
+      }
     ],
     "kalite": {
       "baslik": "Kalite anlayışımız",
@@ -71,17 +96,66 @@
       "metin": "Motor ve şanzıman işlerinde deneyimli usta ve mesleği öğrenmek isteyen çırak arkadaşlarla tanışmak isteriz. Kısa bir tanıtımla bize yazın."
     },
     "sayfalar": {
-      "kurumsal": { "baslik": "Kurumsal", "metin": "Kim olduğumuz, nasıl çalıştığımız ve neye önem verdiğimiz.", "gorsel": "/img/garaj/aletler.jpg" },
-      "hizmetler": { "baslik": "Hizmetlerimiz", "metin": "Motor revizyonundan periyodik bakıma, her iş için ortalama süre ve kapsam." },
-      "kurumsal-musteriler": { "baslik": "Filo ve kurumsal müşteriler", "metin": "Şirket araçlarınız için bakım planı, öncelikli servis ve aylık fatura.", "gorsel": "/img/garaj/lift.jpg" },
-      "referanslar": { "baslik": "Atölyemiz ve müşterilerimiz", "metin": "Tezgâhtan kareler ve müşterilerimizin yorumları." },
-      "iletisim": { "baslik": "İletişim", "metin": "Filo teklifi, randevu ya da bir sorunuz için yazın; aynı gün dönüş yapalım." }
+      "kurumsal": {
+        "baslik": "Kurumsal",
+        "metin": "Kim olduğumuz, nasıl çalıştığımız ve neye önem verdiğimiz.",
+        "gorsel": "/img/kurumsal-motor/atolye.jpg"
+      },
+      "hizmetler": {
+        "baslik": "Hizmetlerimiz",
+        "metin": "Motor revizyonundan periyodik bakıma, her iş için ortalama süre ve kapsam."
+      },
+      "kurumsal-musteriler": {
+        "baslik": "Filo ve kurumsal müşteriler",
+        "metin": "Şirket araçlarınız için bakım planı, öncelikli servis ve aylık fatura.",
+        "gorsel": "/img/kurumsal-motor/filo-gece.jpg"
+      },
+      "referanslar": {
+        "baslik": "Atölyemiz ve müşterilerimiz",
+        "metin": "Tezgâhtan kareler ve müşterilerimizin yorumları."
+      },
+      "iletisim": {
+        "baslik": "İletişim",
+        "metin": "Filo teklifi, randevu ya da bir sorunuz için yazın; aynı gün dönüş yapalım."
+      }
     },
-    "konular": ["Filo bakım anlaşması", "Fiyat teklifi", "Randevu", "Sigorta / hasar dosyası", "Genel bilgi"],
+    "konular": [
+      "Filo bakım anlaşması",
+      "Fiyat teklifi",
+      "Randevu",
+      "Sigorta / hasar dosyası",
+      "Genel bilgi"
+    ],
     "cta": {
       "baslik": "Filonuz için bakım planı çıkaralım",
       "metin": "Araç sayınızı ve tiplerini yazın, size özel bakım takvimi ve teklif hazırlayalım.",
       "buton": "Filo teklifi isteyin"
     }
-  }
+  },
+  "galeri": [
+    {
+      "src": "/img/kurumsal-motor/krank.jpg",
+      "alt": "Motor bloğuna krank mili yerleştiriliyor"
+    },
+    {
+      "src": "/img/kurumsal-motor/revizyon.jpg",
+      "alt": "Revizyon için sökülmüş motor tezgâhta"
+    },
+    {
+      "src": "/img/kurumsal-motor/atolye.jpg",
+      "alt": "Liftli atölye ve takım tezgâhı"
+    },
+    {
+      "src": "/img/kurumsal-motor/eller.jpg",
+      "alt": "Motor üzerinde çalışan ustanın elleri"
+    },
+    {
+      "src": "/img/kurumsal-motor/yag.jpg",
+      "alt": "Motora yeni yağ dolduruluyor"
+    },
+    {
+      "src": "/img/kurumsal-motor/filo-gece.jpg",
+      "alt": "Gece otoparkta sıralanmış ticari araçlar"
+    }
+  ]
 }

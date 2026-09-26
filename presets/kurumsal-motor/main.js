@@ -2,7 +2,7 @@ import '../../shared/base.css';
 import ana from '../../data/garaj.json';
 import ek from '../../data/kurumsal-motor.json';
 import { kurumsal, derinBirlestir, VARSAYILAN_SAYFALAR } from '../_kurumsal/engine.js';
-import { filoPlan } from './extra.js';
+import { filoPlan, revizyon } from './extra.js';
 import './style.css';
 
 kurumsal({
@@ -11,8 +11,8 @@ kurumsal({
     hero: 'bolunmus',
     gecis: 'perde',
     yer: "Şaşmaz'da",
-    heroGorsel: `${import.meta.env.BASE_URL}img/garaj/lift.jpg`,
-    heroAlt: 'Lift üzerindeki aracın altında çalışan usta',
+    heroGorsel: `${import.meta.env.BASE_URL}img/kurumsal-motor/filo-hava.jpg`,
+    heroAlt: 'Sıra sıra park etmiş hafif ticari araçlar, yukarıdan',
     logoAlt: 'Motor, şanzıman ve filo servisi',
     baslikEki: 'Motor ve filo servisi | Şaşmaz, Ankara',
     teklifEtiketi: 'Filo teklifi',
@@ -27,8 +27,9 @@ kurumsal({
   sayfalar: VARSAYILAN_SAYFALAR.map((s) =>
     s.id === 'kurumsal-musteriler' ? { ...s, baslik: 'Filo ve Kurumsal', bolumler: ['anlasmalar', 'filoPlan', 'cta'] }
     : s.id === 'kurumsal' ? { ...s, bolumler: ['hakkimizda', 'vizyon', 'kalite', 'kariyer', 'cta'] }
-    : s.id === 'anasayfa' ? { ...s, bolumler: ['hero', 'ozet', 'hizmetOzet', 'rakamlar', 'anlasmaOzet', 'filoPlan', 'yorumlar', 'cta'] }
+    : s.id === 'anasayfa' ? { ...s, bolumler: ['hero', 'ozet', 'hizmetOzet', 'revizyon', 'rakamlar', 'anlasmaOzet', 'filoPlan', 'yorumlar', 'cta'] }
+    : s.id === 'hizmetler' ? { ...s, bolumler: ['hizmetler', 'revizyon', 'surec', 'cta'] }
     : s
   ),
-  ekstralar: { filoPlan },
+  ekstralar: { filoPlan, revizyon },
 });

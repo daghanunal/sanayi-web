@@ -306,7 +306,11 @@ export function autoHideHeader(el, { offset = 80, tolerance = 8 } = {}) {
   if (!el) return () => {};
   el.setAttribute('data-autohide', '');
   let last = scrollY, raf = 0;
-  const set = () => root.style.setProperty('--header-h', `${el.offsetHeight}px`);
+  // Başlık gizliyken boyut değişse bile --header-h 0 kalmalı; yoksa çapalar boşluğa iner.
+  const set = () => {
+    if (el.hasAttribute('data-autohide-hidden')) return;
+    root.style.setProperty('--header-h', `${el.offsetHeight}px`);
+  };
   set();
   const ro = typeof ResizeObserver !== 'undefined' ? new ResizeObserver(set) : null;
   ro?.observe(el);

@@ -1,4 +1,4 @@
-/* Conta: motor bloğu emaye kırmızısı + alüminyum + dökme demir.
+/* Conta: grafit kompozit conta + motor bloğu emaye kırmızısı (aksan) + alüminyum + dökme demir.
    Archivo (geniş ve dar kesimler aynı aileden) + Martian Mono (ölçü/etiket). */
 :root {
   --red: #d4281c;
@@ -51,6 +51,9 @@ body {
 .btn--line { border: 2px solid currentColor; color: var(--white); }
 .btn--line:hover { background: var(--white); color: var(--red); }
 .btn--red { background: var(--red); color: #fff; }
+/* Grafit conta üstünde siyah buton kayboluyordu: hero'da birincil buton kırmızı */
+.hero .btn--ink { background: var(--red); }
+.hero .btn--ink:hover { background: var(--red-deep); }
 .btn--red:hover { background: var(--red-deep); }
 .btn--xl { min-height: 60px; font-size: 18px; padding: 0 30px; }
 
@@ -67,8 +70,9 @@ body {
   display: flex; align-items: center; gap: 20px; padding: 0 var(--pad);
   color: var(--white); transition: background .35s, color .35s, box-shadow .35s;
 }
+.top.is-scrolled:not(.is-solid) { background: rgb(22 24 26 / .86); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
 .top.is-solid { background: rgb(228 229 226 / .94); color: var(--ink); box-shadow: 0 1px 0 rgb(22 24 26 / .12); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
-.top__brand { display: flex; align-items: center; gap: 10px; text-decoration: none; font-weight: 850; font-stretch: var(--wide); font-size: 17px; letter-spacing: -.01em; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.top__brand { display: flex; align-items: center; gap: 10px; min-height: 44px; text-decoration: none; font-weight: 850; font-stretch: var(--wide); font-size: 17px; letter-spacing: -.01em; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
 .top__dot { width: 18px; height: 18px; border-radius: 50%; border: 3px solid currentColor; flex: none; background: var(--red); }
 .top__nav { display: none; gap: 26px; margin-left: auto; font-weight: 600; font-size: 15px; }
 .top__nav a { text-decoration: none; opacity: .85; }
@@ -93,11 +97,16 @@ body {
 /* ---------------- HERO: conta ---------------- */
 .hero { position: relative; height: 100vh; height: 100svh; min-height: 560px; overflow: hidden; background: var(--ink); color: var(--white); }
 .hero__photo, .hero__photo img { position: absolute; inset: 0; width: 100%; height: 100%; }
-.hero__photo img { object-fit: cover; object-position: 50% 45%; will-change: transform; filter: saturate(.9) contrast(1.08); }
+.hero__photo img { object-fit: cover; object-position: 50% 50%; will-change: transform; }
+/* Blok yüzeyi render'ı: JS delik merkezlerini contaya hizalar, sarmalayıcı contayla aynı dönüşümü alır */
+.hero__deck { position: absolute; inset: 0; transform-origin: 0 0; will-change: transform; pointer-events: none; }
+.hero__deck img { position: absolute; max-width: none; }
+/* Üst çubuk yazısı açık render üstünde de okunsun */
+.hero__scrim { position: absolute; inset: 0 0 auto; height: 140px; background: linear-gradient(rgb(12 13 14 / .45), transparent); pointer-events: none; }
 .gasket { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
-.gasket__sheet { fill: var(--red); }
+.gasket__sheet { fill: url(#gasket-steel); }
 .fire { fill: none; stroke: var(--alu-3); }
-.bead { fill: none; stroke: var(--red-deep); stroke-width: 2; }
+.bead { fill: none; stroke: #4a4f54; stroke-width: 2; }
 .bolt__well { fill: rgb(0 0 0 / .45); }
 .bolt__head polygon { fill: #c9ccce; stroke: #6f7478; stroke-width: 1.5; }
 .bolt__paint { fill: var(--red); opacity: 0; transition: opacity .2s; }
@@ -106,8 +115,9 @@ body {
 .bolt.is-tight .bolt__n { fill: #fff; }
 .bolt.is-tight .bolt__head polygon { fill: #e9eaeb; }
 
+/* Giriş metni akışta durur (pinli sahnede ayrı bir yüzen kart değil) */
 .hero__intro {
-  position: absolute; z-index: 2; left: var(--pad); right: var(--pad); top: 96px;
+  position: relative; z-index: 2; padding: 96px var(--pad) 0;
 }
 .hero__since { font-size: 11px; letter-spacing: .06em; text-transform: uppercase; opacity: .9; }
 .hero__title {
@@ -119,12 +129,12 @@ body {
 .hero__actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
 .hero__actions .btn { min-height: 46px; padding: 0 18px; font-size: 15px; }
 
-.hero__mid { position: absolute; z-index: 2; left: var(--pad); right: var(--pad); top: 110px; opacity: 0; max-width: 1000px; }
+.hero__mid { position: absolute; z-index: 2; left: var(--pad); right: var(--pad); top: 110px; opacity: 0; visibility: hidden; max-width: 1000px; }
 .hero__mid .hero__big { font-size: clamp(40px, 5.6vw, 84px); }
 .hero__mid .hero__small { color: #fff; opacity: .9; }
 @media (max-width: 699px) { .hero__mid { display: none; } }
 .hero__inside {
-  position: absolute; z-index: 2; inset: auto var(--pad) 120px; opacity: 0; max-width: 900px;
+  position: absolute; z-index: 2; inset: auto var(--pad) 120px; opacity: 0; visibility: hidden; max-width: 900px;
 }
 .hero__inside::before { content: ''; position: absolute; top: -60vh; bottom: -140px; left: calc(-1 * var(--pad)); width: 100vw; background: linear-gradient(to top, rgb(10 11 12 / .85), transparent); z-index: -1; }
 .hero__big { font-size: clamp(38px, 7vw, 104px); line-height: .95; font-weight: 900; font-stretch: var(--wide); letter-spacing: -.03em; text-wrap: balance; }
@@ -134,6 +144,7 @@ body {
   position: absolute; z-index: 3; right: var(--pad); bottom: 28px;
   display: grid; grid-template-columns: auto auto; gap: 6px 18px; align-items: baseline;
   padding: 12px 14px; background: var(--ink); color: var(--alu); border-radius: 4px; font-size: 11px; min-width: 240px;
+  opacity: 0; visibility: hidden; /* conta sıkılmaya başlayınca belirir */
 }
 .readout__k { text-transform: uppercase; letter-spacing: .06em; opacity: .7; }
 .readout__n { justify-self: end; font-size: 12px; }
@@ -143,17 +154,17 @@ body {
 .readout__bar i { display: block; height: 100%; background: var(--red-hi); transform-origin: 0 50%; transform: scaleX(0); }
 
 @media (max-width: 699px) {
-  .hero__intro { top: 84px; }
+  .hero__intro { padding-top: 84px; }
   .hero__title { font-size: clamp(34px, 11vw, 60px); }
   .hero__slogan { font-size: 18px; }
   .hero__actions { display: none; }
-  .readout { left: var(--pad); right: var(--pad); bottom: calc(100px + env(safe-area-inset-bottom)); min-width: 0; grid-template-columns: auto auto 1fr; gap: 4px 12px; padding: 10px 12px; }
+  .readout { left: var(--pad); right: var(--pad); bottom: calc(var(--bar-space) + 12px); min-width: 0; transition: bottom .3s; grid-template-columns: auto auto 1fr; gap: 4px 12px; padding: 10px 12px; }
   .readout__stage { justify-self: end; white-space: nowrap; }
   .readout__stage { grid-column: auto; }
   .readout__bar { grid-column: 1 / -1; }
-  .hero__inside { bottom: calc(118px + env(safe-area-inset-bottom)); }
+  .hero__inside { bottom: calc(var(--bar-space) + 28px); }
 }
-@media (min-width: 700px) { .hero__photo img { filter: saturate(.9) contrast(1.1) brightness(1.3); } .hero__intro { max-width: 1320px; } .readout { top: 96px; bottom: auto; } }
+@media (min-width: 700px) { .hero__intro { max-width: 1320px; } .readout { top: 96px; bottom: auto; } }
 
 /* ---------------- Teknik föy ---------------- */
 .spec { padding: clamp(80px, 12vw, 160px) 0 clamp(60px, 9vw, 120px); }
@@ -278,6 +289,7 @@ body {
 .brands__run i { width: 12px; height: 12px; border: 2px solid var(--red); border-radius: 50%; flex: none; }
 @keyframes run { to { transform: translateX(-50%); } }
 .no-motion .brands__track { animation: none; }
+.no-motion .readout { opacity: 1; visibility: visible; }
 
 /* ---------------- Ziyaret ---------------- */
 .visit { background: var(--graphite); color: var(--alu); padding: clamp(80px, 11vw, 140px) 0; }
@@ -306,14 +318,14 @@ body {
 .cta__h { font-size: clamp(40px, 8vw, 118px); line-height: .92; font-weight: 900; font-stretch: var(--wide); letter-spacing: -.035em; max-width: 12ch; }
 .cta__h .ch { display: inline-block; }
 .cta__p { margin-top: 22px; font-size: clamp(17px, 1.6vw, 21px); max-width: 40ch; }
-.cta__num { display: block; margin-top: 36px; font-weight: 900; font-stretch: var(--wide); font-size: clamp(30px, 6.6vw, 92px); line-height: 1; letter-spacing: -.02em; text-decoration: none; color: var(--ink); white-space: nowrap; }
+.cta__num { display: flex; align-items: center; width: fit-content; max-width: 100%; min-height: 48px; margin-top: 36px; font-weight: 900; font-stretch: var(--wide); font-size: clamp(30px, 6.6vw, 92px); line-height: 1; letter-spacing: -.02em; text-decoration: none; color: var(--ink); white-space: nowrap; }
 .cta__actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 34px; }
 
 /* ---------------- Footer ---------------- */
 .foot { background: var(--ink); color: var(--alu-3); padding: 56px 0 40px; font-size: 15px; }
 .foot__grid { display: grid; gap: 10px; }
 .foot__name { font-weight: 900; font-stretch: var(--wide); text-transform: uppercase; color: var(--white); font-size: 20px; }
-.foot a { display: inline-flex; gap: 8px; align-items: center; text-decoration: none; }
+.foot a { display: inline-flex; gap: 8px; align-items: center; min-height: 44px; text-decoration: none; }
 .foot a svg { width: 16px; height: 16px; }
 .foot__small { font-size: 11px; margin-top: 18px; color: var(--steel); }
 @media (min-width: 900px) { .foot__grid { grid-template-columns: 1.2fr 2fr 1fr; align-items: baseline; } .foot__small { grid-column: 1 / -1; } }

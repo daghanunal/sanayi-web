@@ -1,3 +1,6 @@
 vites.jpg: "Close-up of Hand Holding Manual Gear Box", Pexels, https://www.pexels.com/photo/close-up-of-hand-holding-manual-gear-box-15526437/
-hiz.jpg: "Selective Focus Photography of Red Nissan Gt-r R34 Skyline Running on Road", Pexels, https://www.pexels.com/photo/selective-focus-photography-of-red-nissan-gt-r-r34-skyline-running-on-road-1383834/
+eksantrik.jpg: "Close-up of camshaft in engine assembly", Pexels, https://www.pexels.com/photo/close-up-of-camshaft-in-engine-assembly-29226626/
+lift-wide.webp, lift-tall.webp: Blender Cycles render (presets/tork/render_cycles.py, render.sh) of the project's own
+  lib3d assets (public/lib3d: car + garage, procedurally authored, no brand) lit by the Poly Haven "autoshop_01" HDRI (CC0).
+  Product/scene visual, not a photo of the business.
 Diğer görseller: public/img/garaj/ (kaynaklar oradaki CREDITS.txt dosyasında)

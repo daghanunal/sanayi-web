@@ -1,0 +1,8 @@
+filo-hava.jpg: Pexels 33623771 — https://www.pexels.com/photo/33623771/
+krank.jpg: Pexels 33559376 "Mechanic installing crankshaft in engine block" — https://www.pexels.com/photo/33559376/
+atolye.jpg: Pexels 34337558 "Rustic car workshop with tools and machinery" — https://www.pexels.com/photo/34337558/
+filo-gece.jpg: Pexels 12700835 — https://www.pexels.com/photo/12700835/
+motor-3d.jpg, motor-3d-genis.jpg: temsilî 3D çizim — lib3d "engine" varlığı (assets3d, prosedürel, marka yok), Blender Cycles stüdyo render'ı
+  (betik: .shots/yukseltme/render/studio_engine.py; explode 0.8, az 38, el 14, stüdyo HDRI 0.15 + alan ışıkları)
+Lisans: Pexels License (ücretsiz ticari kullanım)
+revizyon.jpg, eller.jpg, yag.jpg: garaj presetinden kopya (Pexels 8985519 Artem Podrez, 12555016, 13065700 Daniel Andraski)

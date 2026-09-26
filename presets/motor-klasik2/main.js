@@ -4,6 +4,7 @@ import {
   telHref, waHref, mapsHref, mapsEmbed, openStatus, groupedHours, icons,
 } from '../../shared/core.js';
 import { SplitText } from 'gsap/SplitText';
+import renders from './render.json';
 
 gsap.registerPlugin(SplitText);
 
@@ -157,6 +158,11 @@ const readBolt = $('[data-bolt]');
 const readStage = $('[data-stage]');
 const readBar = $('.readout__bar i');
 
+// Render'daki blok (lib3d motoru): delik aralığının delik yarıçapına oranı
+const PITCH_R = (renders.h.bores[1][0] - renders.h.bores[0][0]) / renders.h.r;
+const deckWrap = $('.hero__deck');
+const deckImg = $('img', deckWrap);
+
 // 10 cıvatalı kapak için ortadan dışa doğru sarmal sıkma sırası (üst sıra, alt sıra)
 const ORDER = [[9, 5, 1, 3, 7], [8, 4, 2, 6, 10]];
 const circle = (x, y, r) => `M${(x - r).toFixed(1)} ${y.toFixed(1)}a${r.toFixed(1)} ${r.toFixed(1)} 0 1 0 ${(2 * r).toFixed(1)} 0a${r.toFixed(1)} ${r.toFixed(1)} 0 1 0 ${(-2 * r).toFixed(1)} 0Z`;
@@ -179,7 +185,7 @@ function geometry() {
     cx = W / 2;
     cy = (top + bottom) / 2;
   }
-  const P = R * 2.36;
+  const P = R * PITCH_R; // silindir aralığı / delik yarıçapı: render'daki motorla aynı
   const at = (u, v) => (vertical ? [cx + v, cy + u] : [cx + u, cy + v]);
   const pan = vertical ? H * 0.52 - cy : 0;
   const pan2 = vertical ? 0 : H * 0.5 - cy; // masaüstü: dalıştan önce ortaya gelir
@@ -210,6 +216,7 @@ function drawGasket() {
   }
   sheet.setAttribute('d', dPath);
   beads.innerHTML = ring;
+  placeDeck();
 
   let bolts = '';
   ORDER.forEach((row, side) => {
@@ -231,6 +238,20 @@ function drawGasket() {
   boltsG.innerHTML = bolts;
 }
 
+// Blok render'ı: delik merkezleri contadaki deliklerle birebir çakışacak şekilde yerleşir
+function placeDeck() {
+  const m = g.vertical ? renders.v : renders.h;
+  const src = asset(`/img/motor-klasik2/cycles-deck-${g.vertical ? 'v' : 'h'}.webp`);
+  if (deckImg.dataset.src !== src) {
+    deckImg.src = src;
+    deckImg.dataset.src = src;
+  }
+  const k = g.R / m.r;
+  const [bx, by] = g.bores[0];
+  const [ix, iy] = m.bores[0];
+  deckImg.style.cssText = `left:${(bx - ix * k).toFixed(1)}px;top:${(by - iy * k).toFixed(1)}px;width:${(m.w * k).toFixed(1)}px;height:${(m.h * k).toFixed(1)}px`;
+}
+
 const view = { p: 0, q: 0, z: 1 };
 function applyView() {
   const [bx, by0] = g.bores[1];
@@ -238,12 +259,15 @@ function applyView() {
   const by = by0 + pp;
   plane.setAttribute('transform',
     `translate(${bx} ${by}) scale(${view.z}) translate(${-bx} ${-by}) translate(0 ${pp})`);
+  deckWrap.style.transform =
+    `translate(${bx}px, ${by}px) scale(${view.z}) translate(${-bx}px, ${-by}px) translate(0px, ${pp}px)`;
 }
 
 let heroTl;
 function buildHero() {
   heroTl?.scrollTrigger?.kill();
   heroTl?.kill();
+  gsap.set(['.hero__deck', '.hero__intro'], { clearProps: 'opacity,visibility,transform' });
   drawGasket();
   view.p = 0;
   view.q = 0;
@@ -260,15 +284,17 @@ function buildHero() {
     readBolt.textContent = '10';
     readStage.textContent = 'Tork tamam';
     readBar.style.transform = 'scaleX(1)';
+    gsap.set('.readout', { autoAlpha: 1 });
     return;
   }
 
   const { W, H, R } = g;
   const zoomTo = (Math.hypot(W, H) / R) * 0.62 + 1;
   const tl = gsap.timeline({ defaults: { ease: 'none' } });
-  tl.to('.hero__intro', { opacity: 0, y: -80, duration: 1, ease: 'power2.in' }, 0.25)
-    .fromTo('.hero__mid', { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out' }, 1.1)
-    .to('.hero__mid', { opacity: 0, y: -40, duration: 0.6, ease: 'power2.in' }, 6.5)
+  tl.to('.hero__intro', { autoAlpha: 0, y: -80, duration: 1, ease: 'power2.in' }, 0.25)
+    .fromTo('.readout', { autoAlpha: 0, y: 16 }, { autoAlpha: 1, y: 0, duration: 0.4, ease: 'power2.out' }, 0.95)
+    .fromTo('.hero__mid', { autoAlpha: 0, y: 40 }, { autoAlpha: 1, y: 0, duration: 0.8, ease: 'power2.out' }, 1.1)
+    .to('.hero__mid', { autoAlpha: 0, y: -40, duration: 0.6, ease: 'power2.in' }, 6.5)
     .to(view, { p: 1, duration: 6.4, ease: 'power1.inOut', onUpdate: applyView }, 0);
   bolts.forEach((b, i) => {
     const t = 0.7 + i * 0.5;
@@ -277,9 +303,10 @@ function buildHero() {
   tl.to(heads, { rotation: 180, duration: 0.8, ease: 'power2.inOut', stagger: 0.02 }, 5.9)
     .to(view, { q: 1, duration: 1.2, ease: 'power2.inOut', onUpdate: applyView }, 6.2)
     .to(view, { z: zoomTo, duration: 2, ease: 'power3.in', onUpdate: applyView }, 7)
-    .fromTo('.hero__photo img', { scale: 1.18 }, { scale: 1, duration: 9, ease: 'none' }, 0)
-    .to('.readout', { opacity: 0, y: 20, duration: 0.5 }, 7.6)
-    .fromTo('.hero__inside', { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 1, ease: 'power2.out' }, 8.7)
+    .fromTo('.hero__photo img', { scale: 1.35 }, { scale: 1, duration: 2.6, ease: 'power2.out' }, 7.4)
+    .to('.hero__deck', { autoAlpha: 0, duration: 0.8, ease: 'power1.in' }, 7.55)
+    .to('.readout', { autoAlpha: 0, y: 20, duration: 0.5 }, 7.6)
+    .fromTo('.hero__inside', { autoAlpha: 0, y: 50 }, { autoAlpha: 1, y: 0, duration: 1, ease: 'power2.out' }, 8.7)
     .to({}, { duration: 0.9 });
 
   const stageAt = (t) =>
@@ -300,7 +327,7 @@ function buildHero() {
   tl.scrollTrigger = ScrollTrigger.create({
     trigger: heroEl,
     start: 'top top',
-    end: small ? '+=300%' : '+=260%',
+    end: small ? '+=280%' : '+=260%',
     pin: true,
     scrub: 0.5,
     animation: tl,
@@ -328,10 +355,10 @@ if (reducedMotion) {
 } else {
   const split = new SplitText('.hero__title', { type: 'words,chars', charsClass: 'ch' });
   gsap.timeline({ defaults: { ease: 'power4.out' } })
-    .from('.hero__photo img', { opacity: 0, duration: 1.2 }, 0)
+    .from('.hero__deck img', { opacity: 0, duration: 1.2 }, 0)
     .from('.gasket', { opacity: 0, scale: 1.04, transformOrigin: '50% 60%', duration: 1.1 }, 0)
     .from(split.chars, { y: 40, opacity: 0, duration: 0.9, stagger: 0.03 }, 0.2)
-    .from(['.hero__since', '.hero__slogan', '.hero__actions', '.readout'], { opacity: 0, y: 20, duration: 0.8, stagger: 0.08 }, 0.55)
+    .from(['.hero__since', '.hero__slogan', '.hero__actions'], { opacity: 0, y: 20, duration: 0.8, stagger: 0.08 }, 0.55)
     .from('.gasket__bolts', { opacity: 0, duration: 0.8 }, 0.6);
 
   // Sayılar
@@ -409,6 +436,12 @@ ScrollTrigger.create({
   trigger: '.spec', start: 'top 70px',
   onEnter: () => topBar.classList.add('is-solid'),
   onLeaveBack: () => topBar.classList.remove('is-solid'),
+});
+
+// Hero sahnesinde kaydırınca başlığa koyu zemin: yukarı kayan hero yazısı logoyla üst üste binmesin
+ScrollTrigger.create({
+  start: 40, end: 'max',
+  onToggle: (self) => topBar.classList.toggle('is-scrolled', self.isActive),
 });
 
 window.addEventListener('load', () => ScrollTrigger.refresh());

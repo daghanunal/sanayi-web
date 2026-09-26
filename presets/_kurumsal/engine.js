@@ -2,7 +2,7 @@
 // Varyant: kurumsal({ veri, tema, sayfalar, ekstralar, ld, aksiyon }) çağırır; gerisi burada.
 // Ayrıntılar: ./README.md
 import './base.css';
-import { boot, initSmoothScroll, reducedMotion, vitrinModu, icons, gsap, ScrollTrigger } from '../../shared/core.js';
+import { boot, initSmoothScroll, reducedMotion, vitrinModu, icons, gsap, ScrollTrigger, autoHideHeader } from '../../shared/core.js';
 import { SplitText } from 'gsap/SplitText';
 import { BOLUMLER, sayfaBasligi, yilEki } from './bolumler.js';
 
@@ -64,7 +64,7 @@ export function kurumsal({ veri, tema = {}, sayfalar = VARSAYILAN_SAYFALAR, ekst
   iskeletKur(ctx);
   const lenis = initSmoothScroll();
   ctx.lenis = lenis;
-  cerezBandi(ctx);
+  cerezBandi();
 
   // Rota bağlantıları: çekirdeğin "#..." tıklama dinleyicisinden önce yakala (seçici hatası vermesin).
   document.addEventListener(
@@ -74,7 +74,7 @@ export function kurumsal({ veri, tema = {}, sayfalar = VARSAYILAN_SAYFALAR, ekst
       if (!a) return;
       e.preventDefault();
       e.stopPropagation();
-      menuKapat(ctx);
+      menuKapat(ctx, false);
       git(a.dataset.rota);
     },
     true
@@ -131,9 +131,12 @@ export function kurumsal({ veri, tema = {}, sayfalar = VARSAYILAN_SAYFALAR, ekst
 
   function sayfaGoster(r, gecisli) {
     if (gecisVar) return;
+    // Önce başa dön, sonra kur: yeni sayfanın "once" tetikleyicileri eski kaydırma konumunda
+    // oluşturulursa hemen kendini siler ve ScrollTrigger.refresh döngüsü çöker.
+    const basaDon = () => (lenis ? lenis.scrollTo(0, { immediate: true, force: true }) : scrollTo(0, 0));
     if (!gecisli || reducedMotion) {
+      basaDon();
       sayfaIciniKur(r);
-      lenis ? lenis.scrollTo(0, { immediate: true }) : scrollTo(0, 0);
       return;
     }
     gecisVar = true;
@@ -145,8 +148,8 @@ export function kurumsal({ veri, tema = {}, sayfalar = VARSAYILAN_SAYFALAR, ekst
       .set(perde, { visibility: 'visible', transformOrigin: yatay ? 'left center' : 'center bottom' })
       .fromTo(perde, { [eksen]: 0 }, { [eksen]: 1, duration: 0.42, ease: 'power3.in' })
       .add(() => {
+        basaDon();
         sayfaIciniKur(r);
-        lenis ? lenis.scrollTo(0, { immediate: true }) : scrollTo(0, 0);
         gsap.set(perde, { transformOrigin: yatay ? 'right center' : 'center top' });
       })
       .to(perde, { [eksen]: 0, duration: 0.5, ease: 'power3.out' })
@@ -157,6 +160,18 @@ export function kurumsal({ veri, tema = {}, sayfalar = VARSAYILAN_SAYFALAR, ekst
   const ust = document.querySelector('.k-ust');
   const kucult = (y) => ust.classList.toggle('is-kucuk', y > 40);
   lenis ? lenis.on('scroll', ({ scroll }) => kucult(scroll)) : addEventListener('scroll', () => kucult(scrollY), { passive: true });
+  // Telefon sözleşmesi (docs/phone-contract.md): telefonda başlık aşağı kaydırınca saklanır, yukarı
+  // kaydırınca döner; --header-h çapa hedeflerini ve varyantların yapışkan öğelerini hizalar.
+  // Masaüstünde başlık sabit kalır (çekirdek --header-h'yi kendisi ölçer).
+  const telefon = matchMedia('(max-width: 899px)');
+  let gizleDur = null;
+  const basligiAyarla = () => {
+    gizleDur?.();
+    gizleDur = telefon.matches ? autoHideHeader(ust, { offset: 140 }) : null;
+    if (!gizleDur) document.documentElement.style.setProperty('--header-h', `${ust.offsetHeight}px`);
+  };
+  basligiAyarla();
+  telefon.addEventListener?.('change', basligiAyarla);
 
   sayfaGoster(rotaCoz(), false);
   if (!reducedMotion) acilis();
@@ -212,8 +227,14 @@ function iskeletKur(ctx) {
   );
 
   const burger = document.querySelector('.k-burger');
-  burger.addEventListener('click', () => (burger.getAttribute('aria-expanded') === 'true' ? menuKapat(ctx) : menuAc(ctx)));
-  addEventListener('keydown', (e) => e.key === 'Escape' && menuKapat(ctx));
+  burger.addEventListener('click', (e) => {
+    if (burger.getAttribute('aria-expanded') !== 'true') return menuAc(ctx);
+    // Parmakla kapatınca odak başlıkta kalmasın: autoHideHeader odak başlıktayken başlığı hiç saklamaz.
+    const klavye = e.detail === 0;
+    menuKapat(ctx, klavye);
+    if (!klavye) burger.blur();
+  });
+  addEventListener('keydown', (e) => e.key === 'Escape' && menuKapat(ctx, true));
 
   const dlg = document.getElementById('k-kvkk');
   document.addEventListener('click', (e) => {
@@ -244,14 +265,19 @@ function menuAc(ctx) {
   b.setAttribute('aria-expanded', 'true');
   b.setAttribute('aria-label', 'Menüyü kapat');
   document.documentElement.classList.add('k-menu-acik');
+  // Menü açıkken arka sayfa kaymaz ve odak/dokunma almaz (başlık ve alt çubuk erişilebilir kalır).
   ctx.lenis?.stop();
+  arkaPlan(true);
+  requestAnimationFrame(() => m.querySelector('a')?.focus({ preventScroll: true }));
   if (!reducedMotion) {
     gsap.fromTo(m, { clipPath: 'inset(0 0 100% 0)' }, { clipPath: 'inset(0 0 0% 0)', duration: 0.45, ease: 'power3.out' });
     gsap.fromTo(m.querySelectorAll('li'), { yPercent: 60, opacity: 0 }, { yPercent: 0, opacity: 1, stagger: 0.05, duration: 0.5, delay: 0.12, ease: 'power3.out' });
   }
 }
 
-function menuKapat(ctx) {
+// odakGeri: klavyeyle kapatınca odak menü düğmesine döner (erişilebilirlik); dokunarak kapatınca ya da
+// menüden bir sayfaya gidince odak başlıkta bırakılmaz, yoksa telefonda başlık bir daha saklanmaz.
+function menuKapat(ctx, odakGeri = true) {
   const m = document.querySelector('.k-menu');
   if (!m || m.hidden) return;
   const b = document.querySelector('.k-burger');
@@ -259,7 +285,18 @@ function menuKapat(ctx) {
   b.setAttribute('aria-label', 'Menüyü aç');
   document.documentElement.classList.remove('k-menu-acik');
   ctx.lenis?.start();
+  arkaPlan(false);
   m.hidden = true;
+  if (m.contains(document.activeElement)) {
+    if (odakGeri) b.focus({ preventScroll: true });
+    else document.activeElement.blur();
+  }
+}
+
+function arkaPlan(kilit) {
+  for (const el of [document.getElementById('sayfa'), document.querySelector('.k-alt')]) {
+    if (el) el.inert = kilit;
+  }
 }
 
 function esc(s) {
@@ -303,7 +340,10 @@ function kvkkMetni(d) {
     <p>Bu site reklam veya takip çerezi kullanmaz. Tarayıcınızda yalnızca çerez bildirimi ve yazı boyutu tercihinizi hatırlamak için küçük bir kayıt tutulur. Harita bölümü açıldığında Google Haritalar kendi çerezlerini kullanabilir.</p>`;
 }
 
-function cerezBandi(ctx) {
+// Çerez notu. Telefon sözleşmesi: alt çubukla üst üste binmez. Telefonda footer'ın başında akışta
+// duran ince bir şerittir (sabit katman değil); masaüstünde (alt çubuk yok) sağ altta küçük bir kart.
+// "Tamam" tercihi localStorage'da kalır; vitrin modunda hiç gösterilmez.
+function cerezBandi() {
   if (depo.al('k-cerez') === 'tamam' || vitrinModu()) return;
   const b = document.createElement('div');
   b.className = 'k-cerez';
@@ -313,15 +353,18 @@ function cerezBandi(ctx) {
   b.querySelector('button').addEventListener('click', () => {
     depo.koy('k-cerez', 'tamam');
     b.remove();
+    ScrollTrigger.refresh();
   });
-  document.body.append(b);
+  const alt = document.querySelector('.k-alt');
+  alt ? alt.prepend(b) : document.body.append(b);
 }
 
 // --- Hareket -----------------------------------------------------------------------------
 
 function acilis() {
-  const ust = document.querySelector('.k-ust');
-  gsap.from(ust, { yPercent: -100, duration: 0.7, ease: 'power3.out', delay: 0.1 });
+  // İç kutu hareket eder: .k-ust'ün transform'u autoHideHeader'a kalır.
+  const ic = document.querySelector('.k-ust__ic');
+  gsap.from(ic, { yPercent: -100, autoAlpha: 0, duration: 0.7, ease: 'power3.out', delay: 0.1, clearProps: 'transform,opacity,visibility' });
 }
 
 function hareketler(kok, ilk) {

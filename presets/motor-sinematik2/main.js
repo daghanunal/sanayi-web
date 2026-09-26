@@ -148,15 +148,14 @@ labelsBox.innerHTML = ORDER.map((_, i) => `<span class="lbl">${i + 1}</span>`).j
 const lbls = $$('.lbl', labelsBox);
 
 // --- Sahne ve hareket -----------------------------------------------------
-const low = (navigator.hardwareConcurrency || 8) <= 4 || (navigator.deviceMemory || 8) <= 4;
 const fontsReady = Promise.race([
   document.fonts.load("italic 600 100px 'Bodoni Moda'").then(() => document.fonts.ready),
-  new Promise((r) => setTimeout(r, 1500)),
+  new Promise((r) => setTimeout(r, 900)),
 ]);
 
 let scene = null;
 try {
-  scene = createScene($('.stage'), { low, reduced: reducedMotion });
+  scene = createScene($('.stage'), { reduced: reducedMotion });
 } catch (e) {
   document.documentElement.classList.add('no-webgl');
 }
@@ -191,21 +190,33 @@ function runIntro(lenis) {
   gsap.set('.intro__arc', { drawSVG: '0%' });
   gsap.set(heroSplit.chars, { yPercent: 70, opacity: 0, rotate: 8 });
   gsap.set(heroBits, { opacity: 0, y: 18 });
-  const tl = gsap.timeline({ onComplete: finish });
-  tl.from('.intro__name', { opacity: 0, y: 10, duration: 0.5 }, 0)
-    .to('.intro__arc', { drawSVG: '0% 25%', duration: 0.55, ease: 'power3.inOut' }, 0.15)
-    .to('.intro__hex, .intro__mark', { rotate: 90, svgOrigin: '100 100', duration: 0.55, ease: 'power3.inOut' }, 0.15)
-    .to(o, { a: 90, duration: 0.55, ease: 'power3.inOut', onUpdate: () => (deg.textContent = Math.round(o.a)) }, 0.15)
-    .to('.intro__arc', { drawSVG: '0% 50%', duration: 0.55, ease: 'power3.inOut' }, 0.95)
-    .to('.intro__hex, .intro__mark', { rotate: 180, svgOrigin: '100 100', duration: 0.55, ease: 'power3.inOut' }, 0.95)
-    .to(o, { a: 180, duration: 0.55, ease: 'power3.inOut', onUpdate: () => (deg.textContent = Math.round(o.a)) }, 0.95)
-    .to('.intro__mark', { stroke: '#ff2418', duration: 0.2 }, 1.45)
-    .to('.intro', { clipPath: 'inset(0 0 100% 0)', duration: 0.9, ease: 'expo.inOut' }, 1.7)
-    .to(S, { intro: 0, duration: 1.6, ease: 'expo.out' }, 1.75)
-    .to(heroSplit.chars, { yPercent: 0, opacity: 1, rotate: 0, duration: 1.1, ease: 'expo.out', stagger: 0.028 }, 1.95)
-    .to(heroBits, { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out', stagger: 0.06 }, 2.15);
-  const skip = () => tl.progress(1);
+  // Toplam ~2,2 sn; kaydırma kilidi ~1,1 sn'de açılır; dokunma/tekerlek/tuş anında geçer.
+  let unlocked = false;
+  const unlock = () => {
+    if (unlocked) return;
+    unlocked = true;
+    intro.style.pointerEvents = 'none';
+    lenis?.start();
+  };
+  const tl = gsap.timeline({ onComplete: () => (unlock(), finish()) });
+  tl.from('.intro__name', { opacity: 0, y: 10, duration: 0.4 }, 0)
+    .to('.intro__arc', { drawSVG: '0% 25%', duration: 0.4, ease: 'power3.inOut' }, 0.1)
+    .to('.intro__hex, .intro__mark', { rotate: 90, svgOrigin: '100 100', duration: 0.4, ease: 'power3.inOut' }, 0.1)
+    .to(o, { a: 90, duration: 0.4, ease: 'power3.inOut', onUpdate: () => (deg.textContent = Math.round(o.a)) }, 0.1)
+    .to('.intro__arc', { drawSVG: '0% 50%', duration: 0.4, ease: 'power3.inOut' }, 0.55)
+    .to('.intro__hex, .intro__mark', { rotate: 180, svgOrigin: '100 100', duration: 0.4, ease: 'power3.inOut' }, 0.55)
+    .to(o, { a: 180, duration: 0.4, ease: 'power3.inOut', onUpdate: () => (deg.textContent = Math.round(o.a)) }, 0.55)
+    .to('.intro__mark', { stroke: '#ff2418', duration: 0.15 }, 0.95)
+    .to('.intro', { clipPath: 'inset(0 0 100% 0)', duration: 0.75, ease: 'expo.inOut' }, 1.05)
+    .add(unlock, 1.1)
+    .to(S, { intro: 0, duration: 1.3, ease: 'expo.out' }, 1.1)
+    .to(heroSplit.chars, { yPercent: 0, opacity: 1, rotate: 0, duration: 0.9, ease: 'expo.out', stagger: 0.024 }, 1.25)
+    .to(heroBits, { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out', stagger: 0.05 }, 1.4);
+  const skip = () => tl.progress() < 0.98 && tl.progress(1);
   intro.addEventListener('pointerdown', skip, { once: true });
+  addEventListener('keydown', skip, { once: true });
+  addEventListener('wheel', skip, { once: true, passive: true });
+  addEventListener('touchstart', skip, { once: true, passive: true });
 }
 
 const colors = {
@@ -222,7 +233,12 @@ function wireScroll() {
   bind('land', { trigger: '.hero', start: 'top top', end: 'bottom 15%' });
   bind('serv', { trigger: '.serv', start: 'top bottom', end: 'bottom bottom' });
   bind('seqIn', { trigger: '.seq', start: 'top 85%', end: 'top top' });
-  bind('seq', { trigger: '.seq', start: 'top top-=8%', end: 'bottom 170%' });
+  bind('seq', { trigger: '.seq', start: 'top top-=6%', end: 'bottom 150%' });
+  // Sıkma sahnesi ekranı kaplarken telefonda üst başlık saklanır; HUD tek üst öğe olur
+  ScrollTrigger.create({
+    trigger: '.seq', start: 'top 20%', end: 'bottom bottom',
+    onToggle: (self) => document.documentElement.classList.toggle('seq-on', self.isActive),
+  });
   bind('statsIn', { trigger: '.stats-sec', start: 'top 95%', end: 'top 20%' });
   let fadeOut = 0;
   let finIn = 0;
@@ -243,7 +259,8 @@ function wireScroll() {
   let lastAngle = -1;
   scene.onBefore(() => {
     S.finIn = finIn;
-    const vis = Math.max(1 - fadeOut, finIn);
+    // Final sahnesinde motor hızlı belirsin: yarı saydam motor kırmızı fonda pembe/soluk görünüyordu
+    const vis = Math.max(1 - fadeOut, Math.min(1, finIn * 2.2));
     S.visible = vis;
     canvas.style.opacity = vis.toFixed(3);
   });

@@ -22,6 +22,17 @@
       <a href="#konum">Konum</a>
     </nav>
     <span class="status status--top" data-status></span>
+    <!-- Devir göstergesi başlığın içinde: telefonda hero boyunca durum yazısının yerini alır -->
+    <div class="tach" aria-hidden="true">
+      <svg viewBox="0 0 200 120" class="tach__dial">
+        <path class="tach__track" d="M20 110 A80 80 0 0 1 180 110" />
+        <path class="tach__red" d="M20 110 A80 80 0 0 1 180 110" />
+        <g class="tach__ticks"></g>
+        <line class="tach__needle" x1="100" y1="110" x2="100" y2="42" />
+        <circle cx="100" cy="110" r="6" class="tach__hub" />
+      </svg>
+      <p class="tach__read"><span data-rpm>850</span> <span class="tach__u">dev/dak</span></p>
+    </div>
     <a class="top__call" data-tel></a>
   </header>
 
@@ -41,8 +52,8 @@
       </div>
 
       <div class="hero__chapter hero__chapter--2" aria-hidden="true">
-        <p class="hero__big">Motoru açmadan önce dinleriz.</p>
-        <p class="hero__small">Revizyon, silindir kapak, triger, şanzıman. Tezgâhta ölçer, kitabına göre toplarız.</p>
+        <p class="hero__big">Önce dinler, sonra açarız.</p>
+        <p class="hero__small">Revizyon, silindir kapak, triger, şanzıman. Her parça tezgâhta ölçülür, kitabına göre toplanır.</p>
       </div>
 
       <div class="hero__chapter hero__chapter--3" aria-hidden="true">
@@ -50,18 +61,7 @@
         <p class="hero__small" data-garanti></p>
       </div>
 
-      <div class="tach" aria-hidden="true">
-        <svg viewBox="0 0 200 120" class="tach__dial">
-          <path class="tach__track" d="M20 110 A80 80 0 0 1 180 110" />
-          <path class="tach__red" d="M20 110 A80 80 0 0 1 180 110" />
-          <g class="tach__ticks"></g>
-          <line class="tach__needle" x1="100" y1="110" x2="100" y2="42" />
-          <circle cx="100" cy="110" r="6" class="tach__hub" />
-        </svg>
-        <p class="tach__read"><span data-rpm>850</span> dev/dak</p>
-      </div>
-
-      <p class="hero__hint" aria-hidden="true">Kaydırın, motor dönsün</p>
+      <p class="hero__hint" aria-hidden="true">Kaydırın, motor açılsın</p>
     </section>
 
     <section class="about" aria-labelledby="about-h">

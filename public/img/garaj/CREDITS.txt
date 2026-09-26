@@ -5,3 +5,6 @@ motor-bw.jpg: Pexels 190574 (Mike Bird)
 yag.jpg: Pexels 13065700 (Daniel Andraski)
 aletler.jpg: Pexels 14534738
 Lisans: Pexels License (ücretsiz ticari kullanım)
+krank-montaj.jpg: Pexels 33559376 ("Mechanic installing crankshaft in engine block"), https://www.pexels.com/photo/mechanic-installing-crankshaft-in-engine-block-33559376/
+kapak-montaj.jpg: Pexels 8986047 ("Man repairing an engine"), https://www.pexels.com/photo/man-repairing-an-engine-8986047/
+Hero motoru: public/lib3d/engine (projenin kendi Blender varlığı) + Poly Haven "garage" HDRI (CC0), gerçek zamanlı three.js.

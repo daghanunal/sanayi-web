@@ -9,8 +9,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Martian+Mono:wdth,wght@75..100,400..700&display=swap&subset=latin-ext" rel="stylesheet" />
-  <link rel="preload" as="image" href="/img/motor-klasik2/anahtar.jpg" media="(min-width: 700px)" />
-  <link rel="preload" as="image" href="/img/motor-klasik2/kulbutor.jpg" media="(max-width: 699px)" />
+  <link rel="preload" as="image" href="/img/motor-klasik2/cycles-deck-h.webp" media="(min-width: 700px)" />
+  <link rel="preload" as="image" href="/img/motor-klasik2/cycles-deck-v.webp" media="(max-width: 699px)" />
   <link rel="stylesheet" href="../../shared/base.css" />
   <link rel="stylesheet" href="./style.css" />
 </head>
@@ -28,14 +28,25 @@
   </header>
 
   <main>
-    <!-- İMZA: silindir kapak contası. Kırmızı conta ekranı kaplar, silindir deliklerinden atölye görünür.
-         Kaydırdıkça cıvatalar sıkma sırasıyla (1→10) sıkılır, sonra ikinci silindirin içine dalınır. -->
+    <!-- İMZA: silindir kapak contası. Grafit conta blok yüzeyine oturur, deliklerden yeni pistonlar
+         görünür (lib3d motorunun Cycles render'ı, delik merkezleri render.json ile hizalanır).
+         Kaydırdıkça cıvatalar sıkma sırasıyla (1→10) sıkılır, sonra silindirin içine dalınır. -->
     <section class="hero" id="top" aria-label="Giriş">
-      <picture class="hero__photo" aria-hidden="true">
-        <source media="(max-width: 699px)" srcset="/img/motor-klasik2/kulbutor.jpg" />
-        <img src="/img/motor-klasik2/anahtar.jpg" alt="" fetchpriority="high" />
-      </picture>
+      <div class="hero__photo" aria-hidden="true">
+        <img src="/img/motor-klasik2/cycles-bore.webp" alt="" decoding="async" />
+      </div>
+      <div class="hero__scrim" aria-hidden="true"></div>
+      <div class="hero__deck" aria-hidden="true"><img alt="" decoding="async" fetchpriority="high" /></div>
       <svg class="gasket" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+        <!-- Grafit kompozit conta: koyu çelik yüzey, hafif parlaklık (kırmızı yalnız cıvata boya işareti) -->
+        <defs>
+          <linearGradient id="gasket-steel" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#3a3e42" />
+            <stop offset=".45" stop-color="#2a2d30" />
+            <stop offset=".62" stop-color="#34383c" />
+            <stop offset="1" stop-color="#1f2224" />
+          </linearGradient>
+        </defs>
         <g class="gasket__plane">
           <path class="gasket__sheet" fill-rule="evenodd" />
           <g class="gasket__beads"></g>
@@ -161,7 +172,7 @@
       <p class="foot__name" data-name></p>
       <p data-address></p>
       <p><a data-tel></a></p>
-      <p class="foot__small mono">© <span data-year></span> <span data-name></span> · Fotoğraflar: Pexels</p>
+      <p class="foot__small mono">© <span data-year></span> <span data-name></span> · Fotoğraflar: Pexels · 3D görseller temsilîdir</p>
     </div>
   </footer>
 

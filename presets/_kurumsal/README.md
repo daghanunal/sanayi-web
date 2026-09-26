@@ -111,3 +111,22 @@ sayılara `data-sayac="1200"`, listelere `data-sira` verirsen motorun hareketler
 - `aksiyon: (d) => [{ href, ikon, etiket, dis?, rota? }]`: mobil alt çubuğu değiştirir (vitrin modunda dokunmaz).
 - Rota bağlantısı: `<a href="#/iletisim" data-rota="iletisim">`. `data-rota` şart; çekirdeğin `#` tıklama
   dinleyicisinden önce yakalanır.
+
+## Telefon sözleşmesi (docs/phone-contract.md)
+
+Motor sözleşmeyi kendisi uygular; varyantın bir şey yapması gerekmez:
+
+- **Tek üst öğe:** telefonda (< 900 px) `.k-ust` `autoHideHeader` ile aşağı kaydırınca saklanır, yukarı kaydırınca
+  döner; menü açıkken hep görünür. Telefonda küçülen başlığın yüksekliği sabittir (`--k-ust`), `--header-h` kaymaz.
+  Masaüstünde başlık sabit kalır. Açılış hareketi `.k-ust__ic`'te: `.k-ust`'e transform verme (autohide'ı ezer).
+- **Tek alt öğe:** çerez notu telefonda footer'ın başında akışta duran ince şerittir (alt çubukla hiç üst üste
+  binmez); masaüstünde sağ altta kart (`bottom` `--bar-space`'e göre). "Tamam" localStorage'da kalır, vitrinde yok.
+- **Sayfa sonu:** alt çubuk boşluğu body yerine footer'da (`.k-alt` alt dolgusu `--bar-reserve` içerir);
+  varyant `body`/`.k-alt` alt boşluğuna sabit sayı yazmasın.
+- **Mobil menü:** açıkken sayfa kaymaz (html+body overflow, Lenis durur), `#sayfa` ve footer `inert`, odak menüye
+  geçer, kapanınca burger'a döner; alt boşluk `--bar-reserve`.
+- **Dokunma hedefleri ≥ 44 px:** `.k-logo`, `.k-link`, `.k-btn--kucuk`, `.k-metin-dugme`, telefonda footer ve
+  kırıntı bağlantıları. Varyant modüllerindeki küçük düğmeler (sekme, çip, range, select) varyantın işidir.
+- **Rota değişimi:** sayfa önce başa kaydırılır, sonra kurulur (eski konumda oluşan `once` tetikleyicileri
+  ScrollTrigger'ı çökertiyordu).
+- Varyant yüzen bir öğe eklerse `bottom: calc(var(--bar-space) + 12px)`, yapışkan öğe `top: var(--header-h)`.

@@ -41,7 +41,7 @@ body {
   background: var(--k-zemin); color: var(--k-metin);
   font-family: var(--k-font-govde); font-size: var(--k-g); line-height: 1.6;
 }
-html.k-menu-acik { overflow: hidden; }
+html.k-menu-acik, html.k-menu-acik body { overflow: hidden; }
 ::selection { background: var(--k-vurgu); color: var(--k-vurgu-metin); }
 
 .k-kap { width: min(100% - 32px, var(--k-kap)); margin-inline: auto; }
@@ -82,13 +82,13 @@ html.k-menu-acik { overflow: hidden; }
 .k-btn:active { transform: scale(.98); }
 .k-btn--ikincil { background: transparent; color: var(--k-metin); border-color: var(--k-cizgi); }
 .k-btn--ikincil:hover { border-color: var(--k-metin); filter: none; }
-.k-btn--kucuk { min-height: 42px; padding: 0 16px; font-size: 15px; }
+.k-btn--kucuk { min-height: 44px; padding: 0 16px; font-size: 15px; }
 .k-ok { width: 18px; height: 18px; transition: transform .25s; }
 a:hover > .k-ok { transform: translateX(4px); }
 .k-link {
   display: inline-flex; align-items: center; gap: 8px; margin-top: 22px; font-weight: 600;
-  color: var(--k-metin); text-decoration: none; background: linear-gradient(currentColor, currentColor) 0 100% / 0 1.5px no-repeat;
-  transition: background-size .35s ease; padding-bottom: 3px;
+  color: var(--k-metin); text-decoration: none; background: linear-gradient(currentColor, currentColor) 0 calc(50% + .8em) / 0 1.5px no-repeat;
+  transition: background-size .35s ease; min-height: 44px; /* dokunma hedefi ≥ 44 px; alt çizgi metnin hemen altında */
 }
 .k-link:hover { background-size: 100% 1.5px; }
 
@@ -97,7 +97,9 @@ a:hover > .k-ok { transform: translateX(4px); }
 .k-ust__ic { height: var(--k-ust); display: flex; align-items: center; gap: 24px; width: min(100% - 32px, calc(var(--k-kap) + 80px)); margin-inline: auto; transition: height .35s; }
 .k-ust.is-kucuk { background: color-mix(in srgb, var(--k-zemin) 92%, transparent); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); box-shadow: 0 1px 0 var(--k-cizgi); }
 .k-ust.is-kucuk .k-ust__ic { height: 60px; }
-.k-logo { display: flex; flex-direction: column; text-decoration: none; color: var(--k-metin); line-height: 1.05; flex: 0 1 auto; min-width: 0; }
+/* Telefonda yükseklik sabit: başlık zaten kaydırınca saklanıyor; boy değişmezse --header-h ölçümü de kaymaz. */
+@media (max-width: 899px) { .k-ust.is-kucuk .k-ust__ic { height: var(--k-ust); } }
+.k-logo { display: flex; flex-direction: column; justify-content: center; min-height: 44px; text-decoration: none; color: var(--k-metin); line-height: 1.05; flex: 0 1 auto; min-width: 0; }
 .k-logo__ad { font-size: 21px; }
 .k-logo__alt { font-size: 12px; color: var(--k-soluk); margin-top: 2px; }
 .k-logo__img { height: 34px; width: auto; }
@@ -113,7 +115,7 @@ a:hover > .k-ok { transform: translateX(4px); }
 .k-ust__tel { display: flex; align-items: center; gap: 8px; color: var(--k-metin); text-decoration: none; font-weight: 600; font-size: 15px; white-space: nowrap; }
 .k-ust__tel svg { width: 18px; height: 18px; }
 .k-metin-dugme {
-  min-width: 46px; height: 42px; border-radius: var(--k-radius); border: 1.5px solid var(--k-cizgi); background: transparent; cursor: pointer;
+  min-width: 46px; height: 44px; border-radius: var(--k-radius); border: 1.5px solid var(--k-cizgi); background: transparent; cursor: pointer;
   font-family: var(--k-font-baslik); font-weight: 700; color: var(--k-metin); font-size: 15px;
 }
 .k-metin-dugme span { font-size: 20px; margin-left: 1px; }
@@ -136,7 +138,8 @@ a:hover > .k-ok { transform: translateX(4px); }
 
 .k-menu {
   position: fixed; inset: 0; z-index: 79; background: var(--k-koyu); color: var(--k-koyu-metin);
-  padding: calc(var(--k-ust) + 24px) 20px 120px; display: flex; flex-direction: column; justify-content: flex-start; overflow-y: auto;
+  padding: calc(var(--k-ust) + 24px) 20px calc(var(--bar-reserve, 84px) + 24px); display: flex; flex-direction: column; justify-content: flex-start;
+  overflow-y: auto; overscroll-behavior: contain;
 }
 .k-menu[hidden] { display: none; }
 .k-menu-acik .k-ust { background: var(--k-koyu); box-shadow: none; }
@@ -147,7 +150,11 @@ a:hover > .k-ok { transform: translateX(4px); }
 .k-menu a { display: block; color: inherit; text-decoration: none; font-size: clamp(34px, 9vw, 56px); padding: 4px 0; }
 .k-menu a[aria-current] { color: var(--k-vurgu); }
 .k-menu__alt { margin-top: 40px; color: var(--k-koyu-soluk); display: grid; gap: 6px; }
+.k-menu__alt a { display: inline-flex; align-items: center; min-height: 44px; }
 .k-menu-acik .k-cerez { display: none; }
+/* Telefon sözleşmesi: başlık telefonda autoHideHeader ile saklanır; menü açıkken daima görünür. */
+.k-menu-acik .k-ust[data-autohide-hidden] { transform: none; }
+.k-ust[data-autohide] { transition: background .35s, box-shadow .35s, transform .3s cubic-bezier(.2, .7, .2, 1); }
 .k-menu__tel { color: var(--k-koyu-metin); font-size: 22px !important; }
 
 /* --- Blok aralıkları --- */
@@ -366,7 +373,10 @@ a:hover > .k-ok { transform: translateX(4px); }
 .k-form .k-butonlar { margin-top: 4px; }
 
 /* --- Footer --- */
-.k-alt { background: var(--k-koyu); color: var(--k-koyu-metin); padding: clamp(56px, 8vw, 96px) 0 32px; }
+.k-alt { background: var(--k-koyu); color: var(--k-koyu-metin); padding: clamp(56px, 8vw, 96px) 0 calc(var(--bar-reserve, 20px) + 12px); }
+/* Alt çubuk boşluğu body yerine footer'da: sayfa sonunda footer renginin altında zemin şeridi kalmaz. */
+html body, html.is-vitrin body { padding-bottom: 0; }
+html body .k-alt { margin-bottom: 0; }
 .k-alt a { color: inherit; text-decoration: none; }
 .k-alt a:hover { text-decoration: underline; }
 .k-alt__ic, .k-alt__yasal { width: min(100% - 32px, var(--k-kap)); margin-inline: auto; }
@@ -379,6 +389,14 @@ a:hover > .k-ok { transform: translateX(4px); }
 .k-alt__yasal { margin-top: 56px; padding-top: 24px; border-top: 1px solid rgb(255 255 255 / .14); display: flex; flex-wrap: wrap; gap: 8px 32px; justify-content: space-between; font-size: 14px; color: var(--k-koyu-soluk); }
 .k-alt__yasal a + a { margin-left: 20px; }
 .k-alt__not { flex-basis: 100%; }
+/* Telefonda footer bağlantıları ≥ 44 px dokunma hedefi (satır aralığı yerine yükseklikten). */
+@media (max-width: 899px) {
+  .k-alt ul { gap: 0; }
+  .k-alt ul a, .k-alt__yasal a { display: inline-flex; align-items: center; min-height: 44px; min-width: 44px; }
+  .k-alt__yasal { gap: 4px 24px; }
+  .k-kirinti a { display: inline-flex; align-items: center; min-height: 44px; margin-block: -12px; }
+  #sayfa dd > a:only-child { display: inline-flex; align-items: center; min-height: 44px; }
+}
 
 /* --- Geçiş perdesi, KVKK penceresi, çerez bandı --- */
 .k-gecis { position: fixed; inset: 0; z-index: 150; background: var(--k-gecis); visibility: hidden; transform: scaleY(0); pointer-events: none; }
@@ -388,14 +406,24 @@ a:hover > .k-ok { transform: translateX(4px); }
 .k-dialog__ic { padding: 28px; display: grid; gap: 14px; max-height: 80vh; overflow-y: auto; }
 .k-dialog h2 { font-family: var(--k-font-baslik); font-size: 26px; line-height: 1.2; }
 .k-dialog .k-btn { justify-self: start; margin-top: 8px; }
+/* Çerez notu (telefon sözleşmesi): telefonda footer'ın başında akışta duran ince şerit — alt çubukla
+   hiçbir zaman üst üste binmez, footer'ı örtmez. Masaüstünde (alt çubuk yok) sağ altta tek alt öğe. */
 .k-cerez {
-  position: fixed; z-index: 91; left: 12px; right: 12px; bottom: calc(96px + env(safe-area-inset-bottom));
-  display: flex; align-items: center; gap: 14px; padding: 14px 16px; border-radius: var(--k-radius-buyuk);
-  background: var(--k-koyu); color: var(--k-koyu-metin); box-shadow: 0 12px 30px rgb(0 0 0 / .25); font-size: 14px;
+  display: flex; align-items: center; gap: 12px 16px; font-size: 14px; line-height: 1.45;
+  width: min(100% - 32px, var(--k-kap)); margin: 0 auto clamp(40px, 6vw, 64px); padding: 12px 14px 12px 16px;
+  border: 1px solid rgb(255 255 255 / .16); border-radius: var(--k-radius-buyuk);
+  background: rgb(255 255 255 / .05); color: var(--k-koyu-metin);
 }
-.k-cerez p { flex: 1; }
-.k-cerez a { color: inherit; }
-@media (min-width: 900px) { .k-cerez { left: auto; right: 24px; bottom: 24px; max-width: 460px; } }
+.k-cerez p { flex: 1; color: var(--k-koyu-soluk); }
+.k-cerez a { color: var(--k-koyu-metin); text-decoration: underline; }
+.k-alt .k-cerez .k-btn { min-height: 44px; flex: none; }
+@media (min-width: 900px) {
+  .k-cerez {
+    position: fixed; z-index: 91; right: 24px; bottom: max(24px, calc(var(--bar-space, 0px) + 4px)); left: auto;
+    width: auto; max-width: 460px; margin: 0; padding: 14px 16px;
+    background: var(--k-koyu); border-color: rgb(255 255 255 / .12); box-shadow: 0 12px 30px rgb(0 0 0 / .25);
+  }
+}
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition: none !important; }

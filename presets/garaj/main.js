@@ -1,6 +1,6 @@
 import raw from '../../data/garaj.json';
 import {
-  boot, initSmoothScroll, reducedMotion, gsap, ScrollTrigger,
+  boot, initSmoothScroll, reducedMotion, gsap, ScrollTrigger, asset,
   telHref, waHref, mapsHref, mapsEmbed, openStatus, groupedHours, icons,
 } from '../../shared/core.js';
 import { SplitText } from 'gsap/SplitText';
@@ -78,7 +78,13 @@ $('[data-process]').innerHTML = d.surec
   )
   .join('');
 
-const [hero, ...rest] = d.galeri;
+// Tam ekran bant ve galeri: net, konuya özel fotoğraflar (işletme galerisinin genel kareleri yerine)
+const galeri = [
+  { src: asset('/img/garaj/krank-montaj.jpg'), alt: 'Krank mili motor bloğuna yerleştiriliyor' },
+  ...d.galeri.filter((g) => /lift|eller|yag/.test(g.src)),
+  { src: asset('/img/garaj/kapak-montaj.jpg'), alt: 'Silindir kapağında supap ve külbütör montajı' },
+];
+const [hero, ...rest] = galeri;
 const revealImg = $('[data-reveal-img]');
 revealImg.src = hero.src;
 revealImg.alt = hero.alt;
@@ -140,19 +146,29 @@ const setTach = (rpm) => {
 
 const lenis = initSmoothScroll();
 const heroEl = $('.hero');
-const engine = createEngine($('.hero__canvas'), { reducedMotion });
+const canvasEl = $('.hero__canvas');
+const engine = createEngine(canvasEl, { reducedMotion });
+// Motor (GLB + HDRI) hazır olunca karanlıktan belirir; o zamana kadar hero'nun kendi zemini görünür
+engine.ready.then((ok) => {
+  if (!ok) return;
+  heroEl.classList.add('is-ready');
+  if (reducedMotion) gsap.set(canvasEl, { opacity: 1 });
+  else gsap.fromTo(canvasEl, { opacity: 0, scale: 1.06 }, { opacity: 1, scale: 1, duration: 1.4, ease: 'power3.out' });
+});
+
+const topEl = $('.top');
+topEl.classList.add('in-hero');
 
 if (reducedMotion) {
   engine.renderOnce();
   setTach(850);
   document.documentElement.classList.add('no-motion');
 } else {
-  // Giriş: isim harf harf yükselir, motor karanlıktan belirir
+  // Giriş: isim harf harf yükselir (≤ 1,6 sn, kaydırmayı kilitlemez)
   const split = new SplitText('.hero__title', { type: 'words,chars', wordsClass: 'w', charsClass: 'ch', mask: 'words' });
   gsap.timeline({ defaults: { ease: 'power4.out' } })
-    .from('.hero__canvas', { opacity: 0, scale: 1.08, duration: 1.8 }, 0)
-    .from(split.chars, { yPercent: 110, duration: 1.1, stagger: 0.035 }, 0.25)
-    .from(['.hero__since', '.hero__slogan', '.hero__actions', '.tach', '.hero__hint'], { opacity: 0, y: 24, duration: 0.9, stagger: 0.08 }, 0.7);
+    .from(split.chars, { yPercent: 110, duration: 1.0, stagger: 0.03 }, 0.15)
+    .from(['.hero__since', '.hero__slogan', '.hero__actions', '.hero__hint'], { opacity: 0, y: 24, duration: 0.8, stagger: 0.07 }, 0.5);
 
   // Devir: scroll hızına göre yükselir, bırakınca rölantiye iner
   let target = 850;
@@ -182,22 +198,25 @@ if (reducedMotion) {
         onToggle: (self) => (self.isActive ? engine.start() : null),
       },
     });
-    tl.to('.hero__chapter--1', { opacity: 0, y: -60, duration: 1, ease: 'power2.in' }, 0.6)
-      .to('.hero__hint', { opacity: 0, duration: 0.4 }, 0)
-      .fromTo('.hero__chapter--2', { opacity: 0, y: 60 }, { opacity: 1, y: 0, duration: 1 }, 1.4)
-      .to('.hero__chapter--2', { opacity: 0, y: -60, duration: 1, ease: 'power2.in' }, 3)
-      .fromTo('.hero__chapter--3', { opacity: 0, y: 60 }, { opacity: 1, y: 0, duration: 1 }, 3.8)
+    // autoAlpha: görünmez bölümler visibility:hidden olur, alttaki butonlara dokunmayı yutmaz
+    tl.to('.hero__chapter--1', { autoAlpha: 0, y: -60, duration: 1, ease: 'power2.in' }, 0.6)
+      .to('.hero__hint', { autoAlpha: 0, duration: 0.4 }, 0)
+      .fromTo('.hero__chapter--2', { autoAlpha: 0, y: 60 }, { autoAlpha: 1, y: 0, duration: 1 }, 1.65)
+      .to('.hero__chapter--2', { autoAlpha: 0, y: -60, duration: 1, ease: 'power2.in' }, 3)
+      .fromTo('.hero__chapter--3', { autoAlpha: 0, y: 60 }, { autoAlpha: 1, y: 0, duration: 1 }, 4.05)
       .to('.hero__glow', { opacity: 1, scale: 1.25, duration: 5 }, 0)
       .to({}, { duration: 0.8 });
   });
 
-  // Hero ekrandan çıkınca render durur
-  ScrollTrigger.create({
-    trigger: heroEl,
-    start: 'top bottom',
-    end: 'bottom top',
-    onToggle: (self) => (self.isActive ? engine.start() : engine.stop()),
-  });
+  // Hero görünürken render döner, ekrandan çıkınca durur; hero ekranın üçte birinden fazlasını
+  // kaplarken devir göstergesi başlıkta (telefonda durum yazısının yerinde) durur.
+  // (IntersectionObserver: pin sırasında hero sabit kalır, pin bitince akışla çıkar.)
+  new IntersectionObserver((entries) => {
+    const en = entries[entries.length - 1];
+    if (en.isIntersecting) engine.start();
+    else engine.stop();
+    topEl.classList.toggle('in-hero', en.intersectionRatio >= 0.5);
+  }, { threshold: [0, 0.5] }).observe(heroEl);
   engine.start();
 
   // Hakkında başlığı: satır satır
@@ -263,7 +282,8 @@ if (reducedMotion) {
 // Üst çubuk: hero bitince koyu zemine geçer
 ScrollTrigger.create({
   trigger: '.about', start: 'top 80px', end: 'max',
-  toggleClass: { targets: '.top', className: 'is-solid' },
+  onEnter: () => topEl.classList.add('is-solid'),
+  onLeaveBack: () => topEl.classList.remove('is-solid'),
 });
 
 // Görseller yüklendikçe ölçüleri güncelle

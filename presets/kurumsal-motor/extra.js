@@ -83,3 +83,40 @@ export const filoPlan = {
     guncelle(true);
   },
 };
+
+// Sektör imzası: revizyon kesiti. Kütüphanedeki motorun (lib3d engine) patlatılmış Cycles render'ı +
+// yukarıdan aşağı parça parça ölçüm listesi. Görsel temsilîdir ve öyle etiketlenir.
+const PARCALAR = [
+  ['Silindir kapağı', 'Çatlak ve eğiklik kontrol edilir, gerekirse planya yapılır; supaplar alıştırılır.'],
+  ['Eksantrik mili', 'Kam ve yatak aşınması ölçülür; triger seti ile birlikte değerlendirilir.'],
+  ['Piston ve segman', 'Piston çapı, segman ağız aralığı ve kanal boşluğu ölçülür.'],
+  ['Silindir bloğu', 'Silindir çapı ve ovallik ölçülür; ölçü dışıysa honlama ya da rektifiye.'],
+  ['Krank mili', 'Muylular ölçülür; kol ve ana yataklar bu ölçüye göre seçilir.'],
+  ['Karter ve yağ pompası', 'Temizlenir; pompa, süzgeç ve yağ kanalları kontrol edilir.'],
+];
+const okSvg = `<svg class="k-ok" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+
+export const revizyon = {
+  render() {
+    const img = `${import.meta.env.BASE_URL}img/kurumsal-motor/motor-3d.jpg`;
+    const konu = encodeURIComponent('Motor revizyonu');
+    return `
+      <section class="k-bolum rv" aria-labelledby="rv-baslik">
+        <div class="k-kap rv__ic">
+          <div class="rv__metin">
+            <p class="rv__ust">Motor revizyonu</p>
+            <h2 class="k-h2" id="rv-baslik" data-bol>Motoru parça parça açar, her parçayı ölçeriz.</h2>
+            <p class="k-lead">Revizyon tahminle yapılmaz. Motor sökülür, her parça temizlenip ölçülür, sonuç size yazılı gösterilir; neyin değişeceğine ölçüye bakıp birlikte karar veririz.</p>
+            <ol class="rv__liste" data-sira>
+              ${PARCALAR.map(([a, b], i) => `<li><span class="rv__no">${String(i + 1).padStart(2, '0')}</span><div><h3>${esc(a)}</h3><p>${esc(b)}</p></div></li>`).join('')}
+            </ol>
+            <a class="k-link rv__link" href="#/iletisim?konu=${konu}" data-rota="iletisim?konu=${konu}">Motor revizyonu için yazın ${okSvg}</a>
+          </div>
+          <figure class="rv__gorsel" data-perde>
+            <img src="${img}" alt="Parçalarına ayrılmış dört silindirli motorun temsilî 3D çizimi" loading="lazy" width="1000" height="1150">
+            <figcaption>Temsilî 3D çizim</figcaption>
+          </figure>
+        </div>
+      </section>`;
+  },
+};

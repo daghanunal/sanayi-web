@@ -23,14 +23,14 @@
     <span class="dyno__dot"></span>
   </div>
 
-  <div class="hud" aria-hidden="true">
-    <span><b data-hud="rpm">850</b> d/d</span>
-    <span><b data-hud="nm">0</b> Nm</span>
-    <span><b data-hud="hp">0</b> HP</span>
-  </div>
-
   <header class="top">
     <a href="#top" class="top__brand" data-name></a>
+    <!-- Dinamometre göstergesi başlığın içinde (tek üst öğe). Telefonda hero'dan sonra adın yerini alır. -->
+    <div class="hud" aria-hidden="true">
+      <span><b data-hud="rpm">850</b> d/d</span>
+      <span><b data-hud="nm">0</b> Nm</span>
+      <span><b data-hud="hp">0</b> HP</span>
+    </div>
     <nav class="top__nav" aria-label="Sayfa bölümleri">
       <a href="#hizmetler">Hizmetler</a>
       <a href="#olcum">Ölçüm</a>
@@ -152,7 +152,10 @@
     </section>
 
     <section class="final" aria-label="Bize ulaşın">
-      <img class="final__img" data-hiz-img alt="" loading="lazy" />
+      <picture class="final__pic">
+        <source media="(max-width: 759px)" data-hiz-dar />
+        <img class="final__img" data-hiz-img alt="" loading="lazy" decoding="async" />
+      </picture>
       <div class="final__icerik">
         <p class="final__redline">7.000 d/d</p>
         <h2 class="final__baslik" data-final></h2>
@@ -167,7 +170,7 @@
 
   <footer class="alt">
     <p><span data-name></span>, <span data-address></span></p>
-    <p>© <span data-year></span> <span data-name></span>. Fotoğraflar: Pexels.</p>
+    <p>© <span data-year></span> <span data-name></span>. Fotoğraflar: Pexels. 3D görseller temsilîdir.</p>
   </footer>
 
   <script type="module" src="./main.js"></script>
