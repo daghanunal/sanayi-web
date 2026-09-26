@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>lib3d önizleme</title>
+    <link rel="icon" href="data:," />
+    <style>
+      :root { --bg: #0d0e10; --panel: rgba(18, 19, 22, 0.86); --line: #2a2c31; --fg: #e8e6e1; --dim: #8d8f95; --acc: #f0a032; }
+      * { box-sizing: border-box; }
+      html, body { margin: 0; height: 100%; background: var(--bg); color: var(--fg); font: 13px/1.4 system-ui, -apple-system, sans-serif; overflow: hidden; }
+      canvas { display: block; width: 100vw; height: 100vh; }
+      #ui { position: fixed; top: 12px; left: 12px; width: 264px; max-height: calc(100vh - 24px); overflow: auto; background: var(--panel);
+        border: 1px solid var(--line); border-radius: 10px; padding: 12px; backdrop-filter: blur(8px); }
+      #ui h1 { font-size: 14px; margin: 0 0 10px; letter-spacing: 0.02em; }
+      #ui label { display: block; color: var(--dim); margin: 10px 0 4px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; }
+      #ui select, #ui input[type='range'] { width: 100%; }
+      #ui select { background: #1b1c20; color: var(--fg); border: 1px solid var(--line); border-radius: 6px; padding: 5px; }
+      .row { display: flex; gap: 6px; flex-wrap: wrap; }
+      .row button { flex: 1; background: #1b1c20; color: var(--fg); border: 1px solid var(--line); border-radius: 6px; padding: 5px 8px; cursor: pointer; }
+      .row button.on { border-color: var(--acc); color: var(--acc); }
+      #stats { margin-top: 10px; color: var(--dim); font: 11px/1.5 ui-monospace, monospace; white-space: pre-wrap; }
+      #nodes { max-height: 180px; overflow: auto; color: var(--dim); font: 10px/1.35 ui-monospace, monospace; white-space: pre; border-top: 1px solid var(--line); margin-top: 8px; padding-top: 6px; }
+      .swatches { display: flex; gap: 6px; flex-wrap: wrap; }
+      .swatches button { width: 24px; height: 24px; border-radius: 50%; border: 2px solid #0008; cursor: pointer; }
+      body.noui #ui { display: none; }
+      #load { position: fixed; right: 14px; bottom: 12px; color: var(--dim); font-size: 12px; }
+      @media (max-width: 700px) { #ui { width: auto; right: 12px; max-height: 40vh; } }
+    </style>
+  </head>
+  <body>
+    <canvas id="c"></canvas>
+    <div id="ui">
+      <h1>lib3d önizleme</h1>
+      <label>Varlık</label>
+      <select id="asset"></select>
+      <label>Kalite</label>
+      <div class="row" id="qrow"><button data-q="hi">hi (masaüstü)</button><button data-q="lo">lo (telefon)</button></div>
+      <label>Ortam (HDRI)</label>
+      <select id="env"></select>
+      <div class="row" style="margin-top: 6px"><button id="bg">Arka plan</button><button id="spin">Döner tabla</button><button id="lights">Işıklar</button></div>
+      <div id="exwrap"><label>Patlatılmış görünüm</label><input id="explode" type="range" min="0" max="1" step="0.01" value="0" /></div>
+      <div id="paintwrap"><label>Boya</label><div class="swatches" id="paint"></div></div>
+      <div id="varwrap"><label>Malzeme</label><div class="row" id="variants"></div></div>
+      <div id="stats"></div>
+      <div id="nodes"></div>
+    </div>
+    <div id="load"></div>
+    <script type="module" src="./main.js"></script>
+  </body>
+</html>

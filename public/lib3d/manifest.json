@@ -1,0 +1,1147 @@
+{
+ "version": 1,
+ "units": "metres, +Y up (glTF). Vehicles face +X; wheels spin about their local Z axis.",
+ "assets": {
+  "car": {
+   "desc": "Generic modern hatchback, unbranded (4.26 m). Wheels spin about local Z; doors/hood/tailgate hinge.",
+   "explode": true,
+   "hi": {
+    "file": "car-hi-v1.glb",
+    "bytes": 996680,
+    "tris": 133837
+   },
+   "dims": {
+    "min": [
+     -2.125,
+     0.0,
+     -1.058
+    ],
+    "max": [
+     2.17,
+     1.482,
+     1.058
+    ]
+   },
+   "nodes": [
+    "car",
+    "body",
+    "door_FL",
+    "door_FL_panel",
+    "glass_FL",
+    "handle_FL",
+    "mirror_L",
+    "door_FR",
+    "door_FR_panel",
+    "glass_FR",
+    "handle_FR",
+    "mirror_R",
+    "door_RL",
+    "door_RL_panel",
+    "glass_RL",
+    "handle_RL",
+    "door_RR",
+    "door_RR_panel",
+    "glass_RR",
+    "handle_RR",
+    "glass_QL",
+    "glass_QR",
+    "glass_front",
+    "hood",
+    "hood_panel",
+    "hub_RL",
+    "caliper_RL",
+    "wheel_RL",
+    "cap_RL",
+    "disc_RL",
+    "lugs_RL",
+    "rim_RL",
+    "tyre_RL",
+    "valve_RL",
+    "hub_RR",
+    "caliper_RR",
+    "wheel_RR",
+    "cap_RR",
+    "disc_RR",
+    "lugs_RR",
+    "rim_RR",
+    "tyre_RR",
+    "valve_RR",
+    "interior",
+    "lights_front",
+    "lights_rear",
+    "steer_FL",
+    "caliper_FL",
+    "wheel_FL",
+    "cap_FL",
+    "disc_FL",
+    "lugs_FL",
+    "rim_FL",
+    "tyre_FL",
+    "valve_FL",
+    "steer_FR",
+    "caliper_FR",
+    "wheel_FR",
+    "cap_FR",
+    "disc_FR",
+    "lugs_FR",
+    "rim_FR",
+    "tyre_FR",
+    "valve_FR",
+    "tailgate",
+    "glass_rear",
+    "tailgate_panel"
+   ],
+   "materials": [
+    "arch_liner",
+    "caliper_paint",
+    "cap_plastic",
+    "chrome",
+    "dash",
+    "disc_face",
+    "disc_hat",
+    "glass",
+    "grille",
+    "interior",
+    "lamp_glass",
+    "lamp_housing",
+    "light_head",
+    "light_tail",
+    "paint",
+    "plastic_black",
+    "plate",
+    "plate_face",
+    "reflector",
+    "rim_face",
+    "rim_paint",
+    "seat",
+    "steel_dark",
+    "tail_lens",
+    "trim_black",
+    "tyre_side",
+    "tyre_tread"
+   ],
+   "lo": {
+    "file": "car-lo-v1.glb",
+    "bytes": 329816,
+    "tris": 58972
+   }
+  },
+  "engine": {
+   "desc": "Inline-4 petrol engine, separable parts for exploded views (block, head, cams, pistons, crank, belt...).",
+   "explode": true,
+   "hi": {
+    "file": "engine-hi-v1.glb",
+    "bytes": 1072036,
+    "tris": 68996
+   },
+   "dims": {
+    "min": [
+     -0.326,
+     0.0,
+     -0.333
+    ],
+    "max": [
+     0.282,
+     0.596,
+     0.296
+    ]
+   },
+   "nodes": [
+    "engine",
+    "accessory_belt",
+    "alternator",
+    "block",
+    "camshaft_exhaust",
+    "cam_pulley_exhaust",
+    "camshaft_intake",
+    "cam_pulley_intake",
+    "coil_1",
+    "coil_2",
+    "coil_3",
+    "coil_4",
+    "coolant_hose",
+    "crankshaft",
+    "crank_pulley",
+    "flywheel",
+    "dipstick",
+    "exhaust_manifold",
+    "fuel_rail",
+    "injector_1",
+    "injector_2",
+    "injector_3",
+    "injector_4",
+    "head",
+    "head_gasket",
+    "intake_manifold",
+    "mount_front",
+    "mount_rear",
+    "oil_filter",
+    "oil_pan",
+    "piston_1",
+    "conrod_1",
+    "piston_2",
+    "conrod_2",
+    "piston_3",
+    "conrod_3",
+    "piston_4",
+    "conrod_4",
+    "starter",
+    "tensioner",
+    "timing_belt",
+    "timing_cover",
+    "valve_cover"
+   ],
+   "materials": [
+    "alu_cast",
+    "black_paint",
+    "bore",
+    "copper",
+    "exhaust_steel",
+    "filter_paint",
+    "gasket",
+    "piston_alu",
+    "piston_crown",
+    "plastic_black",
+    "plastic_gloss",
+    "pulley_steel",
+    "rubber_belt",
+    "steel_dark",
+    "steel_forged",
+    "steel_machined",
+    "valve_cover",
+    "yellow"
+   ],
+   "lo": {
+    "file": "engine-lo-v1.glb",
+    "bytes": 344336,
+    "tris": 23818
+   }
+  },
+  "wheel": {
+   "desc": "225/45 R17 wheel: tread blocks, two-tone alloy, vented disc, 4-pot caliper, lugs.",
+   "explode": true,
+   "hi": {
+    "file": "wheel-hi-v1.glb",
+    "bytes": 867560,
+    "tris": 58646
+   },
+   "dims": {
+    "min": [
+     -0.317,
+     -0.317,
+     -0.113
+    ],
+    "max": [
+     0.317,
+     0.317,
+     0.113
+    ]
+   },
+   "nodes": [
+    "wheel",
+    "caliper",
+    "spin",
+    "cap",
+    "disc",
+    "lugs",
+    "rim",
+    "tyre",
+    "valve"
+   ],
+   "materials": [
+    "caliper_paint",
+    "cap_plastic",
+    "chrome",
+    "disc_face",
+    "disc_hat",
+    "rim_face",
+    "rim_paint",
+    "steel_dark",
+    "tyre_side",
+    "tyre_tread"
+   ],
+   "lo": {
+    "file": "wheel-lo-v1.glb",
+    "bytes": 302472,
+    "tris": 20510
+   }
+  },
+  "seat": {
+   "desc": "Sports car seat: bolsters, stitching; leather / fabric / alcantara material variants.",
+   "explode": true,
+   "hi": {
+    "file": "seat-hi-v1.glb",
+    "bytes": 1127416,
+    "tris": 31460
+   },
+   "dims": {
+    "min": [
+     -0.54,
+     0.0,
+     -0.324
+    ],
+    "max": [
+     0.289,
+     1.216,
+     0.268
+    ]
+   },
+   "nodes": [
+    "seat",
+    "backrest",
+    "backrest_pad",
+    "headrest",
+    "headrest_pad",
+    "headrest_posts",
+    "piping_back",
+    "stitching_back",
+    "base",
+    "base_mesh",
+    "cushion",
+    "piping_cushion",
+    "stitching_cushion",
+    "variants",
+    "swatch_insert_alcantara",
+    "swatch_insert_fabric",
+    "swatch_insert_quilted",
+    "swatch_upholstery_alcantara",
+    "swatch_upholstery_fabric",
+    "swatch_upholstery_quilted"
+   ],
+   "materials": [
+    "chrome",
+    "frame",
+    "insert_alcantara",
+    "insert_fabric",
+    "insert_leather",
+    "insert_quilted",
+    "railmetal",
+    "shell",
+    "stitch",
+    "underside",
+    "upholstery_alcantara",
+    "upholstery_fabric",
+    "upholstery_leather",
+    "upholstery_quilted"
+   ],
+   "lo": {
+    "file": "seat-lo-v1.glb",
+    "bytes": 266368,
+    "tris": 6956
+   }
+  },
+  "truck": {
+   "desc": "Cab-over tractor unit 4x2 (unbranded), wheels spin, tilting cab.",
+   "explode": true,
+   "hi": {
+    "file": "truck-hi-v1.glb",
+    "bytes": 1058660,
+    "tris": 228924
+   },
+   "dims": {
+    "min": [
+     -2.69,
+     0.0,
+     -1.59
+    ],
+    "max": [
+     3.3,
+     3.805,
+     1.59
+    ]
+   },
+   "nodes": [
+    "truck",
+    "adblue_tank",
+    "adblue_mesh",
+    "air_tanks",
+    "air_tanks_mesh",
+    "battery_box",
+    "battery_box_mesh",
+    "cab",
+    "cab_body",
+    "door_L",
+    "door_L_panel",
+    "glass_L",
+    "door_R",
+    "door_R_panel",
+    "glass_R",
+    "glass_windscreen",
+    "interior",
+    "mirror_L",
+    "mirror_R",
+    "chassis",
+    "amber_lamps",
+    "bumper",
+    "chassis_mesh",
+    "headlamps",
+    "tail_lamps",
+    "fifth_wheel",
+    "fifth_wheel_mesh",
+    "fuel_tank",
+    "fuel_tank_mesh",
+    "hub_R1L",
+    "wheel_R1L",
+    "hubcap_R1L",
+    "rim_R1L_i",
+    "rim_R1L_o",
+    "tyre_R1L_i",
+    "tyre_R1L_o",
+    "hub_R1R",
+    "wheel_R1R",
+    "hubcap_R1R",
+    "rim_R1R_i",
+    "rim_R1R_o",
+    "tyre_R1R_i",
+    "tyre_R1R_o",
+    "steer_FL",
+    "wheel_FL",
+    "hubcap_FL",
+    "rim_FL",
+    "tyre_FL",
+    "steer_FR",
+    "wheel_FR",
+    "hubcap_FR",
+    "rim_FR",
+    "tyre_FR"
+   ],
+   "materials": [
+    "alu",
+    "arch_liner",
+    "chassis_black",
+    "chrome",
+    "dash",
+    "disc_hat",
+    "glass",
+    "grille",
+    "interior",
+    "lamp_glass",
+    "lamp_housing",
+    "light_amber",
+    "light_head",
+    "light_tail",
+    "mirror_glass",
+    "paint",
+    "plastic_black",
+    "reflector",
+    "rim_paint",
+    "rubber",
+    "satin_grey",
+    "seat",
+    "steel_dark",
+    "trim_black",
+    "tyre_side",
+    "tyre_tread"
+   ],
+   "lo": {
+    "file": "truck-lo-v1.glb",
+    "bytes": 268036,
+    "tris": 51680
+   }
+  },
+  "turbo": {
+   "desc": "Turbocharger: compressor + turbine housings, CHRA, wheels on a shaft (separable).",
+   "explode": true,
+   "hi": {
+    "file": "turbo-hi-v1.glb",
+    "bytes": 701204,
+    "tris": 29764
+   },
+   "dims": {
+    "min": [
+     -0.137,
+     0.0,
+     -0.102
+    ],
+    "max": [
+     0.137,
+     0.28,
+     0.102
+    ]
+   },
+   "nodes": [
+    "turbo",
+    "actuator",
+    "center_housing",
+    "compressor_housing",
+    "compressor_wheel",
+    "oil_drain",
+    "oil_feed",
+    "shaft",
+    "turbine_housing",
+    "turbine_wheel"
+   ],
+   "materials": [
+    "actuator_paint",
+    "alu_machined",
+    "alu_milled",
+    "bore_dark",
+    "braid",
+    "brass",
+    "cast_alu",
+    "cast_iron",
+    "cast_iron_hot",
+    "inconel",
+    "rubber",
+    "steel",
+    "steel_dark"
+   ],
+   "lo": {
+    "file": "turbo-lo-v1.glb",
+    "bytes": 132564,
+    "tris": 10580
+   }
+  },
+  "exhaust": {
+   "desc": "Exhaust line: manifold, downpipe, catalyst, DPF, mid pipe, muffler, tailpipe.",
+   "explode": true,
+   "hi": {
+    "file": "exhaust-hi-v1.glb",
+    "bytes": 371100,
+    "tris": 24016
+   },
+   "dims": {
+    "min": [
+     -1.958,
+     0.0,
+     -0.306
+    ],
+    "max": [
+     1.958,
+     0.424,
+     0.306
+    ]
+   },
+   "nodes": [
+    "exhaust",
+    "catalyst",
+    "downpipe",
+    "dpf",
+    "flex",
+    "hangers",
+    "manifold",
+    "midpipe",
+    "muffler",
+    "resonator",
+    "tailpipe"
+   ],
+   "materials": [
+    "aluminized",
+    "bolt",
+    "bore_dark",
+    "chrome",
+    "flex_braid",
+    "gasket",
+    "heat_shield",
+    "rubber",
+    "stainless",
+    "steel_heat"
+   ],
+   "lo": {
+    "file": "exhaust-lo-v1.glb",
+    "bytes": 108428,
+    "tris": 6538
+   }
+  },
+  "garage": {
+   "desc": "Workshop interior: floor, walls, two-post lift, toolboxes, workbench, strip lights.",
+   "explode": false,
+   "hi": {
+    "file": "garage-hi-v1.glb",
+    "bytes": 752064,
+    "tris": 29534
+   },
+   "dims": {
+    "min": [
+     -4.72,
+     -0.002,
+     -3.72
+    ],
+    "max": [
+     4.72,
+     4.5,
+     5.1
+    ]
+   },
+   "nodes": [
+    "garage",
+    "door",
+    "floor",
+    "front",
+    "lift",
+    "lift_carriage",
+    "arms",
+    "arms_mesh",
+    "carriage_body",
+    "lift_frame",
+    "lights",
+    "props",
+    "roof",
+    "toolbox_1",
+    "toolbox_1_mesh",
+    "toolbox_2",
+    "toolbox_2_mesh",
+    "toolbox_3",
+    "toolbox_3_mesh",
+    "walls",
+    "workbench"
+   ],
+   "materials": [
+    "alu",
+    "cardboard",
+    "chrome",
+    "cork",
+    "floor",
+    "galv",
+    "hose_orange",
+    "light_panel",
+    "line_yellow",
+    "oil_black",
+    "paint_blue",
+    "paint_grey",
+    "paint_red",
+    "paint_yellow",
+    "pegboard",
+    "roof_sheet",
+    "rubber",
+    "sign_green",
+    "sign_white",
+    "steel",
+    "steel_dark",
+    "stripe_red",
+    "wall",
+    "wall_ext",
+    "wall_lower",
+    "window",
+    "wood"
+   ],
+   "lo": {
+    "file": "garage-lo-v1.glb",
+    "bytes": 168132,
+    "tris": 7572
+   }
+  },
+  "studio": {
+   "desc": "Studio turntable: cyclorama sweep + rotating plinth (node 'turntable').",
+   "explode": false,
+   "hi": {
+    "file": "studio-hi-v1.glb",
+    "bytes": 189036,
+    "tris": 8316
+   },
+   "dims": {
+    "min": [
+     -5.0,
+     -0.087,
+     -4.5
+    ],
+    "max": [
+     5.0,
+     5.0,
+     6.5
+    ]
+   },
+   "nodes": [
+    "studio",
+    "cyclorama",
+    "softbox_1",
+    "softbox_1_head",
+    "softbox_1_stand",
+    "softbox_2",
+    "softbox_2_head",
+    "softbox_2_stand",
+    "softbox_3",
+    "softbox_3_head",
+    "softbox_3_stand",
+    "turntable",
+    "led_rim",
+    "turntable_disc"
+   ],
+   "materials": [
+    "alu",
+    "black_fabric",
+    "cyc",
+    "light_panel",
+    "stand",
+    "turntable_top"
+   ],
+   "lo": {
+    "file": "studio-lo-v1.glb",
+    "bytes": 40380,
+    "tris": 1822
+   }
+  },
+  "windshield": {
+   "desc": "Laminated windscreen with frit band, wiper arms + blades (animatable).",
+   "explode": true,
+   "hi": {
+    "file": "windshield-hi-v1.glb",
+    "bytes": 115896,
+    "tris": 13906
+   },
+   "dims": {
+    "min": [
+     -0.464,
+     -0.306,
+     -0.736
+    ],
+    "max": [
+     0.572,
+     0.216,
+     0.715
+    ]
+   },
+   "nodes": [
+    "windshield",
+    "cowl",
+    "frit",
+    "glass",
+    "mirror",
+    "moulding",
+    "wiper_L_mount",
+    "wiper_L",
+    "wiper_L_arm",
+    "wiper_L_blade",
+    "wiper_R_mount",
+    "wiper_R",
+    "wiper_R_arm",
+    "wiper_R_blade"
+   ],
+   "materials": [
+    "chrome",
+    "cowl_plastic",
+    "frit",
+    "glass",
+    "glass_edge",
+    "plastic_black",
+    "rubber",
+    "sensor_lens",
+    "wiper_black"
+   ],
+   "lo": {
+    "file": "windshield-lo-v1.glb",
+    "bytes": 44188,
+    "tris": 2652
+   }
+  },
+  "battery": {
+   "desc": "12 V AGM car battery with terminals and clamps.",
+   "explode": true,
+   "hi": {
+    "file": "battery-hi-v1.glb",
+    "bytes": 133548,
+    "tris": 7018
+   },
+   "dims": {
+    "min": [
+     -0.146,
+     0.0,
+     -0.098
+    ],
+    "max": [
+     0.146,
+     0.208,
+     0.249
+    ]
+   },
+   "nodes": [
+    "battery",
+    "case",
+    "clamp_neg",
+    "clamp_pos",
+    "handle",
+    "handle_mesh",
+    "lid",
+    "terminal_neg",
+    "terminal_pos"
+   ],
+   "materials": [
+    "boot_black",
+    "boot_red",
+    "cable_black",
+    "cable_red",
+    "case",
+    "clamp",
+    "indicator",
+    "label",
+    "lead",
+    "lid",
+    "steel"
+   ],
+   "lo": {
+    "file": "battery-lo-v1.glb",
+    "bytes": 81504,
+    "tris": 2884
+   }
+  },
+  "ac_compressor": {
+   "desc": "Automotive A/C compressor with clutch pulley and manifold ports.",
+   "explode": true,
+   "hi": {
+    "file": "ac_compressor-hi-v1.glb",
+    "bytes": 240748,
+    "tris": 9468
+   },
+   "dims": {
+    "min": [
+     -0.115,
+     0.0,
+     -0.083
+    ],
+    "max": [
+     0.115,
+     0.18,
+     0.083
+    ]
+   },
+   "nodes": [
+    "ac_compressor",
+    "body",
+    "clutch_plate",
+    "manifold",
+    "pulley"
+   ],
+   "materials": [
+    "black_paint",
+    "bore_dark",
+    "cast_alu",
+    "machined",
+    "plastic",
+    "pulley_steel",
+    "rubber",
+    "steel",
+    "zinc"
+   ],
+   "lo": {
+    "file": "ac_compressor-lo-v1.glb",
+    "bytes": 70968,
+    "tris": 4286
+   }
+  },
+  "lock": {
+   "desc": "Pin-tumbler lock cylinder (cutaway-ready) + key.",
+   "explode": true,
+   "hi": {
+    "file": "lock-hi-v1.glb",
+    "bytes": 113984,
+    "tris": 11617
+   },
+   "dims": {
+    "min": [
+     -0.03,
+     -0.018,
+     -0.018
+    ],
+    "max": [
+     0.067,
+     0.026,
+     0.018
+    ]
+   },
+   "nodes": [
+    "lock",
+    "housing",
+    "driver_1",
+    "driver_2",
+    "driver_3",
+    "driver_4",
+    "driver_5",
+    "housing_back",
+    "housing_front",
+    "spring_1",
+    "spring_2",
+    "spring_3",
+    "spring_4",
+    "spring_5",
+    "plug",
+    "key",
+    "key_blade",
+    "key_head",
+    "key_pin_1",
+    "key_pin_2",
+    "key_pin_3",
+    "key_pin_4",
+    "key_pin_5",
+    "plug_back",
+    "plug_front"
+   ],
+   "materials": [
+    "brass",
+    "cut_face",
+    "key_metal",
+    "key_plastic",
+    "pin_brass",
+    "pin_steel",
+    "spring"
+   ],
+   "lo": {
+    "file": "lock-lo-v1.glb",
+    "bytes": 68148,
+    "tris": 4483
+   }
+  }
+ },
+ "envs": {
+  "workshop": {
+   "desc": "bright auto service hall (Poly Haven autoshop_01)",
+   "hi": {
+    "file": "env/workshop-1k-v1.hdr",
+    "bytes": 1622432
+   },
+   "lo": {
+    "file": "env/workshop-512-v1.hdr",
+    "bytes": 411368
+   }
+  },
+  "garage": {
+   "desc": "moody repair garage (Poly Haven garage)",
+   "hi": {
+    "file": "env/garage-1k-v1.hdr",
+    "bytes": 1612302
+   },
+   "lo": {
+    "file": "env/garage-512-v1.hdr",
+    "bytes": 406027
+   }
+  },
+  "dusk": {
+   "desc": "urban road at sunset (Poly Haven highway_bridge_sunset)",
+   "hi": {
+    "file": "env/dusk-1k-v1.hdr",
+    "bytes": 1392505
+   },
+   "lo": {
+    "file": "env/dusk-512-v1.hdr",
+    "bytes": 356407
+   }
+  },
+  "night": {
+   "desc": "street at night, sodium lamps (Poly Haven cobblestone_street_night)",
+   "hi": {
+    "file": "env/night-1k-v1.hdr",
+    "bytes": 1760191
+   },
+   "lo": {
+    "file": "env/night-512-v1.hdr",
+    "bytes": 442180
+   }
+  },
+  "studio": {
+   "desc": "small photo studio, soft boxes (Poly Haven studio_small_09)",
+   "hi": {
+    "file": "env/studio-1k-v1.hdr",
+    "bytes": 1615248
+   },
+   "lo": {
+    "file": "env/studio-512-v1.hdr",
+    "bytes": 410568
+   }
+  }
+ },
+ "budget": {
+  "hi_max_bytes": 1200000,
+  "lo_max_bytes": 350000
+ },
+ "credits": [
+  {
+   "file": "car-hi-v1.glb",
+   "source": "authored from scratch in Blender by assets3d/build_car.py (procedural, no third-party model, no brand marks)",
+   "license": "own work (sanayi-web)"
+  },
+  {
+   "file": "car-lo-v1.glb",
+   "source": "authored from scratch in Blender by assets3d/build_car.py (procedural, no third-party model, no brand marks)",
+   "license": "own work (sanayi-web)"
+  },
+  {
+   "file": "engine-hi-v1.glb",
+   "source": "authored from scratch in Blender by assets3d/build_engine.py (procedural, no third-party model, no brand marks)",
+   "license": "own work (sanayi-web)"
+  },
+  {
+   "file": "engine-lo-v1.glb",
+   "source": "authored from scratch in Blender by assets3d/build_engine.py (procedural, no third-party model, no brand marks)",
+   "license": "own work (sanayi-web)"
+  },
+  {
+   "file": "wheel-hi-v1.glb",
+   "source": "authored from scratch in Blender by assets3d/build_wheel.py (procedural, no third-party model, no brand marks)",
+   "license": "own work (sanayi-web)"
+  },
+  {
+   "file": "wheel-lo-v1.glb",
+   "source": "authored from scratch in Blender by assets3d/build_wheel.py (procedural, no third-party model, no brand marks)",
+   "license": "own work (sanayi-web)"
+  },
+  {
+   "file": "seat-hi-v1.glb",
+   "source": "authored from scratch in Blender by assets3d/build_seat.py (procedural, no third-party model, no brand marks)",
+   "license": "own work (sanayi-web)"
+  },
+  {
+   "file": "seat-lo-v1.glb",
+   "source": "authored from scratch in Blender by assets3d/build_seat.py (procedural, no third-party model, no brand marks)",
+   "license": "own work (sanayi-web)"
+  },
+  {
+   "file": "truck-hi-v1.glb",
+   "source": "authored from scratch in Blender by assets3d/build_truck.py (procedural, no third-party model, no brand marks)",
+   "license": "own work (sanayi-web)"
+  },
+  {
+   "file": "truck-lo-v1.glb",
+   "source": "authored from scratch in Blender by assets3d/build_truck.py (procedural, no third-party model, no brand marks)",
+   "license": "own work (sanayi-web)"
+  },
+  {
+   "file": "turbo-hi-v1.glb",
+   "source": "authored from scratch in Blender by assets3d/build_turbo.py (procedural, no third-party model, no brand marks)",
+   "license": "own work (sanayi-web)"
+  },
+  {
+   "file": "turbo-lo-v1.glb",
+   "source": "authored from scratch in Blender by assets3d/build_turbo.py (procedural, no third-party model, no brand marks)",
+   "license": "own work (sanayi-web)"
+  },
+  {
+   "file": "exhaust-hi-v1.glb",
+   "source": "authored from scratch in Blender by assets3d/build_exhaust.py (procedural, no third-party model, no brand marks)",
+   "license": "own work (sanayi-web)"
+  },
+  {
+   "file": "exhaust-lo-v1.glb",
+   "source": "authored from scratch in Blender by assets3d/build_exhaust.py (procedural, no third-party model, no brand marks)",
+   "license": "own work (sanayi-web)"
+  },
+  {
+   "file": "garage-hi-v1.glb",
+   "source": "authored from scratch in Blender by assets3d/build_garage.py (procedural, no third-party model, no brand marks)",
+   "license": "own work (sanayi-web)"
+  },
+  {
+   "file": "garage-lo-v1.glb",
+   "source": "authored from scratch in Blender by assets3d/build_garage.py (procedural, no third-party model, no brand marks)",
+   "license": "own work (sanayi-web)"
+  },
+  {
+   "file": "studio-hi-v1.glb",
+   "source": "authored from scratch in Blender by assets3d/build_studio.py (procedural, no third-party model, no brand marks)",
+   "license": "own work (sanayi-web)"
+  },
+  {
+   "file": "studio-lo-v1.glb",
+   "source": "authored from scratch in Blender by assets3d/build_studio.py (procedural, no third-party model, no brand marks)",
+   "license": "own work (sanayi-web)"
+  },
+  {
+   "file": "windshield-hi-v1.glb",
+   "source": "authored from scratch in Blender by assets3d/build_windshield.py (procedural, no third-party model, no brand marks)",
+   "license": "own work (sanayi-web)"
+  },
+  {
+   "file": "windshield-lo-v1.glb",
+   "source": "authored from scratch in Blender by assets3d/build_windshield.py (procedural, no third-party model, no brand marks)",
+   "license": "own work (sanayi-web)"
+  },
+  {
+   "file": "battery-hi-v1.glb",
+   "source": "authored from scratch in Blender by assets3d/build_battery.py (procedural, no third-party model, no brand marks)",
+   "license": "own work (sanayi-web)"
+  },
+  {
+   "file": "battery-lo-v1.glb",
+   "source": "authored from scratch in Blender by assets3d/build_battery.py (procedural, no third-party model, no brand marks)",
+   "license": "own work (sanayi-web)"
+  },
+  {
+   "file": "ac_compressor-hi-v1.glb",
+   "source": "authored from scratch in Blender by assets3d/build_ac_compressor.py (procedural, no third-party model, no brand marks)",
+   "license": "own work (sanayi-web)"
+  },
+  {
+   "file": "ac_compressor-lo-v1.glb",
+   "source": "authored from scratch in Blender by assets3d/build_ac_compressor.py (procedural, no third-party model, no brand marks)",
+   "license": "own work (sanayi-web)"
+  },
+  {
+   "file": "lock-hi-v1.glb",
+   "source": "authored from scratch in Blender by assets3d/build_lock.py (procedural, no third-party model, no brand marks)",
+   "license": "own work (sanayi-web)"
+  },
+  {
+   "file": "lock-lo-v1.glb",
+   "source": "authored from scratch in Blender by assets3d/build_lock.py (procedural, no third-party model, no brand marks)",
+   "license": "own work (sanayi-web)"
+  },
+  {
+   "file": "env/workshop-1k-v1.hdr",
+   "source": "https://polyhaven.com/a/autoshop_01",
+   "license": "CC0",
+   "author": "Poly Haven",
+   "note": "bright auto service hall with two-post lifts under skylights + fluorescent tubes: default shop light"
+  },
+  {
+   "file": "env/workshop-512-v1.hdr",
+   "source": "https://polyhaven.com/a/autoshop_01",
+   "license": "CC0",
+   "author": "Poly Haven",
+   "note": "bright auto service hall with two-post lifts under skylights + fluorescent tubes: default shop light"
+  },
+  {
+   "file": "env/garage-1k-v1.hdr",
+   "source": "https://polyhaven.com/a/garage",
+   "license": "CC0",
+   "author": "Poly Haven",
+   "note": "moody small repair garage, fluorescent tubes, oil-stained concrete: dark hero scenes"
+  },
+  {
+   "file": "env/garage-512-v1.hdr",
+   "source": "https://polyhaven.com/a/garage",
+   "license": "CC0",
+   "author": "Poly Haven",
+   "note": "moody small repair garage, fluorescent tubes, oil-stained concrete: dark hero scenes"
+  },
+  {
+   "file": "env/dusk-1k-v1.hdr",
+   "source": "https://polyhaven.com/a/highway_bridge_sunset",
+   "license": "CC0",
+   "author": "Poly Haven",
+   "note": "urban road under a bridge at sunset: exterior car / truck shots"
+  },
+  {
+   "file": "env/dusk-512-v1.hdr",
+   "source": "https://polyhaven.com/a/highway_bridge_sunset",
+   "license": "CC0",
+   "author": "Poly Haven",
+   "note": "urban road under a bridge at sunset: exterior car / truck shots"
+  },
+  {
+   "file": "env/night-1k-v1.hdr",
+   "source": "https://polyhaven.com/a/cobblestone_street_night",
+   "license": "CC0",
+   "author": "Poly Haven",
+   "note": "street at night under sodium lamps: tow truck, roadside"
+  },
+  {
+   "file": "env/night-512-v1.hdr",
+   "source": "https://polyhaven.com/a/cobblestone_street_night",
+   "license": "CC0",
+   "author": "Poly Haven",
+   "note": "street at night under sodium lamps: tow truck, roadside"
+  },
+  {
+   "file": "env/studio-1k-v1.hdr",
+   "source": "https://polyhaven.com/a/studio_small_09",
+   "license": "CC0",
+   "author": "Poly Haven",
+   "note": "small photo studio with soft boxes: turntable / product shots"
+  },
+  {
+   "file": "env/studio-512-v1.hdr",
+   "source": "https://polyhaven.com/a/studio_small_09",
+   "license": "CC0",
+   "author": "Poly Haven",
+   "note": "small photo studio with soft boxes: turntable / product shots"
+  }
+ ]
+}
