@@ -94,20 +94,26 @@ if (reducedMotion) {
   setTank(LIMIT);
 } else {
   setTank(0);
-  const tl = gsap.timeline({
-    defaults: { ease: 'none' },
-    scrollTrigger: {
-      trigger: hero, start: 'top top', end: () => `+=${innerHeight * (small ? 1.05 : 1.2)}`,
-      pin: '.hero__pin', scrub: 0.5, anticipatePin: 1,
-    },
-  });
   const m = { p: 0 };
   const START = 0.1;
-  tl.fromTo(m, { p: START }, { p: LIMIT, immediateRender: false, duration: 0.8, ease: 'power1.inOut', onUpdate: () => setTank(m.p) }, 0)
-    .fromTo('.hero__photo img', { scale: 1.14 }, { scale: 1, duration: 1 }, 0)
-    .fromTo('.tank__svg', { rotate: -12 }, { rotate: 0, duration: 0.8, ease: 'power2.out' }, 0)
-    .to('.hero__hint', { opacity: 0, duration: 0.1 }, 0)
-    .to({}, { duration: 0.25 });
+  let tl = null;
+  if (small) {
+    // Telefonda pin yok: tank kendiliğinden %80'e dolar, dolum orada kesilir (2,2 sn)
+    gsap.delayedCall(1.2, () => gsap.fromTo(m, { p: START }, { p: LIMIT, duration: 2.2, ease: 'power1.inOut', onUpdate: () => setTank(m.p) }));
+  } else {
+    tl = gsap.timeline({
+      defaults: { ease: 'none' },
+      scrollTrigger: {
+        trigger: hero, start: 'top top', end: () => `+=${innerHeight * 1.2}`,
+        pin: '.hero__pin', scrub: 0.5, anticipatePin: 1,
+      },
+    });
+    tl.fromTo(m, { p: START }, { p: LIMIT, immediateRender: false, duration: 0.8, ease: 'power1.inOut', onUpdate: () => setTank(m.p) }, 0)
+      .fromTo('.hero__photo img', { scale: 1.14 }, { scale: 1, duration: 1 }, 0)
+      .fromTo('.tank__svg', { rotate: -12 }, { rotate: 0, duration: 0.8, ease: 'power2.out' }, 0)
+      .to('.hero__hint', { opacity: 0, duration: 0.1 }, 0)
+      .to({}, { duration: 0.25 });
+  }
 
   // Açılış
   gsap.from('.hero__name', { yPercent: 30, opacity: 0, duration: 0.9, ease: 'power3.out', delay: 0.05 });
@@ -116,7 +122,7 @@ if (reducedMotion) {
   // İlk açılışta tank biraz dolar: "kaydırınca dolar" ipucu. Kaydırma bu seviyeden devam eder.
   gsap.to(m, {
     p: START, duration: 1.1, ease: 'power2.out', delay: 0.6,
-    onUpdate: () => { if (tl.progress() === 0) setTank(m.p); },
+    onUpdate: () => { if (tl && tl.progress() === 0) setTank(m.p); },
   });
 }
 
@@ -232,7 +238,7 @@ const stars = (n) => Array.from({ length: 5 }, (_, i) => `<span class="${i < n ?
 $('[data-score]').textContent = nf(d.puan.ortalama, 1);
 $('[data-stars]').innerHTML = stars(Math.round(d.puan.ortalama));
 $('[data-stars]').setAttribute('aria-label', `5 üzerinden ${nf(d.puan.ortalama, 1)}`);
-$('[data-review-count]').textContent = `Google'da ${nf(d.puan.adet)} değerlendirme`;
+$('[data-review-count]').textContent = `örnek puan · ${nf(d.puan.adet)} değerlendirme`;
 $('[data-reviews]').innerHTML = d.yorumlar.map((y) => `
   <li class="rev">
     <p class="rev__stars" aria-label="${Number(y.puan)} yıldız">${stars(y.puan)}</p>

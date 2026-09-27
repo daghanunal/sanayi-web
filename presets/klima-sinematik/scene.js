@@ -1,9 +1,12 @@
-// Kodla çizilmiş oto klima devresi: kompresör → kondenser (+fan) → kurutucu → genleşme valfi →
+// Oto klima devresi. Kompresör ve kondenser (+fan) lib3d'nin fotogerçekçi varlıkları (ac_compressor,
+// radiator); yüklenene kadar kodla çizilmiş yedekleri görünür. Işık: stüdyo HDRI + gölgeli tepe ışığı.
+// Eski not: kodla çizilmiş oto klima devresi: kompresör → kondenser (+fan) → kurutucu → genleşme valfi →
 // evaporatör (+polen filtresi, üfleyici) → kompresör. Borular "termal kamera" gibi renklenir:
 // sıcak yüksek basınç tarafı turuncu-kırmızı, valften sonra buz mavisi. Gaz tanecikleri boruda akar.
 // Sahne durumu dışarıdan `update(state)` ile verilir; kamera ve kurgu main.js'tedir.
 import * as THREE from 'three';
 import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js';
+import { loadAsset, loadEnv, pickQuality } from '../../shared/lib3d.js';
 
 const V = (x, y, z) => new THREE.Vector3(x, y, z);
 const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
@@ -143,8 +146,11 @@ export function createScene(canvas, { lite = false } = {}) {
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: !lite, alpha: true, powerPreference: 'high-performance' });
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.05;
+  renderer.toneMappingExposure = 1.0;
   renderer.setClearColor(0x000000, 0);
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFShadowMap;
+  const q = lite ? 'lo' : pickQuality();
   let dpr = Math.min(devicePixelRatio || 1, lite ? 1.25 : 1.5);
   renderer.setPixelRatio(dpr);
 
@@ -155,11 +161,21 @@ export function createScene(canvas, { lite = false } = {}) {
 
   const camera = new THREE.PerspectiveCamera(40, 1, 0.05, 80);
   scene.add(camera);
-  const hemi = new THREE.HemisphereLight(0xffffff, 0x8aa2b4, 0.9);
+  const hemi = new THREE.HemisphereLight(0xffffff, 0x8aa2b4, 0.35);
   scene.add(hemi);
-  const key = new THREE.DirectionalLight(0xfff1e0, 1.6);
-  key.position.set(5, 8, 7);
-  scene.add(key);
+  // Tepe ışığı: yumuşak PCF gölgesi zemine düşer (parçalar havada süzülürken yere bağlar)
+  const key = new THREE.DirectionalLight(0xfff1e0, 2.2);
+  key.position.set(3.5, 9, 5);
+  key.target.position.set(0, -1, 0);
+  key.castShadow = true;
+  key.shadow.mapSize.setScalar(q === 'lo' ? 1024 : 2048);
+  key.shadow.camera.left = -6; key.shadow.camera.right = 6;
+  key.shadow.camera.top = 6; key.shadow.camera.bottom = -6;
+  key.shadow.camera.near = 2; key.shadow.camera.far = 20;
+  key.shadow.bias = -0.0005;
+  key.shadow.normalBias = 0.03;
+  key.shadow.radius = 4;
+  scene.add(key, key.target);
   const rim = new THREE.DirectionalLight(0xbfe6ff, 0.8);
   rim.position.set(-6, 3, -6);
   scene.add(rim);
@@ -240,22 +256,24 @@ export function createScene(canvas, { lite = false } = {}) {
 
   // --- Kondenser + fan ----------------------------------------------------------
   const COND = { x0: -1.3, x1: 2.1, y0: 0.35, y1: 2.25, z: -0.42 };
+  const condG = new THREE.Group(); // kodla çizilmiş kondenser + fan (gerçek varlık gelince gizlenir)
+  rig.add(condG);
   const condW = COND.x1 - COND.x0 + 0.1, condH = COND.y1 - COND.y0;
   const condCx = (COND.x0 + COND.x1) / 2, condCy = (COND.y0 + COND.y1) / 2;
   const mFin = own('kondenser', M.condFin);
   mFin.map.repeat.set(3, 1);
   mFin.map.wrapS = THREE.RepeatWrapping;
-  add(rig, box(condW, condH, 0.09), mFin, condCx, condCy, COND.z);
+  add(condG, box(condW, condH, 0.09), mFin, condCx, condCy, COND.z);
   for (const x of [COND.x0 - 0.1, COND.x1 + 0.1]) {
-    add(rig, cylY(0.085, 0.085, condH + 0.12), own('kondenser', M.alu), x, condCy, COND.z);
-    add(rig, cylY(0.1, 0.1, 0.05), own('kondenser', M.steel), x, COND.y1 + 0.08, COND.z);
-    add(rig, cylY(0.1, 0.1, 0.05), own('kondenser', M.steel), x, COND.y0 - 0.08, COND.z);
+    add(condG, cylY(0.085, 0.085, condH + 0.12), own('kondenser', M.alu), x, condCy, COND.z);
+    add(condG, cylY(0.1, 0.1, 0.05), own('kondenser', M.steel), x, COND.y1 + 0.08, COND.z);
+    add(condG, cylY(0.1, 0.1, 0.05), own('kondenser', M.steel), x, COND.y0 - 0.08, COND.z);
   }
-  add(rig, box(condW + 0.3, 0.05, 0.14), own('kondenser', M.dark), condCx, COND.y1 + 0.12, COND.z);
-  add(rig, box(condW + 0.3, 0.05, 0.14), own('kondenser', M.dark), condCx, COND.y0 - 0.12, COND.z);
+  add(condG, box(condW + 0.3, 0.05, 0.14), own('kondenser', M.dark), condCx, COND.y1 + 0.12, COND.z);
+  add(condG, box(condW + 0.3, 0.05, 0.14), own('kondenser', M.dark), condCx, COND.y0 - 0.12, COND.z);
   const fan = new THREE.Group();
   fan.position.set(condCx - 0.1, condCy, COND.z - 0.3);
-  rig.add(fan);
+  condG.add(fan);
   add(fan, new THREE.TorusGeometry(0.8, 0.05, 8, seg * 2), own('kondenser', M.black), 0, 0, 0);
   add(fan, cylZ(0.82, 0.22, seg * 2).translate(0, 0, 0.02), new THREE.MeshStandardMaterial({ color: 0x1a1f23, roughness: 0.7, side: THREE.BackSide }), 0, 0, 0);
   add(fan, cylZ(0.16, 0.2), M.dark, 0, 0, -0.05);
@@ -295,8 +313,19 @@ export function createScene(canvas, { lite = false } = {}) {
   add(rig, box(evW, evH, 0.16), mEvap, evCx, evCy, EVAP.z);
   for (const x of [EVAP.x0 - 0.1, EVAP.x1 + 0.1]) add(rig, box(0.1, evH + 0.08, 0.2), own('evaporator', M.alu), x, evCy, EVAP.z);
   // Evaporatör kasası (torpido arkası)
-  add(rig, box(evW + 0.5, 0.06, 0.95), own('filtre', M.dark), evCx, EVAP.y1 + 0.12, EVAP.z - 0.35);
-  add(rig, box(evW + 0.5, 0.06, 0.95), own('filtre', M.dark), evCx, EVAP.y0 - 0.12, EVAP.z - 0.35);
+  // Isıtma-klima kutusu: cam elyaf katkılı siyah plastik, önü kesit (içi görünsün)
+  const mCase = own('filtre', new THREE.MeshPhysicalMaterial({ color: 0x23292e, roughness: 0.62, metalness: 0, clearcoat: 0.25, clearcoatRoughness: 0.5 }));
+  const cw = evW + 0.5, ch = evH + 0.3, cd = 0.95, cz0 = EVAP.z - 0.35;
+  add(rig, box(cw, 0.06, cd), mCase, evCx, EVAP.y1 + 0.12, cz0);
+  add(rig, box(cw, 0.06, cd), mCase, evCx, EVAP.y0 - 0.12, cz0);
+  add(rig, box(cw, ch, 0.05), mCase, evCx, evCy, cz0 - cd / 2 + 0.025);
+  for (const sx of [-1, 1]) {
+    add(rig, box(0.05, ch, cd), mCase, evCx + sx * (cw / 2 - 0.025), evCy, cz0);
+    // Kesit kenarı: kesilen plastiğin açık gri yüzü
+    add(rig, box(0.052, ch + 0.002, 0.012), M.alu, evCx + sx * (cw / 2 - 0.025), evCy, cz0 + cd / 2);
+  }
+  add(rig, box(cw + 0.002, 0.062, 0.012), M.alu, evCx, EVAP.y1 + 0.12, cz0 + cd / 2);
+  add(rig, box(cw + 0.002, 0.062, 0.012), M.alu, evCx, EVAP.y0 - 0.12, cz0 + cd / 2);
   // Filtre
   const filter = new THREE.Group();
   const FILTER_Y = evCy;
@@ -456,6 +485,79 @@ export function createScene(canvas, { lite = false } = {}) {
   // Gölge
   const shadow = add(rig, new THREE.PlaneGeometry(9, 4.5), new THREE.MeshBasicMaterial({ map: shadowTex(), transparent: true, depthWrite: false }), 0, -2.05, 0.2, -Math.PI / 2);
   shadow.renderOrder = 0;
+  const floor = add(rig, new THREE.PlaneGeometry(14, 9), new THREE.ShadowMaterial({ color: 0x0b2233, opacity: 0.22, depthWrite: false }), 0, -2.06, 0.2, -Math.PI / 2);
+  floor.receiveShadow = true;
+  floor.renderOrder = 0;
+  // Kodla çizilmiş parçalar da gölge düşürsün
+  rig.traverse((o) => { if (o.isMesh && o !== floor && o !== shadow && !o.material.transparent) { o.castShadow = true; } });
+
+  // --- Gerçek varlıklar: kompresör ve kondenser/fan paketi ------------------------
+  const real = { comp: null, rad: null, spin: [] };
+  const hlClone = (root, id, only) => {
+    const cache = new Map();
+    root.traverse((o) => {
+      if (!o.isMesh || !o.material) return;
+      if (only && !only(o)) return;
+      let m = cache.get(o.material);
+      if (!m) {
+        m = o.material.clone();
+        if (!m.emissive) return;
+        cache.set(o.material, m);
+        groups[id].push(m);
+      }
+      o.material = m;
+    });
+  };
+  const place = (obj, center, size, axis) => {
+    const b = new THREE.Box3().setFromObject(obj);
+    const sz = b.getSize(new THREE.Vector3());
+    obj.scale.multiplyScalar(size / sz[axis]);
+    const b2 = new THREE.Box3().setFromObject(obj);
+    const c = b2.getCenter(new THREE.Vector3());
+    obj.position.add(center.clone().sub(c));
+    return b2;
+  };
+  function under(root, name) {
+    const n = root.getObjectByName(name);
+    return (o) => { let p = o; while (p) { if (p === n) return true; p = p.parent; } return false; };
+  }
+  const assetsReady = Promise.all([
+    loadAsset('ac_compressor', { quality: q, renderer }),
+    loadAsset('radiator', { quality: q, renderer }),
+  ]).then(([ac, rad]) => {
+    // Kompresör: varlığın mili X ekseninde, kasnak +X'te → kasnak kameraya (+Z) baksın
+    const acS = ac.scene;
+    acS.rotation.y = -Math.PI / 2;
+    acS.updateMatrixWorld(true);
+    const holder = new THREE.Group();
+    holder.add(acS);
+    place(holder, V(COMP.x, COMP.y + 0.02, COMP.z + 0.12), 1.42, 'z');
+    rig.add(holder);
+    hlClone(acS, 'kompresor');
+    for (const n of ['pulley', 'clutch_plate']) {
+      const o = ac.nodes[n];
+      if (o) real.spin.push({ o, q0: o.quaternion.clone(), key: n });
+    }
+    if (ac.materials.cast_alu) ac.materials.cast_alu.roughness = Math.max(0.3, ac.materials.cast_alu.roughness);
+    comp.visible = false;
+    real.comp = holder;
+
+    // Radyatör + kondenser + fan paketi: kondenser yüzü (+X) kameraya
+    const rS = rad.scene;
+    rS.rotation.y = -Math.PI / 2;
+    rS.updateMatrixWorld(true);
+    const rh = new THREE.Group();
+    rh.add(rS);
+    place(rh, V(condCx + 0.05, condCy + 0.02, 0), 4.35, 'x');
+    rh.updateMatrixWorld(true);
+    const rb2 = new THREE.Box3().setFromObject(rh);
+    rh.position.z += (COND.z + 0.05) - rb2.max.z;
+    rig.add(rh);
+    hlClone(rS, 'kondenser', under(rS, 'condenser'));
+    real.rad = rad;
+    condG.visible = false;
+  }).catch((e) => console.warn('klima: 3D varlık yüklenemedi, kodla çizilmiş devre kalıyor', e));
+  loadEnv('studio', renderer, { quality: q }).then((env) => { scene.environment = env; }).catch(() => {});
 
   // --- Gaz tanecikleri ---------------------------------------------------------------
   const N = lite ? 300 : 560;
@@ -522,6 +624,8 @@ export function createScene(canvas, { lite = false } = {}) {
   let phase = 0, pulleyA = 0, plateA = 0, fanA = 0, cageA = 0;
   let filterSwapped = false;
   const tmpV = new THREE.Vector3();
+  const _spinQ = new THREE.Quaternion();
+  const _X = new THREE.Vector3(1, 0, 0);
 
   function update(s, now = performance.now()) {
     const dt = clamp((now - last) / 1000, 0, 0.05);
@@ -540,6 +644,11 @@ export function createScene(canvas, { lite = false } = {}) {
     plate.rotation.z = -plateA;
     fanA += dt * 22 * s.fan;
     blades.rotation.z = fanA;
+    if (real.rad) real.rad.spin(-fanA);
+    for (const sp of real.spin) {
+      const a = sp.key === 'pulley' ? pulleyA : plateA;
+      sp.o.quaternion.copy(sp.q0).multiply(_spinQ.setFromAxisAngle(_X, a));
+    }
     cageA += dt * 16 * (0.3 + s.air);
     cage.rotation.x = cageA;
 
@@ -656,7 +765,7 @@ export function createScene(canvas, { lite = false } = {}) {
 
   paintTube(1);
   return {
-    renderer, camera, update, resize, project,
+    renderer, camera, update, resize, project, assetsReady,
     compile: () => renderer.compile(scene, camera),
     points: {
       kompresor: V(COMP.x, COMP.y + 0.1, COMP.z + 0.8),

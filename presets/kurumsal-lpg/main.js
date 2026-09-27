@@ -24,6 +24,7 @@ kurumsal({
     teklifEtiketi: 'Randevu',
     hizmetEtiketi: 'Yaptığımız işler',
     metinBoyutu: true,
+    altNot: 'Fotoğraflar temsilîdir (Pexels). 3D görseller temsilîdir. Yorumlar örnektir.',
     css: {
       zemin: '#e8eee8', yuzey: '#f6f9f5', metin: '#0b221c', soluk: '#4a625a', cizgi: 'rgb(11 34 28 / .16)',
       vurgu: '#1fd17a', 'vurgu-metin': '#062017', koyu: '#0b221c', 'koyu-metin': '#e4f2e8', 'koyu-soluk': '#8fb3a2',

@@ -86,7 +86,7 @@ export const hat = {
             <p class="ml-etiket">Gazın yolu · 7 parça</p>
             <h2 class="k-h2" id="ml-hat-b" data-bol>Tanktan silindire, her parça yerli yerinde.</h2>
             <p class="k-lead">Dönüşüm bir kutu takmak değil; yedi parçanın doğru sırayla, doğru yere oturması. Aşağı kaydırın, gazın izlediği yolu görün.</p>
-            <figure class="ml-hat__foto"><img src="${import.meta.env.BASE_URL}img/kurumsal-lpg/eller.jpg" alt="Emme manifoldu çevresinde enjektör bağlantıları sıkılıyor" loading="lazy"></figure>
+            <figure class="ml-hat__foto"><img src="${import.meta.env.BASE_URL}img/kurumsal-lpg/kit-ustten-3d.jpg" alt="Sıralı enjeksiyon LPG kitinin parçaları üstten: simit tank ve çok valf, regülatör, filtre, enjektör rampası, beyin" width="1000" height="1000" loading="lazy"><figcaption>Temsilî 3D görsel: bir dönüşüm kitinin parçaları</figcaption></figure>
           </div>
           <div class="ml-hat__govde">
           <span class="ml-hat__boru" aria-hidden="true"><span class="ml-hat__dolgu"></span><span class="ml-hat__bas"></span></span>
@@ -392,8 +392,8 @@ export const galeri = {
     return `
       <section class="k-bolum ml-galeri">
         <div class="k-kap">
-          <p class="ml-etiket">Atölyeden · ${g.length} kare</p>
-          <h2 class="k-h2" data-bol>${esc(d.kurumsal?.galeriBaslik || 'Atölyeden')}</h2>
+          <p class="ml-etiket">Temsilî kareler · ${g.length}</p>
+          <h2 class="k-h2" data-bol>${esc(d.kurumsal?.galeriBaslik || 'LPG işinden kareler')}</h2>
           <ul class="ml-galeri__liste">
             ${g.map((x, i) => `<li class="ml-kare"><figure><div class="ml-kare__foto"><img src="${x.src}" alt="${esc(x.alt)}" loading="lazy"></div><figcaption><b>${String(i + 1).padStart(2, '0')}</b>${esc(x.alt)}</figcaption></figure></li>`).join('')}
           </ul>

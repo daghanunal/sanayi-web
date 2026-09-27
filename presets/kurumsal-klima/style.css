@@ -1,11 +1,11 @@
 /* Kurumsal motor — "Termal kamera" yönü.
-   Sis beyazı zemin, gece laciverdi, buz camgöbeği vurgu. Termal skala (mor → mavi → camgöbeği → sarı → turuncu)
+   Lavanta beyazı zemin, gece mürdümü, termal mor vurgu (kardeşlerden ayrışır: sinematik buz camgöbeği, klasik nane). Termal skala (mor → mavi → camgöbeği → sarı → turuncu)
    yalnızca ölçüm anlarında: hero termal katmanı, menfez termometresi, rakamlar, şerit. */
 :root {
   --tk-mono: 'DM Mono', ui-monospace, monospace;
   --tk-skala: linear-gradient(90deg, #3c148c 0%, #146ee6 28%, #00bec8 50%, #fad746 72%, #ff781e 88%, #f03c28 100%);
   --tk-skala-dik: linear-gradient(0deg, #3c148c 0%, #146ee6 28%, #00bec8 50%, #fad746 72%, #ff781e 88%, #f03c28 100%);
-  --tk-koyu-teal: #007585;
+  --tk-koyu-teal: #4a2fc0;
   --tk-beyaz: #fbfdfe;
 }
 
@@ -42,8 +42,8 @@
 
 /* --- Hero: menfez fotoğrafı + sürüklenebilir termal katman --- */
 .th .k-hero__ust { display: flex; align-items: center; gap: 10px; font-family: var(--tk-mono); font-weight: 500; font-size: 13px; letter-spacing: .06em; text-transform: uppercase; }
-.th__nokta { width: 9px; height: 9px; border-radius: 50%; background: var(--k-vurgu); box-shadow: 0 0 0 0 rgb(0 165 184 / .55); animation: th-nabiz 2s ease-out infinite; flex: none; }
-@keyframes th-nabiz { to { box-shadow: 0 0 0 12px rgb(0 165 184 / 0); } }
+.th__nokta { width: 9px; height: 9px; border-radius: 50%; background: var(--k-vurgu); box-shadow: 0 0 0 0 rgb(91 59 214 / .55); animation: th-nabiz 2s ease-out infinite; flex: none; }
+@keyframes th-nabiz { to { box-shadow: 0 0 0 12px rgb(91 59 214 / 0); } }
 .th .k-hero__baslik { letter-spacing: -.045em; }
 .th__kare { border-radius: 26px; background: #120630; touch-action: pan-y; user-select: none; -webkit-user-select: none; }
 .th__kare img { position: absolute; inset: 0; }
@@ -260,7 +260,7 @@
 .gz__tup::after { content: ''; position: absolute; right: -40px; top: -40px; width: 150px; height: 150px; border-radius: 50%; border: 22px solid #d7e6f6; }
 .gz__tup > * { position: relative; z-index: 1; }
 .gz__tup.is-yeni { background: var(--k-koyu); color: var(--k-koyu-metin); }
-.gz__tup.is-yeni::after { border-color: rgb(0 165 184 / .28); }
+.gz__tup.is-yeni::after { border-color: rgb(91 59 214 / .28); }
 .gz__kod { font-family: var(--k-font-baslik); font-weight: 800; font-size: clamp(54px, 7vw, 88px); letter-spacing: -.06em; line-height: .95; position: relative; z-index: 1; }
 .gz__tup.is-yeni .gz__kod { color: #5fd8e2; }
 .gz__kim { font-family: var(--tk-mono); font-size: 12.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--k-soluk); margin: 10px 0 18px; }
@@ -301,7 +301,7 @@
   background: repeating-radial-gradient(circle, transparent 0 34px, rgb(3 22 29 / .09) 34px 36px);
 }
 .k-cta .k-btn { background: var(--k-koyu); color: var(--k-koyu-metin); border-color: var(--k-koyu); }
-.k-cta .k-btn--ikincil { background: transparent; color: var(--k-vurgu-metin); border-color: rgb(3 22 29 / .35); }
+.k-cta .k-btn--ikincil { background: transparent; color: var(--k-vurgu-metin); border-color: rgb(255 255 255 / .5); }
 .k-cta__baslik { letter-spacing: -.045em; }
 
 /* --- Diğer sayfalar --- */

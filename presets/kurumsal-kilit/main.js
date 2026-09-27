@@ -59,6 +59,7 @@ kurumsal({
     teklifEtiketi: 'Anahtarınızı yazın',
     hizmetEtiketi: 'Kilit ve anahtar işleri',
     metinBoyutu: true,
+    altNot: 'Fotoğraflar temsilîdir (Pexels). 3D görseller temsilîdir. Yorumlar örnektir.',
     css: {
       zemin: '#e9ece8', yuzey: '#dde2dd', metin: '#0d1417', soluk: '#4e5a5c', cizgi: 'rgb(13 20 23 / .15)',
       vurgu: '#007f79', 'vurgu-metin': '#f2fbf9', koyu: '#0a1a1c', 'koyu-metin': '#e6efec', 'koyu-soluk': '#8ea6a3',

@@ -170,6 +170,7 @@ function setP(p) {
 }
 
 let st = null;
+let phonePlay = null;
 if (reducedMotion) {
   hero.classList.add('is-static');
   flash(true);
@@ -177,14 +178,21 @@ if (reducedMotion) {
 } else {
   setP(0);
   const m = { p: 0 };
-  const tl = gsap.timeline({
-    scrollTrigger: {
-      trigger: hero, start: 'top top', end: () => `+=${innerHeight * 1.7}`,
-      pin: pinBox, scrub: 0.5, anticipatePin: 1,
-      onRefresh: () => { fitCar(); setP(m.p); },
-    },
-  }).to(m, { p: 1, duration: 1, ease: 'none', onUpdate: () => setP(m.p) });
-  st = tl.scrollTrigger;
+  if (innerWidth < 900) {
+    // Telefonda pin yok: kumanda kendiliğinden basılır (ya da siz basarsınız), çift flaş oynar
+    const play = (to) => gsap.to(m, { p: to, duration: to ? 2.1 : 0.8, ease: to ? 'power1.inOut' : 'power2.out', overwrite: true, onUpdate: () => setP(m.p) });
+    const auto = gsap.delayedCall(1.1, () => play(1));
+    phonePlay = (to) => { auto.kill(); play(to); };
+  } else {
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: hero, start: 'top top', end: () => `+=${innerHeight * 1.7}`,
+        pin: pinBox, scrub: 0.5, anticipatePin: 1,
+        onRefresh: () => { fitCar(); setP(m.p); },
+      },
+    }).to(m, { p: 1, duration: 1, ease: 'none', onUpdate: () => setP(m.p) });
+    st = tl.scrollTrigger;
+  }
 
   // Açılış
   gsap.from('.hero__name', { yPercent: 30, opacity: 0, duration: 1, ease: 'power3.out', delay: 0.05 });
@@ -194,6 +202,7 @@ if (reducedMotion) {
 
 // Kumanda tuşları dokunulabilir: aç → kilit açılana kadar kaydır, kilitle → başa dön.
 function goTo(p) {
+  if (phonePlay) { phonePlay(p > 0.4 ? 1 : 0); return; }
   if (!st) { flash(p > 0.4); return; }
   const y = st.start + (st.end - st.start) * p;
   if (window.__lenis) window.__lenis.scrollTo(y, { duration: 1.4 });
@@ -302,7 +311,7 @@ const stars = (k) => Array.from({ length: 5 }, (_, i) => `<span class="${i < k ?
 $('[data-score]').textContent = nf(d.puan.ortalama, 1);
 $('[data-stars]').innerHTML = stars(Math.round(d.puan.ortalama));
 $('[data-stars]').setAttribute('aria-label', `5 üzerinden ${nf(d.puan.ortalama, 1)}`);
-$('[data-review-count]').textContent = `Google'da ${nf(d.puan.adet)} değerlendirme`;
+$('[data-review-count]').textContent = `örnek puan · ${nf(d.puan.adet)} değerlendirme`;
 $('[data-reviews]').innerHTML = d.yorumlar.map((y) => `
   <li class="rev">
     <p class="rev__stars" aria-label="${Number(y.puan)} yıldız">${stars(y.puan)}</p>
@@ -351,6 +360,8 @@ if (!reducedMotion) {
     const sc = { trigger: all[i + 1], start: 'top bottom', end: 'top 20%', scrub: true };
     gsap.to(c.querySelector('.card__inner'), { scale: 0.92, ease: 'none', scrollTrigger: sc });
     gsap.to(c.querySelector('.card__veil'), { opacity: 0.55, ease: 'none', scrollTrigger: { ...sc } });
+    // Üstüne binen kartın altında yazı üst üste görünmesin: arkadaki kartın metni çekilir
+    gsap.to(c.querySelector('.card__body'), { autoAlpha: 0, ease: 'none', scrollTrigger: { trigger: all[i + 1], start: 'top 55%', end: 'top 30%', scrub: true } });
   });
   $$('.card__photo img').forEach((im) => gsap.fromTo(im, { scale: 1.15 }, { scale: 1, ease: 'none', scrollTrigger: { trigger: im, start: 'top bottom', end: 'top 30%', scrub: true } }));
   gsap.from('.row', { y: 20, opacity: 0, duration: 0.5, stagger: 0.06, ease: 'power2.out', scrollTrigger: { trigger: '.dizin', start: 'top 85%' } });

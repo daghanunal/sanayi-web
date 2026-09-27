@@ -14,3 +14,4 @@ gosterge.jpg: Pexels 9737313 (Erik Mclean)
 yol.jpg: Pexels 221284
 atolye.jpg: Pexels 29286299 (iddea photo)
 Lisans: Pexels License (ücretsiz ticari kullanım)
+kit-ustten-3d.jpg: temsilî 3D render — lib3d lpg_kit varlığı, Blender Cycles, Poly Haven CC0 "garage" HDRI. Fotoğraf değildir. (eller.jpg artık hat bölümünde kullanılmıyor.)

@@ -1,8 +1,12 @@
-// Kodla çizilmiş kesitli pim tamburlu kilit, anahtar, freze, transponder ve sustalı kumanda.
+// Kesitli pim tamburlu kilit (çilingir eğitim kesiti gibi: ön yarısı frezeyle alınmış nikel gövde, pirinç
+// göbek ve pimler), anahtar, freze, transponder ve sustalı kumanda. Mekanizma kodla çizilir çünkü diş
+// profili ve pim hareketi kesim kodundan hesaplanır; ışık stüdyo HDRI'si, fırçalanmış metal dokuları ve
+// yumuşak PCF gölge ile gerçekçileştirildi.
 // Kilit ekseni x boyunca; anahtar +x tarafından girer. Sahne durumu dışarıdan `update(state)` ile verilir.
 import * as THREE from 'three';
 import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js';
 import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js';
+import { loadEnv, pickQuality } from '../../shared/lib3d.js';
 
 const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
 const L = (a, b, t) => a + (b - a) * t;
@@ -78,6 +82,9 @@ export function createScene(canvas, { lite = false, aa = !lite } = {}) {
   renderer.toneMappingExposure = 1.05;
   let dpr = Math.min(devicePixelRatio || 1, lite ? 1.25 : 1.5);
   renderer.setPixelRatio(dpr);
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFShadowMap;
+  const q = lite ? 'lo' : pickQuality();
 
   const scene = new THREE.Scene();
   const pmrem = new THREE.PMREMGenerator(renderer);
@@ -89,7 +96,26 @@ export function createScene(canvas, { lite = false, aa = !lite } = {}) {
   scene.add(new THREE.HemisphereLight(0xcfc4ff, 0x120c1c, 0.5));
   const key = new THREE.DirectionalLight(0xffe2b8, 2.2);
   key.position.set(4, 7, 6);
-  scene.add(key);
+  key.castShadow = true;
+  key.shadow.mapSize.setScalar(q === 'lo' ? 1024 : 2048);
+  Object.assign(key.shadow.camera, { left: -9, right: 9, top: 6, bottom: -6, near: 1, far: 24 });
+  key.shadow.bias = -0.0006;
+  key.shadow.normalBias = 0.02;
+  key.shadow.radius = 5;
+  scene.add(key, key.target);
+  loadEnv('studio', renderer, { quality: q }).then((env) => { scene.environment = env; }).catch(() => {});
+
+  // Fırçalanmış metal pürüzlülük dokusu (eksen boyunca ince çizgiler)
+  const brushed = canvasTex(512, 64, (g, w, h) => {
+    g.fillStyle = '#808080'; g.fillRect(0, 0, w, h);
+    for (let i = 0; i < 1400; i++) {
+      const y = Math.random() * h, v = 90 + Math.random() * 90;
+      g.fillStyle = `rgb(${v},${v},${v})`;
+      g.fillRect(Math.random() * w - 60, y, 60 + Math.random() * 260, 0.6 + Math.random() * 0.8);
+    }
+  });
+  brushed.colorSpace = THREE.NoColorSpace;
+  brushed.wrapS = brushed.wrapT = THREE.RepeatWrapping;
   const rim = new THREE.DirectionalLight(0x9f8cff, 1.6);
   rim.position.set(-6, 2, -5);
   scene.add(rim);
@@ -100,9 +126,12 @@ export function createScene(canvas, { lite = false, aa = !lite } = {}) {
 
   // --- Malzemeler -------------------------------------------------------------
   const M = {
-    brass: new THREE.MeshStandardMaterial({ color: 0xe3ae52, metalness: 1, roughness: 0.28 }),
+    brass: new THREE.MeshPhysicalMaterial({ color: 0xdcaa55, metalness: 1, roughness: 0.62, roughnessMap: brushed, clearcoat: 0.25, clearcoatRoughness: 0.35 }),
+    housing: new THREE.MeshPhysicalMaterial({ color: 0xc2c6ce, metalness: 1, roughness: 0.78, roughnessMap: brushed, side: THREE.DoubleSide }),
+    cutFace: new THREE.MeshStandardMaterial({ color: 0xd6d9df, metalness: 1, roughness: 0.3 }),
+    bore: new THREE.MeshStandardMaterial({ color: 0x3a3842, metalness: 0.9, roughness: 0.55, side: THREE.DoubleSide }),
     brassDark: new THREE.MeshStandardMaterial({ color: 0xa87a33, metalness: 1, roughness: 0.4, side: THREE.DoubleSide }),
-    nickel: new THREE.MeshStandardMaterial({ color: 0xd8d9de, metalness: 1, roughness: 0.22 }),
+    nickel: new THREE.MeshPhysicalMaterial({ color: 0xd5d7dc, metalness: 1, roughness: 0.55, roughnessMap: brushed }),
     steel: new THREE.MeshStandardMaterial({ color: 0x9aa0ab, metalness: 1, roughness: 0.35 }),
     spring: new THREE.MeshStandardMaterial({ color: 0xc4c8d0, metalness: 1, roughness: 0.3 }),
     plastic: new THREE.MeshStandardMaterial({ color: 0x1a1522, metalness: 0.1, roughness: 0.42, transparent: true }),
@@ -132,14 +161,36 @@ export function createScene(canvas, { lite = false, aa = !lite } = {}) {
   };
   const housing = new THREE.Group();
   all.add(housing);
+  // Gövde: nikel kaplı pirinç, ön yarısı kesilmiş (pimler ve yaylar önden görünür)
   const shellG = cylX(SHELL_R, PLUG_LEN + 0.2);
-  housing.add(new THREE.Mesh(shellG, M.xray));
-  const towerG = new THREE.BoxGeometry(PLUG_LEN + 0.2, CH_TOP - 0.45 + 0.1, 0.62);
-  towerG.translate(0, (CH_TOP + 0.45) / 2 + 0.05, 0);
-  housing.add(new THREE.Mesh(towerG, M.xray));
+  const shell = new THREE.Mesh(shellG, M.housing);
+  housing.add(shell);
+  // Göbeğin oturduğu delik (iç yüzey) koyu
+  const shellIn = new THREE.Mesh(cylX(PLUG_R + 0.012, PLUG_LEN + 0.2), M.bore);
+  housing.add(shellIn);
+  // Kule: yalnız arka yarısı kalır; kesit yüzü (z = -0.1) parlak işlenmiş, pim kanalları koyu yarım oyuk
+  const TW = PLUG_LEN + 0.2, TH = CH_TOP - 0.45 + 0.1, TZ0 = -0.31, TZ1 = -0.11;
+  const towerG = new THREE.BoxGeometry(TW, TH, TZ1 - TZ0);
+  towerG.translate(0, (CH_TOP + 0.45) / 2 + 0.05, (TZ0 + TZ1) / 2);
+  const tower = new THREE.Mesh(towerG, M.housing);
+  housing.add(tower);
+  const faceY = (CH_TOP + 0.45) / 2 + 0.05;
+  const cut = new THREE.Mesh(new THREE.PlaneGeometry(TW, TH), M.cutFace);
+  cut.position.set(0, faceY, TZ1 + 0.001);
+  housing.add(cut);
+  PINS.forEach((x) => {
+    const ch = new THREE.Mesh(new THREE.CylinderGeometry(PIN_R + 0.018, PIN_R + 0.018, CH_TOP - SHELL_R + 0.25, 20, 1, true, Math.PI / 2, Math.PI), M.bore);
+    ch.position.set(x, (CH_TOP + SHELL_R - 0.25) / 2, TZ1 + 0.002);
+    housing.add(ch);
+  });
+  // Arka taraftan uzanan montaj kulağı (gövdeyi gerçek kilit göbeği gibi okutur)
+  const ear = new THREE.Mesh(new RoundedBoxGeometry(0.5, 0.9, 0.2, 3, 0.05), M.housing);
+  ear.position.set(-(PLUG_LEN + 0.2) / 2 + 0.35, -0.85, -0.2);
+  housing.add(ear);
   const edges = new THREE.LineSegments(new THREE.EdgesGeometry(towerG), M.edge);
+  edges.visible = false;
   housing.add(edges);
-  // Gövde halkaları ve bore çizgileri
+  // Gövde halkaları
   const lines = [];
   const ring = (x, r) => {
     for (let i = 0; i < 48; i++) {
@@ -148,12 +199,12 @@ export function createScene(canvas, { lite = false, aa = !lite } = {}) {
     }
   };
   [-(PLUG_LEN + 0.2) / 2, (PLUG_LEN + 0.2) / 2].forEach((x) => { ring(x, SHELL_R); });
-  PINS.forEach((x) => {
-    for (const s of [-1, 1]) lines.push(x + s * (PIN_R + 0.02), SHELL_R - 0.1, 0.31, x + s * (PIN_R + 0.02), CH_TOP, 0.31);
-  });
   const lg = new THREE.BufferGeometry();
   lg.setAttribute('position', new THREE.Float32BufferAttribute(lines, 3));
-  housing.add(new THREE.LineSegments(lg, M.edge));
+  const ringLines = new THREE.LineSegments(lg, M.edge);
+  ringLines.material = M.edge.clone();
+  ringLines.material.opacity = 0.25;
+  housing.add(ringLines);
 
   // Kesme hattı ışığı
   const shearMesh = new THREE.Mesh(new THREE.PlaneGeometry(PLUG_LEN + 0.6, 0.022), M.shear);
@@ -409,6 +460,20 @@ export function createScene(canvas, { lite = false, aa = !lite } = {}) {
     arcs.push(a);
   }
 
+  // Yumuşak zemin gölgesi (zemin görünmez, yalnız gölge)
+  const floor = new THREE.Mesh(new THREE.PlaneGeometry(30, 14), new THREE.ShadowMaterial({ color: 0x05030a, opacity: 0.45, depthWrite: false }));
+  floor.rotation.x = -Math.PI / 2;
+  floor.position.y = -1.45;
+  floor.receiveShadow = true;
+  all.add(floor);
+  all.traverse((o) => {
+    if (!o.isMesh || o === floor) return;
+    const m = o.material;
+    if (m && (m.transparent || m.blending === THREE.AdditiveBlending || m.isMeshBasicMaterial)) return;
+    o.castShadow = true;
+    o.receiveShadow = true;
+  });
+
   // --- Durum --------------------------------------------------------------------
   const size = { w: 1, h: 1 };
   function resize() {
@@ -532,7 +597,7 @@ export function createScene(canvas, { lite = false, aa = !lite } = {}) {
       });
     }
 
-    scene.environmentIntensity = s.env ?? 0.85;
+    scene.environmentIntensity = (s.env ?? 0.85) * 1.35;
     const t0 = performance.now();
     renderer.render(scene, camera);
     // Zayıf cihazda çözünürlüğü düşür

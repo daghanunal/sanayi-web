@@ -126,8 +126,8 @@
         "gorsel": "/img/kurumsal-klima/lift-termal.jpg"
       },
       "referanslar": {
-        "baslik": "Atölyeden ve müşterilerden",
-        "metin": "Atölyeden kareler, müşterilerimizin yorumları ve baktığımız markalar."
+        "baslik": "Klima işleri ve yorumlar",
+        "metin": "Klima işlerinden temsilî kareler, örnek müşteri yorumları ve baktığımız markalar."
       },
       "iletisim": {
         "baslik": "İletişim",
@@ -148,7 +148,8 @@
       "baslik": "Menfezden ılık hava mı geliyor? Yazın.",
       "metin": "Ne olduğunu anlatın; neye bakacağımızı ve fiyatı işe başlamadan söyleyelim.",
       "buton": "Arızayı yazın"
-    }
+    },
+    "yorumBaslik": "Örnek müşteri yorumları"
   },
   "istatistikler": [
     {

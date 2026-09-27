@@ -13,3 +13,4 @@ start-stop.jpg: "Engine start round button of modern car" — https://www.pexels
 kodlama.jpg: "Electronic Device Used in Cars" — https://www.pexels.com/photo/electronic-device-used-in-cars-12271951/
 kontak.jpg: "Car ignition turning on" — https://www.pexels.com/photo/car-ignition-turning-on-17124738/
 (sektor-kilit görsellerinin sıkıştırılmış kopyaları)
+silindir-kesit-3d.jpg: temsilî 3D render — lib3d lock varlığı (ön yarılar gizli kesit), Blender Cycles, Poly Haven CC0 "studio" HDRI. Fotoğraf değildir.

@@ -214,7 +214,7 @@
       }
     ],
     "anlasmaNotu": "Kurumsal çalışma koşulları araç sayısına göre konuşulur; ayrıntı için arayın.",
-    "galeriBaslik": "Atölyeden",
+    "galeriBaslik": "LPG işinden kareler",
     "galeri": [
       {
         "src": "/img/kurumsal-lpg/eller.jpg",
@@ -288,6 +288,7 @@
     "kariyer": {
       "baslik": "Ekibimize katılın",
       "metin": "LPG montajı ve ayarı bilen ya da öğrenmek isteyen, işine özen gösteren ustalar ve çıraklar arıyoruz."
-    }
+    },
+    "yorumBaslik": "Örnek müşteri yorumları"
   }
 }

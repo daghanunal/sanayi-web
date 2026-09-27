@@ -105,6 +105,37 @@
         <h2 class="h2" id="hizmet-h">Tanktan enjektöre,<br />bütün hat bizde.</h2>
         <p class="lead">Süreler ortalamadır. Fiyatı işe başlamadan söyleriz; ek parça gerekirse önce haber veririz.</p>
       </div>
+      <!-- Kitin parçaları: temsilî 3D render (lib3d lpg_kit, Blender Cycles) -->
+      <figure class="kit" aria-labelledby="kit-cap">
+        <div class="kit__img">
+          <picture>
+            <source media="(max-width: 699px)" srcset="/img/lpg-klasik/lpg-kiti-3d-k.jpg" />
+            <img src="/img/lpg-klasik/lpg-kiti-3d.jpg" alt="Sıralı enjeksiyon LPG kitinin parçaları: simit tank ve çok valf, regülatör, gaz filtresi, enjektör rampası, beyin ve doldurma ağzı" width="1560" height="780" loading="lazy" decoding="async" />
+          </picture>
+          <ol class="kit__pins" aria-hidden="true">
+            <li style="--x:33.3%;--y:32.6%"><b>1</b><span>Simit tank</span></li>
+            <li style="--x:43.3%;--y:14.2%"><b>2</b><span>Çok valf</span></li>
+            <li style="--x:73.3%;--y:35.4%"><b>3</b><span>Regülatör</span></li>
+            <li style="--x:67.3%;--y:53.7%"><b>4</b><span>Gaz filtresi</span></li>
+            <li style="--x:40.8%;--y:63.6%"><b>5</b><span>Enjektör rampası</span></li>
+            <li style="--x:17.9%;--y:53.7%"><b>6</b><span>Beyin</span></li>
+            <li style="--x:79.5%;--y:80.5%"><b>7</b><span>Doldurma ağzı</span></li>
+          </ol>
+        </div>
+        <figcaption id="kit-cap">
+          <p class="kit__t">Bir dönüşümde takılanlar</p>
+          <ol class="kit__legend">
+            <li><b>1</b>Simit tank: stepne yuvasına oturur</li>
+            <li><b>2</b>Çok valf: doldurma, seviye, emniyet</li>
+            <li><b>3</b>Regülatör: sıvıyı gaza çevirir</li>
+            <li><b>4</b>Gaz filtresi: bakımda değişir</li>
+            <li><b>5</b>Enjektör rampası: her silindire ayrı</li>
+            <li><b>6</b>Beyin: benzin enjektörünü okur</li>
+            <li><b>7</b>Doldurma ağzı: tampon ya da depo kapağı</li>
+          </ol>
+          <p class="kit__note mono">Temsilî 3D görsel; aracınıza göre parça seçimi değişir.</p>
+        </figcaption>
+      </figure>
       <ul class="hizmet__list" data-services></ul>
       <p class="hizmet__hint mono" aria-hidden="true"><span data-svc-count>1 / 8</span><span class="hizmet__bar"><i data-svc-bar></i></span><span>Kaydırın</span></p>
     </section>
@@ -136,13 +167,14 @@
     </section>
 
     <!-- Galeri -->
-    <section class="galeri" aria-label="Atölyeden kareler">
+    <section class="galeri" aria-label="LPG işinden kareler">
       <div class="galeri__track" data-gallery></div>
     </section>
 
     <!-- Yorumlar -->
     <section class="yorum" id="yorumlar" aria-labelledby="yorum-h">
       <div class="yorum__head">
+        <p class="eyebrow mono yorum__eyebrow">Örnek yorumlar</p>
         <h2 class="h2" id="yorum-h">Dönüşüm yaptıranlar anlatıyor</h2>
         <div class="score">
           <p class="score__num" data-score>4,8</p>
@@ -194,7 +226,7 @@
     <p class="foot__name" data-bind="ad"></p>
     <p data-bind="adres"></p>
     <p><a data-tel data-bind="telefon"></a></p>
-    <p class="foot__small">© <span data-year></span> <span data-bind="ad"></span>. Fotoğraflar: Pexels.</p>
+    <p class="foot__small">© <span data-year></span> <span data-bind="ad"></span>. Fotoğraflar: Pexels (temsilî). 3D görseller temsilîdir. Yorumlar örnektir.</p>
   </footer>
 
   <script type="module" src="./main.js"></script>

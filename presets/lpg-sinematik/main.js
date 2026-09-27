@@ -4,7 +4,7 @@ import '../../shared/base.css';
 import './style.css';
 import {
   boot, initSmoothScroll, reducedMotion, telHref, waHref, mapsHref, mapsEmbed,
-  openStatus, groupedHours, icons, esc, gsap, ScrollTrigger,
+  openStatus, groupedHours, icons, esc, gsap, ScrollTrigger, setStoryMode,
 } from '../../shared/core.js';
 import { createScene } from './scene.js';
 
@@ -58,12 +58,14 @@ $('[data-status-big]').classList.toggle('is-open', status.open);
 // Bölümler
 const CH = d.bolumler;
 $('[data-chapters]').innerHTML = CH.map((c, i) => `
+  <div class="stop" data-stop>
   <article class="chap chap--${esc(c.id)}" data-chap>
     <p class="chap__kicker"><b>${String(i + 1).padStart(2, '0')}</b><span>${esc(c.durak)} · ${esc(c.kicker)}</span></p>
     <h2 class="chap__title">${esc(c.baslik)}</h2>
     <p class="chap__text">${esc(c.metin)}</p>
     <a class="chap__wa" href="${esc(waHref(d, `Merhaba ${d.isletme.ad}, ${c.wa} için bilgi almak istiyorum. Aracım: `))}" target="_blank" rel="noopener">${icons.whatsapp}<span>Bu iş için yazın</span></a>
-  </article>`).join('');
+  </article>
+  </div>`).join('');
 $('[data-route-stops]').innerHTML = CH.map((c) => `<li><i></i><span>${esc(c.durak)}</span></li>`).join('');
 
 // Güven
@@ -99,7 +101,7 @@ $('[data-mosaic]').innerHTML = pick.map((k, i) => d.galeri[k]).filter(Boolean).m
 // Yorumlar
 $('[data-puan]').textContent = nf(d.puan.ortalama, 1);
 $('[data-stars]').innerHTML = icons.star.repeat(5);
-$('[data-puan-adet]').textContent = `${nf(d.puan.adet)} Google yorumu`;
+$('[data-puan-adet]').textContent = `örnek puan · ${nf(d.puan.adet)} değerlendirme`;
 $('[data-reviews]').innerHTML = d.yorumlar.map((y) => `
   <figure class="rev">
     <p class="rev__stars" aria-label="${Number(y.puan)} yıldız">${icons.star.repeat(Number(y.puan) || 5)}</p>
@@ -114,7 +116,7 @@ $('[data-hours]').innerHTML = groupedHours(d.saatler)
   .map(([g, h]) => `<div class="${h === 'Kapalı' ? 'is-closed' : ''}"><dt>${esc(g)}</dt><dd>${esc(h)}</dd></div>`).join('');
 $('[data-final-title]').textContent = d.finalBaslik;
 $('[data-final-kicker]').textContent = `${d.isletme.ad} · ${d.iletisim.telefon}`;
-$('[data-year]').textContent = `© ${new Date().getFullYear()} ${d.isletme.ad} · Fotoğraflar: Pexels · 3D sahne bu site için kodla çizildi`;
+$('[data-year]').textContent = `© ${new Date().getFullYear()} ${d.isletme.ad} · Fotoğraflar: Pexels (temsilî) · 3D görseller temsilîdir · Yorumlar örnektir`;
 
 const mapBox = $('[data-map]');
 new IntersectionObserver((entries, obs) => {
@@ -129,17 +131,41 @@ const base = { fill: 0.8, flow: 0, speed: 0.1, regGlow: 0, inj: 0, burn: 0, ambe
 const KF = [
   { ...base, p: 0, bg: NIGHT, fg: LIGHT, call: '#2447ff', cam: [0, 0.1, 5.6], look: [0, 0, 0], pd: 2.05, fx: 1.35, fy: 1.6, flat: 0, tank: 0, flame: 1, rim: 3, env: 0.35 },
   { ...base, p: 0.16, bg: ICE, fg: INK, call: '#2447ff', cam: [2.6, 2.9, 3.6], look: [0.1, -0.1, 0], pd: 1.95, fx: 1.3, fy: 1.5 },
-  { ...base, p: 0.32, bg: '#ffb21e', fg: INK, call: INK, cam: [2.3, 1.6, 2.2], look: [1.0, 0.4, 0.05], pd: 1.6, fx: 1.1, fy: 1.35, fill: 0.5, flow: 1, speed: 0.08, env: 1 },
+  { ...base, p: 0.32, bg: '#ffb21e', fg: INK, call: INK, cam: [2.3, 1.6, 2.2], look: [1.0, 0.4, 0.05], pd: 1.6, fx: 1.75, fy: 1.35, fill: 0.5, flow: 1, speed: 0.08, env: 1 },
   { ...base, p: 0.48, bg: '#2447ff', fg: '#ffffff', call: INK, cam: [5.4, 1.5, 1.0], look: [3.75, 0.55, -0.6], pd: 1.9, fx: 1.0, fy: 1.35, flow: 1, speed: 0.08, regGlow: 1, rim: 1, env: 0.9 },
   { ...base, p: 0.64, bg: '#070a18', fg: LIGHT, call: '#2447ff', cam: [8.4, 1.95, 3.0], look: [6.95, 0.45, -0.35], pd: 2.1, fx: 1.1, fy: 1.35, flow: 1, speed: 0.1, inj: 1, rim: 3.5, env: 0.55 },
   { ...base, p: 0.8, bg: '#e6eef5', fg: INK, call: '#2447ff', cam: [12.95, 1.65, 4.15], look: [11.6, 0.5, -0.3], pd: 2.25, fx: 1.0, fy: 1.35, flow: 0.4, inj: 0.4, burn: 1, amber: 0.3, env: 1 },
   { ...base, p: 0.95, bg: NIGHT, fg: LIGHT, call: '#2447ff', cam: [6.6, 10.5, 21.4], look: [5.8, 0.2, -0.3], pcam: [15.5, 6.5, 7.5], pd: 1, fx: 1.95, fy: 1.2, flow: 1, inj: 1, burn: 1, regGlow: 0.7, rim: 3, env: 0.6 },
 ];
-KF.forEach((k) => { k.pcam ||= k.cam; });
-KF.push({ ...KF[6], p: 1 });
+KF.forEach((k) => { k.pcam ||= k.cam; k.p0 = k.p1 = k.p; });
+KF.push({ ...KF[6], p: 1, p0: 1, p1: 1 });
 const FINALE = { ...KF[0], cam: [0, 0.05, 5.2], pcam: [0, 0.05, 5.2], pd: 2.1, fx: 0, fy: 2.0, env: 0.3 };
-const CENTERS = KF.slice(0, 7).map((k) => k.p);
-const HOLD = 0.04;
+
+// Durak aralıkları DOM'dan: kart yapışınca başlar, bırakınca biter (film ilerlemesi 0..1)
+const filmEl = $('[data-film]');
+const stopEls = $$('[data-stop]');
+const overEl = $('[data-over]');
+const mobileQ = matchMedia('(max-width: 759px)');
+function measure() {
+  const vh = innerHeight;
+  const total = Math.max(1, filmEl.offsetHeight - vh);
+  const m = mobileQ.matches;
+  stopEls.forEach((el, i) => {
+    const card = el.firstElementChild;
+    const padTop = parseFloat(getComputedStyle(el).paddingTop) || 0;
+    // telefonda kart altta yapışır, masaüstünde üstten %22'de
+    const stick = m ? el.offsetTop + padTop + card.offsetHeight + 100 - vh : el.offsetTop + padTop - vh * 0.22;
+    const release = m ? el.offsetTop + el.offsetHeight - vh : el.offsetTop + el.offsetHeight - card.offsetHeight - vh * 0.22 - (parseFloat(getComputedStyle(el).paddingBottom) || 0);
+    const k = KF[i + 1];
+    k.p0 = clamp((stick - vh * 0.1) / total);
+    k.p1 = clamp(release / total);
+    k.p = (k.p0 + k.p1) / 2;
+  });
+  KF[0].p0 = 0;
+  KF[0].p1 = clamp((stopEls[0].offsetTop - vh * 1.05) / total);
+  KF[6].p0 = KF[6].p = clamp((overEl.offsetTop - vh * 0.5) / total);
+  KF[6].p1 = 1;
+}
 
 function mixK(a, b, t) {
   const o = {};
@@ -157,9 +183,9 @@ function mixK(a, b, t) {
 }
 function filmState(p) {
   let i = 0;
-  while (i < KF.length - 2 && p > KF[i + 1].p) i++;
+  while (i < KF.length - 2 && p > KF[i + 1].p0) i++;
   const a = KF[i], b = KF[i + 1];
-  const t = smooth(seg(p, a.p + (i === 0 ? 0.03 : HOLD), b.p - HOLD));
+  const t = smooth(seg(p, a.p1, b.p0));
   const s = mixK(a, b, t);
   // alev tanka dönüşürken: önce alev söner, sonra tank belirir
   if (i === 0) {
@@ -179,6 +205,9 @@ const root = document.documentElement;
 const backdrop = $('[data-backdrop]');
 const chaps = $$('[data-chap]');
 const chapBox = $('[data-chapters]');
+const scrim = $('[data-scrim]');
+const filmui = $('[data-filmui]');
+const inst = $('[data-inst]');
 const stops = $$('[data-route-stops] li');
 const routeFill = $('[data-route-fill]');
 const routeDot = $('[data-route-dot]');
@@ -212,7 +241,7 @@ function endIntro() {
 if (!reducedMotion) {
   gsap.set(chars, { yPercent: 115, opacity: 0 });
   gsap.set(['.hero__kicker', '.hero__slogan', '.hero__cta', '.top', '.route'], { autoAlpha: 0, y: 14 });
-  const tl = gsap.timeline({ delay: 1.3 });
+  const tl = gsap.timeline({ delay: 0.7 });
   tl.to(chars, { yPercent: 0, opacity: 1, duration: 0.9, ease: 'expo.out', stagger: 0.035 })
     .to(['.hero__kicker', '.hero__slogan', '.hero__cta'], { autoAlpha: 1, y: 0, duration: 0.6, stagger: 0.08, ease: 'power3.out' }, '-=0.55')
     .to(['.top', '.route'], { autoAlpha: 1, y: 0, duration: 0.6, ease: 'power3.out', onComplete: endIntro }, '<');
@@ -222,8 +251,37 @@ if (!reducedMotion) {
   addEventListener('wheel', skip, { once: true, passive: true });
 }
 
+// Telefonda güzergâh + hat okuması başlığın içine (tek üst öğe), masaüstünde sahnenin üstünde
+function placeInst() {
+  if (mobileQ.matches) inst.append(route, meter);
+  else filmui.append(route, meter);
+}
+placeInst();
+mobileQ.addEventListener('change', () => { placeInst(); ScrollTrigger.refresh(); });
+ScrollTrigger.addEventListener('refresh', measure);
+measure();
+
 // Tetikleyiciler
 const trg = {};
+if (!reducedMotion) {
+  // Duraklar boyunca hikâye modu: alt çubuk iner (hero ve sonrası çubuklu)
+  ScrollTrigger.create({
+    trigger: chapBox, start: 'top 70%', end: () => `bottom ${Math.round(innerHeight * 0.9)}px`,
+    onToggle: (st) => setStoryMode(st.isActive ? true : null),
+  });
+  // Kart durakta belirir, çekilirken kaybolur (görünmezken dokunmayı almaz)
+  chaps.forEach((card) => {
+    const stop = card.parentElement;
+    gsap.fromTo(card, { autoAlpha: 0, y: 36 }, {
+      autoAlpha: 1, y: 0, ease: 'power2.out', immediateRender: true,
+      scrollTrigger: { trigger: stop, start: () => (mobileQ.matches ? `top+=${Math.round(innerHeight * 0.3)} bottom` : 'top 75%'), end: () => (mobileQ.matches ? `top+=${Math.round(innerHeight * 0.38)} 78%` : 'top 30%'), scrub: 0.4 },
+    });
+    gsap.fromTo(card, { autoAlpha: 1, y: 0 }, {
+      autoAlpha: 0, y: -30, ease: 'power1.in', immediateRender: false,
+      scrollTrigger: { trigger: stop, start: () => (mobileQ.matches ? 'bottom bottom' : 'bottom 85%'), end: () => (mobileQ.matches ? 'bottom 72%' : 'bottom 55%'), scrub: 0.4 },
+    });
+  });
+}
 trg.film = ScrollTrigger.create({ trigger: film, start: 'top top', end: 'bottom bottom' });
 trg.after = ScrollTrigger.create({ trigger: film, start: 'bottom bottom', end: 'bottom 35%' });
 trg.finale = ScrollTrigger.create({ trigger: '[data-finale]', start: 'top top', end: 'bottom bottom' });
@@ -286,41 +344,26 @@ $$('.path, .finale').forEach((sec) => {
 });
 
 // --- Döngü ------------------------------------------------------------------------------
-let lastBg = '', lastFg = '', lastCall = '';
+let lastBg = '', lastFg = '', lastCall = '', lastInst = null;
 let active = -2, lastFiring = -9, lastHal = '';
 let frames = 0, slow = 0, qualityDropped = false, lastT = performance.now();
 
 function chapterIdx(p) {
-  let idx = -1;
-  CENTERS.forEach((c, i) => { if (i > 0 && Math.abs(p - c) < 0.07) idx = i - 1; });
-  return idx;
+  for (let i = 1; i <= 6; i++) if (p >= KF[i].p0 && p < KF[i].p1) return i - 1;
+  return -1;
 }
 
 function uiFilm(p, s) {
-  const heroOut = seg(p, 0.025, 0.08);
-  hero.style.opacity = String(1 - heroOut);
-  hero.style.transform = `translate3d(0, ${-heroOut * 60}px, 0)`;
-  hero.style.visibility = heroOut >= 1 ? 'hidden' : 'visible';
   hint.style.opacity = String(introDone ? 1 - seg(p, 0.004, 0.03) : 0);
-  const mv = seg(p, 0.1, 0.15) * (1 - seg(p, 0.975, 1));
+  const mv = introDone ? seg(p, KF[1].p0 - 0.03, KF[1].p0) * (1 - seg(p, KF[6].p0, KF[6].p0 + 0.03)) : 0;
   meter.style.opacity = String(mv);
   meter.style.visibility = mv > 0.01 ? 'visible' : 'hidden';
-
-  let maxW = 0;
-  CENTERS.forEach((c, i) => {
-    if (i === 0) return;
-    const w = 1 - seg(Math.abs(p - c), 0.04, 0.07);
-    const card = chaps[i - 1];
-    const dir = p < c ? 1 : -1;
-    card.style.opacity = String(w);
-    card.style.transform = `translate3d(0, ${(1 - w) * 46 * dir}px, 0)`;
-    card.style.visibility = w > 0.01 ? 'visible' : 'hidden';
-    maxW = Math.max(maxW, w);
-  });
-  chapBox.style.setProperty('--scrim', maxW.toFixed(3));
+  let sc = 0;
+  for (let i = 1; i <= 6; i++) sc = Math.max(sc, seg(p, KF[i].p0 - 0.02, KF[i].p0) * (1 - seg(p, KF[i].p1, KF[i].p1 + 0.02)));
+  scrim.style.opacity = sc.toFixed(3);
 
   // güzergâh
-  const rp = seg(p, CENTERS[1], CENTERS[6]);
+  const rp = seg(p, KF[1].p, KF[6].p0);
   routeFill.style.transform = `scaleX(${rp.toFixed(4)})`;
   routeDot.style.left = `${(rp * 100).toFixed(2)}%`;
   const idx = chapterIdx(p);
@@ -328,7 +371,7 @@ function uiFilm(p, s) {
     active = idx;
     stops.forEach((st, i) => {
       st.classList.toggle('is-on', i === idx);
-      st.classList.toggle('is-past', i < idx || (idx === -1 && p > CENTERS[i + 1]));
+      st.classList.toggle('is-past', i < idx || (idx === -1 && p > KF[i + 1].p1));
     });
     const c = CH[Math.max(0, idx)];
     if (c && c.hal !== lastHal) {
@@ -349,14 +392,13 @@ function uiFilm(p, s) {
   }
 }
 
-const mobileQ = matchMedia('(max-width: 759px)');
 function tick() {
   const now = performance.now();
   const time = (now - t0) / 1000;
   const dt = now - lastT;
   lastT = now;
 
-  if (introK < 1) introK = Math.min(1, introK + dt / 2600);
+  if (introK < 1) introK = Math.min(1, introK + dt / 2000);
   const ik = smooth(introK);
   if (!reducedMotion && ignitePct && introK < 1) ignitePct.textContent = String(Math.round(ik * 100));
 
@@ -389,8 +431,12 @@ function tick() {
 
   const vis = finaleIn > 0 ? smooth(finaleIn) : 1 - smooth(afterFilm);
   canvas.style.opacity = vis.toFixed(3);
-  chapBox.style.opacity = String(1 - seg(afterFilm, 0, 0.25));
-  route.style.opacity = String(introDone ? (mobileQ.matches ? smooth(seg(filmP, 0.03, 0.09)) : 1) * (1 - smooth(seg(afterFilm, 0, 0.3))) : 0);
+  const fuD = afterFilm >= 1 ? 'none' : '';
+  if (filmui.style.display !== fuD) filmui.style.display = fuD;
+  const rop = introDone ? (mobileQ.matches ? smooth(seg(filmP, KF[0].p1 * 0.6, KF[0].p1 + 0.01)) : 1) * (1 - smooth(seg(afterFilm, 0, 0.3))) : 0;
+  route.style.opacity = String(rop);
+  const instOn = rop > 0.01;
+  if (instOn !== lastInst) { top.classList.toggle('has-inst', instOn); lastInst = instOn; }
 
   if (S && vis > 0.01 && !document.hidden) {
     S.render(s);

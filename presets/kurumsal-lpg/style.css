@@ -104,7 +104,8 @@ body {
 .ml-hat .k-lead { color: var(--k-koyu-soluk); }
 .ml-hat .ml-etiket { color: var(--k-koyu-soluk); }
 .ml-hat__ic { display: grid; gap: 44px; }
-.ml-hat__foto { display: none; margin: 32px 0 0; border-radius: var(--k-radius-buyuk); overflow: hidden; aspect-ratio: 4 / 3; }
+.ml-hat__foto { display: block; position: relative; margin: 28px 0 0; border-radius: var(--k-radius-buyuk); overflow: hidden; aspect-ratio: 4 / 3; background: #102b24; }
+.ml-hat__foto figcaption { position: absolute; left: 12px; bottom: 12px; padding: 6px 10px; border-radius: 999px; background: rgb(11 34 28 / .78); color: #cfe7da; font: 500 12px/1.2 var(--k-font-govde); }
 .ml-hat__foto img { width: 100%; height: 100%; object-fit: cover; }
 @media (min-width: 900px) {
   .ml-hat__ic { grid-template-columns: 5fr 6fr; gap: 80px; align-items: start; }
@@ -168,7 +169,7 @@ body {
 .ml-tank__yil { font-family: var(--k-font-baslik); font-weight: 700; font-size: clamp(56px, 8vw, 84px); line-height: .9; letter-spacing: -.05em; font-variant-numeric: tabular-nums; }
 .ml-tank__adim { width: 52px; height: 52px; border-radius: 50%; border: 1.5px solid var(--k-cizgi); background: transparent; font-size: 26px; line-height: 1; cursor: pointer; color: var(--k-metin); transition: background .2s, color .2s; }
 .ml-tank__adim:hover { background: var(--k-metin); color: var(--k-zemin); }
-.ml-tank__secim input[type=range] { -webkit-appearance: none; appearance: none; width: 100%; height: 34px; background: transparent; cursor: pointer; margin: 0; }
+.ml-tank__secim input[type=range] { -webkit-appearance: none; appearance: none; width: 100%; height: 44px; background: transparent; cursor: pointer; margin: 0; }
 .ml-tank__secim input[type=range]::-webkit-slider-runnable-track { height: 10px; border-radius: 10px; background: linear-gradient(90deg, var(--k-metin) var(--ilerleme, 50%), rgb(11 34 28 / .14) var(--ilerleme, 50%)); }
 .ml-tank__secim input[type=range]::-moz-range-track { height: 10px; border-radius: 10px; background: rgb(11 34 28 / .14); }
 .ml-tank__secim input[type=range]::-moz-range-progress { height: 10px; border-radius: 10px; background: var(--k-metin); }

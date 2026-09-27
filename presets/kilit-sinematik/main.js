@@ -4,7 +4,7 @@ import '../../shared/base.css';
 import './style.css';
 import {
   boot, initSmoothScroll, reducedMotion, telHref, waHref, mapsHref, mapsEmbed,
-  openStatus, groupedHours, icons, esc, gsap, ScrollTrigger,
+  openStatus, groupedHours, icons, esc, gsap, ScrollTrigger, setStoryMode,
 } from '../../shared/core.js';
 import { SplitText } from 'gsap/SplitText';
 import { DrawSVGPlugin } from 'gsap/DrawSVGPlugin';
@@ -66,12 +66,14 @@ $('[data-status-big]').classList.toggle('is-open', status.open);
 const FILM = d.film;
 $('[data-rail]').innerHTML = FILM.map((f, i) => `<li data-rail-i><b>0${i + 1}</b><span>${esc(f.etiket.split('·')[1]?.trim() ?? '')}</span></li>`).join('');
 $('[data-cards]').innerHTML = FILM.map((f) => `
+  <div class="stop" data-stop>
   <article class="card" data-card="${esc(f.id)}">
     <p class="card__tag">${esc(f.etiket)}</p>
     <h2 class="card__title">${esc(f.baslik)}</h2>
     <p class="card__text">${esc(f.metin)}</p>
     <p class="card__foot"><span class="card__time">${esc(f.sure)}</span><a class="card__wa" href="${esc(waHref(d, `Merhaba ${d.isletme.ad}, ${f.hizmet.toLocaleLowerCase('tr')} için bilgi almak istiyorum. Araç: `))}" target="_blank" rel="noopener">${icons.whatsapp}<span>Sorun</span></a></p>
-  </article>`).join('');
+  </article>
+  </div>`).join('');
 
 // Kesim kodu: diş derinliği 1-9
 const CODE = CUTS.map((c) => Math.round((0.32 - c) / 0.04));
@@ -142,7 +144,7 @@ $('[data-gallery]').innerHTML = galeri.map((g) => `<figure class="gallery__item"
 // Yorumlar
 $('[data-puan]').textContent = nf(d.puan.ortalama, 1);
 $('[data-stars]').innerHTML = icons.star.repeat(5);
-$('[data-puan-adet]').textContent = `${nf(d.puan.adet)} Google yorumu`;
+$('[data-puan-adet]').textContent = `örnek puan · ${nf(d.puan.adet)} değerlendirme`;
 $('[data-reviews]').innerHTML = d.yorumlar.map((y) => `
   <figure class="rev">
     <p class="rev__stars" aria-label="${y.puan} yıldız">${icons.star.repeat(y.puan)}</p>
@@ -193,11 +195,36 @@ const POSES = () => {
     over: { pos: V(0.2, 3.8, 10.5), look: V(-1.6, 0.2, 0), fov: 40 },
   };
 };
-const KF = [
-  [0, 'hero'], [0.07, 'hero'], [0.13, 'cut'], [0.29, 'cut'], [0.34, 'lock'], [0.47, 'lock'], [0.53, 'turn'],
-  [0.555, 'turn'], [0.6, 'chip'], [0.715, 'chip'], [0.76, 'fob'], [0.875, 'fob'], [0.93, 'over'], [1, 'over'],
+// Durak aralıkları DOM'dan ölçülür (film ilerlemesi 0..1): kart yapışınca başlar, bırakınca biter
+const filmEl = $('[data-film]');
+const stopEls = $$('[data-stop]');
+const overEl = $('[data-over]');
+let R = FILM.map((_, i) => [0.12 + i * 0.2, 0.28 + i * 0.2]);
+let OVER = 0.92, HERO_END = 0.08;
+function measure() {
+  const vh = innerHeight;
+  const total = Math.max(1, filmEl.offsetHeight - vh);
+  const m = mobile();
+  R = stopEls.map((el) => {
+    const card = el.firstElementChild;
+    const padTop = parseFloat(getComputedStyle(el).paddingTop) || 0;
+    const padBot = parseFloat(getComputedStyle(el).paddingBottom) || 0;
+    const stick = m ? el.offsetTop + padTop + card.offsetHeight + 100 - vh : el.offsetTop + padTop - vh * 0.5 + card.offsetHeight / 2;
+    const release = m ? el.offsetTop + el.offsetHeight - vh : el.offsetTop + el.offsetHeight - padBot - card.offsetHeight / 2 - vh * 0.5;
+    return [clamp((stick - vh * 0.1) / total), clamp(release / total)];
+  });
+  OVER = clamp((overEl.offsetTop - vh * 0.5) / total);
+  HERO_END = clamp((stopEls[0].offsetTop - vh * 0.9) / total);
+}
+const at = (i, u) => L(R[i][0], R[i][1], u);
+const sp = (p, i, u0, j, u1) => seg(p, at(i, u0), at(j, u1));
+const keyframes = () => [
+  [0, 'hero'], [HERO_END * 0.5, 'hero'], [R[0][0], 'cut'], [R[0][1], 'cut'], [R[1][0], 'lock'], [at(1, 0.6), 'lock'],
+  [at(1, 0.87), 'turn'], [R[1][1], 'turn'], [R[2][0], 'chip'], [R[2][1], 'chip'], [R[3][0], 'fob'], [R[3][1], 'fob'],
+  [OVER, 'over'], [1, 'over'],
 ];
-const CARD_RANGES = [[0.12, 0.3], [0.335, 0.56], [0.575, 0.725], [0.745, 0.885]];
+let KF = keyframes();
+function remeasure() { measure(); KF = keyframes(); }
 
 function filmPose(p) {
   const P = POSES();
@@ -214,39 +241,41 @@ function filmPose(p) {
 
 function filmState(p, time) {
   const pose = filmPose(p);
-  const idle = 1 - seg(p, 0.06, 0.12) + seg(p, 0.9, 0.95);
+  const idle = 1 - seg(p, HERO_END * 0.5, R[0][0]) + seg(p, R[3][1], OVER);
   pose.pos.x += Math.sin(time * 0.35) * 0.25 * idle;
   pose.pos.y += Math.sin(time * 0.5) * 0.12 * idle;
-  const cut = smooth(seg(p, 0.14, 0.28));
-  const slide = smooth(seg(p, 0.335, 0.445));
+  const cut = smooth(sp(p, 0, 0.11, 0, 0.89));
+  const slide = smooth(sp(p, 1, 0, 1, 0.49));
   return {
     ...pose,
     cut,
-    cutting: p > 0.135 && p < 0.285,
-    bench: seg(p, 0.08, 0.12) * (1 - seg(p, 0.3, 0.33)),
+    cutting: p > at(0, 0.08) && p < at(0, 0.92),
+    bench: seg(p, R[0][0] - 0.03, R[0][0]) * (1 - sp(p, 0, 1.0, 0, 1.17)),
     tipX: L(TIP_OUT, TIP_IN, slide),
-    shear: seg(p, 0.44, 0.46) * (1 - seg(p, 0.56, 0.6)) * (1 + Math.sin(time * 6) * 0.15),
-    turn: -Math.PI / 2 * smooth(seg(p, 0.475, 0.53)),
-    xray: smooth(seg(p, 0.585, 0.62)) * (1 - seg(p, 0.9, 0.95) * 0.6),
-    rf: seg(p, 0.61, 0.64) * (1 - seg(p, 0.72, 0.745)),
-    fob: smooth(seg(p, 0.7, 0.75)),
-    flip: smooth(seg(p, 0.765, 0.8)),
-    explode: smooth(seg(p, 0.8, 0.85)) * (1 - 0.5 * seg(p, 0.9, 0.95)),
-    press: seg(p, 0.845, 0.86) * (1 - seg(p, 0.88, 0.9)),
+    shear: sp(p, 1, 0.47, 1, 0.56) * (1 - sp(p, 1, 1.0, 1, 1.18)) * (1 + Math.sin(time * 6) * 0.15),
+    turn: -Math.PI / 2 * smooth(sp(p, 1, 0.62, 1, 0.87)),
+    xray: smooth(sp(p, 2, 0.07, 2, 0.3)) * (1 - seg(p, R[3][1], OVER) * 0.6),
+    rf: sp(p, 2, 0.23, 2, 0.43) * (1 - sp(p, 2, 0.97, 2, 1.13)),
+    fob: smooth(sp(p, 2, 0.83, 3, 0.04)),
+    flip: smooth(sp(p, 3, 0.14, 3, 0.39)),
+    explode: smooth(sp(p, 3, 0.39, 3, 0.75)) * (1 - 0.5 * seg(p, R[3][1], OVER)),
+    press: sp(p, 3, 0.71, 3, 0.82) * (1 - sp(p, 3, 0.96, 3, 1.1)),
     env: 0.85,
   };
 }
 
 // --- Film UI -------------------------------------------------------------
 
-const film = $('[data-film]');
-const hero = $('[data-hero]');
+const film = filmEl;
 const cards = $$('[data-card]');
 const railItems = $$('[data-rail-i]');
 const rail = $('[data-rail]');
-const overview = $('[data-overview]');
 const hint = $('[data-hint]');
 const hudCode = $('[data-hud-code]'), hudPins = $('[data-hud-pins]'), hudChip = $('[data-hud-chip]');
+const huds = $('[data-huds]');
+const filmui = $('[data-filmui]');
+const inst = $('[data-inst]');
+const topEl = $('[data-top]');
 const codeDigits = $$('[data-code-digits] span');
 const codeSub = $('[data-code-sub]');
 const pinBars = $$('[data-pinmeter] i b');
@@ -254,9 +283,19 @@ const pinState = $('[data-pin-state]');
 const hexEl = $('[data-hex]'), chipState = $('[data-chip-state]');
 const HEX = ['7A', '3F', '91', 'C2'];
 
+// Telefonda ray + göstergeler başlığın ikinci satırında (tek üst öğe); masaüstünde sahnenin üstünde
+const mobileQ = matchMedia('(max-width: 759px)');
+function placeInst() {
+  if (mobileQ.matches) inst.append(rail, huds);
+  else filmui.append(rail, huds);
+}
+placeInst();
+mobileQ.addEventListener('change', () => { placeInst(); ScrollTrigger.refresh(); });
+
 function vis(el, v, dy = 0) {
   el.style.opacity = v;
   el.style.visibility = v > 0.01 ? 'visible' : 'hidden';
+  el.classList.toggle('is-off', v <= 0.01);
   if (dy) el.style.transform = `translate3d(0, ${(1 - v) * dy}px, 0)`;
 }
 
@@ -265,50 +304,40 @@ function setText(el, key, txt) {
   if (last[key] !== txt) { el.textContent = txt; last[key] = txt; }
 }
 
-function filmUI(p, time) {
-  const heroOut = seg(p, 0.05, 0.1);
-  hero.style.opacity = 1 - heroOut;
-  hero.style.transform = `translate3d(0, ${-heroOut * 40}px, 0)`;
-  hero.style.visibility = heroOut >= 1 ? 'hidden' : 'visible';
+let lastInst = null;
+function filmUI(p, time, inFilm = true) {
   hint.style.opacity = 1 - seg(p, 0, 0.03);
 
-  let active = -1;
-  cards.forEach((card, i) => {
-    const [a, b] = CARD_RANGES[i];
-    const vin = seg(p, a, a + 0.02), vout = seg(p, b - 0.02, b);
-    const v = vin * (1 - vout);
-    card.style.opacity = v;
-    card.style.transform = `translate3d(0, ${(1 - vin) * 36 - vout * 24}px, 0)`;
-    card.style.visibility = v > 0.01 ? 'visible' : 'hidden';
-    if (p >= a && p < b) active = i;
-  });
-  const railOn = seg(p, 0.1, 0.12) * (1 - seg(p, 0.885, 0.9));
+  const active = R.findIndex(([a, b]) => p >= a && p < b);
+  const railOn = inFilm ? seg(p, R[0][0] - 0.03, R[0][0]) * (1 - seg(p, R[3][1], R[3][1] + 0.02)) : 0;
   vis(rail, railOn);
+  const instOn = railOn > 0.01;
+  if (instOn !== lastInst) { topEl.classList.toggle('has-inst', instOn); lastInst = instOn; }
   railItems.forEach((li, i) => {
     li.classList.toggle('is-active', i === active);
-    li.classList.toggle('is-done', p > CARD_RANGES[i][1]);
+    li.classList.toggle('is-done', p > R[i][1]);
   });
 
   // Kesim kodu
-  const cv = seg(p, 0.13, 0.15) * (1 - seg(p, 0.29, 0.31));
+  const cv = inFilm ? sp(p, 0, 0.06, 0, 0.17) * (1 - sp(p, 0, 0.94, 0, 1.06)) : 0;
   vis(hudCode, cv, 16);
   if (cv > 0.01) {
-    const c = smooth(seg(p, 0.14, 0.28));
-    codeDigits.forEach((sp, i) => {
+    const c = smooth(sp(p, 0, 0.11, 0, 0.89));
+    codeDigits.forEach((sp2, i) => {
       const u = PINS[i] - TIP_IN;
       const done = c * 3.25 > u + 0.06;
       const txt = done ? String(CODE[i]) : String(Math.floor(time * 20 + i * 3) % 10);
-      if (sp.textContent !== txt) sp.textContent = txt;
-      sp.classList.toggle('is-set', done);
+      if (sp2.textContent !== txt) sp2.textContent = txt;
+      sp2.classList.toggle('is-set', done);
     });
     setText(codeSub, 'cs', c >= 0.999 ? 'Kesim tamam' : 'Freze ilerliyor');
   }
 
   // Pim ölçer
-  const pv = seg(p, 0.34, 0.36) * (1 - seg(p, 0.545, 0.565));
+  const pv = inFilm ? sp(p, 1, 0.02, 1, 0.11) * (1 - sp(p, 1, 0.93, 1, 1.02)) : 0;
   vis(hudPins, pv, 16);
   if (pv > 0.01) {
-    const slide = smooth(seg(p, 0.335, 0.445));
+    const slide = smooth(sp(p, 1, 0, 1, 0.49));
     const tipX = L(TIP_OUT, TIP_IN, slide);
     let ok = true;
     PINS.forEach((x, i) => {
@@ -319,25 +348,22 @@ function filmUI(p, time) {
       pinBars[i].style.transform = `translate3d(0, ${clamp(-off / 0.6, -1, 1) * 100}%, 0)`;
       pinBars[i].parentElement.classList.toggle('is-ok', Math.abs(off) <= 0.012);
     });
-    const turned = p > 0.5;
+    const turned = p > at(1, 0.73);
     setText(pinState, 'ps', turned ? 'Açık · kontak döndü' : ok ? 'Hizalandı' : 'Kilitli');
     hudPins.classList.toggle('is-ok', ok);
   }
 
   // Çip
-  const chv = seg(p, 0.6, 0.62) * (1 - seg(p, 0.715, 0.735));
+  const chv = inFilm ? sp(p, 2, 0.17, 2, 0.3) * (1 - sp(p, 2, 0.93, 2, 1.07)) : 0;
   vis(hudChip, chv, 16);
   if (chv > 0.01) {
-    const r = seg(p, 0.62, 0.68);
+    const r = sp(p, 2, 0.3, 2, 0.7);
     const n = Math.floor(r * 4.99);
     const hex = HEX.map((h, i) => (i < n ? h : ((Math.floor(time * 18) * (i + 3)) % 256).toString(16).toUpperCase().padStart(2, '0'))).join(' ');
     setText(hexEl, 'hx', hex);
     setText(chipState, 'cs2', r >= 1 ? 'Tanındı · motor çalışır' : 'Okunuyor');
     hudChip.classList.toggle('is-ok', r >= 1);
   }
-
-  const ov = seg(p, 0.905, 0.935) * (1 - seg(p, 0.99, 1));
-  vis(overview, ov, 30);
 }
 
 // --- Kaydırma ve içerik hareketi ---------------------------------------------------
@@ -349,6 +375,29 @@ let filmP = 0, filmTarget = 0, filmST = null;
 function setupScroll() {
   lenis = initSmoothScroll();
   lenis?.stop();
+  ScrollTrigger.addEventListener('refresh', remeasure);
+  remeasure();
+  // Duraklar boyunca hikâye modu: alt çubuk iner (hero ve sonrası çubuklu)
+  ScrollTrigger.create({
+    trigger: '[data-cards]', start: 'top 70%', end: () => `bottom ${Math.round(innerHeight * 0.9)}px`,
+    onToggle: (st) => setStoryMode(st.isActive ? true : null),
+  });
+  // Kart durakta belirir, çekilirken kaybolur (görünmezken dokunmayı almaz)
+  cards.forEach((card) => {
+    const stop = card.parentElement;
+    gsap.fromTo(card, { autoAlpha: 0, y: 36 }, {
+      autoAlpha: 1, y: 0, ease: 'power2.out', immediateRender: true,
+      scrollTrigger: { trigger: stop, start: () => (mobile() ? `top+=${Math.round(innerHeight * 0.3)} bottom` : 'top 70%'), end: () => (mobile() ? `top+=${Math.round(innerHeight * 0.38)} 78%` : 'top 35%'), scrub: 0.4 },
+    });
+    gsap.fromTo(card, { autoAlpha: 1, y: 0 }, {
+      autoAlpha: 0, y: -30, ease: 'power1.in', immediateRender: false,
+      scrollTrigger: { trigger: stop, start: () => (mobile() ? 'bottom bottom' : 'bottom 80%'), end: () => (mobile() ? 'bottom 72%' : 'bottom 50%'), scrub: 0.4 },
+    });
+  });
+  gsap.fromTo('.overview > *', { autoAlpha: 0, y: 30 }, {
+    autoAlpha: 1, y: 0, duration: 0.9, stagger: 0.1, ease: 'power3.out',
+    scrollTrigger: { trigger: '[data-over]', start: 'top 45%', toggleActions: 'play none none reverse' },
+  });
   filmST = ScrollTrigger.create({
     trigger: film, start: 'top top', end: 'bottom bottom',
     onUpdate: (self) => (filmTarget = self.progress),
@@ -453,9 +502,9 @@ function tick(now) {
   filmP += (filmTarget - filmP) * (1 - Math.exp(-dt * 7));
   const active = !filmST || filmST.progress < 1 || canvas.style.opacity !== '0';
   if (active) {
-    filmUI(filmP, time);
+    filmUI(filmP, time, !filmST || filmST.progress < 1);
     S.update(filmState(filmP, time), now);
-  }
+  } else if (lastInst) filmUI(filmP, time, false);
   if (active !== sceneOn) {
     sceneOn = active;
     canvas.style.visibility = active ? 'visible' : 'hidden';
@@ -481,7 +530,7 @@ function runIntro() {
   tl.fromTo('[data-kh-line]', { drawSVG: '0%' }, { drawSVG: '100%', duration: 1, ease: 'power2.inOut' }, 0);
   tl.fromTo('[data-intro-name]', { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.6 }, 0.1);
   tl.to(o, {
-    v: 1, duration: 1.2, ease: 'none',
+    v: 1, duration: 0.95, ease: 'none',
     onUpdate: () => {
       const n = Math.floor(o.v * 5.99);
       codeEl.textContent = CODE.map((c, i) => (i < n ? c : Math.floor(Math.random() * 10))).join(' ');
@@ -491,18 +540,19 @@ function runIntro() {
     S.compile();
     S.update(filmState(0, performance.now() / 1000));
   }, [], 0.3);
-  tl.add(finish, 1.55);
+  tl.add(finish, 1.2);
   function finish() {
     if (done) return;
     done = true;
     tl.kill();
+    intro.style.pointerEvents = 'none';
     codeEl.textContent = CODE.join(' ');
     document.body.classList.remove('is-loading');
     gsap.timeline({ onComplete: () => { intro.remove(); lenis?.start(); } })
       .to('[data-intro-center]', { opacity: 0, y: -10, duration: 0.3, ease: 'power2.in' }, 0)
-      .to('[data-kh], [data-kh-rim]', { attr: { transform: 'translate(50 50) scale(22)' }, duration: 1.1, ease: 'expo.in' }, 0.1)
-      .to('[data-kh-rim]', { opacity: 0, duration: 0.3 }, 0.8)
-      .call(heroIn, [], 0.95);
+      .to('[data-kh], [data-kh-rim]', { attr: { transform: 'translate(50 50) scale(22)' }, duration: 0.9, ease: 'expo.in' }, 0.1)
+      .to('[data-kh-rim]', { opacity: 0, duration: 0.25 }, 0.65)
+      .call(heroIn, [], 0.75);
   }
   intro.addEventListener('pointerdown', finish, { once: true });
   addEventListener('keydown', finish, { once: true });

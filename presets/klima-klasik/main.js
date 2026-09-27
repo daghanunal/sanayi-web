@@ -118,18 +118,26 @@ if (reducedMotion) {
   setTemp(1);
 } else {
   setTemp(0);
-  const tl = gsap.timeline({
-    defaults: { ease: 'none' },
-    scrollTrigger: {
-      trigger: hero, start: 'top top', end: () => `+=${innerHeight * (small ? 1.15 : 1.4)}`,
-      pin: '.hero__pin', scrub: 0.5, anticipatePin: 1,
-    },
-  });
   const m = { p: 0 };
-  tl.to(m, { p: 1, duration: 1, onUpdate: () => setTemp(m.p) }, 0)
-    .fromTo('.hero__stage', { scale: small ? 1.08 : 1 }, { scale: 1, duration: 1 }, 0)
-    .fromTo('.hero__frost', { opacity: 0 }, { opacity: 1, duration: 0.35 }, 0.65)
-    .to('.hero__hint', { opacity: 0, duration: 0.12 }, 0);
+  if (small) {
+    // Telefonda pin yok: ağız kendiliğinden soğur (sıcak kısa bir an görünür, sonra 2,4 sn'de buz gibi).
+    // Kadrana dokununca yeniden oynar.
+    const cool = () => gsap.timeline()
+      .fromTo(m, { p: 0 }, { p: 1, duration: 2.4, ease: 'power1.inOut', onUpdate: () => setTemp(m.p) }, 0)
+      .fromTo('.hero__frost', { opacity: 0 }, { opacity: 1, duration: 0.9 }, 1.5);
+    gsap.delayedCall(1.6, cool);
+  } else {
+    const tl = gsap.timeline({
+      defaults: { ease: 'none' },
+      scrollTrigger: {
+        trigger: hero, start: 'top top', end: () => `+=${innerHeight * 1.4}`,
+        pin: '.hero__pin', scrub: 0.5, anticipatePin: 1,
+      },
+    });
+    tl.to(m, { p: 1, duration: 1, onUpdate: () => setTemp(m.p) }, 0)
+      .fromTo('.hero__frost', { opacity: 0 }, { opacity: 1, duration: 0.35 }, 0.65)
+      .to('.hero__hint', { opacity: 0, duration: 0.12 }, 0);
+  }
 
   // Açılış
   gsap.from('.hero__name', { yPercent: 30, opacity: 0, duration: 0.9, ease: 'power3.out', delay: 0.05 });
@@ -225,7 +233,7 @@ const stars = (n) => Array.from({ length: 5 }, (_, i) => `<span class="${i < n ?
 $('[data-score]').textContent = nf(d.puan.ortalama, 1);
 $('[data-stars]').innerHTML = stars(Math.round(d.puan.ortalama));
 $('[data-stars]').setAttribute('aria-label', `5 üzerinden ${nf(d.puan.ortalama, 1)}`);
-$('[data-review-count]').textContent = `Google'da ${nf(d.puan.adet)} değerlendirme`;
+$('[data-review-count]').textContent = `örnek puan · ${nf(d.puan.adet)} değerlendirme`;
 $('[data-reviews]').innerHTML = d.yorumlar.map((y) => `
   <li class="rev">
     <p class="rev__stars" aria-label="${Number(y.puan)} yıldız">${stars(y.puan)}</p>

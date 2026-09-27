@@ -1,10 +1,13 @@
 // Mavi Hat: gazın yolculuğu. Açılışta mavi alev halkası söner ve simit tanka dönüşür; kamera
 // sonra gazı tanktan çok valfe, bakır hatla regülatöre (sıvı → gaz), enjektör rampasına
-// (1-3-4-2 sırasıyla) ve silindirde mavi yanmaya kadar izler. Hepsi prosedürel three.js.
+// (1-3-4-2 sırasıyla) ve silindirde mavi yanmaya kadar izler. Tank + çok valf, regülatör ve enjektör
+// rampası lib3d'nin fotogerçekçi lpg_kit varlığından (yüklenene kadar kodla çizilmiş yedekler);
+// ışık garaj HDRI'si + gölgeli tepe ışığı. Alev, gaz akışı ve silindir kesiti prosedürel.
 // Durum dışarıdan `render(state)` ile verilir.
 import * as THREE from 'three';
 import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js';
 import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js';
+import { loadAsset, loadEnv, pickQuality } from '../../shared/lib3d.js';
 
 export const POS = {
   tank: new THREE.Vector3(0, 0, 0),
@@ -117,6 +120,9 @@ export function createScene(canvas, { lite = false } = {}) {
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 1.05;
   renderer.outputColorSpace = THREE.SRGBColorSpace;
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFShadowMap;
+  const q = lite ? 'lo' : pickQuality();
 
   const scene = new THREE.Scene();
   const pmrem = new THREE.PMREMGenerator(renderer);
@@ -126,8 +132,14 @@ export function createScene(canvas, { lite = false } = {}) {
 
   const camera = new THREE.PerspectiveCamera(38, 1, 0.05, 80);
   const key = new THREE.DirectionalLight(0xffffff, 2.2);
-  key.position.set(3, 6, 4);
-  scene.add(key);
+  key.position.set(3, 7, 4);
+  key.castShadow = true;
+  key.shadow.mapSize.setScalar(q === 'lo' ? 1024 : 2048);
+  Object.assign(key.shadow.camera, { left: -3, right: 3, top: 3, bottom: -3, near: 1, far: 16 });
+  key.shadow.bias = -0.0005;
+  key.shadow.normalBias = 0.02;
+  key.shadow.radius = 5;
+  scene.add(key, key.target);
   const rim = new THREE.DirectionalLight(0x4d7bff, 3);
   rim.position.set(-4, 2, -5);
   scene.add(rim);
@@ -144,7 +156,7 @@ export function createScene(canvas, { lite = false } = {}) {
     rubber: new THREE.MeshStandardMaterial({ color: 0x14161c, metalness: 0, roughness: 0.7 }),
     alu: new THREE.MeshStandardMaterial({ color: 0x2f55ff, metalness: 0.75, roughness: 0.3 }),
     steel: new THREE.MeshStandardMaterial({ color: 0xb9c2cc, metalness: 1, roughness: 0.22 }),
-    dark: new THREE.MeshStandardMaterial({ color: 0x1b2030, metalness: 0.6, roughness: 0.45 }),
+    dark: new THREE.MeshStandardMaterial({ color: 0x2c313b, metalness: 0.55, roughness: 0.52 }),
     glass: new THREE.MeshStandardMaterial({ color: 0x9fd6ff, metalness: 0.1, roughness: 0.1, transparent: true, opacity: 0.16, depthWrite: false, side: THREE.DoubleSide }),
     dial: new THREE.MeshBasicMaterial({ color: 0xf6f8fb }),
     needle: new THREE.MeshBasicMaterial({ color: 0xff8a1e }),
@@ -244,7 +256,7 @@ export function createScene(canvas, { lite = false } = {}) {
 
   // --- Hatlar ---
   const hose1 = new THREE.CatmullRomCurve3([
-    new THREE.Vector3(0.95, 0.47, 0.12), new THREE.Vector3(1.25, 0.62, 0.2), new THREE.Vector3(1.9, 0.9, 0.25),
+    new THREE.Vector3(0.98, 0.56, 0.02), new THREE.Vector3(1.25, 0.68, 0.14), new THREE.Vector3(1.9, 0.9, 0.25),
     new THREE.Vector3(2.7, 0.75, 0.05), new THREE.Vector3(3.15, 0.56, -0.45), new THREE.Vector3(3.32, 0.55, -0.6),
   ]);
   const hose2 = new THREE.CatmullRomCurve3([
@@ -322,10 +334,12 @@ export function createScene(canvas, { lite = false } = {}) {
     injTip.push(new THREE.Vector3(x, 0.17, -0.16));
   });
   // emme manifoldu ve blok
-  const mani = new THREE.Mesh(new RoundedBoxGeometry(1.7, 0.34, 0.5, 3, 0.08), mat.dark);
+  const castAlu = new THREE.MeshStandardMaterial({ color: 0x9aa0a8, metalness: 0.85, roughness: 0.42 });
+  const castIron = new THREE.MeshStandardMaterial({ color: 0x3b3f46, metalness: 0.6, roughness: 0.62 });
+  const mani = new THREE.Mesh(new RoundedBoxGeometry(1.7, 0.34, 0.5, 3, 0.08), castAlu);
   mani.position.set(6.85, -0.02, -0.25);
   rail.add(mani);
-  const block = new THREE.Mesh(new RoundedBoxGeometry(2.0, 0.7, 1.0, 3, 0.1), mat.dark);
+  const block = new THREE.Mesh(new RoundedBoxGeometry(2.0, 0.7, 1.0, 3, 0.1), castIron);
   block.position.set(6.85, -0.55, -0.55);
   rail.add(block);
 
@@ -341,7 +355,7 @@ export function createScene(canvas, { lite = false } = {}) {
     rr.position.y = y;
     cyl.add(rr);
   }
-  const head = new THREE.Mesh(new THREE.CylinderGeometry(0.58, 0.62, 0.28, 40), mat.dark);
+  const head = new THREE.Mesh(new THREE.CylinderGeometry(0.58, 0.62, 0.28, 40), castAlu);
   head.position.y = 0.8;
   cyl.add(head);
   const plug = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, 0.4, 12), mat.steel);
@@ -430,6 +444,91 @@ export function createScene(canvas, { lite = false } = {}) {
   flow.renderOrder = 6;
   scene.add(flow);
 
+  // Zemin gölgesi (yalnız gölge, zemin rengi arka plandan gelir)
+  const floor = new THREE.Mesh(new THREE.PlaneGeometry(40, 8), new THREE.ShadowMaterial({ color: 0x000014, opacity: 0.28, depthWrite: false }));
+  floor.rotation.x = -Math.PI / 2;
+  floor.position.set(6, -0.5, -0.4);
+  floor.receiveShadow = true;
+  scene.add(floor);
+  [block, mani, railBar].forEach((m) => { m.castShadow = true; });
+
+  // --- Gerçek varlıklar (lpg_kit): tank + çok valf, regülatör, enjektör rampası ---
+  const real = { needle: null, inj: [] };
+  const box3 = new THREE.Box3();
+  // Varlık içinden düğümleri alıp tek grupta toplar; merkez = ilk düğümün kutusunun merkezi
+  function lift(kit, names, pivotName) {
+    const g = new THREE.Group();
+    kit.scene.updateMatrixWorld(true);
+    for (const n of names) if (kit.nodes[n]) g.attach(kit.nodes[n]);
+    const c = box3.setFromObject(kit.nodes[pivotName] || g).getCenter(new THREE.Vector3());
+    g.position.sub(c);
+    const h = new THREE.Group();
+    h.add(g);
+    return h;
+  }
+  function own(root) {
+    const out = [];
+    const cache = new Map();
+    root.traverse((o) => {
+      if (!o.isMesh) return;
+      let m = cache.get(o.material);
+      if (!m) { m = o.material.clone(); cache.set(o.material, m); out.push(m); }
+      o.material = m;
+      o.castShadow = true;
+    });
+    return out;
+  }
+  const realReady = loadAsset('lpg_kit', { quality: q, renderer }).then((kit) => {
+    // Tank: simit çapı 0,636 m → kodla çizilen tankın 2,76 birimine
+    const th = lift(kit, ['tank', 'tank_bracket', 'multivalve'], 'tank');
+    th.scale.setScalar(4.34);
+    th.rotation.y = 0.87; // çok valf +X'e (bakır hattın başına) baksın
+    tank.add(th);
+    [torus, bandM, seam, valve].forEach((o) => { o.visible = false; });
+    tank.children.forEach((o) => { if (o.geometry && o.geometry.type === 'BoxGeometry') o.visible = false; });
+    tankParts.length = 0;
+    tankParts.push(...own(th));
+    const tp = kit.materials.tank_paint && tankParts.find((m) => m.name === 'tank_paint');
+    if (tp) { tp.color.set(0x2a2f38); tp.roughness = 0.32; tp.metalness = 0.55; }
+    real.needle = th.getObjectByName('gauge_needle');
+
+    // Regülatör (buharlaştırıcı): kameraya hafif eğik
+    const rh = lift(kit, ['reducer'], 'reducer');
+    rh.scale.setScalar(4.3);
+    rh.rotation.set(0.85, -0.35, 0);
+    own(rh);
+    reg.children.forEach((o) => { if (o !== regGlow) o.visible = false; });
+    reg.add(rh);
+
+    // Enjektör rampası: dört enjektör 1-3-4-2 sırasıyla yanıp söner
+    const jh = lift(kit, ['injector_rail'], 'injector_rail');
+    jh.scale.setScalar(9.3);
+    jh.position.set(6.85, 0.62, -0.4);
+    own(jh);
+    [1, 2, 3, 4].forEach((k, i) => {
+      const n = jh.getObjectByName('injector_' + k);
+      if (!n) return;
+      const ms = own(n).filter((m) => m.emissive);
+      ms.forEach((m) => m.emissive.set(0x3aa0ff));
+      real.inj[i] = ms;
+    });
+    railBar.visible = false;
+    rail.children.forEach((o) => {
+      if (o.geometry && o.geometry.type === 'CylinderGeometry') o.visible = false;
+    });
+    rail.add(jh);
+    // Kıvılcım noktaları enjektörlerin gerçek yerine
+    jh.updateMatrixWorld(true);
+    [1, 2, 3, 4].forEach((k, i) => {
+      const n = jh.getObjectByName('injector_' + k);
+      if (!n) return;
+      const b = box3.setFromObject(n);
+      injGlow[i].position.set((b.min.x + b.max.x) / 2, b.min.y - 0.02, (b.min.z + b.max.z) / 2 + 0.05);
+    });
+    others = null;
+  }).catch((e) => console.warn('lpg: 3D varlık yüklenemedi, kodla çizilmiş parçalar kalıyor', e));
+  loadEnv('garage', renderer, { quality: q }).then((env) => { scene.environment = env; }).catch(() => {});
+
   // --- Boyut ---
   let W = 1, H = 1;
   function resize() {
@@ -488,6 +587,7 @@ export function createScene(canvas, { lite = false } = {}) {
     hose1M.visible = ta > 0.6;
     tank.scale.setScalar(0.85 + 0.15 * ta);
     needle.rotation.x = -0.6 + s.fill * 1.6;
+    if (real.needle) real.needle.rotation.z = 1.4 - s.fill * 3.4;
 
     FU.uTime.value = time;
     FU.uPower.value = s.flame;
@@ -530,6 +630,7 @@ export function createScene(canvas, { lite = false } = {}) {
       const on = ORDER[slot] === i ? pulse : 0;
       if (on > 0) firing = i;
       mat.injOn[i].emissiveIntensity = on * 3 * s.inj;
+      if (real.inj[i]) for (const m of real.inj[i]) m.emissiveIntensity = on * 1.6 * s.inj;
       injGlow[i].material.opacity = on * s.inj;
       injGlow[i].scale.setScalar(0.3 + on * 0.5);
     });
@@ -563,5 +664,5 @@ export function createScene(canvas, { lite = false } = {}) {
     resize();
   }
 
-  return { render, resize, setQuality };
+  return { render, resize, setQuality, ready: realReady };
 }
