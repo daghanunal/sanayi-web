@@ -218,8 +218,8 @@
 .pv-kart ul { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 16px; }
 .pv-kart li { font-size: 14px; padding: 6px 12px; border-radius: 999px; background: rgb(255 255 255 / .12); border: 1px solid rgb(255 255 255 / .2); }
 .pv-kart__link { color: #fff; }
-.pv-kart__rakam { position: absolute; top: 20px; right: 20px; text-align: right; display: grid; }
-.pv-kart__rakam b { font-family: var(--k-font-baslik); font-weight: 600; font-size: clamp(38px, 4.4vw, 60px); line-height: 1; color: #f0a36b; }
+.pv-kart__rakam { position: absolute; top: 20px; right: 20px; text-align: right; display: grid; gap: 6px; }
+.pv-kart__rakam b { font-family: var(--k-font-baslik); font-weight: 600; font-size: clamp(38px, 4.4vw, 60px); line-height: 1.12; color: #f0a36b; }
 .pv-kart__rakam span { font-family: var(--pk-mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: rgb(255 255 255 / .8); }
 
 /* --- Süreç --- */

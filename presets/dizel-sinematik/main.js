@@ -165,7 +165,7 @@ $('[data-galeri]').innerHTML = d.galeri
 const stars = (n) => Array.from({ length: 5 }, (_, i) => `<i class="${i < n ? 'on' : ''}">${icons.star}</i>`).join('');
 $('[data-puan]').textContent = String(d.puan.ortalama).replace('.', ',');
 $('[data-stars]').innerHTML = stars(5);
-$('[data-puan-adet]').textContent = `${nf.format(d.puan.adet)} Google yorumu`;
+$('[data-puan-adet]').textContent = `Örnek puan · ${nf.format(d.puan.adet)} değerlendirme`;
 $('[data-yorumlar]').innerHTML = d.yorumlar
   .map(
     (y) => `<figure class="yorum"><div class="yorum__stars" aria-label="${y.puan} yıldız">${stars(y.puan)}</div>
@@ -233,7 +233,9 @@ function printFis(mode, animate = true) {
   }
   gsap.timeline()
     .to(fis, { yPercent: -102, duration: 0.35, ease: 'power2.in' })
+    .set(fis, { autoAlpha: 0 })
     .add(() => (fis.innerHTML = fisHTML(mode)))
+    .set(fis, { autoAlpha: 1 })
     .to(fis, { yPercent: 0, duration: 1.3, ease: 'steps(26)' })
     .add(() => {
       $$('td[data-v]', fis).forEach((td, i) => {
@@ -268,25 +270,45 @@ try {
   canvas.remove();
 }
 
-// Patlatılmış görünüş etiketleri
+// Patlatılmış görünüş ve menzür etiketleri: tek SVG içinde (konumlu HTML katmanı yok)
+const NS = 'http://www.w3.org/2000/svg';
 const tagBox = $('[data-tags]');
-tagBox.innerHTML = d.parcalar
-  .map((p, i) => `<div class="tag"><i class="tag__dot"></i><i class="tag__line"></i><p class="tag__txt"><b>${String(i + 1).padStart(2, '0')}</b>${esc(p.ad)}<small>${esc(p.not)}</small></p></div>`)
-  .join('');
-const tags = $$('.tag', tagBox);
-
-// Menzür etiketleri
-const tubeBox = $('[data-tubetags]');
-tubeBox.innerHTML = [0, 1, 2, 3]
-  .map((i) => `<div class="tt"><b>${i + 1}</b><span data-tt>0,0</span></div>`)
-  .join('');
-const tts = $$('.tt', tubeBox);
-const ttVals = $$('[data-tt]', tubeBox);
+const mk = (tag, attrs = {}, parent = tagBox) => {
+  const el = document.createElementNS(NS, tag);
+  for (const [k, v] of Object.entries(attrs)) el.setAttribute(k, v);
+  parent.append(el);
+  return el;
+};
+const tagG = mk('g', { class: 'tags__parts' });
+const tags = d.parcalar.map((p, i) => {
+  const g = mk('g', { class: 'tag' }, tagG);
+  const line = mk('line', { class: 'tag__line', x1: 0, y1: 0, x2: 80, y2: 0 }, g);
+  mk('circle', { class: 'tag__dot', r: 4 }, g);
+  const t = mk('text', { class: 'tag__txt', x: 90, y: 4 }, g);
+  t.innerHTML = `<tspan class="tag__n">${String(i + 1).padStart(2, '0')} </tspan>${esc(p.ad)}`;
+  const sm = mk('text', { class: 'tag__small', x: 90, y: 20 }, g);
+  sm.textContent = p.not;
+  return { g, line, t, sm };
+});
+const ttG = mk('g', { class: 'tags__tubes' });
+const tts = [0, 1, 2, 3].map((i) => {
+  const g = mk('g', { class: 'tt' }, ttG);
+  mk('circle', { class: 'tt__c', r: 11, cy: 0 }, g);
+  const n = mk('text', { class: 'tt__n', y: 4 }, g);
+  n.textContent = String(i + 1);
+  const r = mk('rect', { class: 'tt__r', x: -26, y: 17, width: 52, height: 22, rx: 6 }, g);
+  const v = mk('text', { class: 'tt__v', y: 33 }, g);
+  v.textContent = '0,0';
+  return { g, r, v };
+});
 
 const hud = $('.hud'), codehud = $('.codehud');
 const hudBar = $('[data-hud-bar]'), hudK = $('[data-hud-k]');
 const codeEl = $('[data-code]'), codeState = $('[data-code-state]'), codePct = $('[data-code-pct]'), codeBar = $('[data-code-bar]');
 const rpm = $('[data-rpm]');
+const rpmEl = $('.rpm');
+const hdrEl = $('.hdr');
+let filmOn = true;
 const CODE = '5A7C 3F91';
 const HEX = '0123456789ABCDEF';
 
@@ -302,6 +324,7 @@ if (scene) {
   let lastCh = -1;
   scene.onFrame.push(() => {
     const p = S.p;
+    const inFilm = filmOn;
     // bölüm sayacı
     const ch = p < 0.13 ? 0 : p < 0.42 ? 1 : p < 0.7 ? 2 : p < 0.88 ? 3 : 4;
     if (ch !== lastCh) {
@@ -310,38 +333,49 @@ if (scene) {
     }
     // parça etiketleri
     const e = S.explode;
-    const showTags = e > 0.55;
-    tagBox.classList.toggle('is-on', showTags);
-    if (e > 0.5) {
+    const showTags = e > 0.55 && scene.isReady();
+    tagG.classList.toggle('is-on', showTags);
+    if (showTags) {
       const heroC = scene.project(scene.anchors.part(2));
-      const colX = heroC.x + (phone ? 64 : 150);
-      tags.forEach((tg, i) => {
-        const P = scene.project(scene.anchors.part(i));
+      const colX = Math.min(innerWidth - (phone ? 150 : 260), heroC.x + (phone ? 70 : 170));
+      // yazılar üst üste binmesin: dikeyde en az "gap" aralık
+      const gap = phone ? 17 : 34;
+      const pts = tags.map((tg, i) => ({ tg, P: scene.project(scene.anchors.part(i)) }));
+      const order = [...pts].sort((a, b) => a.P.y - b.P.y);
+      let lastY = -1e9;
+      for (const o of order) { o.ty = Math.max(o.P.y, lastY + gap); lastY = o.ty; }
+      for (const { tg, P, ty } of pts) {
         const len = Math.max(12, colX - P.x);
-        tg.style.transform = `translate3d(${P.x.toFixed(1)}px,${P.y.toFixed(1)}px,0)`;
-        tg.style.setProperty('--len', `${len.toFixed(0)}px`);
-      });
+        const dy = ty - P.y;
+        tg.g.setAttribute('transform', `translate(${P.x.toFixed(1)} ${P.y.toFixed(1)})`);
+        tg.line.setAttribute('x2', len.toFixed(0));
+        tg.line.setAttribute('y2', dy.toFixed(1));
+        tg.t.setAttribute('x', (len + 8).toFixed(0));
+        tg.t.setAttribute('y', (dy + 4).toFixed(1));
+        tg.sm.setAttribute('x', (len + 8).toFixed(0));
+        tg.sm.setAttribute('y', (dy + 20).toFixed(1));
+      }
     }
     // menzür etiketleri
     const showTT = S.bench > 0.98 && S.fill > 0.02 && p < 0.9;
-    tubeBox.classList.toggle('is-on', showTT);
+    ttG.classList.toggle('is-on', showTT);
     if (showTT) {
       tts.forEach((tt, i) => {
-        const P = scene.project(scene.anchors.tubeBottom(i));
-        tt.style.transform = `translate3d(${P.x.toFixed(1)}px,${P.y.toFixed(1)}px,0)`;
+        const P = scene.project(phone ? scene.anchors.tubeUpper(i) : scene.anchors.tubeBottom(i));
+        tt.g.setAttribute('transform', `translate(${P.x.toFixed(1)} ${P.y.toFixed(1)})`);
         let v = TAM[i] * S.fill;
         let bad = false;
         if (i === 2) {
           if (S.redo < 0.35) { v = TAM[i] * S.fill * (1 - smooth(0, 0.35, S.redo)); bad = S.fill > 0.6; }
           else v = C.sonra[2][0] * smooth(0.45, 1, S.redo);
         }
-        ttVals[i].textContent = dec(v, 1);
-        tt.classList.toggle('is-bad', bad);
-        tt.classList.toggle('is-ok', i === 2 && S.redo > 0.99);
+        tt.v.textContent = dec(v, 1);
+        tt.g.classList.toggle('is-bad', bad);
+        tt.g.classList.toggle('is-ok', i === 2 && S.redo > 0.99);
       });
     }
     // HUD
-    const showHud = p > 0.49 && p < 0.7;
+    const showHud = inFilm && p > 0.49 && p < 0.7;
     setVis(hud, showHud, '_on');
     if (showHud) {
       hudBar.style.transform = `scaleX(${S.fill.toFixed(3)})`;
@@ -349,8 +383,11 @@ if (scene) {
       hud.classList.toggle('is-bad', S.fill > 0.6 && S.redo < 0.02);
     }
     // kod HUD
-    const showCode = p > 0.73 && p < 0.89;
+    const showCode = inFilm && p > 0.73 && p < 0.89;
     setVis(codehud, showCode, '_on');
+    // telefonda gösterge görünürken başlık yukarı kaçar: üstte tek öğe
+    hdrEl.classList.toggle('is-away', phone && (showHud || showCode));
+    setVis(rpmEl, !phone && inFilm && p > 0.03, '_on');
     if (showCode) {
       const k = S.code;
       const n = Math.floor(k * CODE.length);
@@ -402,16 +439,16 @@ function playIntro() {
     const o = { v: 0 };
     const MAX = 1800;
     const tl = gsap.timeline({ onComplete: finish });
-    tl.fromTo('.intro__fill', { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 1.5, ease: 'power3.in' }, 0)
+    tl.fromTo('.intro__fill', { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 1.1, ease: 'power3.in' }, 0)
       .to(o, {
-        v: MAX, duration: 1.5, ease: 'power3.in',
+        v: MAX, duration: 1.1, ease: 'power3.in',
         onUpdate: () => (num.textContent = nf.format(Math.round(o.v / 10) * 10)),
       }, 0)
-      .to('.intro__core', { x: 2, duration: 0.04, yoyo: true, repeat: 5, ease: 'none' }, 1.3)
+      .to('.intro__core', { x: 2, duration: 0.04, yoyo: true, repeat: 5, ease: 'none' }, 0.9)
       .add(() => intro.classList.add('is-burst'))
-      .fromTo('.intro__burst line', { scale: 0.1, autoAlpha: 1, transformOrigin: '0px 0px' }, { scale: 1.8, autoAlpha: 0, duration: 0.9, ease: 'expo.out', stagger: { each: 0.002, from: 'random' } })
+      .fromTo('.intro__burst line', { scale: 0.1, autoAlpha: 1, transformOrigin: '0px 0px' }, { scale: 1.8, autoAlpha: 0, duration: 0.6, ease: 'expo.out', stagger: { each: 0.0015, from: 'random' } })
       .to('.intro__core', { scale: 1.12, autoAlpha: 0, duration: 0.35, ease: 'power2.in' }, '<')
-      .fromTo(intro, { '--r': '0%' }, { '--r': '160%', duration: 0.9, ease: 'expo.inOut' }, '<0.05');
+      .fromTo(intro, { '--r': '0%' }, { '--r': '160%', duration: 0.6, ease: 'expo.inOut' }, '<0.05');
     gsap.from('.intro__name', { yPercent: 40, autoAlpha: 0, duration: 0.6, ease: 'power3.out', delay: 0.15 });
     intro.addEventListener('pointerdown', () => tl.progress(0.999), { once: true });
     function finish() {
@@ -426,62 +463,77 @@ function playIntro() {
 
 function heroIn() {
   const split = splitHead($('.hero__title'));
-  gsap.set('.chap--hero', { autoAlpha: 1 });
   const tl = gsap.timeline();
   tl.from(split.chars, { yPercent: 118, duration: 0.9, ease: 'expo.out', stagger: 0.025 })
     .from(['.chap__since', '.hero__lead', '.hero__cta', '.hero__hint'], { autoAlpha: 0, y: 18, duration: 0.6, stagger: 0.08, ease: 'power3.out' }, 0.25)
-    .from('.rpm', { autoAlpha: 0, x: -10, duration: 0.5 }, 0.5);
+
   return tl;
 }
 
-let filmST = null;
+// Film ilerlemesi: her bölüm kartının ekranda durduğu kaydırma konumu sahnedeki bir ana eşlenir.
+const CH_P = [0, 0.27, 0.575, 0.795, 0.955, 1];
+let filmST = null, anchors = [0, 1, 2, 3, 4, 5], filmP = 0, targetP = 0;
+function measureFilm() {
+  const film = $('.film');
+  const top = film.getBoundingClientRect().top + scrollY;
+  const f = phone ? 0.64 : 0.5;
+  const mids = $$('.chap', film).slice(1).map((el) => {
+    const inner = $('.chap__in', el);
+    if (getComputedStyle(inner).position === 'sticky') return el.getBoundingClientRect().top + scrollY + parseFloat(getComputedStyle(el).paddingTop) + inner.offsetHeight / 2 - innerHeight * f;
+    const r = inner.getBoundingClientRect();
+    return r.top + scrollY + r.height / 2 - innerHeight * f;
+  });
+  const end = top + film.offsetHeight - innerHeight * 0.6;
+  anchors = [top, ...mids, Math.max(end, mids.at(-1) + 1)];
+  for (let i = 1; i < anchors.length; i++) anchors[i] = Math.max(anchors[i], anchors[i - 1] + 1);
+}
+function scrollToP(y) {
+  if (y <= anchors[0]) return 0;
+  for (let i = 1; i < anchors.length; i++) {
+    if (y < anchors[i]) return CH_P[i - 1] + (CH_P[i] - CH_P[i - 1]) * (y - anchors[i - 1]) / (anchors[i] - anchors[i - 1]);
+  }
+  return 1;
+}
 function buildFilm() {
   const chaps = $$('.chap');
-  const dur = phone ? 7.5 : 8;
-  const W = [
-    [-1, 0.11],
-    [0.11, 0.405],
-    [0.405, 0.68],
-    [0.68, 0.87],
-    [0.87, 1.1],
-  ];
-  const tl = gsap.timeline({ paused: true, defaults: { ease: 'none' } });
-  chaps.forEach((el, i) => {
-    const [a, b] = W[i];
-    const title = $('.chap__title, .hero__title', el);
+  // bölüm başlıkları girerken harf harf yükselir
+  chaps.slice(1).forEach((el) => {
+    const title = $('.chap__title', el);
     const split = title ? splitHead(title) : null;
-    if (i > 0) {
-      tl.fromTo(el, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.012 }, a);
-      if (split) tl.fromTo(split.chars, { yPercent: 118 }, { yPercent: 0, stagger: 0.0014, duration: 0.03, ease: 'power3.out' }, a);
-      tl.fromTo($$('.antet, .chap__txt', el), { autoAlpha: 0, y: 16 }, { autoAlpha: 1, y: 0, duration: 0.03, stagger: 0.01 }, a + 0.01);
-    }
-    if (b < 1) {
-      if (split) tl.to(split.chars, { yPercent: -118, stagger: 0.001, duration: 0.025, ease: 'power2.in' }, b - 0.035);
-      tl.to(el, { autoAlpha: 0, duration: 0.02 }, b - 0.02);
-    }
+    const tl = gsap.timeline({ paused: true });
+    if (split) tl.from(split.chars, { yPercent: 118, stagger: 0.014, duration: 0.7, ease: 'expo.out' }, 0);
+    tl.from($$('.antet, .chap__txt', el), { autoAlpha: 0, y: 16, duration: 0.6, stagger: 0.08, ease: 'power3.out' }, 0.1);
+    ScrollTrigger.create({ trigger: el, start: phone ? 'bottom 115%' : 'top 60%', once: true, onEnter: () => tl.play() });
   });
-  tl.fromTo('.rpm i', { scaleX: 0 }, { scaleX: 1, duration: 1 }, 0);
-  tl.to({}, { duration: 0.001 }, 1);
-
+  const stage = $('.stage'), shade = $('.stage-shade');
   filmST = ScrollTrigger.create({
-    trigger: '.film',
-    start: 'top top',
-    end: () => `+=${innerHeight * dur}`,
-    pin: true,
-    scrub: true,
-    anticipatePin: 1,
-    onUpdate(self) {
-      scene?.setProgress(self.progress);
-      tl.progress(self.progress);
+    trigger: '.film', start: 'top top', end: 'bottom 40%',
+    onRefresh: measureFilm,
+    onToggle: (self) => {
+      filmOn = self.isActive || self.progress < 0.001;
+      if (filmOn) scene?.start();
     },
   });
+  // film bitince sahne kararır ve durur
   ScrollTrigger.create({
-    start: () => filmST.end,
-    end: () => filmST.end + innerHeight,
-    onLeave: () => scene?.stop(),
-    onEnterBack: () => scene?.start(),
+    trigger: '.film', start: 'bottom 90%', end: 'bottom 40%',
+    onUpdate: (self) => {
+      const o = 1 - self.progress;
+      stage.style.opacity = o;
+      shade.style.opacity = o;
+      if (o <= 0.001) scene?.stop();
+      else scene?.start();
+    },
   });
-  window.__film = filmST;
+  gsap.ticker.add((_, dt) => {
+    targetP = scrollToP(scrollY);
+    if (Math.abs(targetP - filmP) > 0.3) filmP = targetP;
+    filmP += (targetP - filmP) * (1 - Math.exp(-dt * 0.007));
+    scene?.setProgress(filmP);
+    $('.rpm i').style.transform = `scaleX(${filmP.toFixed(3)})`;
+  });
+  measureFilm();
+  window.__film = { get p() { return filmP; }, anchors: () => anchors };
 }
 
 // ------------------------------------------------------------------ bölümler
@@ -543,10 +595,11 @@ function isler() {
 }
 
 function cikti() {
-  gsap.set(fis, { yPercent: -102 });
+  gsap.set(fis, { yPercent: -102, autoAlpha: 0 });
   ScrollTrigger.create({
     trigger: '.printer', start: 'top 70%', once: true,
     onEnter: () => {
+      gsap.set(fis, { autoAlpha: 1 });
       gsap.to(fis, { yPercent: 0, duration: 1.8, ease: 'steps(34)' });
     },
   });
@@ -717,7 +770,7 @@ function staticFallback() {
 }
 
 async function start() {
-  addEventListener('resize', () => scene?.resize());
+  addEventListener('resize', () => { scene?.resize(); measureFilm(); });
   if (reducedMotion) {
     intro.remove();
     staticFallback();

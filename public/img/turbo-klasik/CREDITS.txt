@@ -10,3 +10,4 @@ eller.jpg    ← temiz-eller.jpg, cottonbro studio — https://www.pexels.com/ph
 dizel.jpg    ← dizel-motor.jpg, cottonbro studio — https://www.pexels.com/photo/7564866/
 tezgah.jpg   ← usta-turbo.jpg, cottonbro studio — https://www.pexels.com/photo/7565167/
 motor.jpg    ← motor-turbo.jpg, Jacob Moore — https://www.pexels.com/photo/car-engine-with-turbo-12565885/
+turbo-parcalar.webp — Blender Cycles render'ı, lib3d 'turbo (patlatılmış)' varlığı (kendi üretimimiz, üçüncü taraf model yok; HDRI: Poly Haven CC0). Temsilîdir.

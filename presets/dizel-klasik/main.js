@@ -78,6 +78,8 @@ const tints = slices.map((s) => $('.slice__tint', s));
 const orderLis = $$('[data-order] li');
 const copy = $('.hero__copy'), mid = $('.hero__mid'), endEl = $('.hero__end'), hint = $('.hero__hint'), orderEl = $('.order');
 const shade = $('.hero__shade');
+const topEl = $('.top');
+let pinActive = false;
 
 // Ateşleme olayları: tempo giderek artar
 const F0 = 0.1, F1 = 0.62, N = 16;
@@ -112,8 +114,10 @@ function render(p) {
   const mob = small();
   const W = innerWidth, H = innerHeight;
   // son durum: telefonda başlığın altı ile alt çubuğun üstü, masaüstünde sağ yarı
-  const T = mob ? Math.min(210, H * 0.25) : 108, B = mob ? 104 : 56;
-  const L = mob ? 14 : W * 0.46, R = mob ? 14 : Math.max(24, W * 0.045);
+  // telefonda alt boşluk alt çubuğa göre (hikâye modunda çubuk saklıyken küçülür); kutu ekranın %60'ından büyük kalır
+  const barSpace = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--bar-space')) || 90;
+  const T = mob ? Math.min(176, H * 0.22) : 108, B = mob ? barSpace + 4 : 56;
+  const L = mob ? 10 : W * 0.46, R = mob ? 10 : Math.max(24, W * 0.045);
   cyl.style.inset = `${(T * sp).toFixed(1)}px ${(R * sp).toFixed(1)}px ${(B * sp).toFixed(1)}px ${(L * sp).toFixed(1)}px`;
   cyl.style.transform = `scale(${(1.06 - 0.06 * seg(p, 0, F1)).toFixed(4)})`;
   for (let i = 0; i < 4; i++) {
@@ -144,6 +148,10 @@ function render(p) {
   mid.style.visibility = m > 0.001 ? 'visible' : 'hidden';
   endEl.style.transform = `translate3d(0, ${((1 - en) * 26).toFixed(1)}px, 0)`;
   shade.style.opacity = (0.55 + 0.25 * sp - 0.3 * seg(p, 0.08, 0.2) * (1 - sp)).toFixed(3);
+  // telefonda sahne boyunca başlık saklanır: üstte yalnız ateşleme sırası ya da sonuç yazısı kalır
+  topEl.classList.toggle('is-away', mob && pinActive && p > 0.05);
+  orderEl.style.visibility = orderEl.style.opacity > 0.01 ? 'visible' : 'hidden';
+  endEl.style.visibility = en > 0.01 ? 'visible' : 'hidden';
 }
 
 if (reducedMotion) {
@@ -154,6 +162,7 @@ if (reducedMotion) {
     trigger: hero, start: 'top top', end: () => `+=${innerHeight * (small() ? 2.6 : 2.8)}`,
     pin: '.hero__pin', scrub: 0.35, anticipatePin: 1,
     onUpdate: (self) => render(self.progress),
+    onToggle: (self) => { pinActive = self.isActive; render(self.progress); },
     onRefresh: (self) => render(self.progress),
   });
   render(0);
@@ -194,9 +203,9 @@ if (!reducedMotion) {
 }
 
 // --- Hizmetler -------------------------------------------------------------
-const HIZMET_IMG = ['k-dijital-olcum', 'parca', 'k-motor-ustu', 'k-parca-tepsisi', 'pompa', 'k-komparator', 'k-kamyon-bakim', 'k-silindir-kapak'];
+const HIZMET_IMG = ['k-dijital-olcum', 'enjektor-kesit', 'k-motor-ustu', 'k-parca-tepsisi', 'pompa', 'k-komparator', 'k-kamyon-bakim', 'k-silindir-kapak'];
 const HIZMET_ALT = [
-  'Dijital mikrometre ile hassas ölçüm', 'Yağlı elde sökülmüş parçalar', 'Dizel motor üzerinde anahtarla çalışan usta',
+  'Dijital mikrometre ile hassas ölçüm', 'Common rail enjektör: dış görünüş ve kesit (3D çizim, temsilî)', 'Dizel motor üzerinde anahtarla çalışan usta',
   'Sökülen parçalar tepside sırayla diziliyor', 'Paletin üzerinde eski bir dizel motor ve pompası', 'Hassas komparatör saati',
   'Kaputu açık kamyonun motor bölmesinde bakım', 'Silindir kapağında çalışan ustanın elleri',
 ];
@@ -233,7 +242,7 @@ $('[data-gallery]').innerHTML = GAL.map((g, i) => `
 const star = (n) => Array.from({ length: 5 }, (_, i) => `<span class="${i < n ? 'on' : ''}">${icons.star}</span>`).join('');
 $('[data-score]').textContent = String(d.puan.ortalama).replace('.', ',');
 $('[data-stars]').innerHTML = star(Math.round(d.puan.ortalama));
-$('[data-review-count]').textContent = `${d.puan.adet} Google yorumu`;
+$('[data-review-count]').textContent = `Örnek puan · ${d.puan.adet} değerlendirme`;
 $('[data-reviews]').innerHTML = d.yorumlar.filter((y) => y !== agirYorum || d.yorumlar.length < 4).map((y) => `
   <li class="rev">
     <p class="rev__stars" aria-label="${esc(y.puan)} yıldız">${star(y.puan)}</p>

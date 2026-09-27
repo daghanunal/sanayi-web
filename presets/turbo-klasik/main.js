@@ -191,10 +191,16 @@ function render(p) {
   copy.style.transform = `translate3d(0, ${(-seg(p, 0.02, 0.14) * 40).toFixed(1)}px, 0)`;
   copy.style.visibility = p > 0.15 ? 'hidden' : 'visible';
   hint.style.opacity = (1 - seg(p, 0, 0.05)).toFixed(3);
-  const hudIn = seg(p, 0.06, 0.14);
-  hud.style.opacity = hudIn.toFixed(3);
-  stagesEl.style.opacity = (hudIn * (1 - seg(p, 0.86, 0.92))).toFixed(3);
-  endEl.style.opacity = eOut(seg(p, 0.86, 0.97)).toFixed(3);
+  const hudIn = seg(p, 0.11, 0.18);
+  const hudV = small() ? hudIn * (1 - seg(p, 0.8, 0.86)) : hudIn; // telefonda son yazıyla aynı yeri paylaşır
+  hud.style.opacity = hudV.toFixed(3);
+  hud.style.visibility = hudV > 0.01 ? 'visible' : 'hidden';
+  const stIn = hudIn * (1 - seg(p, 0.86, 0.92));
+  stagesEl.style.opacity = stIn.toFixed(3);
+  stagesEl.style.visibility = stIn > 0.01 ? 'visible' : 'hidden';
+  const endIn = eOut(seg(p, 0.86, 0.97));
+  endEl.style.opacity = endIn.toFixed(3);
+  endEl.style.visibility = endIn > 0.01 ? 'visible' : 'hidden';
   endEl.style.transform = `translate3d(0, ${((1 - eOut(seg(p, 0.86, 0.97))) * 30).toFixed(1)}px, 0)`;
   // Devir: önce ağır, sonra hızla toplar
   rpm = RPM_MAX * Math.pow(seg(p, 0.06, 0.9), 2.2);
@@ -364,7 +370,7 @@ $('[data-gallery]').innerHTML = d.galeri.map((g) => `
 $('[data-score]').textContent = Number(d.puan.ortalama).toLocaleString('tr-TR', { minimumFractionDigits: 1 });
 $('[data-stars]').innerHTML = icons.star.repeat(5);
 $('[data-stars]').setAttribute('aria-label', `5 üzerinden ${d.puan.ortalama}`);
-$('[data-review-count]').textContent = `${nf(d.puan.adet)} Google yorumu`;
+$('[data-review-count]').textContent = `Örnek puan · ${nf(d.puan.adet)} değerlendirme`;
 $('[data-reviews]').innerHTML = d.yorumlar.map((y) => `
   <li class="rev">
     <p class="rev__stars" aria-label="5 üzerinden ${Number(y.puan)}">${icons.star.repeat(Number(y.puan))}</p>
@@ -427,9 +433,9 @@ if (!reducedMotion) {
   $$('.step').forEach((s) => ScrollTrigger.create({
     trigger: s, start: 'top 68%', onEnter: () => s.classList.add('is-on'), onLeaveBack: () => s.classList.remove('is-on'),
   }));
-  gsap.fromTo('.parca img', { scale: 1.12 }, {
-    scale: 1, ease: 'none',
-    scrollTrigger: { trigger: '.parca', start: 'top bottom', end: 'bottom top', scrub: true },
+  gsap.fromTo('.pin', { autoAlpha: 0 }, {
+    autoAlpha: 1, duration: 0.4, stagger: 0.08, ease: 'power2.out',
+    scrollTrigger: { trigger: '.parca', start: 'top 75%', once: true },
   });
   gsap.fromTo('.atolye__photo img', { yPercent: -6 }, {
     yPercent: 6, ease: 'none',

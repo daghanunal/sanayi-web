@@ -38,16 +38,35 @@
   <div class="cursor" data-cursor aria-hidden="true"><i></i></div>
 
   <header class="top" data-top>
-    <a class="top__brand" href="#"><span class="top__drop" aria-hidden="true"></span><span data-bind="ad"></span></a>
-    <p class="top__status" data-status></p>
-    <a class="top__call" data-tel data-magnetic><span data-icon="phone"></span><span class="top__num" data-bind="telefon"></span></a>
+    <div class="top__row">
+      <a class="top__brand" href="#"><span class="top__drop" aria-hidden="true"></span><span data-bind="ad"></span></a>
+      <p class="top__status" data-status></p>
+      <a class="top__call" data-tel data-magnetic><span data-icon="phone"></span><span class="top__num" data-bind="telefon"></span></a>
+    </div>
+    <!-- Film göstergeleri başlığın içinde: telefonda tek üst öğe -->
+    <ol class="rail" data-rail aria-hidden="true"></ol>
+    <div class="hud" data-hud aria-hidden="true">
+      <svg class="hud__dial" viewBox="-60 -60 120 92">
+        <path class="hud__track" d="M-49.2 28.4 A56.8 56.8 0 1 1 49.2 28.4" />
+        <path class="hud__fill" data-hud-fill d="M-49.2 28.4 A56.8 56.8 0 1 1 49.2 28.4" />
+        <g data-hud-needle><line x1="0" y1="0" x2="0" y2="-46" /></g>
+        <circle r="5" />
+      </svg>
+      <div class="hud__txt">
+        <p class="hud__lbl" data-hud-lbl></p>
+        <p class="hud__val"><b data-hud-val>0</b><small data-hud-unit></small></p>
+        <p class="hud__verdict" data-hud-verdict></p>
+      </div>
+    </div>
   </header>
 
+  <div class="leak" data-leak aria-hidden="true"><i></i><span>Kaçak burada</span></div>
+
   <main>
-    <!-- Film: asılı radyatör → hararet → havuza iner, kabarcık → lehim, tekrar test → petek → fan → ağır vasıta -->
+    <!-- Film: sabit sahnenin önünden akan duraklar (pin yok). Asılı radyatör → hararet → havuz → lehim → petek → fan → ağır vasıta -->
     <section class="film" data-film>
-      <div class="film__sticky">
-        <div class="hero" data-hero>
+      <div class="hero" data-hero>
+        <div class="hero__in">
           <p class="hero__since" data-since></p>
           <h1 class="hero__title" data-hero-title></h1>
           <p class="hero__slogan" data-bind="slogan"></p>
@@ -56,30 +75,16 @@
             <a class="btn btn--ghost" data-wa target="_blank" rel="noopener" data-magnetic><span data-icon="whatsapp"></span>WhatsApp'tan yaz</a>
           </div>
         </div>
+        <p class="hint" data-hint aria-hidden="true"><i></i>Kaydırın, radyatörü havuza indirelim</p>
+      </div>
 
-        <ol class="rail" data-rail aria-label="Filmdeki duraklar"></ol>
-        <div class="cards" data-cards></div>
+      <div class="chaps" data-cards></div>
 
-        <div class="hud" data-hud aria-hidden="true">
-          <svg class="hud__dial" viewBox="-60 -60 120 92">
-            <path class="hud__track" d="M-49.2 28.4 A56.8 56.8 0 1 1 49.2 28.4" />
-            <path class="hud__fill" data-hud-fill d="M-49.2 28.4 A56.8 56.8 0 1 1 49.2 28.4" />
-            <g data-hud-needle><line x1="0" y1="0" x2="0" y2="-46" /></g>
-            <circle r="5" />
-          </svg>
-          <p class="hud__lbl" data-hud-lbl></p>
-          <p class="hud__val"><b data-hud-val>0</b><small data-hud-unit></small></p>
-          <p class="hud__verdict" data-hud-verdict></p>
-        </div>
-
-        <div class="leak" data-leak aria-hidden="true"><i></i><span>Kaçak burada</span></div>
-
+      <div class="chap chap--end" data-chap-end>
         <div class="overview" data-overview>
           <p class="overview__kicker">Binekten çekiciye</p>
           <h2 class="overview__title">Radyatörün her derdi <br />aynı havuzda çözülür.</h2>
         </div>
-
-        <p class="hint" data-hint aria-hidden="true"><i></i>Kaydırın, radyatörü havuza indirelim</p>
       </div>
     </section>
 
@@ -90,7 +95,7 @@
         <h2 class="sec-title" data-rise data-about-title></h2>
         <p class="about__text" data-about-text></p>
       </div>
-      <figure class="about__img"><img src="/img/radyator-sinematik/tir-usta.jpg" alt="Ustamız loş atölyede çekicinin yanında çalışıyor" loading="lazy" width="1600" height="1066" /></figure>
+      <figure class="about__img"><img src="/img/radyator-sinematik/tir-usta.jpg" alt="Loş atölyede çekicinin yanında çalışan usta" loading="lazy" width="1600" height="1066" /></figure>
       <ul class="stats" data-stats></ul>
     </section>
 
@@ -155,7 +160,10 @@
     <!-- Yorumlar -->
     <section class="reviews" id="yorumlar">
       <header class="reviews__head">
-        <p class="reviews__score"><b data-puan>4,8</b><span class="reviews__stars" data-stars></span></p>
+        <div>
+          <p class="kicker">Örnek yorumlar</p>
+          <p class="reviews__score"><b data-puan>4,8</b><span class="reviews__stars" data-stars></span></p>
+        </div>
         <p class="reviews__count" data-puan-adet></p>
       </header>
       <div class="reviews__rail"><div class="reviews__track" data-rev-track></div></div>
@@ -166,7 +174,7 @@
       <div class="marquee" data-marquee></div>
     </section>
 
-    <!-- Dükkân -->
+    <!-- Konum -->
     <section class="shop" id="konum">
       <div class="shop__info">
         <p class="kicker">Saatler ve konum</p>
@@ -200,7 +208,7 @@
   <footer class="foot">
     <p data-year></p>
     <p data-bind="adres"></p>
-    <p class="foot__small">Fotoğraflar: Pexels. 3D radyatör ve havuz bu site için kodla çizildi.</p>
+    <p class="foot__small">Fotoğraflar: Pexels (temsilî). 3D görseller temsilîdir. Yorumlar örnektir.</p>
   </footer>
 
   <script type="module" src="./main.js"></script>

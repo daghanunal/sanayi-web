@@ -62,18 +62,41 @@ $$('[data-status]').forEach((el) => {
 $('[data-status-big]').textContent = status.text;
 $('[data-status-big]').classList.toggle('is-open', status.open);
 
-// Film bölümleri
+// Film bölümleri: her biri sabit sahnenin önünden akan bir kart
 const film = d.film;
 $('[data-cards]').innerHTML = film.map((f, i) => `
-  <article class="card" data-card>
-    <p class="card__n"><b>${String(i + 1).padStart(2, '0')}</b><span>/ ${String(film.length).padStart(2, '0')}</span><em>${esc(f.etiket)}</em></p>
-    <h2 class="card__title">${esc(f.baslik)}</h2>
-    <p class="card__text">${esc(f.metin)}</p>
-    <a class="card__wa" href="${esc(waHref(d, `Merhaba ${d.isletme.ad}, ${f.hizmet.toLocaleLowerCase('tr')} için bilgi almak istiyorum.`))}" target="_blank" rel="noopener">${icons.whatsapp}<span>${esc(f.hizmet)} için sorun</span></a>
-  </article>`).join('');
+  <div class="chap" data-chap>
+    <article class="card" data-card>
+      <p class="card__n"><b>${String(i + 1).padStart(2, '0')}</b><span>/ ${String(film.length).padStart(2, '0')}</span><em>${esc(f.etiket)}</em></p>
+      <h2 class="card__title">${esc(f.baslik)}</h2>
+      <p class="card__text">${esc(f.metin)}</p>
+      <a class="card__wa" href="${esc(waHref(d, `Merhaba ${d.isletme.ad}, ${f.hizmet.toLocaleLowerCase('tr')} için bilgi almak istiyorum.`))}" target="_blank" rel="noopener">${icons.whatsapp}<span>${esc(f.hizmet)} için sorun</span></a>
+    </article>
+  </div>`).join('');
 $('[data-ticks]').innerHTML = film.map((f) => `<li><span>${esc(f.etiket)}</span></li>`).join('');
-$('[data-labels]').innerHTML = d.parcalar.map((p) => `
-  <p class="label" data-label="${esc(p.id)}"><b>${esc(p.ad)}</b><span>${esc(p.not)}</span></p>`).join('');
+// Parça etiketleri tek SVG içinde (konumlu HTML katmanı yok)
+const SVGNS = 'http://www.w3.org/2000/svg';
+const labelBox = $('[data-labels]');
+const labels = d.parcalar.map((p) => {
+  const g = document.createElementNS(SVGNS, 'g');
+  g.setAttribute('class', 'lbl');
+  g.dataset.label = p.id;
+  const dn = /^(kg|tg|yg)$/.test(p.id); // gövdeler noktanın altında, çarklar üstünde: telefonda çakışmasın
+  g.innerHTML = dn
+    ? `<line x1="0" y1="0" x2="0" y2="24" /><circle r="4" /><rect rx="11" y="24" height="22" /><text y="39">${esc(p.ad)}</text>`
+    : `<line x1="0" y1="0" x2="0" y2="-26" /><circle r="4" /><rect rx="11" y="-50" height="22" /><text y="-35">${esc(p.ad)}</text>`;
+  labelBox.append(g);
+  return g;
+});
+function sizeLabels() {
+  for (const g of labels) {
+    const w = g.querySelector('text').getComputedTextLength() + 24;
+    const r = g.querySelector('rect');
+    r.setAttribute('width', w.toFixed(0));
+    r.setAttribute('x', (-w / 2).toFixed(0));
+    g.dataset.w = w;
+  }
+}
 
 // Hakkımızda + rakamlar
 const aboutText = $('[data-about-text]');
@@ -138,7 +161,7 @@ $('[data-gal-track]').innerHTML = gal.map((g, i) => `
 // Yorumlar
 $('[data-puan]').textContent = nf(d.puan.ortalama, 1);
 $('[data-stars]').innerHTML = icons.star.repeat(5);
-$('[data-puan-adet]').textContent = `${nf(d.puan.adet)} Google yorumu`;
+$('[data-puan-adet]').textContent = `Örnek puan · ${nf(d.puan.adet)} değerlendirme`;
 $('[data-reviews]').innerHTML = d.yorumlar.map((y) => `
   <figure class="rev">
     <p class="rev__stars" aria-label="${y.puan} yıldız">${icons.star.repeat(y.puan)}</p>
@@ -168,85 +191,82 @@ new IntersectionObserver((entries, obs) => {
 
 const canvas = $('[data-stage]');
 const S = createScene(canvas, { lite });
-if (import.meta.env.DEV) window.__tb = S;
+if (import.meta.env.DEV) { window.__tb = S; window.__c = () => ({ c: filmP, anchors }); }
 const V = (x, y, z) => new THREE.Vector3(x, y, z);
 
 // Kamera planları. Masaüstünde turbo sağda (metin solda), telefonda üstte (kart altta).
+// Film ilerlemesi "c": 0 = giriş, 1..5 = bölümler, 6 = teslim. c, bölümlerin sayfadaki konumundan hesaplanır.
 const POSES = () => mobile()
   ? {
-      hero: { pos: V(8.4, 4.4, 10.2), look: V(0.2, -1.75, 0), fov: 44 },
-      sokum: { pos: V(4.2, 9.4, 15.2), look: V(-0.3, -2.9, 0), fov: 48 },
-      balans: { pos: V(6.0, 2.8, 7.6), look: V(0, -1.5, 0), fov: 44 },
-      vnt: { pos: V(-7.4, 2.2, 3.4), look: V(-2.1, -1.1, 0), fov: 46 },
-      yag: { pos: V(3.4, 5.6, 7.6), look: V(0.2, -0.4, -0.3), fov: 46 },
-      basinc: { pos: V(9.2, 3.6, 9.4), look: V(0.1, -1.7, 0), fov: 44 },
-      end: { pos: V(3.2, 3.2, 13.5), look: V(0, -2.0, 0), fov: 44 },
+      hero: { pos: V(7.6, 3.6, 9.6), look: V(0.1, -0.2, 0), fov: 42, sh: 0.2 },
+      sokum: { pos: V(4.4, 9.8, 18.4), look: V(-0.1, -0.6, 0), fov: 46, sh: 0.24 },
+      balans: { pos: V(8.2, 3.0, 9.6), look: V(0, -0.1, 0), fov: 44, sh: 0.24 },
+      vnt: { pos: V(-8.4, 2.2, 4.6), look: V(-0.9, -0.1, 0), fov: 46, sh: 0.24 },
+      yag: { pos: V(5.0, 7.4, 11.0), look: V(0.2, 0.2, -0.2), fov: 44, sh: 0.24 },
+      basinc: { pos: V(10.6, 3.8, 11.6), look: V(0, -0.3, 0), fov: 42, sh: 0.24 },
+      end: { pos: V(3.6, 3.4, 14.8), look: V(0, -0.3, 0), fov: 42, sh: 0.22 },
     }
   : {
-      hero: { pos: V(3.6, 2.1, 7.6), look: V(-1.35, 0.1, 0), fov: 34 },
-      sokum: { pos: V(0.8, 3.8, 12.6), look: V(-2.2, -0.3, 0), fov: 38 },
-      balans: { pos: V(2.6, 1.5, 5.8), look: V(-1.7, -0.05, 0), fov: 38 },
-      vnt: { pos: V(-6.4, 1.5, 2.6), look: V(-1.7, -0.1, -1.5), fov: 38 },
-      yag: { pos: V(3.0, 4.6, 6.2), look: V(-1.2, 0.8, -0.3), fov: 38 },
-      basinc: { pos: V(4.8, 1.7, 6.8), look: V(-1.2, 0, 0), fov: 36 },
-      end: { pos: V(1.4, 1.9, 9.8), look: V(-1.6, 0, 0), fov: 36 },
+      hero: { pos: V(3.8, 2.0, 7.8), look: V(-1.45, 0.1, 0), fov: 34 },
+      sokum: { pos: V(0.6, 3.3, 10.4), look: V(-2.0, -0.2, 0), fov: 38 },
+      balans: { pos: V(1.6, 1.1, 5.0), look: V(-1.3, 0, 0), fov: 38 },
+      vnt: { pos: V(-7.4, 1.8, 4.4), look: V(-1.5, 0, -1.3), fov: 38 },
+      yag: { pos: V(3.2, 4.8, 6.4), look: V(-1.2, 0.9, -0.3), fov: 38 },
+      basinc: { pos: V(4.8, 1.7, 6.8), look: V(-1.3, 0, 0), fov: 36 },
+      end: { pos: V(1.4, 1.9, 9.8), look: V(-1.7, 0, 0), fov: 36 },
     };
 const KF = [
-  [0.0, 'hero'], [0.08, 'hero'], [0.17, 'sokum'], [0.28, 'sokum'],
-  [0.34, 'balans'], [0.44, 'balans'], [0.5, 'vnt'], [0.61, 'vnt'],
-  [0.67, 'yag'], [0.77, 'yag'], [0.84, 'basinc'], [0.95, 'basinc'], [1.0, 'end'],
+  [0, 'hero'], [0.2, 'hero'], [0.8, 'sokum'], [1.25, 'sokum'],
+  [1.75, 'balans'], [2.25, 'balans'], [2.75, 'vnt'], [3.25, 'vnt'],
+  [3.75, 'yag'], [4.25, 'yag'], [4.75, 'basinc'], [5.3, 'basinc'], [6, 'end'],
 ];
-function filmPose(p) {
+function filmPose(c) {
   const P = POSES();
   let i = 0;
-  while (i < KF.length - 2 && p > KF[i + 1][0]) i++;
+  while (i < KF.length - 2 && c > KF[i + 1][0]) i++;
   const a = KF[i], b = KF[i + 1];
-  const t = smooth(seg(p, a[0], b[0]));
+  const t = smooth(seg(c, a[0], b[0]));
   const A = P[a[1]], B = P[b[1]];
-  return { pos: A.pos.clone().lerp(B.pos, t), look: A.look.clone().lerp(B.look, t), fov: L(A.fov, B.fov, t) };
+  return { pos: A.pos.clone().lerp(B.pos, t), look: A.look.clone().lerp(B.look, t), fov: L(A.fov, B.fov, t), sh: L(A.sh || 0, B.sh || 0, t) };
 }
 
-const CARD_RANGES = [[0.12, 0.285], [0.295, 0.455], [0.465, 0.62], [0.63, 0.78], [0.79, 0.965]];
-
-function filmState(p, time, vel) {
-  const pose = filmPose(p);
-  const hold = 1 - seg(p, 0.08, 0.14) + seg(p, 0.95, 1);
+function filmState(c, time, vel) {
+  const pose = filmPose(c);
+  const hold = 1 - seg(c, 0.15, 0.5) + seg(c, 5.6, 6);
   pose.pos.x += Math.sin(time * 0.4) * 0.18 * clamp(hold);
   pose.pos.y += Math.sin(time * 0.55) * 0.1 * clamp(hold);
-  const explode = seg(p, 0.1, 0.18) * (1 - 0.75 * seg(p, 0.62, 0.7)) * (1 - seg(p, 0.78, 0.84));
-  const far = seg(p, 0.285, 0.33) * (1 - seg(p, 0.6, 0.68));
-  const balance = seg(p, 0.3, 0.34) * (1 - seg(p, 0.44, 0.47));
-  const boost = seg(p, 0.8, 0.92);
-  const spin = p < 0.1 ? 5.5
-    : p < 0.29 ? L(5.5, 1.4, seg(p, 0.1, 0.16))
-    : p < 0.46 ? L(1.4, 14, seg(p, 0.3, 0.36)) * (1 - seg(p, 0.44, 0.47)) + 1.2 * seg(p, 0.44, 0.47)
-    : p < 0.78 ? 1.2
+  const explode = seg(c, 0.3, 0.9) * (1 - 0.7 * seg(c, 3.35, 3.8)) * (1 - seg(c, 4.35, 4.8));
+  const far = seg(c, 1.3, 1.7) * (1 - seg(c, 3.3, 3.75));
+  const balance = seg(c, 1.5, 1.8) * (1 - seg(c, 2.3, 2.5));
+  const boost = seg(c, 4.5, 5.2);
+  const spin = c < 1.3 ? L(5.5, 1.4, seg(c, 0.3, 0.8))
+    : c < 2.5 ? L(1.4, 14, seg(c, 1.5, 1.9)) * (1 - seg(c, 2.3, 2.5)) + 1.2 * seg(c, 2.3, 2.5)
+    : c < 4.5 ? 1.2
     : L(1.2, 24, boost);
   return {
     ...pose,
     explode, far, balance,
-    wobble: 1 - seg(p, 0.36, 0.43) * 0.95,
-    vntShow: seg(p, 0.44, 0.49) * (1 - seg(p, 0.62, 0.66)),
-    vnt: seg(p, 0.5, 0.55) - 0.55 * seg(p, 0.56, 0.6),
-    oil: 0.22 + 0.78 * seg(p, 0.62, 0.66) * (1 - seg(p, 0.79, 0.84)),
-    oilClean: seg(p, 0.68, 0.75),
-    heat: 0.16 * (1 - seg(p, 0.1, 0.16)) + boost,
-    cool: 1 - seg(p, 0.1, 0.16),
-    flow: (1 - seg(p, 0.1, 0.14)) * 0.8 + seg(p, 0.8, 0.86),
+    wobble: 1 - seg(c, 1.85, 2.2) * 0.95,
+    vntShow: seg(c, 2.3, 2.6) * (1 - seg(c, 3.3, 3.55)),
+    vnt: seg(c, 2.7, 3.0) - 0.55 * seg(c, 3.05, 3.3),
+    oil: 0.15 + 0.85 * seg(c, 3.4, 3.7) * (1 - seg(c, 4.4, 4.7)),
+    oilClean: seg(c, 3.6, 3.95),
+    heat: 0.06 * (1 - seg(c, 0.3, 0.7)) + boost,
+    cool: 1 - seg(c, 0.3, 0.7),
+    flow: (1 - seg(c, 0.2, 0.5)) * 0.8 + seg(c, 4.5, 4.9),
     flowSpeed: 0.5 + spin / 9 + vel,
     spin: spin + vel * 6,
-    turn: 0,
     boost,
   };
 }
 function finaleState(q, time) {
   const a = Math.sin(time * 0.16) * 0.55 + 0.35;
-  const r = mobile() ? 13.5 : 9.4;
-  const pos = V(Math.sin(a) * r, (mobile() ? 3.4 : 1.9) + Math.sin(time * 0.3) * 0.3, Math.cos(a) * r);
+  const r = mobile() ? 12.5 : 9.4;
+  const pos = V(Math.sin(a) * r, (mobile() ? 2.6 : 1.9) + Math.sin(time * 0.3) * 0.3, Math.cos(a) * r);
   return {
-    pos, look: mobile() ? V(0, -2.3 + q * 0.5, 0) : V(-3.9, 0.3, 0), fov: mobile() ? 44 : 36,
+    pos, look: mobile() ? V(0, 0.2 + q * 0.4, 0) : V(-3.9, 0.3, 0), fov: mobile() ? 42 : 36, sh: mobile() ? 0.24 : 0,
     explode: 0, far: 0, balance: 0, wobble: 0, vntShow: 0, vnt: 0, oil: 0.3, oilClean: 1,
-    heat: 0.9, cool: 0.4, flow: 1, flowSpeed: 3, spin: 22, turn: 0, boost: 1,
+    heat: 0.9, cool: 0.4, flow: 1, flowSpeed: 3, spin: 22, boost: 1,
   };
 }
 
@@ -255,15 +275,34 @@ function finaleState(q, time) {
 const filmEl = $('[data-film]');
 const finaleEl = $('[data-finale]');
 const hero = $('[data-hero]');
-const cards = $$('[data-card]');
-const filmEnd = $('[data-film-end]');
+const chaps = $$('[data-chap]');
 const ticks = $$('[data-ticks] li');
 const hud = $('[data-hud]');
 const hint = $('[data-hint]');
 const hRpm = $('[data-h-rpm]'), hBar = $('[data-h-bar]'), hGauge = $('[data-h-gauge]'), hExtra = $('[data-h-extra]');
-const labels = $$('[data-label]');
-const labelBox = $('[data-labels]');
 let titleChars = [];
+
+// Bölüm çapaları: kartın ekran ortasına geldiği kaydırma konumu → c = i
+let anchors = [0, 1, 2, 3, 4, 5, 6];
+function measure() {
+  const top = (el) => el.getBoundingClientRect().top + scrollY;
+  const mid = (el) => {
+    const card = el.querySelector('.card');
+    const f = mobile() ? 0.66 : 0.5;
+    if (getComputedStyle(card).position === 'sticky') // yapışkan kartın doğal yeri: bölüm başı + üst boşluk
+      return top(el) + parseFloat(getComputedStyle(el).paddingTop) + card.offsetHeight / 2 - innerHeight * f;
+    const r = card.getBoundingClientRect();
+    return r.top + scrollY + r.height / 2 - innerHeight * f;
+  };
+  const end = top(filmEl) + filmEl.offsetHeight - innerHeight;
+  anchors = [top(filmEl), ...chaps.map(mid), Math.max(mid($('[data-chap-end]')), end - 1)];
+  for (let i = 1; i < anchors.length; i++) anchors[i] = Math.max(anchors[i], anchors[i - 1] + 1);
+}
+function scrollToC(y) {
+  if (y <= anchors[0]) return 0;
+  for (let i = 1; i < anchors.length; i++) if (y < anchors[i]) return i - 1 + (y - anchors[i - 1]) / (anchors[i] - anchors[i - 1]);
+  return anchors.length - 1;
+}
 
 let lastExtra = '';
 function setExtra(html) {
@@ -272,43 +311,25 @@ function setExtra(html) {
   hExtra.innerHTML = html;
 }
 
-function filmUI(p, time, st) {
-  const heroOut = seg(p, 0.045, 0.1);
-  hero.style.opacity = 1 - heroOut;
-  hero.style.transform = `translate3d(0, ${-heroOut * 50}px, 0)`;
-  hero.style.visibility = heroOut >= 1 ? 'hidden' : 'visible';
-  titleChars.forEach((c, i) => {
+function filmUI(c, st) {
+  const heroOut = seg(c, 0.05, 0.55);
+  titleChars.forEach((ch, i) => {
     const k = clamp(heroOut * 1.5 - (i / titleChars.length) * 0.5);
-    c.style.transform = `translate3d(${k * 60}px, 0, 0) skewX(${-k * 20}deg)`;
-    c.style.opacity = 1 - k;
+    ch.style.transform = k ? `translate3d(${k * 60}px, 0, 0) skewX(${-k * 20}deg)` : '';
+    ch.style.opacity = 1 - k;
   });
-  hint.style.opacity = 1 - seg(p, 0, 0.03);
+  hint.style.opacity = 1 - seg(c, 0, 0.1);
 
-  let active = -1;
-  cards.forEach((card, i) => {
-    const [a, b] = CARD_RANGES[i];
-    const vin = seg(p, a, a + 0.025), vout = seg(p, b - 0.02, b);
-    const v = vin * (1 - vout);
-    card.style.opacity = v;
-    card.style.transform = `translate3d(${(1 - vin) * -24 + vout * 24}px, 0, 0)`;
-    card.style.visibility = v > 0.01 ? 'visible' : 'hidden';
-    if (p >= a && p < b) active = i;
-  });
-  const endV = seg(p, 0.968, 0.985);
-  filmEnd.style.opacity = endV;
-  filmEnd.style.transform = `translate3d(${(1 - endV) * -24}px, 0, 0)`;
-  filmEnd.style.visibility = endV > 0.01 ? 'visible' : 'hidden';
+  const active = c > 0.5 && c < 5.5 ? Math.round(c) - 1 : -1;
   ticks.forEach((li, i) => {
     li.classList.toggle('is-active', i === active);
-    li.classList.toggle('is-done', p > CARD_RANGES[i][1]);
+    li.classList.toggle('is-done', c > i + 1.5);
   });
 
   // Gösterge
-  const hudOn = 1 - seg(p, 0.975, 1);
-  hud.style.opacity = hudOn;
   const rpm = Math.round((st.spin * 7600) / 100) * 100;
   hRpm.textContent = nf(rpm);
-  const bar = L(0.15 * (1 - seg(p, 0.1, 0.14)), 1.6, st.boost);
+  const bar = L(0.15 * (1 - seg(c, 0.3, 0.6)), 1.6, st.boost);
   hBar.textContent = nf(bar, 1);
   hGauge.style.transform = `scaleX(${clamp(bar / 2)})`;
   hud.classList.toggle('is-hot', st.boost > 0.6);
@@ -321,9 +342,9 @@ function filmUI(p, time, st) {
   } else if (active === 2) setExtra(`<span>Kanat açıklığı</span><em data-vnt></em>`);
   else if (active === 3) setExtra(`<span>Yağ dönüşü</span><em data-oil></em>`);
   else if (active === 4) setExtra(`<span>Kaçak testi</span><em data-ic></em>`);
-  else if (p > 0.9) setExtra(`<span>Tam yük</span><em>değerler yerinde</em>`);
+  else if (c >= 5.5) setExtra(`<span>Tam yük</span><em>değerler yerinde</em>`);
   else setExtra(`<span>Rölanti</span><em>dinliyoruz</em>`);
-  if (active !== 1) hExtra.classList.toggle('is-ok', active === -1 && p > 0.9);
+  if (active !== 1) hExtra.classList.toggle('is-ok', c >= 5.5);
   const vEl = hExtra.querySelector('[data-vnt]');
   if (vEl) vEl.textContent = `%${Math.round(20 + st.vnt * 75)}`;
   const oEl = hExtra.querySelector('[data-oil]');
@@ -333,22 +354,23 @@ function filmUI(p, time, st) {
   }
   const iEl = hExtra.querySelector('[data-ic]');
   if (iEl) {
-    const ok = p > 0.9;
+    const ok = c > 5.1;
     iEl.textContent = ok ? 'kaçak yok' : 'basınç veriliyor';
     hExtra.classList.toggle('is-ok', ok);
   }
 
   // Parça etiketleri (söküm)
-  const lab = seg(p, 0.165, 0.19) * (1 - seg(p, 0.265, 0.285));
+  const lab = seg(c, 0.7, 0.95) * (1 - seg(c, 1.3, 1.5));
   labelBox.style.opacity = lab;
   labelBox.style.visibility = lab > 0.01 ? 'visible' : 'hidden';
-  if (lab > 0.01) {
-    labels.forEach((el) => {
-      const pr = S.project(el.dataset.label);
-      const half = (el.firstElementChild.offsetWidth || 120) / 2 + 8;
+  if (lab > 0.01 && S.isReady()) {
+    for (const g of labels) {
+      const pr = S.project(g.dataset.label);
+      const half = Number(g.dataset.w || 120) / 2 + 8;
       const x = clamp(pr.x, half, innerWidth - half);
-      el.style.transform = `translate3d(${x.toFixed(1)}px, ${pr.y.toFixed(1)}px, 0)`;
-    });
+      g.setAttribute('transform', `translate(${x.toFixed(1)} ${pr.y.toFixed(1)})`);
+      g.querySelector('line').setAttribute('x1', (pr.x - x).toFixed(1));
+    }
   }
 }
 
@@ -367,11 +389,12 @@ function setupScroll() {
   lenis = initSmoothScroll();
   lenis?.stop();
   lenis?.on('scroll', (e) => (vel = Math.min(1, Math.abs(e.velocity) / 60)));
-  trg.film = ScrollTrigger.create({ trigger: filmEl, start: 'top top', end: 'bottom bottom' });
+  trg.film = ScrollTrigger.create({ trigger: filmEl, start: 'top top', end: 'bottom bottom', onRefresh: measure });
   trg.filmOut = ScrollTrigger.create({ trigger: filmEl, start: 'bottom bottom', end: 'bottom 40%' });
   trg.finale = ScrollTrigger.create({ trigger: '[data-finale]', start: 'top bottom', end: 'bottom bottom' });
   trg.finaleIn = ScrollTrigger.create({ trigger: '[data-finale]', start: 'top bottom', end: 'top 25%' });
   trg.solid = ScrollTrigger.create({ trigger: '[data-about]', start: 'top 70px', endTrigger: '[data-finale]', end: 'top 70px' });
+  measure();
   contentMotion();
 }
 
@@ -459,13 +482,14 @@ function tick(now) {
   vel *= 0.92;
 
   if (trg.film) {
-    const target = trg.film.progress;
-    const filmActive = trg.film.isActive || target < 0.001;
+    const target = scrollToC(scrollY);
+    const filmActive = trg.film.isActive || trg.film.progress < 0.001;
     const canvasFinale = trg.finaleIn.progress;
     const filmFade = 1 - trg.filmOut.progress;
-    topBar.classList.toggle('is-solid', trg.solid.isActive);
+    topBar.classList.toggle('is-solid', trg.solid.isActive || (mobile() && scrollY > 40));
+    topBar.classList.toggle('has-hud', filmFade > 0.5 && target > 0.25 && target < 6.2);
 
-    if (Math.abs(target - filmP) > 0.25) filmP = target;
+    if (Math.abs(target - filmP) > 1.5) filmP = target;
     filmP += (target - filmP) * (1 - Math.exp(-dt * 7));
 
     if (canvasFinale > 0.001 && !filmActive) {
@@ -477,7 +501,7 @@ function tick(now) {
       canvas.style.opacity = filmFade;
       if (canvas.style.transform) canvas.style.transform = '';
       const st = filmState(filmP, time, vel);
-      filmUI(filmP, time, st);
+      filmUI(filmP, st);
       if (filmFade > 0.001) S.update(st, now);
     } else {
       canvas.style.opacity = 0;
@@ -492,7 +516,9 @@ function tick(now) {
   requestAnimationFrame(tick);
 }
 
-addEventListener('resize', () => S.resize());
+addEventListener('resize', () => { S.resize(); measure(); });
+document.fonts?.ready.then(() => { sizeLabels(); measure(); ScrollTrigger.refresh(); });
+sizeLabels();
 
 // Masaüstü: imleç ve mıknatıslı butonlar
 if (finePointer && !reducedMotion) {
@@ -520,7 +546,7 @@ $('[data-intro-blades]').innerHTML = blades7(18, 74, 7) + `<g transform="rotate(
 
 function introHeroIn() {
   gsap.fromTo(titleChars, { opacity: 0, x: -50, skewX: -24 }, { opacity: 1, x: 0, skewX: 0, duration: 0.9, stagger: 0.03, ease: 'expo.out', clearProps: 'opacity' });
-  gsap.fromTo(['.hero__since', '.hero__slogan', '.hero__cta', '.hero__sides', '.hud'], { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.8, stagger: 0.07, delay: 0.3, ease: 'power3.out', clearProps: 'opacity,transform' });
+  gsap.fromTo(['.hero__since', '.hero__slogan', '.hero__cta', '.hero__sides'], { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.8, stagger: 0.07, delay: 0.3, ease: 'power3.out', clearProps: 'opacity,transform' });
 }
 
 function runIntro() {
@@ -545,11 +571,16 @@ function runIntro() {
     S.compile();
     S.update(filmState(0, performance.now() / 1000, 0));
   }, [], 0.3);
-  tl.add(finish, 1.5);
+  let minDone = false, readyDone = false;
+  const maybe = () => minDone && readyDone && finish();
+  tl.call(() => { minDone = true; maybe(); }, [], 1.3);
+  S.readyP.then(() => { readyDone = true; maybe(); }, () => { readyDone = true; maybe(); });
+  gsap.delayedCall(2.3, finish);
   function finish() {
     if (done) return;
     done = true;
     tl.kill();
+    intro.style.pointerEvents = 'none';
     gsap.timeline({
       onComplete: () => {
         gsap.ticker.remove(spinTick);
@@ -573,9 +604,9 @@ if (reducedMotion) {
   document.documentElement.classList.add('is-static');
   $('[data-intro]').remove();
   document.body.classList.remove('is-loading');
-  S.compile();
   const st = { ...filmState(0, 0, 0), spin: 0 };
   S.update(st);
+  S.readyP.then(() => S.update(st), () => {});
   $$('[data-count]').forEach((el) => (el.textContent = nf(Number(el.dataset.count))));
   $$('.step').forEach((s) => s.classList.add('is-lit'));
   $('.steps__list').style.setProperty('--fill', 1);

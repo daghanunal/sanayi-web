@@ -2,7 +2,7 @@ import '../../shared/base.css';
 import ana from '../../data/sektor-dizel.json';
 import ek from '../../data/kurumsal-dizel.json';
 import { kurumsal, derinBirlestir, VARSAYILAN_SAYFALAR } from '../_kurumsal/engine.js';
-import { hero, tezgah, hizmetOzet, atolye } from './extra.js';
+import { hero, tezgah, hizmetOzet, atolye, yorumlar } from './extra.js';
 import './style.css';
 
 // "Menzür" yönü: milimetrik ölçüm kâğıdı zemin, derin petrol paneller, test tezgâhı kobaltı; kehribar yalnızca menzürdeki yakıtta.
@@ -11,6 +11,9 @@ const B = import.meta.env.BASE_URL;
 const hizmetGorsel = ['manometre', 'dijital-olcum', 'motor-ustu', 'parca-tepsisi', 'komparator', 'silindir-kapak', 'kamyon-bakim', 'eksantrik'];
 const veri = derinBirlestir(ana, ek);
 veri.hizmetler = (ana.hizmetler || []).map((h, i) => (hizmetGorsel[i] ? { ...h, gorsel: `${B}img/sektor-dizel/${hizmetGorsel[i]}.jpg` } : h));
+// Rail ve basınç sensörü: kütüphanedeki dizel motorun Cycles render'ı (3D, temsilî)
+const railI = veri.hizmetler.findIndex((h) => /rail/i.test(h.baslik));
+if (railI > -1) veri.hizmetler[railI] = { ...veri.hizmetler[railI], gorsel: `${B}img/kurumsal-dizel/common-rail-3d.jpg` };
 
 // Motor, rota değişince yeni sayfanın ScrollTrigger'larını kurar ve sayfayı ancak SONRA başa sarar. Aşağıdayken
 // kurulan `once` tetikleyicileri kurulum sırasında kendini siler ve ScrollTrigger "reading 'end'" hatası verir.
@@ -41,6 +44,7 @@ kurumsal({
     teklifEtiketi: 'Enjektörümü ölçtüreyim',
     hizmetEtiketi: 'Tezgâhtaki işler',
     metinBoyutu: true,
+    altNot: 'Fotoğraflar temsilîdir (Pexels). 3D motor görseli temsilîdir. Yorumlar örnektir.',
     css: {
       zemin: '#e8edee', yuzey: '#f6f8f8', metin: '#0c1d22', soluk: '#4d5f64', cizgi: 'rgb(12 29 34 / .16)',
       vurgu: '#2455ff', 'vurgu-metin': '#ffffff', koyu: '#0b2a2f', 'koyu-metin': '#e6f0ef', 'koyu-soluk': '#8fb0b0',
@@ -57,7 +61,7 @@ kurumsal({
     : s.id === 'kurumsal-musteriler' ? { ...s, baslik: 'Filo ve Servisler', bolumler: ['anlasmalar', 'cta'] }
     : s
   ),
-  ekstralar: { hero, tezgah, hizmetOzet, atolye },
+  ekstralar: { hero, tezgah, hizmetOzet, atolye, yorumlar },
 });
 
 // Uzun işletme adı (?ad=) mobilde iki satıra iner; küçülen üst çubuğa (60px) sığsın diye alt satırı gizle, adı sıkılaştır.

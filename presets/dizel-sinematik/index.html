@@ -33,6 +33,11 @@
 
   <div class="cur" aria-hidden="true"><span></span></div>
 
+  <canvas class="stage" aria-hidden="true"></canvas>
+  <div class="stage-shade" aria-hidden="true"></div>
+  <!-- Parça ve menzür etiketleri: tek SVG katmanı -->
+  <svg class="tags" aria-hidden="true" data-tags></svg>
+
   <header class="hdr">
     <a class="hdr__brand" href="#top"><i aria-hidden="true"></i><span data-name></span></a>
     <nav class="hdr__nav" aria-label="Bölümler">
@@ -45,62 +50,66 @@
     <a class="hdr__tel btn btn--amber" data-tel></a>
   </header>
 
+  <!-- Göstergeler: telefonda göründükleri sürece başlık saklanır (tek üst öğe) -->
+  <div class="hud" aria-hidden="true">
+    <p class="hud__k" data-hud-k>Tam yük debisi</p>
+    <p class="hud__v" data-hud-v>mm³/strok · aralık 52–60</p>
+    <div class="hud__bar"><i data-hud-bar></i></div>
+  </div>
+  <div class="codehud" aria-hidden="true">
+    <p class="codehud__k">3 numaralı enjektör · düzeltme kodu</p>
+    <p class="codehud__code" data-code>0000 0000</p>
+    <div class="codehud__row"><span data-code-state>Beyne yazılıyor</span><b data-code-pct>0%</b></div>
+    <div class="codehud__bar"><i data-code-bar></i></div>
+  </div>
+  <div class="rpm" aria-hidden="true"><span data-rpm>00</span><i></i><b>5</b></div>
+
   <main id="top">
-    <!-- Film -->
+    <!-- Film: sahne sabit arka planda, bölümler önünden akar (pin yok) -->
     <section class="film" aria-label="Enjektör tezgâhta">
-      <canvas class="stage" aria-hidden="true"></canvas>
-      <div class="stage-shade" aria-hidden="true"></div>
-      <div class="tags" aria-hidden="true" data-tags></div>
-      <div class="tubetags" aria-hidden="true" data-tubetags></div>
-
-      <div class="hud" aria-hidden="true">
-        <p class="hud__k" data-hud-k>Tam yük debisi</p>
-        <p class="hud__v" data-hud-v>mm³/strok · aralık 52–60</p>
-        <div class="hud__bar"><i data-hud-bar></i></div>
-      </div>
-
-      <div class="codehud" aria-hidden="true">
-        <p class="codehud__k">3 numaralı enjektör · düzeltme kodu</p>
-        <p class="codehud__code" data-code>0000 0000</p>
-        <div class="codehud__row"><span data-code-state>Beyne yazılıyor</span><b data-code-pct>0%</b></div>
-        <div class="codehud__bar"><i data-code-bar></i></div>
-      </div>
-
-      <div class="rpm" aria-hidden="true"><span data-rpm>00</span><i></i><b>5</b></div>
-
       <div class="chap chap--hero" data-ch="0">
-        <p class="chap__since" data-since></p>
-        <h1 class="hero__title" data-name></h1>
-        <p class="hero__lead" data-slogan></p>
-        <div class="hero__cta">
-          <a class="btn btn--amber mag" data-tel-btn>Ara</a>
-          <a class="btn btn--line mag" data-wa>WhatsApp'tan yaz</a>
+        <div class="chap__in">
+          <p class="chap__since" data-since></p>
+          <h1 class="hero__title" data-name></h1>
+          <p class="hero__lead" data-slogan></p>
+          <div class="hero__cta">
+            <a class="btn btn--amber mag" data-tel-btn>Ara</a>
+            <a class="btn btn--line mag" data-wa>WhatsApp'tan yaz</a>
+          </div>
+          <p class="hero__hint"><i></i>Kaydırın, enjektörü sökelim</p>
         </div>
-        <p class="hero__hint"><i></i>Kaydırın, enjektörü sökelim</p>
       </div>
 
       <div class="chap" data-ch="1">
-        <p class="antet"><span>01</span>Sökeriz</p>
-        <h2 class="chap__title">Parça parça bakarız.</h2>
-        <p class="chap__txt">Bobinden memeye kadar her parça ayrı kontrol edilir. Temizlikle düzelecek enjektöre değişim önermeyiz.</p>
+        <div class="chap__in">
+          <p class="antet"><span>01</span>Sökeriz</p>
+          <h2 class="chap__title">Parça parça bakarız.</h2>
+          <p class="chap__txt">Bobinden memeye kadar her parça ayrı kontrol edilir. Temizlikle düzelecek enjektöre değişim önermeyiz.</p>
+        </div>
       </div>
 
       <div class="chap" data-ch="2">
-        <p class="antet"><span>02</span>Tezgâhta ölçeriz</p>
-        <h2 class="chap__title">Tahmin yok, ölçü var.</h2>
-        <p class="chap__txt">Dört enjektör aynı anda püskürtür, debi menzürde görünür. Hangisinin arızalı olduğunu ölçüm söyler.</p>
+        <div class="chap__in">
+          <p class="antet"><span>02</span>Tezgâhta ölçeriz</p>
+          <h2 class="chap__title">Tahmin yok, ölçü var.</h2>
+          <p class="chap__txt">Dört enjektör aynı anda püskürtür, debi menzürde görünür. Hangisinin arızalı olduğunu ölçüm söyler.</p>
+        </div>
       </div>
 
       <div class="chap" data-ch="3">
-        <p class="antet"><span>03</span>Onarır, kodlarız</p>
-        <h2 class="chap__title">Kodu beyne işleriz.</h2>
-        <p class="chap__txt">Tamir edilen enjektör yeniden ölçülür. Değer aralığa girince düzeltme kodu arıza tespit cihazıyla motora yazılır.</p>
+        <div class="chap__in">
+          <p class="antet"><span>03</span>Onarır, kodlarız</p>
+          <h2 class="chap__title">Kodu beyne işleriz.</h2>
+          <p class="chap__txt">Tamir edilen enjektör yeniden ölçülür. Değer aralığa girince düzeltme kodu arıza tespit cihazıyla motora yazılır.</p>
+        </div>
       </div>
 
       <div class="chap chap--end" data-ch="4">
-        <p class="antet"><span>04</span>Teslim</p>
-        <h2 class="chap__title">Çıktısı elinize verilir.</h2>
-        <p class="chap__txt" data-garanti></p>
+        <div class="chap__in">
+          <p class="antet"><span>04</span>Teslim</p>
+          <h2 class="chap__title">Çıktısı elinize verilir.</h2>
+          <p class="chap__txt" data-garanti></p>
+        </div>
       </div>
     </section>
 
@@ -171,10 +180,10 @@
     </section>
 
     <!-- Atölye -->
-    <section class="galeri" aria-label="Atölye">
+    <section class="galeri" aria-label="Dizel işinden kareler">
       <div class="wrap sec-head">
-        <p class="eyebrow">Atölye</p>
-        <h2 class="sec-title" data-kin>Şaşmaz'daki tezgâh.</h2>
+        <p class="eyebrow">Kareler</p>
+        <h2 class="sec-title" data-kin>Dizelin yakıt tarafı.</h2>
       </div>
       <div class="galeri__track" data-galeri></div>
     </section>
@@ -183,7 +192,7 @@
     <section class="yorumlar">
       <div class="wrap yorumlar__head">
         <div>
-          <p class="eyebrow">Müşteriler</p>
+          <p class="eyebrow">Örnek yorumlar</p>
           <h2 class="sec-title" data-kin>Ölçtük, anlattık.</h2>
         </div>
         <p class="puan"><span class="puan__n" data-puan>4,8</span><span class="puan__s" data-stars></span><span class="puan__c" data-puan-adet></span></p>
@@ -235,7 +244,7 @@
       <p class="foot__name" data-name></p>
       <p data-address></p>
       <p><a data-tel-plain></a></p>
-      <p class="foot__small">© <span data-year></span> <span data-name></span>. Fotoğraflar: Pexels.</p>
+      <p class="foot__small">© <span data-year></span> <span data-name></span>. Fotoğraflar: Pexels (temsilî). 3D görseller temsilîdir. Yorumlar örnektir.</p>
     </div>
   </footer>
 

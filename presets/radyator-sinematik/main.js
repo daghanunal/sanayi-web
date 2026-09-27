@@ -67,12 +67,14 @@ $('[data-status-big]').classList.toggle('is-open', status.open);
 const F = d.film;
 $('[data-rail]').innerHTML = F.map((a, i) => `<li data-rail-i><b>${String(i + 1).padStart(2, '0')}</b><span>${esc(a.durak)}</span></li>`).join('');
 $('[data-cards]').innerHTML = F.map((a, i) => `
+  <div class="chap" data-chap>
   <article class="card" data-card="${esc(a.id)}">
     <p class="card__stop"><b>${String(i + 1).padStart(2, '0')}</b> ${esc(a.durak)}</p>
     <h2 class="card__title">${esc(a.baslik)}</h2>
     <p class="card__text">${esc(a.metin)}</p>
     <a class="card__wa" href="${esc(waHref(d, `Merhaba ${d.isletme.ad}, ${low(a.hizmet)} için bilgi almak istiyorum. Araç: `))}" target="_blank" rel="noopener">${icons.whatsapp}<span>${esc(a.hizmet)} için sorun</span></a>
-  </article>`).join('');
+  </article>
+  </div>`).join('');
 
 // Hakkımızda + rakamlar
 $('[data-about-title]').textContent = `${yil} yıldır yalnızca radyatör.`;
@@ -132,7 +134,7 @@ $('[data-steps]').innerHTML = d.surec.map((s, i) => `
 // Yorumlar
 $('[data-puan]').textContent = nf(d.puan.ortalama, 1);
 $('[data-stars]').innerHTML = icons.star.repeat(5);
-$('[data-puan-adet]').textContent = `${nf(d.puan.adet)} Google yorumu`;
+$('[data-puan-adet]').textContent = `Örnek puan · ${nf(d.puan.adet)} değerlendirme`;
 $('[data-rev-track]').innerHTML = d.yorumlar.map((y) => `
   <figure class="rev">
     <p class="rev__stars" aria-label="${Number(y.puan)} yıldız">${icons.star.repeat(Number(y.puan))}</p>
@@ -292,6 +294,9 @@ function finaleState(q, time) {
 const film = $('[data-film]');
 const hero = $('[data-hero]');
 const cards = $$('[data-card]');
+const chaps = $$('[data-chap]');
+const topEl = $('[data-top]');
+let filmOnScreen = true;
 const railItems = $$('[data-rail-i]');
 const rail = $('[data-rail]');
 const hud = $('[data-hud]');
@@ -305,25 +310,14 @@ hudFill.setAttribute('pathLength', '100');
 
 let lastHud = -1, lastVerdict = '';
 function filmUI(p) {
-  const heroOut = seg(p, 0.045, 0.085);
-  hero.style.opacity = 1 - heroOut;
-  hero.style.transform = `translate3d(0, ${heroOut * -40}px, 0)`;
-  hero.style.visibility = heroOut >= 1 ? 'hidden' : 'visible';
+  const heroOut = seg(p, 0.02, 0.07);
   hint.style.opacity = 1 - seg(p, 0.0, 0.03);
+  void heroOut;
 
   let active = -1;
-  cards.forEach((card, i) => {
-    const [a, b] = CARD_RANGES[i];
-    const vin = seg(p, a, a + 0.02), vout = seg(p, b - 0.018, b);
-    const v = vin * (1 - vout);
-    card.style.opacity = v;
-    card.style.transform = `translate3d(0, ${(1 - vin) * 36 - vout * 24}px, 0)`;
-    card.style.visibility = v > 0.01 ? 'visible' : 'hidden';
-    if (p >= a && p < b) active = i;
-  });
+  CARD_RANGES.forEach(([a, b], i) => { if (p >= a && p < b) active = i; });
   const railOn = seg(p, 0.075, 0.095) * (1 - seg(p, 0.935, 0.95));
-  rail.style.opacity = railOn;
-  rail.style.visibility = railOn > 0.01 ? 'visible' : 'hidden';
+  topEl.classList.toggle('has-rail', railOn > 0.5 && filmOnScreen);
   railItems.forEach((li, i) => {
     li.classList.toggle('is-active', i === active);
     li.classList.toggle('is-done', p > CARD_RANGES[i][1]);
@@ -331,8 +325,7 @@ function filmUI(p) {
 
   // Gösterge: durağın içinde önceki değerden sonrakine
   const on = active >= 0 ? seg(p, CARD_RANGES[active][0], CARD_RANGES[active][0] + 0.02) * (1 - seg(p, CARD_RANGES[active][1] - 0.015, CARD_RANGES[active][1])) : 0;
-  hud.style.opacity = on;
-  hud.style.visibility = on > 0.01 ? 'visible' : 'hidden';
+  topEl.classList.toggle('has-hud', on > 0.5 && filmOnScreen);
   if (active >= 0) {
     const f = F[active], o = f.hud;
     const [a, b] = CARD_RANGES[active];
@@ -359,10 +352,6 @@ function filmUI(p) {
     hud.classList.toggle('is-bad', !o.iyi && fix >= 0.5);
   }
 
-  const ov = seg(p, 0.945, 0.97);
-  overview.style.opacity = ov;
-  overview.style.visibility = ov > 0.01 ? 'visible' : 'hidden';
-  overview.style.transform = `translate3d(0, ${(1 - ov) * 30}px, 0)`;
 }
 
 // Kaçak işareti ve su çizgisi: sahne karesinden sonra
@@ -388,6 +377,32 @@ function waterUI(camY) {
   if (w > 0.01) waterline.style.transform = `translate3d(0, ${(camY / 0.22) * 50}%, 0)`;
 }
 
+// --- Kaydırma → film ilerlemesi -------------------------------------------------
+// Her durak kartının ekranda durduğu kaydırma konumu, sahnedeki durağın ortasına (CARD_RANGES) eşlenir.
+const CH_P = [0, ...CARD_RANGES.map(([a, b]) => (a + b) / 2), 0.965, 1];
+let anchors = CH_P.map((_, i) => i);
+function measure() {
+  const top = (el) => el.getBoundingClientRect().top + scrollY;
+  const f = mobile() ? 0.66 : 0.5;
+  const mid = (el) => {
+    const r = el.getBoundingClientRect();
+    return r.top + scrollY + r.height / 2 - innerHeight * f;
+  };
+  const endChap = $('[data-chap-end]');
+  const filmEnd = top(film) + film.offsetHeight - innerHeight;
+  anchors = [top(film), ...chaps.map((c) => {
+    const card = $('.card', c);
+    if (getComputedStyle(card).position === 'sticky') return top(c) + parseFloat(getComputedStyle(c).paddingTop) + card.offsetHeight / 2 - innerHeight * f;
+    return mid(card);
+  }), mid($('.overview', endChap)), filmEnd];
+  for (let i = 1; i < anchors.length; i++) anchors[i] = Math.max(anchors[i], anchors[i - 1] + 1);
+}
+function scrollToP(y) {
+  if (y <= anchors[0]) return 0;
+  for (let i = 1; i < anchors.length; i++) if (y < anchors[i]) return CH_P[i - 1] + (CH_P[i] - CH_P[i - 1]) * (y - anchors[i - 1]) / (anchors[i] - anchors[i - 1]);
+  return 1;
+}
+
 // --- Başlangıç -------------------------------------------------------------
 
 let lenis = null;
@@ -404,8 +419,10 @@ function setupScroll() {
 
   filmST = ScrollTrigger.create({
     trigger: film, start: 'top top', end: 'bottom bottom',
-    onUpdate: (self) => (filmTarget = self.progress),
+    onRefresh: measure,
+    onToggle: (self) => (filmOnScreen = self.isActive || self.progress < 0.001),
   });
+  measure();
   ScrollTrigger.create({
     trigger: film, start: 'bottom bottom', end: 'bottom 40%',
     onUpdate: (self) => (canvas.style.opacity = 1 - self.progress),
@@ -524,6 +541,8 @@ function tick(now) {
     filmActive = filmST.progress < 1;
     finaleActive = (finaleST.progress > 0 && finaleST.progress < 1) || finaleST.isActive;
   }
+  filmTarget = scrollToP(scrollY);
+  if (Math.abs(filmTarget - filmP) > 0.3) filmP = filmTarget;
   filmP += (filmTarget - filmP) * (1 - Math.exp(-dt * 7));
   if (filmActive || filmP < 0.999) filmUI(filmP);
 
@@ -555,7 +574,9 @@ function tick(now) {
 addEventListener('resize', () => {
   S.resize();
   fitTitle();
+  measure();
 });
+document.fonts?.ready.then(() => { measure(); ScrollTrigger.refresh(); });
 
 // Masaüstü: imleç ve mıknatıslı butonlar
 if (finePointer && !reducedMotion) {
@@ -606,17 +627,22 @@ function runIntro() {
     S.compile();
     S.update(filmState(0, performance.now() / 1000, 0));
   }, [], 0.2);
-  tl.add(finish, 1.3);
+  let minDone = false, readyDone = false;
+  const maybe = () => minDone && readyDone && finish();
+  tl.call(() => { minDone = true; maybe(); }, [], 1.2);
+  S.readyP.then(() => { readyDone = true; maybe(); }, () => { readyDone = true; maybe(); });
+  gsap.delayedCall(2.2, finish);
   function finish() {
     if (done) return;
     done = true;
     tl.kill();
+    intro.style.pointerEvents = 'none';
     intro.classList.add('is-hot');
     gsap.timeline({ onComplete: () => { intro.remove(); lenis?.start(); } })
       .fromTo('[data-intro-drop]', { y: '-60vh', scaleY: 1.6, opacity: 1 }, { y: 0, scaleY: 1, duration: 0.42, ease: 'power2.in' }, 0)
       .to('[data-intro-center]', { opacity: 0, scale: 0.9, duration: 0.3, ease: 'power2.in' }, 0.1)
       .set('[data-intro-drop]', { opacity: 0 }, 0.42)
-      .fromTo(intro, { '--r': '0%' }, { '--r': '150%', duration: 0.9, ease: 'power3.in' }, 0.42)
+      .fromTo(intro, { '--r': '0%' }, { '--r': '150%', duration: 0.6, ease: 'power3.in' }, 0.42)
       .call(heroIn, [], 0.8);
     document.body.classList.remove('is-loading');
     S.ripple(0, 0, 1);

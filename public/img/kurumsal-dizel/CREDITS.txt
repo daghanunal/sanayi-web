@@ -1,3 +1,4 @@
 Pexels lisansı (ücretsiz, ticari kullanım serbest):
 dizel-boru.jpg: "Diesel fuel sign on metal pipes" https://www.pexels.com/photo/794089/
 Diğer görseller public/img/sektor-dizel/ klasöründen (bkz. oradaki CREDITS.txt).
+common-rail-3d.jpg — Blender Cycles render'ı, lib3d 'engine_diesel' varlığı (kendi üretimimiz, üçüncü taraf model yok; HDRI: Poly Haven CC0). Temsilîdir.

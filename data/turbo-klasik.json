@@ -4,40 +4,40 @@
     {
       "id": "cark",
       "no": "A",
-      "x": 52,
-      "y": 39,
+      "x": 71,
+      "y": 44.5,
       "ad": "Kompresör çarkı",
       "metin": "Havayı emip sıkıştıran çark. Kanatta çentik ya da sürtme izi varsa içeri bir şey kaçmıştır; hava filtresine ve hortumlara bakarız."
     },
     {
       "id": "mil",
       "no": "B",
-      "x": 71,
-      "y": 47,
+      "x": 53.5,
+      "y": 45,
       "ad": "Mil, yatak ve segmanlar",
       "metin": "Turbonun kalbi. Yağ gelmezse ya da kirli gelirse ilk burası aşınır. Mil boşluğunu ölçer, balansı buradan kontrol ederiz."
     },
     {
       "id": "turbin",
       "no": "C",
-      "x": 61,
-      "y": 58,
+      "x": 36.5,
+      "y": 41,
       "ad": "Türbin gövdesi ve VNT kanatları",
       "metin": "Egzozla dönen taraf. Kısa yol ve düşük devirde kurum bağlar, kanatlar sıkışır; çekiş düşer, siyah duman başlar."
     },
     {
       "id": "flans",
       "no": "D",
-      "x": 40,
-      "y": 60,
+      "x": 31,
+      "y": 63,
       "ad": "Egzoz flanşı ve contası",
       "metin": "Buradan kaçak varsa turbo basınç yapamaz, motor bölmesinden tıslama gelir. Revizyon sonrası contayı hep yeniler."
     },
     {
       "id": "salyangoz",
       "no": "E",
-      "x": 55,
-      "y": 80,
+      "x": 85,
+      "y": 52,
       "ad": "Kompresör gövdesi",
       "metin": "Salyangoz dediğimiz gövde. İçinde yağ birikmişse sebep turbo olmayabilir; karter havalandırmasına da bakarız."
     }
@@ -107,7 +107,7 @@
     },
     {
       "src": "/img/turbo-klasik/giris-m.jpg",
-      "alt": "Atölye tezgâhında bekleyen turbo"
+      "alt": "Tezgâhta bekleyen turbo"
     }
   ]
 }

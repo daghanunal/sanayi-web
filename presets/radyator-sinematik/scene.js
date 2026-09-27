@@ -1,21 +1,22 @@
-// Kodla çizilmiş radyatör ve test havuzu. Alüminyum petek (zikzak kanatçıklar, yassı borular),
-// plastik yan tanklar, dolum boğazı ve kapak, zincirle asılı gövde, arkadan kayan fan.
+// Kütüphanedeki gerçekçi radyatör (lib3d `radiator`: panjurlu kanatçıklı petek, nervürlü plastik tanklar, fan
+// davlumbazı) zincirle asılı, 3,35 kat büyütülmüş; test havuzu, kabarcıklar ve antifriz akışı burada çizilir.
 // Havuz: dalgalanan su yüzeyi (üstten ve alttan farklı görünür), kostikli taban, kaçaktan
 // yükselen kabarcıklar, kapaktan buhar, lehim kıvılcımı ve borularda akan pembe antifriz.
 // Sahne durumu dışarıdan `update(state)` ile verilir; kamera ve kurgu main.js'tedir.
 import * as THREE from 'three';
-import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js';
-import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js';
+import { loadAsset, loadEnv, pickQuality } from '../../shared/lib3d.js';
 
 const V = (x, y, z) => new THREE.Vector3(x, y, z);
 const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
 const L = (a, b, t) => a + (b - a) * t;
 
 // Ölçüler (metre, sahne ölçeği). Petek x boyunca, borular yatay; su yüzeyi y = 0.
-export const CORE = { w: 2.2, h: 1.36, d: 0.1, rows: 34 };
-const TANK = { w: 0.17, h: 1.52, d: 0.17 };
-export const LEAK = V(-CORE.w / 2 - 0.03, -0.63, TANK.d / 2 - 0.01); // sol alt tank contası
-export const CAP = V(CORE.w / 2 + TANK.w / 2, TANK.h / 2 + 0.1, 0);
+const SR = 3.35; // varlık metre → sahne
+export const CORE = { w: 0.657 * SR, h: 0.427 * SR, d: 0.044 * SR, rows: 34 };
+const TANK = { w: 0.064 * SR, h: 0.48 * SR, d: 0.046 * SR };
+// Kaçak: sol tankın alt contası; kapak sağ tankın üstünde. Varlık yüklenince düğümlerden düzeltilir.
+export const LEAK = V(-CORE.w / 2 - 0.05, -0.6, 0.1);
+export const CAP = V(0.3475 * SR, TANK.h / 2 + 0.05, 0);
 const POOL = { w: 6.4, d: 4.2, depth: 2.7 };
 
 const PINK = new THREE.Color(0xff3d7f);
@@ -63,35 +64,6 @@ function softDot() {
   });
 }
 
-// Zikzak kanatçık şeritleri: her iki boru arasında bir şerit, tek BufferGeometry
-function finGeometry(pitch) {
-  const { w, h, d, rows } = CORE;
-  const step = h / rows;
-  const tubeT = 0.011;
-  const pos = [];
-  const nrm = [];
-  const half = pitch / 2;
-  const n = Math.floor(w / half);
-  for (let r = 0; r < rows - 1; r++) {
-    const yLo = -h / 2 + (r + 0.5) * step + tubeT / 2;
-    const yHi = yLo + step - tubeT;
-    for (let k = 0; k < n; k++) {
-      const x0 = -w / 2 + k * half, x1 = x0 + half;
-      const y0 = k % 2 ? yHi : yLo, y1 = k % 2 ? yLo : yHi;
-      const z0 = -d / 2 + 0.004, z1 = d / 2 - 0.004;
-      // yüzey normali (x-y düzleminde, şeride dik)
-      const dx = x1 - x0, dy = y1 - y0, ln = Math.hypot(dx, dy);
-      const nx = -dy / ln, ny = dx / ln;
-      pos.push(x0, y0, z0, x1, y1, z0, x1, y1, z1, x0, y0, z0, x1, y1, z1, x0, y0, z1);
-      for (let i = 0; i < 6; i++) nrm.push(nx, ny, 0);
-    }
-  }
-  const g = new THREE.BufferGeometry();
-  g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
-  g.setAttribute('normal', new THREE.Float32BufferAttribute(nrm, 3));
-  return g;
-}
-
 export function createScene(canvas, { lite = false } = {}) {
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: !lite, alpha: false, powerPreference: 'high-performance' });
   renderer.outputColorSpace = THREE.SRGBColorSpace;
@@ -100,11 +72,12 @@ export function createScene(canvas, { lite = false } = {}) {
   let dpr = Math.min(devicePixelRatio || 1, lite ? 1.25 : 1.5);
   renderer.setPixelRatio(dpr);
 
+  const q = pickQuality();
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFShadowMap;
   const scene = new THREE.Scene();
   scene.background = SKY.clone();
-  const pmrem = new THREE.PMREMGenerator(renderer);
-  scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
-  scene.environmentIntensity = 0.55;
+  scene.environmentIntensity = 0.5;
   scene.fog = new THREE.Fog(SKY.clone(), 8, 28);
 
   const camera = new THREE.PerspectiveCamera(40, 1, 0.03, 80);
@@ -115,6 +88,13 @@ export function createScene(canvas, { lite = false } = {}) {
   scene.add(hemi);
   const lamp = new THREE.SpotLight(0xfff0dc, 60, 14, 0.62, 0.55, 1.6); // tavandaki atölye lambası
   lamp.position.set(0.6, 5.2, 1.6);
+  lamp.castShadow = true;
+  lamp.shadow.mapSize.set(lite ? 1024 : 2048, lite ? 1024 : 2048);
+  lamp.shadow.bias = -0.0006;
+  lamp.shadow.normalBias = 0.03;
+  lamp.shadow.radius = 6;
+  lamp.shadow.camera.near = 1;
+  lamp.shadow.camera.far = 14;
   scene.add(lamp, lamp.target);
   const rim = new THREE.DirectionalLight(0xff7aa6, 1.1); // arkadan pembe kontur
   rim.position.set(-4, 2.5, -5);
@@ -140,7 +120,7 @@ export function createScene(canvas, { lite = false } = {}) {
     clamp: new THREE.MeshStandardMaterial({ color: 0xff3d7f, metalness: 0.3, roughness: 0.35 }),
     fan: new THREE.MeshStandardMaterial({ color: 0x1b1a20, metalness: 0.05, roughness: 0.55, side: THREE.DoubleSide }),
   };
-  const CLEAN = new THREE.Color(0xc9cdd2), DIRTY = new THREE.Color(0x5e4526);
+  const CLEAN = new THREE.Color(0xd6d9dd), CLEAN_CORE = new THREE.Color(0xc9ccd1), DIRTY = new THREE.Color(0x5e4526);
 
   // --- Radyatör -----------------------------------------------------------------
   const rad = new THREE.Group(); // asılı gövde: y ile havuza iner
@@ -148,84 +128,61 @@ export function createScene(canvas, { lite = false } = {}) {
   rad.add(body);
   scene.add(rad);
 
-  body.add(new THREE.Mesh(finGeometry(lite ? 0.024 : 0.015), M.fin));
   const step = CORE.h / CORE.rows;
-  const tubes = new THREE.InstancedMesh(new THREE.BoxGeometry(CORE.w, 0.011, CORE.d), M.tube, CORE.rows);
   const tm = new THREE.Matrix4();
-  for (let r = 0; r < CORE.rows; r++) {
-    tm.makeTranslation(0, -CORE.h / 2 + (r + 0.5) * step, 0);
-    tubes.setMatrixAt(r, tm);
-  }
-  body.add(tubes);
-  // üst ve alt yan sac
-  for (const s of [-1, 1]) {
-    const plate = new THREE.Mesh(new THREE.BoxGeometry(CORE.w, 0.02, CORE.d + 0.01), M.alu);
-    plate.position.y = s * (CORE.h / 2 + 0.01);
-    body.add(plate);
-  }
-  // Yan tanklar + kıvrık başlık sacı
-  const tankGeo = new RoundedBoxGeometry(TANK.w, TANK.h, TANK.d, 3, 0.035);
-  const ribGeo = new THREE.BoxGeometry(TANK.w * 0.7, 0.012, 0.012);
-  for (const s of [-1, 1]) {
-    const x = s * (CORE.w / 2 + TANK.w / 2 + 0.012);
-    const t = new THREE.Mesh(tankGeo, M.tank);
-    t.position.x = x;
-    body.add(t);
-    for (let i = 0; i < 9; i++) {
-      const rib = new THREE.Mesh(ribGeo, M.tank);
-      rib.position.set(x, -TANK.h / 2 + 0.14 + i * 0.155, TANK.d / 2 + 0.004);
-      body.add(rib);
-    }
-    const head = new THREE.Mesh(new THREE.BoxGeometry(0.03, TANK.h - 0.06, TANK.d + 0.02), M.alu);
-    head.position.x = s * (CORE.w / 2 + 0.012);
-    body.add(head);
-    // montaj ayakları
-    for (const v of [-1, 1]) {
-      const foot = new THREE.Mesh(new THREE.CylinderGeometry(0.018, 0.018, 0.09, 12), M.rubber);
-      foot.position.set(x, v * (TANK.h / 2 + 0.04), 0);
-      body.add(foot);
-    }
-    // zincir: tankın üstünden tavana
+  // Zincirler: tank üstlerinden tavana
+  for (const sx of [-1, 1]) {
     const chain = new THREE.Mesh(new THREE.CylinderGeometry(0.008, 0.008, 7, 6), M.steel);
-    chain.position.set(s * (CORE.w / 2 - 0.12), CORE.h / 2 + 3.52, 0);
+    chain.position.set(sx * (CORE.w / 2 - 0.12), CORE.h / 2 + 3.62, 0);
     body.add(chain);
     const hook = new THREE.Mesh(new THREE.TorusGeometry(0.03, 0.008, 6, 14), M.steel);
-    hook.position.set(s * (CORE.w / 2 - 0.12), CORE.h / 2 + 0.05, 0);
+    hook.position.set(sx * (CORE.w / 2 - 0.12), CORE.h / 2 + 0.14, 0);
     body.add(hook);
   }
-  // Dolum boğazı ve kapak (sağ tank üstü)
-  const neck = new THREE.Mesh(new THREE.CylinderGeometry(0.034, 0.04, 0.09, 20), M.tank);
-  neck.position.set(CAP.x, TANK.h / 2 + 0.04, 0);
-  body.add(neck);
-  const cap = new THREE.Mesh(new THREE.CylinderGeometry(0.058, 0.058, 0.035, 24), M.brass);
-  cap.position.set(CAP.x, TANK.h / 2 + 0.1, 0);
-  body.add(cap);
-  const capTop = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.05, 0.02, 20), M.brass);
-  capTop.position.set(CAP.x, TANK.h / 2 + 0.127, 0);
-  body.add(capTop);
-  // Hortum ağızları ve pembe kelepçeler
-  const pipe = (x, y, dir) => {
-    const g = new THREE.Group();
-    const p = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 0.12, 16), M.tank);
-    p.rotation.z = Math.PI / 2;
-    p.position.x = dir * 0.06;
-    const hose = new THREE.Mesh(new THREE.CylinderGeometry(0.042, 0.042, 0.2, 18), M.rubber);
-    hose.rotation.z = Math.PI / 2;
-    hose.position.x = dir * 0.2;
-    const cl = new THREE.Mesh(new THREE.TorusGeometry(0.044, 0.008, 8, 20), M.clamp);
-    cl.rotation.y = Math.PI / 2;
-    cl.position.x = dir * 0.13;
-    g.add(p, hose, cl);
-    g.position.set(x, y, 0);
-    body.add(g);
-  };
-  pipe(-(CORE.w / 2 + TANK.w + 0.01), 0.52, -1);
-  pipe(CORE.w / 2 + TANK.w + 0.01, -0.54, 1);
+  // Kütüphane radyatörü: ön yüz +z (kameraya), fan davlumbazı arkada; petek merkezi gövdenin orijininde
+  const rig = new THREE.Group();
+  // z aynası: kapaklı tank sağa, kaçak veren tank sola gelir (three negatif ölçekte yüz yönünü düzeltir)
+  rig.scale.set(SR, SR, -SR);
+  rig.rotation.y = -Math.PI / 2;
+  body.add(rig);
+  let R = null, ready = false;
+  const fanParts = {};
+  const coreMats = [];
+  let finMat = null;
+  const readyP = (async () => {
+    const [env, asset] = await Promise.all([loadEnv('garage', renderer, { quality: q }), loadAsset('radiator', { quality: q, renderer })]);
+    scene.environment = env;
+    R = asset;
+    rig.add(R.scene);
+    // petek merkezi (varlıkta x .074, y .252) orijine
+    R.scene.position.set(-0.074, -0.252, 0);
+    const N = R.nodes, Mt = R.materials;
+    N.condenser.visible = false; // klima kondenseri bu işte ayrı
+    for (const n of ['shroud', 'fan', 'fan_motor']) {
+      const e = R.explodeData[n];
+      fanParts[n] = { node: N[n], base: N[n].position.clone(), dir: e ? e.dir.clone() : V(-0.4, 0, 0) };
+      N[n].visible = false;
+    }
+    if (Mt.tank_plastic) { Mt.tank_plastic.color.set(0x1a1620); Mt.tank_plastic.roughness = 0.5; }
+    if (Mt.cap_black) { Mt.cap_black.color.set(0xff3d7f); Mt.cap_black.roughness = 0.35; }
+    for (const k of ['alu_core', 'alu_header']) if (Mt[k]) { Mt[k].emissive = PINK.clone(); Mt[k].emissiveIntensity = 0; coreMats.push(Mt[k]); }
+    finMat = Mt.fin || Mt.condenser_face || null;
+    R.scene.traverse((o) => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
+    // kaçak ve kapak noktaları: gerçek düğümlerden (aynadan sonra sol tank = tank_L, kapak sağda)
+    rad.updateMatrixWorld(true);
+    const box = new THREE.Box3().setFromObject(N.tank_L);
+    const inv = new THREE.Matrix4().copy(body.matrixWorld).invert();
+    LEAK.copy(V((box.min.x + box.max.x) / 2, box.min.y + 0.12, box.max.z)).applyMatrix4(inv);
+    const cb = new THREE.Box3().setFromObject(N.cap);
+    CAP.copy(cb.getCenter(V(0, 0, 0))).applyMatrix4(inv);
+    ready = true;
+  })();
+
   // Tank üstünde işletme adı (yazı fontu yüklenince çizilir)
   const nameMat = new THREE.MeshBasicMaterial({ transparent: true, depthWrite: false, color: 0xffffff, toneMapped: false, opacity: 0.85 });
   const namePlate = new THREE.Mesh(new THREE.PlaneGeometry(1.2, 0.12), nameMat);
   namePlate.rotation.z = Math.PI / 2;
-  namePlate.position.set(-(CORE.w / 2 + TANK.w / 2 + 0.012), 0.05, TANK.d / 2 + 0.013);
+  namePlate.position.set(-0.3475 * SR, 0.0, 0.1);
   namePlate.visible = false;
   body.add(namePlate);
   function drawName(name) {
@@ -300,54 +257,8 @@ export function createScene(canvas, { lite = false } = {}) {
   flow.frustumCulled = false;
   body.add(flow);
 
-  // Fan: petek arkasından kayarak gelir
-  const fan = new THREE.Group();
-  const shroudShape = new THREE.Shape();
-  shroudShape.moveTo(-0.95, -0.66); shroudShape.lineTo(0.95, -0.66); shroudShape.lineTo(0.95, 0.66); shroudShape.lineTo(-0.95, 0.66); shroudShape.lineTo(-0.95, -0.66);
-  const hole = new THREE.Path();
-  hole.absarc(0, 0, 0.6, 0, Math.PI * 2, true);
-  shroudShape.holes.push(hole);
-  const shroud = new THREE.Mesh(new THREE.ExtrudeGeometry(shroudShape, { depth: 0.03, bevelEnabled: false, curveSegments: 40 }), M.fan);
-  shroud.position.z = -0.015;
-  fan.add(shroud);
-  const ring = new THREE.Mesh(new THREE.TorusGeometry(0.6, 0.025, 8, 48), M.fan);
-  fan.add(ring);
-  const rotor = new THREE.Group();
-  const bladeShape = new THREE.Shape();
-  bladeShape.moveTo(0.08, -0.05);
-  bladeShape.quadraticCurveTo(0.35, -0.16, 0.56, -0.09);
-  bladeShape.quadraticCurveTo(0.6, 0.02, 0.54, 0.1);
-  bladeShape.quadraticCurveTo(0.3, 0.08, 0.08, 0.05);
-  const bladeGeo = new THREE.ShapeGeometry(bladeShape, 8);
-  const BL = 7;
-  for (let i = 0; i < BL; i++) {
-    const b = new THREE.Mesh(bladeGeo, M.fan);
-    const holder = new THREE.Group();
-    b.rotation.x = 0.45; // kanat açısı
-    holder.add(b);
-    holder.rotation.z = (i / BL) * Math.PI * 2;
-    rotor.add(holder);
-  }
-  const hub = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.1, 0.09, 24), M.fan);
-  hub.rotation.x = Math.PI / 2;
-  rotor.add(hub);
-  const hubCap = new THREE.Mesh(new THREE.CylinderGeometry(0.045, 0.045, 0.1, 20), M.clamp);
-  hubCap.rotation.x = Math.PI / 2;
-  rotor.add(hubCap);
-  fan.add(rotor);
-  const motor = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.12, 0.16, 24), M.steel);
-  motor.rotation.x = Math.PI / 2;
-  motor.position.z = -0.12;
-  fan.add(motor);
-  for (let i = 0; i < 3; i++) {
-    const arm = new THREE.Mesh(new THREE.BoxGeometry(0.62, 0.035, 0.02), M.fan);
-    arm.rotation.z = (i / 3) * Math.PI * 2 + 0.5;
-    arm.position.z = -0.08;
-    arm.translateX(0.3);
-    fan.add(arm);
-  }
-  fan.visible = false;
-  body.add(fan);
+  // Fan: kütüphane radyatörünün davlumbazı, fanı ve motoru petek arkasından kayarak gelir (update'te)
+  let fanAngle = 0;
 
   // --- Havuz --------------------------------------------------------------------
   const caus = causticTex();
@@ -385,6 +296,7 @@ export function createScene(canvas, { lite = false } = {}) {
   flHole.lineTo(POOL.w / 2 + 0.1, POOL.d / 2 + 0.1); flHole.lineTo(POOL.w / 2 + 0.1, -POOL.d / 2 - 0.1);
   fl.holes.push(flHole);
   const ground = new THREE.Mesh(new THREE.ShapeGeometry(fl), new THREE.MeshStandardMaterial({ color: 0x1a1622, roughness: 0.9, metalness: 0 }));
+  ground.receiveShadow = true;
   ground.rotation.x = -Math.PI / 2;
   ground.position.y = 0.075;
   scene.add(ground);
@@ -577,24 +489,33 @@ export function createScene(canvas, { lite = false } = {}) {
     caus2.offset.set(-time * 0.025, time * 0.035);
 
     // Isı ve kir
-    M.tube.emissiveIntensity = s.hot * (0.45 + 0.2 * Math.sin(time * 5));
-    M.fin.color.copy(CLEAN).lerp(DIRTY, 1 - s.clean);
-    M.fin.roughness = L(0.4, 0.75, 1 - s.clean);
+    for (const m of coreMats) m.emissiveIntensity = s.hot * (0.35 + 0.18 * Math.sin(time * 5));
+    if (finMat) {
+      finMat.color.copy(CLEAN).lerp(DIRTY, 1 - s.clean);
+      finMat.roughness = L(0.45, 0.8, 1 - s.clean);
+    }
+    for (const m of coreMats) m.color.copy(CLEAN_CORE).lerp(DIRTY, (1 - s.clean) * 0.7);
     flowMat.uniforms.uTime.value = time;
     flowMat.uniforms.uFlow.value = s.flow;
     flowMat.uniforms.uAmt.value = s.flowAmt;
     flowMat.uniforms.uScale.value = renderer.domElement.height / (2 * Math.tan((camera.fov * Math.PI) / 360));
 
     // Fan
-    fan.visible = s.fan > 0.001;
-    if (fan.visible) {
-      fan.position.z = -0.2 - (1 - s.fan) * 1.2;
-      rotor.rotation.z -= s.fanSpin * dt * 26;
+    if (ready) {
+      const on = s.fan > 0.001;
+      for (const p of Object.values(fanParts)) {
+        p.node.visible = on;
+        p.node.position.copy(p.base).addScaledVector(p.dir, (1 - s.fan) * 1.6);
+      }
+      if (on) {
+        fanAngle += s.fanSpin * dt * 26;
+        R.spin(fanAngle);
+      }
     }
 
     rad.updateMatrixWorld(true);
     leakW.copy(LEAK).applyMatrix4(body.matrixWorld);
-    capW.set(CAP.x, TANK.h / 2 + 0.14, 0).applyMatrix4(body.matrixWorld);
+    capW.set(CAP.x, CAP.y + 0.06, CAP.z).applyMatrix4(body.matrixWorld);
 
     // Kabarcıklar: kaçak su altındayken
     const leakOn = s.leak * (leakW.y < -0.03 ? 1 : 0);
@@ -694,5 +615,5 @@ export function createScene(canvas, { lite = false } = {}) {
     renderer.compile(scene, camera);
   }
 
-  return { update, resize, compile, drawName, screenOf, renderer, ripple: (x, z, amp = 0.6) => ripple(x, z, lastTime, amp) };
+  return { update, resize, compile, drawName, screenOf, renderer, readyP, isReady: () => ready, ripple: (x, z, amp = 0.6) => ripple(x, z, lastTime, amp) };
 }

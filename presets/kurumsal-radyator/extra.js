@@ -7,7 +7,7 @@
 // (3) vasita: binek ve ağır vasıta için iki büyük fotoğraf panosu.
 // (4) atolye: canlı açık/kapalı, haftalık saatler (bugün işaretli), adres, yaklaşınca yüklenen harita.
 import { esc, telHref, mapsHref, mapsEmbed, openStatus, groupedHours, GUNLER, icons, gsap, reducedMotion } from '../../shared/core.js';
-import { yilEki } from '../_kurumsal/bolumler.js';
+import { yilEki, BOLUMLER } from '../_kurumsal/bolumler.js';
 
 const ok = `<svg class="k-ok" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 const rota = (id, metin, cls = 'k-btn') => `<a class="${cls}" href="#/${id}" data-rota="${id}">${metin}</a>`;
@@ -384,5 +384,14 @@ export const atolye = {
       io.disconnect();
     }, { rootMargin: '300px' });
     io.observe(kutu);
+  },
+};
+
+// --- Yorumlar: motorun bölümü, puanı açıkça "örnek" diye yazar -----------------------------------
+export const yorumlar = {
+  render(d, ctx, sorgu) {
+    return BOLUMLER.yorumlar.render(d, ctx, sorgu)
+      .replace('değerlendirme</span>', 'örnek değerlendirme</span>')
+      .replace('<ul class="k-yorumlar__liste"', '<p class="k-not">Bu yorumlar tasarım örneğidir; işletmenin kendi yorumlarıyla değiştirilir.</p><ul class="k-yorumlar__liste"');
   },
 };

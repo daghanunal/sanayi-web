@@ -21,8 +21,8 @@
       "alt": "Aşınmış turbo gövdesine yakından bakış"
     },
     {
-      "src": "/img/kurumsal-turbo/krom-turbo.jpg",
-      "alt": "Motor bölmesinde turbo ve intercooler borusu"
+      "src": "/img/kurumsal-turbo/turbo-3d.jpg",
+      "alt": "Revizyon sonrası turbo (3D görsel, temsilî)"
     },
     {
       "src": "/img/kurumsal-turbo/motor-turbo.jpg",
@@ -34,7 +34,7 @@
     },
     {
       "src": "/img/kurumsal-turbo/tezgah-turbo.jpg",
-      "alt": "Atölye tezgâhında bekleyen turbo"
+      "alt": "Tezgâhta bekleyen turbo"
     }
   ],
   "kurumsal": {
@@ -50,9 +50,9 @@
       "metin": "Tıkalı bir yağ dönüş hattı, geç değişen yağ ya da kurum bağlamış bir VNT mekanizması. Biz önce sebebi buluruz; sebep ortadan kalkmadan revizyonlu turbo da yenisi de aynı yoldan gider."
     },
     "hizmetOzetBaslik": "Tezgâhtaki işler",
-    "yorumBaslik": "Turbosu açılanlar ne diyor",
+    "yorumBaslik": "Örnek yorumlar: turbosu açılanlar",
     "surecBaslik": "Bir turbo tezgâhta nasıl ilerler",
-    "galeriBaslik": "Tezgâhtan",
+    "galeriBaslik": "Turbo işinden kareler",
     "markaBaslik": "Revizyonunu yaptığımız turbo ve araç markaları",
     "anlasmaBaslik": "Filolar ve sanayideki meslektaşlar",
     "anlasmaMetin": "Aracı yoldan çekemeyen filolara ve turboyu söküp getiren servis ustalarına ayrı sıra açıyoruz.",
@@ -165,8 +165,8 @@
         "gorsel": "/img/kurumsal-turbo/dizel-motor.jpg"
       },
       "referanslar": {
-        "baslik": "Tezgâhtan ve müşterilerden",
-        "metin": "Atölyeden kareler, müşterilerimizin yorumları ve baktığımız markalar."
+        "baslik": "Turbo işinden kareler ve örnek yorumlar",
+        "metin": "Turbo işinden kareler, örnek yorumlar ve baktığımız markalar."
       },
       "iletisim": {
         "baslik": "İletişim",

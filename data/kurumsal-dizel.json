@@ -12,9 +12,9 @@
       "metin": "Zor çalışma, tekleme, duman: belirti aynı olabilir, arızalı enjektör farklıdır. Hepsini değiştirmek yerine her birini tezgâhta tek tek ölçer, yalnızca değeri tutmayana dokunuruz."
     },
     "hizmetOzetBaslik": "Tezgâhtaki işler",
-    "yorumBaslik": "Enjektörü ölçülenler ne diyor",
+    "yorumBaslik": "Örnek yorumlar: enjektörü ölçülenler",
     "surecBaslik": "Bir enjektör tezgâhta nasıl ilerler",
-    "galeriBaslik": "Atölyeden",
+    "galeriBaslik": "Dizel işinden kareler",
     "markaBaslik": "Enjektör ve pompasına baktığımız markalar",
     "anlasmaBaslik": "Filolar ve sanayideki meslektaşlar",
     "anlasmaMetin": "Seferdeki aracı bekletmemek için ticari araçlara, söküp getiren servis ustalarına ayrı sıra açıyoruz.",
@@ -78,7 +78,7 @@
       "kurumsal": { "baslik": "Kurumsal", "metin": "Kim olduğumuz, neden yalnızca dizel yakıt sistemiyle uğraştığımız ve bir enjektörü nasıl teslim ettiğimiz.", "gorsel": "/img/sektor-dizel/silindir-kapak.jpg" },
       "hizmetler": { "baslik": "Hizmetlerimiz", "metin": "Enjektör testinden pompa tamirine, kodlamadan ağır vasıtaya; her iş için ortalama süre ve kapsam." },
       "kurumsal-musteriler": { "baslik": "Filolar ve servisler", "metin": "Sanayideki servislere tezgâh testi, kamyon, otobüs ve iş makinesine aynı gün ölçüm.", "gorsel": "/img/sektor-dizel/kamyon-atolye.jpg" },
-      "referanslar": { "baslik": "Atölyeden ve müşterilerden", "metin": "Tezgâhtan kareler, müşterilerimizin yorumları ve baktığımız markalar." },
+      "referanslar": { "baslik": "Dizel işinden kareler ve örnek yorumlar", "metin": "Dizel işinden kareler, örnek yorumlar ve baktığımız sistemler." },
       "iletisim": { "baslik": "İletişim", "metin": "Şikâyeti yazın ya da enjektörü getirin; aynı gün dönüş yapalım." }
     },
     "konular": ["Enjektör testi", "Enjektör tamiri / kodlama", "Yüksek basınç pompası", "Mekanik pompa", "Ağır vasıta", "Servis olarak iş getirmek", "Filo / ticari araç", "Genel bilgi"],

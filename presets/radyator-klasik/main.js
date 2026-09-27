@@ -265,7 +265,7 @@ $('[data-gallery]').innerHTML = gallery.map((g, i) => `
 const star = icons.star;
 $('[data-score]').textContent = nf(d.puan.ortalama, 1);
 $('[data-stars]').innerHTML = Array.from({ length: 5 }, (_, i) => `<span class="${i < Math.round(d.puan.ortalama) ? 'on' : ''}">${star}</span>`).join('');
-$('[data-review-count]').textContent = `${nf(d.puan.adet)} Google yorumu`;
+$('[data-review-count]').textContent = `Örnek puan · ${nf(d.puan.adet)} değerlendirme`;
 $('[data-reviews]').innerHTML = d.yorumlar.map((y) => `
   <li class="rv">
     <p class="rv__stars" aria-label="${y.puan} yıldız">${Array.from({ length: 5 }, (_, i) => `<span class="${i < y.puan ? 'on' : ''}">${star}</span>`).join('')}</p>

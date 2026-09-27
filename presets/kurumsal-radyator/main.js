@@ -2,14 +2,14 @@ import '../../shared/base.css';
 import ana from '../../data/sektor-radyator.json';
 import ek from '../../data/kurumsal-radyator.json';
 import { kurumsal, derinBirlestir, VARSAYILAN_SAYFALAR } from '../_kurumsal/engine.js';
-import { petek, devre, vasita, atolye } from './extra.js';
+import { petek, devre, vasita, atolye, yorumlar } from './extra.js';
 import './style.css';
 
 // "Bakır petek" yönü: çelik grisi zemin, kurşun-arduvaz paneller, bakır-pirinç radyatör bakırı vurgu.
 // Sıcak/soğuk yalnızca ölçüm anlarında: hararet kırmızısı → bakır → soğuk su mavisi. Başlıklar Kanit, ölçüler Roboto Mono.
 const S = (f) => `/img/sektor-radyator/${f}`;
 const K = (f) => `/img/kurumsal-radyator/${f}`;
-const GORSEL = [S('tezgah.jpg'), K('radyator-on.jpg'), S('kaynak.jpg'), S('kaput-alti.jpg'), K('eller-motor.jpg'), S('teshis.jpg'), S('motor-bolmesi.jpg'), S('tir-motor.jpg'), K('antifriz-dolum.jpg')];
+const GORSEL = [S('tezgah.jpg'), K('bakir-petek-3d.jpg'), S('kaynak.jpg'), S('kaput-alti.jpg'), K('eller-motor.jpg'), S('teshis.jpg'), S('motor-bolmesi.jpg'), S('tir-motor.jpg'), K('antifriz-dolum.jpg')];
 const KISA = [
   'Delik, çatlak, sızıntı; lehim ya da tank ve conta.',
   'Kurtarmayan radyatöre uygun yenisi, havası alınarak.',
@@ -48,6 +48,7 @@ kurumsal({
     teklifEtiketi: 'Arızayı yazın',
     hizmetEtiketi: 'Soğutmada yaptığımız işler',
     metinBoyutu: true,
+    altNot: 'Fotoğraflar temsilîdir (Pexels). 3D radyatör görseli temsilîdir. Yorumlar örnektir.',
     css: {
       zemin: '#eef0f1', yuzey: '#e0e4e6', metin: '#15191c', soluk: '#525b61', cizgi: 'rgb(21 25 28 / .14)',
       vurgu: '#c4561a', 'vurgu-metin': '#ffffff', koyu: '#1b2429', 'koyu-metin': '#eef1f2', 'koyu-soluk': '#9aa6ad',
@@ -65,5 +66,5 @@ kurumsal({
     : s.id === 'iletisim' ? { ...s, bolumler: ['iletisim'] }
     : s
   ),
-  ekstralar: { petek, devre, vasita, atolye },
+  ekstralar: { petek, devre, vasita, atolye, yorumlar },
 });

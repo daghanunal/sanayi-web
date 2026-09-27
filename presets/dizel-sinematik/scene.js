@@ -3,7 +3,7 @@
 // C) dört enjektör test tezgâhında menzürlere püskürtür, D) tamir edilen enjektörün kodu okunur.
 // Dışarıya: createScene(canvas, opts) → { setProgress(p), state, anchors, project(v3), resize(), start(), stop(), render(), warm() }
 import * as THREE from 'three';
-import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js';
+import { loadAsset, loadEnv, pickQuality } from '../../shared/lib3d.js';
 
 const clamp01 = (x) => Math.min(1, Math.max(0, x));
 const smooth = (a, b, x) => {
@@ -26,27 +26,22 @@ function canvasTex(w, h, draw, srgb = true) {
   return t;
 }
 
-// Gövdedeki lazer yazısı: parça numarası, düzeltme kodu, matris kod
+// Gövdedeki lazer yazısı: düzeltme kodu ve matris kod (parça numarası yok)
 function etchTex() {
-  return canvasTex(512, 256, (g, w, h) => {
+  return canvasTex(512, 160, (g, w, h) => {
     g.clearRect(0, 0, w, h);
-    g.fillStyle = 'rgba(28,30,32,.92)';
-    g.font = '600 34px monospace';
-    g.fillText('0 445 110 293', 150, 74);
-    g.font = '500 26px monospace';
-    g.fillText('IMA  5A7C 3F91', 150, 118);
-    g.fillText('D2  0,82  19/07', 150, 156);
-    // matris kod
-    const s = 9, x0 = 22, y0 = 44;
+    g.fillStyle = 'rgba(24,26,28,.9)';
+    g.font = '600 30px monospace';
+    g.fillText('IMA  5A7C 3F91', 150, 62);
+    g.font = '500 24px monospace';
+    g.fillText('D2  0,82', 150, 104);
+    const s = 8, x0 = 24, y0 = 24;
     for (let y = 0; y < 13; y++) {
       for (let x = 0; x < 13; x++) {
         const edge = x === 0 || y === 12 || (y === 0 && x % 2 === 0) || (x === 12 && y % 2 === 0);
         if (edge || Math.random() < 0.46) g.fillRect(x0 + x * s, y0 + y * s, s - 1, s - 1);
       }
     }
-    g.strokeStyle = 'rgba(28,30,32,.6)';
-    g.lineWidth = 2;
-    g.strokeRect(12, 30, w - 24, 176);
   });
 }
 
@@ -103,124 +98,76 @@ function backdropTex() {
 
 // ---------------------------------------------------------------- enjektör
 
-// Profil noktaları [yarıçap, y] → LatheGeometry
-const lathe = (pts, seg = 48) => new THREE.LatheGeometry(pts.map(([r, y]) => new THREE.Vector2(r, y)), seg);
+// Kütüphane enjektörü (lib3d `injector`, 0,167 m, ucu y = 0'da, giriş +x'e): K kat büyütülür, ucu yerel y = −1,2'de.
+// Kahramanın ön yarıları (*_front) sökümde 180° döndürülüp yana konur: iki yarının da kesit yüzü kameraya bakar.
+const K = 14.4;
+const TIP_Y = 0.0018; // püskürtme delikleri
+const LABEL_NODES = ['coil_back', 'valve_piece_back', 'body_back', 'nozzle_nut_back', 'nozzle_back', 'needle'];
 
-function injectorKit(low) {
-  const seg = low ? 32 : 56;
-  const M = {
-    steel: new THREE.MeshStandardMaterial({ color: 0xc3c8cd, metalness: 1, roughness: 0.26 }),
-    bright: new THREE.MeshStandardMaterial({ color: 0xe4e6e8, metalness: 1, roughness: 0.12 }),
-    oxide: new THREE.MeshStandardMaterial({ color: 0x3d4146, metalness: 0.9, roughness: 0.42 }),
-    plastic: new THREE.MeshStandardMaterial({ color: 0x17191b, metalness: 0, roughness: 0.5 }),
-    tip: new THREE.MeshStandardMaterial({ color: 0xb49a78, metalness: 1, roughness: 0.2 }), // ısıdan saman rengi
-    pin: new THREE.MeshStandardMaterial({ color: 0xd9b25a, metalness: 1, roughness: 0.3 }),
-  };
-  const etch = etchTex();
-  const G = {
-    // bobin: plastik kapak + çelik kapak somunu (altıgen)
-    cap: lathe([[0, 1.0], [0.2, 1.0], [0.25, 0.985], [0.27, 0.95], [0.27, 0.88], [0.255, 0.87], [0.255, 0.85], [0.27, 0.84], [0.27, 0.76], [0.24, 0.73], [0.24, 0.72], [0, 0.72]], seg),
-    capNut: new THREE.CylinderGeometry(0.29, 0.29, 0.1, 6, 1),
-    sok: new THREE.BoxGeometry(0.2, 0.2, 0.3),
-    sokPlug: new THREE.BoxGeometry(0.3, 0.16, 0.2),
-    pins: new THREE.CylinderGeometry(0.012, 0.012, 0.1, 6),
-    // valf grubu: yuva + bilye
-    valve: lathe([[0, 0.56], [0.13, 0.56], [0.14, 0.575], [0.14, 0.64], [0.1, 0.66], [0.1, 0.68], [0, 0.68]], seg),
-    ball: new THREE.SphereGeometry(0.035, 16, 12),
-    // gövde
-    body: lathe([[0, 0.64], [0.19, 0.64], [0.2, 0.63], [0.2, 0.5], [0.235, 0.49], [0.24, 0.44], [0.24, 0.36], [0.2, 0.35], [0.2, -0.3], [0.19, -0.35], [0, -0.35]], seg),
-    stub: new THREE.CylinderGeometry(0.065, 0.075, 0.42, 20),
-    stubNut: new THREE.CylinderGeometry(0.1, 0.1, 0.1, 6),
-    ret: new THREE.CylinderGeometry(0.035, 0.035, 0.14, 14),
-    etch: new THREE.CylinderGeometry(0.2025, 0.2025, 0.44, 24, 1, true, -0.62, 1.24),
-    // meme somunu
-    nut: lathe([[0, -0.35], [0.205, -0.35], [0.21, -0.37], [0.21, -0.6], [0.19, -0.66], [0.16, -0.7], [0.15, -0.72], [0, -0.72]], seg),
-    // meme
-    nozzle: lathe([[0, -0.72], [0.14, -0.72], [0.14, -0.79], [0.1, -0.81], [0.078, -0.83], [0.075, -1.1], [0.066, -1.14], [0.045, -1.175], [0.02, -1.195], [0, -1.2]], seg),
-    // iğne
-    needle: lathe([[0, -0.44], [0.032, -0.44], [0.032, -1.0], [0.026, -1.04], [0.02, -1.07], [0.003, -1.12], [0, -1.12]], 20),
-    // bobin telleri (kesik görünmesin diye sadece patlatınca görünür küçük halka)
-    coil: new THREE.TorusGeometry(0.15, 0.03, 8, 32),
-  };
-  G.stub.rotateX(-Math.PI / 3); // arkaya ve yukarı
-  G.stubNut.rotateX(-Math.PI / 3);
-  G.ret.rotateZ(Math.PI / 2);
-  G.pins.rotateZ(Math.PI / 2);
-  G.coil.rotateX(Math.PI / 2);
-  const etchMat = new THREE.MeshStandardMaterial({ map: etch, transparent: true, metalness: 0.4, roughness: 0.6, depthWrite: false, polygonOffset: true, polygonOffsetFactor: -2 });
-  return { M, G, etchMat };
-}
-
-function buildInjector(kit, hero = false) {
-  const { M, G } = kit;
+function buildInjector(asset, hero, etchMat, scanMat) {
   const root = new THREE.Group();
-  const part = (name, meshes) => {
-    const g = new THREE.Group();
-    g.name = name;
-    meshes.forEach((m) => g.add(m));
-    root.add(g);
-    return g;
-  };
-  const mesh = (geo, mat, x = 0, y = 0, z = 0) => {
-    const m = new THREE.Mesh(geo, mat);
-    m.position.set(x, y, z);
-    return m;
-  };
-
-  // 0 bobin + soket
-  const capNut = mesh(G.capNut, M.steel, 0, 0.69, 0);
-  capNut.rotation.y = Math.PI / 6;
-  const bobin = part('bobin', [
-    mesh(G.cap, M.plastic),
-    capNut,
-    mesh(G.sok, M.plastic, 0.02, 1.09, 0),
-    mesh(G.sokPlug, M.plastic, 0.2, 1.1, 0),
-    mesh(G.pins, M.pin, 0.37, 1.12, 0.04),
-    mesh(G.pins, M.pin, 0.37, 1.12, -0.04),
-    mesh(G.coil, M.pin, 0, 0.74, 0),
-  ]);
-  // 1 valf grubu
-  const valf = part('valf', [mesh(G.valve, M.bright), mesh(G.ball, M.bright, 0, 0.7, 0)]);
-  // 2 gövde
-  const etchMat = hero ? kit.etchMat.clone() : kit.etchMat;
-  const etch = mesh(G.etch, etchMat, 0, 0.02, 0);
-  const govde = part('govde', [
-    mesh(G.body, M.steel),
-    mesh(G.stub, M.steel, 0, 0.52, -0.21),
-    mesh(G.stubNut, M.steel, 0, 0.64, -0.41),
-    mesh(G.ret, M.oxide, 0.24, 0.56, 0),
-    etch,
-  ]);
-  // 3 meme somunu
-  const somun = part('somun', [mesh(G.nut, M.oxide)]);
-  // 4 meme
-  const meme = part('meme', [mesh(G.nozzle, M.tip)]);
-  // 5 iğne
-  const igne = part('igne', [mesh(G.needle, M.bright)]);
-
-  const parts = [bobin, valf, govde, somun, meme, igne];
-  // patlatılmış görünüşte dikey kaydırma
-  const EXPL = [1.02, 0.56, 0, -0.56, -1.02, -1.92];
-  // her parçanın yerel merkezi (etiket için)
-  const CENTER = [0.9, 0.62, 0.15, -0.53, -0.95, -0.78];
+  const rig = new THREE.Group();
+  rig.scale.setScalar(K);
+  rig.position.y = -1.2;
+  root.add(rig);
+  const model = hero ? asset.scene : asset.scene.clone(true);
+  rig.add(model);
+  const byName = {};
+  model.traverse((o) => { if (o.name) byName[o.name] = o; });
   const tip = new THREE.Object3D();
-  tip.position.set(0, -1.2, 0);
-  meme.add(tip);
+  tip.position.set(0, TIP_Y, 0);
+  rig.add(tip);
+  const inj = byName.injector || model;
+  // gövdedeki kod yazısı ve kodlama taraması (−x yüzü: tezgâhta kameraya bakar)
+  let etch = null, scan = null;
+  if (hero) {
+    etch = new THREE.Mesh(new THREE.CylinderGeometry(0.01135, 0.01135, 0.022, 32, 1, true, -Math.PI / 2 - 0.85 + 0.35, 1.7), etchMat);
+    etch.position.y = 0.088;
+    inj.add(etch);
+    scan = new THREE.Mesh(new THREE.CylinderGeometry(0.0118, 0.0118, 0.0009, 40, 1, true), scanMat);
+    inj.add(scan);
+  }
+  const base = {};
+  if (hero) for (const [n, e] of Object.entries(asset.explodeData)) base[n] = { node: e.node, p: e.base.clone(), dir: e.dir.clone(), q: e.node.quaternion.clone() };
+  const fronts = hero ? Object.keys(base).filter((n) => n.endsWith('_front')) : [];
+  const qTurn = new THREE.Quaternion();
+  const Y = new THREE.Vector3(0, 1, 0);
+  const center = new THREE.Vector3();
+  const box = new THREE.Box3();
+  const labelLocal = LABEL_NODES.map((n) => {
+    const o = byName[n];
+    if (!o) return null;
+    model.updateMatrixWorld(true);
+    box.setFromObject(o);
+    return { o, local: o.worldToLocal(box.getCenter(new THREE.Vector3())) };
+  });
   return {
-    root, parts, tip, etch, etchMat,
-    explode(e) {
-      parts.forEach((p, i) => {
-        p.position.y = EXPL[i] * e;
-        p.rotation.y = (i % 2 ? -1 : 1) * e * 0.5 * (i / 5);
-      });
-      igne.visible = e > 0.02;
-      valf.visible = e > 0.02;
-      bobin.children[6].visible = e > 0.02;
+    root, tip, etch, scan, nodes: byName,
+    // e: dikey açılma, cut: ön yarılar yana (0…1)
+    explode(e, cut = e) {
+      if (!hero) return;
+      for (const [n, b] of Object.entries(base)) {
+        const front = n.endsWith('_front');
+        const back = n.endsWith('_back');
+        b.node.position.copy(b.p);
+        // yalnız dikey bileşen (yarılar ±z'de ayrılmasın), biraz abartılı
+        b.node.position.y += b.dir.y * e * 1.3;
+        if (!front && !back) b.node.position.x += b.dir.x * e;
+        if (front) {
+          b.node.position.x += 0.075 * cut;
+          qTurn.setFromAxisAngle(Y, Math.PI * cut);
+          b.node.quaternion.copy(b.q).premultiply(qTurn);
+        }
+      }
+      if (byName.o_ring) byName.o_ring.visible = cut < 0.1;
+      if (etch) etch.visible = e < 0.02;
     },
     centerOf(i, out) {
-      out.set(0, CENTER[i], 0);
-      return parts[i].localToWorld(out);
+      const L = labelLocal[i];
+      if (!L) return out.set(0, 0, 0);
+      return out.copy(L.local).applyMatrix4(L.o.matrixWorld);
     },
+    fronts,
   };
 }
 
@@ -322,17 +269,24 @@ export function createScene(canvas, { low = false, reduced = false, phone = fals
   renderer.toneMappingExposure = 1.1;
   renderer.setClearColor(0x0b0d0c, 1);
 
+  const q = pickQuality();
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFShadowMap;
   const scene = new THREE.Scene();
-  const pmrem = new THREE.PMREMGenerator(renderer);
-  scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
-  scene.environmentIntensity = 0.5;
+  scene.environmentIntensity = 0.55;
   scene.fog = new THREE.Fog(0x0b0d0c, 14, 34);
 
   const camera = new THREE.PerspectiveCamera(phone ? 38 : 32, 1, 0.05, 80);
 
   // ışıklar
   const key = new THREE.DirectionalLight(0xfff1dc, 2.4);
-  key.position.set(3, 5, 5);
+  key.position.set(3, 6, 5);
+  key.castShadow = true;
+  key.shadow.mapSize.set(low ? 1024 : 2048, low ? 1024 : 2048);
+  Object.assign(key.shadow.camera, { left: -4, right: 4, top: 4, bottom: -4, near: 1, far: 20 });
+  key.shadow.bias = -0.0005;
+  key.shadow.normalBias = 0.02;
+  key.shadow.radius = 5;
   const rim = new THREE.DirectionalLight(0xffa233, 3.2);
   rim.position.set(-4, 2, -4);
   const fill = new THREE.DirectionalLight(0x9cc4e0, 0.6);
@@ -348,19 +302,36 @@ export function createScene(canvas, { low = false, reduced = false, phone = fals
   const floor = new THREE.Mesh(new THREE.CircleGeometry(9, 48), new THREE.MeshStandardMaterial({ map: floorTex(), metalness: 0.2, roughness: 0.7 }));
   floor.rotation.x = -Math.PI / 2;
   floor.position.y = -1.38;
+  floor.receiveShadow = true;
   scene.add(floor);
 
-  // ---------------- enjektörler
-  const kit = injectorKit(low);
+  // ---------------- enjektörler (lib3d; yüklenince kurulur)
+  const steel = new THREE.MeshStandardMaterial({ color: 0xc3c8cd, metalness: 1, roughness: 0.26 });
+  const etchMat = new THREE.MeshStandardMaterial({ map: etchTex(), transparent: true, metalness: 0.4, roughness: 0.6, depthWrite: false, polygonOffset: true, polygonOffsetFactor: -2, emissive: 0xff9d2a, emissiveIntensity: 0 });
+  const scanMat = new THREE.MeshBasicMaterial({ color: 0xffb640, transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide });
   const SP = phone ? 0.8 : 1.0; // tezgâhta aralık
   const SLOTS = [-1.5, -0.5, 0.5, 1.5].map((x) => x * SP);
   const HERO = 2; // arızalı çıkan, tamir edilip kodlanan
   const BENCH_S = phone ? 0.46 : 0.5;
   const TUBE_TOP = 0.5, TUBE_BOT = -1.12, TUBE_H = TUBE_TOP - TUBE_BOT;
   const INJ_Y = TUBE_TOP + 0.06 + 1.2 * BENCH_S;
-  const injs = SLOTS.map((_, i) => buildInjector(kit, i === HERO));
-  injs.forEach((j) => scene.add(j.root));
-  const hero = injs[HERO];
+  const injs = [];
+  let hero = null, injFuel = null, needleBase = 0, ready = false;
+  const readyP = (async () => {
+    const [env, asset] = await Promise.all([loadEnv('workshop', renderer, { quality: q }), loadAsset('injector', { quality: q, renderer })]);
+    scene.environment = env;
+    injFuel = asset.materials.fuel;
+    if (injFuel) { injFuel.color.set(0xf5a524); injFuel.emissive = new THREE.Color(0xf59a14); injFuel.emissiveIntensity = 0.6; }
+    if (asset.materials.cut_face) asset.materials.cut_face.color.set(0x8d949b);
+    SLOTS.forEach((_, i) => {
+      const j = buildInjector(asset, i === HERO, etchMat, scanMat);
+      scene.add(j.root);
+      injs.push(j);
+    });
+    hero = injs[HERO];
+    needleBase = hero.nodes.needle ? hero.nodes.needle.position.y : 0;
+    ready = true;
+  })();
 
   // ---------------- tezgâh
   const bench = new THREE.Group();
@@ -378,14 +349,14 @@ export function createScene(canvas, { low = false, reduced = false, phone = fals
   postR.position.x = W / 2 - 0.06;
   bench.add(base, plate, postL, postR);
   // common rail: arkadan geçen boru ve her enjektöre giden hatlar
-  const railY = INJ_Y + 0.64 * BENCH_S + 0.06, railZ = -0.41 * BENCH_S - 0.06;
-  const rail = new THREE.Mesh(new THREE.CylinderGeometry(0.075, 0.075, W - 0.2, 24), kit.M.steel);
+  const railY = INJ_Y + (0.112 * K - 1.2) * BENCH_S, railZ = -0.034 * K * BENCH_S - 0.1;
+  const rail = new THREE.Mesh(new THREE.CylinderGeometry(0.075, 0.075, W - 0.2, 24), steel);
   rail.rotation.z = Math.PI / 2;
   rail.position.set(0, railY + 0.02, railZ - 0.12);
   bench.add(rail);
   const pipeGeo = new THREE.CylinderGeometry(0.022, 0.022, 0.16, 10);
   SLOTS.forEach((x) => {
-    const p = new THREE.Mesh(pipeGeo, kit.M.steel);
+    const p = new THREE.Mesh(pipeGeo, steel);
     p.rotation.x = Math.PI / 2;
     p.position.set(x, railY, railZ - 0.03);
     bench.add(p);
@@ -420,9 +391,6 @@ export function createScene(canvas, { low = false, reduced = false, phone = fals
   scene.add(glow);
 
   // kodlama taraması: gövde etrafında ince amber bant
-  const scanMat = new THREE.MeshBasicMaterial({ color: 0xffb640, transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false });
-  const scan = new THREE.Mesh(new THREE.CylinderGeometry(0.207, 0.207, 0.014, 32, 1, true, -0.7, 1.4), scanMat);
-  hero.parts[2].add(scan);
 
   // ---------------- durum
   const S = {
@@ -451,10 +419,10 @@ export function createScene(canvas, { low = false, reduced = false, phone = fals
   const hx = SLOTS[HERO];
   const KEYS = phone
     ? [
-        [0.0, V(0.3, -0.9, 8.4), V(0, -1.3, 0)],
-        [0.1, V(0.6, -1.0, 8.8), V(0, -1.35, 0)],
-        [0.22, V(1.6, -1.2, 17), V(0.72, -1.85, 0)],
-        [0.36, V(1.3, -1.0, 17.2), V(0.72, -1.85, 0)],
+        [0.0, V(0.0, -0.6, 10.6), V(-0.45, -1.45, 0)],
+        [0.1, V(0.3, -0.7, 11.0), V(-0.4, -1.5, 0)],
+        [0.22, V(1.4, -1.0, 19.5), V(0.55, -2.3, 0)],
+        [0.36, V(1.2, -0.8, 19.7), V(0.55, -2.3, 0)],
         [0.5, V(0, 1.6, 11.2), V(0, -1.35, 0)],
         [0.64, V(0.3, 1.2, 10.6), V(0, -1.2, 0)],
         [0.74, V(hx + 0.3, INJ_Y + 0.3, 2.4), V(hx, INJ_Y + 0.02, 0)],
@@ -465,8 +433,8 @@ export function createScene(canvas, { low = false, reduced = false, phone = fals
     : [
         [0.0, V(-1.0, 0.1, 5.6), V(-0.95, -0.05, 0)],
         [0.1, V(-0.6, 0.0, 6.0), V(-1.0, -0.1, 0)],
-        [0.22, V(-2.4, 0.2, 10.4), V(-1.9, -0.35, 0)],
-        [0.36, V(-2.0, 0.4, 10.6), V(-1.9, -0.35, 0)],
+        [0.22, V(-1.9, 0.7, 9.4), V(-1.45, 0.1, 0)],
+        [0.36, V(-1.6, 0.9, 9.6), V(-1.45, 0.1, 0)],
         [0.5, V(-1.6, 1.6, 7.6), V(-1.35, 0.05, 0)],
         [0.64, V(-1.2, 1.3, 7.2), V(-1.25, 0.05, 0)],
         [0.74, V(hx + 0.05, INJ_Y + 0.25, 2.2), V(hx - 0.42, INJ_Y - 0.12, 0)],
@@ -500,18 +468,19 @@ export function createScene(canvas, { low = false, reduced = false, phone = fals
   }
   // DOM etiketleri için dünya noktaları
   const anchors = {
-    part: (i) => hero.centerOf(i, new THREE.Vector3()),
+    part: (i) => (hero ? hero.centerOf(i, new THREE.Vector3()) : new THREE.Vector3(0, -99, 0)),
     tubeTop: (i) => new THREE.Vector3(SLOTS[i], TUBE_TOP + 0.12, 0),
     tubeLevel: (i) => {
       const f = tubes[i];
       return new THREE.Vector3(SLOTS[i] + R + 0.02, f.position.y + f.scale.y, 0);
     },
     tubeBottom: (i) => new THREE.Vector3(SLOTS[i], TUBE_BOT - 0.3, 0.35),
-    etch: () => hero.parts[2].localToWorld(new THREE.Vector3(0, 0.02, 0.21)),
+    tubeUpper: (i) => new THREE.Vector3(SLOTS[i], TUBE_TOP - 0.42, 0.3),
+    etch: () => (hero ? hero.etch.localToWorld(new THREE.Vector3(-0.0114, 0, 0)) : new THREE.Vector3()),
   };
 
   // ---------------- döngü
-  const clock = new THREE.Clock();
+  const clock = { last: performance.now(), getDelta() { const n = performance.now(); const d = (n - this.last) / 1000; this.last = n; return d; } };
   let running = false, raf = 0, t = 0;
   let camPos = null, camTgt = null;
   const onFrame = [];
@@ -535,9 +504,15 @@ export function createScene(canvas, { low = false, reduced = false, phone = fals
     camera.lookAt(camTgt);
 
     const b = S.bench;
-    // kahraman enjektör: havadan tezgâha
+    if (!ready) {
+      spray.update(dt);
+      for (const f of onFrame) f(dt);
+      renderer.render(scene, camera);
+      return;
+    }
+    // kahraman enjektör: havadan tezgâha. Sökümde kesit yüzü kameraya döner, tezgâhta giriş raile bakar.
     const sway = Math.sin(t * 0.45) * 0.55 + 0.35;
-    const heroRot = lerp(lerp(sway, -0.55, smooth(0.1, 0.2, S.p)), 0.0, b);
+    const heroRot = lerp(lerp(sway, 0.1, smooth(0.1, 0.2, S.p)), Math.PI / 2, b);
     hero.root.rotation.y = heroRot;
     hero.root.rotation.z = lerp(Math.sin(t * 0.3) * 0.04, 0, b);
     hero.root.position.set(lerp(0, hx, b), lerp(Math.sin(t * 0.8) * 0.04, INJ_Y, b), 0);
@@ -550,8 +525,7 @@ export function createScene(canvas, { low = false, reduced = false, phone = fals
       const k = smooth(0.1 + i * 0.12, 0.7 + i * 0.1, b);
       j.root.position.set(SLOTS[i], INJ_Y + (1 - k) * 4.5, 0);
       j.root.scale.setScalar(BENCH_S);
-      j.root.rotation.y = (1 - k) * 2.2;
-      j.explode(0);
+      j.root.rotation.y = Math.PI / 2 + (1 - k) * 2.2;
     });
     bench.visible = b > 0.01;
     bench.position.y = (1 - smooth(0, 0.8, b)) * -4;
@@ -570,7 +544,7 @@ export function createScene(canvas, { low = false, reduced = false, phone = fals
     badMat.emissive.setHex(hot && S.fill > 0.6 ? 0x5a1400 : 0x6a3a00);
 
     // püskürtme: hangi enjektör, ne zaman
-    let glowAmt = 0;
+    let glowAmt = 0, liftAmt = 0;
     const heroFree = b < 0.05 && S.explode < 0.02;
     const benchFire = (S.p > 0.5 && S.p < 0.64) || (S.p > 0.79 && S.p < 0.84) || S.finale > 0.02;
     if (!reduced) {
@@ -591,6 +565,7 @@ export function createScene(canvas, { low = false, reduced = false, phone = fals
         const n = low ? 0.55 : 1;
         if (!P.pilot && P.t > 0.0) { spray.emit(Math.round(26 * n), tipW, axisDown, k * 0.55, cone); P.pilot = true; }
         if (P.t > 0.09 && P.t < 0.22) { spray.emit(Math.round(46 * n), tipW, axisDown, k, cone); if (i === HERO) glowAmt = 1; }
+        if (i === HERO) liftAmt = P.t > 0.07 && P.t < 0.24 ? 1 : 0;
         if (i === HERO) {
           glow.position.copy(tipW);
           tipLight.position.copy(tipW);
@@ -602,13 +577,19 @@ export function createScene(canvas, { low = false, reduced = false, phone = fals
     glow.scale.setScalar(lerp(1.3, 0.55, b));
     tipLight.intensity = glow.material.opacity * 3.5;
 
+    // iğne kalkar (gerçek strok 0,25 mm; okunur olsun diye 6 kat), yakıt kanalı parlar
+    if (hero.nodes.needle) {
+      const nl = hero.nodes.needle;
+      const target = needleBase + liftAmt * 0.0015;
+      nl.position.y += (target - nl.position.y) * Math.min(1, dt * 30);
+    }
+    if (injFuel) injFuel.emissiveIntensity = 0.45 + glow.material.opacity * 1.4 + S.explode * 0.5;
+
     // kodlama: bant gövdeyi tarar, yazı ısınır
     const c = S.code;
     scanMat.opacity = c > 0.01 && c < 0.99 ? 0.95 : 0;
-    scan.position.y = lerp(-0.2, 0.24, (Math.sin(t * 3.2) * 0.5 + 0.5));
-    hero.etchMat.emissive = hero.etchMat.emissive || new THREE.Color();
-    hero.etchMat.emissive.setHex(0xff9d2a);
-    hero.etchMat.emissiveIntensity = c > 0.01 ? (c < 0.99 ? 0.35 + Math.sin(t * 9) * 0.2 : 0.55) : 0;
+    if (hero.scan) hero.scan.position.y = lerp(0.04, 0.125, Math.sin(t * 3.2) * 0.5 + 0.5);
+    etchMat.emissiveIntensity = c > 0.01 ? (c < 0.99 ? 0.35 + Math.sin(t * 9) * 0.2 : 0.55) : 0;
 
     for (const f of onFrame) f(dt);
     renderer.render(scene, camera);
@@ -629,7 +610,7 @@ export function createScene(canvas, { low = false, reduced = false, phone = fals
   resize();
   setProgress(0);
   return {
-    setProgress, state: S, anchors, project, resize, onFrame, renderer,
+    setProgress, state: S, anchors, project, resize, onFrame, renderer, readyP, isReady: () => ready,
     slots: SLOTS.length, hero: HERO,
     start() {
       if (running) return;

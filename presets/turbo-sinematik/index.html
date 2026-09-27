@@ -32,22 +32,35 @@
   <div class="cursor" data-cursor aria-hidden="true"><i></i></div>
 
   <header class="top" data-top>
-    <a class="top__brand" href="#" data-brand><span class="top__mark" aria-hidden="true"></span><span data-bind="ad"></span></a>
-    <nav class="top__nav" aria-label="Bölümler">
-      <a href="#hizmetler">Hizmetler</a>
-      <a href="#belirti">Belirtiler</a>
-      <a href="#yorumlar">Yorumlar</a>
-      <a href="#konum">Konum</a>
-    </nav>
-    <p class="top__status" data-status></p>
-    <a class="top__call" data-tel data-magnetic><span data-icon="phone"></span><span class="top__num" data-bind="telefon"></span></a>
+    <div class="top__row">
+      <a class="top__brand" href="#" data-brand><span class="top__mark" aria-hidden="true"></span><span data-bind="ad"></span></a>
+      <nav class="top__nav" aria-label="Bölümler">
+        <a href="#hizmetler">Hizmetler</a>
+        <a href="#belirti">Belirtiler</a>
+        <a href="#yorumlar">Yorumlar</a>
+        <a href="#konum">Konum</a>
+      </nav>
+      <p class="top__status" data-status></p>
+      <a class="top__call" data-tel data-magnetic><span data-icon="phone"></span><span class="top__num" data-bind="telefon"></span></a>
+    </div>
+    <!-- Gösterge: başlığın içinde (telefonda tek üst öğe) -->
+    <div class="hud" data-hud aria-hidden="true">
+      <p class="hud__row"><span>Devir</span><b data-h-rpm>0</b><small>d/dk</small></p>
+      <p class="hud__row hud__row--boost"><span>Basınç</span><b data-h-bar>0,0</b><small>bar</small></p>
+      <div class="hud__gauge"><i data-h-gauge></i></div>
+      <p class="hud__extra" data-h-extra></p>
+      <ol class="hud__ticks" data-ticks></ol>
+    </div>
   </header>
 
+  <!-- Parça etiketleri: tek SVG katmanı (dokunmayı almaz) -->
+  <svg class="labels" data-labels aria-hidden="true"></svg>
+
   <main>
-    <!-- Film: kapalı turbo → söküm → balans → VNT → yağ hattı → basınç -->
+    <!-- Film: sabit sahnenin önünden akan bölümler. Kapalı turbo → söküm → balans → VNT → yağ hattı → basınç -->
     <section class="film" data-film>
-      <div class="film__sticky">
-        <div class="hero" data-hero>
+      <div class="hero" data-hero>
+        <div class="hero__in">
           <p class="hero__since" data-since></p>
           <h1 class="hero__title" data-hero-title></h1>
           <p class="hero__slogan" data-bind="slogan"></p>
@@ -57,26 +70,17 @@
           </div>
           <p class="hero__sides" aria-hidden="true"><span class="is-cold">Soğuk taraf · temiz hava</span><span class="is-hot">Sıcak taraf · egzoz</span></p>
         </div>
+        <p class="hint" data-hint aria-hidden="true"><i></i>Kaydırın, turboyu birlikte açalım</p>
+      </div>
 
-        <aside class="hud" data-hud aria-hidden="true">
-          <p class="hud__row"><span>Devir</span><b data-h-rpm>0</b><small>d/dk</small></p>
-          <p class="hud__row hud__row--boost"><span>Basınç</span><b data-h-bar>0,0</b><small>bar</small></p>
-          <div class="hud__gauge"><i data-h-gauge></i></div>
-          <p class="hud__extra" data-h-extra></p>
-          <ol class="hud__ticks" data-ticks></ol>
-        </aside>
+      <div class="chaps" data-cards></div>
 
-        <div class="labels" data-labels aria-hidden="true"></div>
-
-        <div class="cards" data-cards></div>
-
-        <div class="card card--end" data-film-end>
+      <div class="chap chap--end" data-chap-end>
+        <div class="card card--end">
           <p class="card__n"><em>Teslim</em></p>
           <h2 class="card__title">Tam devirde, kaçaksız.</h2>
           <p class="card__text">Değerler yerindeyse aracınızı teslim ederiz. Yerinde değilse sebebini bulana kadar bırakmayız.</p>
         </div>
-
-        <p class="hint" data-hint aria-hidden="true"><i></i>Kaydırın, turboyu birlikte açalım</p>
       </div>
     </section>
 
@@ -140,14 +144,17 @@
     </section>
 
     <!-- Galeri: yatay kayan şerit -->
-    <section class="gallery" aria-label="Atölyeden fotoğraflar">
+    <section class="gallery" aria-label="Turbo işinden kareler">
       <div class="gallery__track" data-gal-track></div>
     </section>
 
     <!-- Yorumlar -->
     <section class="reviews" id="yorumlar">
       <header class="reviews__head">
-        <p class="reviews__score"><b data-puan>4,8</b><span class="reviews__stars" data-stars></span></p>
+        <div>
+          <p class="kicker">Örnek yorumlar</p>
+          <p class="reviews__score"><b data-puan>4,8</b><span class="reviews__stars" data-stars></span></p>
+        </div>
         <p class="reviews__count" data-puan-adet></p>
       </header>
       <div class="reviews__grid" data-reviews></div>
@@ -158,7 +165,7 @@
       <div class="marquee" data-marquee></div>
     </section>
 
-    <!-- Dükkân -->
+    <!-- Konum -->
     <section class="shop" id="konum">
       <div class="shop__info">
         <p class="kicker">Konum ve saatler</p>
@@ -191,7 +198,7 @@
   <footer class="foot">
     <p data-year></p>
     <p data-bind="adres"></p>
-    <p class="foot__small">Fotoğraflar: Pexels. 3D turbo bu site için kodla çizildi; göstergeler temsilidir.</p>
+    <p class="foot__small">Fotoğraflar: Pexels (temsilî). 3D görseller ve göstergeler temsilîdir. Yorumlar örnektir.</p>
   </footer>
 
   <script type="module" src="./main.js"></script>

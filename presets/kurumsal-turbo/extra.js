@@ -254,3 +254,12 @@ export const atolye = {
     io.observe(h);
   },
 };
+
+// --- (5) Yorumlar: motorun bölümü, puanı açıkça "örnek" diye yazar -------------------------------
+export const yorumlar = {
+  render(d, ctx, sorgu) {
+    return BOLUMLER.yorumlar.render(d, ctx, sorgu)
+      .replace('değerlendirme</span>', 'örnek değerlendirme</span>')
+      .replace('<ul class="k-yorumlar__liste"', '<p class="k-not">Bu yorumlar tasarım örneğidir; işletmenin kendi yorumlarıyla değiştirilir.</p><ul class="k-yorumlar__liste"');
+  },
+};
