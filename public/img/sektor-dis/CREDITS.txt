@@ -12,3 +12,5 @@ cocuk.jpg: "Photo of a Child in Dental Clinic" https://www.pexels.com/photo/nen-
 implant-model.jpg: "Close-Up Shot of Dental Implant Model" https://www.pexels.com/photo/close-up-shot-of-dental-implant-model-6502305/
 model.jpg: "Cast Model of Dentures" https://www.pexels.com/photo/cast-model-of-dentures-6529216/
 tedavi.jpg: "Dentist Working on Woman's Teeth" https://www.pexels.com/photo/dentist-working-working-on-woman-s-teeth-3779713/
+
+2026-09-27: marka yazıları temizlendi (alet-seti: ünite paneli; unite: masa üstü cihaz; muayenehane: koltuk tabanındaki etiketler kırpıldı).

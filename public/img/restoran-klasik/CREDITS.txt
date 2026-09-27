@@ -15,3 +15,5 @@ kor-duman.jpg: Pexels 36890236
 salon.jpg: Pexels 38301339
 Kaynak: https://www.pexels.com/photo/<id>/
 Lisans: Pexels License (ücretsiz ticari kullanım)
+
+2026-09-27: ocak.jpg arka plandaki içecek dolabı logosu temizlendi.

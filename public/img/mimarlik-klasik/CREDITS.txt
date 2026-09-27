@@ -4,3 +4,5 @@ Bu klasördeki dosyalar public/img/sektor-mimarlik/ görsellerinin küçültülm
 için public/img/sektor-mimarlik/CREDITS.txt dosyasına bakın.
 
 yemek-odasi.webp   https://www.pexels.com/photo/6585751/ (hero, bu presete özel)
+
+2026-09-27: 3d-yatak-odasi (monitör logosu) ve bilgisayar (monitör markası) temizlendi.

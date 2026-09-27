@@ -36,13 +36,22 @@
       <a href="#konum">Konum</a>
     </nav>
     <p class="top__status" data-status></p>
+    <div class="hud" data-hud aria-hidden="true">
+      <p class="hud__clock"><b data-hud-clock>06:00</b><span data-hud-kicker>Sabah</span></p>
+      <div class="done" data-done>
+        <p class="done__lbl">Pişme</p>
+        <div class="done__bar"><i data-done-fill></i></div>
+        <p class="done__state" data-done-state>Çiğ</p>
+      </div>
+    </div>
     <a class="top__call" data-tel data-magnetic><span data-icon="phone"></span><span class="top__num" data-bind="telefon"></span></a>
   </header>
 
   <main>
-    <!-- Film: kor tutuşur → küllenir → kıyma → şiş ocağa → közde döner → tabağa -->
+    <!-- Film: kor tutuşur → küllenir → kıyma → şiş ocağa → közde döner → tabağa.
+         Hero + kısa duraklar (kart durakta yapışır, sahne arkada sabit) + kısa tabak sahnesi (pin ≤ 3 ekran). -->
     <section class="film" data-film>
-      <div class="film__sticky">
+      <div class="film__hero" data-hero-sec>
         <div class="hero" data-hero>
           <p class="hero__since" data-since></p>
           <h1 class="hero__title" data-hero-title></h1>
@@ -52,27 +61,21 @@
             <a class="btn btn--ghost" data-tel data-magnetic><span data-icon="phone"></span>Paket sipariş ver</a>
           </div>
         </div>
+        <p class="hint" data-hint aria-hidden="true"><i></i>Kaydırın, ocağı yakalım</p>
+      </div>
 
-        <div class="hud" data-hud aria-hidden="true">
-          <p class="hud__clock"><b data-hud-clock>06:00</b><span data-hud-kicker>Sabah</span></p>
-          <div class="done" data-done>
-            <p class="done__lbl">Pişme</p>
-            <div class="done__bar"><i data-done-fill></i></div>
-            <p class="done__state" data-done-state>Çiğ</p>
+      <div class="film__stops" data-chapters></div>
+
+      <div class="film__plate" data-plate-sec>
+        <div class="plate__sticky">
+          <div class="plate" data-plate aria-hidden="true">
+            <img src="/img/sektor-restoran/adana-tabak.jpg" alt="" width="2000" height="1333" loading="lazy" />
+          </div>
+          <div class="plate__cap" data-plate-cap>
+            <p class="plate__kicker">Afiyet olsun</p>
+            <h2 class="plate__title">Siparişten masaya <em>15-20 dakika.</em></h2>
           </div>
         </div>
-
-        <div class="chapters" data-chapters></div>
-
-        <div class="plate" data-plate aria-hidden="true">
-          <img src="/img/sektor-restoran/adana-tabak.jpg" alt="" width="2000" height="1333" />
-        </div>
-        <div class="plate__cap" data-plate-cap>
-          <p class="plate__kicker">Afiyet olsun</p>
-          <h2 class="plate__title">Siparişten masaya <em>15-20 dakika.</em></h2>
-        </div>
-
-        <p class="hint" data-hint aria-hidden="true"><i></i>Kaydırın, ocağı yakalım</p>
       </div>
     </section>
 
@@ -159,6 +162,7 @@
     <!-- Yorumlar -->
     <section class="reviews" id="yorumlar">
       <header class="reviews__head">
+        <p class="kicker">Örnek yorumlar</p>
         <p class="reviews__score"><b data-puan>4,8</b><span class="reviews__stars" data-stars></span></p>
         <p class="reviews__count" data-puan-adet></p>
       </header>
@@ -198,7 +202,7 @@
   <footer class="foot">
     <p data-year></p>
     <p data-bind="adres"></p>
-    <p class="foot__small">Fotoğraflar: Pexels. 3D ocak bu site için kodla çizildi.</p>
+    <p class="foot__small">Fotoğraflar temsilîdir (Pexels). 3D görseller temsilîdir; ocak sahnesi bu site için kodla çizildi. Yorumlar örnektir; fiyatları telefonda sorun.</p>
   </footer>
 
   <script type="module" src="./main.js"></script>

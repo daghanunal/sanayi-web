@@ -4,7 +4,7 @@ import '../../shared/base.css';
 import './style.css';
 import {
   boot, initSmoothScroll, reducedMotion, telHref, waHref, mapsHref, mapsEmbed,
-  openStatus, groupedHours, icons, esc, asset, gsap, ScrollTrigger,
+  openStatus, groupedHours, icons, esc, asset, gsap, ScrollTrigger, setStoryMode,
 } from '../../shared/core.js';
 import { SplitText } from 'gsap/SplitText';
 import { createScene } from './scene.js';
@@ -65,12 +65,14 @@ $('[data-status-big]').classList.toggle('is-open', status.open);
 const F = d.film;
 $('[data-rail]').innerHTML = F.map((a) => `<li data-rail-i><b>${esc(a.no)}</b><span>${esc(a.durak)}</span></li>`).join('');
 $('[data-cards]').innerHTML = F.map((a) => `
+  <div class="stop" data-stop="${esc(a.id)}">
   <article class="card" data-card="${esc(a.id)}">
     <p class="card__no"><b>${esc(a.no)}</b><span>${esc(a.durak)}</span></p>
     <h2 class="card__title">${esc(a.baslik)}</h2>
     <p class="card__text">${esc(a.metin)}</p>
     <a class="card__wa" href="${esc(waHref(d, `Merhaba ${d.isletme.ad}, ${lower(a.hizmet)} için muayene randevusu almak istiyorum.`))}" target="_blank" rel="noopener">${icons.whatsapp}<span>${esc(a.hizmet)} için yazın</span></a>
-  </article>`).join('');
+  </article>
+  </div>`).join('');
 
 // Sahne etiketleri (3B noktalara bağlı)
 const TAGS = [
@@ -117,7 +119,7 @@ $('[data-gallery]').innerHTML = d.galeri.map((g) => `
 // Yorumlar
 $('[data-puan]').textContent = nf(d.puan.ortalama, 1);
 $('[data-stars]').innerHTML = icons.star.repeat(5);
-$('[data-puan-adet]').textContent = `${nf(d.puan.adet)} Google yorumu`;
+$('[data-puan-adet]').textContent = 'Temsilî puan · yorumlar örnektir';
 $('[data-reviews]').innerHTML = d.yorumlar.map((y) => `
   <figure class="rev">
     <p class="rev__stars" aria-label="${y.puan} yıldız">${icons.star.repeat(y.puan)}</p>
@@ -187,9 +189,46 @@ const canvas = $('[data-stage]');
 const S = createScene(canvas, { lite });
 if (import.meta.env.DEV) window.__tj = S;
 
-// Durak aralıkları (film ilerlemesi)
-const R = { hero: [0, 0.075], muayene: [0.075, 0.215], temizlik: [0.215, 0.34], dolgu: [0.34, 0.465], kanal: [0.465, 0.61], implant: [0.61, 0.765], ortodonti: [0.765, 0.9], over: [0.9, 1] };
-const CARD_RANGES = F.map((a) => R[a.id]);
+// Durak aralıkları film ilerlemesi (0..1) cinsinden DOM'dan ölçülür. Her durak, bir önceki kartın
+// çekilmeye başladığı yerden başlar: ilk ~%28'de kamera yeni poza geçer, kart gelince sahne oynar.
+const filmEl = $('[data-film]');
+const R = { hero: [0, 0.02], muayene: [0.02, 0.16], temizlik: [0.16, 0.3], dolgu: [0.3, 0.44], kanal: [0.44, 0.58], implant: [0.58, 0.72], ortodonti: [0.72, 0.9], over: [0.9, 1] };
+function measure() {
+  const vh = innerHeight;
+  const total = Math.max(1, filmEl.offsetHeight - vh);
+  const ft = filmEl.getBoundingClientRect().top;
+  const top = (el) => el.getBoundingClientRect().top - ft;
+  const starts = $$('[data-stop]').map((el) => clamp((top(el) - vh) / total));
+  const over = clamp((top($('[data-over-sec]')) - vh * 0.75) / total);
+  const heroEnd = Math.max(0.012, starts[0]);
+  R.hero = [0, heroEnd];
+  F.forEach((a, i) => { R[a.id] = [Math.max(heroEnd, starts[i]), i < F.length - 1 ? Math.max(heroEnd, starts[i + 1]) : over]; });
+  R.over = [over, 1.0001];
+  const sy = scrollY;
+  cardGeo = $$('[data-stop]').map((el) => ({ top: el.getBoundingClientRect().top + sy, h: el.offsetHeight, pad: parseFloat(getComputedStyle(el).paddingTop) || 0 }));
+}
+let cardGeo = [];
+// Kart görünürlüğü doğrudan kaydırma konumundan: durağa girerken belirir, bırakırken çekilir.
+// (İki ayrı scrub tween'i hızlı atlamada birbirini ezip eski kartı ekranda bırakıyordu.)
+const cardState = [];
+function cardUI() {
+  const y = scrollY, vh = innerHeight;
+  cards.forEach((card, i) => {
+    const g = cardGeo[i];
+    if (!g) return;
+    const a0 = g.top + g.pad * 0.6 - vh, a1 = g.top + g.pad - vh * 0.8;
+    const b0 = g.top + g.h - vh, b1 = b0 + vh * 0.28;
+    const vin = clamp((y - a0) / Math.max(1, a1 - a0)), vout = clamp((y - b0) / Math.max(1, b1 - b0));
+    const v = +(sm(vin) * (1 - vout)).toFixed(3);
+    const ty = +((1 - vin) * 30 - vout * 24).toFixed(1);
+    const st = cardState[i] || (cardState[i] = {});
+    if (st.v === v && st.ty === ty) return;
+    st.v = v; st.ty = ty;
+    card.style.opacity = v;
+    card.style.visibility = v > 0.01 ? 'visible' : 'hidden';
+    card.style.transform = `translate3d(0, ${ty}px, 0)`;
+  });
+}
 const kOf = (p, id) => seg(p, R[id][0], R[id][1]);
 
 // Kamera pozları: [az, el, dist, y, fov]
@@ -216,16 +255,22 @@ function camPose(p) {
   return out;
 }
 
+let heroSpin = 0;
 function filmState(p, time) {
   const m = mobile();
   const [camAz, camEl, camDist, camY, fov] = camPose(p);
   const kM = kOf(p, 'muayene'), kT = kOf(p, 'temizlik'), kD = kOf(p, 'dolgu'), kK = kOf(p, 'kanal'), kI = kOf(p, 'implant'), kO = kOf(p, 'ortodonti'), kV = kOf(p, 'over');
   // Diş dönüşü: kaydırmaya bağlı, hafif nefes
-  let rotY = p < R.muayene[0] ? time * 0.25 % (Math.PI * 2) : 0;
+  // Hero'da diş yavaşça döner; kaydırma başlayınca son açıdan ilk durağın açısına yumuşakça geçer
+  if (p < R.muayene[0] + 0.002) heroSpin = time * 0.25;
+  let rotY = heroSpin;
   const idle = Math.sin(time * 0.6) * 0.06;
   if (p >= R.muayene[0]) {
     rotY = L(-0.55, -0.35, kM) + (kT > 0 ? kT * Math.PI * 2 : 0) + (kD > 0 ? L(0, -0.25, sm(seg(kD, 0, 0.3))) : 0);
     if (kK > 0) rotY = L(-0.6, 0.18, sm(seg(kK, 0, 0.3))) + L(0, -0.35, seg(kK, 0.3, 1));
+    const TAU = Math.PI * 2;
+    const from = rotY + ((((heroSpin - rotY) % TAU) + TAU + Math.PI) % TAU) - Math.PI;
+    rotY = L(from, rotY, sm(seg(kM, 0, 0.26)));
   }
   // Tarama: aşağı iner, bekler, geri çıkar
   const scanDown = sm(seg(kM, 0.08, 0.45)), scanUp = sm(seg(kM, 0.72, 0.98));
@@ -271,12 +316,10 @@ function finaleState(q, time) {
 
 // --- Film UI -------------------------------------------------------------
 
-const film = $('[data-film]');
-const hero = $('[data-hero]');
+const film = filmEl;
 const cards = $$('[data-card]');
 const railItems = $$('[data-rail-i]');
 const rail = $('[data-rail]');
-const overview = $('[data-overview]');
 const hint = $('[data-hint]');
 const tagsBox = $('[data-tags]');
 
@@ -286,43 +329,38 @@ function place(el, v, pt) {
   if (v > 0.01 && pt) el.style.transform = `translate3d(${pt.x.toFixed(1)}px, ${pt.y.toFixed(1)}px, 0)`;
 }
 
-function filmUI(p) {
-  const heroOut = seg(p, 0.05, 0.075);
-  hero.style.opacity = 1 - heroOut;
-  hero.style.transform = `translate3d(0, ${heroOut * -40}px, 0)`;
-  hero.style.visibility = heroOut >= 1 ? 'hidden' : 'visible';
-  hint.style.opacity = 1 - seg(p, 0.0, 0.03);
-
-  let active = -1;
-  cards.forEach((card, i) => {
-    const [a, b] = CARD_RANGES[i];
-    const w = (b - a) * 0.12;
-    const vin = seg(p, a + w * 0.3, a + w * 1.3), vout = seg(p, b - w, b);
-    const v = vin * (1 - vout);
-    card.style.opacity = v;
-    card.style.transform = `translate3d(0, ${(1 - vin) * 36 - vout * 24}px, 0)`;
-    card.style.visibility = v > 0.01 ? 'visible' : 'hidden';
-    if (p >= a && p < b) active = i;
-  });
-  const railOn = seg(p, 0.07, 0.085) * (1 - seg(p, 0.89, 0.9));
-  rail.style.opacity = railOn;
-  rail.style.visibility = railOn > 0.01 ? 'visible' : 'hidden';
-  railItems.forEach((li, i) => {
-    li.classList.toggle('is-active', i === active);
-    li.classList.toggle('is-done', p >= CARD_RANGES[i][1]);
-  });
-
-  const ov = seg(p, 0.905, 0.93) * (1 - seg(p, 0.99, 1));
-  overview.style.opacity = ov;
-  overview.style.visibility = ov > 0.01 ? 'visible' : 'hidden';
-  overview.style.transform = `translate3d(0, ${(1 - ov) * 30}px, 0)`;
+const topEl = $('[data-top]');
+const topStopNo = $('[data-top-stop-no]'), topStopName = $('[data-top-stop-name]');
+let lastActive = -2, railShown = -1;
+function filmUI(p, inFilm = true) {
+  hint.style.opacity = 1 - seg(p, 0.0, 0.02);
+  const active = inFilm ? F.findIndex((a) => p >= R[a.id][0] && p < R[a.id][1]) : -1;
+  const on = active >= 0 ? 1 : 0;
+  if (on !== railShown) {
+    rail.classList.toggle('is-on', !!on);
+    topEl.classList.toggle('is-stop', !!on);
+    railShown = on;
+  }
+  if (active !== lastActive) {
+    railItems.forEach((li, i) => {
+      li.classList.toggle('is-active', i === active);
+      li.classList.toggle('is-done', active > i);
+    });
+    if (active >= 0) {
+      topStopNo.textContent = `${F[active].no}/${String(F.length).padStart(2, '0')}`;
+      topStopName.textContent = F[active].durak;
+    }
+    lastActive = active;
+  }
 }
 
 function tagUI(p) {
   if (!S.isReady()) return;
   const kM = kOf(p, 'muayene'), kD = kOf(p, 'dolgu'), kK = kOf(p, 'kanal'), kI = kOf(p, 'implant');
   const inR = (id) => p >= R[id][0] && p < R[id][1];
-  place(tagEls.cavity, inR('muayene') ? bump(kM, 0.4, 0.8, 0.15) : 0, S.project('cavity'));
+  // Hero yazısı ekrandayken etiket çıkmasın (buton ve başlıkla çakışmasın)
+  const heroGone = clamp((scrollY - innerHeight * 0.85) / (innerHeight * 0.1));
+  place(tagEls.cavity, inR('muayene') ? bump(kM, 0.4, 0.8, 0.15) * heroGone : 0, S.project('cavity'));
   place(tagEls.fill, inR('dolgu') ? bump(kD, 0.5, 0.98, 0.15) : 0, S.project('cavity'));
   const layers = inR('kanal') ? bump(kK, 0.28, 0.97, 0.12) : 0;
   place(tagEls.mine, layers, S.project('mine'));
@@ -346,6 +384,8 @@ let filmST = null, finaleST = null;
 function setupScroll() {
   lenis = initSmoothScroll();
   lenis?.stop();
+  ScrollTrigger.addEventListener('refresh', measure);
+  measure();
   filmST = ScrollTrigger.create({
     trigger: film, start: 'top top', end: 'bottom bottom',
     onUpdate: (self) => (filmTarget = self.progress),
@@ -353,6 +393,15 @@ function setupScroll() {
   ScrollTrigger.create({
     trigger: film, start: 'bottom bottom', end: 'bottom 30%',
     onUpdate: (self) => (canvasFade = 1 - self.progress),
+  });
+  // Duraklar boyunca hikâye modu: alt çubuk iner, kart onun boşluğuna oturur (hero ve sonrası çubuklu)
+  ScrollTrigger.create({
+    trigger: '[data-cards]', start: 'top 70%', end: () => `bottom ${Math.round(innerHeight * 0.9)}px`,
+    onToggle: (st) => setStoryMode(st.isActive ? true : null),
+  });
+  gsap.fromTo('[data-overview] > *', { autoAlpha: 0, y: 30 }, {
+    autoAlpha: 1, y: 0, stagger: 0.1, duration: 1, ease: 'expo.out',
+    scrollTrigger: { trigger: '[data-over-sec]', start: 'top 45%', toggleActions: 'play none none reverse' },
   });
   finaleST = ScrollTrigger.create({
     trigger: '[data-finale]', start: 'top bottom', end: 'bottom bottom',
@@ -454,7 +503,9 @@ function tick(now) {
 
   const filmActive = filmST ? filmST.progress < 1 || canvasFade > 0.001 : true;
   filmP += (filmTarget - filmP) * (1 - Math.exp(-dt * 8));
-  if (filmActive) filmUI(filmP);
+  if (filmActive) filmUI(filmP, filmST ? filmST.progress < 1 : true);
+  if (filmActive || cardState.some((c) => c.v > 0)) cardUI();
+  else if (railShown === 1) filmUI(filmP, false);
 
   const showFinale = finaleIn > 0.001;
   let op;
@@ -535,7 +586,7 @@ function runIntro() {
   const tl = gsap.timeline();
   tl.fromTo('[data-intro-name]', { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' }, 0);
   tl.to(o, {
-    v: 1, duration: 1.7, ease: 'power1.inOut', onUpdate: () => {
+    v: 1, duration: 1.3, ease: 'power1.inOut', onUpdate: () => {
       rect.setAttribute('width', (vb[0] + o.v * vb[2]).toFixed(1));
       bar.style.transform = `translate3d(${(o.v * 100).toFixed(2)}cqw, 0, 0)`;
       pct.textContent = Math.round(o.v * 100);
@@ -545,7 +596,7 @@ function runIntro() {
     S.compile();
     S.update(filmState(0, performance.now() / 1000), performance.now());
   }, [], 0.3);
-  tl.add(finish, 2.0);
+  tl.add(finish, 1.5);
   function finish() {
     if (done) return;
     done = true;
@@ -554,7 +605,8 @@ function runIntro() {
     pct.textContent = 100;
     gsap.timeline({ onComplete: () => { intro.remove(); lenis?.start(); } })
       .to('.intro__film', { opacity: 1, filter: 'brightness(2.2)', duration: 0.12, ease: 'power1.in' }, 0)
-      .to(intro, { opacity: 0, duration: 0.7, ease: 'power2.out' }, 0.14)
+      .to(intro, { opacity: 0, duration: 0.45, ease: 'power2.out' }, 0.1)
+      .set(intro, { pointerEvents: 'none' }, 0.1)
       .call(heroIn, [], 0.25);
     document.body.classList.remove('is-loading');
   }

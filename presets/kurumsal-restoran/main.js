@@ -24,6 +24,8 @@ const EK = [
 ];
 const masaIkon = `<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="6" y="7" width="12" height="10" rx="2"/><path d="M9 3.5h6M9 20.5h6M2.5 10v4M21.5 10v4"/></svg>`;
 const veri = derinBirlestir(ana, ek);
+// Yorumlar örnektir: uydurma puan ve "N değerlendirme" sayısı gösterilmez.
+delete veri.puan;
 veri.hizmetler = ana.hizmetler.map((h, i) => {
   const [grup, foto, kisa, detay] = EK[i] || ['hizmet', 'salon', '', []];
   return { ...h, grup, gorsel: g(foto), kisa, detay, etiket: grup === 'hizmet' ? 'Ne zaman' : 'Masaya gelişi' };
@@ -52,7 +54,7 @@ kurumsal({
     teklifEtiketi: 'Masa ayırtın',
     hizmetEtiketi: 'Menü',
     metinBoyutu: true,
-    altNot: 'Güncel fiyatlar için arayın; grup menülerinde fiyatı rezervasyon onaylanmadan söyleriz.',
+    altNot: 'Güncel fiyatlar için arayın; grup menülerinde fiyatı rezervasyon onaylanmadan söyleriz. Fotoğraflar temsilîdir (Pexels). Yorumlar örnektir.',
     css: {
       zemin: '#f0f3ec', yuzey: '#dde7de', metin: '#0d3b33', soluk: '#46605a', cizgi: 'rgb(13 59 51 / .14)',
       vurgu: '#d8361f', 'vurgu-metin': '#ffffff', koyu: '#0d3b33', 'koyu-metin': '#f0f3ec', 'koyu-soluk': '#9fc3b5',
@@ -89,6 +91,5 @@ kurumsal({
     openingHoursSpecification: d.saatler
       .map((s, i) => (s ? { '@type': 'OpeningHoursSpecification', dayOfWeek: `https://schema.org/${GUN[i]}`, opens: s.split('-')[0], closes: s.split('-')[1] } : null))
       .filter(Boolean),
-    ...(d.puan && { aggregateRating: { '@type': 'AggregateRating', ratingValue: d.puan.ortalama, reviewCount: d.puan.adet } }),
   }),
 });

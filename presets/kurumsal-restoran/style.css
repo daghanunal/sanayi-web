@@ -188,8 +188,9 @@
 .mk__sayi { text-align: center; font-family: var(--k-font-baslik); font-size: 52px; line-height: 1; }
 .mk__sayi small { font-family: var(--k-font-govde); font-size: 15px; margin-left: 6px; color: var(--k-soluk); }
 .mk__kaydir {
-  grid-column: 1 / -1; width: 100%; appearance: none; -webkit-appearance: none; height: 8px; border-radius: 99px; margin: 8px 0 0;
-  background: linear-gradient(90deg, var(--k-vurgu) var(--dolu, 0%), var(--k-yuzey) var(--dolu, 0%));
+  grid-column: 1 / -1; width: 100%; appearance: none; -webkit-appearance: none; height: 44px; border-radius: 99px; margin: 0;
+  /* Dokunma alanı 44 px, görünen ray 8 px */
+  background: linear-gradient(90deg, var(--k-vurgu) var(--dolu, 0%), var(--k-yuzey) var(--dolu, 0%)) center / 100% 8px no-repeat;
 }
 .mk__kaydir::-webkit-slider-thumb { -webkit-appearance: none; width: 28px; height: 28px; border-radius: 50%; background: var(--cs-koyu); border: 4px solid var(--cs-sir); box-shadow: 0 2px 8px rgb(0 0 0 / .25); cursor: grab; }
 .mk__kaydir::-moz-range-thumb { width: 22px; height: 22px; border-radius: 50%; background: var(--cs-koyu); border: 4px solid var(--cs-sir); cursor: grab; }
@@ -247,7 +248,7 @@
 .mk__satirlar b { font-family: var(--cs-el); font-weight: 400; font-size: 23px; color: #123f36; text-align: right; line-height: 1.1; }
 .mk__not { display: grid; grid-template-columns: auto 1fr; gap: 12px; align-items: baseline; margin-top: 4px; }
 .mk__not span { font-size: 13px; color: #6f8479; text-transform: uppercase; letter-spacing: .06em; font-weight: 600; }
-.mk__not input { font-family: var(--cs-el); font-size: 21px; color: #123f36; background: transparent; border: 0; border-bottom: 1.5px dashed rgb(13 59 51 / .3); padding: 4px 0; min-width: 0; text-align: right; }
+.mk__not input { font-family: var(--cs-el); font-size: 21px; color: #123f36; background: transparent; border: 0; border-bottom: 1.5px dashed rgb(13 59 51 / .3); padding: 8px 0; min-height: 44px; box-sizing: border-box; min-width: 0; text-align: right; }
 .mk__not input:focus { outline: none; border-bottom-color: var(--k-vurgu); }
 .mk__ipucu { margin-top: 14px; padding: 10px 12px; border-radius: 10px; background: #fff1d6; color: #6b4410; font-size: 15px; line-height: 1.4; }
 .mk__butonlar { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
@@ -320,7 +321,8 @@
 }
 
 .k-logo { min-width: 0; }
-.k-logo__ad { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: min(56vw, 360px); }
+.k-logo__ad, .k-logo__alt { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: min(56vw, 360px); }
+@media (max-width: 380px) { .k-logo__alt { font-size: 10px; letter-spacing: .04em; } }
 .kh__ad--uzun { font-size: clamp(48px, 6.4vw, 108px); max-width: 11ch; }
 @media (max-width: 959px) { .kh__ad.kh__ad--uzun { font-size: min(13vw, 76px); } }
 .k-logo__ad { padding-top: .16em; margin-top: -.16em; line-height: 1.12; }

@@ -4,7 +4,7 @@ import '../../shared/base.css';
 import './style.css';
 import {
   boot, initSmoothScroll, reducedMotion, telHref, waHref, mapsHref, mapsEmbed,
-  openStatus, groupedHours, icons, esc, gsap, ScrollTrigger,
+  openStatus, groupedHours, icons, esc, gsap, ScrollTrigger, setStoryMode,
 } from '../../shared/core.js';
 import { SplitText } from 'gsap/SplitText';
 import { DrawSVGPlugin } from 'gsap/DrawSVGPlugin';
@@ -67,12 +67,14 @@ $('[data-status-big]').classList.toggle('is-open', status.open);
 const FILM = d.film;
 $('[data-sheets]').innerHTML = FILM.map((f) => `<li data-sheet><b>${esc(f.pafta)}</b><span>${esc(f.paftaAd)}</span></li>`).join('');
 $('[data-cards]').innerHTML = FILM.map((f) => `
+  <div class="stop" data-stop>
   <article class="card" data-card="${esc(f.id)}">
     <p class="card__sheet"><span>Pafta ${esc(f.pafta)}</span><span>${esc(f.durak)}</span></p>
     <h2 class="card__title">${esc(f.baslik)}</h2>
     <p class="card__text">${esc(f.metin)}</p>
     <a class="card__wa" href="${esc(waHref(d, `Merhaba ${d.isletme.ad}, ${f.hizmet.toLocaleLowerCase('tr')} için bilgi almak istiyorum.`))}" target="_blank" rel="noopener">${icons.whatsapp}<span>${esc(f.hizmet)} için sorun</span></a>
-  </article>`).join('');
+  </article>
+  </div>`).join('');
 $('[data-ov-kicker]').textContent = d.filmSon.ust;
 $('[data-ov-title]').textContent = d.filmSon.baslik;
 
@@ -110,7 +112,7 @@ $('[data-marquee]').innerHTML = `<div class="marquee__inner">${chunk}${chunk}</d
 // Yorumlar
 $('[data-puan]').textContent = nf(d.puan.ortalama, 1);
 $('[data-stars]').innerHTML = icons.star.repeat(5);
-$('[data-puan-adet]').textContent = `${nf(d.puan.adet)} Google yorumu`;
+$('[data-puan-adet]').textContent = 'Temsilî puan · yorumlar örnektir';
 $('[data-rev-track]').innerHTML = d.yorumlar.map((y) => `
   <figure class="rev">
     <p class="rev__stars" aria-label="${Number(y.puan)} yıldız">${icons.star.repeat(Number(y.puan) || 0)}</p>
@@ -163,6 +165,52 @@ const KF = [
   [0.765, 'ev1'], [0.835, 'ev2'], [0.885, 'gece'], [1, 'gece2'],
 ];
 const CARD_RANGES = [[0.085, 0.2], [0.205, 0.33], [0.335, 0.46], [0.465, 0.59], [0.595, 0.72], [0.735, 0.85]];
+
+// Kurgu 0..1 "sanal" film zamanında yazıldı (KF, CARD_RANGES, etiketler). Gerçek kaydırma DOM'dan ölçülen
+// duraklara eşlenir: durak i bir önceki kartın çekildiği yerde başlar ve sanal aralığına oturur.
+let WARP = [[0, 0], [1, 1]];
+let cardGeo = [];
+function measureFilm() {
+  const filmEl = $('[data-film]');
+  const vh = innerHeight;
+  const total = Math.max(1, filmEl.offsetHeight - vh);
+  const ft = filmEl.getBoundingClientRect().top;
+  const top = (el) => el.getBoundingClientRect().top - ft;
+  const stops = $$('[data-stop]');
+  const r = (y) => clamp(y / total);
+  const w = [[0, 0]];
+  stops.forEach((el, i) => { if (i > 0) w.push([r(top(el) - vh), CARD_RANGES[i][0] - 0.005]); });
+  w.push([r(top($('[data-over-sec]')) - vh * 0.8), 0.86], [1, 1]);
+  WARP = w;
+  const sy = scrollY;
+  cardGeo = stops.map((el) => ({ top: el.getBoundingClientRect().top + sy, h: el.offsetHeight, pad: parseFloat(getComputedStyle(el).paddingTop) || 0 }));
+}
+function warp(x) {
+  let i = 0;
+  while (i < WARP.length - 2 && x > WARP[i + 1][0]) i++;
+  const [a, va] = WARP[i], [b, vb] = WARP[i + 1];
+  return L(va, vb, seg(x, a, b));
+}
+// Kart görünürlüğü doğrudan kaydırma konumundan (hızlı atlamada eski kart ekranda kalmasın)
+const cardState = [];
+function cardUI() {
+  const y = scrollY, vh = innerHeight;
+  cards.forEach((card, i) => {
+    const g = cardGeo[i];
+    if (!g) return;
+    const a0 = g.top + g.pad * 0.6 - vh, a1 = g.top + g.pad - vh * 0.8;
+    const b0 = g.top + g.h - vh, b1 = b0 + vh * 0.28;
+    const vin = clamp((y - a0) / Math.max(1, a1 - a0)), vout = clamp((y - b0) / Math.max(1, b1 - b0));
+    const v = +(smooth(vin) * (1 - vout)).toFixed(3);
+    const ty = +((1 - vin) * 30 - vout * 24).toFixed(1);
+    const st = cardState[i] || (cardState[i] = {});
+    if (st.v === v && st.ty === ty) return;
+    st.v = v; st.ty = ty;
+    show(card, v);
+    card.style.transform = `translate3d(0, ${ty}px, 0)`;
+    card.style.setProperty('--draw', clamp(vin * 1.1).toFixed(3));
+  });
+}
 
 const pose = (name) => {
   const a = POSE[name][mobile() ? 1 : 0];
@@ -243,11 +291,17 @@ const tagsBox = $('[data-tags]');
 tagsBox.innerHTML = TAGS.map((g) => `<p class="tag${g.acc ? ' tag--acc' : ''}" data-tag><i></i><span></span></p>`).join('');
 const tagEls = $$('[data-tag]');
 function drawTags(p) {
-  TAGS.forEach((g, i) => {
+  // Telefonda aynı anda en çok iki etiket (vurgulu olanlar önce): sahne okunaklı kalsın
+  const m = mobile();
+  let room = m ? 2 : 99;
+  const order = m ? TAGS.map((g, i) => i).sort((x, y) => (TAGS[y].acc ? 1 : 0) - (TAGS[x].acc ? 1 : 0)) : TAGS.map((g, i) => i);
+  order.forEach((i) => {
+    const g = TAGS[i];
     const el = tagEls[i];
     const [a, b] = g.r;
-    const v = seg(p, a, a + 0.012) * (1 - seg(p, b - 0.012, b));
-    if (v <= 0.01 || (g.desk && mobile())) {
+    let v = seg(p, a, a + 0.012) * (1 - seg(p, b - 0.012, b));
+    if (v > 0.01 && !(g.desk && m)) { if (room > 0) room--; else v = 0; }
+    if (v <= 0.01 || (g.desk && m)) {
       if (el.style.visibility !== 'hidden') el.style.visibility = 'hidden';
       return;
     }
@@ -271,14 +325,16 @@ function drawTags(p) {
 // --- Film arayüzü -----------------------------------------------------------------
 
 const film = $('[data-film]');
-const hero = $('[data-hero]');
 const cards = $$('[data-card]');
+const topEl = $('[data-top]');
+const tsNo = $('[data-ts-no]'), tsName = $('[data-ts-name]');
+let topSheetOn = false;
+const inFilmNow = () => (filmST ? filmST.progress < 1 : true);
 const sheets = $$('[data-sheet]');
 const sheetsBox = $('[data-sheets]');
 const antet = $('[data-antet]');
 const aNo = $('[data-a-no]'), aScale = $('[data-a-scale]'), aName = $('[data-a-name]');
 const compass = $('[data-compass]');
-const overview = $('[data-overview]');
 const hint = $('[data-hint]');
 let lastSheet = -2;
 
@@ -288,24 +344,13 @@ function show(el, v) {
 }
 
 function filmUI(p) {
-  const heroOut = seg(p, 0.04, 0.08);
-  hero.style.opacity = 1 - heroOut;
-  hero.style.transform = `translate3d(0, ${heroOut * -40}px, 0)`;
-  hero.style.visibility = heroOut >= 1 ? 'hidden' : 'visible';
   hint.style.opacity = 1 - seg(p, 0, 0.03);
-
   let active = -1;
-  cards.forEach((card, i) => {
-    const [a, b] = CARD_RANGES[i];
-    const vin = seg(p, a, a + 0.018), vout = seg(p, b - 0.018, b);
-    const v = vin * (1 - vout);
-    show(card, v);
-    card.style.transform = `translate3d(0, ${(1 - vin) * 34 - vout * 24}px, 0)`;
-    card.style.setProperty('--draw', seg(p, a, a + 0.04));
-    if (p >= a && p < b) active = i;
-  });
-  show(sheetsBox, seg(p, 0.07, 0.09) * (1 - seg(p, 0.86, 0.88)));
-  show(antet, seg(p, 0.06, 0.09) * (1 - seg(p, 0.965, 0.99)));
+  CARD_RANGES.forEach(([a, b], i) => { if (p >= a && p < b) active = i; });
+  const inStops = inFilmNow() && p > 0.06 && p < 0.865;
+  if (inStops !== topSheetOn) { topEl.classList.toggle('is-sheet', inStops); topSheetOn = inStops; }
+  show(sheetsBox, filmActive ? seg(p, 0.07, 0.09) * (1 - seg(p, 0.86, 0.88)) : 0);
+  show(antet, filmActive ? seg(p, 0.06, 0.09) * (1 - seg(p, 0.965, 0.99)) : 0);
   if (active !== lastSheet) {
     sheets.forEach((li, i) => {
       li.classList.toggle('is-active', i === active);
@@ -315,6 +360,8 @@ function filmUI(p) {
     aNo.textContent = f.pafta;
     aScale.textContent = f.olcek;
     aName.textContent = f.paftaAd;
+    tsNo.textContent = `Pafta ${f.pafta}`;
+    tsName.textContent = f.olcek;
     antet.classList.remove('is-flash');
     void antet.offsetWidth;
     antet.classList.add('is-flash');
@@ -322,9 +369,6 @@ function filmUI(p) {
   }
   compass.style.transform = `rotate(${(S.azimuth() * 180) / Math.PI}deg)`;
 
-  const ov = seg(p, 0.885, 0.915) * (1 - seg(p, 0.975, 0.995));
-  show(overview, ov);
-  overview.style.transform = `translate3d(0, ${(1 - ov) * 26}px, 0)`;
   document.documentElement.classList.toggle('is-real', p > 0.6 && p < 0.84);
 }
 
@@ -342,7 +386,18 @@ function setupScroll() {
   lenis = initSmoothScroll();
   lenis?.stop();
   lenis?.on('scroll', (e) => (vel = Math.min(1, Math.abs(e.velocity) / 40)));
-  filmST = ScrollTrigger.create({ trigger: film, start: 'top top', end: 'bottom bottom', onUpdate: (s) => (filmTarget = s.progress) });
+  ScrollTrigger.addEventListener('refresh', measureFilm);
+  measureFilm();
+  filmST = ScrollTrigger.create({ trigger: film, start: 'top top', end: 'bottom bottom', onUpdate: (s) => (filmTarget = warp(s.progress)) });
+  // Duraklar boyunca hikâye modu: alt çubuk iner, kart onun boşluğuna oturur
+  ScrollTrigger.create({
+    trigger: '[data-cards]', start: 'top 70%', end: () => `bottom ${Math.round(innerHeight * 0.9)}px`,
+    onToggle: (st) => setStoryMode(st.isActive ? true : null),
+  });
+  gsap.fromTo('[data-overview] > *', { autoAlpha: 0, y: 26 }, {
+    autoAlpha: 1, y: 0, stagger: 0.1, duration: 1, ease: 'expo.out',
+    scrollTrigger: { trigger: '[data-over-sec]', start: 'top 45%', toggleActions: 'play none none reverse' },
+  });
   ScrollTrigger.create({ trigger: film, start: 'bottom bottom', end: 'bottom 30%', onUpdate: (s) => (filmFade = 1 - s.progress) });
   finaleST = ScrollTrigger.create({ trigger: '[data-finale]', start: 'top bottom', end: 'bottom bottom', onUpdate: (s) => (finaleQ = s.progress) });
   ScrollTrigger.create({ trigger: '[data-finale]', start: 'top bottom', end: 'top 25%', onUpdate: (s) => (canvasFinale = s.progress) });
@@ -460,7 +515,8 @@ function tick(now) {
   }
   filmP += (filmTarget - filmP) * (1 - Math.exp(-dt * 6));
   const inFilm = filmST ? filmST.progress < 1 : true;
-  if (inFilm || filmP < 0.999) filmUI(filmP);
+  if (inFilm || filmP < 0.999 || topSheetOn) filmUI(filmP);
+  if (inFilm || cardState.some((c) => c.v > 0)) cardUI();
 
   if (finaleActive && canvasFinale > 0.001) {
     canvas.style.opacity = canvasFinale;
@@ -508,7 +564,7 @@ function runIntro() {
   tl.to(paths, { drawSVG: '100%', duration: 0.7, stagger: 0.09, ease: 'power2.inOut' }, 0.1);
   tl.fromTo('[data-intro-name]', { yPercent: 100, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 0.7, ease: 'power3.out' }, 0.3);
   const o = { v: 1000 };
-  tl.to(o, { v: 200, duration: 1.4, ease: 'power2.inOut', onUpdate: () => {
+  tl.to(o, { v: 200, duration: 1.1, ease: 'power2.inOut', onUpdate: () => {
     scaleEl.textContent = `1/${Math.round(o.v / 50) * 50}`;
     dimEl.textContent = nf(12 * (o.v / 1000) * 5, 2);
   } }, 0.2);
@@ -516,16 +572,19 @@ function runIntro() {
     S.compile();
     S.update(filmState(0, performance.now() / 1000), performance.now());
   }, [], 0.3);
-  tl.add(finish, 1.9);
+  tl.add(finish, 1.4);
   function finish() {
     if (done) return;
     done = true;
     tl.kill();
     gsap.set(paths, { drawSVG: '100%' });
-    gsap.timeline({ onComplete: () => { intro.remove(); lenis?.start(); } })
-      .to('.intro__sheet', { scale: 1.6, opacity: 0, duration: 0.9, ease: 'power3.in' }, 0)
-      .to(intro, { opacity: 0, duration: 0.5, ease: 'power1.out' }, 0.55)
-      .call(heroIn, [], 0.6);
+    // Kaydırma ve dokunma hemen serbest; perde yalnızca görsel olarak söner
+    intro.style.pointerEvents = 'none';
+    lenis?.start();
+    gsap.timeline({ onComplete: () => intro.remove() })
+      .to('.intro__sheet', { scale: 1.6, opacity: 0, duration: 0.6, ease: 'power3.in' }, 0)
+      .to(intro, { opacity: 0, duration: 0.4, ease: 'power1.out' }, 0.35)
+      .call(heroIn, [], 0.4);
     document.body.classList.remove('is-loading');
   }
   intro.addEventListener('pointerdown', finish, { once: true });
@@ -539,7 +598,7 @@ if (reducedMotion) {
   $('[data-intro]').remove();
   document.body.classList.remove('is-loading');
   S.compile();
-  const still = () => S.update(filmState(0.7, 0), performance.now());
+  const still = () => S.update(filmState(0.02, 0), performance.now());
   still();
   addEventListener('resize', still);
   $$('[data-count]').forEach((el) => (el.textContent = nf(Number(el.dataset.count))));

@@ -28,6 +28,8 @@ const DETAY = {
   cekim: [['Önce', 'Röntgen'], ['Ertesi gün', 'Telefonla ararız']],
 };
 const veri = derinBirlestir(ana, ek);
+// Yorumlar örnektir: uydurma puan ve "N değerlendirme" sayısı gösterilmez.
+delete veri.puan;
 veri.hizmetler = ana.hizmetler.map((h) => ({ ...h, kisa: KISA[h.id], detay: DETAY[h.id] || [] }));
 
 const ctx = kurumsal({
@@ -43,6 +45,7 @@ const ctx = kurumsal({
     teklifEtiketi: 'Randevu al',
     hizmetEtiketi: 'Tedaviler',
     metinBoyutu: true,
+    altNot: 'Fotoğraflar temsilîdir (Pexels). Yorumlar örnektir. Sayfadaki bilgiler genel bilgilendirme içindir; tedavi kararı muayeneden sonra hekimle birlikte verilir.',
     css: {
       zemin: '#eef1f8', yuzey: '#e0e5f2', metin: '#131838', soluk: '#4d5378', cizgi: 'rgb(19 24 56 / .14)',
       vurgu: '#de3d66', 'vurgu-metin': '#ffffff', koyu: '#171b45', 'koyu-metin': '#eef0fb', 'koyu-soluk': '#a6abd2',
@@ -72,7 +75,6 @@ const ctx = kurumsal({
     openingHoursSpecification: d.saatler
       .map((s, i) => (s ? { '@type': 'OpeningHoursSpecification', dayOfWeek: `https://schema.org/${GUN[i]}`, opens: s.split('-')[0], closes: s.split('-')[1] } : null))
       .filter(Boolean),
-    ...(d.puan && { aggregateRating: { '@type': 'AggregateRating', ratingValue: d.puan.ortalama, reviewCount: d.puan.adet } }),
   }),
 });
 

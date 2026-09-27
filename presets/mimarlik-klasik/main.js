@@ -323,7 +323,7 @@ const stars = (n) => Array.from({ length: 5 }, (_, i) => `<span class="${i < n ?
 $('[data-score]').textContent = nf(d.puan.ortalama, 1);
 $('[data-stars]').innerHTML = stars(Math.round(d.puan.ortalama));
 $('[data-stars]').setAttribute('aria-label', `5 üzerinden ${nf(d.puan.ortalama, 1)}`);
-$('[data-review-count]').textContent = `Google'da ${nf(d.puan.adet)} değerlendirme`;
+$('[data-review-count]').textContent = 'Temsilî puan · yorumlar örnektir';
 $('[data-reviews]').innerHTML = d.yorumlar.map((y) => `
   <li class="rev">
     <p class="rev__stars" aria-label="${Number(y.puan)} yıldız">${stars(y.puan)}</p>
@@ -369,10 +369,12 @@ if (!reducedMotion) {
   $$('.h2').forEach((h) => gsap.from(h, { y: 30, opacity: 0, duration: 0.8, ease: 'power3.out', scrollTrigger: { trigger: h, start: 'top 88%' } }));
 
   // Oda kartları: bir sonraki kart üstüne binerken öncekini geri it
+  // Telefonda deste yok (kartlar alt alta akar): üst üste binen yazı ve 40%'tan uzun yapışkan kart olmasın
   const odalar = $$('.oda');
+  const deck = matchMedia('(min-width: 900px)').matches;
   odalar.forEach((o, i) => {
     const next = odalar[i + 1];
-    if (!next) return;
+    if (!next || !deck) return;
     gsap.timeline({ scrollTrigger: { trigger: next, start: 'top bottom', end: 'top 20%', scrub: true } })
       .to($('.oda__card', o), { scale: 0.92, ease: 'none' }, 0)
       .to($('.oda__dim', o), { opacity: 0.55, ease: 'none' }, 0);

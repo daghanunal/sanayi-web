@@ -5,6 +5,7 @@ import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
 import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js';
+import { loadEnv, pickQuality } from '../../shared/lib3d.js';
 import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js';
 
 const V = (x, y, z) => new THREE.Vector3(x, y, z);
@@ -28,72 +29,6 @@ void main(){
   gl_Position = projectionMatrix * viewMatrix * wp;
 }`;
 
-// Katman malzemesi: mine/dentin/pulpa/kemik/diş eti aynı gölgelendiriciyi paylaşır.
-const FRAG = /* glsl */ `
-uniform vec3 uColor; uniform vec3 uCutColor; uniform vec3 uRim; uniform vec3 uGlowColor; uniform vec3 uFillColor;
-uniform float uAlpha; uniform float uCut; uniform float uClipBelow; uniform float uScan; uniform float uKind;
-uniform float uPlaque; uniform float uClean; uniform float uCavity; uniform float uFill; uniform float uGlow;
-uniform float uCanal; uniform float uTime; uniform float uCure; uniform vec3 uCav; uniform float uSpong;
-varying vec3 vPos; varying vec3 vWN; varying vec3 vView;
-${NOISE}
-void main(){
-  if (vPos.z > uCut || vPos.y < uClipBelow || vPos.y > uScan) discard;
-  vec3 N = normalize(vWN); vec3 V = normalize(vView);
-  float nz = vnoise(vPos * 7.0) * 0.6 + vnoise(vPos * 19.0) * 0.4;
-  if (!gl_FrontFacing) {
-    // Kesit yüzü (kapalı kabuğun içi): düz katman rengi
-    vec3 c = uCutColor * (0.9 + nz * 0.16);
-    if (uSpong > 0.0) {
-      float s = smoothstep(0.52, 0.6, vnoise(vPos * 16.0));
-      c = mix(c, c * 0.62, s * uSpong);
-    }
-    if (uCanal > 0.0) {
-      float line = mix(0.48, -1.3, uCanal);
-      c = mix(c, uFillColor, step(line, vPos.y));
-    }
-    c += uGlowColor * uGlow * (0.7 + 0.3 * sin(uTime * 5.0));
-    gl_FragColor = vec4(c, uAlpha);
-    #include <colorspace_fragment>
-    return;
-  }
-  vec3 base = uColor;
-  float pl = 0.0;
-  if (uKind < 0.5) {
-    base = mix(vec3(0.86, 0.78, 0.6), base, smoothstep(-0.25, 0.08, vPos.y));
-    base *= 0.9 + 0.1 * nz;
-    // Diş taşı: boyuna ve aralara yığılır, temizlik cephesi üstten aşağı iner
-    float band = smoothstep(0.42, 0.02, vPos.y) * smoothstep(-0.32, -0.02, vPos.y);
-    pl = smoothstep(0.62, 0.74, nz * 0.7 + band * 0.55) * uPlaque * step(vPos.y, uClean);
-    base = mix(base, vec3(0.74, 0.6, 0.36), pl * 0.8);
-    float cd = distance(vPos, uCav) + (vnoise(vPos * 22.0) - 0.5) * 0.06;
-    float cav = smoothstep(0.15, 0.09, cd) * uCavity;
-    vec3 dark = vec3(0.12, 0.07, 0.04);
-    base = mix(base, mix(dark, vec3(0.95, 0.96, 1.0), uFill), cav);
-    base += vec3(0.25, 0.45, 1.0) * uCure * smoothstep(0.3, 0.05, cd) * 1.4;
-  }
-  if (uCanal > 0.0) {
-    float line = mix(0.48, -1.3, uCanal);
-    base = mix(base, uFillColor, step(line, vPos.y));
-  }
-  vec3 L1 = normalize(vec3(0.55, 0.85, 0.7));
-  vec3 L2 = normalize(vec3(-0.8, 0.1, -0.5));
-  float wrap = max(0.0, (dot(N, L1) + 0.4) / 1.4);
-  float back = max(0.0, dot(N, L2));
-  vec3 H = normalize(L1 + V);
-  float gloss = uKind < 0.5 ? 1.0 : 0.3;
-  float spec = pow(max(dot(N, H), 0.0), 70.0) * 0.55 * gloss * (1.0 - pl);
-  float fr = pow(1.0 - max(dot(N, V), 0.0), 3.0);
-  // Mine yarı saydam gibi: ışık kenarda içeri süzülür
-  vec3 sss = vec3(1.0, 0.72, 0.55) * pow(max(0.0, 1.0 - dot(N, V)), 1.6) * 0.18 * gloss;
-  vec3 col = base * (0.16 + 0.66 * wrap) + base * back * 0.14 + spec + sss + uRim * fr * 0.45;
-  col += uGlowColor * uGlow * (0.7 + 0.3 * sin(uTime * 5.0));
-  // Tarama çizgisi yakınında parıltı
-  float sl = smoothstep(0.06, 0.0, abs(vPos.y - uScan));
-  col += vec3(0.55, 0.85, 1.0) * sl * 1.2;
-  gl_FragColor = vec4(col, uAlpha);
-  #include <colorspace_fragment>
-}`;
-
 // Röntgen: yoğunluk kenarda artar, üst üste binen katmanlar toplanır
 const XFRAG = /* glsl */ `
 uniform vec3 uTint; uniform float uAmt; uniform float uScan; uniform float uCut; uniform vec3 uCav; uniform float uCavity; uniform float uDense;
@@ -108,20 +43,86 @@ void main(){
   vec3 o = c * uAmt; gl_FragColor = vec4(o, clamp(max(o.r, max(o.g, o.b)), 0.0, 1.0));
 }`;
 
+// Katman malzemesi: fiziksel tabanlı (HDRI yansıması, ACES), kesit/tarama/çürük/dolgu mantığı
+// MeshPhysicalMaterial'a enjekte edilir. Kesit yüzü (kapalı kabuğun içi) düz katman rengiyle çizilir.
+const PBR = {
+  0: { roughness: 0.16, clearcoat: 0.55, clearcoatRoughness: 0.1, ior: 1.62, sheen: 0 },   // mine (enamel)
+  1: { roughness: 0.46, clearcoat: 0, clearcoatRoughness: 0.3, ior: 1.5, sheen: 0 },       // dentin, kemik
+  2: { roughness: 0.3, clearcoat: 0.7, clearcoatRoughness: 0.18, ior: 1.4, sheen: 0.35 },   // ıslak doku: pulpa, diş eti
+};
+let LITE = false;
 function layerMat(o) {
-  return new THREE.ShaderMaterial({
-    vertexShader: VERT,
-    fragmentShader: FRAG,
-    side: THREE.DoubleSide,
-    transparent: true,
-    uniforms: {
-      uColor: { value: C(o.color) }, uCutColor: { value: C(o.cut ?? o.color) }, uRim: { value: C(o.rim ?? '#9fd4ff') },
-      uGlowColor: { value: C(o.glow ?? '#ff3050') }, uFillColor: { value: C(o.fill ?? '#e98a5c') },
-      uAlpha: { value: 1 }, uCut: { value: 9 }, uClipBelow: { value: -9 }, uScan: { value: 9 }, uKind: { value: o.kind ?? 1 },
-      uPlaque: { value: 0 }, uClean: { value: 9 }, uCavity: { value: 0 }, uFill: { value: 0 }, uGlow: { value: 0 },
-      uCanal: { value: 0 }, uTime: { value: 0 }, uCure: { value: 0 }, uCav: { value: V(0.2, 0.6, 0.2) }, uSpong: { value: o.spong ?? 0 },
-    },
+  const kind = o.kind ?? 1;
+  const pb = PBR[o.pbr ?? (kind < 0.5 ? 0 : 1)];
+  const m = new THREE.MeshPhysicalMaterial({
+    color: C(o.color), roughness: pb.roughness, metalness: 0, ior: pb.ior,
+    clearcoat: LITE ? 0 : pb.clearcoat, clearcoatRoughness: pb.clearcoatRoughness,
+    sheen: LITE ? 0 : pb.sheen, sheenRoughness: 0.5, sheenColor: C(o.sheen ?? '#ffd0d8'),
+    side: THREE.DoubleSide, transparent: true,
   });
+  const U = {
+    uCutColor: { value: C(o.cut ?? o.color) }, uGlowColor: { value: C(o.glow ?? '#ff3050') }, uFillColor: { value: C(o.fill ?? '#e98a5c') },
+    uAlpha: { value: 1 }, uCut: { value: 9 }, uClipBelow: { value: -9 }, uScan: { value: 9 }, uKind: { value: kind },
+    uPlaque: { value: 0 }, uClean: { value: 9 }, uCavity: { value: 0 }, uFill: { value: 0 }, uGlow: { value: 0 },
+    uCanal: { value: 0 }, uTime: { value: 0 }, uCure: { value: 0 }, uCav: { value: V(0.2, 0.6, 0.2) }, uSpong: { value: o.spong ?? 0 },
+    uSss: { value: o.sss ?? (kind < 0.5 ? 1 : 0) },
+  };
+  m.uniforms = U;
+  m.onBeforeCompile = (sh) => {
+    Object.assign(sh.uniforms, U);
+    sh.vertexShader = sh.vertexShader
+      .replace('#include <common>', '#include <common>\nvarying vec3 vPos;')
+      .replace('#include <begin_vertex>', '#include <begin_vertex>\nvPos = position;');
+    sh.fragmentShader = sh.fragmentShader
+      .replace('#include <common>', `#include <common>
+uniform vec3 uCutColor; uniform vec3 uGlowColor; uniform vec3 uFillColor; uniform vec3 uCav;
+uniform float uAlpha; uniform float uCut; uniform float uClipBelow; uniform float uScan; uniform float uKind;
+uniform float uPlaque; uniform float uClean; uniform float uCavity; uniform float uFill; uniform float uGlow;
+uniform float uCanal; uniform float uTime; uniform float uCure; uniform float uSpong; uniform float uSss;
+varying vec3 vPos;
+${NOISE}`)
+      .replace('#include <clipping_planes_fragment>', `#include <clipping_planes_fragment>
+  if (vPos.z > uCut || vPos.y < uClipBelow || vPos.y > uScan) discard;`)
+      .replace('#include <color_fragment>', `#include <color_fragment>
+  float nz = vnoise(vPos * 7.0) * 0.6 + vnoise(vPos * 19.0) * 0.4;
+  float pl = 0.0; float cav = 0.0; float cd = 9.0;
+  vec3 cutCol = uCutColor * (0.9 + nz * 0.16);
+  if (uSpong > 0.0) { float sp = smoothstep(0.52, 0.6, vnoise(vPos * 16.0)); cutCol = mix(cutCol, cutCol * 0.62, sp * uSpong); }
+  if (uKind < 0.5) {
+    vec3 base = diffuseColor.rgb;
+    base = mix(vec3(0.8, 0.68, 0.46), base, smoothstep(-0.25, 0.08, vPos.y));
+    base *= 0.9 + 0.1 * nz;
+    float band = smoothstep(0.42, 0.02, vPos.y) * smoothstep(-0.32, -0.02, vPos.y);
+    pl = smoothstep(0.62, 0.74, nz * 0.7 + band * 0.55) * uPlaque * step(vPos.y, uClean);
+    base = mix(base, vec3(0.6, 0.44, 0.2), pl * 0.85);
+    cd = distance(vPos, uCav) + (vnoise(vPos * 22.0) - 0.5) * 0.06;
+    cav = smoothstep(0.15, 0.09, cd) * uCavity;
+    base = mix(base, mix(vec3(0.05, 0.028, 0.015), vec3(0.9, 0.9, 0.92), uFill), cav);
+    diffuseColor.rgb = base;
+  } else {
+    diffuseColor.rgb *= 0.9 + 0.14 * nz;
+  }
+  if (uCanal > 0.0) {
+    float cl = step(mix(0.48, -1.3, uCanal), vPos.y);
+    diffuseColor.rgb = mix(diffuseColor.rgb, uFillColor, cl);
+    cutCol = mix(cutCol, uFillColor, cl);
+  }
+  diffuseColor.a *= uAlpha;`)
+      .replace('#include <roughnessmap_fragment>', `#include <roughnessmap_fragment>
+  roughnessFactor = clamp(roughnessFactor + pl * 0.55 + cav * (1.0 - uFill) * 0.5, 0.04, 1.0);`)
+      .replace('#include <emissivemap_fragment>', `#include <emissivemap_fragment>
+  float glowP = uGlow * (0.7 + 0.3 * sin(uTime * 5.0));
+  totalEmissiveRadiance += uGlowColor * glowP;
+  if (uKind < 0.5) totalEmissiveRadiance += vec3(0.25, 0.45, 1.0) * uCure * smoothstep(0.3, 0.05, cd) * 1.6;
+  totalEmissiveRadiance += vec3(0.55, 0.85, 1.0) * smoothstep(0.06, 0.0, abs(vPos.y - uScan)) * 1.3;
+  // Mine yarı saydam: kenarda ışık içeri süzülür (ucuz alt yüzey saçılması)
+  float sssF = pow(1.0 - saturate(dot(normal, normalize(vViewPosition))), 2.2);
+  totalEmissiveRadiance += vec3(1.0, 0.78, 0.6) * sssF * 0.07 * uSss * (1.0 - pl);`)
+      .replace('#include <tonemapping_fragment>', `if (!gl_FrontFacing) gl_FragColor.rgb = cutCol * 1.25 + uGlowColor * glowP;
+#include <tonemapping_fragment>`);
+  };
+  m.customProgramCacheKey = () => 'dis-layer';
+  return m;
 }
 function xrayMat(dense) {
   return new THREE.ShaderMaterial({
@@ -163,6 +164,7 @@ function screwGeometry() {
 }
 
 export function createScene(canvas, { lite = false, onReady } = {}) {
+  LITE = lite;
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: !lite, alpha: true, powerPreference: 'high-performance' });
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -173,12 +175,22 @@ export function createScene(canvas, { lite = false, onReady } = {}) {
 
   const scene = new THREE.Scene();
   const pmrem = new THREE.PMREMGenerator(renderer);
+  // Önce anlık oda ışığı; stüdyo HDRI'ı gelince yansımalar gerçek softbox'lardan gelir
   scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
-  scene.environmentIntensity = 0.9;
-  scene.add(new THREE.HemisphereLight(0xcfe6ff, 0x1a1020, 1.1));
-  const key = new THREE.DirectionalLight(0xffffff, 2.2);
+  scene.environmentIntensity = 0.75;
+  loadEnv('studio', renderer, { quality: lite ? 'lo' : pickQuality() }).then((env) => {
+    scene.environment = env;
+    scene.environmentIntensity = 0.95;
+    scene.environmentRotation.set(0, -0.6, 0);
+  }).catch(() => {});
+  scene.add(new THREE.HemisphereLight(0xcfe6ff, 0x1a1020, 0.45));
+  const key = new THREE.DirectionalLight(0xfff6ea, 2.0);
   key.position.set(3, 5, 4);
   scene.add(key);
+  // Arkadan soğuk kenar ışığı: ünite lambasının halkası dişin kenarını çizer
+  const rim = new THREE.DirectionalLight(0xa9d8ff, 1.6);
+  rim.position.set(-2.5, 1.5, -4);
+  scene.add(rim);
 
   const camera = new THREE.PerspectiveCamera(34, 1, 0.05, 80);
 
@@ -201,6 +213,31 @@ export function createScene(canvas, { lite = false, onReady } = {}) {
   const halo = new THREE.Mesh(new THREE.PlaneGeometry(7, 7), haloMat);
   halo.position.set(0, 0.1, -3.2);
   scene.add(halo);
+
+  // Işık masası: dişin altında hafifçe parlayan buzlu panel ve yumuşak temas gölgesi
+  const tableMat = new THREE.ShaderMaterial({
+    transparent: true, depthWrite: false,
+    uniforms: { uAmt: { value: 1 }, uSh: { value: new THREE.Vector2() }, uShAmt: { value: 1 }, uShR: { value: 0.9 } },
+    vertexShader: 'varying vec3 vW; void main(){ vec4 w = modelMatrix * vec4(position, 1.0); vW = w.xyz; gl_Position = projectionMatrix * viewMatrix * w; }',
+    fragmentShader: /* glsl */ `
+      uniform float uAmt; uniform vec2 uSh; uniform float uShAmt; uniform float uShR; varying vec3 vW;
+      void main(){
+        float r = length(vW.xz);
+        float glow = exp(-r * r * 0.16);
+        float edge = smoothstep(5.2, 1.6, r);
+        float sd = length(vW.xz - uSh) / uShR;
+        float sh = exp(-sd * sd * 2.0) * uShAmt;
+        vec3 col = mix(vec3(0.012, 0.02, 0.045), vec3(0.32, 0.5, 0.72), glow * 0.42);
+        col *= 1.0 - sh * 0.9;
+        gl_FragColor = vec4(col, edge * (0.6 + glow * 0.3) * uAmt);
+        #include <colorspace_fragment>
+      }`,
+  });
+  const table = new THREE.Mesh(new THREE.PlaneGeometry(12, 12), tableMat);
+  table.rotation.x = -Math.PI / 2;
+  table.position.y = -1.62;
+  table.renderOrder = -1;
+  scene.add(table);
 
   const DUST = lite ? 180 : 360;
   const dpos = new Float32Array(DUST * 3);
@@ -237,21 +274,21 @@ export function createScene(canvas, { lite = false, onReady } = {}) {
   tooth.add(toothInner);
 
   const M = {
-    mine: layerMat({ color: '#f4efe4', cut: '#fbf7ee', kind: 0 }),
+    mine: layerMat({ color: '#ece2d0', cut: '#fbf7ee', kind: 0 }),
     dentin: layerMat({ color: '#e9cf9c', cut: '#e3c285', rim: '#000000' }),
-    pulpa: layerMat({ color: '#d6445a', cut: '#c9354c', rim: '#000000', glow: '#ff2a48' }),
-    bone: layerMat({ color: '#ead8c2', cut: '#dcc3a3', rim: '#6d86a0', spong: 1 }),
-    gum: layerMat({ color: '#e27f8c', cut: '#d6606f', rim: '#ffb7c2' }),
-    arch: layerMat({ color: '#f4efe4', kind: 0 }),
-    crown: layerMat({ color: '#f7f3ea', kind: 0 }),
-    archGum: layerMat({ color: '#e27f8c', rim: '#ffb7c2' }),
+    pulpa: layerMat({ color: '#d6445a', cut: '#c9354c', glow: '#ff2a48', pbr: 2 }),
+    bone: layerMat({ color: '#e6d3bb', cut: '#dcc3a3', spong: 1 }),
+    gum: layerMat({ color: '#d9707f', cut: '#d6606f', pbr: 2 }),
+    arch: layerMat({ color: '#ece2d0', kind: 0 }),
+    crown: layerMat({ color: '#efe7d8', kind: 0 }),
+    archGum: layerMat({ color: '#d9707f', pbr: 2 }),
   };
   M.arch.uniforms.uClipBelow.value = -0.04;
   M.crown.uniforms.uClipBelow.value = 0.0;
   const X = { mine: xrayMat(1.0), dentin: xrayMat(0.7), pulpa: xrayMat(0.35) };
 
-  const titanium = new THREE.MeshStandardMaterial({ color: 0xc3c8cf, metalness: 1, roughness: 0.28, transparent: true });
-  const wireMat = new THREE.MeshStandardMaterial({ color: 0xdfe4ea, metalness: 1, roughness: 0.22, transparent: true, opacity: 0 });
+  const titanium = new THREE.MeshPhysicalMaterial({ color: 0xb9bec6, metalness: 1, roughness: 0.3, clearcoat: lite ? 0 : 0.3, clearcoatRoughness: 0.2, transparent: true });
+  const wireMat = new THREE.MeshStandardMaterial({ color: 0xdfe4ea, metalness: 1, roughness: 0.16, transparent: true, opacity: 0 });
 
   const parts = {};
   const implant = new THREE.Group();
@@ -554,6 +591,12 @@ export function createScene(canvas, { lite = false, onReady } = {}) {
       wire.visible = s.wire > 0.01;
       wire.scale.setScalar(1);
     }
+
+    // Temas gölgesi: görünen nesneye göre boyutlanır, diş yükseldikçe açılıp silinir
+    const lift = Math.max(0, s.toothY);
+    const archOn = arch.visible ? s.arch : 0;
+    tableMat.uniforms.uShR.value = L(0.95 + lift * 0.5, 2.1, archOn);
+    tableMat.uniforms.uShAmt.value = Math.max(s.tooth * (1 - Math.min(1, lift / 2.2)) * 0.85, (implant.visible ? s.implant : 0) * 0.9, archOn * 0.7);
 
     renderer.render(scene, camera);
 

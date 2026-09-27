@@ -37,40 +37,9 @@
   </div>
 
   <canvas class="stage" data-stage aria-hidden="true"></canvas>
-
-  <header class="top" data-top>
-    <a class="top__brand" href="#" data-brand><span class="top__mark" aria-hidden="true"></span><span data-bind="ad"></span></a>
-    <nav class="top__nav" aria-label="Bölümler">
-      <a href="#hizmetler">Hizmetler</a>
-      <a href="#surec">Süreç</a>
-      <a href="#yorumlar">Yorumlar</a>
-      <a href="#konum">Ofis</a>
-    </nav>
-    <p class="top__status" data-status></p>
-    <a class="top__call" data-tel><span data-icon="phone"></span><span data-bind="telefon"></span></a>
-  </header>
-
-  <main>
-    <!-- Film: arsa → imar → avan (katlar yükselir) → ruhsat (kotlar) → kesit → render → iç mekân → akşam -->
-    <section class="film" data-film>
-      <div class="film__sticky">
-        <div class="tags" data-tags aria-hidden="true"></div>
-
-        <div class="hero" data-hero>
-          <p class="hero__kicker" data-kicker></p>
-          <h1 class="hero__title" data-hero-title></h1>
-          <p class="hero__slogan" data-bind="slogan"></p>
-          <div class="hero__cta">
-            <a class="btn btn--acc" data-tel><span data-icon="phone"></span>Ofisi arayın</a>
-            <a class="btn btn--line" data-wa target="_blank" rel="noopener"><span data-icon="whatsapp"></span>WhatsApp'tan yazın</a>
-          </div>
-        </div>
-
-        <div class="cards" data-cards></div>
-
-        <ol class="sheets" data-sheets aria-label="Paftalar"></ol>
-
-        <aside class="antet" data-antet aria-hidden="true">
+  <div class="tags" data-tags aria-hidden="true"></div>
+  <ol class="sheets" data-sheets aria-label="Paftalar"></ol>
+  <aside class="antet" data-antet aria-hidden="true">
           <div class="antet__compass"><svg viewBox="-20 -20 40 40" data-compass><circle r="17" /><path d="M0 -15 L5 6 L0 2 L-5 6 Z" /><text y="-8.5" text-anchor="middle">K</text></svg></div>
           <dl class="antet__grid">
             <div class="antet__wide"><dt>Proje</dt><dd>Müstakil konut, 3 kat</dd></div>
@@ -81,12 +50,43 @@
           </dl>
         </aside>
 
+  <header class="top" data-top>
+    <a class="top__brand" href="#" data-brand><span class="top__mark" aria-hidden="true"></span><span data-bind="ad"></span></a>
+    <nav class="top__nav" aria-label="Bölümler">
+      <a href="#hizmetler">Hizmetler</a>
+      <a href="#surec">Süreç</a>
+      <a href="#yorumlar">Yorumlar</a>
+      <a href="#konum">Ofis</a>
+    </nav>
+    <p class="top__status" data-status></p>
+    <p class="top__sheet" data-top-sheet aria-hidden="true"><b data-ts-no></b><span data-ts-name></span></p>
+    <a class="top__call" data-tel><span data-icon="phone"></span><span data-bind="telefon"></span></a>
+  </header>
+
+  <main>
+    <!-- Film: arsa → imar → avan (katlar yükselir) → ruhsat (kotlar) → kesit → render → iç mekân → akşam.
+         Hero + kısa duraklar (kart durakta yapışır, sahne arkada sabit, pin ≤ 3 ekran) + akşam görünüşü. -->
+    <section class="film" data-film>
+      <div class="film__hero" data-hero-sec>
+        <div class="hero" data-hero>
+          <p class="hero__kicker" data-kicker></p>
+          <h1 class="hero__title" data-hero-title></h1>
+          <p class="hero__slogan" data-bind="slogan"></p>
+          <div class="hero__cta">
+            <a class="btn btn--acc" data-tel><span data-icon="phone"></span>Ofisi arayın</a>
+            <a class="btn btn--line" data-wa target="_blank" rel="noopener"><span data-icon="whatsapp"></span>WhatsApp'tan yazın</a>
+          </div>
+        </div>
+        <p class="hint" data-hint aria-hidden="true"><i></i>Kaydırın, projeyi çizelim</p>
+      </div>
+
+      <div class="film__stops" data-cards></div>
+
+      <div class="film__over" data-over-sec>
         <div class="overview" data-overview>
           <p class="overview__kicker" data-ov-kicker></p>
           <h2 class="overview__title" data-ov-title></h2>
         </div>
-
-        <p class="hint" data-hint aria-hidden="true"><i></i>Kaydırın, projeyi çizelim</p>
       </div>
     </section>
 
@@ -120,7 +120,7 @@
     </section>
 
     <!-- Galeri -->
-    <section class="gallery" aria-label="Ofisten ve projelerden">
+    <section class="gallery" aria-label="Temsilî proje ve çizim görselleri">
       <div class="gallery__track" data-gallery></div>
     </section>
 
@@ -139,7 +139,7 @@
     <!-- Yorumlar -->
     <section class="reviews" id="yorumlar">
       <header class="reviews__head">
-        <p class="eyebrow">Yorumlar</p>
+        <p class="eyebrow">Örnek yorumlar</p>
         <p class="reviews__score"><b data-puan>4,9</b><span class="reviews__stars" data-stars></span></p>
         <p class="reviews__count" data-puan-adet></p>
       </header>
@@ -179,7 +179,7 @@
   <footer class="foot">
     <p data-year></p>
     <p data-bind="adres"></p>
-    <p class="foot__small">Fotoğraflar: Pexels. Sayfadaki 3D konut bu site için kodla çizildi.</p>
+    <p class="foot__small">Fotoğraflar ve proje görselleri temsilîdir (Pexels). 3D görseller temsilîdir; konut modeli bu site için kodla çizildi. Yorumlar örnektir.</p>
   </footer>
 
   <script type="module" src="./main.js"></script>

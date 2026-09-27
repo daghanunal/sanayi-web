@@ -25,6 +25,8 @@ const EK = [
 ];
 
 const veri = derinBirlestir(ana, ek);
+// Yorumlar örnektir: uydurma puan ve "N değerlendirme" sayısı gösterilmez.
+delete veri.puan;
 veri.hizmetler = ana.hizmetler.map((h, i) => {
   const [kisa, detay] = EK[i] || ['', []];
   return { ...h, kisa, detay, gorsel: yerel(h.gorsel), etiket: 'Süre' };
@@ -44,7 +46,7 @@ kurumsal({
     teklifEtiketi: 'Ön görüşme',
     hizmetEtiketi: 'Hizmetler',
     metinBoyutu: true,
-    altNot: 'Proje ücretini yer ziyaretinden sonra, işe başlamadan yazılı olarak söyleriz.',
+    altNot: 'Proje ücretini yer ziyaretinden sonra, işe başlamadan yazılı olarak söyleriz. Proje görselleri ve fotoğraflar temsilîdir (Pexels). Yorumlar örnektir.',
     css: {
       zemin: '#e3e7de', yuzey: '#d3dacc', metin: '#16201b', soluk: '#526058', cizgi: 'rgb(22 32 27 / .15)',
       vurgu: '#f2a30f', 'vurgu-metin': '#16201b', koyu: '#14221b', 'koyu-metin': '#e8ece3', 'koyu-soluk': '#95a69b',
@@ -81,6 +83,5 @@ kurumsal({
     openingHoursSpecification: d.saatler
       .map((s, i) => (s ? { '@type': 'OpeningHoursSpecification', dayOfWeek: `https://schema.org/${GUN[i]}`, opens: s.split('-')[0], closes: s.split('-')[1] } : null))
       .filter(Boolean),
-    ...(d.puan && { aggregateRating: { '@type': 'AggregateRating', ratingValue: d.puan.ortalama, reviewCount: d.puan.adet } }),
   }),
 });

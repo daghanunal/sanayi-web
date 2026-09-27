@@ -15,3 +15,5 @@ villa.jpg           https://www.pexels.com/photo/courtyard-of-modern-villa-with-
 ticari-yapi.jpg     https://www.pexels.com/photo/modern-office-building-16370914/
 restorasyon.jpg     https://www.pexels.com/photo/historic-building-under-renovation-with-scaffolding-29070615/
 santiye-plan.jpg    https://www.pexels.com/photo/architects-reviewing-construction-blueprints-outdoors-29299826/
+
+2026-09-27: 3d-yatak-odasi (monitör logosu) ve bilgisayar (monitör markası) temizlendi.

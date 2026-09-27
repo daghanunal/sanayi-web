@@ -4,7 +4,7 @@ import '../../shared/base.css';
 import './style.css';
 import {
   boot, initSmoothScroll, reducedMotion, telHref, waHref, mapsHref, mapsEmbed,
-  openStatus, groupedHours, icons, esc, gsap, ScrollTrigger,
+  openStatus, groupedHours, icons, esc, gsap, ScrollTrigger, setStoryMode,
 } from '../../shared/core.js';
 import { SplitText } from 'gsap/SplitText';
 import * as THREE from 'three';
@@ -66,12 +66,14 @@ $('[data-status-big]').classList.toggle('is-open', status.open);
 // Film bölümleri
 const CH = d.film;
 $('[data-chapters]').innerHTML = CH.map((c, i) => `
+  <div class="stop" data-stop>
   <article class="ch" data-ch>
     <p class="ch__kicker"><span>${String(i + 1).padStart(2, '0')}</span>${esc(c.kicker)}</p>
     <h2 class="ch__title">${esc(c.baslik)}</h2>
     <p class="ch__text">${esc(c.metin)}</p>
     ${c.secenekler ? `<ul class="ch__chips">${c.secenekler.map((s) => `<li>${esc(s)}</li>`).join('')}</ul>` : ''}
-  </article>`).join('');
+  </article>
+  </div>`).join('');
 
 // Hakkımızda + rakamlar
 const aboutText = $('[data-about-text]');
@@ -149,7 +151,7 @@ renderRez();
 // Yorumlar
 $('[data-puan]').textContent = nf(d.puan.ortalama, 1);
 $('[data-stars]').innerHTML = icons.star.repeat(5);
-$('[data-puan-adet]').textContent = `${nf(d.puan.adet)} Google yorumu`;
+$('[data-puan-adet]').textContent = 'Temsilî puan · yorumlar örnektir';
 $('[data-reviews]').innerHTML = d.yorumlar.map((y) => `
   <figure class="rev">
     <p class="rev__stars" aria-label="${y.puan} yıldız">${icons.star.repeat(y.puan)}</p>
@@ -211,6 +213,53 @@ const KF = [
 ];
 const CR = [[0.08, 0.24], [0.26, 0.4], [0.42, 0.56], [0.58, 0.76], [0.78, 0.87]];
 
+// Kurgu, 0..1 "sanal" film zamanında yazıldı (KF, CR). Gerçek kaydırma DOM'dan ölçülen duraklara
+// eşlenir: durak i, bir önceki kartın çekildiği yerden başlar ve sanal CR[i]'ye oturur.
+let WARP = [[0, 0], [1, 1]];
+function measureFilm() {
+  const vh = innerHeight;
+  const total = Math.max(1, film.offsetHeight - vh);
+  const ft = film.getBoundingClientRect().top;
+  const top = (el) => el.getBoundingClientRect().top - ft;
+  const stops = $$('[data-stop]');
+  const r = (y) => clamp(y / total);
+  const w = [[0, 0]];
+  stops.forEach((el, i) => { if (i > 0) w.push([r(top(el) - vh), CR[i][0] - 0.02]); });
+  const plateTop = top($('[data-plate-sec]'));
+  w.push([r(plateTop - vh * 0.6), 0.86], [1, 1]);
+  WARP = w;
+  const sy = scrollY;
+  cardGeo = stops.map((el) => ({ top: el.getBoundingClientRect().top + sy, h: el.offsetHeight, pad: parseFloat(getComputedStyle(el).paddingTop) || 0 }));
+}
+function warp(x) {
+  let i = 0;
+  while (i < WARP.length - 2 && x > WARP[i + 1][0]) i++;
+  const [a, va] = WARP[i], [b, vb] = WARP[i + 1];
+  return L(va, vb, seg(x, a, b));
+}
+let cardGeo = [];
+const cardState = [];
+// Kart görünürlüğü doğrudan kaydırma konumundan (hızlı atlamada eski kart ekranda kalmasın)
+function cardUI() {
+  const y = scrollY, vh = innerHeight;
+  chEls.forEach((card, i) => {
+    const g = cardGeo[i];
+    if (!g) return;
+    const a0 = g.top + g.pad * 0.6 - vh, a1 = g.top + g.pad - vh * 0.8;
+    const b0 = g.top + g.h - vh, b1 = b0 + vh * 0.28;
+    const vin = clamp((y - a0) / Math.max(1, a1 - a0)), vout = clamp((y - b0) / Math.max(1, b1 - b0));
+    const v = +(smooth(vin) * (1 - vout)).toFixed(3);
+    const ty = +((1 - vin) * 30 - vout * 24).toFixed(1);
+    const st = cardState[i] || (cardState[i] = {});
+    if (st.v === v && st.ty === ty) return;
+    st.v = v; st.ty = ty;
+    card.style.opacity = v;
+    card.style.visibility = v > 0.01 ? 'visible' : 'hidden';
+    card.style.transform = `translate3d(0, ${ty}px, 0)`;
+    card.style.setProperty('--in', clamp(vin * 1.2).toFixed(3));
+  });
+}
+
 function filmPose(p) {
   const P = POSES();
   let i = 0;
@@ -260,7 +309,6 @@ function finaleState(q, time) {
 // --- Film UI -------------------------------------------------------------
 
 const film = $('[data-film]');
-const hero = $('[data-hero]');
 const chEls = $$('[data-ch]');
 const hud = $('[data-hud]');
 const hudClock = $('[data-hud-clock]'), hudKicker = $('[data-hud-kicker]');
@@ -284,29 +332,18 @@ function doneness(p) {
   if (p < 0.5) return 0;
   return L(0.12, 1, smooth(seg(p, 0.57, 0.77)));
 }
-let lastClock = '', lastKicker = -1, lastDone = '';
+let lastClock = '', lastKicker = -1, lastDone = '', hudShown = false, plateQ = 0;
+const topEl = $('[data-top]');
 function filmUI(p) {
-  const heroOut = seg(p, 0.05, 0.09);
-  hero.style.opacity = 1 - heroOut;
-  hero.style.transform = `translate3d(0, ${heroOut * -40}px, 0)`;
-  hero.style.visibility = heroOut >= 1 ? 'hidden' : 'visible';
   hint.style.opacity = 1 - seg(p, 0.0, 0.03);
-
   let active = -1;
-  chEls.forEach((el, i) => {
-    const [a, b] = CR[i];
-    const vin = seg(p, a, a + 0.025), vout = seg(p, b - 0.02, b);
-    const v = vin * (1 - vout);
-    el.style.opacity = v;
-    el.style.transform = `translate3d(0, ${(1 - vin) * 36 - vout * 30}px, 0)`;
-    el.style.visibility = v > 0.01 ? 'visible' : 'hidden';
-    el.style.setProperty('--in', seg(p, a, a + 0.05));
-    if (p >= a - 0.01 && p < b + 0.01) active = i;
-  });
+  CR.forEach(([a, b], i) => { if (p >= a - 0.01 && p < b + 0.01) active = i; });
 
-  const hudOn = seg(p, 0.07, 0.09) * (1 - seg(p, 0.86, 0.88));
+  const hudOn = filmActive ? seg(p, 0.06, 0.08) * (1 - seg(p, 0.86, 0.88)) : 0;
   hud.style.opacity = hudOn;
   hud.style.visibility = hudOn > 0.01 ? 'visible' : 'hidden';
+  const hudIn = hudOn > 0.5;
+  if (hudIn !== hudShown) { topEl.classList.toggle('is-hud', hudIn); hudShown = hudIn; }
   if (hudOn > 0.01) {
     const c = clockAt(p);
     if (c !== lastClock) { hudClock.textContent = c; lastClock = c; }
@@ -318,12 +355,12 @@ function filmUI(p) {
     hud.style.setProperty('--dn', dn);
   }
 
-  // Tabak: daire açılır, fotoğraf büyür
-  const pl = smooth(seg(p, 0.86, 0.95));
+  // Tabak: kendi kısa sahnesinde daire açılır, fotoğraf büyür
+  const pl = smooth(seg(plateQ, 0.12, 0.55));
   plate.style.visibility = pl > 0.001 ? 'visible' : 'hidden';
   plate.style.clipPath = `circle(${(pl * 78).toFixed(2)}% at 50% 55%)`;
   plate.firstElementChild.style.transform = `scale(${L(1.35, 1, pl)}) rotate(${L(-12, 0, pl)}deg)`;
-  const cap = seg(p, 0.93, 0.97);
+  const cap = seg(plateQ, 0.42, 0.62);
   plateCap.style.opacity = cap;
   plateCap.style.visibility = cap > 0.01 ? 'visible' : 'hidden';
   plateCap.style.transform = `translate3d(0, ${(1 - cap) * 30}px, 0)`;
@@ -345,9 +382,20 @@ function setupScroll() {
   lenis = initSmoothScroll();
   lenis?.stop();
   lenis?.on('scroll', (e) => (vel = Math.min(1, Math.abs(e.velocity) / 40)));
+  ScrollTrigger.addEventListener('refresh', measureFilm);
+  measureFilm();
   filmST = ScrollTrigger.create({
     trigger: film, start: 'top top', end: 'bottom bottom',
-    onUpdate: (self) => (filmTarget = self.progress),
+    onUpdate: (self) => (filmTarget = warp(self.progress)),
+  });
+  // Duraklar boyunca hikâye modu: alt çubuk iner, kart onun boşluğuna oturur; tabak sahnesi de tam ekran
+  ScrollTrigger.create({
+    trigger: '[data-chapters]', start: 'top 70%', endTrigger: '[data-plate-sec]', end: () => `bottom ${Math.round(innerHeight * 0.9)}px`,
+    onToggle: (st) => setStoryMode(st.isActive ? true : null),
+  });
+  ScrollTrigger.create({
+    trigger: '[data-plate-sec]', start: 'top bottom', end: 'bottom bottom',
+    onUpdate: (self) => (plateQ = self.progress),
   });
   ScrollTrigger.create({
     trigger: film, start: 'bottom bottom', end: 'bottom 40%',
@@ -363,8 +411,8 @@ function setupScroll() {
   });
   ScrollTrigger.create({
     trigger: '[data-about]', start: 'top 70px',
-    endTrigger: '[data-finale]', end: 'top 70px',
-    onToggle: (self) => $('[data-top]').classList.toggle('is-solid', self.isActive),
+    end: 'max',
+    onToggle: (self) => $('[data-top]').classList.toggle('is-solid', self.isActive || self.progress >= 1),
   });
   contentMotion();
 }
@@ -463,7 +511,8 @@ function tick(now) {
     finaleActive = (finaleST.progress > 0 && finaleST.progress < 1) || finaleST.isActive;
   }
   filmP += (filmTarget - filmP) * (1 - Math.exp(-dt * 7));
-  if (filmActive || filmP < 0.999) filmUI(filmP);
+  if (filmActive || filmP < 0.999 || hudShown) filmUI(filmP);
+  if (filmActive || cardState.some((c) => c.v > 0)) cardUI();
 
   const showFilm = filmActive && canvas.style.opacity !== '0' && filmP < 0.975;
   const showFinale = finaleActive || canvasFinale > 0.001;
@@ -516,7 +565,7 @@ function runIntro() {
   const tl = gsap.timeline();
   tl.fromTo('[data-ember]', { scale: 0.2, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.6, ease: 'power2.out' }, 0);
   tl.fromTo('[data-intro-center]', { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.5 }, 0.1);
-  tl.to(o, { m: endM, duration: 1.3, ease: 'power2.inOut', onUpdate: () => {
+  tl.to(o, { m: endM, duration: 1.0, ease: 'power2.inOut', onUpdate: () => {
     const m = Math.round(o.m);
     clock.textContent = `${String(Math.floor(m / 60)).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`;
   } }, 0.2);
@@ -524,22 +573,25 @@ function runIntro() {
     S.compile();
     S.update(filmState(0, performance.now() / 1000, 0));
   }, [], 0.3);
-  tl.add(finish, 1.65);
+  tl.add(finish, 1.25);
   function finish() {
     if (done) return;
     done = true;
     tl.kill();
     clock.textContent = CH[0].saat;
     const ih = { v: 0 };
-    gsap.timeline({ onComplete: () => { intro.remove(); lenis?.start(); } })
+    // Kaydırma ve dokunma hemen serbest: perde yalnızca görsel olarak söner
+    intro.style.pointerEvents = 'none';
+    lenis?.start();
+    gsap.timeline({ onComplete: () => intro.remove() })
       .to(['[data-intro-line]', '.intro__skip'], { opacity: 0, duration: 0.2 }, 0)
-      .to('[data-ember]', { scale: 60, duration: 0.9, ease: 'power3.in' }, 0.05)
-      .to('[data-flash]', { opacity: 1, duration: 0.35, ease: 'power2.in' }, 0.55)
-      .to(ih, { v: 0.85, duration: 1.4, ease: 'power2.out', onUpdate: () => (introHeat = ih.v) }, 0.7)
-      .set(['[data-ember]', '[data-intro-center]'], { opacity: 0 }, 0.9)
-      .to(intro, { backgroundColor: 'rgba(0,0,0,0)', duration: 0.6 }, 0.9)
-      .to('[data-flash]', { opacity: 0, duration: 0.8, ease: 'power2.out' }, 0.9)
-      .call(heroIn, [], 1.0);
+      .to('[data-ember]', { scale: 60, duration: 0.6, ease: 'power3.in' }, 0.02)
+      .to('[data-flash]', { opacity: 1, duration: 0.25, ease: 'power2.in' }, 0.35)
+      .to(ih, { v: 0.85, duration: 1.2, ease: 'power2.out', onUpdate: () => (introHeat = ih.v) }, 0.45)
+      .set(['[data-ember]', '[data-intro-center]'], { opacity: 0 }, 0.6)
+      .to(intro, { backgroundColor: 'rgba(0,0,0,0)', duration: 0.45 }, 0.6)
+      .to('[data-flash]', { opacity: 0, duration: 0.6, ease: 'power2.out' }, 0.6)
+      .call(heroIn, [], 0.65);
     document.body.classList.remove('is-loading');
   }
   intro.addEventListener('pointerdown', finish, { once: true });

@@ -5,6 +5,7 @@
 import * as THREE from 'three';
 import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js';
 import { mergeVertices } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
+import { loadEnv } from '../../shared/lib3d.js';
 
 const V = (x, y, z) => new THREE.Vector3(x, y, z);
 export const MANGAL = { len: 8.2, w: 1.5, rail: 0.1 };
@@ -42,7 +43,12 @@ export function createScene(canvas, { lite = false } = {}) {
   scene.fog = new THREE.Fog(0x0d0806, 7, 22);
   const camera = new THREE.PerspectiveCamera(40, 1, 0.03, 60);
 
-  scene.add(new THREE.HemisphereLight(0x3b3440, 0x0a0504, 0.35));
+  scene.add(new THREE.HemisphereLight(0x3b3440, 0x0a0504, 0.3));
+  // Gece HDRI'ı: pirinç rayda, çelikte ve yağlı etin parlaklığında soğuk salon yansımaları
+  loadEnv('night', renderer, { quality: 'lo' }).then((env) => {
+    scene.environment = env;
+    scene.environmentIntensity = 0.32;
+  }).catch(() => {});
   const rim = new THREE.DirectionalLight(0x9aa6c8, 0.35); // salondan gelen soğuk ışık
   rim.position.set(-4, 5, -6);
   scene.add(rim);
@@ -171,10 +177,10 @@ export function createScene(canvas, { lite = false } = {}) {
   const holeTex = canvasTex(1024, 64, (g, w, h) => {
     g.fillStyle = '#000';
     g.fillRect(0, 0, w, h);
-    for (let x = 16; x < w; x += 32) {
+    for (let x = 10; x < w; x += 20) {
       g.fillStyle = '#fff';
       g.beginPath();
-      g.arc(x, h * 0.38, 5, 0, Math.PI * 2);
+      g.arc(x, h * 0.36, 3.2, 0, Math.PI * 2);
       g.fill();
     }
   }, false);
@@ -213,7 +219,8 @@ export function createScene(canvas, { lite = false } = {}) {
   // --- Şişler -------------------------------------------------------------------
   const MEAT_UNI = { uCook: U.uCook, uGlow: U.uGlow, uTime: U.uTime };
   function meatMaterial(raw, cooked, charAmt, rough = 0.62) {
-    const m = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: rough, metalness: 0.0 });
+    // Fiziksel malzeme: pişince yüzeyde yağ parlaklığı (clearcoat), çiğken nemli mat
+    const m = new THREE.MeshPhysicalMaterial({ color: 0xffffff, roughness: rough, metalness: 0.0, clearcoat: lite ? 0 : 0.35, clearcoatRoughness: 0.42 });
     m.onBeforeCompile = (sh) => {
       Object.assign(sh.uniforms, MEAT_UNI);
       sh.vertexShader = sh.vertexShader
@@ -224,16 +231,20 @@ export function createScene(canvas, { lite = false } = {}) {
         .replace('#include <color_fragment>', `#include <color_fragment>
           float nn = fbm(vPL * 28.0);
           float speck = step(0.8, vn(vPL * 90.0));
-          vec3 raw = vec3(${raw.join(',')}) * (0.85 + nn * 0.3);
-          vec3 ck = vec3(${cooked.join(',')}) * (0.7 + nn * 0.6);
-          float fat = smoothstep(0.6, 0.72, vn(vPL * vec3(34.0, 12.0, 34.0) + 3.0));
-          raw = mix(raw, vec3(0.78, 0.62, 0.55), fat * 0.55);
+          // Kıyma dokusu: ince taneli et + küçük kuyruk yağı benekleri (kaba leke değil)
+          float mince = vn(vPL * 170.0) * 0.6 + vn(vPL * 70.0) * 0.4;
+          vec3 raw = vec3(${raw.join(',')}) * (0.72 + nn * 0.18 + mince * 0.3);
+          vec3 ck = vec3(${cooked.join(',')}) * (0.62 + nn * 0.5 + mince * 0.25);
+          float fat = smoothstep(0.7, 0.8, vn(vPL * vec3(150.0, 90.0, 150.0) + 3.0)) * ${charAmt > 0.85 ? '1.0' : '0.5'};
+          raw = mix(raw, vec3(0.8, 0.66, 0.6), fat * 0.6);
           ck = mix(ck, vec3(0.42, 0.2, 0.06), fat * 0.5);
           vec3 c = mix(raw, ck, smoothstep(0.0, 0.75, uCook));
           float ch = smoothstep(0.55, 0.8, nn + speck * 0.3) * smoothstep(0.45, 1.0, uCook) * ${charAmt.toFixed(2)};
           c = mix(c, vec3(0.04, 0.02, 0.012), ch);
           c = mix(c, vec3(0.75, 0.1, 0.05), speck * 0.35 * (1.0 - uCook)); // pul biber
           diffuseColor.rgb = c;`)
+        .replace('#include <roughnessmap_fragment>', `#include <roughnessmap_fragment>
+          roughnessFactor = clamp(roughnessFactor + (fbm(vPL * 40.0) - 0.5) * 0.35 + uCook * 0.08, 0.2, 1.0);`)
         .replace('#include <emissivemap_fragment>', `#include <emissivemap_fragment>
           vec3 wn = inverseTransformDirection(normal, viewMatrix);
           float below = smoothstep(0.1, -0.9, wn.y);
@@ -246,9 +257,9 @@ export function createScene(canvas, { lite = false } = {}) {
   const kusMat = meatMaterial([0.33, 0.06, 0.065], [0.16, 0.055, 0.022], 0.8, 0.55);
   const tavukMat = meatMaterial([0.74, 0.5, 0.4], [0.55, 0.28, 0.08], 0.6, 0.55);
   const bladeMat = new THREE.MeshStandardMaterial({ color: 0xb9bcc0, roughness: 0.28, metalness: 1 });
-  const pepperG = new THREE.MeshStandardMaterial({ color: 0x2f7a1e, roughness: 0.35 });
-  const tomatoM = new THREE.MeshStandardMaterial({ color: 0xc8261a, roughness: 0.3 });
-  const onionM = new THREE.MeshStandardMaterial({ color: 0xe8dcc8, roughness: 0.45 });
+  const pepperG = new THREE.MeshPhysicalMaterial({ color: 0x2f7a1e, roughness: 0.32, clearcoat: lite ? 0 : 0.7, clearcoatRoughness: 0.18 });
+  const tomatoM = new THREE.MeshPhysicalMaterial({ color: 0xc8261a, roughness: 0.28, clearcoat: lite ? 0 : 0.8, clearcoatRoughness: 0.12 });
+  const onionM = new THREE.MeshPhysicalMaterial({ color: 0xe8dcc8, roughness: 0.4, sheen: lite ? 0 : 0.4, sheenColor: new THREE.Color(0xfff2e0), transmission: 0 });
 
   // Adana: parmakla bastırılmış sırtlar, yassı kesit
   const adanaGeo = (() => {
@@ -269,13 +280,22 @@ export function createScene(canvas, { lite = false } = {}) {
   })();
   const bladeGeo = new THREE.BoxGeometry(0.075, 0.012, 2.25);
   const handleGeo = new THREE.TorusGeometry(0.075, 0.013, 8, 20);
+  // Kuşbaşı: kesilmiş et parçası; köşeli ama organik (çok frekanslı gürültüyle ezilmiş küp-küre)
   const cubeGeo = (() => {
-    const g = new RoundedBoxGeometry(0.17, 0.15, 0.15, 3, 0.035);
+    let g = new THREE.IcosahedronGeometry(1, lite ? 2 : 3);
+    g.deleteAttribute('normal');
+    g.deleteAttribute('uv');
+    g = mergeVertices(g);
     const p = g.attributes.position;
+    const v = new THREE.Vector3();
     for (let i = 0; i < p.count; i++) {
-      const x = p.getX(i), y = p.getY(i), z = p.getZ(i);
-      const k = 1 + 0.12 * Math.sin(x * 41 + y * 23) * Math.cos(z * 37 - x * 11);
-      p.setXYZ(i, x * k, y * k, z * (1 + 0.06 * Math.sin(y * 50)));
+      v.fromBufferAttribute(p, i);
+      const c = Math.max(Math.abs(v.x), Math.abs(v.y), Math.abs(v.z));
+      const cube = 1 / Math.max(0.6, c) * 0.55 + 0.45;      // küre → yuvarlatılmış küp
+      const n = 0.08 * Math.sin(v.x * 5.3 + v.y * 2.1) * Math.cos(v.z * 4.7 - v.x * 1.3)
+        + 0.035 * Math.sin(v.x * 17.0 + v.z * 11.0) * Math.cos(v.y * 13.0);
+      const r = cube * (1 + n);
+      p.setXYZ(i, v.x * r * 0.085, v.y * r * 0.075, v.z * r * 0.075);
     }
     g.computeVertexNormals();
     return g;

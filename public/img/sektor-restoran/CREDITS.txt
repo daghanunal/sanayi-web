@@ -14,3 +14,5 @@ firin.jpg: Pexels 36916297
 cay.jpg: Pexels 36287927
 Kaynak: https://www.pexels.com/photo/<id>/
 Lisans: Pexels License (ücretsiz ticari kullanım)
+
+2026-09-27: ocak.jpg arka plandaki içecek dolabı logosu temizlendi.

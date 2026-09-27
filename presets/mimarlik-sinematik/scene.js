@@ -3,6 +3,8 @@
 // (ozalit) ve malzemesiyle render. Durum dışarıdan `update(state)` ile verilir.
 import * as THREE from 'three';
 import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js';
+import { mergeVertices } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
+import { loadEnv } from '../../shared/lib3d.js';
 
 const V = (x, y, z) => new THREE.Vector3(x, y, z);
 const L = (a, b, t) => a + (b - a) * t;
@@ -51,6 +53,9 @@ export function createScene(canvas, { lite = false } = {}) {
   const pmrem = new THREE.PMREMGenerator(renderer);
   scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
   scene.environmentIntensity = 0.25;
+  // Alacakaranlık HDRI'ı: camda gökyüzü yansıması, yüzeylerde yumuşak dolgu ışığı (render ve akşam durakları)
+  let envBoost = 1;
+  loadEnv('dusk', renderer, { quality: 'lo' }).then((env) => { scene.environment = env; envBoost = 1.6; }).catch(() => {});
 
   const camera = new THREE.PerspectiveCamera(40, 1, 0.1, 260);
   scene.add(camera);
@@ -76,20 +81,66 @@ export function createScene(canvas, { lite = false } = {}) {
 
   // --- Malzemeler -----------------------------------------------------------
   const fadeMats = []; // pafta ↔ render geçişinde saydamlığı değişenler
-  const std = (o, fade = 0.05) => {
+  // Yüzey dokusu: kutuların UV'si ölçüye göre gerilir, bu yüzden desen dünya koordinatından üretilir
+  // (0 sıva, 1 ahşap kaplama, 2 taş, 3 çim, 4 döşeme taşı, 5 beton).
+  const GRAIN = /* glsl */ `
+    float gh(vec3 p){ p = fract(p * 0.3183099 + 0.1); p *= 17.0; return fract(p.x * p.y * p.z * (p.x + p.y + p.z)); }
+    float gn(vec3 x){ vec3 i = floor(x); vec3 f = fract(x); f = f * f * (3.0 - 2.0 * f);
+      return mix(mix(mix(gh(i), gh(i + vec3(1,0,0)), f.x), mix(gh(i + vec3(0,1,0)), gh(i + vec3(1,1,0)), f.x), f.y),
+                 mix(mix(gh(i + vec3(0,0,1)), gh(i + vec3(1,0,1)), f.x), mix(gh(i + vec3(0,1,1)), gh(i + vec3(1,1,1)), f.x), f.y), f.z); }
+    float gf(vec3 p){ return gn(p) * 0.5 + gn(p * 2.1 + 3.1) * 0.3 + gn(p * 4.3 + 7.7) * 0.2; }`;
+  function addGrain(m, kind) {
+    m.onBeforeCompile = (sh) => {
+      sh.vertexShader = sh.vertexShader
+        .replace('#include <common>', '#include <common>\nvarying vec3 vGW;')
+        .replace('#include <worldpos_vertex>', '#include <worldpos_vertex>\nvGW = (modelMatrix * vec4(transformed, 1.0)).xyz;');
+      sh.fragmentShader = sh.fragmentShader
+        .replace('#include <common>', `#include <common>\nvarying vec3 vGW;\n${GRAIN}`)
+        .replace('#include <color_fragment>', `#include <color_fragment>
+          float gK = ${kind.toFixed(1)}; float gR = 0.0;
+          if (gK < 0.5) { float n = gf(vGW * 2.3); diffuseColor.rgb *= 0.93 + 0.1 * n; gR = (n - 0.5) * 0.12; }
+          else if (gK < 1.5) {
+            float board = floor(vGW.y * 7.0);
+            float seam = smoothstep(0.0, 0.05, fract(vGW.y * 7.0)) * smoothstep(1.0, 0.95, fract(vGW.y * 7.0));
+            float grain = gn(vec3(vGW.x * 1.6 + vGW.z * 1.6, vGW.y * 60.0, board * 3.7)) * 0.6 + gn(vec3((vGW.x + vGW.z) * 9.0, board, 1.0)) * 0.4;
+            diffuseColor.rgb *= (0.78 + 0.3 * grain) * (0.85 + 0.15 * gh(vec3(board, 1.0, 2.0))) * (0.55 + 0.45 * seam);
+            gR = (grain - 0.5) * 0.2;
+          }
+          else if (gK < 2.5) {
+            vec2 c = vec2((vGW.x + vGW.z) * 1.6, vGW.y * 3.2); c.x += floor(c.y) * 0.5;
+            vec2 f = fract(c); float joint = smoothstep(0.0, 0.05, f.x) * smoothstep(0.0, 0.08, f.y);
+            float id = gh(vec3(floor(c), 3.0));
+            diffuseColor.rgb *= (0.8 + 0.3 * id) * (0.6 + 0.4 * joint) * (0.9 + 0.15 * gf(vGW * 6.0));
+            gR = 0.05;
+          }
+          else if (gK < 3.5) {
+            float n = gf(vGW * 0.35) * 0.6 + gn(vGW * 9.0) * 0.4;
+            diffuseColor.rgb *= vec3(0.86 + 0.28 * n, 0.9 + 0.2 * n, 0.8 + 0.2 * n) * (0.9 + 0.2 * gn(vGW * 40.0));
+          }
+          else if (gK < 4.5) {
+            vec2 f = fract(vGW.xz * 1.25); float joint = smoothstep(0.0, 0.03, f.x) * smoothstep(0.0, 0.03, f.y) * smoothstep(1.0, 0.97, f.x) * smoothstep(1.0, 0.97, f.y);
+            diffuseColor.rgb *= (0.88 + 0.16 * gh(vec3(floor(vGW.xz * 1.25), 5.0))) * (0.7 + 0.3 * joint) * (0.94 + 0.1 * gf(vGW * 5.0));
+          }
+          else { float n = gf(vGW * 1.4); diffuseColor.rgb *= 0.9 + 0.14 * n + 0.04 * gn(vGW * 30.0); gR = (n - 0.5) * 0.15; }`)
+        .replace('#include <roughnessmap_fragment>', '#include <roughnessmap_fragment>\n          roughnessFactor = clamp(roughnessFactor + gR, 0.04, 1.0);');
+    };
+    m.customProgramCacheKey = () => 'grain' + kind;
+  }
+  const std = (o, fade = 0.05, grain = -1) => {
     const m = new THREE.MeshStandardMaterial({ roughness: 0.8, metalness: 0, transparent: true, opacity: fade, depthWrite: false, clippingPlanes: clips, side: THREE.DoubleSide, ...o });
+    if (grain >= 0) addGrain(m, grain);
     m.userData.min = fade;
     m.userData.max = o.opacity ?? 1;
     fadeMats.push(m);
     return m;
   };
   const M = {
-    render: std({ color: 0xece8e0, roughness: 0.85 }),
-    slab: std({ color: 0xdedad2, roughness: 0.75 }),
-    wood: std({ color: 0x9a6a3c, roughness: 0.6 }),
-    frame: std({ color: 0x24282c, roughness: 0.5, metalness: 0.5 }),
-    stone: std({ color: 0x8c877d, roughness: 0.9 }),
-    glass: std({ color: 0x5f7d93, roughness: 0.05, metalness: 0.3, opacity: 0.42, emissive: 0xffb866, emissiveIntensity: 0 }, 0.03),
+    render: std({ color: 0xece8e0, roughness: 0.85 }, 0.05, 0),
+    slab: std({ color: 0xdedad2, roughness: 0.75 }, 0.05, 5),
+    wood: std({ color: 0xa4703f, roughness: 0.6 }, 0.05, 1),
+    frame: std({ color: 0x24282c, roughness: 0.38, metalness: 0.7 }),
+    stone: std({ color: 0x8c877d, roughness: 0.9 }, 0.05, 2),
+    glass: std({ color: 0x4f6d83, roughness: 0.03, metalness: 0.55, opacity: 0.5, emissive: 0xffb866, emissiveIntensity: 0 }, 0.03),
     fabric: std({ color: 0xe4ddd0, roughness: 0.95 }),
     dark: std({ color: 0x3a3632, roughness: 0.6 }),
     oak: std({ color: 0xb98b58, roughness: 0.55 }),
@@ -98,11 +149,11 @@ export function createScene(canvas, { lite = false } = {}) {
     cove: std({ color: 0x333333, emissive: 0xffd9a0, emissiveIntensity: 0 }, 0.0),
   };
   const G = {
-    lawn: std({ color: 0x8e9f74, roughness: 1, side: THREE.FrontSide, clippingPlanes: [] }, 0),
-    pave: std({ color: 0xcbc6bc, roughness: 0.9, clippingPlanes: [] }, 0.04),
+    lawn: std({ color: 0x7f9868, roughness: 1, side: THREE.FrontSide, clippingPlanes: [] }, 0, 3),
+    pave: std({ color: 0xcbc6bc, roughness: 0.9, clippingPlanes: [] }, 0.04, 4),
     water: std({ color: 0x3f9fc4, roughness: 0.05, metalness: 0.2, clippingPlanes: [], opacity: 0.92, emissive: 0x2a86b0, emissiveIntensity: 0 }, 0.04),
     trunk: std({ color: 0x6a5541, clippingPlanes: [] }, 0.03),
-    leaf: std({ color: 0x6f8a58, roughness: 0.9, flatShading: true, clippingPlanes: [] }, 0.04),
+    leaf: std({ color: 0x6a8752, roughness: 0.85, vertexColors: true, clippingPlanes: [] }, 0.04),
     context: std({ color: 0xe6e3dc, roughness: 0.9, clippingPlanes: [] }, 0.02),
   };
 
@@ -296,7 +347,7 @@ export function createScene(canvas, { lite = false } = {}) {
   const pot = new THREE.Mesh(potGeo, M.dark);
   pot.position.set(-6.3, fz + 0.22, 2.3);
   g0.add(pot);
-  const plant = new THREE.Mesh(new THREE.IcosahedronGeometry(0.55, 0), G.leaf);
+  const plant = new THREE.Mesh(new THREE.IcosahedronGeometry(0.55, 1), std({ color: 0x5f7d4a, roughness: 0.85, flatShading: true }, 0.04));
   plant.position.set(-6.3, fz + 1.0, 2.3);
   plant.scale.y = 1.4;
   g0.add(plant);
@@ -331,8 +382,35 @@ export function createScene(canvas, { lite = false } = {}) {
   box(garden, 6.8, 10.8, 0.02, 0.1, 5, 8.2, G.water, { lines: lineSoft, shadow: false }); // havuz
   box(garden, 6.5, 11.1, 0, 0.14, 4.7, 5, G.pave, { lines: null });
   const trunkGeo = new THREE.CylinderGeometry(0.12, 0.16, 2.2, 8);
-  const crownGeo = new THREE.IcosahedronGeometry(1.5, 0);
-  const crownEdge = new THREE.EdgesGeometry(crownGeo);
+  const crownEdge = new THREE.EdgesGeometry(new THREE.IcosahedronGeometry(1.5, 0));
+  // Taç: üç-dört yaprak kümesi, gürültüyle girintili; tepeden aşağı açık-koyu yeşil geçişli
+  const crownGeo = (() => {
+    const parts = [[0, 0, 0, 1.25], [0.75, -0.25, 0.3, 0.9], [-0.7, -0.15, -0.35, 0.95], [0.1, 0.55, -0.2, 0.85]];
+    const pos = [], col = [], idx = [];
+    const v = new THREE.Vector3();
+    for (const [cx, cy, cz, r] of parts) {
+      let g = new THREE.IcosahedronGeometry(1, lite ? 1 : 2);
+      g.deleteAttribute('normal'); g.deleteAttribute('uv');
+      g = mergeVertices(g);
+      const p = g.attributes.position, base = pos.length / 3;
+      for (let i = 0; i < p.count; i++) {
+        v.fromBufferAttribute(p, i);
+        const n = 1 + 0.16 * Math.sin(v.x * 5.1 + cx * 3) * Math.cos(v.y * 4.3 + cz) + 0.08 * Math.sin(v.z * 11 + v.x * 7);
+        const x = cx + v.x * r * n, y = cy + v.y * r * n * 0.9, z = cz + v.z * r * n;
+        pos.push(x, y, z);
+        const t = THREE.MathUtils.clamp((y + 1.3) / 2.6, 0, 1);
+        const k = 0.7 + 0.45 * t + 0.08 * Math.sin(x * 13 + z * 7);
+        col.push(k * 0.95, k, k * 0.9);
+      }
+      for (let i = 0; i < g.index.count; i++) idx.push(base + g.index.getX(i));
+    }
+    const g = new THREE.BufferGeometry();
+    g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+    g.setAttribute('color', new THREE.Float32BufferAttribute(col, 3));
+    g.setIndex(idx);
+    g.computeVertexNormals();
+    return g;
+  })();
   for (const [x, z, s] of [[-10, -7, 1], [-10.2, 5.8, 1.2], [10, -7.2, 0.9], [-10.8, 8.3, 0.8], [11, -8.2, 0.7], [-10.5, -1, 0.85]]) {
     const t = new THREE.Mesh(trunkGeo, G.trunk);
     t.position.set(x, 1.1 * s, z);
@@ -350,6 +428,26 @@ export function createScene(canvas, { lite = false } = {}) {
   for (const [x0, x1, h, z0, z1] of [[-30, -16, 9, -8, 6], [16, 28, 12, -9, 3], [-24, -14, 6, -24, -12], [8, 22, 7, -26, -14], [-6, 6, 13, -30, -16], [-44, -30, 12, 26, 38], [34, 48, 10, 28, 40]]) {
     box(garden, x0, x1, 0, h, z0, z1, G.context, { lines: lineSoft });
   }
+
+  // Gök kubbe: render duraklarında ufukta sıcak, tepede mavi; akşamda lacivertten ufuk turuncusuna
+  const skyMat = new THREE.ShaderMaterial({
+    side: THREE.BackSide, depthWrite: false, transparent: true, fog: false,
+    uniforms: { uR: { value: 0 }, uN: { value: 0 } },
+    vertexShader: 'varying vec3 vD; void main(){ vD = normalize(position); gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }',
+    fragmentShader: /* glsl */ `
+      uniform float uR, uN; varying vec3 vD;
+      void main(){
+        float h = clamp(vD.y, -0.1, 1.0);
+        vec3 day = mix(vec3(0.93, 0.9, 0.84), mix(vec3(0.62, 0.76, 0.9), vec3(0.33, 0.52, 0.78), smoothstep(0.15, 0.7, h)), smoothstep(0.0, 0.2, h));
+        vec3 eve = mix(vec3(0.95, 0.55, 0.3), mix(vec3(0.16, 0.18, 0.32), vec3(0.03, 0.05, 0.12), smoothstep(0.1, 0.6, h)), smoothstep(-0.02, 0.18, h));
+        vec3 c = mix(day, eve, uN);
+        gl_FragColor = vec4(c, uR);
+        #include <colorspace_fragment>
+      }`,
+  });
+  const sky = new THREE.Mesh(new THREE.SphereGeometry(200, 32, 16), skyMat);
+  sky.renderOrder = -10;
+  scene.add(sky);
 
   // Akşam gökyüzü: kubbe üzerinde yıldızlar
   const starPos = [];
@@ -416,6 +514,8 @@ export function createScene(canvas, { lite = false } = {}) {
 
     // Pafta ↔ render
     const r = s.real, n = s.night;
+    skyMat.uniforms.uR.value = r; skyMat.uniforms.uN.value = n;
+    sky.visible = r > 0.01; sky.position.copy(camera.position);
     setReal(r);
     bg.copy(C.blue).lerp(C.day, r).lerp(C.night, n);
     scene.background.copy(bg);
@@ -453,7 +553,7 @@ export function createScene(canvas, { lite = false } = {}) {
     sun.intensity = r * (1 - n) * 2.6;
     hemi.intensity = L(1.4, 0.75, r) * (1 - n * 0.8);
     hemi.color.setHSL(L(0.6, 0.6, n), 0.5, L(0.9, 0.5, n));
-    scene.environmentIntensity = L(0.35, 0.3, r) * (1 - n * 0.7);
+    scene.environmentIntensity = L(0.35, 0.34 * envBoost, r) * (1 - n * 0.6);
     M.glass.emissiveIntensity = n * 0.9 + s.inside * 0.05;
     M.glass.color.setHex(n > 0.5 ? 0x3a3326 : 0x5f7d93);
     M.lamp.emissiveIntensity = Math.max(s.inside, n) * 3;
