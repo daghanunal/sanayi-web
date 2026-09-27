@@ -5,10 +5,17 @@
   "car": {
    "desc": "Generic modern hatchback, unbranded (4.26 m). Wheels spin about local Z; doors/hood/tailgate hinge.",
    "explode": true,
+   "version": 1,
+   "latest": 1,
    "hi": {
     "file": "car-hi-v1.glb",
     "bytes": 996680,
     "tris": 133837
+   },
+   "lo": {
+    "file": "car-lo-v1.glb",
+    "bytes": 329816,
+    "tris": 58972
    },
    "dims": {
     "min": [
@@ -119,20 +126,273 @@
     "trim_black",
     "tyre_side",
     "tyre_tread"
-   ],
+   ]
+  },
+  "car_sedan": {
+   "desc": "Generic 4-door notchback sedan, unbranded (4.7 m). Same node conventions as car; trunk lid.",
+   "explode": true,
+   "version": 1,
+   "latest": 1,
+   "hi": {
+    "file": "car_sedan-hi-v1.glb",
+    "bytes": 957780,
+    "tris": 134734
+   },
    "lo": {
-    "file": "car-lo-v1.glb",
-    "bytes": 329816,
-    "tris": 58972
-   }
+    "file": "car_sedan-lo-v1.glb",
+    "bytes": 327968,
+    "tris": 58748
+   },
+   "dims": {
+    "min": [
+     -2.375,
+     0.0,
+     -1.058
+    ],
+    "max": [
+     2.34,
+     1.476,
+     1.058
+    ]
+   },
+   "nodes": [
+    "car_sedan",
+    "body",
+    "door_FL",
+    "door_FL_panel",
+    "glass_FL",
+    "handle_FL",
+    "mirror_L",
+    "door_FR",
+    "door_FR_panel",
+    "glass_FR",
+    "handle_FR",
+    "mirror_R",
+    "door_RL",
+    "door_RL_panel",
+    "glass_RL",
+    "handle_RL",
+    "door_RR",
+    "door_RR_panel",
+    "glass_RR",
+    "handle_RR",
+    "glass_QL",
+    "glass_QR",
+    "glass_front",
+    "glass_rear",
+    "hood",
+    "hood_panel",
+    "hub_RL",
+    "caliper_RL",
+    "wheel_RL",
+    "cap_RL",
+    "disc_RL",
+    "lugs_RL",
+    "rim_RL",
+    "tyre_RL",
+    "valve_RL",
+    "hub_RR",
+    "caliper_RR",
+    "wheel_RR",
+    "cap_RR",
+    "disc_RR",
+    "lugs_RR",
+    "rim_RR",
+    "tyre_RR",
+    "valve_RR",
+    "interior",
+    "lights_front",
+    "lights_rear",
+    "steer_FL",
+    "caliper_FL",
+    "wheel_FL",
+    "cap_FL",
+    "disc_FL",
+    "lugs_FL",
+    "rim_FL",
+    "tyre_FL",
+    "valve_FL",
+    "steer_FR",
+    "caliper_FR",
+    "wheel_FR",
+    "cap_FR",
+    "disc_FR",
+    "lugs_FR",
+    "rim_FR",
+    "tyre_FR",
+    "valve_FR",
+    "trunk",
+    "trunk_panel"
+   ],
+   "materials": [
+    "arch_liner",
+    "caliper_paint",
+    "cap_plastic",
+    "chrome",
+    "dash",
+    "disc_face",
+    "disc_hat",
+    "glass",
+    "grille",
+    "interior",
+    "lamp_glass",
+    "lamp_housing",
+    "light_head",
+    "light_tail",
+    "paint",
+    "plastic_black",
+    "plate",
+    "plate_face",
+    "reflector",
+    "rim_face",
+    "rim_paint",
+    "seat",
+    "steel_dark",
+    "tail_lens",
+    "trim_black",
+    "tyre_side",
+    "tyre_tread"
+   ]
+  },
+  "van": {
+   "desc": "Generic panel van / LCV, unbranded. Same node conventions as car; sliding side door, rear barn doors.",
+   "explode": true,
+   "version": 1,
+   "latest": 1,
+   "hi": {
+    "file": "van-hi-v1.glb",
+    "bytes": 929876,
+    "tris": 133256
+   },
+   "lo": {
+    "file": "van-lo-v1.glb",
+    "bytes": 314948,
+    "tris": 58632
+   },
+   "dims": {
+    "min": [
+     -2.553,
+     0.0,
+     -1.126
+    ],
+    "max": [
+     2.453,
+     1.97,
+     1.126
+    ]
+   },
+   "nodes": [
+    "van",
+    "body",
+    "door_FL",
+    "door_FL_panel",
+    "glass_FL",
+    "handle_FL",
+    "mirror_L",
+    "door_FR",
+    "door_FR_panel",
+    "glass_FR",
+    "handle_FR",
+    "mirror_R",
+    "door_RL_rear",
+    "door_RL_rear_panel",
+    "glass_RL_rear",
+    "door_RR_rear",
+    "door_RR_rear_panel",
+    "glass_RR_rear",
+    "handle_RR_rear",
+    "glass_QL",
+    "glass_QR",
+    "glass_front",
+    "hood",
+    "hood_panel",
+    "hub_RL",
+    "caliper_RL",
+    "wheel_RL",
+    "cap_RL",
+    "disc_RL",
+    "lugs_RL",
+    "rim_RL",
+    "tyre_RL",
+    "valve_RL",
+    "hub_RR",
+    "caliper_RR",
+    "wheel_RR",
+    "cap_RR",
+    "disc_RR",
+    "lugs_RR",
+    "rim_RR",
+    "tyre_RR",
+    "valve_RR",
+    "interior",
+    "lights_front",
+    "lights_rear",
+    "slide_door_R",
+    "handle_slide_R",
+    "slide_door_R_panel",
+    "steer_FL",
+    "caliper_FL",
+    "wheel_FL",
+    "cap_FL",
+    "disc_FL",
+    "lugs_FL",
+    "rim_FL",
+    "tyre_FL",
+    "valve_FL",
+    "steer_FR",
+    "caliper_FR",
+    "wheel_FR",
+    "cap_FR",
+    "disc_FR",
+    "lugs_FR",
+    "rim_FR",
+    "tyre_FR",
+    "valve_FR"
+   ],
+   "materials": [
+    "arch_liner",
+    "caliper_paint",
+    "cap_plastic",
+    "chrome",
+    "dash",
+    "disc_face",
+    "disc_hat",
+    "glass",
+    "grille",
+    "interior",
+    "lamp_glass",
+    "lamp_housing",
+    "light_head",
+    "light_tail",
+    "paint",
+    "plastic_black",
+    "plate",
+    "plate_face",
+    "reflector",
+    "rim_face",
+    "rim_paint",
+    "seat",
+    "steel_dark",
+    "tail_lens",
+    "trim_black",
+    "tyre_side",
+    "tyre_tread"
+   ]
   },
   "engine": {
    "desc": "Inline-4 petrol engine, separable parts for exploded views (block, head, cams, pistons, crank, belt...).",
    "explode": true,
+   "version": 1,
+   "latest": 2,
    "hi": {
     "file": "engine-hi-v1.glb",
     "bytes": 1072036,
     "tris": 68996
+   },
+   "lo": {
+    "file": "engine-lo-v1.glb",
+    "bytes": 344336,
+    "tris": 23818
    },
    "dims": {
     "min": [
@@ -211,19 +471,327 @@
     "valve_cover",
     "yellow"
    ],
-   "lo": {
-    "file": "engine-lo-v1.glb",
-    "bytes": 344336,
-    "tris": 23818
+   "versions": {
+    "1": {
+     "hi": {
+      "file": "engine-hi-v1.glb",
+      "bytes": 1072036,
+      "tris": 68996
+     },
+     "lo": {
+      "file": "engine-lo-v1.glb",
+      "bytes": 344336,
+      "tris": 23818
+     },
+     "dims": {
+      "min": [
+       -0.326,
+       0.0,
+       -0.333
+      ],
+      "max": [
+       0.282,
+       0.596,
+       0.296
+      ]
+     },
+     "nodes": [
+      "engine",
+      "accessory_belt",
+      "alternator",
+      "block",
+      "camshaft_exhaust",
+      "cam_pulley_exhaust",
+      "camshaft_intake",
+      "cam_pulley_intake",
+      "coil_1",
+      "coil_2",
+      "coil_3",
+      "coil_4",
+      "coolant_hose",
+      "crankshaft",
+      "crank_pulley",
+      "flywheel",
+      "dipstick",
+      "exhaust_manifold",
+      "fuel_rail",
+      "injector_1",
+      "injector_2",
+      "injector_3",
+      "injector_4",
+      "head",
+      "head_gasket",
+      "intake_manifold",
+      "mount_front",
+      "mount_rear",
+      "oil_filter",
+      "oil_pan",
+      "piston_1",
+      "conrod_1",
+      "piston_2",
+      "conrod_2",
+      "piston_3",
+      "conrod_3",
+      "piston_4",
+      "conrod_4",
+      "starter",
+      "tensioner",
+      "timing_belt",
+      "timing_cover",
+      "valve_cover"
+     ],
+     "materials": [
+      "alu_cast",
+      "black_paint",
+      "bore",
+      "copper",
+      "exhaust_steel",
+      "filter_paint",
+      "gasket",
+      "piston_alu",
+      "piston_crown",
+      "plastic_black",
+      "plastic_gloss",
+      "pulley_steel",
+      "rubber_belt",
+      "steel_dark",
+      "steel_forged",
+      "steel_machined",
+      "valve_cover",
+      "yellow"
+     ]
+    },
+    "2": {
+     "hi": {
+      "file": "engine-hi-v2.glb",
+      "bytes": 1070976,
+      "tris": 117428
+     },
+     "lo": {
+      "file": "engine-lo-v2.glb",
+      "bytes": 348796,
+      "tris": 25630
+     },
+     "dims": {
+      "min": [
+       -0.326,
+       0.0,
+       -0.333
+      ],
+      "max": [
+       0.282,
+       0.596,
+       0.296
+      ]
+     },
+     "nodes": [
+      "engine",
+      "accessory_belt",
+      "alternator",
+      "block",
+      "camshaft_exhaust",
+      "cam_pulley_exhaust",
+      "camshaft_intake",
+      "cam_pulley_intake",
+      "coil_1",
+      "coil_2",
+      "coil_3",
+      "coil_4",
+      "coolant_hose",
+      "crankshaft",
+      "crank_pulley",
+      "flywheel",
+      "dipstick",
+      "exhaust_manifold",
+      "fuel_rail",
+      "injector_1",
+      "injector_2",
+      "injector_3",
+      "injector_4",
+      "head",
+      "head_bolt_1",
+      "head_bolt_10",
+      "head_bolt_2",
+      "head_bolt_3",
+      "head_bolt_4",
+      "head_bolt_5",
+      "head_bolt_6",
+      "head_bolt_7",
+      "head_bolt_8",
+      "head_bolt_9",
+      "head_gasket",
+      "intake_manifold",
+      "mount_front",
+      "mount_rear",
+      "oil_filter",
+      "oil_pan",
+      "piston_1",
+      "conrod_1",
+      "piston_2",
+      "conrod_2",
+      "piston_3",
+      "conrod_3",
+      "piston_4",
+      "conrod_4",
+      "starter",
+      "tensioner",
+      "timing_belt",
+      "timing_cover",
+      "valve_cover"
+     ],
+     "materials": [
+      "alu_cast",
+      "black_paint",
+      "bore",
+      "copper",
+      "exhaust_steel",
+      "filter_paint",
+      "gasket",
+      "piston_alu",
+      "piston_crown",
+      "plastic_black",
+      "plastic_cover",
+      "plastic_gloss",
+      "pulley_steel",
+      "rubber_belt",
+      "steel_dark",
+      "steel_forged",
+      "steel_machined",
+      "valve_cover",
+      "yellow"
+     ]
+    }
    }
+  },
+  "engine_diesel": {
+   "desc": "Inline-4 common-rail turbo diesel: tall block, rail + injectors on top, turbo, intercooler stubs; separable.",
+   "explode": true,
+   "version": 1,
+   "latest": 1,
+   "hi": {
+    "file": "engine_diesel-hi-v1.glb",
+    "bytes": 1170000,
+    "tris": 82946
+   },
+   "lo": {
+    "file": "engine_diesel-lo-v1.glb",
+    "bytes": 341048,
+    "tris": 21136
+   },
+   "dims": {
+    "min": [
+     -0.324,
+     0.0,
+     -0.3
+    ],
+    "max": [
+     0.312,
+     0.643,
+     0.423
+    ]
+   },
+   "nodes": [
+    "engine_diesel",
+    "accessory_belt",
+    "air_inlet_hose",
+    "alternator",
+    "block",
+    "camshaft_exhaust",
+    "cam_pulley_exhaust",
+    "camshaft_intake",
+    "common_rail",
+    "coolant_hose",
+    "crankshaft",
+    "crank_pulley",
+    "flywheel",
+    "dipstick",
+    "downpipe",
+    "egr_cooler",
+    "egr_valve",
+    "exhaust_manifold",
+    "glow_plug_1",
+    "glow_plug_2",
+    "glow_plug_3",
+    "glow_plug_4",
+    "head",
+    "head_gasket",
+    "hp_lines",
+    "hp_pump",
+    "hp_pump_pulley",
+    "injector_1",
+    "injector_2",
+    "injector_3",
+    "injector_4",
+    "intake_manifold",
+    "intercooler_pipe_in",
+    "intercooler_pipe_out",
+    "oil_filter",
+    "oil_pan",
+    "piston_1",
+    "conrod_1",
+    "piston_2",
+    "conrod_2",
+    "piston_3",
+    "conrod_3",
+    "piston_4",
+    "conrod_4",
+    "return_line",
+    "starter",
+    "tensioner",
+    "timing_belt",
+    "timing_cover",
+    "turbo",
+    "center_housing",
+    "compressor_housing",
+    "compressor_wheel",
+    "turbine_housing",
+    "turbo_actuator",
+    "vacuum_pump",
+    "valve_cover"
+   ],
+   "materials": [
+    "actuator_paint",
+    "alu_cast",
+    "alu_machined",
+    "alu_milled",
+    "black_paint",
+    "bore",
+    "bore_dark",
+    "copper",
+    "gasket",
+    "hp_tube",
+    "iron_cast",
+    "iron_hot",
+    "piston_alu",
+    "piston_crown",
+    "plastic_black",
+    "plastic_gloss",
+    "pulley_steel",
+    "rail_steel",
+    "rubber",
+    "stainless",
+    "steel",
+    "steel_dark",
+    "steel_forged",
+    "steel_machined",
+    "yellow",
+    "zinc"
+   ]
   },
   "wheel": {
    "desc": "225/45 R17 wheel: tread blocks, two-tone alloy, vented disc, 4-pot caliper, lugs.",
    "explode": true,
+   "version": 1,
+   "latest": 1,
    "hi": {
     "file": "wheel-hi-v1.glb",
     "bytes": 867560,
     "tris": 58646
+   },
+   "lo": {
+    "file": "wheel-lo-v1.glb",
+    "bytes": 302472,
+    "tris": 20510
    },
    "dims": {
     "min": [
@@ -259,20 +827,22 @@
     "steel_dark",
     "tyre_side",
     "tyre_tread"
-   ],
-   "lo": {
-    "file": "wheel-lo-v1.glb",
-    "bytes": 302472,
-    "tris": 20510
-   }
+   ]
   },
   "seat": {
    "desc": "Sports car seat: bolsters, stitching; leather / fabric / alcantara material variants.",
    "explode": true,
+   "version": 1,
+   "latest": 1,
    "hi": {
     "file": "seat-hi-v1.glb",
     "bytes": 1127416,
     "tris": 31460
+   },
+   "lo": {
+    "file": "seat-lo-v1.glb",
+    "bytes": 266368,
+    "tris": 6956
    },
    "dims": {
     "min": [
@@ -323,20 +893,22 @@
     "upholstery_fabric",
     "upholstery_leather",
     "upholstery_quilted"
-   ],
-   "lo": {
-    "file": "seat-lo-v1.glb",
-    "bytes": 266368,
-    "tris": 6956
-   }
+   ]
   },
   "truck": {
    "desc": "Cab-over tractor unit 4x2 (unbranded), wheels spin, tilting cab.",
    "explode": true,
+   "version": 1,
+   "latest": 1,
    "hi": {
     "file": "truck-hi-v1.glb",
     "bytes": 1058660,
     "tris": 228924
+   },
+   "lo": {
+    "file": "truck-lo-v1.glb",
+    "bytes": 268036,
+    "tris": 51680
    },
    "dims": {
     "min": [
@@ -432,20 +1004,189 @@
     "trim_black",
     "tyre_side",
     "tyre_tread"
-   ],
+   ]
+  },
+  "tow_bed": {
+   "desc": "Tilt / slide recovery bed for the truck chassis: bed, subframe, winch, ramps, wheel lift.",
+   "explode": true,
+   "version": 1,
+   "latest": 1,
+   "hi": {
+    "file": "tow_bed-hi-v1.glb",
+    "bytes": 226380,
+    "tris": 11528
+   },
    "lo": {
-    "file": "truck-lo-v1.glb",
-    "bytes": 268036,
-    "tris": 51680
-   }
+    "file": "tow_bed-lo-v1.glb",
+    "bytes": 102752,
+    "tris": 2798
+   },
+   "dims": {
+    "min": [
+     -4.77,
+     0.56,
+     -1.211
+    ],
+    "max": [
+     0.9,
+     2.448,
+     1.211
+    ]
+   },
+   "nodes": [
+    "tow_bed",
+    "bed_tilt",
+    "bed_slide",
+    "bed",
+    "cable",
+    "headboard",
+    "light_bar",
+    "hook",
+    "ramp_L",
+    "ramp_R",
+    "winch",
+    "winch_drum",
+    "ram_anchor_L",
+    "ram_anchor_R",
+    "tilt_frame",
+    "ram_L",
+    "ram_L_rod",
+    "ram_R",
+    "ram_R_rod",
+    "subframe",
+    "toolbox_L",
+    "toolbox_R",
+    "wheel_lift",
+    "_wl_body",
+    "wheel_lift_boom",
+    "wheel_lift_cross"
+   ],
+   "materials": [
+    "alu",
+    "cable",
+    "deck_plate",
+    "frame_black",
+    "galv",
+    "hook_yellow",
+    "hydraulic",
+    "lamp_housing",
+    "light_amber",
+    "light_head",
+    "light_tail",
+    "paint",
+    "reflective",
+    "steel_dark"
+   ]
+  },
+  "trailer": {
+   "desc": "Tri-axle curtainside semi-trailer (13.6 m), kingpin for the truck's fifth wheel, wheels spin.",
+   "explode": true,
+   "version": 1,
+   "latest": 1,
+   "hi": {
+    "file": "trailer-hi-v1.glb",
+    "bytes": 631800,
+    "tris": 250804
+   },
+   "lo": {
+    "file": "trailer-lo-v1.glb",
+    "bytes": 170380,
+    "tris": 53016
+   },
+   "dims": {
+    "min": [
+     -12.45,
+     0.0,
+     -1.313
+    ],
+    "max": [
+     1.225,
+     4.0,
+     1.313
+    ]
+   },
+   "nodes": [
+    "trailer",
+    "axles",
+    "body",
+    "chassis",
+    "curtain_L",
+    "curtain_R",
+    "door_RL_rear",
+    "door_RR_rear",
+    "hub_1L",
+    "wheel_1L",
+    "hubcap_1L",
+    "rim_1L",
+    "tyre_1L",
+    "hub_1R",
+    "wheel_1R",
+    "hubcap_1R",
+    "rim_1R",
+    "tyre_1R",
+    "hub_2L",
+    "wheel_2L",
+    "hubcap_2L",
+    "rim_2L",
+    "tyre_2L",
+    "hub_2R",
+    "wheel_2R",
+    "hubcap_2R",
+    "rim_2R",
+    "tyre_2R",
+    "hub_3L",
+    "wheel_3L",
+    "hubcap_3L",
+    "rim_3L",
+    "tyre_3L",
+    "hub_3R",
+    "wheel_3R",
+    "hubcap_3R",
+    "rim_3R",
+    "tyre_3R",
+    "landing_gear",
+    "landing_legs",
+    "spare_wheel",
+    "rim_spare",
+    "tyre_spare",
+    "toolbox"
+   ],
+   "materials": [
+    "alu",
+    "buckle",
+    "chrome",
+    "curtain",
+    "disc_hat",
+    "frame_black",
+    "light_amber",
+    "light_tail",
+    "paint",
+    "plastic_black",
+    "red_reflective",
+    "reflective",
+    "rim_paint",
+    "roof",
+    "rubber",
+    "steel_dark",
+    "strap",
+    "tyre_side",
+    "tyre_tread"
+   ]
   },
   "turbo": {
    "desc": "Turbocharger: compressor + turbine housings, CHRA, wheels on a shaft (separable).",
    "explode": true,
+   "version": 1,
+   "latest": 1,
    "hi": {
     "file": "turbo-hi-v1.glb",
     "bytes": 701204,
     "tris": 29764
+   },
+   "lo": {
+    "file": "turbo-lo-v1.glb",
+    "bytes": 132564,
+    "tris": 10580
    },
    "dims": {
     "min": [
@@ -485,20 +1226,22 @@
     "rubber",
     "steel",
     "steel_dark"
-   ],
-   "lo": {
-    "file": "turbo-lo-v1.glb",
-    "bytes": 132564,
-    "tris": 10580
-   }
+   ]
   },
   "exhaust": {
    "desc": "Exhaust line: manifold, downpipe, catalyst, DPF, mid pipe, muffler, tailpipe.",
    "explode": true,
+   "version": 1,
+   "latest": 1,
    "hi": {
     "file": "exhaust-hi-v1.glb",
     "bytes": 371100,
     "tris": 24016
+   },
+   "lo": {
+    "file": "exhaust-lo-v1.glb",
+    "bytes": 108428,
+    "tris": 6538
    },
    "dims": {
     "min": [
@@ -536,20 +1279,22 @@
     "rubber",
     "stainless",
     "steel_heat"
-   ],
-   "lo": {
-    "file": "exhaust-lo-v1.glb",
-    "bytes": 108428,
-    "tris": 6538
-   }
+   ]
   },
   "garage": {
    "desc": "Workshop interior: floor, walls, two-post lift, toolboxes, workbench, strip lights.",
    "explode": false,
+   "version": 1,
+   "latest": 1,
    "hi": {
     "file": "garage-hi-v1.glb",
     "bytes": 752064,
     "tris": 29534
+   },
+   "lo": {
+    "file": "garage-lo-v1.glb",
+    "bytes": 168132,
+    "tris": 7572
    },
    "dims": {
     "min": [
@@ -614,20 +1359,22 @@
     "wall_lower",
     "window",
     "wood"
-   ],
-   "lo": {
-    "file": "garage-lo-v1.glb",
-    "bytes": 168132,
-    "tris": 7572
-   }
+   ]
   },
   "studio": {
    "desc": "Studio turntable: cyclorama sweep + rotating plinth (node 'turntable').",
    "explode": false,
+   "version": 1,
+   "latest": 1,
    "hi": {
     "file": "studio-hi-v1.glb",
     "bytes": 189036,
     "tris": 8316
+   },
+   "lo": {
+    "file": "studio-lo-v1.glb",
+    "bytes": 40380,
+    "tris": 1822
    },
    "dims": {
     "min": [
@@ -664,20 +1411,22 @@
     "light_panel",
     "stand",
     "turntable_top"
-   ],
-   "lo": {
-    "file": "studio-lo-v1.glb",
-    "bytes": 40380,
-    "tris": 1822
-   }
+   ]
   },
   "windshield": {
    "desc": "Laminated windscreen with frit band, wiper arms + blades (animatable).",
    "explode": true,
+   "version": 1,
+   "latest": 1,
    "hi": {
     "file": "windshield-hi-v1.glb",
     "bytes": 115896,
     "tris": 13906
+   },
+   "lo": {
+    "file": "windshield-lo-v1.glb",
+    "bytes": 44188,
+    "tris": 2652
    },
    "dims": {
     "min": [
@@ -717,20 +1466,22 @@
     "rubber",
     "sensor_lens",
     "wiper_black"
-   ],
-   "lo": {
-    "file": "windshield-lo-v1.glb",
-    "bytes": 44188,
-    "tris": 2652
-   }
+   ]
   },
   "battery": {
    "desc": "12 V AGM car battery with terminals and clamps.",
    "explode": true,
+   "version": 1,
+   "latest": 1,
    "hi": {
     "file": "battery-hi-v1.glb",
     "bytes": 133548,
     "tris": 7018
+   },
+   "lo": {
+    "file": "battery-lo-v1.glb",
+    "bytes": 81504,
+    "tris": 2884
    },
    "dims": {
     "min": [
@@ -767,20 +1518,22 @@
     "lead",
     "lid",
     "steel"
-   ],
-   "lo": {
-    "file": "battery-lo-v1.glb",
-    "bytes": 81504,
-    "tris": 2884
-   }
+   ]
   },
   "ac_compressor": {
    "desc": "Automotive A/C compressor with clutch pulley and manifold ports.",
    "explode": true,
+   "version": 1,
+   "latest": 1,
    "hi": {
     "file": "ac_compressor-hi-v1.glb",
     "bytes": 240748,
     "tris": 9468
+   },
+   "lo": {
+    "file": "ac_compressor-lo-v1.glb",
+    "bytes": 70968,
+    "tris": 4286
    },
    "dims": {
     "min": [
@@ -811,20 +1564,22 @@
     "rubber",
     "steel",
     "zinc"
-   ],
-   "lo": {
-    "file": "ac_compressor-lo-v1.glb",
-    "bytes": 70968,
-    "tris": 4286
-   }
+   ]
   },
   "lock": {
    "desc": "Pin-tumbler lock cylinder (cutaway-ready) + key.",
    "explode": true,
+   "version": 1,
+   "latest": 1,
    "hi": {
     "file": "lock-hi-v1.glb",
     "bytes": 113984,
     "tris": 11617
+   },
+   "lo": {
+    "file": "lock-lo-v1.glb",
+    "bytes": 68148,
+    "tris": 4483
    },
    "dims": {
     "min": [
@@ -873,12 +1628,333 @@
     "pin_brass",
     "pin_steel",
     "spring"
-   ],
+   ]
+  },
+  "bolt": {
+   "desc": "Fastener set for close-ups: cylinder-head bolt, stud, nut, washer with real helical threads.",
+   "explode": true,
+   "version": 1,
+   "latest": 1,
+   "hi": {
+    "file": "bolt-hi-v1.glb",
+    "bytes": 784012,
+    "tris": 91698
+   },
    "lo": {
-    "file": "lock-lo-v1.glb",
-    "bytes": 68148,
-    "tris": 4483
-   }
+    "file": "bolt-lo-v1.glb",
+    "bytes": 263916,
+    "tris": 24540
+   },
+   "dims": {
+    "min": [
+     -0.01,
+     0.0,
+     -0.01
+    ],
+    "max": [
+     0.04,
+     0.122,
+     0.01
+    ]
+   },
+   "nodes": [
+    "bolt",
+    "head_bolt",
+    "head_bolt_washer",
+    "nut",
+    "stud",
+    "washer"
+   ],
+   "materials": [
+    "bolt_ground",
+    "bolt_phosphate",
+    "bolt_zinc"
+   ]
+  },
+  "gearbox": {
+   "desc": "Manual 5-speed transaxle: separable casing halves, input / output gear sets, differential, forks.",
+   "explode": true,
+   "version": 1,
+   "latest": 1,
+   "hi": {
+    "file": "gearbox-hi-v1.glb",
+    "bytes": 1143708,
+    "tris": 85290
+   },
+   "lo": {
+    "file": "gearbox-lo-v1.glb",
+    "bytes": 338624,
+    "tris": 29300
+   },
+   "dims": {
+    "min": [
+     -0.468,
+     0.0,
+     -0.191
+    ],
+    "max": [
+     0.002,
+     0.47,
+     0.247
+    ]
+   },
+   "nodes": [
+    "gearbox",
+    "breather",
+    "case_clutch",
+    "case_gear",
+    "diff",
+    "cross_pin",
+    "diff_case",
+    "flange_L",
+    "flange_R",
+    "planet_1",
+    "planet_2",
+    "ring_gear",
+    "side_gear_L",
+    "side_gear_R",
+    "drain_plug",
+    "end_cover",
+    "fill_plug",
+    "fork_12",
+    "fork_34",
+    "fork_5",
+    "gear_1_out",
+    "gear_2_out",
+    "gear_3_in",
+    "gear_4_in",
+    "gear_5_out",
+    "input_shaft",
+    "gear_1_in",
+    "gear_2_in",
+    "gear_5_in",
+    "gear_rev_in",
+    "sync_34_hub",
+    "sync_34_sleeve",
+    "output_shaft",
+    "final_pinion",
+    "gear_3_out",
+    "gear_4_out",
+    "sync_12_hub",
+    "sync_12_sleeve",
+    "sync_5_hub",
+    "sync_5_sleeve",
+    "release_bearing",
+    "reverse_idler",
+    "reverse_shaft",
+    "selector_shaft"
+   ],
+   "materials": [
+    "alu_machined",
+    "bronze",
+    "case_alu",
+    "cast_iron",
+    "fork_steel",
+    "gear_face",
+    "gear_steel",
+    "plastic_black",
+    "rubber",
+    "shaft_steel",
+    "steel_dark"
+   ]
+  },
+  "radiator": {
+   "desc": "Radiator pack: finned core, plastic end tanks, fan shroud, spinning fan, cap, hose necks.",
+   "explode": true,
+   "version": 1,
+   "latest": 1,
+   "hi": {
+    "file": "radiator-hi-v1.glb",
+    "bytes": 808600,
+    "tris": 67420
+   },
+   "lo": {
+    "file": "radiator-lo-v1.glb",
+    "bytes": 126008,
+    "tris": 5446
+   },
+   "dims": {
+    "min": [
+     -0.135,
+     0.0,
+     -0.432
+    ],
+    "max": [
+     0.135,
+     0.534,
+     0.432
+    ]
+   },
+   "nodes": [
+    "radiator",
+    "cap",
+    "condenser",
+    "core",
+    "drain_cock",
+    "fan",
+    "fan_motor",
+    "mount_L",
+    "mount_R",
+    "neck_lower",
+    "neck_upper",
+    "shroud",
+    "tank_L",
+    "tank_R"
+   ],
+   "materials": [
+    "alu_core",
+    "alu_header",
+    "alu_pipe",
+    "cap_black",
+    "condenser_face",
+    "copper_wire",
+    "fan_plastic",
+    "fin",
+    "motor_can",
+    "rubber",
+    "shroud_plastic",
+    "steel",
+    "steel_zinc",
+    "tank_plastic"
+   ]
+  },
+  "injector": {
+   "desc": "Common-rail diesel injector with a cutaway: body, solenoid, needle, spring, nozzle.",
+   "explode": true,
+   "version": 1,
+   "latest": 1,
+   "hi": {
+    "file": "injector-hi-v1.glb",
+    "bytes": 431136,
+    "tris": 33128
+   },
+   "lo": {
+    "file": "injector-lo-v1.glb",
+    "bytes": 150140,
+    "tris": 7794
+   },
+   "dims": {
+    "min": [
+     -0.025,
+     0.0,
+     -0.011
+    ],
+    "max": [
+     0.034,
+     0.167,
+     0.011
+    ]
+   },
+   "nodes": [
+    "injector",
+    "armature",
+    "valve_ball",
+    "armature_spring",
+    "body_back",
+    "body_front",
+    "coil_back",
+    "coil_front",
+    "connector",
+    "copper_washer",
+    "edge_filter",
+    "hp_fuel",
+    "magnet_core_back",
+    "magnet_core_front",
+    "magnet_nut_back",
+    "magnet_nut_front",
+    "needle",
+    "nozzle_back",
+    "nozzle_front",
+    "nozzle_nut_back",
+    "nozzle_nut_front",
+    "nozzle_spring",
+    "o_ring",
+    "return_connector",
+    "valve_piece_back",
+    "valve_piece_front",
+    "valve_piston"
+   ],
+   "materials": [
+    "coil_copper",
+    "copper",
+    "cut_face",
+    "fuel",
+    "hole",
+    "plastic_black",
+    "plastic_grey",
+    "rubber",
+    "steel_body",
+    "steel_bright",
+    "steel_dark",
+    "steel_nut"
+   ]
+  },
+  "lpg_kit": {
+   "desc": "LPG conversion kit: toroidal tank + multivalve, reducer / vaporiser, injector rail, filter, ECU.",
+   "explode": true,
+   "version": 1,
+   "latest": 1,
+   "hi": {
+    "file": "lpg_kit-hi-v1.glb",
+    "bytes": 608088,
+    "tris": 39332
+   },
+   "lo": {
+    "file": "lpg_kit-lo-v1.glb",
+    "bytes": 224544,
+    "tris": 11304
+   },
+   "dims": {
+    "min": [
+     -0.732,
+     0.0,
+     -0.501
+    ],
+    "max": [
+     0.732,
+     0.319,
+     0.501
+    ]
+   },
+   "nodes": [
+    "lpg_kit",
+    "ecu",
+    "fill_valve",
+    "filter",
+    "gas_line",
+    "hoses",
+    "injector_rail",
+    "injector_1",
+    "injector_2",
+    "injector_3",
+    "injector_4",
+    "map_sensor",
+    "multivalve",
+    "gauge_needle",
+    "nozzle_hoses",
+    "reducer",
+    "tank",
+    "tank_bracket",
+    "valve_housing"
+   ],
+   "materials": [
+    "alu_cast",
+    "brass",
+    "coil_black",
+    "copper",
+    "dial",
+    "ecu_alu",
+    "glass",
+    "housing_grey",
+    "label_silver",
+    "needle_red",
+    "plastic_black",
+    "plastic_yellow",
+    "rubber",
+    "steel_zinc",
+    "tank_paint",
+    "weld"
+   ]
   }
  },
  "envs": {
@@ -954,6 +2030,26 @@
    "license": "own work (sanayi-web)"
   },
   {
+   "file": "car_sedan-hi-v1.glb",
+   "source": "authored from scratch in Blender by assets3d/build_car_sedan.py (procedural, no third-party model, no brand marks)",
+   "license": "own work (sanayi-web)"
+  },
+  {
+   "file": "car_sedan-lo-v1.glb",
+   "source": "authored from scratch in Blender by assets3d/build_car_sedan.py (procedural, no third-party model, no brand marks)",
+   "license": "own work (sanayi-web)"
+  },
+  {
+   "file": "van-hi-v1.glb",
+   "source": "authored from scratch in Blender by assets3d/build_van.py (procedural, no third-party model, no brand marks)",
+   "license": "own work (sanayi-web)"
+  },
+  {
+   "file": "van-lo-v1.glb",
+   "source": "authored from scratch in Blender by assets3d/build_van.py (procedural, no third-party model, no brand marks)",
+   "license": "own work (sanayi-web)"
+  },
+  {
    "file": "engine-hi-v1.glb",
    "source": "authored from scratch in Blender by assets3d/build_engine.py (procedural, no third-party model, no brand marks)",
    "license": "own work (sanayi-web)"
@@ -961,6 +2057,26 @@
   {
    "file": "engine-lo-v1.glb",
    "source": "authored from scratch in Blender by assets3d/build_engine.py (procedural, no third-party model, no brand marks)",
+   "license": "own work (sanayi-web)"
+  },
+  {
+   "file": "engine-hi-v2.glb",
+   "source": "authored from scratch in Blender by assets3d/build_engine.py (procedural, no third-party model, no brand marks)",
+   "license": "own work (sanayi-web)"
+  },
+  {
+   "file": "engine-lo-v2.glb",
+   "source": "authored from scratch in Blender by assets3d/build_engine.py (procedural, no third-party model, no brand marks)",
+   "license": "own work (sanayi-web)"
+  },
+  {
+   "file": "engine_diesel-hi-v1.glb",
+   "source": "authored from scratch in Blender by assets3d/build_engine_diesel.py (procedural, no third-party model, no brand marks)",
+   "license": "own work (sanayi-web)"
+  },
+  {
+   "file": "engine_diesel-lo-v1.glb",
+   "source": "authored from scratch in Blender by assets3d/build_engine_diesel.py (procedural, no third-party model, no brand marks)",
    "license": "own work (sanayi-web)"
   },
   {
@@ -991,6 +2107,26 @@
   {
    "file": "truck-lo-v1.glb",
    "source": "authored from scratch in Blender by assets3d/build_truck.py (procedural, no third-party model, no brand marks)",
+   "license": "own work (sanayi-web)"
+  },
+  {
+   "file": "tow_bed-hi-v1.glb",
+   "source": "authored from scratch in Blender by assets3d/build_tow_bed.py (procedural, no third-party model, no brand marks)",
+   "license": "own work (sanayi-web)"
+  },
+  {
+   "file": "tow_bed-lo-v1.glb",
+   "source": "authored from scratch in Blender by assets3d/build_tow_bed.py (procedural, no third-party model, no brand marks)",
+   "license": "own work (sanayi-web)"
+  },
+  {
+   "file": "trailer-hi-v1.glb",
+   "source": "authored from scratch in Blender by assets3d/build_trailer.py (procedural, no third-party model, no brand marks)",
+   "license": "own work (sanayi-web)"
+  },
+  {
+   "file": "trailer-lo-v1.glb",
+   "source": "authored from scratch in Blender by assets3d/build_trailer.py (procedural, no third-party model, no brand marks)",
    "license": "own work (sanayi-web)"
   },
   {
@@ -1071,6 +2207,56 @@
   {
    "file": "lock-lo-v1.glb",
    "source": "authored from scratch in Blender by assets3d/build_lock.py (procedural, no third-party model, no brand marks)",
+   "license": "own work (sanayi-web)"
+  },
+  {
+   "file": "bolt-hi-v1.glb",
+   "source": "authored from scratch in Blender by assets3d/build_bolt.py (procedural, no third-party model, no brand marks)",
+   "license": "own work (sanayi-web)"
+  },
+  {
+   "file": "bolt-lo-v1.glb",
+   "source": "authored from scratch in Blender by assets3d/build_bolt.py (procedural, no third-party model, no brand marks)",
+   "license": "own work (sanayi-web)"
+  },
+  {
+   "file": "gearbox-hi-v1.glb",
+   "source": "authored from scratch in Blender by assets3d/build_gearbox.py (procedural, no third-party model, no brand marks)",
+   "license": "own work (sanayi-web)"
+  },
+  {
+   "file": "gearbox-lo-v1.glb",
+   "source": "authored from scratch in Blender by assets3d/build_gearbox.py (procedural, no third-party model, no brand marks)",
+   "license": "own work (sanayi-web)"
+  },
+  {
+   "file": "radiator-hi-v1.glb",
+   "source": "authored from scratch in Blender by assets3d/build_radiator.py (procedural, no third-party model, no brand marks)",
+   "license": "own work (sanayi-web)"
+  },
+  {
+   "file": "radiator-lo-v1.glb",
+   "source": "authored from scratch in Blender by assets3d/build_radiator.py (procedural, no third-party model, no brand marks)",
+   "license": "own work (sanayi-web)"
+  },
+  {
+   "file": "injector-hi-v1.glb",
+   "source": "authored from scratch in Blender by assets3d/build_injector.py (procedural, no third-party model, no brand marks)",
+   "license": "own work (sanayi-web)"
+  },
+  {
+   "file": "injector-lo-v1.glb",
+   "source": "authored from scratch in Blender by assets3d/build_injector.py (procedural, no third-party model, no brand marks)",
+   "license": "own work (sanayi-web)"
+  },
+  {
+   "file": "lpg_kit-hi-v1.glb",
+   "source": "authored from scratch in Blender by assets3d/build_lpg_kit.py (procedural, no third-party model, no brand marks)",
+   "license": "own work (sanayi-web)"
+  },
+  {
+   "file": "lpg_kit-lo-v1.glb",
+   "source": "authored from scratch in Blender by assets3d/build_lpg_kit.py (procedural, no third-party model, no brand marks)",
    "license": "own work (sanayi-web)"
   },
   {

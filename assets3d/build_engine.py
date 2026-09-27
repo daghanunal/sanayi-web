@@ -12,6 +12,13 @@ Kinematics (bore 78 mm, stroke 83.6 mm -> 1598 cc; conrod 140 mm; firing order 1
   conrod_i.rotation.x = -asin(r*sin(a) / L)   (conrod_i is a child of piston_i, pivot on the wrist pin)
   camshaft_intake / camshaft_exhaust .rotation.x = theta / 2 (the cam pulleys are their children).
 Every part carries extras.explode = [x, y, z] (three space, metres).
+
+v2 (versions.json engine: 2; v1 = git f3f1930):
+  - every named node is a pivot (C.finish(pivots=True)): leaf meshes sit in a `<name>_geo` child, so compression can
+    no longer move a node origin. conrod_i now pivots on the wrist pin (v1: mid-rod, after gltf-transform moved it).
+  - bores run down into the crankcase (pistons visible at BDC with the head off), threaded head-bolt holes in the deck.
+  - head_bolt_1..10: M10 12-point head bolts (build_bolt.py helpers), seated on the cam-tub floor, explode with the head.
+  - timing cover: smooth moulded shells (no horizontal ribs), planar UVs.
 """
 
 import math
@@ -27,6 +34,7 @@ from mathutils import Matrix, Vector
 
 import common as C
 import texgen as T
+import build_bolt as BB
 
 CRANK_Y = 0.160  # crank axis height (Blender z)
 R_CR = 0.0418  # crank throw (stroke / 2)
@@ -39,6 +47,10 @@ DECK = 0.370
 HEAD_TOP = 0.490
 CAM_Z = 0.462
 CAM_Y = 0.056
+BORE_BOTTOM = 0.222  # v2: bore floor (v1 stopped the bores 5 cm under the deck)
+TUB_FLOOR = 0.452  # cam-tub floor = head-bolt bearing face
+HEAD_BOLT_L = 0.140  # length under head (0.312 .. 0.452: 58 mm into the block)
+HEAD_BOLTS = [(x, sy * 0.094) for x in (0.176, 0.088, 0.0, -0.088, -0.176) for sy in (1, -1)]
 BELT_X = 0.226
 Q = "hi"
 
@@ -65,7 +77,7 @@ def engine_mats():
                normal=(C.image("e_brush_n", n2, False) if HI() else None), normal_strength=0.5, vcol=True, uv_scale=(us * 2, us * 2))
     C.material("steel_forged", C.srgb("#4d4f52"), 0.46, 1.0, vcol=True)
     C.material("piston_alu", C.srgb("#b9bcbf"), 0.34, 1.0, vcol=True)
-    C.material("piston_crown", C.srgb("#3a3633"), 0.62, 0.55, vcol=True)
+    C.material("piston_crown", C.srgb("#6a645e"), 0.55, 0.6, vcol=True)  # v2: lighter (visible at BDC)
     C.material("bore", C.srgb("#6f7276"), 0.30, 1.0, vcol=True)
     C.material("gasket", C.srgb("#55585c"), 0.38, 0.9, vcol=True)
     pa, po, pn = T.textured_plastic(n, seed=33, lum=0.020, rough=0.5, grain=1.2)
@@ -74,6 +86,8 @@ def engine_mats():
     ma, mo, mn = T.textured_plastic(n, seed=34, lum=0.030, rough=0.62, grain=1.0)
     C.material("plastic_black", (1, 1, 1), albedo=C.image("e_pl_alb", ma), orm=C.image("e_pl_orm", mo, False),
                normal=(C.image("e_pl_n", mn, False) if HI() else None), normal_strength=0.5, vcol=True, uv_scale=(us, us))
+    C.material("plastic_cover", (1, 1, 1), albedo=bpy.data.images["e_pl_alb"], orm=bpy.data.images["e_pl_orm"],
+               normal=(bpy.data.images["e_pl_n"] if HI() else None), normal_strength=0.22, vcol=True, uv_scale=(us * 1.6, us * 1.6))
     C.material("plastic_gloss", C.srgb("#141416"), 0.32, 0.0, vcol=True)
     C.material("rubber_belt", C.srgb("#151516"), 0.78, 0.0, vcol=True)
     C.material("pulley_steel", C.srgb("#a4a7ab"), 0.28, 1.0, vcol=True)
@@ -426,8 +440,11 @@ def make_block():
         C.bevel_mod(blk, width=0.003, segs=2, angle=40)
     # bores through into the crankcase, crankcase cavity from below
     cut = bmesh.new()
-    for xc in XC:
-        C.cyl(BORE / 2, 0.3, segs, loc=(xc, 0, DECK + 0.1), axis="Z", bm=cut, mat=1)
+    for xc in XC:  # v2: the bores run down to 0.222 (skirt bottom at BDC 0.232) and open into the crankcase
+        z_lo, z_hi = BORE_BOTTOM, DECK + 0.1
+        C.cyl(BORE / 2, z_hi - z_lo, segs, loc=(xc, 0, (z_lo + z_hi) / 2), axis="Z", bm=cut, mat=1)
+    for x, y in HEAD_BOLTS:  # threaded head-bolt holes in the deck
+        C.cyl(0.0052, 0.06, 16 if HI() else 8, loc=(x, y, DECK), axis="Z", bm=cut, mat=1)
     if HI():
         C.merge(cut, C.box((0.38, 0.30, 0.13), loc=(0, 0, 0.118 + 0.06)))
     co = C.obj("_cut", cut, ["alu_cast", "bore"], smooth=False)
@@ -493,9 +510,8 @@ def make_gasket():
     cut = bmesh.new()
     for xc in XC:
         C.cyl(BORE / 2 + 0.002, 0.02, seg(48, 20), loc=(xc, 0, DECK), bm=cut)
-    for x in (-0.176, -0.088, 0.0, 0.088, 0.176):
-        for sy in (1, -1):
-            C.cyl(0.006, 0.02, 10, loc=(x, sy * 0.118, DECK), bm=cut)
+    for x, y in HEAD_BOLTS:
+        C.cyl(0.006, 0.02, 10, loc=(x, y, DECK), bm=cut)
     C.boolean(g, C.obj("_c", cut, ["gasket"], smooth=False))
     if not HI():
         uv_eng(g)
@@ -773,8 +789,31 @@ def make_tensioner():
 
 
 
+def offset_poly(poly, d):
+    """inset a convex CCW-or-CW (y, z) polygon by d (vertex moves along the inward bisector)"""
+    n = len(poly)
+    area = sum(poly[i][0] * poly[(i + 1) % n][1] - poly[(i + 1) % n][0] * poly[i][1] for i in range(n))
+    sgn = 1 if area > 0 else -1
+    out = []
+    for i in range(n):
+        p0, p1, p2 = Vector(poly[i - 1]), Vector(poly[i]), Vector(poly[(i + 1) % n])
+        e1 = (p1 - p0).normalized()
+        e2 = (p2 - p1).normalized()
+        n1 = Vector((-e1.y, e1.x)) * sgn
+        n2 = Vector((-e2.y, e2.x)) * sgn
+        b = (n1 + n2)
+        if b.length < 1e-9:
+            b = n1
+        b.normalize()
+        c = max(0.35, b.dot(n1))
+        q = p1 + b * (d / c)
+        out.append((q.x, q.y))
+    return out
+
+
 def make_timing_cover():
-    """black plastic upper + lower belt covers following the belt hull, ribbed fronts"""
+    """black moulded upper + lower belt covers following the belt hull. v2: smooth faces with a raised moulded
+    panel instead of the v1 horizontal ribs (they read as dark stripe artefacts), planar UVs on the front."""
     pts = []
     for y, z, r in PULLEYS:
         for k in range(48):
@@ -786,30 +825,22 @@ def make_timing_cover():
     for name, keep_above, zc in (("upper", True, zs + 0.002), ("lower", False, zs - 0.002)):
         poly = clip_poly(hull, zc, keep_above)
         bm = prism_x(poly, 0.207, 0.243)
-        o = mk("_tc_" + name, bm, ["plastic_black"], sharp=35, uv=False)
+        o = mk("_tc_" + name, bm, ["plastic_cover"], sharp=35, uv=False)
         if HI():
-            C.bevel_mod(o, width=0.005, segs=2, angle=35)
+            C.bevel_mod(o, width=0.005, segs=3, angle=35)
         parts.append(o)
-        # horizontal ribs on the front face
-        rb = bmesh.new()
-        zmin, zmax = min(p[1] for p in poly), max(p[1] for p in poly)
-        nr = 5 if keep_above else 4
-        for k in range(nr):
-            z = zmin + (zmax - zmin) * (k + 0.8) / (nr + 0.6)
-            ys = []
-            for i in range(len(poly)):
-                (y0, z0), (y1, z1) = poly[i], poly[(i + 1) % len(poly)]
-                if (z0 - z) * (z1 - z) < 0:
-                    ys.append(y0 + (y1 - y0) * (z - z0) / (z1 - z0))
-            if len(ys) >= 2:
-                a, bb = min(ys) + 0.02, max(ys) - 0.02
-                if bb - a > 0.02:
-                    C.merge(rb, C.box((0.004, bb - a, 0.004), loc=(0.2445, (a + bb) / 2, z), bevel=0.0015 if HI() else 0, segs=1))
-        parts.append(mk("_tcr", rb, ["plastic_black"]))
-    # bolts
+        # raised moulded panel on the front face (a 2.5 mm step 14 mm in from the edge)
+        inner = offset_poly(poly, 0.014)
+        pb = prism_x(inner, 0.2425, 0.2455)
+        po = mk("_tcp_" + name, pb, ["plastic_cover"], sharp=35, uv=False)
+        if HI():
+            C.bevel_mod(po, width=0.0015, segs=2, angle=35)
+        parts.append(po)
+    # bolts with washers in the flange
     bb = bmesh.new()
     for y, z in ((-0.12, 0.44), (0.12, 0.44), (-0.10, 0.30), (0.1, 0.25), (0.0, 0.52)):
-        C.cyl(0.006, 0.006, 6, loc=(0.245, y, z), axis="X", bm=bb)
+        C.cyl(0.0075, 0.0015, 12, loc=(0.2437, y, z), axis="X", bm=bb)
+        C.cyl(0.006, 0.006, 6, loc=(0.2465, y, z), axis="X", bm=bb)
     parts.append(mk("_tcb", bb, ["steel_dark"]))
     o = C.join(parts, "timing_cover")
     uv_eng(o)
@@ -1043,6 +1074,7 @@ EXPLODE = {
     "starter": (-0.06, -0.08, -0.26), "dipstick": (0, 0.24, -0.14), "block": (0, 0, 0),
     "accessory_belt": (0.30, -0.02, -0.08), "coolant_hose": (-0.14, 0.2, 0.1),
     "timing_cover": (0.46, 0.02, 0), "mount_front": (0.04, -0.02, 0.34), "mount_rear": (-0.04, -0.02, 0.34),
+    "head_bolt": (0, 0.47, 0),
 }
 
 
@@ -1096,6 +1128,25 @@ def build(q):
         rd.location = (XC[i], 0, h)
         pistons.append(p)
         rods.append(rd)
+    # v2: head bolts (one shared mesh; bearing face on the cam-tub floor, 58 mm into the block)
+    if HI():
+        hb0 = BB.head_bolt_bm(Q, segs=12, samples=4, name="head_bolt_1", mat="steel_dark", L=HEAD_BOLT_L)
+        hb0.data.transform(Matrix.Translation((0, 0, -HEAD_BOLT_L)))
+    else:  # lo: an 8-sided shank + flange + 12-point-ish head (a few hundred bytes)
+        b = bmesh.new()
+        C.cyl(0.0045, HEAD_BOLT_L, 8, loc=(0, 0, -HEAD_BOLT_L / 2), bm=b)
+        C.cyl(0.0105, 0.003, 12, loc=(0, 0, 0.0015), bm=b)
+        C.cyl(0.0068, 0.009, 12, loc=(0, 0, 0.0075), bm=b)
+        hb0 = mk("head_bolt_1", b, ["steel_dark"], sharp=40, uv=False)
+    uv_eng(hb0)
+    bolts = []
+    for k, (x, y) in enumerate(HEAD_BOLTS):
+        b = hb0 if k == 0 else hb0.copy()
+        if k:
+            b.name = f"head_bolt_{k + 1}"
+            bpy.context.scene.collection.objects.link(b)
+        b.location = (x, y, TUB_FLOOR)
+        bolts.append(b)
     pan = make_oil_pan()
     intake = make_intake()
     exh = make_exhaust()
@@ -1104,7 +1155,7 @@ def build(q):
     oilf = make_oil_filter()
     dip = make_dipstick()
     parts = [block, gasket, head, vc, cam_i, cam_e, cp_i, cp_e, crank, cpul, fly, belt, tens, pan, intake, exh, rail,
-             alt, oilf, dip, abelt, hose, tcov] + mounts + coils + pistons + rods + injs
+             alt, oilf, dip, abelt, hose, tcov] + mounts + coils + pistons + rods + injs + bolts
     if HI():
         st = make_starter()
         parts.append(st)
@@ -1116,6 +1167,8 @@ def build(q):
             seen.add(o.data.name)
             uniq.append(o)
     C.bake_ao_vcol(uniq, samples=48 if HI() else 16, max_dist=0.06, floor=0.25)
+    for o in uniq:  # v2: AO on the vertices (corner colours split every vertex per face: bigger files)
+        C.vcol_to_points(o)
     # pivots
     set_pivot(crank, (0, 0, CRANK_Y))
     for o in (cpul, fly):
@@ -1168,4 +1221,4 @@ if __name__ == "__main__":
         H = os.path.join(C.HERE, "..", "public/lib3d/env/")
         C.look(a["look2"], target=(0, 0, 0.31), cam=(0.85, 1.1, 0.8), fov=34, hdr=H + a.get("env", "garage") + "-1k-v1.hdr",
                ground=True, spp=int(a.get("spp", "48")), res=(1200, 800))
-    C.finish("engine", q, root, a.get("out"))
+    C.finish("engine", q, root, a.get("out"), pivots=True)

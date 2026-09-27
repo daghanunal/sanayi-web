@@ -4,6 +4,7 @@ Compare it with the preview screenshot to judge the realtime look against a path
 
   Blender -b --factory-startup --python assets3d/render_cycles.py -- --asset car --q hi --env workshop \
       --az 35 --el 14 --dist 1 --explode 0 --spp 128 --out assets3d/shots/car-cycles.png
+  [--v 2] (non-default version)  [--hide head,coil_*] (hide nodes)
 """
 
 import json
@@ -28,7 +29,15 @@ out = a.get("out", os.path.join(C.HERE, "shots", f"{name}-cycles.png"))
 os.makedirs(os.path.dirname(out), exist_ok=True)
 C.reset()
 sc = bpy.context.scene
-bpy.ops.import_scene.gltf(filepath=os.path.join(ROOT, man["assets"][name][q]["file"]))
+ent = man["assets"][name]
+if a.get("v") and int(a["v"]) != ent.get("version", 1):  # --v N: a non-default version
+    ent = ent["versions"][str(int(a["v"]))]
+bpy.ops.import_scene.gltf(filepath=os.path.join(ROOT, ent[q]["file"]))
+for o in list(sc.objects):  # --hide a,b,prefix* : hide nodes (and their children) for cutaway stills
+    for h in [x for x in a.get("hide", "").split(",") if x]:
+        if (h.endswith("*") and o.name.startswith(h[:-1])) or o.name == h:
+            for c in [o] + list(o.children_recursive):
+                c.hide_render = True
 objs = list(sc.objects)
 # exploded view from extras.explode (three space metres -> Blender (x, -z, y)), applied in world space
 t = float(a.get("explode", "0"))

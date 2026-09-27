@@ -68,7 +68,7 @@ def image(name, arr, srgb=True):
     img = bpy.data.images.new(name, W, H, alpha=(Cn == 4))
     img.colorspace_settings.name = "sRGB" if srgb else "Non-Color"
     img.pixels.foreach_set(px.ravel())
-    path = os.path.join(BUILD, "tex", name + ".png")
+    path = os.path.join(BUILD, "tex", str(os.getpid()), name + ".png")  # per process: parallel builds never collide
     os.makedirs(os.path.dirname(path), exist_ok=True)
     img.filepath_raw = path
     img.file_format = "PNG"
@@ -620,6 +620,11 @@ def join(objs, name=None):
         return objs[0]
     for o in objs:
         norm_uv(o.data)
+    # a colour layer present on some parts only would be filled with black on the others: fill them white first
+    if any(o.type == "MESH" and o.data.color_attributes.get("Color") for o in objs):
+        for o in objs:
+            if o.type == "MESH" and not o.data.color_attributes.get("Color"):
+                vcol_fill(o)
     ctx = {"active_object": objs[0], "selected_editable_objects": objs, "selected_objects": objs}
     with bpy.context.temp_override(**ctx):
         bpy.ops.object.join()
@@ -684,6 +689,10 @@ def vcol_fill(ob, rgba=(1, 1, 1, 1)):
 def cycles(samples=64):
     sc = bpy.context.scene
     sc.render.engine = "CYCLES"
+    if os.environ.get("LIB3D_CPU"):  # LIB3D_CPU=1: bake / render on the CPU (when the GPU is busy elsewhere)
+        sc.cycles.device = "CPU"
+        sc.cycles.samples = samples
+        return sc
     try:
         prefs = bpy.context.preferences.addons["cycles"].preferences
         prefs.compute_device_type = "METAL"
@@ -736,6 +745,31 @@ def bake_ao_vcol(objs, samples=48, max_dist=0.3, floor=0.3, gamma=1.0, only_loca
         me.color_attributes.active_color = base
         me.color_attributes.render_color_index = me.color_attributes.active_color_index
     b.target = "IMAGE_TEXTURES"
+
+
+def vcol_to_points(ob):
+    """baked AO lives on face corners; average it onto the vertices (a corner-domain colour splits every vertex
+    per face on export: ~4x the vertex count)"""
+    me = ob.data
+    ca = me.color_attributes.get("Color")
+    if ca is None or ca.domain == "POINT":
+        return
+    n = len(me.loops)
+    c = np.zeros(n * 4, np.float32)
+    ca.data.foreach_get("color", c)
+    c = c.reshape(-1, 4)
+    vi = np.zeros(n, np.int64)
+    me.loops.foreach_get("vertex_index", vi)
+    acc = np.zeros((len(me.vertices), 4), np.float32)
+    cnt = np.zeros(len(me.vertices), np.float32)
+    np.add.at(acc, vi, c)
+    np.add.at(cnt, vi, 1)
+    acc /= np.maximum(cnt, 1)[:, None]
+    me.color_attributes.remove(ca)
+    pa = me.color_attributes.new("Color", "FLOAT_COLOR", "POINT")
+    pa.data.foreach_set("color", acc.ravel())
+    me.color_attributes.active_color = pa
+    me.color_attributes.render_color_index = me.color_attributes.active_color_index
 
 
 def bake_image(target, W, H, kind="AO", sources=None, cage=0.02, max_dist=0.1, samples=64, margin=8):
@@ -806,6 +840,8 @@ def node_tree_names(root_objs):
     out = []
 
     def walk(o, depth):
+        if o.get("_geo"):  # keep_pivots() geometry child: an implementation detail, not a contract node
+            return
         out.append(("  " * depth) + o.name)
         for c in sorted(o.children, key=lambda c: c.name):
             walk(c, depth + 1)
@@ -846,6 +882,7 @@ def look(path, target=(0, 0, 0.5), cam=(4, -5, 2), fov=35, hdr=None, res=(1200, 
     cd = bpy.data.cameras.new("_cam")
     cd.sensor_fit = "VERTICAL"
     cd.angle_y = math.radians(fov)
+    cd.clip_start = min(0.1, max(0.0005, (Vector(target) - Vector(cam)).length / 200))  # macro shots of small parts
     co = bpy.data.objects.new("_cam", cd)
     sc.collection.objects.link(co)
     co.location = cam
@@ -868,9 +905,65 @@ def look(path, target=(0, 0, 0.5), cam=(4, -5, 2), fov=35, hdr=None, res=(1200, 
     print("look", path)
 
 
-def finish(name, q, root, out=None, look=None, extra_stats=None):
-    """export root (+ descendants) to BUILD/<name>-<q>.raw.glb and record tris / dims / nodes / materials"""
+def b2t(v):
+    """Blender (x, y, z) -> three.js (x, y, z) = (x, z, -y)"""
+    return [round(float(v[0]), 5), round(float(v[2]), 5), round(float(-v[1]), 5)]
+
+
+def set_explode(ob, v3, order=None):
+    """extras.explode = [x, y, z] (three.js space, metres, asset frame); lib3d explode(t) moves by t x v"""
+    ob["explode"] = [float(c) for c in v3]
+    if order is not None:
+        ob["explode_order"] = float(order)
+    return ob
+
+
+def set_spin(ob, axis3, ratio=1.0):
+    """extras.spin = [ax, ay, az, ratio]: axis in the node's LOCAL frame, three.js convention (Blender local X = three X,
+    Blender local Z = three Y, Blender local Y = three -Z). lib3d spin(angle) turns the node by angle x ratio."""
+    ob["spin"] = [float(axis3[0]), float(axis3[1]), float(axis3[2]), float(ratio)]
+    return ob
+
+
+def keep_pivots(root):
+    """Leaf mesh objects become an empty (same name, transform, parent, custom props: the pivot) with the mesh as a
+    child `<name>_geo` at identity. Needed because gltf-transform's meshopt quantization rewrites a leaf mesh node's
+    translation / scale to its dequantization transform (the node origin moves to the mesh bounds: rotations then
+    pivot in the wrong place, e.g. engine-v1 conrods pivot mid-rod). Nodes with children are already safe
+    (gltf-transform moves their mesh into a new child node). Returns the geometry children."""
+    geos = []
+    for o in [root] + list(root.children_recursive):
+        if o.type != "MESH" or o.children or o.get("_geo"):
+            continue
+        name = o.name
+        e = bpy.data.objects.new(name + "__piv", None)
+        bpy.context.scene.collection.objects.link(e)
+        e.empty_display_size = 0.02
+        e.parent = o.parent  # exact copy of the local transform (no world-matrix round trip)
+        e.matrix_parent_inverse = o.matrix_parent_inverse.copy()
+        e.matrix_basis = o.matrix_basis.copy()
+        for k in list(o.keys()):
+            if k.startswith("_") or k in ("cycles",):
+                continue
+            e[k] = o[k]
+            del o[k]
+        o.parent = e
+        o.matrix_parent_inverse = Matrix.Identity(4)
+        o.matrix_basis = Matrix.Identity(4)
+        o.name = name + "_geo"
+        o["_geo"] = 1
+        e.name = name
+        geos.append(o)
+    bpy.context.view_layer.update()
+    return geos
+
+
+def finish(name, q, root, out=None, look=None, extra_stats=None, pivots=False):
+    """export root (+ descendants) to BUILD/<name>-<q>.raw.glb and record tris / dims / nodes / materials.
+    pivots=True: keep_pivots(root) first (every named node keeps its authored origin through compress.sh)."""
     out = out or os.path.join(BUILD, f"{name}-{q}.raw.glb")
+    if pivots:
+        keep_pivots(root)
     objs = [root] + list(root.children_recursive)
     bpy.context.view_layer.update()
     lo = Vector((1e9, 1e9, 1e9))

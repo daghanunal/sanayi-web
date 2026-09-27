@@ -15,13 +15,16 @@ D=assets3d
 mkdir -p "$OUT/env" "$BUILD/stats"
 ver() { python3 -c "import json,sys;print(json.load(open('$D/versions.json')).get(sys.argv[1],1))" "$1"; }
 want() { [ -z "${ONLY:-}" ] || [[ " $ONLY " == *" $1 "* ]]; }
-run() { "$B" -b --factory-startup --python "$D/$1" -- "${@:2}" 2>&1 | grep -E " tris |HDRI|Error|Traceback" || true; }
+run() { "$D/lock.sh" "$B" -b --factory-startup --python "$D/$1" -- "${@:2}" 2>&1 | grep -E " tris |HDRI|Error|Traceback" || true; }
 
 want env && run fetch_env.py --out "$OUT/env"
 # name  script  (hi quality args) ; lo is built with --q lo and compressed with 256 px textures
 ASSETS="wheel:build_wheel.py car:build_car.py engine:build_engine.py seat:build_seat.py truck:build_truck.py
 turbo:build_turbo.py exhaust:build_exhaust.py ac_compressor:build_ac_compressor.py garage:build_garage.py
-studio:build_studio.py windshield:build_windshield.py battery:build_battery.py lock:build_lock.py"
+studio:build_studio.py windshield:build_windshield.py battery:build_battery.py lock:build_lock.py
+bolt:build_bolt.py engine_diesel:build_engine_diesel.py gearbox:build_gearbox.py radiator:build_radiator.py
+injector:build_injector.py lpg_kit:build_lpg_kit.py tow_bed:build_tow_bed.py trailer:build_trailer.py
+car_sedan:build_car_sedan.py van:build_van.py"
 for e in $ASSETS; do
   n="${e%%:*}"; s="${e##*:}"
   [ -f "$D/$s" ] || continue
@@ -35,7 +38,7 @@ for e in $ASSETS; do
     seat) QH="78 85"; QL="78 80 256" ;;
     battery|lock) QH="85 85"; QL="80 80 256" ;;
     garage|studio) QH="88 82"; QL="80 75 256" ;;
-    engine) QH="90 85"; QL="80 75 256 0.85" ;;
+    engine) QH="90 85"; QL="78 70 192 0.85" ;;   # v2 (v1 lo was "80 75 256 0.85")
     *) QH="90 85"; QL="85 80 256" ;;
   esac
   "$D/compress.sh" "$BUILD/$n-hi.raw.glb" "$OUT/$n-hi-v$v.glb" $QH

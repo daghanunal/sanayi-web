@@ -1,5 +1,6 @@
 // lib3d önizleme: her varlığı HDRI içinde döner tablada gösterir; patlatılmış görünüm, kalite, ortam, boya.
-// URL: ?asset=car&q=hi&env=workshop&explode=0.5&spin=0&az=35&el=12&dist=1&bg=1&ui=0&variant=fabric
+// URL: ?asset=car&v=2&q=hi&env=workshop&explode=0.5&spin=0&az=35&el=12&dist=1&bg=1&ui=0&variant=fabric
+//      &hide=valve_cover,coil_* (düğüm gizle, * = önek)  &anim=0.8 (extras.spin düğümlerini bu açıya döndür, döner tabla kapalıyken)
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { loadAsset, loadEnv, manifest } from '../../shared/lib3d.js';
@@ -40,6 +41,7 @@ const state = {
   bg: P.get('bg') !== '0',
   spin: P.get('spin') !== '0',
   explode: Number(P.get('explode') || 0),
+  v: P.get('v') || null,
 };
 let cur = null;
 let pivot = new THREE.Group();
@@ -91,7 +93,13 @@ async function applyAsset() {
   window.__ready = false;
   $('#load').textContent = 'yükleniyor…';
   const t0 = performance.now();
-  const a = await loadAsset(state.asset, { quality: state.q, renderer, onProgress: (f) => ($('#load').textContent = `yükleniyor ${Math.round(f * 100)}%`) });
+  const info = m.assets[state.asset];
+  const vers = info && info.versions ? Object.keys(info.versions) : [];
+  if (state.v && !vers.includes(String(state.v))) state.v = null;
+  $('#verwrap').style.display = vers.length > 1 ? '' : 'none';
+  $('#ver').innerHTML = vers.map((v) => `<option value="${v}">v${v}${Number(v) === info.version ? ' (varsayılan)' : ''}</option>`).join('');
+  $('#ver').value = String(state.v || info.version || 1);
+  const a = await loadAsset(state.asset, { quality: state.q, version: state.v ? Number(state.v) : undefined, renderer, onProgress: (f) => ($('#load').textContent = `yükleniyor ${Math.round(f * 100)}%`) });
   if (my !== token) return a.dispose();
   if (cur) cur.dispose();
   cur = a;
@@ -99,6 +107,12 @@ async function applyAsset() {
   pivot.add(a.scene);
   frame(a.scene);
   a.explode(state.explode);
+  for (const n of (P.get('hide') || '').split(',')) {
+    if (!n) continue;
+    if (n.endsWith('*')) for (const k in a.nodes) k.startsWith(n.slice(0, -1)) && (a.nodes[k].visible = false);
+    else if (a.nodes[n]) a.nodes[n].visible = false;
+  }
+  if (P.get('anim')) a.spin(Number(P.get('anim')));
   const noGround = state.asset === 'garage' || state.asset === 'studio';
   ground.visible = !noGround;
   $('#exwrap').style.display = a.hasExplode ? '' : 'none';
@@ -111,7 +125,7 @@ async function applyAsset() {
   let tris = 0;
   a.scene.traverse((o) => o.isMesh && (tris += (o.geometry.index ? o.geometry.index.count : o.geometry.attributes.position.count) / 3));
   const f = a.info[state.q] || {};
-  $('#stats').textContent = `${state.asset} / ${state.q}\n${((f.bytes || 0) / 1024).toFixed(0)} KB · ${Math.round(tris).toLocaleString()} üçgen\nyükleme ${Math.round(performance.now() - t0)} ms\n${a.info.desc}`;
+  $('#stats').textContent = `${state.asset} v${a.version} / ${state.q}\n${((f.bytes || 0) / 1024).toFixed(0)} KB · ${Math.round(tris).toLocaleString()} üçgen\nyükleme ${Math.round(performance.now() - t0)} ms\n${a.info.desc}`;
   const names = [];
   a.scene.traverse((o) => {
     if (o === a.scene) return;
@@ -146,7 +160,8 @@ $('#explode').value = state.explode;
 const syncQ = () => document.querySelectorAll('#qrow button').forEach((b) => b.classList.toggle('on', b.dataset.q === state.q));
 syncQ();
 $('#spin').classList.toggle('on', state.spin);
-$('#asset').onchange = (e) => ((state.asset = e.target.value), applyAsset());
+$('#asset').onchange = (e) => ((state.asset = e.target.value), (state.v = null), applyAsset());
+$('#ver').onchange = (e) => ((state.v = e.target.value), applyAsset());
 $('#env').onchange = (e) => ((state.env = e.target.value), applyEnv());
 $('#qrow').onclick = (e) => e.target.dataset.q && ((state.q = e.target.dataset.q), syncQ(), applyAsset(), applyEnv());
 $('#bg').onclick = () => ((state.bg = !state.bg), applyEnv());
@@ -173,6 +188,7 @@ addEventListener('resize', () => {
 });
 
 const clock = new THREE.Clock();
+let spinAngle = 0;
 renderer.setAnimationLoop(() => {
   const dt = Math.min(clock.getDelta(), 0.05);
   if (state.spin) pivot.rotation.y += dt * 0.35;
@@ -186,6 +202,7 @@ renderer.setAnimationLoop(() => {
     }
   }
   if (cur && state.spin) cur.roll(dt * 0.8);
+  if (cur && state.spin && cur.spinners.length) cur.spin((spinAngle += dt * 3.0));
   controls.update();
   renderer.render(scene, camera);
 });

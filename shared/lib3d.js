@@ -9,6 +9,9 @@
 //   car.materials.paint.color.set('#8a1c1c');                  // boya rengi
 //   car.explode(0.6);                                          // patlatılmış görünüm (varsa)
 //   seat.setVariant('upholstery', 'alcantara');                // malzeme varyantı (döşeme)
+//   const e2 = await loadAsset('engine', { version: 2 });      // belirli sürüm ('latest' = en yenisi)
+//   e2.explodeData.head.vector                                 // parça başına patlatma vektörü (varlık uzayı)
+//   radiator.spin(angle);                                      // extras.spin taşıyan düğümleri (fan, dişliler) döndür
 //   car.dispose();
 // Tüm yollar import.meta.env.BASE_URL üzerinden kurulur (/sanayi-web/ altında da çalışır).
 import * as THREE from 'three';
@@ -57,16 +60,26 @@ function gltfLoader() {
 /**
  * Bir varlığı yükler.
  * @param {string} name  manifest'teki ad: 'car', 'engine', 'wheel', 'seat', 'truck', 'turbo', 'exhaust', 'garage', ...
- * @param {{quality?: 'hi'|'lo', renderer?: THREE.WebGLRenderer, shadows?: boolean, onProgress?: (f:number)=>void}} opts
+ * @param {{quality?: 'hi'|'lo', version?: number|'latest', renderer?: THREE.WebGLRenderer, shadows?: boolean,
+ *   onProgress?: (f:number)=>void}} opts
  * @returns {Promise<{scene: THREE.Group, nodes: Record<string, THREE.Object3D>, materials: Record<string, THREE.Material>,
- *   explode: (t:number)=>void, hasExplode: boolean, info: object, dispose: ()=>void}>}
+ *   explode: (t:number)=>void, explodeData: Record<string, {node: THREE.Object3D, vector: number[], dir: THREE.Vector3,
+ *   base: THREE.Vector3, order: number}>, spin: (angle:number)=>void, spinners: object[], hasExplode: boolean,
+ *   info: object, version: number, dispose: ()=>void}>}
  */
 export async function loadAsset(name, opts = {}) {
   const m = await manifest();
   const a = m.assets[name];
   if (!a) throw new Error('lib3d: bilinmeyen varlık ' + name);
   const q = opts.quality || pickQuality();
-  const file = (a[q] || a.hi || a.lo).file;
+  // sürüm: varsayılan = manifest'teki üst düzey dosyalar (canlı ön ayarların beklediği sürüm); { version: N | 'latest' }
+  let av = a;
+  const want = opts.version === 'latest' ? a.latest : opts.version;
+  if (want != null && Number(want) !== Number(a.version || 1)) {
+    av = (a.versions && a.versions[String(want)]) || null;
+    if (!av) throw new Error('lib3d: ' + name + ' sürüm ' + want + ' yok');
+  }
+  const file = (av[q] || av.hi || av.lo).file;
   const gltf = await gltfLoader().loadAsync(LIB3D_URL + file, (e) => {
     if (opts.onProgress && e.total) opts.onProgress(e.loaded / e.total);
   });
@@ -101,6 +114,7 @@ export async function loadAsset(name, opts = {}) {
   root.updateMatrixWorld(true);
   const rootInv = new THREE.Matrix4().copy(root.matrixWorld).invert();
   const ex = [];
+  const explodeData = {};
   root.traverse((o) => {
     const v = o.userData && o.userData.explode;
     if (!Array.isArray(v) || (v[0] === 0 && v[1] === 0 && v[2] === 0)) return;
@@ -111,10 +125,23 @@ export async function loadAsset(name, opts = {}) {
       pm.decompose(new THREE.Vector3(), q3, new THREE.Vector3());
       dir.applyQuaternion(q3.invert());
     }
-    ex.push({ o, base: o.position.clone(), dir, order: o.userData.explode_order || 0 });
+    const e = { o, base: o.position.clone(), dir, order: o.userData.explode_order || 0, vector: v.slice(0, 3) };
+    ex.push(e);
+    if (o.name && !explodeData[o.name]) explodeData[o.name] = { node: o, vector: e.vector, dir, base: e.base, order: e.order };
   });
   const explode = (t) => {
     for (const e of ex) e.o.position.copy(e.base).addScaledVector(e.dir, t);
+  };
+  // dönen parçalar: extras.spin = [ax, ay, az, oran] (düğümün yerel ekseni). spin(açı) her birini açı × oran döndürür
+  const spinners = [];
+  root.traverse((o) => {
+    const s = o.userData && o.userData.spin;
+    if (!Array.isArray(s) || s.length < 3) return;
+    spinners.push({ o, axis: new THREE.Vector3(s[0], s[1], s[2]).normalize(), ratio: s.length > 3 ? s[3] : 1, q0: o.quaternion.clone() });
+  });
+  const _sq = new THREE.Quaternion();
+  const spin = (angle) => {
+    for (const s of spinners) s.o.quaternion.copy(s.q0).multiply(_sq.setFromAxisAngle(s.axis, angle * s.ratio));
   };
   if (opts.renderer && opts.renderer.compileAsync && opts.compile !== false) {
     // shader derlemesini ilk kareden önce yap (takılma olmasın); hata olursa sessiz geç
@@ -159,7 +186,10 @@ export async function loadAsset(name, opts = {}) {
   const roll = (d) => {
     for (const w of wheels) w.o.rotation.z -= (w.s * d) / w.r;
   };
-  return { scene: root, nodes, materials, variants, setVariant, explode, roll, wheels, hasExplode: ex.length > 0, info: a, quality: q, dispose };
+  return {
+    scene: root, nodes, materials, variants, setVariant, explode, explodeData, roll, wheels, spin, spinners,
+    hasExplode: ex.length > 0, info: av === a ? a : Object.assign({}, a, av), version: Number(want ?? a.version ?? 1), quality: q, dispose,
+  };
 }
 
 const envCache = new WeakMap();
