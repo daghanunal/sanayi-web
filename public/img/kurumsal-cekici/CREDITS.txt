@@ -1,1 +1,9 @@
-hero.jpg: public/img/sektor-cekici/cekici-sehir.jpg (Pexels, bkz. sektor-cekici/CREDITS.txt) tabanlı; araç üzerindeki yabancı telefon numaraları boyanarak kapatıldı.
+hero-3d.webp (1920x1200, masaüstü), hero-3d-dar.webp (1000x2750, telefon) ve galeri-3d.webp (1200x1200, galeri):
+Blender Cycles render'ları,
+presets/kurumsal-cekici/render_cycles.py ile üretildi. Yalnızca lib3d varlıkları (public/lib3d: truck + tow_bed +
+car; projede prosedürel olarak üretilmiş, üçüncü taraf model yok, marka/logo/yazı yok) ve Poly Haven'dan
+highway_bridge_sunset HDRI'si (CC0, public/lib3d/env/dusk-1k-v1.hdr). Sayfada temsilî 3D görsel olarak belirtilir.
+
+hero.jpg (artık kullanılmıyor): public/img/sektor-cekici/cekici-sehir.jpg (Pexels, bkz. sektor-cekici/CREDITS.txt)
+tabanlı; araç üzerindeki yabancı telefon numaraları boyanarak kapatılmıştı. Üzerinde üretici logosu ve firma
+yazısı okunduğu için hero'dan ve galeriden çıkarıldı; silinebilir.

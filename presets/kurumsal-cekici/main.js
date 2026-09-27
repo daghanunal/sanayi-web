@@ -12,8 +12,11 @@ const B = import.meta.env.BASE_URL;
 const hizmetGorsel = ['cekici-yukleme', 'aku-takviye', 'yolda-lastik', 'vinc-kurtarma', 'arac-tasima', 'agir-kurtarma', 'zincir-sabitleme', 'yolda-kalan'];
 const veri = derinBirlestir(ana, ek);
 veri.hizmetler = (ana.hizmetler || []).map((h, i) => (hizmetGorsel[i] ? { ...h, gorsel: `${B}img/sektor-cekici/${hizmetGorsel[i]}.jpg` } : h));
-// Kaynak fotoğraftaki yabancı telefon numarası kapatılmış kopya.
-veri.galeri = (ana.galeri || []).map((g) => (g.src.includes('cekici-sehir') ? { ...g, src: '/img/kurumsal-cekici/hero.jpg' } : g));
+// Stok çekici fotoğrafı (üzerinde üretici ve firma yazısı okunuyordu) yerine lib3d'den Cycles render'ı
+// (presets/kurumsal-cekici/render_cycles.py): kayar kasalı çekici üstünde binek araç, alacakaranlıkta.
+const HERO_3D = `${B}img/kurumsal-cekici/hero-3d.webp`;
+const HERO_ALT = 'Alacakaranlıkta ıslak yolda, kasasında kırmızı bir otomobil taşıyan beyaz kayar kasalı çekici (temsilî 3D görsel)';
+veri.galeri = (ana.galeri || []).map((g) => (g.src.includes('cekici-sehir') ? { ...g, src: `${B}img/kurumsal-cekici/galeri-3d.webp`, alt: HERO_ALT } : g));
 
 kurumsal({
   veri,
@@ -21,8 +24,10 @@ kurumsal({
     hero: 'tam',
     gecis: 'yan',
     yer: "Şaşmaz'dan",
-    heroGorsel: `${B}img/kurumsal-cekici/hero.jpg`,
-    heroAlt: 'Şehir içinde ilerleyen turuncu kayar kasalı çekici',
+    heroGorsel: HERO_3D,
+    heroGorselDar: `${B}img/kurumsal-cekici/hero-3d-dar.webp`,
+    heroAlt: HERO_ALT,
+    altNot: '3D görseller temsilîdir; fotoğraflar temsilîdir (Pexels), yorumlar örnektir.',
     logoAlt: '7/24 Çekici · Yol Yardım',
     baslikEki: '7/24 çekici ve yol yardım | Şaşmaz, Ankara',
     teklifEtiketi: 'Çekici çağır',

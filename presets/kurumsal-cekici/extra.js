@@ -1,5 +1,5 @@
 // Sektör modülleri (kurumsal-cekici, "Reflektör" yönü):
-// (1) hero: tam ekran fotoğraf + karayolu levhası (Şaşmaz'dan mesafeler) + dönen tepe lambası; ilk düğme "Ara".
+// (1) hero: tam ekran görsel (lib3d Cycles render'ı; telefonda dikey kadraj) + karayolu levhası (Şaşmaz'dan mesafeler) + dönen tepe lambası; ilk düğme "Ara".
 // (2) serit: reflektif şerit (çapraz çizgili) üstünde kayan iş listesi. CSS animasyonu, ekran dışında durur.
 // (3) cagri: "Çağrı masası". Neredesiniz → şematik Ankara haritasında çekici Şaşmaz'dan yola çıkar;
 //     Ne oldu → gelecek araç, süre, beklerken yapılacaklar; konum eklenmiş hazır WhatsApp mesajı.
@@ -38,7 +38,7 @@ export const hero = {
     const mesaj = `Merhaba ${d.isletme.ad}, yolda kaldım. Konumum: `;
     return `
       <section class="k-hero hz-hero" aria-label="Giriş">
-        <figure class="k-hero__gorsel" data-perde><div class="k-hero__gorsel-ic" data-paralaks><img src="${tema.heroGorsel}" alt="${esc(tema.heroAlt || '')}" fetchpriority="high"></div></figure>
+        <figure class="k-hero__gorsel" data-perde><div class="k-hero__gorsel-ic" data-paralaks><picture>${tema.heroGorselDar ? `<source media="(max-width: 760px)" srcset="${tema.heroGorselDar}">` : ''}<img src="${tema.heroGorsel}" alt="${esc(tema.heroAlt || '')}" fetchpriority="high"></picture></div></figure>
         <div class="k-kap k-hero__ic">
           <div class="k-hero__metin">
             <p class="k-hero__ust"><span class="hz-lamba" aria-hidden="true"><i></i></span>${esc(h.ust || d.isletme.sektor)}</p>
