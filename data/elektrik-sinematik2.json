@@ -1,0 +1,6 @@
+{
+  "galeri": [
+    { "src": "/img/elektrik-sinematik2/aku.jpg", "alt": "Motor bölmesinde takviye kabloları bağlı akü", "baslik": "Akü ve şarj testi" },
+    { "src": "/img/elektrik-sinematik2/far.jpg", "alt": "Gece yanan LED far ve sis farı", "baslik": "Far ve aydınlatma" }
+  ]
+}

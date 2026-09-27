@@ -3,7 +3,7 @@ import './style.css';
 import raw from '../../data/devre.json';
 import {
   boot, initSmoothScroll, reducedMotion, gsap, ScrollTrigger, esc,
-  telHref, waHref, mapsHref, mapsEmbed, openStatus, groupedHours, icons,
+  telHref, waHref, mapsHref, mapsEmbed, openStatus, groupedHours, icons, setStoryMode, autoHideHeader,
 } from '../../shared/core.js';
 import { SplitText } from 'gsap/SplitText';
 import { createCoil } from './scene.js';
@@ -43,6 +43,7 @@ const mark = `<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" widt
 
 $('#top').innerHTML = `
   <a class="top__brand" href="#basla">${mark}<span>${ad}</span></a>
+  <nav class="top__nav" aria-label="Bölümler"><a href="#hizmetler">Hizmetler</a><a href="#ariza">Arıza kaydı</a><a href="#yorumlar">Yorumlar</a><a href="#dukkan">Saatler ve konum</a></nav>
   <p class="top__status ${status.open ? 'is-open' : ''}"><i></i><span class="long">${esc(status.text)}</span><span class="short">${status.open ? 'Açık' : 'Kapalı'}</span></p>
   <a class="top__call" href="${telHref(d)}">${icons.phone}<span>${esc(d.iletisim.telefon)}</span></a>`;
 
@@ -85,7 +86,7 @@ $('#hakkimizda').innerHTML = `
         </div>`).join('')}
     </dl>
     <div class="about__photos">
-      ${g.slice(0, 2).map((p, i) => `<figure class="duo duo--${i}"><img src="${esc(p.src)}" alt="${esc(p.alt)}" loading="lazy" width="700" height="900" /></figure>`).join('')}
+      ${g.slice(0, 2).map((p, i) => `<figure class="duo duo--${i}"><img src="${esc(p.src)}" alt="${esc(p.alt)}" loading="lazy" width="${i ? 800 : 1600}" height="${i ? 1000 : 1068}" />${p.baslik ? `<figcaption class="duo__cap mono">${esc(p.baslik)}</figcaption>` : ''}</figure>`).join('')}
     </div>
   </div>`;
 
@@ -150,15 +151,16 @@ const stars = (n) => Array.from({ length: 5 }, (_, i) => `<span class="${i < Mat
 $('#yorumlar').innerHTML = `
   <div class="wrap reviews__head">
     <div>
-      <p class="eyebrow mono">05 · Müşteri ne diyor</p>
+      <p class="eyebrow mono">05 · Örnek yorumlar</p>
       <h2 class="h2 split" id="reviews-title">Çözülmeyen arıza burada biter.</h2>
     </div>
     <div class="score">
       <b class="score__n">${esc(String(puan.ortalama).replace('.', ','))}</b>
-      <div><p class="stars">${stars(puan.ortalama)}</p><p class="muted mono">${esc(fmt(puan.adet))} değerlendirme</p></div>
+      <div><p class="stars" role="img" aria-label="5 üzerinden ${esc(String(puan.ortalama).replace('.', ','))} puan">${stars(puan.ortalama)}</p><p class="muted mono">Örnek puan · ${esc(fmt(puan.adet))} yorum</p></div>
     </div>
   </div>
-  <div class="rv" data-lenis-prevent-wheel>
+  <p class="wrap reviews__note mono">Yorumlar tasarım örneğidir; gerçek müşteri yorumlarınız buraya gelir.</p>
+  <div class="rv" data-lenis-prevent-wheel tabindex="0" aria-label="Örnek yorumlar, yana kaydırın">
     ${d.yorumlar.map((y) => `
       <figure class="rv__card">
         <p class="stars">${stars(y.puan)}</p>
@@ -207,7 +209,7 @@ $('#foot').innerHTML = `
     <p class="foot__brand">${mark}<span>${ad}</span></p>
     <p>${esc(d.iletisim.adres)}</p>
     <p><a href="${telHref(d)}">${esc(d.iletisim.telefon)}</a></p>
-    <p class="mono">© ${yil} ${ad}</p>
+    <p class="mono foot__small">© ${yil} ${ad} · Fotoğraflar: Pexels · 3D görseller temsilîdir</p>
   </div>`;
 
 // --- Harita: yaklaşınca yüklenir ------------------------------------------------------------
@@ -237,11 +239,12 @@ const KEYS = [
   { el: '.stage--wind', at: 0.5, v: { wind: 0.62, camR: P ? 4.6 : 5.2, camYaw: 0.3, camPitch: 0.5, vx: 0, vy: P ? 0.06 : 0 } },
   { el: '#hakkimizda', at: 0.55, v: { wind: 1, camR: 8, camYaw: -0.45, camPitch: 0.3, vx: P ? 0 : 0.25, vy: P ? 0.25 : 0, field: 0.45, dim: P ? 0.45 : 1 } },
   { el: '.stage--field', at: 0.5, v: { camR: P ? 7.6 : 8.8, camYaw: 0.02, camPitch: 0.05, vx: 0, vy: P ? 0.08 : 0, field: 1, pulse: 0.4, dim: 1 } },
-  { el: '#hizmetler', at: 0.12, v: { camR: 7.4, camYaw: 0.75, camPitch: 0.18, vx: P ? 0 : -0.25, vy: 0, field: 0.55, pulse: 1, dim: P ? 0.4 : 1 } },
+  { el: '#hizmetler', at: P ? 0 : 0.12, v: { camR: P ? 8.6 : 7.4, camYaw: 0.75, camPitch: 0.18, vx: P ? 0 : -0.25, vy: 0, field: 0.55, pulse: 1, dim: P ? 0.4 : 1 } },
   { el: '#hizmetler', at: 0.9, v: { camYaw: 1.35, camPitch: 0.3 } },
   { el: '#ariza', at: 0, v: { camR: P ? 7.2 : 9.4, camYaw: 0.5, camPitch: 0.12, vx: P ? 0 : 0.36, vy: P ? 0.02 : 0, field: 1, pulse: 0, dim: 1 } },
   { el: '#ariza', at: 1, v: { camYaw: -0.5, camPitch: 0.2 } },
   { el: '#surec', at: 0.35, v: { camR: 6, camYaw: Math.PI / 2 - 0.02, camPitch: 0.02, vx: P ? 0 : 0.36, vy: 0, field: 0.35, pulse: 0.8, dim: P ? 0.45 : 0.35, roll: 0 } },
+  { el: '#yorumlar', at: 0, v: { dim: P ? 0.28 : 0.5 } },
   { el: '#yorumlar', at: 0.4, v: { camR: 2.4, camYaw: 0.2, camPitch: 0.62, tx: 0.2, ty: 0.75, vx: 0, vy: 0, field: 0.15, pulse: 0.5, dim: 0.22 } },
   { el: '#dukkan', at: 0.4, v: { camR: 10, camYaw: -0.8, camPitch: 0.4, tx: 0, ty: 0, field: 0.4, pulse: 0.3, dim: 0.35 } },
   { el: '#iletisim', at: P ? 0.25 : 0.55, v: { camR: P ? 7 : 9.4, camYaw: 0.6, camPitch: 0.2, vx: P ? 0 : 0.44, vy: P ? 0.3 : 0, field: 1, pulse: 1, heat: 1, dim: 1 } },
@@ -344,7 +347,7 @@ override = {};
 ScrollTrigger.create({
   trigger: '#ariza',
   start: 'top top',
-  end: () => `+=${innerHeight * (faults.length * (P ? 0.75 : 0.65))}`,
+  end: () => `+=${innerHeight * (faults.length * (P ? 0.68 : 0.62))}`,
   pin: '.faults__pin',
   pinSpacing: true,
   // Alan kontrolü yalnızca bölüm sabitliyken; dışarıda film anahtarlarına geri döner.
@@ -353,6 +356,7 @@ ScrollTrigger.create({
     if (!self.isActive) override = {};
   },
   onToggle: (self) => {
+    setStoryMode(self.isActive ? true : null);
     setFault(self.isActive ? self.progress : self.progress > 0.5 ? 1 : 0);
     if (!self.isActive) override = {};
     applyFilm();
@@ -413,8 +417,9 @@ if (!reducedMotion) {
   gsap.to('.brands__row', { xPercent: -50, duration: 40, ease: 'none', repeat: -1 });
 }
 
-// Başlık çubuğu: aşağı inince koyulaşır
+// Başlık çubuğu: aşağı inince koyulaşır; telefonda aşağı kaydırırken saklanır, yukarıda geri gelir
 ScrollTrigger.create({ start: 80, onToggle: (s) => $('#top').classList.toggle('is-solid', s.isActive) });
+if (phone) autoHideHeader($('#top'), { offset: 140 });
 
 // --- Açılış ------------------------------------------------------------------------------
 function spiralPath() {
@@ -437,7 +442,10 @@ function intro() {
   path.style.strokeDasharray = `${len}`;
   path.style.strokeDashoffset = `${len}`;
   const count = $('#intro-count');
+  let finished = false;
   const done = () => {
+    if (finished) return;
+    finished = true;
     introHold = false;
     el.remove();
     lenis?.start();
@@ -447,25 +455,42 @@ function intro() {
     done();
     return;
   }
+  // Toplam ~2 sn; kaydırma kilidi ~1 sn'de açılır; dokunma/tekerlek/tuş anında geçer.
   lenis?.stop();
+  let unlocked = false;
+  const unlock = () => {
+    if (unlocked) return;
+    unlocked = true;
+    el.style.pointerEvents = 'none';
+    lenis?.start();
+    introHold = false;
+    applyFilm();
+  };
+  const heroBits = '.hero__kicker, .hero__sub, .hero__cta, .hero__meter, .hero__hint, .top';
   const c = { n: 0 };
-  const tl = gsap.timeline({ onComplete: done });
-  tl.to(path, { strokeDashoffset: 0, duration: 1.7, ease: 'power2.inOut' }, 0)
-    .to(c, { n: TOTAL_TURNS, duration: 1.7, ease: 'power2.inOut', onUpdate: () => (count.textContent = String(Math.round(c.n)).padStart(3, '0')) }, 0)
-    .to(introWind, { v: 0.3, duration: 1.7, ease: 'power2.inOut', onUpdate: applyFilm }, 0.4)
-    .from('#intro-name', { yPercent: 60, autoAlpha: 0, duration: 0.7, ease: 'expo.out' }, 0.35)
-    .to('.intro__coil', { scale: 7, rotate: 120, autoAlpha: 0, duration: 0.9, ease: 'expo.in' }, 1.75)
-    .to('.intro__center, .intro__skip', { autoAlpha: 0, scale: 1.15, duration: 0.5, ease: 'power2.in' }, 1.8)
-    .to(el, { backgroundColor: 'rgba(8,26,23,0)', duration: 0.6, ease: 'power2.in' }, 2.0)
-    .fromTo('#gl', { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.8 }, 1.9)
-    .from('.hero__title .ln', { yPercent: 105, duration: 1, ease: 'expo.out', stagger: 0.1 }, 2.15)
-    .from('.hero__kicker, .hero__sub, .hero__cta, .hero__meter, .hero__hint, .top', { y: 20, autoAlpha: 0, duration: 0.7, ease: 'power3.out', stagger: 0.06 }, 2.3);
-  el.addEventListener('pointerdown', () => tl.progress(1), { once: true });
+  const tl = gsap.timeline({ onComplete: () => (unlock(), done()) });
+  tl.to(path, { strokeDashoffset: 0, duration: 1, ease: 'power2.inOut' }, 0)
+    .to(c, { n: TOTAL_TURNS, duration: 1, ease: 'power2.inOut', onUpdate: () => (count.textContent = String(Math.round(c.n)).padStart(3, '0')) }, 0)
+    .to(introWind, { v: 0.3, duration: 1.2, ease: 'power2.inOut', onUpdate: applyFilm }, 0.2)
+    .from('#intro-name', { yPercent: 60, autoAlpha: 0, duration: 0.5, ease: 'expo.out' }, 0.1)
+    .to('.intro__coil', { scale: 7, rotate: 120, autoAlpha: 0, duration: 0.6, ease: 'expo.in' }, 0.95)
+    .to('.intro__center, .intro__skip', { autoAlpha: 0, scale: 1.15, duration: 0.35, ease: 'power2.in' }, 1.0)
+    .to(el, { backgroundColor: 'rgba(8,26,23,0)', duration: 0.45, ease: 'power2.in' }, 1.05)
+    .add(unlock, 1.05)
+    .fromTo('#gl', { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.6 }, 1.0)
+    .from('.hero__title .ln', { yPercent: 105, duration: 0.9, ease: 'expo.out', stagger: 0.08 }, 1.0)
+    .from(heroBits, { y: 18, autoAlpha: 0, duration: 0.5, ease: 'power3.out', stagger: 0.03 }, 1.05);
+  const skip = () => tl.progress() < 0.98 && tl.progress(1);
+  el.addEventListener('pointerdown', skip, { once: true });
+  addEventListener('keydown', skip, { once: true });
+  addEventListener('wheel', skip, { once: true, passive: true });
+  addEventListener('touchstart', skip, { once: true, passive: true });
 }
 
 // --- Başlat --------------------------------------------------------------------------------
 let started = false;
-Promise.race([document.fonts.ready, new Promise((r) => setTimeout(r, 1500))]).then(() => {
+// Yazı tipleri ve HDRI ışığı gelince (en çok 1,5 sn beklenir) açılış başlar.
+Promise.race([Promise.all([document.fonts.ready, coil?.ready]), new Promise((r) => setTimeout(r, 1500))]).then(() => {
   if (started) return;
   started = true;
   textFx();

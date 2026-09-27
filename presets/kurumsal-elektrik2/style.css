@@ -244,7 +244,6 @@ body:not(.k-ana) .k-blok[data-bolum='farPerdesi'] .fp { margin-top: 32px; }
 
 @media (prefers-reduced-motion: reduce) { .k-hero::before { animation: none; } }
 
-@media (max-width: 899px) { .k-alt { padding-bottom: calc(120px + env(safe-area-inset-bottom)); } }
 
 /* Telefonda perde SVG'si ~0,6 ölçekte çizilir; etiketler okunur kalsın */
 @media (max-width: 599px) {
@@ -259,5 +258,19 @@ body:not(.k-ana) .k-blok[data-bolum='farPerdesi'] .fp { margin-top: 32px; }
 /* Saat satırı: gün adı ile mono saat aynı taban çizgisinde */
 .bg__saat div { align-items: baseline; }
 
-/* Telefonda alt çubuğun arkasında sarı şerit kalmasın; footer zaten çubuk kadar alt boşluk taşıyor */
-@media (max-width: 899px) { html body, html.is-vitrin body { padding-bottom: 0; } }
+
+/* --- Yükseltme cilası --- */
+.k-galeri__liste figure { background: var(--k-yuzey); }
+.k-hozet__gorsel img, .k-hizmet__gorsel img { filter: saturate(.95) contrast(1.03); }
+.fp__lamba:focus-visible, .fp__kaydir input:focus-visible { outline: 2px solid var(--k-zemin); outline-offset: 3px; }
+.fp__kaydir input:focus-visible { border-radius: 12px; }
+
+/* Funnel Display 800'de sıkı aralıkta "rn" harfleri "m" gibi birleşiyor ("Örnek" → "Ömek"); bu başlıkta aralığı aç. */
+.k-yorumlar .k-h2 { letter-spacing: 0.012em; }
+
+/* Büyük ilk galeri karesi: dikey bir fotoğraf satırı kendi boyuna uzatmasın, kare ızgaraya otursun. */
+.k-galeri__liste li:first-child figure { position: relative; }
+.k-galeri__liste li:first-child img { position: absolute; inset: 0; }
+
+/* Telefonda ilk galeri karesi de kare: satırın tamamına uzayıp kendi yazısını alt satırın altına itmesin. */
+@media (max-width: 899px) { .k-galeri__liste li:first-child figure { aspect-ratio: 1; height: auto; min-height: 0; } }

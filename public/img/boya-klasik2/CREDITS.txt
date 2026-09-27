@@ -1,4 +1,8 @@
-Tüm görseller Pexels lisansı (ücretsiz ticari kullanım) — https://www.pexels.com/license/
-Kaynak: https://www.pexels.com/photo/19315078/ (public/img/showroom/g-corvette.jpg)
-kat-sac, kat-astar, kat-boya, kat-vernik ve renk-*.jpg bu fotoğraftan işlenerek üretildi
-(plaka bulanıklaştırıldı; gövde maskesiyle katman ve renk varyantları).
+r-kat-{sac,astar,boya,vernik}-{d,m}.webp ve r-renk-*.webp: kendi 3D görselimiz (Blender Cycles).
+  Kaynak: presets/boya-klasik2/render_cycles.py + render.sh; araç modeli assets3d (lib3d) kütüphanesinden.
+  -d = masaüstü (1200x1560), -m = telefon (780x1560); renk-* 960x1200.
+
+Eski (artık kullanılmıyor): kat-*.jpg ve renk-*.jpg
+  Pexels lisansı — https://www.pexels.com/license/
+  Kaynak: https://www.pexels.com/photo/19315078/ (public/img/showroom/g-corvette.jpg)
+  (plaka bulanıklaştırıldı; gövde maskesiyle katman ve renk varyantları).

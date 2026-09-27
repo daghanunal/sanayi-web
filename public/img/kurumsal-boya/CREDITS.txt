@@ -1,0 +1,6 @@
+Fotoğraflar Pexels lisansıyla (ücretsiz, ticari kullanım serbest) — https://www.pexels.com/license/
+hero.jpg       https://www.pexels.com/photo/6873190/   (siyah otomobilin farları)
+kurumsal.jpg   https://www.pexels.com/photo/17045049/  (LED tavan lambaları altında otomobil; kırpıldı)
+kontrol-3d.jpg Blender Cycles render'ı, lib3d "car" varlığı (presets/kurumsal-boya/render.sh) — temsilî 3D çizim
+hasar.jpg      https://www.pexels.com/photo/30679981/  (kaputtaki yansıma; amblem kadraj dışında kalacak şekilde kırpıldı)
+Ayrıca public/img/showroom/ altındaki fotoğraflar kullanılıyor (kaynaklar oradaki CREDITS.txt'de).

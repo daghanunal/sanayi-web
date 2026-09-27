@@ -31,7 +31,7 @@
       "baslik": "Kaporta ve şase düzeltme",
       "aciklama": "Kazalı araçta ölçü alıp şaseyi fabrika değerine çekiyoruz. Sigorta dosyasını da biz takip ediyoruz.",
       "sure": "3-10 gün",
-      "gorsel": "/img/showroom/g-corvette.jpg"
+      "gorsel": "/img/showroom/s-kaporta.jpg"
     },
     {
       "baslik": "Pasta ve cila",
@@ -75,9 +75,9 @@
   "parlaklik": { "once": 38, "sonra": 94 },
   "markalar": ["Volkswagen", "Renault", "Fiat", "Toyota", "BMW", "Mercedes-Benz", "Audi", "Hyundai", "Ford", "Peugeot"],
   "galeri": [
-    { "src": "/img/showroom/g-tesla-y.jpg", "alt": "Beyaz SUV, seramik kaplama sonrası stüdyo ışığında", "baslik": "Seramik kaplama", "detay": "2 kat, 2 gün" },
-    { "src": "/img/showroom/g-i8.jpg", "alt": "Beyaz spor otomobil, parlatılmış gövde", "baslik": "Komple PPF", "detay": "Tam gövde şeffaf film" },
-    { "src": "/img/showroom/kaput.jpg", "alt": "Kırmızı kaputta ayna gibi yansıma", "baslik": "Kaput boyası", "detay": "Renk cihazla eşlendi" },
+    { "src": "/img/showroom/g-tesla-y.jpg", "alt": "Beyaz SUV, stüdyo ışığında parlak gövde", "baslik": "Seramik kaplama", "detay": "2 kat, 2 gün" },
+    { "src": "/img/showroom/g-i8.jpg", "alt": "Beyaz spor otomobil, sergi ışığında parlak gövde", "baslik": "Komple PPF", "detay": "Tam gövde şeffaf film" },
+    { "src": "/img/showroom/kaput.jpg", "alt": "Kırmızı kaputta ayna gibi yansıma, arma yakın plan", "baslik": "Kaput boyası", "detay": "Renk cihazla eşlendi" },
     { "src": "/img/showroom/g-corvette.jpg", "alt": "Turuncu spor otomobilin arkası", "baslik": "Arka tampon", "detay": "Kaporta ve lokal boya" },
     { "src": "/img/showroom/g-klasik.jpg", "alt": "Klasik otomobilin siyah kaputu", "baslik": "Klasik araç", "detay": "Komple boya, 3 aşamalı pasta" },
     { "src": "/img/showroom/g-model3.jpg", "alt": "Beyaz sedan, parlak ön görünüm", "baslik": "Detaylı temizlik", "detay": "İç ve dış, 5 saat" }

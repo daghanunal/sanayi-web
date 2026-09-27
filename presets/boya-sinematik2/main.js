@@ -4,7 +4,7 @@ import base from '../../data/showroom.json';
 import extra from '../../data/boya-sinematik2.json';
 import {
   boot, initSmoothScroll, reducedMotion, gsap, ScrollTrigger, esc,
-  telHref, waHref, mapsHref, mapsEmbed, openStatus, groupedHours, icons, GUNLER,
+  telHref, waHref, mapsHref, mapsEmbed, openStatus, groupedHours, icons, GUNLER, vitrinModu,
 } from '../../shared/core.js';
 import { SplitText } from 'gsap/SplitText';
 import { createWorld, PINS } from './scene.js';
@@ -49,9 +49,12 @@ const hz = (i) => d.hizmetler[i] || d.hizmetler[0];
 const logo = `<svg viewBox="0 0 28 20" aria-hidden="true"><path d="M1 3h26M1 10c8 0 9 3 13 3s5-3 13-3M1 17h26" fill="none" stroke="currentColor" stroke-width="2.6"/></svg>`;
 
 $('#top').innerHTML = `
-  <a class="top__brand" href="#sahne" data-hot>${logo}<span>${ad}</span></a>
-  <p class="top__status ${status.open ? 'is-open' : ''}"><i></i><span class="top__long">${esc(status.text)}</span><span class="top__short">${status.open ? 'Açık' : 'Kapalı'}</span></p>
-  <a class="top__call" href="${telHref(d)}" aria-label="Ara: ${esc(d.iletisim.telefon)}">${icons.phone}<span>${esc(d.iletisim.telefon)}</span></a>`;
+  <div class="top__row">
+    <a class="top__brand" href="#sahne" data-hot>${logo}<span>${ad}</span></a>
+    <p class="top__status ${status.open ? 'is-open' : ''}"><i></i><span class="top__long">${esc(status.text)}</span><span class="top__short">${status.open ? 'Açık' : 'Kapalı'}</span></p>
+    <a class="top__call" href="${telHref(d)}" aria-label="Ara: ${esc(d.iletisim.telefon)}">${icons.phone}<span>${esc(d.iletisim.telefon)}</span></a>
+  </div>
+  <div class="hud" aria-hidden="true"><span class="hud__rec"><i></i>Yansıma testi</span><span class="hud__ch"><b id="hud-no">00</b><span id="hud-name">Son kontrol ışığı</span></span><span class="hud__prog"><i id="hud-bar"></i></span></div>`;
 
 const sticky = (inner) => `<div class="scene__sticky"><div class="copy">${inner}</div></div>`;
 const beat = (i, inner) => `<div class="beat" data-beat="${i}">${inner}</div>`;
@@ -134,9 +137,9 @@ $('#seramik').innerHTML = sticky(`
 $('#isler').innerHTML = `
   <div class="wrap">
     <div class="sec-head">
-      <p class="tag tag--ink">Atölyeden</p>
-      <h2 class="h2 h2--ink" id="proof-title" data-reveal>Bunlar render değil.</h2>
-      <p class="sec-head__p">Gerçek işler. Kaydırdıkça bantlar kapanır, sonrası görünür.</p>
+      <p class="tag tag--ink">Önce / sonra</p>
+      <h2 class="h2 h2--ink" id="proof-title" data-reveal>Pastadan önce, pastadan sonra.</h2>
+      <p class="sec-head__p">Kaydırdıkça bantlar kapanır, sonrası görünür. Fotoğraflar temsilîdir.</p>
     </div>
     <div class="proof__list">
       ${(d.oncesiSonrasi || []).map((o) => `
@@ -198,8 +201,9 @@ $('#surec').innerHTML = `
 $('#galeri').innerHTML = `
   <div class="wrap">
     <div class="sec-head">
-      <p class="tag tag--ink">Teslim edilenler</p>
-      <h2 class="h2 h2--ink" id="gal-title" data-reveal>Kabinden yeni çıktı.</h2>
+      <p class="tag tag--ink">Galeri</p>
+      <h2 class="h2 h2--ink" id="gal-title" data-reveal>Boya, pasta, seramik.</h2>
+      <p class="sec-head__p">Yaptığımız işlerden örnekler. Fotoğraflar temsilîdir.</p>
     </div>
   </div>
   <ul class="gal__rail" data-lenis-prevent-horizontal>
@@ -215,10 +219,10 @@ $('#yorumlar').innerHTML = `
   <div class="wrap">
     <div class="reviews__head">
       <div>
-        <p class="tag tag--ink">Yorumlar</p>
+        <p class="tag tag--ink">Örnek yorumlar</p>
         <h2 class="h2 h2--ink" id="reviews-title" data-reveal>Arabasını alan anlatsın.</h2>
       </div>
-      <p class="score"><b data-count="${d.puan.ortalama}" data-decimals="1">0</b><span>${stars(d.puan.ortalama)}<small>${fmt(d.puan.adet)} Google yorumu</small></span></p>
+      <p class="score"><b data-count="${d.puan.ortalama}" data-decimals="1">0</b><span>${stars(d.puan.ortalama)}<small>${fmt(d.puan.adet)} değerlendirme · örnek</small></span></p>
     </div>
     <ul class="reviews__list">
       ${d.yorumlar.map((y) => `
@@ -263,19 +267,21 @@ $('#iletisim').innerHTML = sticky(`
 $('#foot').innerHTML = `
   <div class="wrap foot__grid">
     <p><b>${ad}</b><br>${esc(d.iletisim.adres)}<br><a href="${telHref(d)}">${esc(d.iletisim.telefon)}</a></p>
-    <p class="foot__small">© ${yil} ${ad}. Fotoğraflar: Pexels. 3D panel bu site için kodla çizildi.</p>
+    <p class="foot__small">© ${yil} ${ad}. Fotoğraflar: Pexels, temsilîdir. 3D görseller temsilîdir. Işık haritası: Poly Haven (CC0).</p>
   </div>`;
 
 const CHAPTERS = { hero: ['00', 'Son kontrol ışığı'], dolu: ['01', 'Dolu ve boyasız göçük'], kaza: ['03', 'Kaza ve ölçü'], renk: ['05', 'Renk eşleme'], pasta: ['06', 'Pasta ve cila'], seramik: ['07', 'Seramik'], final: ['08', 'Teslim'] };
-const hud = document.createElement('div');
-hud.className = 'hud';
-hud.setAttribute('aria-hidden', 'true');
-hud.innerHTML = `<span class="hud__rec"><i></i>Yansıma testi</span><span class="hud__ch"><b id="hud-no">00</b><span id="hud-name">Son kontrol ışığı</span></span><span class="hud__prog"><i id="hud-bar"></i></span>`;
-document.body.append(hud);
 let hudKey = '';
 
-$('#pins').innerHTML = PINS.map((p, i) => `<span class="pin" data-pin="${i}"><i></i><b>+${dec(p.mm)} mm</b></span>`).join('');
-const pinEls = $$('.pin');
+const pinCv = $('#pins');
+const pinCtx = pinCv.getContext('2d');
+function sizePins() {
+  const r = Math.min(devicePixelRatio || 1, 2);
+  pinCv.width = Math.round(innerWidth * r);
+  pinCv.height = Math.round(innerHeight * r);
+  pinCtx.setTransform(r, 0, 0, r, 0, 0);
+}
+sizePins();
 
 // Harita yaklaşınca yüklensin
 new IntersectionObserver((entries, io) => {
@@ -356,6 +362,7 @@ if (!reducedMotion) {
 
 const canvas = $('#gl');
 const world = createWorld(canvas, { phone, low });
+world.whenReady.then(() => canvas.classList.add('is-ready'));
 const { S } = world;
 const DEFAULTS = { ...S };
 const reset = () => Object.assign(S, DEFAULTS);
@@ -367,6 +374,7 @@ function measure() {
 }
 addEventListener('resize', () => {
   world.resize();
+  sizePins();
   measure();
 });
 
@@ -398,19 +406,43 @@ function flash(key, on) {
   flashed[key] = on;
 }
 
+// Ölçü noktaları: 3D panelin üstüne 2D tuvalde çizilir (DOM katmanı yok, dokunmayı yutmaz)
 let pinsOn = false;
 function showPins(on, k = 1) {
   if (on !== pinsOn) {
     pinsOn = on;
-    $('#pins').classList.toggle('is-on', on);
+    pinCv.classList.toggle('is-on', on);
   }
   if (!on) return;
+  const c = pinCtx;
+  c.clearRect(0, 0, innerWidth, innerHeight);
+  c.font = '600 12px "JetBrains Mono", ui-monospace, monospace';
+  c.textBaseline = 'middle';
+  const ok = k < 0.02;
   PINS.forEach((p, i) => {
     const s = world.project(p.x, p.y, 0.02);
-    const el = pinEls[i];
-    el.style.transform = `translate3d(${s.x.toFixed(1)}px, ${s.y.toFixed(1)}px, 0)`;
-    el.lastChild.textContent = k < 0.02 ? '0,0 mm' : `+${dec(p.mm * k)} mm`;
-    el.classList.toggle('is-ok', k < 0.02);
+    const col = ok ? '#00b89c' : '#ff3b5c';
+    c.beginPath();
+    c.arc(s.x, s.y, 12, 0, Math.PI * 2);
+    c.fillStyle = ok ? 'rgba(0,184,156,.25)' : 'rgba(255,59,92,.25)';
+    c.fill();
+    c.beginPath();
+    c.arc(s.x, s.y, 6, 0, Math.PI * 2);
+    c.fillStyle = col;
+    c.fill();
+    c.lineWidth = 2;
+    c.strokeStyle = '#fff';
+    c.stroke();
+    const t = ok ? '0,0 mm' : `+${dec(p.mm * k)} mm`;
+    const w = c.measureText(t).width + 16;
+    const x = s.x + 14;
+    const y = i === 1 ? s.y + 26 : s.y - 26;
+    c.fillStyle = ok ? '#00b89c' : '#0b0b10';
+    c.beginPath();
+    c.roundRect(x, y - 12, w, 24, 6);
+    c.fill();
+    c.fillStyle = ok ? '#0b0b10' : '#fff';
+    c.fillText(t, x + 8, y + 1);
   });
 }
 
@@ -453,16 +485,18 @@ const SCENES = {
     showPins(S.wire > 0.5, k);
     txt('m-mm', dec(O.sapmaMm * k));
     bar('m-mm-bar', k);
-    txt('m-mm-sub', p < 0.12 ? 'Ölçü alınıyor' : p < 0.46 ? 'Sapma var' : k > 0.02 ? 'Çekiliyor' : 'Fabrika değerinde');
+    txt('m-mm-sub', p < 0.12 ? 'Ölçü alınıyor' : p < 0.46 ? 'Sapma var' : k > 0.02 ? 'Çekiliyor' : p < 0.84 ? 'Fabrika değerinde' : 'Zımparaya hazır');
   },
   renk(p) {
     enter('renk', p, 0.22);
     S.patch = 1;
-    S.paint = ease(seg(p, 0.12, 0.4));
-    S.match = ease(seg(p, 0.48, 0.86));
+    S.primer = ease(seg(p, 0.03, 0.2));
+    S.tape = seg(p, 0.2, 0.34) * (1 - seg(p, 0.88, 0.97));
+    S.paint = ease(seg(p, 0.36, 0.56));
+    S.match = ease(seg(p, 0.6, 0.84));
     const de = lerp(O.deltaEOnce, O.deltaESonra, S.match);
     txt('m-de', dec(de));
-    txt('m-de-sub', S.paint < 0.5 ? 'Astar hazır' : S.match < 0.98 ? 'Karışım ayarlanıyor' : 'Göz ayırt etmez');
+    txt('m-de-sub', S.primer < 0.98 ? 'Astar atılıyor' : p < 0.34 ? 'Bantlanıyor' : S.paint < 0.98 ? 'Boyanıyor' : S.match < 0.98 ? 'Karışım ayarlanıyor' : 'Göz ayırt etmez');
     $('#m-sw').style.opacity = String(1 - S.match);
   },
   pasta(p) {
@@ -573,7 +607,7 @@ function start() {
     reset();
     S.offX = OFF.x;
     S.offY = OFF.y;
-    world.render();
+    world.whenReady.then(() => world.render());
     return;
   }
   lenis = initSmoothScroll({ lerp: 0.1 });
@@ -583,7 +617,7 @@ function start() {
   world.snap();
   gsap.ticker.add(() => {
     tick();
-    if (canvasOn) world.render();
+    if (canvasOn && world.isReady()) world.render();
   });
   marquee($('.brands__track'), 40);
 }
@@ -592,7 +626,7 @@ function start() {
 
 function intro() {
   const el = $('#intro');
-  if (reducedMotion) {
+  if (reducedMotion || vitrinModu()) {
     el.remove();
     return Promise.resolve();
   }
@@ -648,25 +682,30 @@ function intro() {
 
   let done = false;
   return new Promise((resolve) => {
+    const kill = () => {
+      ['pointerdown', 'touchstart', 'wheel', 'keydown'].forEach((t) => removeEventListener(t, finish, true));
+    };
     const finish = () => {
       if (done) return;
       done = true;
-      gsap.to(el, { opacity: 0, duration: 0.3, onComplete: () => {
-        el.remove();
-        document.documentElement.classList.remove('is-intro');
-      } });
+      kill();
+      tl.kill();
+      // kilit hemen kalkar; perde yalnızca görsel olarak söner
+      document.documentElement.classList.remove('is-intro');
+      el.style.pointerEvents = 'none';
       lenis?.start();
+      gsap.to(el, { autoAlpha: 0, duration: 0.3, onComplete: () => el.remove() });
       resolve();
     };
-    el.addEventListener('pointerdown', finish, { once: true });
-    addEventListener('keydown', finish, { once: true });
+    ['pointerdown', 'touchstart', 'wheel', 'keydown'].forEach((t) => addEventListener(t, finish, { capture: true, passive: true }));
     draw();
-    gsap.timeline({ onUpdate: draw, onComplete: finish })
-      .to(st, { dent: 1, duration: 0.55, ease: 'power3.in' }, 0.2)
-      .to(st, { dent: 0, duration: 0.7, ease: 'elastic.out(1.1, 0.35)' }, 0.95)
-      .fromTo(name, { opacity: 0, '--wd': 50 }, { opacity: 1, '--wd': 125, duration: 0.6, ease: 'expo.out' }, 1.0)
-      .to(name, { opacity: 0, duration: 0.25 }, 1.95)
-      .to(st, { open: 1, duration: 0.8, ease: 'power2.inOut' }, 1.95);
+    // toplam ≈ 1,5 sn: çarpma, geri esneme, ad, bantlar açılır
+    const tl = gsap.timeline({ onUpdate: draw, onComplete: finish })
+      .to(st, { dent: 1, duration: 0.32, ease: 'power3.in' }, 0.08)
+      .to(st, { dent: 0, duration: 0.5, ease: 'elastic.out(1.1, 0.35)' }, 0.42)
+      .fromTo(name, { opacity: 0, '--wd': 50 }, { opacity: 1, '--wd': 125, duration: 0.4, ease: 'expo.out' }, 0.4)
+      .to(name, { opacity: 0, duration: 0.18 }, 0.98)
+      .to(st, { open: 1, duration: 0.5, ease: 'power2.inOut' }, 0.98);
   });
 }
 
@@ -675,7 +714,6 @@ reset();
 S.offX = OFF.x;
 S.offY = OFF.y;
 world.snap();
-world.render();
-const fontsReady = Promise.race([document.fonts?.ready ?? Promise.resolve(), new Promise((res) => setTimeout(res, 700))]);
+const fontsReady = Promise.race([document.fonts?.ready ?? Promise.resolve(), new Promise((res) => setTimeout(res, 250))]);
 fontsReady.then(intro).then(() => reveal($('#hero-title')));
 start();

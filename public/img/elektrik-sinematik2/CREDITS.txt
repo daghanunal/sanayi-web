@@ -1,0 +1,4 @@
+Fotoğraflar: Pexels (Pexels lisansı). Yerel kopyalar kırpıldı/küçültüldü.
+aku.jpg: "Car Battery with Jumper Cables Attached" — https://www.pexels.com/photo/car-battery-with-jumper-cables-attached-32282232/
+far.jpg: "Sleek sports car at night with headlights on" — https://www.pexels.com/photo/32723285/ (kırpıldı: yazılar kadraj dışında)
+3D bobin sahnesi bu site için kodla çizildi (three.js); ışık: lib3d studio HDRI (Poly Haven, CC0).

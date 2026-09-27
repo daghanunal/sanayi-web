@@ -1,5 +1,12 @@
-Tüm görseller Pexels lisansıyla (ücretsiz, ticari kullanım serbest):
+Tüm görseller Pexels lisansıyla (ücretsiz, ticari kullanım serbest). Temsilîdir; işletmenin kendi fotoğrafı değildir.
 gece-yol.jpg: "Car Lights on the Highway at Night" — https://www.pexels.com/photo/car-lights-on-the-highway-at-night-15444512/
 aku-kablo.jpg: "Car Battery with Jumper Cables Attached" — https://www.pexels.com/photo/car-battery-with-jumper-cables-attached-32282232/
 kaput.jpg: "Man in Black Jacket and Black Knit Cap Inspecting Car Engine" — https://www.pexels.com/photo/3807277/
-Ayrıca public/img/devre/ görselleri kullanılır (kaynaklar orada).
+lambalar.jpg: https://www.pexels.com/photo/pictographs-on-dashboard-in-car-16341407/
+uyari.jpg: https://www.pexels.com/photo/pictograph-in-car-16341409/
+far-aksam.jpg: https://www.pexels.com/photo/silver-car-on-road-3007435/
+led-far.jpg: https://www.pexels.com/photo/front-light-on-modern-black-car-16352272/
+garaj-far.jpg: https://www.pexels.com/photo/sleek-black-car-in-underground-parking-lot-29149452/
+eller.jpg: https://www.pexels.com/photo/person-holding-black-and-gray-car-engine-8478264/
+filo.jpg: https://www.pexels.com/photo/row-of-bright-yellow-vans-parked-outdoors-32980265/
+beyin.jpg: https://www.pexels.com/photo/technician-repairing-circuit-board-with-multimeter-38264253/

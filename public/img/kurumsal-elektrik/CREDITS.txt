@@ -1,0 +1,13 @@
+Fotoğraflar Pexels lisansıyla (ücretsiz, ticari kullanım serbest). Temsilîdir; işletmenin kendi fotoğrafı değildir.
+hero.jpg: https://www.pexels.com/photo/man-in-blue-coveralls-checking-on-a-vehicle-6870295/
+tablet.jpg: https://www.pexels.com/photo/close-up-of-mechanic-with-tablet-4116198/
+beyin.jpg: https://www.pexels.com/photo/technician-repairing-circuit-board-with-multimeter-38264253/
+filo.jpg: https://www.pexels.com/photo/aerial-view-of-van-parking-lot-35501727/
+teshis-motor.jpg: https://www.pexels.com/photo/black-and-orange-power-tool-4116172/
+olcum.jpg: https://www.pexels.com/photo/technician-testing-electrical-motor-wires-33531832/
+oksit.jpg: https://www.pexels.com/photo/a-person-holding-wires-11569036/
+lamba.jpg: https://www.pexels.com/photo/pictographs-on-dashboard-in-car-16341407/
+far.jpg: https://www.pexels.com/photo/front-light-on-modern-black-car-16352272/
+hibrit.jpg: https://www.pexels.com/photo/close-up-of-electric-car-charger-14242296/
+motor.jpg: https://www.pexels.com/photo/a-mechanic-working-on-a-car-8478230/
+aku-3d.jpg: lib3d "battery" varlığının Blender Cycles çizimi (public/lib3d, markasız), temsilî. Betik: .shots/yukseltme/kurumsal-elektrik/tools/render.sh

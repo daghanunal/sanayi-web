@@ -19,6 +19,7 @@ kurumsal({
     logoAlt: 'Oto elektrik · Far · Akü · Beyin',
     baslikEki: 'Oto elektrik, far ve akü | Şaşmaz, Ankara',
     teklifEtiketi: 'Randevu isteyin',
+    altNot: 'Fotoğraflar temsilîdir (Pexels).',
     css: {
       zemin: '#ffd21a', yuzey: '#fff0a3', metin: '#1f0a26', soluk: '#553a4c', cizgi: 'rgb(31 10 38 / .2)',
       vurgu: '#1f0a26', 'vurgu-metin': '#ffd21a', koyu: '#1c0822', 'koyu-metin': '#fff3c4', 'koyu-soluk': '#c9aec6',

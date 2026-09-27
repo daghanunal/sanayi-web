@@ -3,4 +3,6 @@ pasta-kirmizi.jpg  https://www.pexels.com/photo/5233262/
 tabanca.jpg        https://www.pexels.com/photo/6870301/
 polisaj.jpg        https://www.pexels.com/photo/6870296/
 cila-yakin.jpg     https://www.pexels.com/photo/5233261/
+panel-3d.jpg       Blender Cycles render'ı, lib3d "car" varlığı (presets/kurumsal-boya2/render.sh) — sitede "Temsilî 3D çizim" etiketli
+kaput-yansima.jpg  https://www.pexels.com/photo/30679981/ (kaputtaki yansıma; amblem kadraj dışında kalacak şekilde kırpıldı)
 Ayrıca public/img/showroom/ altındaki fotoğraflar kullanılıyor (kaynaklar oradaki CREDITS.txt'de).

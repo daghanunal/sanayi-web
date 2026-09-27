@@ -13,9 +13,15 @@ gsap.registerPlugin(SplitText);
 ScrollTrigger.config({ ignoreMobileResize: true });
 
 const raw = { ...showroom, ...ekler, isletme: { ...showroom.isletme, ...ekler.isletme } };
+// Yorumlar örnektir: işletmeye ait bir Google puanı yokmuş gibi davran (JSON-LD'de AggregateRating yazılmaz).
+// Ekranda gösterilen sayı yalnızca örnek yorumların ortalamasıdır.
+delete raw.puan;
 const d = boot(raw);
+const ys = (d.yorumlar || []).map((y) => Number(y.puan) || 0).filter(Boolean);
+d.puan = { ortalama: ys.length ? Math.round((ys.reduce((a, b) => a + b, 0) / ys.length) * 10) / 10 : 5 };
 
 const $ = (s, root = document) => root.querySelector(s);
+document.documentElement.classList.toggle('uzun-ad', (d.isletme.ad || '').length > 24);
 const $$ = (s, root = document) => [...root.querySelectorAll(s)];
 const nf = (n) => Math.round(n).toLocaleString('tr-TR');
 const isMobile = () => innerWidth < 900;
@@ -90,13 +96,25 @@ const heroRenk = renkler.find((r) => r.kod === 'RAL 5015') ?? renkler[0];
 $('[data-hero-chip-code]').textContent = heroRenk.kod;
 $('[data-hero-chip-name]').textContent = heroRenk.ad;
 
-// Kartela
-const fan = $('[data-fan]');
-fan.innerHTML = d.hizmetler
-  .map((h, i) => {
-    const r = renkAt(i);
-    return `
-    <div class="chip" style="--c:${r.hex};--on:${onColor(r.hex)}" data-chip>
+// Kartela: iki kısa sahne (data-from / data-to aralığı). Her sahnede bütün kartela görünür, kendi hizmetleri öne çıkar.
+const H = d.hizmetler;
+const decks = $$('[data-deck]').map((el) => {
+  const from = Number(el.dataset.from) || 0;
+  const to = Math.min(H.length, Number(el.dataset.to) || H.length);
+  return { el, from, to, n: to - from };
+}).filter((k) => {
+  if (k.n > 0) return true;
+  k.el.remove();
+  return false;
+});
+decks.forEach((k) => {
+  const { el, from, to } = k;
+  $('[data-fan]', el).innerHTML = H
+    .map((h, i) => {
+      const r = renkAt(i);
+      const kendi = i >= from && i < to;
+      return `
+    <div class="chip${kendi ? '' : ' chip--diger'}" style="--c:${r.hex};--on:${onColor(r.hex)}" data-chip${kendi ? ' data-own' : ''}>
       <div class="chip__color">
         <span class="chip__code">${esc(r.kod)}</span>
         <span class="chip__name">${esc(r.ad)}</span>
@@ -104,37 +122,39 @@ fan.innerHTML = d.hizmetler
       </div>
       <div class="chip__foot"></div>
     </div>`;
-  })
-  .join('') + '<i class="deck__rivet"></i>';
-$('[data-deck-total]').textContent = String(d.hizmetler.length).padStart(2, '0');
-$('[data-deck-list]').innerHTML = d.hizmetler
-  .map((h, i) => `
+    })
+    .join('') + '<i class="deck__rivet"></i>';
+  $('[data-deck-total]', el).textContent = String(H.length).padStart(2, '0');
+  $('[data-deck-list]', el).innerHTML = H.slice(from, to)
+    .map((h, j) => {
+      const i = from + j;
+      return `
     <li style="--c:${renkAt(i).hex}">
       <span class="deck__list-code">${esc(renkAt(i).kod)}</span>
       <h3>${esc(h.baslik)}</h3>
       <p>${esc(h.aciklama)}</p>
       <p class="deck__list-time">Süre: <strong>${esc(h.sure)}</strong></p>
-    </li>`)
-  .join('');
-
-const deck = $('[data-deck]');
-let aktifHizmet = -1;
-function hizmetGoster(i) {
-  if (i === aktifHizmet) return;
-  aktifHizmet = i;
-  const h = d.hizmetler[Math.max(0, i)];
-  const r = renkAt(Math.max(0, i));
-  $('[data-deck-no]').textContent = String(Math.max(0, i) + 1).padStart(2, '0');
-  $('[data-deck-code]').textContent = `${r.kod}, ${r.ad}`;
-  $('[data-deck-title]').textContent = h.baslik;
-  $('[data-deck-text]').textContent = h.aciklama;
-  $('[data-deck-time]').textContent = h.sure;
-  $('[data-deck-wa]').href = waHref(d, `Merhaba ${d.isletme.ad}, ${h.baslik.toLocaleLowerCase('tr')} için fiyat almak istiyorum.`);
-  if (!reducedMotion && i >= 0) {
-    gsap.fromTo('[data-deck-panel] > *', { y: 18, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.4, stagger: 0.04, ease: 'power3.out', overwrite: true });
-  }
-}
-hizmetGoster(0);
+    </li>`;
+    })
+    .join('');
+  k.aktif = null;
+  k.goster = (i) => {
+    if (i === k.aktif) return;
+    k.aktif = i;
+    const h = H[i];
+    const r = renkAt(i);
+    $('[data-deck-no]', el).textContent = String(i + 1).padStart(2, '0');
+    $('[data-deck-code]', el).textContent = `${r.kod}, ${r.ad}`;
+    $('[data-deck-title]', el).textContent = h.baslik;
+    $('[data-deck-text]', el).textContent = h.aciklama;
+    $('[data-deck-time]', el).textContent = h.sure;
+    $('[data-deck-wa]', el).href = waHref(d, `Merhaba ${d.isletme.ad}, ${h.baslik.toLocaleLowerCase('tr')} için fiyat almak istiyorum.`);
+    if (!reducedMotion) {
+      gsap.fromTo($$('[data-deck-panel] > *', el), { y: 14, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.35, stagger: 0.035, ease: 'power3.out', overwrite: true });
+    }
+  };
+  k.goster(from);
+});
 
 // Renk eşleştirme
 const e = d.eslestirme;
@@ -208,7 +228,7 @@ $('[data-gallery-track]').innerHTML = d.galeri
 // Yorumlar
 const yildiz = (n) => Array.from({ length: 5 }, (_, i) => `<span class="${i < n ? 'on' : ''}">${icons.star}</span>`).join('');
 $('[data-stars]').innerHTML = yildiz(Math.round(d.puan.ortalama));
-$('[data-score-count]').textContent = `${nf(d.puan.adet)} Google yorumu`;
+$('[data-score-count]').textContent = 'Örnek yorumların ortalaması';
 const yorumKart = (y, i) => `
   <blockquote class="review" style="--c:${renkAt(i).hex}">
     <p class="review__stars">${yildiz(y.puan)}</p>
@@ -373,45 +393,52 @@ function hareket() {
       .to(heroChip, { x: () => dalis().x, y: () => dalis().y, scale: () => dalis().s, rotation: 0, duration: 1, ease: 'power3.inOut' }, 0.05)
       .to('[data-hero-photo]', { autoAlpha: 1, duration: 0.2 }, 0.88);
 
-    // 2. Kartela
-    const chips = $$('[data-chip]');
-    const n = chips.length;
-    const flood = $('[data-deck-flood]');
-    mm.add({ mob: '(max-width: 899px)', desk: '(min-width: 900px)' }, (ctx) => {
-      const { mob } = ctx.conditions;
-      const acilar = chips.map((_, i) => (mob ? -6 + (i * 72) / (n - 1) : -10 + (i * 80) / (n - 1)));
-      gsap.set(chips, { rotation: 0, transformOrigin: '14% 92%' });
-      gsap.set(flood, { backgroundColor: PAPER });
-      const tl = gsap.timeline({
-        defaults: { ease: 'power2.inOut' },
-        scrollTrigger: {
-          trigger: deck, start: 'top top', end: () => `+=${(n + 1.2) * (mob ? 55 : 60)}%`,
-          pin: true, scrub: 0.5, anticipatePin: 1,
-        },
-        // Scrub gecikmesiyle birlikte ilerlesin diye zaman çizelgesinin kendi güncellemesinde
-        onUpdate: () => {
-          const t = tl.time();
-          hizmetGoster(t < 0.9 ? -1 : Math.min(n - 1, Math.floor(t - 0.9)));
-          deck.classList.toggle('is-open', t >= 0.9);
-          // Yazı rengi zeminin o anki rengine göre (geçiş sırasında da okunur kalsın)
-          const on = onColor(rgbHex(gsap.getProperty(flood, 'backgroundColor')));
-          deck.style.setProperty('--on', on);
-          deck.classList.toggle('is-light-text', on !== INK);
-        },
+    // 2. Kartela: her sahne ≤ 3 ekran pinli. Yelpaze açılır, sahnenin hizmetleri sırayla öne çıkar, zemin o renge boyanır.
+    decks.forEach((k) => {
+      const { el, from, n } = k;
+      const chips = $$('[data-chip]', el);
+      const N = chips.length;
+      const flood = $('[data-deck-flood]', el);
+      const panel = $('[data-deck-panel]', el);
+      const head = $('[data-deck-head]', el);
+      const kat = Math.min(0.6, 2.8 / (n + 1.3));
+      mm.add({ mob: '(max-width: 899px)', desk: '(min-width: 900px)' }, (ctx) => {
+        const { mob } = ctx.conditions;
+        const acilar = chips.map((_, i) => (mob ? -6 + (i * 72) / (N - 1) : -10 + (i * 80) / (N - 1)));
+        // Masaüstünde kapalı deste başlığın altına düşmesin: aşağıda bekler, yelpaze açılırken yükselir.
+        gsap.set(chips, { rotation: 0, yPercent: mob ? 0 : 72, transformOrigin: '14% 92%' });
+        gsap.set(flood, { backgroundColor: PAPER });
+        gsap.set(panel, { autoAlpha: 0 });
+        const tl = gsap.timeline({
+          defaults: { ease: 'power2.inOut' },
+          scrollTrigger: {
+            trigger: el, start: 'top top', end: () => `+=${(n + 1.3) * kat * 100}%`,
+            pin: true, scrub: 0.5, anticipatePin: 1, invalidateOnRefresh: true,
+          },
+          onUpdate: () => {
+            const t = tl.time();
+            k.goster(from + Math.max(0, Math.min(n - 1, Math.floor(t - 0.9))));
+            el.classList.toggle('is-open', t >= 0.9);
+            const on = onColor(rgbHex(gsap.getProperty(flood, 'backgroundColor')));
+            el.style.setProperty('--on', on);
+            el.classList.toggle('is-light-text', on !== INK);
+          },
+        });
+        tl.to(head, { autoAlpha: 0, y: -30, duration: 0.3 }, 0.1)
+          .to(chips, { rotation: (i) => acilar[i], yPercent: 0, duration: 0.8, stagger: 0.02 }, 0.1)
+          .to(panel, { autoAlpha: 1, duration: 0.1 }, 0.9);
+        for (let j = 0; j < n; j++) {
+          const i = from + j;
+          const chip = chips[i];
+          const t = 1 + j;
+          const digerleri = chips.filter((_, q) => q !== i);
+          tl.to(flood, { backgroundColor: renkAt(i).hex, duration: 0.35, ease: 'power1.inOut' }, t - 0.1)
+            .to(chip, { rotation: mob ? 28 : 34, yPercent: -9, scale: 1.08, duration: 0.35 }, t - 0.1)
+            .to(digerleri, { rotation: (q) => acilar[chips.indexOf(digerleri[q])], yPercent: 0, scale: 1, duration: 0.35 }, t - 0.1)
+            .set(chip, { zIndex: 10 + j }, t - 0.1);
+        }
+        tl.to({}, { duration: 0.4 });
       });
-      tl.to('[data-deck-head]', { autoAlpha: 0, y: -30, duration: 0.3 }, 0.1)
-        .to(chips, { rotation: (i) => acilar[i], duration: 0.8, stagger: 0.02 }, 0.1)
-        .fromTo('[data-deck-panel]', { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.1 }, 0.9);
-      chips.forEach((chip, i) => {
-        const t = 1 + i;
-        const r = renkAt(i).hex;
-        const digerleri = chips.filter((_, k) => k !== i);
-        tl.to(flood, { backgroundColor: r, duration: 0.35, ease: 'power1.inOut' }, t - 0.1)
-          .to(chip, { rotation: mob ? 28 : 34, yPercent: -9, scale: 1.08, duration: 0.35 }, t - 0.1)
-          .to(digerleri, { rotation: (k) => acilar[chips.indexOf(digerleri[k])], yPercent: 0, scale: 1, duration: 0.35 }, t - 0.1)
-          .set(chip, { zIndex: 10 + i }, t - 0.1);
-      });
-      tl.to({}, { duration: 0.4 });
     });
 
     // 3. Renk eşleştirme
@@ -449,7 +476,7 @@ function hareket() {
     const lt = gsap.timeline({
       defaults: { ease: 'power2.out', duration: 0.5 },
       scrollTrigger: {
-        trigger: '[data-layers]', start: 'top top', end: `+=${steps.length * (isMobile() ? 50 : 55)}%`,
+        trigger: '[data-layers]', start: 'top top', end: `+=${Math.min(2.85, steps.length * 0.5) * 100}%`,
         pin: true, scrub: 0.5, anticipatePin: 1,
         onUpdate: (self) => {
           const idx = Math.min(steps.length - 1, Math.floor(self.progress * steps.length * 0.999));

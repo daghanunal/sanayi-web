@@ -76,27 +76,29 @@ const kopya = (ink) => `
   <div class="hero__copy ${ink ? 'is-ink' : 'is-light'}" ${ink ? '' : 'aria-hidden="true"'}>
     <p class="hero__eyebrow">${ad} · Şaşmaz Oto Sanayi · ${denEki(yil)} beri</p>
     ${ink ? `<h1 class="hero__title" id="hero-title">${baslikHTML(true)}</h1>` : `<p class="hero__title">${baslikHTML(false)}</p>`}
-    <div class="harness" ${ink ? 'data-harness' : ''}></div>
+    <div class="harness" ${ink ? 'data-harness' : ''}>${ink ? '' : `<p class="hero__hint"><span class="hero__hintLine"></span>${esc(H.ipucu)}</p>`}</div>
     <p class="hero__lead">${esc(H.cozum)}</p>
-    <div class="hero__cta">
-      <a class="btn btn--red" href="${telHref(d)}" ${ink ? '' : 'tabindex="-1"'}>${icons.phone}<span>Hemen ara</span></a>
-      <a class="btn btn--ink" href="${wa()}" target="_blank" rel="noopener" ${ink ? '' : 'tabindex="-1"'}>${icons.whatsapp}<span>WhatsApp</span></a>
-    </div>
+    <div class="hero__ctaSpace" aria-hidden="true"></div>
   </div>`;
 
+// İki kopya (karmaşa / temiz) üst üste durur; butonlar tek bir katmanda ikisinin de üstündedir,
+// böylece açılıştan itibaren her an dokunulabilir.
 $('#hero').innerHTML = `
   <div class="hero__stage">
     <div class="hero__mess">
-      <img class="hero__img" src="${img('/img/elektrik-klasik2/karmasa.jpg')}" alt="Birbirine dolanmış renkli elektrik kabloları" width="1066" height="1600" fetchpriority="high" />
+      <picture><source media="(min-width: 900px)" srcset="${img('/img/elektrik-klasik2/karmasa-genis.jpg')}" width="2200" height="1364" /><img class="hero__img" src="${img('/img/elektrik-klasik2/karmasa.jpg')}" alt="Birbirine dolanmış renkli elektrik kabloları" width="1066" height="1600" fetchpriority="high" /></picture>
       <div class="hero__shade" aria-hidden="true"></div>
-      <p class="hero__q" aria-hidden="true"><i></i><span>Hangisi?</span></p>
+      <p class="hero__q" aria-hidden="true"><i></i><span data-t="Hangisi?"></span></p>
       ${kopya(false)}
     </div>
-    <div class="hero__clean">
-      <div class="hero__cleanIn">${kopya(true)}</div>
-      <div class="plug" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    <div class="hero__clean">${kopya(true)}</div>
+    <div class="plug" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    <div class="hero__act">
+      <div class="hero__cta">
+        <a class="btn btn--red" href="${telHref(d)}">${icons.phone}<span>Hemen ara</span></a>
+        <a class="btn btn--wa" href="${wa()}" target="_blank" rel="noopener">${icons.whatsapp}<span>WhatsApp</span></a>
+      </div>
     </div>
-    <p class="hero__hint" aria-hidden="true"><span class="hero__hintLine"></span>${esc(H.ipucu)}</p>
   </div>`;
 
 // Demet: her hizmet bir kablo, rengi sigortasının rengi.
@@ -135,13 +137,39 @@ function drawHarness() {
     ${[0.07, 0.14, 0.21].map((f) => `<rect x="${bx * f}" y="${cy - tight * 5}" width="1.5" height="${tight * 10}" fill="#3b3f44"/>`).join('')}`;
   const fx = Math.min(W * 0.78, W - 60);
   const fy = lane(FAULT);
+  const desk = innerWidth >= 900;
+  const th = desk ? 26 : 22; // etiket yüksekliği
+  const tags = HAT.map((w, i) => `<g class="htag ${i === FAULT ? 'is-fault' : ''}" transform="translate(${bx + 10} ${lane(i)})">
+      <rect class="htag__bg" x="0" y="${-th / 2}" height="${th}" rx="6"/>
+      <rect class="htag__amp" x="3" y="${-th / 2 + 3}" height="${th - 6}" rx="4" fill="${w.c}"/>
+      <text class="htag__a" x="8" y="0.5" fill="${w.t}">${amp(w.a)}A</text>
+      <text class="htag__n" y="0.5">${esc(w.ad)}</text>
+    </g>`).join('');
   harness.innerHTML = `
     <svg class="harness__svg" viewBox="0 0 ${W} ${h}" width="${W}" height="${h}" aria-hidden="true">${wires}${tape}
       <g class="spark" transform="translate(${fx} ${fy})"><circle r="${sw * 2.6}" class="spark__ring"/><circle r="${sw * 0.9}" class="spark__dot"/></g>
-    </svg>
-    <ul class="harness__tags">${HAT.map((w, i) => `<li style="top:${lane(i)}px;left:${bx + 10}px;--c:${w.c};--t:${w.t}" class="${i === FAULT ? 'is-fault' : ''}"><b>${amp(w.a)}A</b>${esc(w.ad)}</li>`).join('')}</ul>
-    <p class="harness__found" style="top:${fy}px;right:${W - fx - 8}px">${esc(H.bulgu)}</p>`;
-  // Işık tarafındaki kopyada aynı yükseklik korunur (hizalama için), çizim yok.
+      <g class="htags">${tags}</g>
+      <g transform="translate(${fx + 8} ${fy + (desk ? 20 : 16)})"><g class="found">
+        <path class="found__tip" d="M -12 0 l 6 -6 l 6 6 z"/>
+        <rect class="found__bg" y="0" height="${desk ? 28 : 24}" rx="6"/>
+        <text class="found__t" y="${desk ? 14.5 : 12.5}">${esc(H.bulgu)}</text>
+      </g></g>
+    </svg>`;
+  // Yazı genişliğini ölç, kutuları ona göre kur.
+  harness.querySelectorAll('.htag').forEach((g) => {
+    const a = g.querySelector('.htag__a'), n = g.querySelector('.htag__n');
+    const aw = a.getComputedTextLength();
+    g.querySelector('.htag__amp').setAttribute('width', aw + 10);
+    n.setAttribute('x', aw + 20);
+    g.querySelector('.htag__bg').setAttribute('width', aw + 28 + n.getComputedTextLength());
+  });
+  {
+    const t = harness.querySelector('.found__t');
+    const tw = t.getComputedTextLength() + 20;
+    const bg = harness.querySelector('.found__bg');
+    bg.setAttribute('x', -tw); bg.setAttribute('width', tw);
+    t.setAttribute('x', -tw + 10);
+  }
   const plug = $('.plug');
   const r = harness.getBoundingClientRect();
   const s = $('.hero__stage').getBoundingClientRect();
@@ -162,7 +190,7 @@ $('#hakkimizda').innerHTML = `
       <p class="olcu__garanti rv">${fuseSVG(10)}<span>${esc(d.garanti)} Değişen parçayı size geri veririz.</span></p>
     </div>
     <figure class="olcu__photo rv">
-      <img src="${img('/img/elektrik-klasik2/kaput-usta.jpg')}" alt="Usta kaputun altında kablo soketini kontrol ediyor" width="1600" height="1066" loading="lazy" />
+      <img src="${img('/img/elektrik-klasik2/kaput-usta.jpg')}" alt="Kaputun altında kablo soketi kontrolü" width="1600" height="1066" loading="lazy" />
       <figcaption>Önce ölçüm, sonra parça.</figcaption>
     </figure>
     <figure class="olcu__photo olcu__photo--s rv">
@@ -267,10 +295,10 @@ const yildiz = (n) => `<span class="stars" aria-label="${n} yıldız">${Array.fr
 $('#yorumlar').innerHTML = `
   <div class="wrap yorum__head">
     <div>
-      <p class="kicker rv"><i style="background:#d9a441"></i>Yorumlar</p>
+      <p class="kicker rv"><i style="background:#d9a441"></i>Örnek yorumlar</p>
       <h2 class="h2 rv">Lamba söndü, <span class="u">onlar yazdı.</span></h2>
     </div>
-    <div class="score rv"><b>${String(P.ortalama).replace('.', ',')}</b><div>${yildiz(5)}<p>${sayi(P.adet)} Google yorumu</p></div></div>
+    <div class="score rv"><b>${String(P.ortalama).replace('.', ',')}</b><div>${yildiz(5)}<p>Örnek puan · ${sayi(P.adet)} değerlendirme</p></div></div>
   </div>
   <div class="yorum__track" data-lenis-prevent-touch>
     <ul class="yorum__list">
@@ -327,7 +355,7 @@ $('#foot').innerHTML = `
   <div class="wrap foot__in">
     <p class="foot__brand">${ad}</p>
     <p>${esc(d.iletisim.adres)}<br><a href="${telHref(d)}">${tel}</a></p>
-    <p class="foot__small">© ${new Date().getFullYear()} ${ad}. Fotoğraflar: Pexels.</p>
+    <p class="foot__small">© ${new Date().getFullYear()} ${ad}. Fotoğraflar: Pexels, temsilîdir. Yorumlar örnektir.</p>
   </div>`;
 
 // --- Harita: yaklaşınca yükle --------------------------------------------------------------
@@ -358,27 +386,28 @@ if (reducedMotion) {
 } else {
   initSmoothScroll();
 
-  // İmza: temiz panel soldan sağa açılır (iç kopya ters kayar, sabit durur), soket öndedir.
+  // İmza: temiz panel soldan sağa açılır (clip-path; panel tam ekran kalır), soket panelin kenarını taşır.
+  const stageW = () => $('.hero__stage').clientWidth;
   const tl = gsap.timeline({
     defaults: { ease: 'none' },
     scrollTrigger: {
-      trigger: hero, start: 'top top', end: '+=170%', pin: '.hero__stage', scrub: 0.5,
+      trigger: hero, start: 'top top', end: '+=170%', pin: '.hero__stage', scrub: 0.5, invalidateOnRefresh: true,
       onUpdate: (st) => {
         hero.classList.toggle('is-found', st.progress > 0.8);
         hero.classList.toggle('is-done', st.progress > 0.9);
       },
     },
   });
-  tl.fromTo('.hero__clean', { xPercent: -100 }, { xPercent: 0, duration: 0.72 }, 0)
-    .fromTo('.hero__cleanIn', { xPercent: 100 }, { xPercent: 0, duration: 0.72 }, 0)
+  tl.fromTo('.hero__clean', { clipPath: 'inset(0% 100% 0% 0%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: 0.72 }, 0)
+    .fromTo('.plug', { x: 0 }, { x: () => stageW(), duration: 0.72 }, 0)
     .fromTo('.hero__img', { scale: 1.14 }, { scale: 1, duration: 0.72 }, 0)
     .fromTo('.hero__hint', { autoAlpha: 1 }, { autoAlpha: 0, duration: 0.08 }, 0.02)
-    .fromTo('.plug', { x: 0 }, { x: () => -$('.plug').offsetWidth * 0.5 - 6, duration: 0.08, ease: 'power2.out' }, 0.72)
+    .to('.plug', { x: () => stageW() - $('.plug').offsetWidth * 0.5 - 6, duration: 0.08, ease: 'power2.out' }, 0.72)
     .to({}, { duration: 0.2 });
 
   // Açılışta soket kenardan hafifçe görünür, "çek beni" der.
   gsap.fromTo('.plug', { xPercent: -60 }, { xPercent: 0, duration: 0.9, ease: 'power3.out', delay: 0.3 });
-  gsap.fromTo('.hero__mess .hero__eyebrow, .hero__mess .hero__title', { y: 26, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.8, stagger: 0.08, ease: 'power3.out' });
+  gsap.fromTo('.hero__mess .hero__eyebrow, .hero__mess .hero__title, .hero__mess .hero__lead', { y: 22, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.7, stagger: 0.07, ease: 'power3.out' });
 
   ScrollTrigger.batch('.rv', {
     start: 'top 88%',

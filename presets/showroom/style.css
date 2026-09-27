@@ -87,8 +87,8 @@ h2 { font-size: clamp(2.1rem, 5.4vw, 4.8rem); }
   box-shadow: inset 0 0 0 1px rgb(255 255 255 / .08);
   transition: transform .4s cubic-bezier(.2, .8, .2, 1);
 }
-.top.is-hidden { transform: translateY(-140%); }
-.top__brand { font-weight: 800; font-variation-settings: 'wdth' 118; text-decoration: none; font-size: 17px; letter-spacing: -.01em; margin-right: auto; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.top[data-autohide-hidden] { transform: translateY(-140%); }
+.top__brand { display: block; line-height: 44px; min-width: 0; font-weight: 800; font-variation-settings: 'wdth' 118; text-decoration: none; font-size: 17px; letter-spacing: -.01em; margin-right: auto; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .top__nav { display: flex; gap: 26px; font-size: 15px; }
 .top__nav a { text-decoration: none; opacity: .72; transition: opacity .2s; }
 .top__nav a:hover { opacity: 1; }
@@ -99,9 +99,12 @@ h2 { font-size: clamp(2.1rem, 5.4vw, 4.8rem); }
 @media (max-width: 899px) {
   .top { padding: 6px 6px 6px 18px; top: 10px; }
   .top__nav { display: none; }
-  .top__call { min-height: 40px; padding: 0 14px; font-size: 14px; }
+  .top__call { min-height: 44px; padding: 0 16px; font-size: 14px; }
 }
 @media (max-width: 420px) {
+  .top { gap: 10px; padding-left: 16px; }
+  .top__brand { font-size: 16px; font-variation-settings: 'wdth' 100; min-width: 0; }
+  .top__call { padding: 0 14px; }
   .top__call span:last-child { display: none; }
   .top__call::after { content: 'Ara'; }
 }
@@ -144,7 +147,7 @@ h2 { font-size: clamp(2.1rem, 5.4vw, 4.8rem); }
 @media (max-width: 899px) {
   .hero__actions .btn { flex: 1 1 100%; }
   .hero__cue { display: none; }
-  .hero__content { padding-bottom: 40px; }
+  .hero__content { padding-bottom: calc(var(--bar-reserve, 96px) + 18px); }
 }
 
 /* --- İmza: Önce / Sonra -------------------------------------------- */
@@ -177,8 +180,13 @@ h2 { font-size: clamp(2.1rem, 5.4vw, 4.8rem); }
   position: absolute; left: var(--gutter); right: var(--gutter); top: 50%; transform: translateY(-50%);
   max-width: var(--maxw); margin: 0 auto; text-shadow: 0 2px 30px rgb(0 0 0 / .5);
 }
+.reveal__intro::before {
+  content: ''; position: absolute; z-index: -1; inset: -45% -40% -45% -30%; pointer-events: none;
+  background: radial-gradient(farthest-side, rgb(7 8 10 / .8), rgb(7 8 10 / .62) 45%, rgb(7 8 10 / .25) 75%, transparent);
+}
+.reveal__intro { isolation: isolate; }
 .reveal__title { font-size: clamp(2.6rem, 8vw, 7.4rem); max-width: 12ch; }
-.reveal__intro p { margin-top: 18px; font-size: clamp(16px, 1.4vw, 20px); color: rgb(246 249 252 / .85); }
+.reveal__intro p { margin-top: 18px; font-size: clamp(16px, 1.4vw, 20px); color: var(--light); font-weight: 500; text-shadow: 0 1px 12px rgb(0 0 0 / .7); }
 .reveal__hud {
   position: absolute; left: var(--gutter); right: var(--gutter); bottom: clamp(24px, 6vh, 56px);
   display: grid; grid-template-columns: 1fr 1fr auto; align-items: end; gap: 24px;
@@ -206,7 +214,7 @@ h2 { font-size: clamp(2.1rem, 5.4vw, 4.8rem); }
   .reveal__label b { font-size: 18px; }
   .reveal__label span { font-size: 13px; }
   .reveal__intro { top: 38%; }
-  .reveal__hud { bottom: calc(96px + env(safe-area-inset-bottom)); }
+  .reveal__hud { bottom: calc(var(--bar-space, 96px) + 12px); transition: bottom .35s ease; }
 }
 
 /* --- Hizmetler ----------------------------------------------------- */
@@ -279,10 +287,12 @@ h2 { font-size: clamp(2.1rem, 5.4vw, 4.8rem); }
 .shot figcaption { display: flex; justify-content: space-between; gap: 12px; margin-top: 14px; font-size: 15px; }
 .shot figcaption b { font-weight: 750; font-variation-settings: 'wdth' 112; }
 .shot figcaption span { color: rgb(246 249 252 / .6); text-align: right; }
-.gallery__progress { position: absolute; left: var(--gutter); right: var(--gutter); bottom: 32px; height: 2px; background: rgb(255 255 255 / .12); border-radius: 2px; overflow: hidden; }
+.gallery__progress { position: absolute; left: var(--gutter); right: var(--gutter); bottom: 32px; pointer-events: none; height: 2px; background: rgb(255 255 255 / .12); border-radius: 2px; overflow: hidden; }
 .gallery__progress i { display: block; height: 100%; background: var(--pearl); transform-origin: 0 50%; transform: scaleX(0); }
 @media (max-width: 899px) {
-  .shot { width: 72vw; }
+  .shot { width: 78vw; }
+  .shot__img { aspect-ratio: 3 / 4; }
+  .gallery__progress { bottom: calc(var(--bar-space, 96px) + 10px); transition: bottom .35s ease; }
   .shot:nth-child(even) { transform: translateY(3vh); }
   .gallery__intro { width: 78vw; }
   .shot figcaption { flex-direction: column; gap: 2px; }
@@ -294,7 +304,7 @@ h2 { font-size: clamp(2.1rem, 5.4vw, 4.8rem); }
 .compare__head { max-width: var(--maxw); margin: 0 auto 32px; display: grid; gap: 14px; }
 .compare__head p { color: rgb(246 249 252 / .7); }
 .compare__tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
-.compare__tab { border: 0; cursor: pointer; padding: 10px 16px; border-radius: 999px; background: rgb(255 255 255 / .07); color: rgb(246 249 252 / .8); font-size: 14px; font-weight: 600; }
+.compare__tab { border: 0; cursor: pointer; min-height: 44px; padding: 10px 18px; border-radius: 999px; background: rgb(255 255 255 / .07); color: rgb(246 249 252 / .8); font-size: 14px; font-weight: 600; }
 .compare__tab[aria-selected='true'] { background: var(--light); color: var(--ink); }
 .compare__box { --c: 50%; position: relative; max-width: var(--maxw); margin: 0 auto; aspect-ratio: 16 / 9; border-radius: var(--r-lg); overflow: hidden; background: var(--lacquer); user-select: none; }
 .compare__img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: opacity .4s; }
@@ -337,7 +347,10 @@ h2 { font-size: clamp(2.1rem, 5.4vw, 4.8rem); }
 .reviews__big { font-size: clamp(5rem, 12vw, 10rem); font-weight: 800; line-height: .85; font-variation-settings: 'wdth' 125; letter-spacing: -.03em; }
 .reviews__stars { display: flex; gap: 4px; color: var(--ink); }
 .reviews__stars svg { width: 24px; height: 24px; }
-.reviews__score h2 { font-size: 20px; font-variation-settings: 'wdth' 100; font-weight: 600; letter-spacing: 0; line-height: 1.3; color: #3c434b; }
+.reviews__kicker { display: inline-flex; align-items: center; gap: 8px; justify-self: start; margin-bottom: 6px; padding: 6px 12px; border-radius: 999px; background: rgb(22 25 29 / .07); font-size: 13px; font-weight: 700; letter-spacing: .02em; color: #3c434b; }
+.reviews__kicker::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: linear-gradient(135deg, var(--pearl-a), var(--pearl-b)); }
+.reviews__note { font-size: 14px; color: #4b525a; }
+.reviews__score h2 { font-size: clamp(26px, 2.6vw, 36px); font-variation-settings: 'wdth' 115; font-weight: 800; letter-spacing: -.01em; line-height: 1.05; color: var(--ink); margin-top: 8px; }
 .reviews__list { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 .review { background: var(--light); border-radius: var(--r-md); padding: 24px; display: grid; gap: 14px; align-content: start; box-shadow: 0 1px 0 rgb(255 255 255), 0 20px 40px -30px rgb(22 25 29 / .35); }
 .review:nth-child(3n + 1) { grid-row: span 1; }
@@ -396,6 +409,7 @@ h2 { font-size: clamp(2.1rem, 5.4vw, 4.8rem); }
 
 /* --- Footer -------------------------------------------------------- */
 .foot { background: var(--piano); border-top: 1px solid rgb(255 255 255 / .08); padding: 36px var(--gutter) 40px; display: flex; flex-wrap: wrap; gap: 8px 32px; font-size: 14px; color: rgb(246 249 252 / .55); }
+.foot__note { flex-basis: 100%; font-size: 13px; color: rgb(246 249 252 / .5); }
 .foot__name { color: var(--light); font-weight: 750; font-variation-settings: 'wdth' 115; }
 
 /* --- Azaltılmış hareket ------------------------------------------- */
@@ -407,3 +421,7 @@ h2 { font-size: clamp(2.1rem, 5.4vw, 4.8rem); }
   .gallery__progress { display: none; }
   .trust__about .w { opacity: 1; }
 }
+
+/* Odak halkası: kabin beyazı bölümlerde mürekkep, piyano siyahında sedef mavisi */
+.services, .trust, .process, .reviews, .visit { --focus: var(--ink); }
+.btn:focus-visible, .compare__tab:focus-visible, .top a:focus-visible { outline-width: 3px; outline-offset: 3px; }

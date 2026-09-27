@@ -3,7 +3,7 @@ import './style.css';
 import raw from '../../data/devre.json';
 import extra from '../../data/amper.json';
 import {
-  boot, initSmoothScroll, reducedMotion, gsap, ScrollTrigger, asset,
+  boot, initSmoothScroll, reducedMotion, gsap, ScrollTrigger, asset, autoHideHeader,
   telHref, waHref, mapsHref, mapsEmbed, openStatus, groupedHours, icons, esc,
 } from '../../shared/core.js';
 import { segHTML, segSet } from './seg.js';
@@ -70,11 +70,11 @@ $('#hero').innerHTML = `
         <a class="btn btn--line" href="${wa()}" target="_blank" rel="noopener">${icons.whatsapp}<span>WhatsApp'tan yaz</span></a>
       </div>
     </div>
-    <div class="hero__switch">
+    <div class="hero__switch" aria-hidden="true">
       ${rocker('rocker--big')}
       <span class="dymo">${esc(d.hero.anahtar)}</span>
+      <p class="hero__hint"><span class="blink">▼</span> ${esc(d.hero.ipucu)}</p>
     </div>
-    <p class="hero__hint" aria-hidden="true"><span class="blink">▼</span> ${esc(d.hero.ipucu)}</p>
   </div>`;
 
 // --- Fener -------------------------------------------------------------------
@@ -102,7 +102,7 @@ $('#hakkimizda').innerHTML = `
       <p class="about__lead" data-words>${esc(d.isletme.hakkinda)}</p>
     </div>
     <figure class="about__photo">
-      <img src="${asset('/img/amper/fener-usta.jpg')}" alt="Ustamız kaputun altında el feneriyle kabloları kontrol ediyor" width="1600" height="1066" loading="lazy" />
+      <img src="${asset('/img/amper/fener-usta.jpg')}" alt="Kaputun altında el feneriyle kablo kontrolü" width="1600" height="1066" loading="lazy" />
     </figure>
     <ul class="meters">
       ${stats.map((s) => `
@@ -129,7 +129,7 @@ $('#hizmetler').innerHTML = `
             <h3 class="dymo">${esc(h.baslik)}</h3>
             <p>${esc(h.aciklama)}</p>
             <p class="sw__meta"><span>Süre: <b>${esc(h.sure)}</b></span>
-              <a href="${wa(`Merhaba ${d.isletme.ad}, ${h.baslik} için bilgi almak istiyorum.`)}" target="_blank" rel="noopener">${icons.whatsapp}Bu iş için sor</a></p>
+              <a href="${wa(`Merhaba ${d.isletme.ad}, ${h.baslik} için bilgi almak istiyorum.`)}" target="_blank" rel="noopener" aria-label="${esc(h.baslik)} için WhatsApp'tan sor">${icons.whatsapp}Bu iş için sor</a></p>
           </div>
           <span class="sw__no" aria-hidden="true">${String(i + 1).padStart(2, '0')}</span>
         </li>`).join('')}
@@ -184,9 +184,12 @@ $('#yorumlar').innerHTML = `
     <header class="yorum__head">
       <div class="yorum__score">
         <div class="meter__lcd meter__lcd--wide">${segHTML(2, { label: `${String(P.ortalama).replace('.', ',')} puan` })}</div>
-        <p><span class="leds5" aria-hidden="true">${'<i></i>'.repeat(5)}</span> ${P.adet} Google yorumu</p>
+        <p><span class="leds5" aria-hidden="true">${'<i></i>'.repeat(5)}</span> ${P.adet} değerlendirme</p>
       </div>
-      <h2 class="h2">${dots('Işığı söndürdük, onlar yazdı.')}</h2>
+      <div class="yorum__title">
+        <p class="yorum__tag">Örnek yorumlar</p>
+        <h2 class="h2">${dots('Işığı söndürdük, onlar yazdı.')}</h2>
+      </div>
     </header>
   </div>
   <div class="yorum__track">
@@ -247,7 +250,7 @@ $('#foot').innerHTML = `
   <div class="wrap foot__in">
     <p class="foot__brand">${ad}</p>
     <p>${esc(d.iletisim.adres)}<br><a href="${telHref(d)}">${tel}</a></p>
-    <p class="foot__small">© ${new Date().getFullYear()} ${ad}. Fotoğraflar: Pexels.</p>
+    <p class="foot__small">© ${new Date().getFullYear()} ${ad}. Fotoğraflar temsilîdir (Pexels). Yorumlar örnek olarak gösterilmiştir.</p>
   </div>`;
 
 // --- Harita: yaklaşınca yükle -------------------------------------------------
@@ -286,6 +289,17 @@ function allOn() {
   $$('.board__row').forEach((r) => r.classList.add('is-on', 'is-fixed'));
 }
 
+// Telefonda tek üst öğe: aşağı kaydırırken başlık saklanır (telefon sözleşmesi).
+const topEl = $('#top');
+let unhide = null;
+const phoneMq = matchMedia('(max-width: 899px)');
+const syncHeader = () => {
+  if (phoneMq.matches && !unhide) unhide = autoHideHeader(topEl, { offset: 120 });
+  else if (!phoneMq.matches && unhide) { unhide(); unhide = null; root.style.setProperty('--header-h', `${topEl.offsetHeight}px`); }
+};
+syncHeader();
+phoneMq.addEventListener('change', syncHeader);
+
 if (reducedMotion) {
   allOn();
 } else {
@@ -295,17 +309,51 @@ if (reducedMotion) {
 
   // Hero: anahtar iner → tüp ışık titrer → tabela yanar.
   const hero = $('#hero');
+  // Telefonda anahtar yandıktan sonra butonların altındaki boşluğa, sağa küçülür; butonların üstüne binmez.
+  const heroStage = $('.hero__stage');
+  const sw = $('.hero__switch');
+  const plate = $('.rocker--big .rocker__plate');
+  const swEnd = () => {
+    if (!mobile()) return { s: 0.7, x: 0, y: 0, a: 1 };
+    const copy = $('.hero__copy');
+    const cta = $('.hero__cta');
+    const top = copy.offsetTop + cta.offsetTop + cta.offsetHeight + 18;
+    const barH = parseFloat(getComputedStyle(root).getPropertyValue('--bar-reserve')) || 90;
+    const bottom = heroStage.offsetHeight - barH - 8;
+    const dy = sw.querySelector('.dymo');
+    const Hc = dy.offsetTop + dy.offsetHeight; // anahtar + etiket (ipucu o sırada sönük)
+    const avail = bottom - top;
+    const s = Math.min(0.46, avail / Hc);
+    if (s < 0.2) return { s: 0.3, x: 0, y: 0, a: 0 };
+    // transform-origin telefonda üst orta: görünür üst kenar sw.offsetTop + y olur.
+    const x = heroStage.offsetWidth / 2 - 16 - (plate.offsetWidth * s) / 2;
+    return { s, x, y: top + (avail - Hc * s) / 2 - sw.offsetTop, a: 1 };
+  };
+  // Açılışta anahtar başlıkla alt çubuk arasındaki boşluğa, biraz yukarı yaslı oturur; çubuğa yapışmaz.
+  const swStart = () => {
+    if (!mobile()) { sw.style.top = ''; sw.style.bottom = ''; return; }
+    const title = $('.hero__title');
+    const titleBottom = $('.hero__copy').offsetTop + title.offsetTop + title.offsetHeight;
+    const barH = parseFloat(getComputedStyle(root).getPropertyValue('--bar-reserve')) || 90;
+    const free = heroStage.offsetHeight - barH - titleBottom;
+    sw.style.bottom = 'auto';
+    sw.style.top = `${titleBottom + Math.max(12, (free - sw.offsetHeight) * 0.35)}px`;
+  };
+  swStart();
+  let end = swEnd();
   const heroTl = gsap.timeline({
     scrollTrigger: {
-      trigger: hero, start: 'top top', end: '+=130%', pin: '.hero__stage', scrub: 0.6,
+      trigger: hero, start: 'top top', end: '+=130%', pin: heroStage, scrub: 0.6, invalidateOnRefresh: true,
+      onRefreshInit: () => { gsap.set(sw, { clearProps: 'transform' }); swStart(); end = swEnd(); },
       onUpdate: (st) => hero.classList.toggle('is-on', st.progress > 0.2),
     },
   });
   heroTl
     .fromTo('.rocker--big .rocker__key', { rotateX: 16 }, { rotateX: -16, ease: 'power3.in', duration: 0.2 })
     .fromTo('.hero__hint', { autoAlpha: 1 }, { autoAlpha: 0, duration: 0.1 }, 0.05)
-    .fromTo('.hero__switch', { scale: 1, yPercent: 0 }, { scale: () => (mobile() ? 0.46 : 0.7), yPercent: () => (mobile() ? 18 : 0), xPercent: () => (mobile() ? 30 : 0), duration: 0.5, ease: 'power2.inOut' }, 0.3)
-    .fromTo('.hero__lead, .hero__cta', { autoAlpha: 0, y: 30 }, { autoAlpha: 1, y: 0, duration: 0.35, stagger: 0.08 }, 0.32)
+    .fromTo(sw, { scale: 1, x: 0, y: 0, autoAlpha: 1 }, { scale: () => end.s, x: () => end.x, y: () => end.y, autoAlpha: () => end.a, duration: 0.5, ease: 'power2.inOut' }, 0.3)
+    // Masaüstünde butonlar ilk andan dokunulabilir; telefonda alt çubuk zaten Ara/WhatsApp'ı taşıyor.
+    .fromTo(mobile() ? '.hero__lead, .hero__cta' : '.hero__lead', { autoAlpha: 0, y: 30 }, { autoAlpha: 1, y: 0, duration: 0.35, stagger: 0.08 }, mobile() ? 0.3 : 0.32)
     .to({}, { duration: 0.25 });
 
   // Bölüm girince "ışığı yanar"; geri çıkınca söner.
@@ -350,8 +398,13 @@ if (reducedMotion) {
     gsap.set(mark, { x: x * r.width, y: y * r.height });
     // Etiket işaretin altında, ekrandan taşmayacak şekilde.
     const lw = found.offsetWidth;
+    const lh = found.offsetHeight;
     const lx = gsap.utils.clamp(16, r.width - lw - 16, x * r.width - lw / 2);
-    gsap.set(found, { x: lx, y: y * r.height + 48 });
+    // Etiket kartın üstüne binecekse işaretin üstüne alınır.
+    const stepsTop = $('.fener__steps').offsetTop;
+    const below = y * r.height + 48;
+    const ly = below + lh > stepsTop - 10 && !matchMedia('(min-width: 900px)').matches ? y * r.height - 48 - lh : below;
+    gsap.set(found, { x: lx, y: ly });
     const [bx, by] = yol[0];
     gsap.set(beam, { x: bx * r.width, y: by * r.height });
   };

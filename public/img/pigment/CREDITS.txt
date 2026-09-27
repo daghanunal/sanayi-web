@@ -4,4 +4,7 @@ sari-araba.jpg: https://www.pexels.com/photo/yellow-car-at-the-parking-lot-40623
 mavi-ust.jpg: https://www.pexels.com/photo/top-view-of-a-sleek-blue-supercar-with-striking-design-30092955/
 mavi-yakin.jpg: https://www.pexels.com/photo/close-up-shot-of-blue-car-15100108/
 sari-livery.jpg: https://www.pexels.com/photo/close-up-of-yellow-car-livery-16070468/
+kirmizi-kapi.jpg: https://www.pexels.com/photo/5233262/ (kurumsal-boya2/pasta-kirmizi.jpg ile aynı kare)
+kaput-yansima.jpg: https://www.pexels.com/photo/30679981/ (üst kısmı kırpıldı; amblem kadraj dışında)
+kaput-yansima-once.jpg: showroom/kaput-once.jpg ile aynı kırpım (canlandırma amaçlı işlenmiş "önce" karesi)
 Ayrıca public/img/showroom/ altındaki fotoğraflar kullanılıyor (kaynaklar oradaki CREDITS.txt'de).

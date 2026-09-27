@@ -65,7 +65,7 @@ h1, h2, h3 { font-family: var(--display); font-weight: 800; letter-spacing: -0.0
   transition: background-color .3s ease, color .3s ease, box-shadow .3s ease;
 }
 .top.is-solid { background: rgb(207 208 203 / .96); color: var(--ink); box-shadow: 0 1px 0 var(--line); }
-.top__brand { display: flex; align-items: center; gap: 10px; text-decoration: none; font-weight: 800; font-size: 17px; letter-spacing: -0.02em; min-width: 0; }
+.top__brand { display: flex; align-items: center; gap: 10px; min-height: 44px; text-decoration: none; font-weight: 800; font-size: 17px; letter-spacing: -0.02em; min-width: 0; }
 .top__brand > span:last-child { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .top__mark { display: grid; gap: 2px; width: 18px; flex: none; }
 .top__mark i { height: 4px; }
@@ -91,11 +91,12 @@ h1, h2, h3 { font-family: var(--display); font-weight: 800; letter-spacing: -0.0
 
 /* --- HERO: katlar --- */
 .kat { background: var(--grafit); color: var(--kagit); }
-.kat__stage { position: relative; height: 100vh; height: 100svh; overflow: hidden; }
+.kat__stage { position: relative; height: 100vh; height: 100svh; overflow: hidden; display: grid; grid-template-columns: minmax(0, 1fr); }
 .kat__photo { position: absolute; inset: 0; overflow: hidden; background: #3a3b3d; }
 .layer { position: absolute; inset: 0; overflow: hidden; will-change: transform; }
 .layer__in { position: absolute; inset: 0; will-change: transform; }
-.layer img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 42%; }
+.layer picture { display: contents; }
+.layer img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%; }
 .layer__edge {
   position: absolute; left: 0; right: 0; top: 0; height: 90px; pointer-events: none;
   background: linear-gradient(to bottom, var(--e) 0 2px, color-mix(in srgb, var(--e) 45%, transparent) 2px, transparent);
@@ -110,17 +111,21 @@ h1, h2, h3 { font-family: var(--display); font-weight: 800; letter-spacing: -0.0
 .kat__shade {
   position: absolute; inset: 0; pointer-events: none;
   background:
-    linear-gradient(to top, rgb(23 24 26 / .96) 0%, rgb(23 24 26 / .82) 34%, rgb(23 24 26 / 0) 62%),
-    linear-gradient(to bottom, rgb(23 24 26 / .55), transparent 18%);
+    linear-gradient(to top, rgb(23 24 26 / .97) 0%, rgb(23 24 26 / .86) 36%, rgb(23 24 26 / 0) 60%),
+    linear-gradient(to bottom, rgb(23 24 26 / .7), rgb(23 24 26 / .2) 12%, transparent 20%);
 }
 
+/* Panel akışta (mutlak konumlu kart değil): sahnenin altına oturur, alt çubuğun boşluğunu --bar-space ile bırakır. */
 .kat__panel {
-  position: absolute; left: 0; right: 0; bottom: 0;
+  position: relative; z-index: 1; align-self: end; min-width: 0;
   display: grid; grid-template-columns: minmax(0, 1fr) 62px; column-gap: 16px; align-items: end;
-  padding: 0 var(--pad) calc(100px + env(safe-area-inset-bottom));
+  padding: 0 var(--pad) calc(var(--bar-space, 96px) + 14px);
+  transition: padding-bottom .35s ease;
 }
 .kat__intro { grid-column: 1 / -1; grid-row: 1; }
-.kat__caps { grid-column: 1; grid-row: 1; position: relative; min-height: 230px; display: grid; align-items: end; }
+/* Başlıklar girişle aynı hücrede; boşken butonları örtmesin */
+.kat__caps { grid-column: 1; grid-row: 1; position: relative; min-height: 210px; display: grid; align-items: end; pointer-events: none; }
+.kat__caps a { pointer-events: auto; }
 .kesit { grid-column: 2; grid-row: 1; }
 
 .kat__kicker { font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: #ffb59e; margin-bottom: 14px; }
@@ -141,7 +146,7 @@ h1, h2, h3 { font-family: var(--display); font-weight: 800; letter-spacing: -0.0
 .kesit__head { display: flex; flex-direction: column; gap: 2px; font-size: 10px; text-transform: uppercase; color: rgb(243 243 239 / .6); margin-bottom: 8px; line-height: 1.2; }
 .kesit__head b { font-size: 18px; color: var(--kagit); text-transform: none; white-space: nowrap; }
 .kesit__box {
-  position: relative; height: 200px; border: 1px solid rgb(243 243 239 / .35);
+  position: relative; height: 200px; display: flex; flex-direction: column-reverse; border: 1px solid rgb(243 243 239 / .35);
   background: repeating-linear-gradient(to top, transparent 0 9px, rgb(243 243 239 / .08) 9px 10px);
 }
 .kesit { --glow: 0; }
@@ -149,7 +154,8 @@ h1, h2, h3 { font-family: var(--display); font-weight: 800; letter-spacing: -0.0
   content: ''; position: absolute; inset: -1px; pointer-events: none;
   box-shadow: 0 0 0 1px var(--boya), 0 0 28px rgb(255 77 26 / .5); opacity: var(--glow);
 }
-.band { position: absolute; left: 0; right: 0; }
+/* Bantlar akışta, alttan üste (sac en altta); yükseklik satır içi % */
+.band { position: relative; flex: none; }
 .band__fill { position: absolute; inset: 0; transform-origin: 50% 100%; }
 .band--0 .band__fill { background: repeating-linear-gradient(90deg, #7c8289 0 2px, #9aa0a7 2px 5px, #868c93 5px 7px); }
 .band--1 .band__fill { background: radial-gradient(circle at 30% 40%, rgb(0 0 0 / .08) 0 1px, transparent 1.5px) 0 0 / 6px 6px, #c9cac5; }
@@ -158,10 +164,12 @@ h1, h2, h3 { font-family: var(--display); font-weight: 800; letter-spacing: -0.0
 .band__label { display: none; }
 
 @media (min-width: 900px) {
+  .kat__stage { grid-template-columns: 48% 52%; }
   .kat__photo { left: 48%; }
-  .kat__shade { background: linear-gradient(to right, rgb(23 24 26 / .9), transparent 22%), linear-gradient(to bottom, rgb(23 24 26 / .45), transparent 16%); }
+  .layer img { object-position: 100% 30%; }
+  .kat__shade { background: linear-gradient(to right, rgb(23 24 26 / .9), transparent 22%), linear-gradient(to bottom, rgb(23 24 26 / .7), rgb(23 24 26 / .25) 14%, transparent 26%), linear-gradient(to top, rgb(23 24 26 / .35), transparent 30%); }
   .kat__panel {
-    top: 0; right: 52%; left: 0; column-gap: 40px;
+    grid-column: 1; align-self: stretch; column-gap: 40px;
     align-items: center; padding: 110px var(--pad) 64px;
   }
   .kat__actions { display: flex; }
@@ -182,6 +190,7 @@ h1, h2, h3 { font-family: var(--display); font-weight: 800; letter-spacing: -0.0
 .sec-head { padding: 0 var(--pad); max-width: 1320px; margin: 0 auto; }
 .sec-head__no { font-size: 12px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin-bottom: 14px; display: flex; align-items: center; gap: 10px; }
 .sec-head__no::before { content: ''; width: 22px; height: 2px; background: var(--boya); }
+.sec-head__note { margin-top: 14px; color: var(--muted); font-size: 15px; max-width: 40em; }
 .sec-head h2, .renk h2, .konum h2 { font-size: clamp(36px, 9.6vw, 84px); text-wrap: balance; max-width: 15ch; padding-top: .05em; }
 
 /* --- Hizmetler --- */
@@ -251,7 +260,7 @@ h1, h2, h3 { font-family: var(--display); font-weight: 800; letter-spacing: -0.0
 .renk { background: var(--grafit); color: var(--kagit); padding: 96px var(--pad); display: grid; gap: 36px; }
 .renk .sec-head__no { color: rgb(243 243 239 / .6); }
 .renk__text p:not(.sec-head__no):not(.renk__name) { margin-top: 16px; color: rgb(243 243 239 / .8); max-width: 36em; }
-.renk__swatches { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 18px; }
+.renk__swatches { display: flex; justify-content: space-between; gap: 2px; max-width: 372px; margin-top: 18px; }
 .renk__view { width: 100%; max-width: 540px; margin: 0 auto; }
 .sw {
   width: 44px; height: 44px; border-radius: 50%; border: 0; padding: 0; cursor: pointer; background: transparent;
@@ -310,10 +319,12 @@ h1, h2, h3 { font-family: var(--display); font-weight: 800; letter-spacing: -0.0
 /* --- Yorumlar --- */
 .yorum { background: var(--kagit); padding: 96px 0 60px; }
 .yorum__score { padding: 0 var(--pad); max-width: 1320px; margin: 0 auto; display: grid; grid-template-columns: auto 1fr; align-items: center; column-gap: 18px; }
-.yorum__big { grid-row: span 2; font: 900 clamp(88px, 26vw, 180px)/.85 var(--display); letter-spacing: -0.06em; }
+.yorum__big { grid-row: span 3; font: 900 clamp(88px, 26vw, 180px)/.85 var(--display); letter-spacing: -0.06em; }
 .yorum__stars { display: flex; gap: 3px; color: var(--boya); }
 .yorum__stars svg, .rv__stars svg { width: 20px; height: 20px; }
-.yorum__score h2 { font-size: clamp(18px, 4.6vw, 28px); letter-spacing: -0.02em; font-weight: 700; margin-top: 6px; }
+.yorum__tag { grid-column: 1 / -1; justify-self: start; margin-bottom: 14px; font-size: 11px; text-transform: uppercase; letter-spacing: .08em; padding: 5px 9px; border: 1.5px solid var(--grafit); }
+.yorum__score h2 { font-size: clamp(22px, 5.4vw, 34px); letter-spacing: -0.025em; font-weight: 800; margin-top: 6px; }
+.yorum__note { grid-column: 2; font-size: 13px; color: var(--muted); margin-top: 4px; }
 .yorum__list {
   display: grid; grid-auto-flow: column; grid-auto-columns: 84%; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory;
   padding: 36px var(--pad) 12px; scroll-padding: 0 var(--pad); scrollbar-width: none; max-width: 1320px; margin: 0 auto;
@@ -376,13 +387,19 @@ h1, h2, h3 { font-family: var(--display); font-weight: 800; letter-spacing: -0.0
 .foot { background: var(--grafit); color: rgb(243 243 239 / .6); padding: 30px var(--pad) 40px; border-top: 1px solid rgb(243 243 239 / .1); font-size: 14px; display: grid; gap: 6px; }
 .foot__name { color: var(--kagit); font-weight: 800; font-size: 18px; }
 .foot .mono { font-size: 12px; }
+.foot__note { color: rgb(243 243 239 / .5); }
 
 /* --- Hareketsiz mod: tüm katlar görünür --- */
 .is-static .layer--1, .is-static .layer--2 { display: none; }
 .is-static .layer__edge { display: none; }
 .is-static .kat__caps, .is-static .kesit, .is-static .kat__hint { display: none; }
 
-/* Mobil: alt çubuk için body'nin bıraktığı pay footer rengiyle dolsun */
+/* Mobil: alt çubuğun payı footer'ın içinde (sayfa sonu footer rengiyle biter) */
 @media (max-width: 899px) {
-  .foot { margin-bottom: -84px; padding-bottom: calc(40px + 84px + env(safe-area-inset-bottom)); }
+  body { padding-bottom: 0; }
+  .foot { padding-bottom: calc(var(--bar-reserve, 96px) + 24px); }
 }
+
+/* Odak halkası: açık zeminde grafit, koyu zeminde turuncu (3:1 üstü kontrast) */
+.hiz, .foy, .surec, .isler, .yorum, .konum { --focus: var(--grafit); }
+.btn:focus-visible, .sw:focus-visible, .top a:focus-visible { outline-width: 3px; outline-offset: 3px; }

@@ -37,6 +37,7 @@
       <figure class="hero__chip" data-hero-chip aria-hidden="true">
         <div class="hero__chip-img" data-hero-chip-img></div>
         <figcaption><span data-hero-chip-code></span><strong data-hero-chip-name></strong></figcaption>
+        <div class="tape tape--hero" data-tape><span data-note="0"></span></div>
       </figure>
       <div class="hero__photo" data-hero-photo aria-hidden="true"></div>
       <div class="hero__inner">
@@ -54,24 +55,43 @@
           <p class="hero__open" data-status-long></p>
         </div>
       </div>
-      <div class="tape tape--hero" data-tape aria-hidden="true"><span data-note="0"></span></div>
     </section>
 
-    <!-- 2. Kartela: yelpaze açılır, her renk bir hizmet -->
-    <section class="deck" id="hizmetler" data-deck>
+    <!-- 2. Kartela: yelpaze açılır, her renk bir hizmet. İki kısa sahne: boya-kaporta, sonra parlatma-koruma -->
+    <section class="deck" id="hizmetler" data-deck data-from="0" data-to="3" aria-label="Boya ve kaporta hizmetleri">
       <div class="deck__flood" data-deck-flood aria-hidden="true"></div>
       <div class="deck__stage">
         <div class="deck__fan" data-fan aria-hidden="true"></div>
         <div class="deck__panel" data-deck-panel>
-          <p class="deck__count"><span data-deck-no>01</span> / <span data-deck-total></span></p>
-          <p class="deck__code" data-deck-code></p>
-          <h2 class="deck__title" data-deck-title></h2>
+          <p class="deck__meta"><span class="deck__count"><span data-deck-no>01</span> / <span data-deck-total></span></span> <span class="deck__code" data-deck-code></span></p>
+          <h3 class="deck__title" data-deck-title></h3>
           <p class="deck__text" data-deck-text></p>
-          <p class="deck__time">Süre: <strong data-deck-time></strong></p>
-          <a class="deck__wa" data-deck-wa target="_blank" rel="noopener"><span data-icon="whatsapp"></span><span>Bu iş için fiyat sor</span></a>
+          <div class="deck__row">
+            <p class="deck__time">Süre <strong data-deck-time></strong></p>
+            <a class="deck__wa" data-deck-wa target="_blank" rel="noopener"><span data-icon="whatsapp"></span><span>Bu iş için fiyat sor</span></a>
+          </div>
         </div>
       </div>
-      <h2 class="deck__head" data-deck-head>Her iş bir renk.</h2>
+      <h2 class="deck__head" data-deck-head>Her iş <br />bir renk.</h2>
+      <!-- Hareket azaltma ve ekran okuyucular için düz liste -->
+      <ul class="deck__list" data-deck-list></ul>
+    </section>
+
+    <section class="deck deck--b" data-deck data-from="3" data-to="" aria-label="Parlatma ve koruma hizmetleri">
+      <div class="deck__flood" data-deck-flood aria-hidden="true"></div>
+      <div class="deck__stage">
+        <div class="deck__fan" data-fan aria-hidden="true"></div>
+        <div class="deck__panel" data-deck-panel>
+          <p class="deck__meta"><span class="deck__count"><span data-deck-no>01</span> / <span data-deck-total></span></span> <span class="deck__code" data-deck-code></span></p>
+          <h3 class="deck__title" data-deck-title></h3>
+          <p class="deck__text" data-deck-text></p>
+          <div class="deck__row">
+            <p class="deck__time">Süre <strong data-deck-time></strong></p>
+            <a class="deck__wa" data-deck-wa target="_blank" rel="noopener"><span data-icon="whatsapp"></span><span>Bu iş için fiyat sor</span></a>
+          </div>
+        </div>
+      </div>
+      <h2 class="deck__head" data-deck-head>Sonra parlatır, <br />koruruz.</h2>
       <!-- Hareket azaltma ve ekran okuyucular için düz liste -->
       <ul class="deck__list" data-deck-list></ul>
     </section>
@@ -84,7 +104,7 @@
           <p class="match__text">Renk kodunu cihaz okur, karışımı panel panel tuttururuz. Yeni boyanan kapı eskisinin yanında ayrı durmaz.</p>
         </div>
         <figure class="match__figure">
-          <img class="match__img" data-match-img alt="Kırmızı kaputun yakın çekimi, renk ölçümü yapılıyor" loading="lazy" />
+          <img class="match__img" data-match-img alt="Kırmızı kapı panelinin yakın çekimi, yüzey hazırlanıyor" loading="lazy" />
           <div class="match__swatch" data-swatch>
             <div class="match__chip" data-swatch-chip></div>
             <div class="match__label">
@@ -119,7 +139,7 @@
     <section class="ba" id="isler" data-ba>
       <div class="tape tape--ba" data-tape aria-hidden="true"><span data-note="3"></span></div>
       <h2 class="ba__title">Önce, sonra.</h2>
-      <p class="ba__lead">Bantı sürükleyin. Fotoğraflar kendi işimizden.</p>
+      <p class="ba__lead">Bandı sürükleyin: solda işlem öncesi, sağda sonrası.</p>
       <div class="ba__list" data-ba-list></div>
     </section>
 
@@ -133,7 +153,7 @@
     <!-- 7. Galeri: yatay kayan renk kartları -->
     <section class="gallery" data-gallery>
       <div class="gallery__pin">
-        <h2 class="gallery__title">Bu ay kabinden çıkanlar</h2>
+        <h2 class="gallery__title">Hangi renk olursa olsun.</h2>
         <div class="gallery__track" data-gallery-track></div>
       </div>
     </section>
@@ -183,7 +203,7 @@
   <footer class="foot">
     <p><strong data-bind="ad"></strong></p>
     <p data-bind="adres"></p>
-    <p class="foot__small">© <span data-year></span> <span data-bind="ad"></span>. Fotoğraflar: Pexels.</p>
+    <p class="foot__small">© <span data-year></span> <span data-bind="ad"></span>. Fotoğraflar temsilîdir (Pexels), yorumlar örnektir.</p>
   </footer>
 
   <script type="module" src="./main.js"></script>

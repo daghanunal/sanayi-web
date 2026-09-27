@@ -8,3 +8,4 @@ multimetre.jpg 38292956 (Close-up of multimeter and tools on table)
 olcum.jpg 33531830 (Electrician working with multimeter in workshop)
 far-gece.jpg 32723285 (Sleek sports car at night with headlights on)
 Ayrıca public/img/devre/ görselleri kullanılır (kaynaklar orada).
+karmasa-genis.jpg 4480525 (aynı fotoğrafın 2600px sürümünden yatay kesit, masaüstü hero)

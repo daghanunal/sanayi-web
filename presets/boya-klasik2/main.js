@@ -62,7 +62,7 @@ const bandlar = katlar.map((k, i) => {
   return b;
 });
 $('[data-kesit]').innerHTML = katlar.map((k, i) => `
-  <div class="band band--${i}" style="bottom:${bandlar[i].bottom}%;height:${bandlar[i].h}%">
+  <div class="band band--${i}" style="height:${bandlar[i].h}%">
     <span class="band__fill"></span>
     <span class="band__label mono">${esc(k.ad)}${k.mikron ? ` · ${k.mikron} µm` : ''}</span>
   </div>`).join('');
@@ -122,7 +122,7 @@ function renkSec(i) {
   renkName.textContent = r.ad;
   renkEdge.style.setProperty('--c', r.hex);
   const next = imgB;
-  next.alt = `${r.ad} boyalı spor otomobilin arkası`;
+  next.alt = `${r.ad} vernikli otomobil, sağ arka çapraz görünüm (3D görsel)`;
   const go = () => {
     gsap.killTweensOf([next, renkEdge]);
     next.classList.add('is-top');
@@ -175,7 +175,7 @@ $('[data-gallery]').innerHTML = d.galeri.map((g, i) => `
 const stars = (n) => Array.from({ length: 5 }, (_, i) => `<span class="${i < n ? 'on' : ''}">${icons.star}</span>`).join('');
 $('[data-score]').textContent = String(d.puan.ortalama).replace('.', ',');
 $('[data-stars]').innerHTML = stars(Math.round(d.puan.ortalama));
-$('[data-score-text]').textContent = `${nf.format(d.puan.adet)} müşteri yorumunun ortalaması`;
+$('[data-score-text]').textContent = '5 üzerinden ortalama. Yorumlar tanıtım amaçlı örnektir.';
 $('[data-reviews]').innerHTML = d.yorumlar.map((y) => `
   <li class="rv">
     <div class="rv__stars" aria-label="${y.puan} yıldız">${stars(y.puan)}</div>
@@ -237,7 +237,7 @@ if (reducedMotion) {
     scrollTrigger: {
       trigger: '.kat',
       start: 'top top',
-      end: () => `+=${innerHeight * (mobil() ? 3.4 : 3)}`,
+      end: () => `+=${innerHeight * 2.7}`,
       pin: '.kat__stage',
       scrub: 0.5,
       anticipatePin: 1,
@@ -310,10 +310,10 @@ if (reducedMotion) {
   gsap.from('.son__title, .son__note, .son__actions', { y: 30, opacity: 0, duration: 0.7, stagger: 0.1, ease: 'power3.out', scrollTrigger: { trigger: '.son', start: 'top 70%', once: true } });
 }
 
-// Header: hero bitince zemin alır
+// Header: hikâye sahnesi yukarı kaymaya başlayınca zemin alır (metin şeffaf başlığın altından geçmesin)
 ScrollTrigger.create({
   trigger: '.hiz',
-  start: 'top 64px',
+  start: 'top bottom',
   onEnter: () => $('[data-top]').classList.add('is-solid'),
   onLeaveBack: () => $('[data-top]').classList.remove('is-solid'),
 });

@@ -76,7 +76,7 @@ export const mikron = {
           <div class="mk__izgara">
             <div class="mk__arac">
               <div class="mk__cizim">
-                <svg class="mk__svg" viewBox="0 0 600 222" role="group" aria-label="Aracın yandan görünüşü, ölçülen paneller">
+                <svg class="mk__svg" viewBox="0 0 600 222" role="img" aria-label="Aracın yandan görünüşü; panel seçimi aşağıdaki düğmelerle">
                   <g class="mk__olcu" aria-hidden="true">
                     <path d="M12 214 H594 M12 208 V220 M594 208 V220 M140 210 V218 M474 210 V218"/>
                   </g>
@@ -85,7 +85,7 @@ export const mikron = {
                   <path class="mk__cam" d="M218 102 L250 58 L316 58 L316 102 Z"/>
                   <path class="mk__cam" d="M322 102 L322 58 L384 58 L420 102 Z"/>
                   <path class="mk__cam" d="M426 100 L390 58 L398 58 L444 98 Z"/>
-                  ${PANELLER.map(([id, ad, , d]) => `<g class="mk__p" data-p="${id}" data-d="yok" role="button" tabindex="0" aria-label="${esc(ad)}"><path d="${d}"/></g>`).join('')}
+                  ${PANELLER.map(([id, ad, , d]) => `<g class="mk__p" data-p="${id}" data-d="yok" aria-hidden="true"><path d="${d}"/></g>`).join('')}
                   <g class="mk__detay" aria-hidden="true"><path d="M298 116 H312 M404 116 H418 M556 118 L578 118 L584 126 L558 126 Z M20 124 L46 120 L46 132 L18 134 Z M422 100 L438 92 L442 102 Z"/></g>
                   <g class="mk__teker" aria-hidden="true"><circle cx="140" cy="170" r="34"/><circle cx="140" cy="170" r="14"/><circle cx="474" cy="170" r="34"/><circle cx="474" cy="170" r="14"/></g>
                   <g class="mk__yazilar" aria-hidden="true">${PANELLER.map(([id]) => `<text data-y="${id}"></text>`).join('')}</g>
@@ -213,7 +213,6 @@ export const mikron = {
     PANELLER.forEach(([id]) => {
       const sec = () => { tara?.kill(); PANELLER.forEach(([x]) => isaretle(x)); gsap.to(prob, { x: merkez[id].x, y: merkez[id].y, duration: reducedMotion ? 0 : 0.35, ease: 'power2.out' }); goster(id); };
       g[id].addEventListener('click', sec);
-      g[id].addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); sec(); } });
       cip[id].addEventListener('click', sec);
     });
 

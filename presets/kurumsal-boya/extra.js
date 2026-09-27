@@ -167,3 +167,47 @@ export const hasarDosyasi = {
     guncelle();
   },
 };
+
+// Sektör imzası: "son kontrol". Kütüphanedeki otomobilin (lib3d car) şampanya metalik Cycles render'ı, gün ışığı
+// lambalarının yansıması gövde boyunca akıyor; kaydırdıkça lamba ışığı görselin üstünden geçer. Görsel temsilîdir.
+const KONTROLLER = [
+  ['Renk tonu', 'Boyanan panel komşu panelle gün ışığında yan yana karşılaştırılır. Ton farkı görünüyorsa araç teslim edilmez.'],
+  ['Yüzey ve parlaklık', 'Lambanın yansıması panel boyunca düz akmalı. Portakal kabuğu, akıntı ya da toz varsa pastayla alınır.'],
+  ['Kenar ve aralıklar', 'Söküp takılan çıta, fitil ve kapı aralıkları kontrol edilir; bant izi, boya taşması bırakılmaz.'],
+  ['Ölçüm ve rapor', 'Boya kalınlığı panel panel ölçülür, fotoğraflarla birlikte iş raporuna yazılır ve size verilir.'],
+];
+const okSvg = `<svg class="k-ok" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+
+export const sonKontrol = {
+  render() {
+    const img = `${import.meta.env.BASE_URL}img/kurumsal-boya/kontrol-3d.jpg`;
+    const konu = encodeURIComponent('Hasar / sigorta dosyası');
+    return `
+      <section class="k-bolum sk" aria-labelledby="sk-baslik">
+        <div class="k-kap sk__ic">
+          <figure class="sk__gorsel" data-perde>
+            <img src="${img}" alt="Gün ışığı lambalarının altında şampanya renkli otomobilin temsilî 3D çizimi" loading="lazy" width="1600" height="1200">
+            <span class="sk__isik" aria-hidden="true"></span>
+            <figcaption>Temsilî 3D çizim</figcaption>
+          </figure>
+          <div class="sk__metin">
+            <p class="sk__ust">Teslimden önce</p>
+            <h2 class="k-h2" id="sk-baslik" data-bol>Gün ışığı lambasının altında <em>son tur</em></h2>
+            <p class="k-lead">Kabinden çıkan araç doğrudan size gitmez. Lambanın altında dört şeye bakarız; biri bile tutmuyorsa iş bitmemiş sayılır.</p>
+            <ol class="sk__liste" data-sira>
+              ${KONTROLLER.map(([a, b], i) => `<li><span class="sk__no">${['i', 'ii', 'iii', 'iv'][i]}</span><div><h3>${esc(a)}</h3><p>${esc(b)}</p></div></li>`).join('')}
+            </ol>
+            <a class="k-link sk__link" href="#/iletisim?konu=${konu}" data-rota="iletisim?konu=${konu}">Hasar fotoğrafı gönderin ${okSvg}</a>
+          </div>
+        </div>
+      </section>`;
+  },
+  mount(el) {
+    if (reducedMotion) return;
+    const isik = el.querySelector('.sk__isik');
+    gsap.fromTo(isik, { xPercent: -120 }, {
+      xPercent: 220, ease: 'none',
+      scrollTrigger: { trigger: el.querySelector('.sk__gorsel'), start: 'top 85%', end: 'bottom 15%', scrub: 0.6 },
+    });
+  },
+};

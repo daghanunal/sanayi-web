@@ -9,7 +9,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Epilogue:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,800&family=Space+Mono:wght@400;700&display=swap&subset=latin-ext" rel="stylesheet" />
-  <link rel="preload" as="image" href="/img/boya-klasik2/kat-sac.jpg" />
+  <link rel="preload" as="image" href="/img/boya-klasik2/r-kat-sac-m.webp" media="(max-width: 899px)" />
+  <link rel="preload" as="image" href="/img/boya-klasik2/r-kat-sac-d.webp" media="(min-width: 900px)" />
   <link rel="stylesheet" href="../../shared/base.css" />
   <link rel="stylesheet" href="./style.css" />
 </head>
@@ -17,7 +18,7 @@
   <a class="skip" href="#hizmetler">İçeriğe geç</a>
 
   <header class="top" data-top>
-    <a href="#katlar" class="top__brand"><span class="top__mark" aria-hidden="true"><i></i><i></i><i></i></span><span data-bind="ad"></span></a>
+    <a href="#" class="top__brand"><span class="top__mark" aria-hidden="true"><i></i><i></i><i></i></span><span data-bind="ad"></span></a>
     <nav class="top__nav" aria-label="Sayfa bölümleri">
       <a href="#hizmetler">Hizmetler</a>
       <a href="#renk">Renk</a>
@@ -32,10 +33,10 @@
     <section class="kat" id="katlar" aria-labelledby="hero-title">
       <div class="kat__stage">
         <div class="kat__photo">
-          <div class="layer layer--0"><img src="/img/boya-klasik2/kat-sac.jpg" alt="Boyası sökülmüş, çıplak sac halindeki spor otomobilin arkası" fetchpriority="high" /></div>
-          <div class="layer layer--1"><div class="layer__in"><img src="/img/boya-klasik2/kat-astar.jpg" alt="" /></div><span class="layer__edge"></span></div>
-          <div class="layer layer--2"><div class="layer__in"><img src="/img/boya-klasik2/kat-boya.jpg" alt="" /></div><span class="layer__edge"></span></div>
-          <div class="layer layer--3"><div class="layer__in"><img src="/img/boya-klasik2/kat-vernik.jpg" alt="" /><span class="gloss"></span></div><span class="layer__edge"></span></div>
+          <div class="layer layer--0"><picture><source media="(min-width: 900px)" srcset="/img/boya-klasik2/r-kat-sac-d.webp" /><img src="/img/boya-klasik2/r-kat-sac-m.webp" alt="Boya kabininde, camları ve stopları kâğıtla maskelenmiş, boyası sökülüp çıplak saca inmiş bir otomobil (3D görsel)" fetchpriority="high" /></picture></div>
+          <div class="layer layer--1"><div class="layer__in"><picture><source media="(min-width: 900px)" srcset="/img/boya-klasik2/r-kat-astar-d.webp" /><img src="/img/boya-klasik2/r-kat-astar-m.webp" alt="" /></picture></div><span class="layer__edge"></span></div>
+          <div class="layer layer--2"><div class="layer__in"><picture><source media="(min-width: 900px)" srcset="/img/boya-klasik2/r-kat-boya-d.webp" /><img src="/img/boya-klasik2/r-kat-boya-m.webp" alt="" /></picture></div><span class="layer__edge"></span></div>
+          <div class="layer layer--3"><div class="layer__in"><picture><source media="(min-width: 900px)" srcset="/img/boya-klasik2/r-kat-vernik-d.webp" /><img src="/img/boya-klasik2/r-kat-vernik-m.webp" alt="" /></picture><span class="gloss"></span></div><span class="layer__edge"></span></div>
           <div class="kat__shade" aria-hidden="true"></div>
         </div>
 
@@ -91,12 +92,12 @@
       </div>
       <div class="renk__view">
         <div class="renk__frame" data-renk-frame>
-          <img class="renk__img is-top" src="/img/boya-klasik2/renk-turuncu.jpg" alt="Turuncu boyalı spor otomobilin arkası" loading="lazy" data-renk-a />
+          <img class="renk__img is-top" src="/img/boya-klasik2/r-renk-turuncu.webp" alt="Turuncu vernikli otomobil, sağ arka çapraz görünüm (3D görsel)" loading="lazy" data-renk-a />
           <img class="renk__img" alt="" loading="lazy" data-renk-b />
           <span class="renk__edge" aria-hidden="true"></span>
         </div>
-          <div class="renk__swatches" role="radiogroup" aria-label="Renk seçin" data-swatches></div>
-          <p class="renk__name mono"><span data-renk-name></span><span class="renk__rate" data-renk-rate></span></p>
+        <div class="renk__swatches" role="radiogroup" aria-label="Renk seçin" data-swatches></div>
+        <p class="renk__name mono" aria-live="polite"><span data-renk-name></span><span class="renk__rate" data-renk-rate></span></p>
       </div>
     </section>
 
@@ -115,8 +116,9 @@
     <!-- GALERİ -->
     <section class="isler" id="isler" aria-labelledby="isler-title">
       <div class="sec-head">
-        <p class="sec-head__no mono">04 / Teslim edilenler</p>
-        <h2 id="isler-title">Kabinden son çıkanlar.</h2>
+        <p class="sec-head__no mono">04 / İş örnekleri</p>
+        <h2 id="isler-title">Bitmiş iş böyle görünmeli.</h2>
+        <p class="sec-head__note">Seramik, film, boya ve pasta. Görseller örnek amaçlıdır.</p>
       </div>
       <div class="isler__grid" data-gallery></div>
     </section>
@@ -124,9 +126,11 @@
     <!-- YORUMLAR -->
     <section class="yorum" id="yorumlar" aria-labelledby="yorum-title">
       <div class="yorum__score">
+        <p class="yorum__tag mono">Örnek yorumlar</p>
         <p class="yorum__big" data-score></p>
         <div class="yorum__stars" data-stars></div>
-        <h2 id="yorum-title" data-score-text></h2>
+        <h2 id="yorum-title">Müşteriler ne diyor?</h2>
+        <p class="yorum__note" data-score-text></p>
       </div>
       <ul class="yorum__list" data-reviews></ul>
       <div class="markalar" aria-label="Çalıştığımız markalar"><div class="markalar__track" data-brands></div></div>
@@ -164,6 +168,7 @@
     <p class="foot__name" data-bind="ad"></p>
     <p data-bind="adres"></p>
     <p class="mono" data-bind="copy"></p>
+    <p class="foot__note mono">Fotoğraflar: Pexels · 3D görseller temsilîdir</p>
   </footer>
 
   <script type="module" src="./main.js"></script>

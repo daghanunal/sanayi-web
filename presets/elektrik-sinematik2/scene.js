@@ -1,9 +1,11 @@
 // Bobin: kaydırmayla sarılan bakır bobin sahnesi.
-// Tek sahne: gövde (saç paketli nüve + iki flanş), üzerine katman katman sarılan emaye bakır tel,
+// Tek sahne: sarma tezgâhının miline takılı makara (disk disk saç paketli nüve, yalıtım kâğıdı,
+// pahlı bakalit flanşlar, kalaylı pabuçlar), üzerine katman katman sarılan emaye bakır tel,
 // besleme teli, bobinin manyetik alan çizgileri ve bu çizgilerde akan parçacıklar.
-// Dışarıya: createCoil(canvas, opts) → { S, start(), stop(), resize(), warm() }
+// Işık: lib3d `studio` HDRI (softbox yansımaları), ACES ton eşleme, yumuşak PCF gölge; telefonda 'lo'.
+// Dışarıya: createCoil(canvas, opts) → { S, ready, start(), stop(), resize(), warm(), snap() }
 import * as THREE from 'three';
-import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js';
+import { loadEnv, pickQuality } from '../../shared/lib3d.js';
 
 const lerp = (a, b, t) => a + (b - a) * t;
 const clamp01 = (x) => Math.min(1, Math.max(0, x));
@@ -46,6 +48,27 @@ function canvasTex(w, h, draw, srgb = true) {
   return t;
 }
 
+// Tekrarlanabilir gürültü (her yüklemede aynı doku)
+function rng(seed) {
+  let s = seed >>> 0;
+  return () => ((s = (s * 1664525 + 1013904223) >>> 0) / 4294967296);
+}
+
+// Pahlı disk profili (LatheGeometry, Y ekseni): iç delik → pahlı dış kenar
+function flangeProfile(rIn, rOut, th, ch) {
+  const h = th / 2;
+  return [
+    new THREE.Vector2(rIn, -h),
+    new THREE.Vector2(rOut - ch, -h),
+    new THREE.Vector2(rOut - ch * 0.3, -h + ch * 0.3),
+    new THREE.Vector2(rOut, -h + ch),
+    new THREE.Vector2(rOut, h - ch),
+    new THREE.Vector2(rOut - ch * 0.3, h - ch * 0.3),
+    new THREE.Vector2(rOut - ch, h),
+    new THREE.Vector2(rIn, h),
+  ];
+}
+
 // ---------------------------------------------------------------- alan çizgileri
 
 // Solenoid dipol alanı: r = s·sin²θ, eksen X. Çizgi, dış yay + nüvenin içinden dönüş.
@@ -71,91 +94,192 @@ function fieldLine(s, phi, n) {
 // ---------------------------------------------------------------- sahne
 
 export function createCoil(canvas, { low = false, reduced = false } = {}) {
+  const q = pickQuality();
+  const lo = low || q === 'lo';
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: 'high-performance' });
   renderer.setClearColor(0x000000, 0);
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.05;
+  renderer.toneMappingExposure = 1.0;
   renderer.outputColorSpace = THREE.SRGBColorSpace;
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFShadowMap;
 
   const scene = new THREE.Scene();
-  const pmrem = new THREE.PMREMGenerator(renderer);
-  scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
-  scene.environmentIntensity = 0.85;
+  const ENV = 0.95;
+  scene.environmentIntensity = ENV;
+  // softbox yansımaları telin üst sırtına ve flanş pahına düşsün
+  scene.environmentRotation.set(0.25, 0.9, 0);
   scene.fog = new THREE.Fog(0x071816, 7, 16);
+
+  // Yedek ışık: HDRI inmezse metal kararmasın
+  const hemi = new THREE.HemisphereLight(0xffe8d6, 0x0b2a24, 0);
+  let hemiOn = 0;
+  scene.add(hemi);
+  const ready = loadEnv('studio', renderer, { quality: lo ? 'lo' : 'hi' })
+    .then((env) => {
+      scene.environment = env;
+    })
+    .catch(() => {
+      hemiOn = 1.6;
+    });
 
   const camera = new THREE.PerspectiveCamera(34, 1, 0.05, 40);
 
-  // Işıklar: sıcak üst ışık + patina yeşili arka kontur
-  const key = new THREE.DirectionalLight(0xffe2c4, 2.4);
-  key.position.set(2.5, 4, 3);
-  scene.add(key);
-  const rim = new THREE.DirectionalLight(0x5fe0c0, 3.2);
+  // Işıklar: sıcak üst anahtar (yumuşak gölge) + patina yeşili arka kontur
+  const key = new THREE.DirectionalLight(0xffe4c8, 2.1);
+  key.position.set(2.2, 6, 3.4);
+  key.castShadow = true;
+  key.shadow.mapSize.set(lo ? 1024 : 2048, lo ? 1024 : 2048);
+  key.shadow.radius = lo ? 3 : 5;
+  key.shadow.bias = -0.0005;
+  key.shadow.normalBias = 0.025;
+  Object.assign(key.shadow.camera, { left: -3.6, right: 3.6, top: 3.6, bottom: -3.6, near: 1, far: 16 });
+  scene.add(key, key.target);
+  const rim = new THREE.DirectionalLight(0x5fe0c0, 2.8);
   rim.position.set(-3, 1.5, -4);
   scene.add(rim);
   const glow = new THREE.PointLight(0xff8a3a, 0, 6, 1.6);
   glow.position.set(0, 0, 1.6);
   scene.add(glow);
 
+  // Zemin: yalnız gölgeyi taşır (tezgâh yüzeyi); renk CSS fonundan gelir
+  const GROUND_Y = -1.62;
+  const ground = new THREE.Mesh(new THREE.PlaneGeometry(40, 40), new THREE.ShadowMaterial({ opacity: 0.42, color: 0x010605 }));
+  ground.rotation.x = -Math.PI / 2;
+  ground.position.y = GROUND_Y;
+  ground.receiveShadow = true;
+  scene.add(ground);
+
   const rig = new THREE.Group(); // bobini ekrana göre kaydırmak için
   scene.add(rig);
   const coil = new THREE.Group();
   rig.add(coil);
+  const shade = (m) => {
+    m.castShadow = true;
+    m.receiveShadow = true;
+    return m;
+  };
 
-  // --- Nüve: saç paketi (enine ince çizgiler)
-  const lamTex = canvasTex(512, 64, (g, w, h) => {
-    g.fillStyle = '#4b5052';
-    g.fillRect(0, 0, w, h);
-    for (let x = 0; x < w; x += 4) {
-      const v = 60 + Math.random() * 40;
-      g.fillStyle = `rgb(${v},${v + 4},${v + 4})`;
-      g.fillRect(x, 0, 3, h);
+  // --- Nüve: disk disk saç paketi (yan yüzde ince halkalar, her saç biraz farklı ton)
+  const R = rng(7);
+  const lamTex = canvasTex(64, 1024, (g, w, h) => {
+    for (let y = 0; y < h; y += 6) {
+      const v = 118 + R() * 46;
+      const b = R() < 0.18 ? 16 : 6; // bazı saçlarda mavimsi oksit
+      g.fillStyle = `rgb(${v - 4},${v + 2},${v + b})`;
+      g.fillRect(0, y, w, 5);
+      g.fillStyle = 'rgb(38,40,42)'; // saç arası yalıtım çizgisi
+      g.fillRect(0, y + 5, w, 1);
+    }
+    g.globalAlpha = 0.08;
+    for (let i = 0; i < 400; i++) {
+      g.fillStyle = R() < 0.5 ? '#000' : '#fff';
+      g.fillRect(R() * w, R() * h, 1 + R() * 3, 1);
     }
   });
-  lamTex.repeat.set(1, 1);
-  const core = new THREE.Mesh(
-    new THREE.CylinderGeometry(CORE_R, CORE_R, CORE_L + 0.5, 48, 1, false),
-    new THREE.MeshStandardMaterial({ color: 0x9aa2a4, map: lamTex, metalness: 0.9, roughness: 0.45 })
-  );
+  const lamBump = lamTex.clone();
+  lamBump.colorSpace = THREE.NoColorSpace;
+  lamBump.needsUpdate = true;
+  const steel = new THREE.MeshStandardMaterial({
+    color: 0xb9c0c4, map: lamTex, bumpMap: lamBump, bumpScale: 1.2, metalness: 1, roughness: 0.34,
+  });
+  const core = shade(new THREE.Mesh(new THREE.CylinderGeometry(CORE_R, CORE_R, CORE_L + 0.5, lo ? 48 : 72, 1, true), steel));
   core.rotation.z = Math.PI / 2;
   coil.add(core);
-  // nüve alnı (uçlarda görünen saç kesiti)
+  // nüve alnı: tek saçın yüzü, lekeli mavi-gri oksit
   const faceTex = canvasTex(256, 256, (g, w, h) => {
-    g.fillStyle = '#3c4143';
+    const gr = g.createRadialGradient(w / 2, h / 2, 10, w / 2, h / 2, w / 2);
+    gr.addColorStop(0, '#6c7479');
+    gr.addColorStop(1, '#4d565c');
+    g.fillStyle = gr;
     g.fillRect(0, 0, w, h);
-    g.strokeStyle = 'rgba(160,170,172,.5)';
-    for (let y = 0; y < h; y += 5) {
+    // torna izi: ince eş merkezli halkalar + hafif mavi oksit lekesi
+    for (let r = 12; r < w / 2; r += 1.5) {
+      g.strokeStyle = `rgba(${R() < 0.5 ? '40,46,52' : '170,176,180'},${0.05 + R() * 0.06})`;
       g.beginPath();
-      g.moveTo(0, y);
-      g.lineTo(w, y);
+      g.arc(w / 2, h / 2, r, 0, Math.PI * 2);
       g.stroke();
     }
+    const ox = g.createRadialGradient(w * 0.3, h * 0.35, 4, w * 0.3, h * 0.35, w * 0.5);
+    ox.addColorStop(0, 'rgba(70,96,140,.22)');
+    ox.addColorStop(1, 'rgba(70,96,140,0)');
+    g.fillStyle = ox;
+    g.fillRect(0, 0, w, h);
   });
+  const faceMat = new THREE.MeshStandardMaterial({ map: faceTex, metalness: 0.9, roughness: 0.42 });
 
-  // --- Flanşlar: koyu bakalit
-  const bakalit = new THREE.MeshStandardMaterial({ color: 0x2a1610, metalness: 0.1, roughness: 0.42 });
-  const flangeGeo = new THREE.CylinderGeometry(1.18, 1.18, 0.07, 64);
+  // --- Mil (sarma tezgâhı) + somun + pul
+  const chrome = new THREE.MeshStandardMaterial({ color: 0xe6e9ec, metalness: 1, roughness: 0.12 });
+  const zinc = new THREE.MeshStandardMaterial({ color: 0xc9ccc4, metalness: 1, roughness: 0.3 });
+  const shaft = shade(new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.1, CORE_L + 2.4, 32), chrome));
+  shaft.rotation.z = Math.PI / 2;
+  coil.add(shaft);
+  const nutGeo = new THREE.CylinderGeometry(0.21, 0.21, 0.13, 6);
+  const washerGeo = new THREE.CylinderGeometry(0.27, 0.27, 0.025, 40);
+
+  // --- Flanşlar: pahlı, cilalı fenolik bakalit
+  const bakTex = canvasTex(256, 256, (g, w, h) => {
+    g.fillStyle = '#3a1d12';
+    g.fillRect(0, 0, w, h);
+    for (let i = 0; i < 1400; i++) {
+      g.fillStyle = `rgba(${R() < 0.5 ? '20,8,4' : '92,50,30'},${0.06 + R() * 0.1})`;
+      g.fillRect(R() * w, R() * h, 1 + R() * 4, 1 + R() * 2);
+    }
+  });
+  const bakalit = new THREE.MeshPhysicalMaterial({
+    color: 0x8a5a44, map: bakTex, metalness: 0, roughness: 0.42, clearcoat: 0.8, clearcoatRoughness: 0.18,
+  });
+  const flangeGeo = new THREE.LatheGeometry(flangeProfile(CORE_R, 1.18, 0.09, 0.028), lo ? 64 : 112);
   for (const sx of [-1, 1]) {
-    const f = new THREE.Mesh(flangeGeo, bakalit);
+    const f = shade(new THREE.Mesh(flangeGeo, bakalit));
     f.rotation.z = Math.PI / 2;
-    f.position.x = sx * (CORE_L / 2 + 0.035);
+    f.position.x = sx * (CORE_L / 2 + 0.045);
     coil.add(f);
-    const face = new THREE.Mesh(
-      new THREE.CircleGeometry(CORE_R * 0.98, 40),
-      new THREE.MeshStandardMaterial({ map: faceTex, metalness: 0.8, roughness: 0.5 })
-    );
+    const face = new THREE.Mesh(new THREE.RingGeometry(0.105, CORE_R, 48), faceMat);
     face.position.x = sx * (CORE_L / 2 + 0.25 + 0.001);
     face.rotation.y = sx * Math.PI / 2;
     coil.add(face);
+    const washer = shade(new THREE.Mesh(washerGeo, zinc));
+    washer.rotation.z = Math.PI / 2;
+    washer.position.x = sx * (CORE_L / 2 + 0.265);
+    coil.add(washer);
+    const nut = shade(new THREE.Mesh(nutGeo, zinc));
+    nut.rotation.z = Math.PI / 2;
+    nut.position.x = sx * (CORE_L / 2 + 0.345);
+    coil.add(nut);
   }
 
-  // --- Sargı teli
+  // --- Yalıtım kâğıdı: sargının altında, tel sarıldıkça örtülür
+  const paperTex = canvasTex(512, 128, (g, w, h) => {
+    g.fillStyle = '#a07a48';
+    g.fillRect(0, 0, w, h);
+    g.globalAlpha = 0.18;
+    for (let i = 0; i < 1600; i++) {
+      g.strokeStyle = R() < 0.5 ? '#8a6a3c' : '#e8cf9c';
+      g.beginPath();
+      const x = R() * w, y = R() * h;
+      g.moveTo(x, y);
+      g.lineTo(x + 3 + R() * 12, y + (R() - 0.5) * 3);
+      g.stroke();
+    }
+  });
+  const paper = shade(new THREE.Mesh(
+    new THREE.CylinderGeometry(CORE_R + 0.008, CORE_R + 0.008, CORE_L, lo ? 48 : 72, 1, true),
+    new THREE.MeshStandardMaterial({ color: 0x6a4e30, map: paperTex, roughness: 0.9, metalness: 0 })
+  ));
+  paper.rotation.z = Math.PI / 2;
+  coil.add(paper);
+
+  // --- Sargı teli: emaye bakır (metal + şeffaf vernik katmanı), her sarımda hafif ton farkı
   const curve = new WindingCurve();
-  const segPerTurn = low ? 24 : 26;
+  const segPerTurn = lo ? 24 : 32;
   const segments = curve.total * segPerTurn;
-  const radial = low ? 6 : 7;
+  const radial = lo ? 6 : 10;
   const wireGeo = new THREE.TubeGeometry(curve, segments, WIRE, radial, false);
   const idxPerSeg = radial * 6;
-  const wireMat = new THREE.MeshStandardMaterial({ color: 0xd07a45, metalness: 1, roughness: 0.26, emissive: 0x000000 });
+  const wireMat = new THREE.MeshPhysicalMaterial({
+    color: 0xd8875a, metalness: 1, roughness: 0.24, clearcoat: 1, clearcoatRoughness: 0.07, emissive: 0x000000,
+  });
   const wu = {
     uTime: { value: 0 },
     uPulse: { value: 0 },
@@ -172,52 +296,66 @@ export function createCoil(canvas, { low = false, reduced = false } = {}) {
       .replace(
         '#include <common>',
         `#include <common>
-        varying float vAlong; uniform float uTime, uPulse, uHeat, uFault, uHead;`
+        varying float vAlong; uniform float uTime, uPulse, uHeat, uFault, uHead;
+        float turnHash(float n){ return fract(sin(n * 12.9898) * 43758.5453); }`
+      )
+      .replace(
+        '#include <color_fragment>',
+        `#include <color_fragment>
+        float tn = turnHash(floor(vAlong * ${(TURNS * LAYERS).toFixed(1)}));
+        diffuseColor.rgb *= 0.95 + 0.08 * tn;`
+      )
+      .replace(
+        '#include <roughnessmap_fragment>',
+        `#include <roughnessmap_fragment>
+        roughnessFactor *= 0.94 + 0.14 * tn;`
       )
       .replace(
         '#include <emissivemap_fragment>',
         `#include <emissivemap_fragment>
         // akım darbeleri: telin boyunca akan sıcak ışık
         float k = fract(vAlong * 9.0 - uTime * 0.35);
-        float pulse = smoothstep(0.0, 0.02, k) * (1.0 - smoothstep(0.02, 0.09, k));
-        vec3 hot = vec3(1.0, 0.55, 0.2);
-        totalEmissiveRadiance += hot * pulse * uPulse * 2.4;
+        float pulse = smoothstep(0.0, 0.012, k) * (1.0 - smoothstep(0.012, 0.05, k));
+        vec3 hot = vec3(1.0, 0.36, 0.08);
+        totalEmissiveRadiance += hot * pulse * uPulse * 1.5;
         // ısınma: tüm sargı kor gibi
         totalEmissiveRadiance += vec3(1.0, 0.32, 0.08) * uHeat * (0.55 + 0.3 * sin(vAlong * 180.0 + uTime * 3.0));
         // arıza: bir bölgede kırmızı sıcak nokta
         float spot = exp(-pow((vAlong - 0.62) * 40.0, 2.0));
         totalEmissiveRadiance += vec3(1.0, 0.08, 0.05) * spot * uFault * (0.7 + 0.3 * sin(uTime * 14.0));
         // sarılan telin ucu parlar
-        float tip = exp(-pow((vAlong - uHead) * 260.0, 2.0));
-        totalEmissiveRadiance += vec3(1.0, 0.7, 0.4) * tip * 1.6;`
+        float tip = exp(-pow((vAlong - uHead) * 1400.0, 2.0));
+        totalEmissiveRadiance += vec3(1.0, 0.42, 0.14) * tip * 1.4;`
       );
   };
-  const wire = new THREE.Mesh(wireGeo, wireMat);
+  const wire = shade(new THREE.Mesh(wireGeo, wireMat));
   coil.add(wire);
 
   // --- Besleme teli (ucu takip eden düz tel)
-  const feed = new THREE.Mesh(new THREE.CylinderGeometry(WIRE * 0.9, WIRE * 0.9, 1, 8, 1, true), wireMat);
+  const feed = new THREE.Mesh(new THREE.CylinderGeometry(WIRE * 0.9, WIRE * 0.9, 1, 10, 1, true), wireMat);
+  feed.castShadow = true;
   rig.add(feed);
   const feedFrom = new THREE.Vector3(0, 6, 1.2);
   const head = new THREE.Vector3();
   const tmpV = new THREE.Vector3();
   const up = new THREE.Vector3(0, 1, 0);
 
-  // --- Terminal pabuçları
-  const lugMat = new THREE.MeshStandardMaterial({ color: 0xb87333, metalness: 1, roughness: 0.35 });
+  // --- Terminal pabuçları: kalaylı bakır
+  const lugMat = new THREE.MeshStandardMaterial({ color: 0xd2cdc2, metalness: 1, roughness: 0.28 });
   for (const sx of [-1, 1]) {
-    const lug = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.34, 0.2), lugMat);
-    lug.position.set(sx * (CORE_L / 2 + 0.035), 1.3, 0);
+    const x = sx * (CORE_L / 2 + 0.045);
+    const lug = shade(new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.34, 0.2), lugMat));
+    lug.position.set(x, 1.3, 0);
     coil.add(lug);
-    const ring = new THREE.Mesh(new THREE.TorusGeometry(0.07, 0.025, 8, 20), lugMat);
-    ring.position.set(sx * (CORE_L / 2 + 0.035), 1.52, 0);
+    const ring = shade(new THREE.Mesh(new THREE.TorusGeometry(0.075, 0.026, 12, 28), lugMat));
+    ring.position.set(x, 1.53, 0);
     ring.rotation.y = Math.PI / 2;
     coil.add(ring);
   }
 
   // --- Alan çizgileri
-  const scales = low ? [1.9, 2.8, 4.0] : [1.7, 2.35, 3.1, 4.2];
-  const phis = low ? 8 : 12;
+  const scales = lo ? [1.9, 2.8, 4.0] : [1.7, 2.35, 3.1, 4.2];
+  const phis = lo ? 8 : 12;
   const N = 140;
   const lines = [];
   const lineMat = new THREE.ShaderMaterial({
@@ -268,7 +406,7 @@ export function createCoil(canvas, { low = false, reduced = false } = {}) {
   });
 
   // --- Alan çizgilerinde akan parçacıklar (CPU'da örneklenir, sayı az)
-  const PN = low ? 260 : 620;
+  const PN = lo ? 260 : 620;
   const pPos = new Float32Array(PN * 3);
   const pData = Array.from({ length: PN }, () => ({
     line: Math.floor(Math.random() * lines.length),
@@ -310,7 +448,7 @@ export function createCoil(canvas, { low = false, reduced = false } = {}) {
   coil.add(dots);
 
   // --- Havada toz
-  const DN = low ? 160 : 360;
+  const DN = lo ? 160 : 360;
   const dPos = new Float32Array(DN * 3);
   for (let i = 0; i < DN; i++) {
     dPos[i * 3] = (Math.random() - 0.5) * 14;
@@ -360,7 +498,13 @@ export function createCoil(canvas, { low = false, reduced = false } = {}) {
     dustMat.uniforms.uPx.value = dotMat.uniforms.uPx.value;
   }
 
-  const clock = new THREE.Clock();
+  let lastT = performance.now();
+  const delta = () => {
+    const n = performance.now();
+    const d = (n - lastT) / 1000;
+    lastT = n;
+    return d;
+  };
   let t = 0;
   let spinA = 0;
   let running = false;
@@ -441,9 +585,10 @@ export function createCoil(canvas, { low = false, reduced = false } = {}) {
     // Işık
     glow.intensity = (C.heat * 9 + C.pulse * 1.2 + C.fault * 3) * C.dim;
     glow.color.setHex(C.fault > 0.5 ? 0xff3a20 : 0xff8a3a);
-    scene.environmentIntensity = 0.85 * C.dim;
-    key.intensity = 2.4 * C.dim;
-    rim.intensity = 3.2 * C.dim;
+    scene.environmentIntensity = ENV * C.dim;
+    hemi.intensity = hemiOn * C.dim;
+    key.intensity = 2.1 * C.dim;
+    rim.intensity = 2.8 * C.dim;
 
     // Kamera
     const cp = Math.cos(C.camPitch);
@@ -468,17 +613,18 @@ export function createCoil(canvas, { low = false, reduced = false } = {}) {
   function loop() {
     if (!running) return;
     raf = requestAnimationFrame(loop);
-    step(Math.min(clock.getDelta(), 1 / 20));
+    step(Math.min(delta(), 1 / 20));
   }
 
   resize();
   return {
     S,
+    ready,
     resize,
     start() {
       if (running) return;
       running = true;
-      clock.getDelta();
+      delta();
       loop();
     },
     stop() {

@@ -2,7 +2,7 @@ import '../../shared/base.css';
 import ana from '../../data/devre.json';
 import ek from '../../data/kurumsal-elektrik.json';
 import { kurumsal, derinBirlestir } from '../_kurumsal/engine.js';
-import { arizaKodu } from './extra.js';
+import { arizaKodu, akuTesti } from './extra.js';
 import './style.css';
 
 const B = import.meta.env.BASE_URL;
@@ -12,8 +12,9 @@ kurumsal({
     hero: 'bolunmus',
     gecis: 'perde',
     yer: "Şaşmaz'da",
-    heroGorsel: `${B}img/devre/teshis.jpg`,
-    heroAlt: 'Tablet arıza tespit cihazıyla araç kontrolü',
+    heroGorsel: `${B}img/kurumsal-elektrik/hero.jpg`,
+    heroAlt: 'Mavi tulumlu usta elinde arıza tespit tabletiyle kaputu açık aracın motoruna bakıyor',
+    altNot: 'Fotoğraflar temsilîdir (Pexels). 3D akü çizimi temsilîdir.',
     logoAlt: 'Oto elektrik, elektronik, arıza tespit',
     baslikEki: 'Oto elektrik ve arıza tespit | Şaşmaz, Ankara',
     teklifEtiketi: 'Arıza kodu sorgula',
@@ -26,12 +27,12 @@ kurumsal({
     },
   },
   sayfalar: [
-    { id: 'anasayfa', baslik: 'Ana Sayfa', bolumler: ['hero', 'arizaKodu', 'hizmetOzet', 'rakamlar', 'ozet', 'anlasmaOzet', 'yorumlar', 'cta'] },
+    { id: 'anasayfa', baslik: 'Ana Sayfa', bolumler: ['hero', 'arizaKodu', 'hizmetOzet', 'rakamlar', 'akuTesti', 'ozet', 'anlasmaOzet', 'yorumlar', 'cta'] },
     { id: 'kurumsal', baslik: 'Kurumsal', bolumler: ['hakkimizda', 'vizyon', 'kalite', 'kariyer', 'cta'] },
-    { id: 'hizmetler', baslik: 'Hizmetler', bolumler: ['hizmetler', 'surec', 'markalar', 'cta'] },
+    { id: 'hizmetler', baslik: 'Hizmetler', bolumler: ['hizmetler', 'akuTesti', 'surec', 'markalar', 'cta'] },
     { id: 'ariza-kodu', baslik: 'Arıza Kodu', bolumler: ['arizaKodu', 'sss', 'cta'] },
     { id: 'kurumsal-musteriler', baslik: 'Filo ve Kurumsal', bolumler: ['anlasmalar', 'galeri', 'cta'] },
     { id: 'iletisim', baslik: 'İletişim', bolumler: ['iletisim'] },
   ],
-  ekstralar: { arizaKodu },
+  ekstralar: { arizaKodu, akuTesti },
 });

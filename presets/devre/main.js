@@ -59,8 +59,8 @@ $('#hero').innerHTML = `
       </div>
       <p class="hero__lead">${esc(d.isletme.slogan)} Arıza tespiti 30 dakika, fiyatı işe başlamadan söyleriz.</p>
       <div class="hero__actions">
-        <a class="btn btn--hot" href="${telHref(d)}">${icons.phone}<span>Hemen ara</span></a>
-        <a class="btn btn--line" href="${waHref(d)}" target="_blank" rel="noopener">${icons.whatsapp}<span>WhatsApp'tan yaz</span></a>
+        <a class="btn btn--go" href="${telHref(d)}">${icons.phone}<span>Hemen ara</span></a>
+        <a class="btn btn--line" href="${waHref(d)}" target="_blank" rel="noopener">${icons.whatsapp}<span>WhatsApp<span class="xs-hide">'tan yaz</span></span></a>
       </div>
     </div>
   </div>
@@ -80,7 +80,7 @@ $('#hakkimizda').innerHTML = `
         <p class="about__since">${denEki(d.isletme.kurulus)} beri Şaşmaz Oto Sanayi Sitesi'ndeyiz.</p>
       </div>
       <figure class="about__photo">
-        <img src="${import.meta.env.BASE_URL}img/devre/usta.jpg" alt="Ustamız arıza tespit cihazıyla aracı kontrol ediyor" width="1400" height="933" loading="lazy" />
+        <img src="${import.meta.env.BASE_URL}img/devre/usta.jpg" alt="Arıza tespit tabletiyle araç kontrolü" width="1400" height="933" loading="lazy" />
       </figure>
     </div>
     <ul class="meters">
@@ -154,7 +154,7 @@ $('#ariza-tespit').innerHTML = `
     <div class="scanner">
       <div class="scanner__bezel">
         <div class="scanner__screen">
-          <div class="scanner__bar"><span>Volt Teşhis</span><span data-scan-status>Hazır</span></div>
+          <div class="scanner__bar"><span>OBD tarayıcı</span><span data-scan-status>Hazır</span></div>
           <ol class="scanner__log" data-log>
             ${logLines.map((l) =>
               l.t === 'code'
@@ -214,10 +214,10 @@ const yildiz = (n) => `<span class="stars" aria-label="5 üzerinden ${n}">${icon
 $('#yorumlar').innerHTML = `
   <div class="wrap">
     <header class="reviews__head">
-      <h2 class="h2" data-power>Arızası çözülen<br>ne diyor?</h2>
+      <div class="reviews__title"><p class="eyebrow">Örnek yorumlar</p><h2 class="h2" data-power>Arızası çözülen<br>ne diyor?</h2></div>
       <div class="score">
         <span class="score__num">${String(d.puan.ortalama).replace('.', ',')}</span>
-        <span class="score__meta">${yildiz(5)}<span>${d.puan.adet} Google yorumu</span></span>
+        <span class="score__meta">${yildiz(5)}<span>Örnek puan · ${d.puan.adet} değerlendirme</span></span>
       </div>
     </header>
     <ul class="cards" data-lenis-prevent-touch>
@@ -277,8 +277,8 @@ $('#iletisim').innerHTML = `
     <h2 class="cta__title" data-power>Lamba yanıyorsa<br>beklemeyin.</h2>
     <p class="lead">Arızayı telefonda anlatın, ne zaman gelebileceğinizi söyleyelim. Çoğu işi aynı gün teslim ediyoruz.</p>
     <div class="cta__actions">
-      <a class="btn btn--hot btn--xl" data-wire-end href="${telHref(d)}">${icons.phone}<span>${tel}</span></a>
-      <a class="btn btn--wa btn--xl" href="${waHref(d)}" target="_blank" rel="noopener">${icons.whatsapp}<span>WhatsApp'tan yaz</span></a>
+      <a class="btn btn--go btn--xl" data-wire-end href="${telHref(d)}">${icons.phone}<span>${tel}</span></a>
+      <a class="btn btn--ink btn--wa btn--xl" href="${waHref(d)}" target="_blank" rel="noopener">${icons.whatsapp}<span>WhatsApp'tan yaz</span></a>
     </div>
     <p class="cta__note">${esc(d.garanti)}</p>
   </div>`;
@@ -288,7 +288,7 @@ $('#footer').innerHTML = `
     <p class="brand">${bolt}<span>${ad}</span></p>
     <p>${esc(d.iletisim.adres)}</p>
     <p><a href="${telHref(d)}">${tel}</a></p>
-    <p class="footer__small">© ${new Date().getFullYear()} ${ad}. ${esc(d.isletme.sektor)}, Etimesgut/Ankara.</p>
+    <p class="footer__small">© ${new Date().getFullYear()} ${ad}. ${esc(d.isletme.sektor)}, Etimesgut/Ankara.<br>Fotoğraflar: Pexels, temsilîdir. Yorumlar örnektir.</p>
   </div>`;
 
 // --- Açık/kapalı durumu ----------------------------------------------------
@@ -346,7 +346,7 @@ if (reducedMotion) {
   intro.to(needle('hiz'), { rotation: KADRAN_BASLANGIC, duration: 0.7, ease: 'power2.inOut' }, 1.1);
   intro.to(needle('devir'), { rotation: angle(0.9, 8), duration: 0.7, ease: 'power2.inOut' }, 1.1);
   intro.call(() => lamps.forEach((l) => !l.hasAttribute('data-fault') && l.classList.remove('on')), null, 1.6);
-  intro.from('.hero__copy > *', { opacity: 0, y: 24, stagger: 0.08, duration: 0.7, ease: 'power3.out' }, 0.9);
+  intro.from('.hero__copy > :not(.hero__actions)', { autoAlpha: 0, y: 20, stagger: 0.06, duration: 0.6, ease: 'power3.out' }, 0.05);
 
   // Rölanti titremesi
   gsap.to(needle('devir'), { rotation: `+=${KADRAN_SUPURME * 0.012}`, duration: 0.09, repeat: -1, yoyo: true, ease: 'sine.inOut', delay: 2.4 });
@@ -382,7 +382,7 @@ if (!reducedMotion) {
   });
   tl.to(t1.chars, { opacity: 0, yPercent: -30, stagger: 0.008, duration: 0.12, ease: 'power1.in' }, 0.6);
   tl.to(t2.chars, { keyframes: { opacity: [0, 1, 0.25, 1] }, stagger: 0.03, duration: 0.14 }, 0.72);
-  tl.to('.hero__hint', { opacity: 0, duration: 0.1 }, 0);
+  tl.to('.hero__hint', { autoAlpha: 0, duration: 0.1 }, 0);
 
   ScrollTrigger.create({
     trigger: hero, start: 'top top', end: '+=130%', pin: true, scrub: 0.4, animation: tl,

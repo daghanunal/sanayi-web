@@ -207,15 +207,15 @@
         "cevap": "Ölçümde boyalı görünür; ama renk ve parlaklık farkı gözle anlaşılmaz. Boyasız çıkarılabilecek göçüğü boyamayız."
       }
     ],
-    "yorumBaslik": "Ölçümü gören ne diyor",
-    "galeriBaslik": "Kabinden çıkanlar",
+    "yorumBaslik": "Örnek müşteri yorumları",
+    "galeriBaslik": "İş türlerinden örnekler",
     "galeri": [
       {
         "src": "/img/kurumsal-boya2/pasta-kirmizi.jpg",
         "alt": "Kırmızı kapıda makine pastası"
       },
       {
-        "src": "/img/showroom/kaput.jpg",
+        "src": "/img/kurumsal-boya2/kaput-yansima.jpg",
         "alt": "Kırmızı kaput, pasta ve seramik sonrası"
       },
       {
@@ -247,16 +247,17 @@
       },
       "olcum": {
         "baslik": "Boya ölçümü",
-        "metin": "Aracın her panelinde boya kaç mikron, ne anlama gelir? Alım-satım öncesi ve pastadan önce."
+        "metin": "Aracın her panelinde boya kaç mikron, ne anlama gelir? Alım-satım öncesi ve pastadan önce.",
+        "gorsel": "/img/kurumsal-boya2/panel-3d.jpg"
       },
       "kurumsal-musteriler": {
         "baslik": "Sigorta ve filo",
         "metin": "Kasko, trafik sigortası, şirket ve galeri araçları için tek muhatap.",
-        "gorsel": "/img/showroom/kaput.jpg"
+        "gorsel": "/img/kurumsal-boya2/kaput-yansima.jpg"
       },
       "islerimiz": {
         "baslik": "İşlerimiz",
-        "metin": "Kabinden çıkan araçlar ve müşterilerimizin yorumları."
+        "metin": "Yaptığımız iş türlerinden örnek kareler ve örnek müşteri yorumları."
       },
       "iletisim": {
         "baslik": "İletişim",

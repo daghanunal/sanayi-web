@@ -1,33 +1,44 @@
-// Vernik 3D sahnesi: boya kabini, araba, astar→boya süpürmesi, vernik, seramik damlaları, PPF.
+// Vernik 3D sahnesi: karanlık, fırınlı boya kabini. Kahraman: lib3d `car` (markasız 5 kapılı hatchback,
+// +X'e bakar). Işık: `garage` HDRI + kabin tavan/yan tüpleri (PMREM), tepeden yumuşak PCF gölge,
+// masaüstünde aynalı zemin yansıması. Hikâye: astar → boya süpürmesi (kapı açılır, kapı içi de boyanır)
+// → vernik (yansıma netleşir) → seramik damlaları → PPF filmi + farlar → döner tabla → araç kabinden çıkar.
 // Dışarıya tek bir `state` nesnesi açar; GSAP bu nesnenin alanlarını scroll ile tween'ler.
 import * as THREE from 'three';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
+import { loadAsset, loadEnv, pickQuality } from '../../shared/lib3d.js';
 
-const PRIMER = new THREE.Color('#5d6064');
-// Telefonda dışarıdan seçilmeyen iç detaylar çizilmez (~87 bin üçgen)
-const HIDDEN_ON_PHONE = /^(interior_light|steering_.*|carbon_fibre_trim|carpet|metal|blue)$/;
+const PRIMER = new THREE.Color('#5b5e62');
+const FRONT = 2.17; // araç uzayında ön tampon (x)
+const REAR = -2.125;
+const BASE_YAW = Math.PI / 2; // araç +X'e bakar; sahnede önü -Z'ye dönük dursun (kamera pozları buna göre)
+const TAU = Math.PI * 2;
+// Aynalı yansımada da hareket eden düğümler (her karede kopyaya aktarılır)
+const MOVING = ['door_FL', 'door_FR', 'hood', 'tailgate', 'steer_FL', 'steer_FR', 'wheel_FL', 'wheel_FR', 'wheel_RL', 'wheel_RR'];
 
-export function createScene(canvas, { lowPower = false } = {}) {
-  const renderer = new THREE.WebGLRenderer({
-    canvas, antialias: true, powerPreference: 'high-performance', alpha: false,
-  });
-  const dprCap = lowPower ? 1.25 : 1.5;
-  renderer.setPixelRatio(Math.min(devicePixelRatio, dprCap));
-  renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.05;
+export function createScene(canvas, { reduced = false } = {}) {
+  const q = pickQuality();
+  const lo = q === 'lo';
+  // Aynalı zemin (araba iki kez çizilir): masaüstünde her zaman, telefonda yalnız güçlü cihazda
+  const nav = navigator;
+  const mirrorOk = !lo || ((nav.hardwareConcurrency || 4) >= 6 && !(nav.deviceMemory && nav.deviceMemory <= 4));
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: 'high-performance', alpha: false });
+  renderer.setPixelRatio(Math.min(devicePixelRatio || 1, lo ? 1.25 : 1.5));
+  renderer.toneMapping = THREE.ACESFilmicToneMapping; // koyu kabinde kırmızı doygun kalsın (AgX soldurur)
+  renderer.toneMappingExposure = 1;
   renderer.outputColorSpace = THREE.SRGBColorSpace;
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFShadowMap;
 
   const scene = new THREE.Scene();
   const INK = new THREE.Color('#050607');
   scene.background = INK;
-  scene.fog = new THREE.Fog(INK, 9, 22);
+  scene.fog = new THREE.Fog(INK, 10, 26);
+  scene.environmentIntensity = 0.05;
 
-  const camera = new THREE.PerspectiveCamera(32, 1, 0.1, 60);
+  const camera = new THREE.PerspectiveCamera(lo ? 34 : 32, 1, 0.1, 80);
 
   // --- Durum (GSAP bunu tween'ler) ----------------------------------------
   const state = {
-    px: -4.6, py: 1.1, pz: -5.6, tx: 0, ty: 0.55, tz: 0, // kamera
+    px: -4.6, py: 1.1, pz: -5.6, tx: 0, ty: 0.6, tz: 0, // kamera
     tubes: 0, // kabin ışıkları 0..1
     sweep: 0, // astar → boya
     spray: 0, // tabanca partikülleri
@@ -37,79 +48,133 @@ export function createScene(canvas, { lowPower = false } = {}) {
     sheet: 0, // damlaların akıp gitmesi
     film: 0, // PPF süpürmesi
     head: 0, // farlar
+    door: 0, // sol ön kapı (0 kapalı, 1 açık): kapı içi de boyanır
+    drive: 0, // araç kendi ekseninde ileri kayar (metre); tekerlekler döner
+    steer: 0, // ön tekerlek açısı (radyan)
     spin: 0, // döner tabla hızı
     swap: 1, // renk değişim süpürmesi (1 = tamamlandı)
-    viewY: 0, // mobilde arabayı yukarı almak için görüntü kaydırma
-    viewX: 0, // masaüstünde arabayı sağa almak için
+    viewY: 0,
+    viewX: 0,
     fitCar: 0, // dikey ekranda arabayı çerçeveye tam sığdır (0 = yakın plan, serbest)
     rTop: 0.1, // dikey ekranda arabanın kalacağı bant (ekran yüksekliğinin oranı)
     rBot: 0.42,
     fit: 1,
-    fitK: 1, // yakın planlarda mobil uzaklaştırmayı azaltır
+    fitK: 1,
   };
 
-  // --- Ortam (yansımalar): kabin tüpleri ----------------------------------
+  // --- Ortam: garage HDRI + kabin tüpleri → PMREM ---------------------------
   const pmrem = new THREE.PMREMGenerator(renderer);
   const envScene = new THREE.Scene();
   envScene.background = new THREE.Color('#020203');
-  const stripMat = new THREE.MeshBasicMaterial({ color: new THREE.Color(1, 1, 1).multiplyScalar(6) });
-  const stripGeo = new THREE.BoxGeometry(0.35, 0.08, 9);
+  const tubeMat = new THREE.MeshBasicMaterial({ color: new THREE.Color(1, 1, 1).multiplyScalar(5.5) });
+  const ceil = new THREE.BoxGeometry(0.5, 0.06, 9);
   for (let i = -2; i <= 2; i++) {
-    const s = new THREE.Mesh(stripGeo, stripMat);
-    s.position.set(i * 1.25, 4.2, 0);
+    const s = new THREE.Mesh(ceil, tubeMat);
+    s.position.set(i * 1.3, 4.3, 0);
     envScene.add(s);
   }
-  const sideGeo = new THREE.BoxGeometry(0.06, 0.25, 9);
+  const side = new THREE.BoxGeometry(0.07, 0.22, 9);
   for (const x of [-5, 5]) {
-    for (const y of [1.2, 2.6]) {
-      const s = new THREE.Mesh(sideGeo, stripMat);
+    for (const y of [1.1, 2.5]) {
+      const s = new THREE.Mesh(side, tubeMat);
       s.position.set(x, y, 0);
       envScene.add(s);
     }
   }
-  const warm = new THREE.Mesh(
-    new THREE.PlaneGeometry(3, 1.4),
-    new THREE.MeshBasicMaterial({ color: new THREE.Color('#dfe8f2').multiplyScalar(1.2), side: THREE.DoubleSide })
+  const endPanel = new THREE.Mesh(
+    new THREE.PlaneGeometry(3.4, 1.2),
+    new THREE.MeshBasicMaterial({ color: new THREE.Color('#dfe8f2').multiplyScalar(1.1), side: THREE.DoubleSide })
   );
-  warm.position.set(0, 1.6, -7);
-  envScene.add(warm);
-  const floorEnv = new THREE.Mesh(new THREE.PlaneGeometry(30, 30), new THREE.MeshBasicMaterial({ color: '#0c0d0f' }));
+  endPanel.position.set(0, 1.7, -7);
+  envScene.add(endPanel);
+  const floorEnv = new THREE.Mesh(new THREE.PlaneGeometry(30, 30), new THREE.MeshBasicMaterial({ color: '#0b0c0e' }));
   floorEnv.rotation.x = -Math.PI / 2;
   envScene.add(floorEnv);
-  const envRT = pmrem.fromScene(envScene, 0.02);
+  let envRT = pmrem.fromScene(envScene, 0.02);
   scene.environment = envRT.texture;
+  function rebuildEnv(hdri) {
+    envScene.background = hdri;
+    envScene.backgroundIntensity = 0.32;
+    const next = pmrem.fromScene(envScene, 0.015);
+    scene.environment = next.texture;
+    envRT.dispose();
+    envRT = next;
+  }
 
-  // --- Kabin: zemin ve tavan tüpleri -------------------------------------
-  const floor = new THREE.Mesh(
-    new THREE.CircleGeometry(16, 64),
-    // Masaüstünde altındaki aynalı araba bu yarı saydam zeminden görünür
-    new THREE.MeshBasicMaterial({ color: '#050607', transparent: true, opacity: lowPower ? 1 : 0.78 })
-  );
+  // --- Kabin: zemin, görünür tüpler, anahtar ışık ----------------------------
+  const floorMat = new THREE.MeshStandardMaterial({
+    color: '#050607', roughness: mirrorOk ? 0.34 : 0.3, metalness: 0,
+    transparent: mirrorOk, opacity: mirrorOk ? 0.84 : 1,
+    envMapIntensity: mirrorOk ? 0.8 : 0.4, // bulanık ortam yansıması zemini griye boğmasın
+  });
+  const floor = new THREE.Mesh(new THREE.CircleGeometry(18, 72), floorMat);
   floor.rotation.x = -Math.PI / 2;
+  floor.receiveShadow = true;
   floor.renderOrder = 1;
   scene.add(floor);
 
-  const glowTex = makeGlowTexture();
-  scene.add(new THREE.HemisphereLight('#9aa7b4', '#050505', 0.25));
-  const key = new THREE.DirectionalLight('#ffffff', 0);
-  key.position.set(-3, 6, -2);
-  scene.add(key);
+  // Kabin duvarındaki dikey lamba armatürleri: sisle kaybolan derinlik. Kamera ile araba arasına
+  // düşeni söner (dikey ekranda kamera uzaklaşınca halkanın dışına çıkabiliyor).
+  const fixtures = [];
+  {
+    const R = 9.5;
+    const N = 14;
+    const geo = new THREE.BoxGeometry(0.05, 5.2, 0.05); // zeminin altına da uzanır: aynalı zeminde yansıması
+    for (let i = 0; i < N; i++) {
+      const a = (i / N) * TAU + 0.12;
+      const m = new THREE.MeshBasicMaterial({ color: new THREE.Color('#e9f1ff').multiplyScalar(1.4), transparent: true, opacity: 0, fog: true });
+      const f = new THREE.Mesh(geo, m);
+      f.position.set(Math.cos(a) * R, 0.2, Math.sin(a) * R);
+      f.renderOrder = 0;
+      scene.add(f);
+      fixtures.push(f);
+    }
+  }
+
+  const key = new THREE.DirectionalLight('#f4f7ff', 0);
+  key.position.set(0.8, 9, -1.2);
+  key.castShadow = true;
+  key.shadow.mapSize.set(lo ? 1024 : 2048, lo ? 1024 : 2048);
+  key.shadow.radius = lo ? 4 : 6;
+  key.shadow.bias = -0.0003;
+  key.shadow.normalBias = 0.02;
+  Object.assign(key.shadow.camera, { left: -3.4, right: 3.4, top: 3.4, bottom: -3.4, near: 4, far: 14 });
+  scene.add(key, key.target);
+  const fill = new THREE.DirectionalLight('#9fb4ff', 0);
+  fill.position.set(-6, 2.2, 4);
+  scene.add(fill);
+
+  // --- Döner tabla ve araç kökü ---------------------------------------------
+  const rig = new THREE.Group(); // döner tabla (y ekseni)
+  rig.rotation.y = BASE_YAW;
+  scene.add(rig);
+  const carRoot = new THREE.Group(); // araç uzayı: +X ileri
+  rig.add(carRoot);
+
+  // Temas gölgesi: yumuşak AO lekesi (PCF gölgesinin altında, lastik izlerini oturtur)
+  const blob = new THREE.Mesh(
+    new THREE.PlaneGeometry(5.3, 2.7),
+    new THREE.MeshBasicMaterial({ map: blobTexture(), transparent: true, depthWrite: false, toneMapped: false, opacity: 0.92 })
+  );
+  blob.rotation.x = -Math.PI / 2;
+  blob.position.set(0.02, 0.004, 0);
+  blob.renderOrder = 2;
+  carRoot.add(blob);
 
   // --- Boya malzemesi (astar → boya süpürmesi, renk değişimi) -------------
+  const carInv = new THREE.Matrix4();
   const paint = {
     uSweep: { value: 0 },
     uSwap: { value: 1 },
-    uOld: { value: new THREE.Color('#8e0b14') },
-    uNew: { value: new THREE.Color('#8e0b14') },
+    uOld: { value: new THREE.Color('#7a0911') },
+    uNew: { value: new THREE.Color('#7a0911') },
     uPrimer: { value: PRIMER.clone() },
     uGloss: { value: 0 },
-    uZ: { value: new THREE.Vector2(-2.4, 2.4) }, // ön ve arka z
+    uSpan: { value: new THREE.Vector2(FRONT, REAR) },
+    uCarInv: { value: carInv },
     uTime: { value: 0 },
   };
-  const bodyMat = new THREE.MeshPhysicalMaterial({
-    color: '#ffffff', metalness: 0.55, roughness: 0.32, clearcoat: 1, clearcoatRoughness: 0.3, envMapIntensity: 1,
-  });
-  bodyMat.onBeforeCompile = (shader) => {
+  const paintChunks = (shader) => {
     Object.assign(shader.uniforms, paint);
     shader.vertexShader = shader.vertexShader
       .replace('#include <common>', '#include <common>\nvarying vec3 vWPos;')
@@ -121,7 +186,8 @@ export function createScene(canvas, { lowPower = false } = {}) {
         varying vec3 vWPos;
         uniform float uSweep, uSwap, uGloss, uTime;
         uniform vec3 uOld, uNew, uPrimer;
-        uniform vec2 uZ;
+        uniform vec2 uSpan;
+        uniform mat4 uCarInv;
         float vHash(vec3 p){ p = fract(p * 0.3183099 + 0.1); p *= 17.0; return fract(p.x * p.y * p.z * (p.x + p.y + p.z)); }
         float vNoise(vec3 x){ vec3 i = floor(x); vec3 f = fract(x); f = f*f*(3.0-2.0*f);
           return mix(mix(mix(vHash(i), vHash(i+vec3(1,0,0)), f.x), mix(vHash(i+vec3(0,1,0)), vHash(i+vec3(1,1,0)), f.x), f.y),
@@ -131,20 +197,22 @@ export function createScene(canvas, { lowPower = false } = {}) {
       .replace(
         '#include <color_fragment>',
         `#include <color_fragment>
-        float s = (vWPos.z - uZ.x) / (uZ.y - uZ.x);
-        float n = vNoise(vWPos * 7.0) * 0.06 + vNoise(vWPos * 31.0) * 0.02;
-        float sw = uSweep * 1.12 - 0.06;
+        vec3 cp = (uCarInv * vec4(vWPos, 1.0)).xyz;
+        cp.y = abs(cp.y); // aynalı kopya
+        float s = (uSpan.x - cp.x) / (uSpan.x - uSpan.y); // 0 = ön tampon, 1 = arka
+        float n = vNoise(cp * 7.0) * 0.06 + vNoise(cp * 31.0) * 0.02 + cp.y * 0.05;
+        float sw = uSweep * 1.14 - 0.07;
         vPaint = smoothstep(sw + 0.012, sw - 0.012, s + n - 0.04);
         vEdge = smoothstep(0.05, 0.0, abs(s + n - 0.04 - sw)) * step(0.001, uSweep) * step(uSweep, 0.999);
-        float sp = uSwap * 1.12 - 0.06;
+        float sp = uSwap * 1.14 - 0.07;
         float swapM = smoothstep(sp + 0.012, sp - 0.012, s + n - 0.04);
         vec3 painted = mix(uOld, uNew, swapM);
-        diffuseColor.rgb = mix(uPrimer, painted, vPaint);`
+        diffuseColor.rgb = mix(uPrimer, painted, vPaint) * diffuseColor.rgb; // taban beyaz: yalnız AO köşe rengi kalır`
       )
       .replace(
         '#include <roughnessmap_fragment>',
         `#include <roughnessmap_fragment>
-        roughnessFactor = mix(0.46, mix(0.42, 0.16, uGloss), vPaint);`
+        roughnessFactor = mix(0.62, mix(0.42, 0.3, uGloss), vPaint);`
       )
       .replace(
         '#include <metalnessmap_fragment>',
@@ -154,72 +222,18 @@ export function createScene(canvas, { lowPower = false } = {}) {
       .replace(
         '#include <lights_physical_fragment>',
         `#include <lights_physical_fragment>
-        material.clearcoat = vPaint * mix(0.35, 1.0, uGloss);
-        material.clearcoatRoughness = mix(0.35, 0.015, uGloss);`
+        material.clearcoat = vPaint * mix(0.55, 1.0, uGloss);
+        material.clearcoatRoughness = mix(0.26, 0.02, uGloss);`
       )
       .replace(
         '#include <emissivemap_fragment>',
         `#include <emissivemap_fragment>
-        totalEmissiveRadiance += uNew * vEdge * 1.6;`
+        totalEmissiveRadiance += uNew * vEdge * 1.4;`
       );
   };
 
-  const chromeMat = new THREE.MeshStandardMaterial({ color: '#e8ecf0', metalness: 1, roughness: 0.12 });
-  const rimMat = new THREE.MeshStandardMaterial({ color: '#b9bec4', metalness: 1, roughness: 0.22 });
-  const glassMat = new THREE.MeshPhysicalMaterial({
-    color: '#0b0d10', metalness: 0.2, roughness: 0.02, transparent: true, opacity: 0.55, clearcoat: 1, envMapIntensity: 1.6,
-  });
-  const lampMat = new THREE.MeshStandardMaterial({
-    color: '#dfe7ee', metalness: 0.6, roughness: 0.1, emissive: new THREE.Color('#eaf3ff'), emissiveIntensity: 0,
-  });
-
-  // --- Araba --------------------------------------------------------------
-  const car = new THREE.Group();
-  scene.add(car);
-  let carReflect = null;
-  let bodyMesh = null;
-  const wheels = [];
-  const carBox = new THREE.Box3(new THREE.Vector3(-1.1, 0, -2.3), new THREE.Vector3(1.1, 1.25, 2.3));
-  const carCenter = new THREE.Vector3(0, 0.6, 0);
-  const corners = Array.from({ length: 8 }, () => new THREE.Vector3());
-  let fitDelta = 0;
-  const headGlows = [];
-
-  // PPF filmi: gövdenin biraz şişirilmiş kopyası, yanardöner kenar çizgisi
-  const filmUniforms = { uFilm: { value: 0 }, uZ: paint.uZ, uTime: paint.uTime };
-  const filmMat = new THREE.ShaderMaterial({
-    uniforms: filmUniforms,
-    transparent: true,
-    depthWrite: false,
-    blending: THREE.AdditiveBlending,
-    vertexShader: `
-      varying vec3 vWPos; varying vec3 vN; varying vec3 vView;
-      void main(){
-        vec3 p = position + normal * 0.006;
-        vec4 wp = modelMatrix * vec4(p, 1.0);
-        vWPos = wp.xyz;
-        vN = normalize(mat3(modelMatrix) * normal);
-        vView = normalize(cameraPosition - wp.xyz);
-        gl_Position = projectionMatrix * viewMatrix * wp;
-      }`,
-    fragmentShader: `
-      uniform float uFilm, uTime; uniform vec2 uZ;
-      varying vec3 vWPos; varying vec3 vN; varying vec3 vView;
-      void main(){
-        float s = (vWPos.z - uZ.x) / (uZ.y - uZ.x);
-        float f = uFilm * 0.62; // filmi ön yarıya uygula
-        float on = step(s, f);
-        float edge = smoothstep(0.012, 0.0, abs(s - f)) * step(0.001, uFilm) * step(uFilm, 0.999);
-        float fres = pow(1.0 - max(dot(normalize(vN), normalize(vView)), 0.0), 3.0);
-        vec3 irid = 0.5 + 0.5 * cos(6.2831 * (fres * 1.4 + vWPos.y * 0.6 + vec3(0.0, 0.33, 0.67)));
-        vec3 col = irid * fres * 0.12 * on + mix(vec3(0.8,0.92,1.0), irid, 0.35) * edge * 1.1;
-        gl_FragColor = vec4(col, 1.0);
-      }`,
-  });
-  let filmMesh = null;
-
-  // --- Tabanca partikülleri ------------------------------------------------
-  const P = lowPower ? 260 : 520;
+  // --- Tabanca partikülleri (araç uzayında) --------------------------------
+  const P = lo ? 240 : 480;
   const pGeo = new THREE.BufferGeometry();
   const seeds = new Float32Array(P * 4);
   for (let i = 0; i < P * 4; i++) seeds[i] = Math.random();
@@ -228,7 +242,7 @@ export function createScene(canvas, { lowPower = false } = {}) {
   const sprayU = {
     uTime: paint.uTime,
     uAmount: { value: 0 },
-    uNozzle: { value: new THREE.Vector3(-1.7, 0.85, 0) },
+    uNozzle: { value: new THREE.Vector3(0, 0.85, -1.8) },
     uColor: paint.uNew,
     uSize: { value: 26 * renderer.getPixelRatio() },
   };
@@ -241,8 +255,8 @@ export function createScene(canvas, { lowPower = false } = {}) {
       varying float vA;
       void main(){
         float life = fract(uTime * (0.9 + seed.w * 0.8) + seed.x);
-        vec3 dir = normalize(vec3(1.0, (seed.y - 0.5) * 0.9, (seed.z - 0.5) * 1.1));
-        vec3 p = uNozzle + dir * life * (0.9 + seed.w * 0.6);
+        vec3 dir = normalize(vec3((seed.z - 0.5) * 1.1, (seed.y - 0.5) * 0.9, 1.0)); // sol yandan gövdeye (+Z)
+        vec3 p = uNozzle + dir * life * (0.8 + seed.w * 0.5);
         p.y -= life * life * 0.15;
         vec4 mv = modelViewMatrix * vec4(p, 1.0);
         gl_Position = projectionMatrix * mv;
@@ -260,142 +274,234 @@ export function createScene(canvas, { lowPower = false } = {}) {
   });
   const spray = new THREE.Points(pGeo, sprayMat);
   spray.frustumCulled = false;
-  scene.add(spray);
+  spray.visible = false;
+  carRoot.add(spray);
 
-  // --- Seramik damlaları ---------------------------------------------------
-  const DROPS = lowPower ? 110 : 190;
-  const dropMat = new THREE.MeshStandardMaterial({
-    color: '#ffffff', metalness: 0, roughness: 0.03, transparent: true, opacity: 0.5, envMapIntensity: 2.6,
+  // --- Seramik damlaları (araç uzayında) -----------------------------------
+  const DROPS = lo ? 110 : 200;
+  const dropMat = new THREE.MeshPhysicalMaterial({
+    color: '#b8c6d4', metalness: 0, roughness: 0.02, clearcoat: 1, clearcoatRoughness: 0, transparent: true, opacity: 0.3, ior: 1.33,
   });
-  const drops = new THREE.InstancedMesh(new THREE.SphereGeometry(1, 14, 10), dropMat, DROPS);
+  const drops = new THREE.InstancedMesh(new THREE.SphereGeometry(1, lo ? 10 : 14, lo ? 7 : 10), dropMat, DROPS);
   drops.count = 0;
   drops.frustumCulled = false;
-  scene.add(drops);
-  const dropData = []; // {p: Vector3, r, side}
+  drops.visible = false;
+  carRoot.add(drops);
+  const dropData = [];
   const m4 = new THREE.Matrix4();
-  const q = new THREE.Quaternion();
+  const qt = new THREE.Quaternion();
   const v3 = new THREE.Vector3();
   const sc = new THREE.Vector3();
   const UP = new THREE.Vector3(0, 1, 0);
 
-  // --- Yükleme ------------------------------------------------------------
-  const manager = new THREE.LoadingManager();
-  let onProgress = () => {};
-  manager.onProgress = (_, loaded, total) => onProgress(loaded / total);
+  // --- PPF filmi: gövdenin şişirilmiş kopyası, yanardöner süpürme kenarı ------
+  const filmU = { uFilm: { value: 0 }, uSpan: paint.uSpan, uCarInv: paint.uCarInv };
+  const filmMat = new THREE.ShaderMaterial({
+    uniforms: filmU,
+    transparent: true,
+    depthWrite: false,
+    blending: THREE.AdditiveBlending,
+    vertexShader: `
+      varying vec3 vWPos; varying vec3 vN; varying vec3 vView;
+      void main(){
+        vec3 p = position + normal * 0.004;
+        vec4 wp = modelMatrix * vec4(p, 1.0);
+        vWPos = wp.xyz;
+        vN = normalize(mat3(modelMatrix) * normal);
+        vView = normalize(cameraPosition - wp.xyz);
+        gl_Position = projectionMatrix * viewMatrix * wp;
+      }`,
+    fragmentShader: `
+      uniform float uFilm; uniform vec2 uSpan; uniform mat4 uCarInv;
+      varying vec3 vWPos; varying vec3 vN; varying vec3 vView;
+      void main(){
+        vec3 cp = (uCarInv * vec4(vWPos, 1.0)).xyz;
+        float s = (uSpan.x - cp.x) / (uSpan.x - uSpan.y);
+        float f = uFilm * 0.42; // ön tampon, kaput, çamurluklar
+        float on = step(s, f);
+        float edge = smoothstep(0.012, 0.0, abs(s - f)) * step(0.001, uFilm) * step(uFilm, 0.999);
+        float fres = pow(1.0 - abs(dot(normalize(vN), normalize(vView))), 3.0);
+        vec3 irid = 0.5 + 0.5 * cos(6.2831 * (fres * 1.4 + cp.y * 0.6 + vec3(0.0, 0.33, 0.67)));
+        vec3 col = irid * fres * 0.14 * on + mix(vec3(0.8, 0.92, 1.0), irid, 0.35) * edge * 1.2;
+        gl_FragColor = vec4(col, 1.0);
+      }`,
+  });
+  const filmMeshes = [];
 
-  function load(progressCb) {
-    if (progressCb) onProgress = progressCb;
-    const draco = new DRACOLoader(manager);
-    draco.setDecoderPath(import.meta.env.BASE_URL + 'draco/');
-    const loader = new GLTFLoader(manager);
-    loader.setDRACOLoader(draco);
-    const aoTex = new THREE.TextureLoader(manager).load(import.meta.env.BASE_URL + 'models/ferrari_ao.png');
+  // --- Far parlamaları -------------------------------------------------------
+  const glowTex = makeGlowTexture();
+  const headGlows = [];
 
-    return new Promise((resolve, reject) => {
-      loader.load(
-        import.meta.env.BASE_URL + 'models/ferrari.glb',
-        (gltf) => {
-          const model = gltf.scene.children[0];
-          model.traverse((o) => {
-            if (!o.isMesh) return;
-            const n = o.name;
-            if (lowPower && HIDDEN_ON_PHONE.test(n)) {
-              o.visible = false;
-              return;
-            }
-            if (n === 'body') {
-              o.material = bodyMat;
-              bodyMesh = o;
-            } else if (n.startsWith('rim_') || n === 'trim') o.material = rimMat;
-            else if (n === 'chrome' || n === 'nuts') o.material = chromeMat;
-            else if (n === 'glass') o.material = glassMat;
-            else if (n === 'lights' || n === 'leds') o.material = lampMat;
-          });
-          for (const w of ['wheel_fl', 'wheel_fr', 'wheel_rl', 'wheel_rr']) wheels.push(model.getObjectByName(w));
+  // --- Araba -------------------------------------------------------------------
+  let car = null;
+  let mirror = null;
+  const mirrorPairs = [];
+  let paintMat = null;
+  let lampHead = null;
+  let lampTail = null;
+  const carBox = new THREE.Box3(new THREE.Vector3(REAR, 0, -0.95), new THREE.Vector3(FRONT, 1.48, 0.95));
+  const carCenter = new THREE.Vector3((FRONT + REAR) / 2, 0.66, 0);
+  const corners = Array.from({ length: 8 }, () => new THREE.Vector3());
+  let fitDelta = 0;
+  let ready = false;
 
-          const shadow = new THREE.Mesh(
-            new THREE.PlaneGeometry(0.655 * 4, 1.3 * 4),
-            new THREE.MeshBasicMaterial({
-              map: aoTex, blending: THREE.MultiplyBlending, toneMapped: false, transparent: true, premultipliedAlpha: true,
-            })
-          );
-          shadow.rotation.x = -Math.PI / 2;
-          shadow.position.y = 0.006;
-          shadow.renderOrder = 3;
-          car.add(model, shadow);
-
-          // Gövde uzunluğu (süpürme ekseni)
-          car.updateMatrixWorld(true);
-          const box = new THREE.Box3().setFromObject(bodyMesh);
-          paint.uZ.value.set(box.min.z, box.max.z);
-
-          // PPF filmi
-          filmMesh = new THREE.Mesh(bodyMesh.geometry, filmMat);
-          filmMesh.matrixAutoUpdate = false;
-          filmMesh.renderOrder = 4;
-          bodyMesh.add(filmMesh);
-
-          // Far parlamaları
-          const lb = new THREE.Box3().setFromObject(model.getObjectByName('lights'));
-          for (const sx of [-1, 1]) {
-            const g = new THREE.Sprite(
-              new THREE.SpriteMaterial({
-                map: glowTex, color: '#dfeaff', transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, opacity: 0,
-              })
-            );
-            g.position.set(sx * (lb.max.x - 0.22), lb.min.y + (lb.max.y - lb.min.y) * 0.6, lb.min.z + 0.1);
-            g.scale.setScalar(1.1);
-            car.add(g);
-            headGlows.push(g);
-          }
-
-          // Masaüstünde zeminde gerçek (aynalı) yansıma
-          if (!lowPower) {
-            carReflect = model.clone();
-            carReflect.scale.y = -1;
-            carReflect.traverse((o) => {
-              if (o.isMesh && o.material === filmMat) o.visible = false;
-            });
-            car.add(carReflect);
-          }
-
-          placeDrops(box);
-          // Gövde kutusu + tekerlekler yere kadar (bazı iç parçaların kutuları döndürülmüş, onları katmıyoruz)
-          carBox.copy(box);
-          carBox.min.y = 0;
-          carBox.getCenter(carCenter);
-          resolve();
-        },
-        undefined,
-        reject
-      );
+  async function load(progressCb = () => {}) {
+    let fCar = 0;
+    let fEnv = 0;
+    const report = () => progressCb(fCar * 0.55 + fEnv * 0.45);
+    const envP = loadEnv('garage', renderer, { quality: q })
+      .then((t) => {
+        fEnv = 1;
+        report();
+        return t;
+      })
+      .catch((e) => {
+        console.warn('HDRI yüklenemedi', e);
+        fEnv = 1;
+        return null;
+      });
+    const carP = loadAsset('car', {
+      quality: q,
+      renderer,
+      onProgress: (f) => {
+        fCar = Math.min(0.98, f);
+        report();
+      },
     });
+    const [hdri, asset] = await Promise.all([envP, carP]);
+    fCar = 1;
+    report();
+    if (hdri) rebuildEnv(hdri);
+    setupCar(asset);
+    try {
+      await renderer.compileAsync(scene, camera);
+    } catch (_) {}
+    ready = true;
   }
 
-  // Damlaları kaput, tavan ve bagaj üstüne yerleştir (aşağı doğru ışın atarak).
-  function placeDrops(box) {
+  function setupCar(asset) {
+    car = asset;
+    const root = car.scene;
+    carRoot.add(root);
+
+    // Boya: GLB'deki clearcoat boyadan türeyen, süpürme/renk değişimi yapan malzeme
+    const src = car.materials.paint;
+    paintMat = new THREE.MeshPhysicalMaterial({
+      color: '#ffffff', metalness: 0.45, roughness: 0.34, clearcoat: 1, clearcoatRoughness: 0.03,
+      vertexColors: !!src.vertexColors, normalMap: src.normalMap || null, envMapIntensity: 1,
+    });
+    if (src.normalMap) paintMat.normalScale.copy(src.normalScale);
+    paintMat.name = 'paint';
+    paintMat.onBeforeCompile = paintChunks;
+    root.traverse((o) => {
+      if (!o.isMesh) return;
+      if (Array.isArray(o.material)) o.material = o.material.map((m) => (m === src ? paintMat : m));
+      else if (o.material === src) o.material = paintMat;
+    });
+    src.dispose();
+
+    lampHead = car.materials.light_head;
+    lampTail = car.materials.light_tail;
+    // Boş plaka yerine yazılı TR plakası (karanlık kabinde bembeyaz dikdörtgen ucuz duruyor)
+    const plate = car.materials.plate_face;
+    if (plate) {
+      plate.map?.dispose();
+      plate.map = makePlateTexture(renderer);
+      plate.color.set('#c9cacc');
+      plate.needsUpdate = true;
+    }
+    if (lampHead) lampHead.userData.base = lampHead.emissiveIntensity;
+    if (lampTail) lampTail.userData.base = lampTail.emissiveIntensity;
+
+    // PPF filmi: boyalı ön paneller
+    for (const n of ['body', 'hood_panel', 'door_FL_panel', 'door_FR_panel']) {
+      const node = car.nodes[n];
+      if (!node) continue;
+      node.traverse((o) => {
+        if (!o.isMesh) return;
+        const hasPaint = Array.isArray(o.material) ? o.material.includes(paintMat) : o.material === paintMat;
+        if (!hasPaint) return;
+        const fm = new THREE.Mesh(o.geometry, filmMat);
+        fm.renderOrder = 4;
+        fm.visible = false;
+        fm.castShadow = false;
+        fm.receiveShadow = false;
+        o.add(fm);
+        filmMeshes.push(fm);
+      });
+    }
+
+    // Far parlamaları: ön lamba grubunun iki ucu
+    root.updateMatrixWorld(true);
+    const lf = car.nodes.lights_front;
+    if (lf) {
+      const lb = new THREE.Box3().setFromObject(lf);
+      const inv = new THREE.Matrix4().copy(carRoot.matrixWorld).invert();
+      lb.applyMatrix4(inv);
+      for (const sz of [-1, 1]) {
+        const g = new THREE.Sprite(
+          new THREE.SpriteMaterial({ map: glowTex, color: '#dfeaff', transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, opacity: 0, fog: false })
+        );
+        g.position.set(lb.max.x + 0.02, lb.min.y + (lb.max.y - lb.min.y) * 0.55, sz * (lb.max.z - 0.2));
+        g.scale.setScalar(0.55);
+        g.renderOrder = 5;
+        carRoot.add(g);
+        headGlows.push(g);
+      }
+    }
+
+    // Yarı saydam zeminin altında gerçek aynalı yansıma
+    if (mirrorOk) {
+      mirror = root.clone(true);
+      mirror.scale.y = -1;
+      mirror.traverse((o) => {
+        if (o.isMesh) {
+          o.castShadow = false;
+          o.receiveShadow = false;
+          if (o.material === filmMat) o.visible = false;
+        }
+        if (o.name && MOVING.includes(o.name)) {
+          const a = car.nodes[o.name];
+          if (a) mirrorPairs.push([a, o]);
+        }
+      });
+      carRoot.add(mirror);
+    }
+
+    placeDrops();
+  }
+
+  // Damlaları kaput, tavan ve bagaj üstüne yerleştir (aşağı doğru ışın, araç uzayında).
+  function placeDrops() {
+    const targets = [];
+    for (const n of ['body', 'hood_panel', 'tailgate_panel']) {
+      const node = car.nodes[n];
+      if (node) node.traverse((o) => o.isMesh && o.material !== filmMat && targets.push(o));
+    }
     const ray = new THREE.Raycaster();
     const down = new THREE.Vector3(0, -1, 0);
+    const inv = new THREE.Matrix4();
     const tries = DROPS * 3;
     let i = 0;
     const step = () => {
-      const end = Math.min(i + 24, tries);
+      carRoot.updateMatrixWorld(true);
+      inv.copy(carRoot.matrixWorld).invert();
+      const end = Math.min(i + 20, tries);
       for (; i < end && dropData.length < DROPS; i++) {
-        const x = THREE.MathUtils.lerp(box.min.x + 0.25, box.max.x - 0.25, Math.random());
-        const z = THREE.MathUtils.lerp(box.min.z + 0.25, box.max.z - 0.35, Math.random());
-        ray.set(new THREE.Vector3(x, 3, z), down);
-        const hit = ray.intersectObject(bodyMesh, false)[0];
+        const x = THREE.MathUtils.lerp(REAR + 0.35, FRONT - 0.25, Math.random());
+        const z = THREE.MathUtils.lerp(-0.72, 0.72, Math.random());
+        const o = new THREE.Vector3(x, 3, z).applyMatrix4(carRoot.matrixWorld);
+        const d = down.clone().transformDirection(carRoot.matrixWorld);
+        ray.set(o, d);
+        const hit = ray.intersectObjects(targets, false)[0];
         if (!hit || !hit.face) continue;
-        const nrm = hit.face.normal.clone().transformDirection(bodyMesh.matrixWorld);
+        const mat = Array.isArray(hit.object.material) ? hit.object.material[hit.face.materialIndex] : hit.object.material;
+        if (mat !== paintMat) continue;
+        const p = hit.point.clone().applyMatrix4(inv);
+        const nrm = hit.face.normal.clone().transformDirection(hit.object.matrixWorld).transformDirection(inv);
         if (nrm.y < 0) nrm.negate();
         if (nrm.y < 0.55) continue;
-        dropData.push({
-          p: hit.point.clone(),
-          n: nrm,
-          r: 0.012 + Math.random() ** 2 * 0.03,
-          k: Math.random(),
-          side: Math.sign(x) || 1,
-        });
+        dropData.push({ p, n: nrm, r: 0.007 + Math.random() ** 2 * 0.02, k: Math.random(), side: Math.sign(z) || 1 });
       }
       drops.count = dropData.length;
       if (i < tries && dropData.length < DROPS) (window.requestIdleCallback || setTimeout)(step);
@@ -409,15 +515,14 @@ export function createScene(canvas, { lowPower = false } = {}) {
   function resize() {
     const w = innerWidth;
     const h = innerHeight;
-    // Mobilde adres çubuğu gidip gelince küçük yükseklik değişimlerini yok say
-    if (w === W && Math.abs(h - H) < 140) return;
+    if (w === W && Math.abs(h - H) < 140) return; // adres çubuğu gidip gelince
     W = w;
     H = h;
     renderer.setSize(w, h, false);
     camera.aspect = w / h;
-    state.fit = w / h < 1 ? Math.min(2.5, 1.05 / (w / h)) : w / h < 1.3 ? 1.3 : 1;
+    state.fit = w / h < 1 ? Math.min(2.4, 1.02 / (w / h)) : w / h < 1.3 ? 1.28 : 1;
     state.viewY = w / h < 1 ? 0.11 : 0;
-    state.viewX = w / h >= 1.2 ? -0.15 : 0;
+    state.viewX = w / h >= 1.2 ? -0.16 : 0;
     camera.updateProjectionMatrix();
   }
   resize();
@@ -426,10 +531,16 @@ export function createScene(canvas, { lowPower = false } = {}) {
   // --- Döngü ----------------------------------------------------------------
   const timer = new THREE.Timer();
   const target = new THREE.Vector3();
+  const tmpA = new THREE.Vector3();
+  const tmpB = new THREE.Vector3();
   let running = false;
   let paused = document.hidden;
-  let flicker = 0;
-  document.addEventListener('visibilitychange', () => (paused = document.hidden));
+  let lastDrive = 0;
+  let yaw = 0;
+  document.addEventListener('visibilitychange', () => {
+    paused = document.hidden;
+    if (!paused) timer.update();
+  });
 
   function frame() {
     if (paused) return;
@@ -438,94 +549,118 @@ export function createScene(canvas, { lowPower = false } = {}) {
     const t = timer.getElapsed();
     paint.uTime.value = t;
 
+    // Döner tabla
+    yaw += dt * 0.32 * state.spin;
+    if (state.spin < 0.01 && Math.abs(yaw) > 0.0001) {
+      const goal = Math.round(yaw / TAU) * TAU; // film bölümüne dönünce en yakın tam tura otur
+      yaw += (goal - yaw) * Math.min(1, dt * 3);
+    }
+    rig.rotation.y = BASE_YAW + yaw;
+
+    // Araç hareketi: ileri kayma → tekerlekler döner; döner tablada tekerlekler de döner
+    carRoot.position.x = state.drive;
+    if (car) {
+      const dd = state.drive - lastDrive;
+      lastDrive = state.drive;
+      car.roll(dd);
+      const n = car.nodes;
+      if (n.steer_FL) n.steer_FL.rotation.y = state.steer;
+      if (n.steer_FR) n.steer_FR.rotation.y = state.steer;
+      if (n.door_FL) n.door_FL.rotation.y = -1.05 * state.door;
+      for (const [a, b] of mirrorPairs) {
+        b.position.copy(a.position);
+        b.quaternion.copy(a.quaternion);
+      }
+    }
+    rig.updateMatrixWorld(true);
+    carInv.copy(carRoot.matrixWorld).invert();
+
     // Kamera
     target.set(state.tx, state.ty, state.tz);
     const portrait = W / H < 1;
     if (portrait && state.fitCar > 0.001) fitPortrait(dt);
     else {
-      scene.fog.near = 9;
-      scene.fog.far = 22;
+      scene.fog.near = 10;
+      scene.fog.far = 26;
       camera.position.set(state.px, state.py, state.pz).sub(target).multiplyScalar(1 + (state.fit - 1) * state.fitK).add(target);
       camera.lookAt(target);
       if (state.viewY || state.viewX) camera.setViewOffset(W, H, W * state.viewX, H * state.viewY, W, H);
       else camera.clearViewOffset();
     }
 
-    // Işıklar
+    // Işıklar: kabin tüpleri yanınca ortam, anahtar ışık ve armatürler birlikte gelir
     const tub = state.tubes;
-    bodyMat.envMapIntensity = 0.08 + tub * (0.75 + state.gloss * 0.55);
-    rimMat.envMapIntensity = chromeMat.envMapIntensity = 0.1 + tub * 1.1;
-    glassMat.envMapIntensity = 0.1 + tub * 1.6;
-    dropMat.envMapIntensity = 0.3 + tub * 2.4;
-    key.intensity = tub * 0.6;
+    scene.environmentIntensity = 0.03 + tub * (0.9 + state.gloss * 0.35);
     scene.environmentRotation.y = state.envRot;
-    renderer.toneMappingExposure = 0.45 + tub * 0.6;
+    key.intensity = tub * 0.9;
+    fill.intensity = tub * 0.35;
+    renderer.toneMappingExposure = 0.5 + tub * 0.45;
+    floorMat.opacity = mirrorOk ? 0.86 : 1;
+
+    // Armatürler: kameradan bakınca arabanın önüne düşeni söndür
+    const camD = tmpA.copy(target).sub(camera.position);
+    const len = camD.length();
+    camD.divideScalar(len);
+    for (const f of fixtures) {
+      const along = tmpB.copy(f.position).sub(camera.position).dot(camD) / len;
+      const k = THREE.MathUtils.smoothstep(along, 1.05, 1.45);
+      f.material.opacity = tub * k * 0.5;
+      f.visible = f.material.opacity > 0.01;
+    }
 
     paint.uSweep.value = state.sweep;
     paint.uGloss.value = state.gloss;
     paint.uSwap.value = state.swap;
-    filmUniforms.uFilm.value = state.film;
+    filmU.uFilm.value = state.film;
 
-    // Tabanca: süpürme cephesinde, arabanın sol yanında
-    const zf = THREE.MathUtils.lerp(paint.uZ.value.x, paint.uZ.value.y, state.sweep < 0.999 ? state.sweep : state.swap);
-    sprayU.uNozzle.value.set(-1.85, 0.8 + Math.sin(t * 7) * 0.05, zf);
+    // Tabanca: süpürme cephesinde, arabanın sol yanında (araç uzayı -Z)
+    const s = state.sweep < 0.999 ? state.sweep : state.swap;
+    const xf = THREE.MathUtils.lerp(FRONT, REAR, s);
+    sprayU.uNozzle.value.set(xf, 0.78 + Math.sin(t * 7) * 0.05, -1.75);
     sprayU.uAmount.value = state.spray;
     spray.visible = state.spray > 0.01;
 
     // Farlar
-    lampMat.emissiveIntensity = state.head * 2.4;
-    for (const g of headGlows) g.material.opacity = state.head * (0.75 + Math.sin(t * 30) * 0.02);
-
-    // Döner tabla
-    car.rotation.y += dt * 0.32 * state.spin;
-    if (state.spin < 0.01 && Math.abs(car.rotation.y) > 0.0001) {
-      // Film bölümüne dönünce arabayı en yakın tam tura yumuşakça oturt
-      const goal = Math.round(car.rotation.y / (Math.PI * 2)) * Math.PI * 2;
-      car.rotation.y += (goal - car.rotation.y) * Math.min(1, dt * 3);
-    }
-    for (const w of wheels) if (w) w.rotation.x -= dt * 2.2 * state.spin;
+    if (lampHead) lampHead.emissiveIntensity = (lampHead.userData.base || 1) * (0.35 + tub * 0.65) + state.head * 5;
+    if (lampTail) lampTail.emissiveIntensity = (lampTail.userData.base || 1) + state.head * 2.5;
+    for (const g of headGlows) g.material.opacity = state.head * (0.62 + Math.sin(t * 30) * 0.02);
 
     // Damlalar
     if (state.beads > 0.001 && dropData.length) {
       drops.visible = true;
-      dropMat.opacity = 0.55 * (1 - state.sheet * 0.9);
-      const cr = Math.cos(car.rotation.y);
-      const sr = Math.sin(car.rotation.y);
+      dropMat.opacity = 0.32 * (1 - state.sheet * 0.9);
       for (let i = 0; i < dropData.length; i++) {
         const dd = dropData[i];
         const g = THREE.MathUtils.clamp(state.beads * 1.6 - dd.k * 0.6, 0, 1);
         const sh = THREE.MathUtils.clamp(state.sheet * 1.5 - dd.k * 0.5, 0, 1);
         v3.copy(dd.p);
-        v3.x += dd.side * sh * sh * 1.4;
-        v3.y -= sh * sh * sh * 1.2;
-        // arabanın dönüşüne uy
-        const x = v3.x * cr + v3.z * sr;
-        const z = -v3.x * sr + v3.z * cr;
-        v3.x = x;
-        v3.z = z;
+        v3.z += dd.side * sh * sh * 1.2;
+        v3.y -= sh * sh * sh * 1.1;
         const r = dd.r * g * (1 - sh * 0.4);
-        q.setFromUnitVectors(UP, dd.n);
-        sc.set(r * (1 + sh * 2.5), r * 0.62, r);
-        m4.compose(v3, q, sc);
+        qt.setFromUnitVectors(UP, dd.n);
+        sc.set(r * (1 + sh * 2.5), r * 0.6, r);
+        m4.compose(v3, qt, sc);
         drops.setMatrixAt(i, m4);
       }
       drops.instanceMatrix.needsUpdate = true;
     } else drops.visible = false;
 
-    if (filmMesh) filmMesh.visible = state.film > 0.001 && state.film < 1.2;
+    const filmOn = state.film > 0.001 && state.film < 1.2;
+    for (const fm of filmMeshes) fm.visible = filmOn;
 
     renderer.render(scene, camera);
   }
 
-  // Dikey ekran: arabanın kutusunu [rTop, rBot] bandına kenar payıyla sığdır.
-  // Kamera kendi bakış ekseni boyunca ileri/geri gider, bant merkezi view offset ile kaydırılır.
+  // Dikey ekran: arabanın kutusunu [rTop, rBot] bandına sığdır. Kamera bakış ekseni boyunca
+  // ileri/geri gider, bant merkezi view offset ile kaydırılır.
   const tmp = new THREE.Vector3();
   const tgt = new THREE.Vector3();
   const right = new THREE.Vector3();
   const fwd = new THREE.Vector3();
   function fitPortrait(dt) {
     const k = state.fitCar;
-    tgt.set(state.tx, state.ty, state.tz).lerp(tmp.copy(carCenter).applyMatrix4(car.matrixWorld), k);
+    // kadraj aracın durma yerine göre (final: araç uzaktan gelip bu kadraja oturur)
+    tgt.set(state.tx, state.ty, state.tz).lerp(tmp.copy(carCenter).applyMatrix4(rig.matrixWorld), k);
     const base = tmp.set(state.px, state.py, state.pz).sub(target);
     const d0 = base.length() * (1 + (state.fit - 1) * state.fitK);
     base.normalize();
@@ -533,42 +668,39 @@ export function createScene(canvas, { lowPower = false } = {}) {
     camera.lookAt(tgt);
     camera.updateMatrixWorld();
 
-    // Gövde kutusunun 8 köşesi ekrana izdüşürülür. Döner tablada sabit boy için kutu yerine
-    // kameraya göre hizalı, yarı genişliği arabanın yan boyu kadar olan bir kare kullanılır.
     const { min, max } = carBox;
     const spinning = state.spin > 0.01;
     let i = 0;
     if (spinning) {
-      const R = Math.max(max.z - min.z, max.x - min.x) / 2;
+      // döner tablada sabit boy: kameraya hizalı, yarı genişliği arabanın yarı boyu kadar kare
+      const R = (max.x - min.x) / 2;
+      const c = tmpA.copy(carCenter).applyMatrix4(rig.matrixWorld);
       right.setFromMatrixColumn(camera.matrixWorld, 0).setY(0).normalize();
       fwd.set(-right.z, 0, right.x);
       for (const sx of [-1, 1]) for (const sz of [-1, 1]) for (const y of [min.y, max.y]) {
-        corners[i++].copy(car.position).setY(y).addScaledVector(right, sx * R).addScaledVector(fwd, sz * (max.x - min.x) / 2)
+        corners[i++].set(c.x, y, c.z).addScaledVector(right, sx * R).addScaledVector(fwd, sz * 0.45 * R)
           .applyMatrix4(camera.matrixWorldInverse);
       }
     } else {
       for (const x of [0, 1]) for (const y of [0, 1]) for (const z of [0, 1]) {
         corners[i++].set(x ? max.x : min.x, y ? max.y : min.y, z ? max.z : min.z)
-          .applyMatrix4(car.matrixWorld).applyMatrix4(camera.matrixWorldInverse);
+          .applyMatrix4(rig.matrixWorld).applyMatrix4(camera.matrixWorldInverse);
       }
     }
     const tanV = Math.tan(THREE.MathUtils.degToRad(camera.fov / 2));
     const tanH = tanV * camera.aspect;
-    const half = (state.rBot - state.rTop); // NDC yarı-yükseklik
-    // Kutu köşeleri 3/4 açıda gövdeden geniş düşer; bu yüzden sabit kutuda biraz daha doldur
-    const wFill = spinning ? 0.9 : 1.0;
+    const half = state.rBot - state.rTop;
+    const wFill = spinning ? 0.92 : 0.98;
     let need = -Infinity;
     for (const c of corners) {
       const depth = -c.z;
       need = Math.max(need, Math.abs(c.x) / (tanH * wFill) - depth, Math.abs(c.y) / (tanV * half * 0.96) - depth);
     }
-    // Kaydırma animasyonuyla yumuşak takip; döner tablada ani sıçrama olmasın
     fitDelta += (need - fitDelta) * Math.min(1, dt * 10 || 1);
     camera.position.addScaledVector(base, fitDelta * k);
-    // Uzaklaşınca sis arabayı yutmasın: sisi kameranın arabaya uzaklığına göre kaydır
     const dist = camera.position.distanceTo(tgt);
-    scene.fog.near = Math.max(9, dist + 2.5);
-    scene.fog.far = Math.max(22, dist + 14);
+    scene.fog.near = Math.max(10, dist + 3);
+    scene.fog.far = Math.max(26, dist + 16);
     const centerNdc = 1 - (state.rTop + state.rBot);
     const offY = THREE.MathUtils.lerp(H * state.viewY, (centerNdc * H) / 2, k);
     camera.setViewOffset(W, H, 0, offY, W, H);
@@ -586,7 +718,38 @@ export function createScene(canvas, { lowPower = false } = {}) {
     paint.uNew.value.set(hex);
   }
 
-  return { state, load, setActive, setPaint, resize, renderOnce: frame };
+  return {
+    state, load, setActive, setPaint, resize, renderOnce: frame, quality: q,
+    get ready() { return ready; },
+    get active() { return running; },
+  };
+}
+
+function makePlateTexture(renderer) {
+  const c = document.createElement('canvas');
+  c.width = 1024;
+  c.height = 224;
+  const g = c.getContext('2d');
+  g.fillStyle = '#f4f4f2';
+  g.fillRect(0, 0, c.width, c.height);
+  g.fillStyle = '#123f9e';
+  g.fillRect(0, 0, 92, c.height);
+  g.fillStyle = '#fff';
+  g.font = '700 46px Arial, sans-serif';
+  g.textAlign = 'center';
+  g.fillText('TR', 46, 190);
+  g.fillStyle = '#111';
+  g.font = '700 150px "Arial Narrow", Arial, sans-serif';
+  g.textBaseline = 'middle';
+  g.fillText('06 PK 2008', 92 + (c.width - 92) / 2, c.height / 2 + 8);
+  g.lineWidth = 10;
+  g.strokeStyle = '#111';
+  g.strokeRect(5, 5, c.width - 10, c.height - 10);
+  const t = new THREE.CanvasTexture(c);
+  t.colorSpace = THREE.SRGBColorSpace;
+  t.flipY = false; // glTF UV düzeni
+  t.anisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy());
+  return t;
 }
 
 function makeGlowTexture() {
@@ -595,10 +758,36 @@ function makeGlowTexture() {
   const g = c.getContext('2d');
   const grd = g.createRadialGradient(64, 64, 0, 64, 64, 64);
   grd.addColorStop(0, 'rgba(255,255,255,1)');
-  grd.addColorStop(0.25, 'rgba(255,255,255,.45)');
+  grd.addColorStop(0.22, 'rgba(255,255,255,.42)');
   grd.addColorStop(1, 'rgba(255,255,255,0)');
   g.fillStyle = grd;
   g.fillRect(0, 0, 128, 128);
+  const t = new THREE.CanvasTexture(c);
+  t.colorSpace = THREE.SRGBColorSpace;
+  return t;
+}
+
+// Aracın altındaki yumuşak temas gölgesi (dikdörtgen, kenarları eriyen)
+function blobTexture() {
+  const c = document.createElement('canvas');
+  c.width = 256;
+  c.height = 128;
+  const g = c.getContext('2d');
+  const img = g.createImageData(256, 128);
+  for (let y = 0; y < 128; y++) {
+    for (let x = 0; x < 256; x++) {
+      const u = Math.abs((x + 0.5) / 128 - 1);
+      const v = Math.abs((y + 0.5) / 64 - 1);
+      const dx = Math.max(0, u - 0.72) / 0.28;
+      const dy = Math.max(0, v - 0.6) / 0.4;
+      const d = Math.min(1, Math.hypot(dx, dy));
+      const a = Math.pow(1 - d, 1.8) * 0.85;
+      const i = (y * 256 + x) * 4;
+      img.data[i] = img.data[i + 1] = img.data[i + 2] = 0;
+      img.data[i + 3] = Math.round(a * 255);
+    }
+  }
+  g.putImageData(img, 0, 0);
   const t = new THREE.CanvasTexture(c);
   t.colorSpace = THREE.SRGBColorSpace;
   return t;

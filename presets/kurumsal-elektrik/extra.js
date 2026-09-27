@@ -112,3 +112,114 @@ export const arizaKodu = {
     goster(true);
   },
 };
+
+// Sektör imzası 2: akü ve şarj ölçümü. Üç ölçüm anı (motor kapalı / marş anında / motor çalışırken) seçilir,
+// voltmetrede okunan değer kaydırılır; skala bölgeleri ve sade Türkçe yorum canlı güncellenir. Değerler 12 V
+// kurşun asit akü için yaklaşık başvuru değerleridir; görsel lib3d akünün temsilî Cycles çizimidir.
+const OLCUMLER = {
+  kapali: {
+    ad: 'Motor kapalı', ne: 'Araç en az bir saat durmuşken, kutup başlarından', min: 11, max: 13, adim: 0.05, ilk: 12.3,
+    bolge: [[11, 12, 'kirmizi'], [12, 12.4, 'sari'], [12.4, 13, 'yesil']],
+    yorum: (v) => v >= 12.6 ? ['yesil', 'Akü dolu.', 'Marş sorunu varsa sebep akü değil; marş motoru, kablo ya da şaseye bakarız.']
+      : v >= 12.4 ? ['yesil', 'Yaklaşık %75 dolu.', 'Kullanılabilir. Kısa yolda kullanılan araçta şarj yetişmiyor olabilir; motor çalışırken de ölçelim.']
+      : v >= 12.2 ? ['sari', 'Yarı yarıya boş.', 'Şarj edip yük testine alırız. Soğuk sabahta marş zorlanabilir.']
+      : v >= 12.0 ? ['sari', 'Yaklaşık %25 dolu.', 'Kış sabahı marş basmayabilir. Önce şarj, sonra test; araç uyurken kaçak akım var mı ona da bakarız.']
+      : ['kirmizi', 'Akü boş ya da hücre arızalı.', 'Şarj etsek bile tutmayabilir. Test cihazına bağlayıp aküyü mü, şarjı mı suçlayacağımızı ölçüyle söyleriz.'],
+  },
+  mars: {
+    ad: 'Marş anında', ne: 'Marşa basılırken voltajın düştüğü en alt değer', min: 8, max: 12, adim: 0.05, ilk: 10.2,
+    bolge: [[8, 9.6, 'kirmizi'], [9.6, 10.5, 'sari'], [10.5, 12, 'yesil']],
+    yorum: (v) => v >= 10.5 ? ['yesil', 'Akü marşı rahat çeviriyor.', 'Marş sırasında voltaj yeterince yüksek kalıyor.']
+      : v >= 9.6 ? ['sari', 'Sınırda.', 'Yazın çalışır, soğukta zorlanır. Akünün yük testine ve marş kablolarına bakalım.']
+      : ['kirmizi', 'Akü zayıf ya da marş fazla akım çekiyor.', 'Aküyü yük testine alır, marş motorunun çektiği akımı ölçeriz; hangisi olduğunu görmeden parça değiştirmeyiz.'],
+  },
+  calisiyor: {
+    ad: 'Motor çalışırken', ne: 'Rölantide, far ve klima açıkken ve kapalıyken', min: 12, max: 15.6, adim: 0.05, ilk: 14.1,
+    bolge: [[12, 13.2, 'kirmizi'], [13.2, 13.8, 'sari'], [13.8, 14.7, 'yesil'], [14.7, 15.6, 'kirmizi']],
+    yorum: (v) => v > 14.7 ? ['kirmizi', 'Aşırı şarj.', 'Konjektör (regülatör) voltajı tutmuyor; akü kaynar, ampuller ve beyinler zarar görebilir. Bekletmeden bakalım.']
+      : v >= 13.8 ? ['yesil', 'Şarj normal.', 'Dinamo aküyü dolduruyor. Akü yine de boşalıyorsa araç uyurken kaçak akım ararız.']
+      : v >= 13.2 ? ['sari', 'Şarj düşük.', 'Yük altında düşüyorsa kayış, kömür ya da konjektör. Far ve klima açıkken tekrar ölçeriz.']
+      : ['kirmizi', 'Şarj yok.', 'Akü tek başına araç çalıştırıyor, bir süre sonra biter. Dinamo, kömür, konjektör ve şarj kablosunu ölçeriz.'],
+  },
+};
+
+export const akuTesti = {
+  render(d) {
+    const img = `${import.meta.env.BASE_URL}img/kurumsal-elektrik/aku-3d.jpg`;
+    const sekmeler = Object.entries(OLCUMLER).map(([k, o], i) => `<button type="button" class="at__sekme" data-olcum="${k}" aria-pressed="${i === 0}">${esc(o.ad)}</button>`).join('');
+    return `
+      <section class="k-bolum at" aria-labelledby="at-baslik">
+        <div class="k-kap at__ic">
+          <div class="at__metin">
+            <p class="at__etiket"><span class="at__nokta"></span>Akü ve şarj ölçümü</p>
+            <h2 class="k-h2" id="at-baslik" data-bol>Akü mü bitti, dinamo mu? Voltmetre söyler.</h2>
+            <p class="k-lead">Akü değiştirmeden önce üç ölçü alırız. Ölçüm anını seçin, voltmetrede okunan değeri kaydırın; ne anlama geldiğini görün.</p>
+            <div class="at__sekmeler" role="group" aria-label="Ölçüm anı">${sekmeler}</div>
+            <div class="at__olcer">
+              <p class="at__ne"></p>
+              <p class="at__deger" aria-live="polite"><output class="at__v">12,30</output><span>V</span></p>
+              <div class="at__skala" aria-hidden="true"><div class="at__bolgeler"></div></div>
+              <label class="at__kaydir"><span class="sr-only">Voltmetrede okunan değer</span><input type="range" aria-describedby="at-yorum"></label>
+              <p class="at__uclar" aria-hidden="true"><span class="at__min"></span><span class="at__max"></span></p>
+            </div>
+            <div class="at__yorum" id="at-yorum" aria-live="polite"><strong></strong><p></p></div>
+            <div class="k-butonlar">
+              <a class="k-btn" href="${waHref(d, `Merhaba ${d.isletme.ad}, akü ve şarj kontrolü için ne zaman gelebilirim?\nAraç: `)}" target="_blank" rel="noopener">${icons.whatsapp}<span>Akü kontrolü için yazın</span></a>
+            </div>
+            <p class="at__not">Değerler 12 voltluk kurşun asit akü için yaklaşıktır. Kesin karar yük testi ve ölçümle verilir.</p>
+          </div>
+          <figure class="at__gorsel" data-perde>
+            <img src="${img}" alt="Kapağı kaldırılmış 12 voltluk akü ve kutup başı kablolarının temsilî 3D çizimi" loading="lazy" width="1200" height="1200">
+            <figcaption>Temsilî 3D çizim</figcaption>
+          </figure>
+        </div>
+      </section>`;
+  },
+
+  mount(el) {
+    const kok = el.querySelector('.at');
+    const giris = el.querySelector('.at__kaydir input');
+    const vEl = el.querySelector('.at__v');
+    const ne = el.querySelector('.at__ne');
+    const bolgeler = el.querySelector('.at__bolgeler');
+    const yorum = el.querySelector('.at__yorum');
+    const minEl = el.querySelector('.at__min');
+    const maxEl = el.querySelector('.at__max');
+    const sekmeler = el.querySelectorAll('[data-olcum]');
+    let o = OLCUMLER.kapali;
+    let son = '';
+    const virgul = (n) => n.toFixed(2).replace('.', ',');
+    const yuzde = (v) => ((v - o.min) / (o.max - o.min)) * 100;
+
+    const ciz = (animasyon) => {
+      const v = Number(giris.value);
+      vEl.textContent = virgul(v);
+      giris.setAttribute('aria-valuetext', `${virgul(v)} volt`);
+      const [renk, bas, metin] = o.yorum(v);
+      kok.dataset.durum = renk;
+      if (bas + metin !== son) {
+        son = bas + metin;
+        yorum.querySelector('strong').textContent = bas;
+        yorum.querySelector('p').textContent = metin;
+        if (animasyon && !reducedMotion) gsap.fromTo(yorum, { y: 6, autoAlpha: 0.4 }, { y: 0, autoAlpha: 1, duration: 0.3, ease: 'power2.out' });
+      }
+    };
+
+    const sec = (k) => {
+      o = OLCUMLER[k];
+      sekmeler.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.olcum === k)));
+      Object.assign(giris, { min: o.min, max: o.max, step: o.adim });
+      giris.value = o.ilk;
+      ne.textContent = o.ne;
+      minEl.textContent = `${virgul(o.min).replace(',00', '')} V`;
+      maxEl.textContent = `${virgul(o.max).replace(',00', '')} V`;
+      bolgeler.innerHTML = o.bolge.map(([a, b, r]) => `<i data-r="${r}" style="left:${yuzde(a)}%;width:${yuzde(b) - yuzde(a)}%"></i>`).join('');
+      son = '';
+      ciz(true);
+    };
+
+    giris.addEventListener('input', () => ciz(true));
+    sekmeler.forEach((b) => b.addEventListener('click', () => sec(b.dataset.olcum)));
+    sec('kapali');
+  },
+};

@@ -2,7 +2,7 @@ import '../../shared/base.css';
 import './style.css';
 import raw from '../../data/devre.json';
 import {
-  boot, initSmoothScroll, reducedMotion, gsap, ScrollTrigger, esc,
+  boot, initSmoothScroll, reducedMotion, gsap, ScrollTrigger, esc, vitrinModu, autoHideHeader, setStoryMode,
   telHref, waHref, mapsHref, mapsEmbed, openStatus, groupedHours, icons, GUNLER,
 } from '../../shared/core.js';
 import { SplitText } from 'gsap/SplitText';
@@ -75,10 +75,10 @@ $('#sahne').innerHTML = `
       <a class="btn btn--main" href="${telHref(d)}">${icons.phone}<span>Hemen ara</span></a>
       <a class="btn btn--ghost" href="${waHref(d)}" target="_blank" rel="noopener">${icons.whatsapp}<span>WhatsApp'tan yaz</span></a>
     </div>
-  </div>
-  <div class="hero__readout mono" aria-hidden="true">
-    <p><span>Tarama</span><b id="scan-pct">%0</b></p>
-    <p><span>Bulunan arıza</span><b id="scan-found">0</b></p>
+    <div class="hero__readout mono" aria-hidden="true">
+      <p><span>Tarama</span><b id="scan-pct">%0</b></p>
+      <p><span>Bulunan arıza</span><b id="scan-found">0</b></p>
+    </div>
   </div>
   <p class="hero__hint mono" aria-hidden="true">Kaydırın, tarama başlasın</p>`;
 
@@ -99,7 +99,6 @@ $('#arizalar').innerHTML = `
     </ol>
   </div>`;
 
-$('#tags').innerHTML = faults.map((f, i) => `<span class="tag mono" data-i="${i}">${esc(f.kod)}</span>`).join('');
 
 const stats = d.istatistikler.map((s) => ({ ...s, deger: s.kurulustanHesapla ? tecrube : s.deger }));
 $('#olcum').innerHTML = `
@@ -126,8 +125,7 @@ $('#hizmetler').innerHTML = `
         <h3 class="svc__title">${esc(s.baslik)}</h3>
         <p class="svc__text">${esc(s.aciklama)}</p>
         <div class="svc__meter" aria-hidden="true"><i></i></div>
-        <p class="svc__read mono">${s.map.read}</p>
-        <p class="svc__time">Süre: <b>${esc(s.sure)}</b></p>
+        <div class="svc__row"><p class="svc__read mono">${s.map.read}</p><p class="svc__time">Süre: <b>${esc(s.sure)}</b></p></div>
         <a class="svc__ask" href="${waHref(d, `Merhaba ${d.isletme.ad}, ${s.baslik} için bilgi almak istiyorum.`)}" target="_blank" rel="noopener">${icons.whatsapp}<span>Bu iş için WhatsApp'tan sor</span></a>
       </div>
     </article>`).join('')}`;
@@ -156,8 +154,11 @@ const rowA = d.yorumlar.slice(0, half).map(reviewCard).join('');
 const rowB = d.yorumlar.slice(half).concat(d.yorumlar.slice(0, 1)).map(reviewCard).join('');
 $('#yorumlar').innerHTML = `
   <div class="reviews__head">
-    <p class="reviews__score"><b id="score" data-to="${d.puan.ortalama}">0,0</b><span class="mono">${d.puan.adet} Google yorumu</span></p>
-    <h2 class="kinetic" id="reviews-title" data-kinetic>Lamba söndü, müşteri yazdı.</h2>
+    <p class="reviews__score"><b id="score" data-to="${d.puan.ortalama}">0,0</b><span class="mono">Ortalama puan · 5 üzerinden</span></p>
+    <div class="reviews__title">
+      <p class="reviews__label mono">Örnek yorumlar</p>
+      <h2 class="kinetic" id="reviews-title" data-kinetic>Lamba söndü, müşteri yazdı.</h2>
+    </div>
   </div>
   <div class="marquee"><div class="marquee__track" data-dir="1">${rowA}${rowA}</div></div>
   <div class="marquee"><div class="marquee__track" data-dir="-1">${rowB}${rowB}</div></div>`;
@@ -202,8 +203,8 @@ $('#foot').innerHTML = `
   <div class="foot__inner">
     <p class="foot__brand">${bolt}<span>${ad}</span></p>
     <p>${esc(d.iletisim.adres)}</p>
-    <p><a href="${telHref(d)}">${esc(d.iletisim.telefon)}</a></p>
-    <p class="foot__small">© ${yil} ${ad}. 3D araç modeli: vicent091036, CC BY 4.0.</p>
+    <p><a class="foot__tel" href="${telHref(d)}">${icons.phone}<span>${esc(d.iletisim.telefon)}</span></a></p>
+    <p class="foot__small">© ${yil} ${ad}. 3D görseller temsilîdir; gösterilen araç belirli bir marka ya da model değildir.</p>
   </div>`;
 
 // Harita yalnızca yaklaşınca yüklenir
@@ -216,12 +217,17 @@ new IntersectionObserver((entries, io) => {
 
 // --- 3D dünya ----------------------------------------------------------------------------
 
+const tagCanvas = $('#tags');
+const tagCtx = tagCanvas.getContext('2d');
+let tagDpr = 1;
+let tagsDrawn = false;
 const canvas = $('#gl');
 const world = createWorld(canvas, { lowTier });
 const resize = () => {
   world.resize(innerWidth, innerHeight);
-  // Telefonda hizmet kartı, panel boyunca aksiyon çubuğunun hemen üstünde durur.
-  if (phone) $$('.svc__card').forEach((c) => c.style.setProperty('--stick', `${innerHeight - 100 - c.offsetHeight}px`));
+  sizeTags();
+  // Telefonda hizmet kartı, bölüm boyunca ekranın altında (alt çubuğun boşluğunda) durur.
+  if (phone) $$('.svc__card').forEach((c) => c.style.setProperty('--card-h', `${c.offsetHeight}px`));
 };
 resize();
 addEventListener('resize', resize);
@@ -234,43 +240,45 @@ const loading = world.load((p) => (loadProgress = p)).then(() => {
 
 // Kamera çekimleri. Masaüstünde araç metnin karşı tarafında, telefonda üst yarıda.
 const cam = (o) => ({
-  tx: 0, ty: 0.45, tz: 0, fov: 34, sx: 0, sy: phone ? -0.2 : 0,
+  tx: 0, ty: 0.55, tz: 0, fov: 34, sx: 0, sy: phone ? -0.2 : 0,
   ...o,
-  dist: (o.dist ?? 6.2) * (phone ? (o.close ? 2.1 : 1.55) : 1),
+  dist: (o.dist ?? 6.2) * (phone ? o.pd ?? (o.close ? 2.1 : 1.55) : 1),
   close: undefined,
+  pd: undefined,
 });
 const SHOT = {
-  heroA: cam({ az: 2.3, el: 0.1, dist: 6.3, sx: phone ? 0 : 0.2 }),
-  heroB: cam({ az: 1.7, el: 0.17, dist: 6.0, sx: phone ? 0 : 0.2 }),
-  faultsA: cam({ tz: 0.1, az: 2.1, el: 0.95, dist: 6.6, sx: phone ? 0 : 0.2, sy: phone ? -0.24 : 0 }),
-  faultsB: cam({ tz: 0.1, az: 1.45, el: 1.08, dist: 6.4, sx: phone ? 0 : 0.2, sy: phone ? -0.24 : 0 }),
+  heroA: cam({ az: 2.3, el: 0.1, dist: 7.9, sx: phone ? 0 : 0.17, pd: 2.2 }),
+  heroB: cam({ az: 1.7, el: 0.17, dist: 7.2, sx: phone ? 0 : 0.2, pd: 2.3 }),
+  faultsA: cam({ tz: 0.1, az: 2.1, el: 0.95, dist: 6.6, sx: phone ? 0 : 0.2, sy: phone ? -0.24 : 0, pd: 1.8 }),
+  faultsB: cam({ tz: 0.1, az: 1.45, el: 1.08, dist: 6.4, sx: phone ? 0 : 0.2, sy: phone ? -0.24 : 0, pd: 1.8 }),
   aboutA: cam({ az: 0.95, el: -0.01, dist: 5.8, sx: phone ? 0 : -0.2 }),
   aboutB: cam({ az: 0.55, el: 0.04, dist: 5.6, sx: phone ? 0 : -0.2 }),
-  process: cam({ az: 1.6, el: 0.36, dist: 6.8, sx: phone ? 0 : 0.18, sy: phone ? -0.22 : 0.03 }),
+  process: cam({ az: 1.6, el: 0.36, dist: 6.8, sx: phone ? 0 : 0.27, sy: phone ? -0.1 : 0.03, pd: 1.9 }),
   reviews: cam({ az: 8.5, el: 0.22, dist: 9, sy: phone ? -0.1 : 0.05 }),
   brands: cam({ az: 9.1, el: 0.3, dist: 9.5 }),
-  finaleA: cam({ tz: -0.3, az: 10.2, el: 0.02, dist: 7.2, sy: phone ? 0.02 : 0.1 }),
-  finaleB: cam({ tz: -0.3, az: 10.0, el: 0.08, dist: 6.2, sy: phone ? 0.02 : 0.1 }),
+  finaleA: cam({ tz: -0.3, az: 10.2, el: 0.02, dist: 7.2, sy: phone ? 0.02 : 0.1, pd: 1.9 }),
+  finaleB: cam({ tz: -0.3, az: 10.0, el: 0.08, dist: 6.2, sy: phone ? 0.02 : 0.1, pd: 2.1 }),
 };
 const nodeShot = (names, o) => {
   const pts = names.map((n) => NODES[n].p);
   const c = pts.reduce((a, p) => [a[0] + p[0] / pts.length, a[1] + p[1] / pts.length, a[2] + p[2] / pts.length], [0, 0, 0]);
-  return cam({ tx: c[0], ty: c[1], tz: c[2], close: true, sx: phone ? 0 : 0.2, sy: phone ? -0.2 : 0, ...o });
+  // Masaüstünde yakın çekim biraz geriden: devre ekranı doldurup soyut bir leke olmasın.
+  return cam({ tx: c[0], ty: c[1], tz: c[2], close: true, sx: phone ? 0 : 0.2, sy: phone ? -0.2 : 0, ...o, dist: o.dist * (phone ? 1 : 1.45) });
 };
 const SERVICE_SHOTS = {
-  diag: () => nodeShot(['obd', 'dash', 'ecu'], { az: 2.75, el: 0.45, dist: 2.4 }),
-  ecu: () => nodeShot(['ecu'], { az: 2.0, el: 0.7, dist: 2.1 }),
-  bat: () => nodeShot(['bat', 'starter', 'alt'], { az: 1.5, el: 0.55, dist: 5.4 }),
-  klima: () => nodeShot(['klima'], { az: 3.5, el: 0.3, dist: 2.3 }),
-  far: () => cam({ tx: 0.1, ty: 0.45, tz: -2.6, az: 2.05, el: 0.2, dist: 5.2, sx: phone ? 0 : 0.2, beam: 1 }),
-  hv: () => nodeShot(['hv'], { az: 1.25, el: 0.75, dist: 2.8 }),
-  wire: () => cam({ tz: 0, az: 1.57, el: 1.3, dist: 6.4, sx: phone ? 0 : 0.2, flow: 1 }),
+  diag: () => nodeShot(['obd', 'dash', 'ecu'], { az: 2.6, el: 0.42, dist: 2.6, hood: 0.3 }),
+  ecu: () => nodeShot(['ecu'], { az: 2.1, el: 0.72, dist: 2.7, hood: 1 }),
+  bat: () => nodeShot(['bat', 'alt'], { az: 2.35, el: 0.62, dist: 2.7, hood: 1 }),
+  klima: () => nodeShot(['klima', 'alt'], { az: 3.55, el: 0.28, dist: 2.5, hood: 1 }),
+  far: () => cam({ tx: 0.1, ty: 0.5, tz: -2.6, az: 2.05, el: 0.2, dist: 5.2, sx: phone ? 0 : 0.2, beam: 1, hood: 0 }),
+  hv: () => nodeShot(['hv'], { az: 1.25, el: 0.75, dist: 3.4, hood: 0 }),
+  wire: () => cam({ tz: 0, az: 1.57, el: 1.3, dist: 6.4, sx: phone ? 0 : 0.2, flow: 1, hood: 0 }),
 };
 
 // --- Film --------------------------------------------------------------------------------
 
 const F = {
-  ...SHOT.heroA, scan: -2.8, xray: 1, harness: 0, flow: 0.15, dim: 0, power: 0, beam: 0, grid: 1, fault: 0, tags: 0,
+  ...SHOT.heroA, scan: -2.8, xray: 1, harness: 0, flow: 0.15, dim: 0, power: 0, beam: 0, grid: 1, fault: 0, tags: 0, hood: 0,
 };
 Object.assign(world.P, F);
 
@@ -303,17 +311,17 @@ function buildFilm() {
 
   seg('hero', {
     trigger: '#sahne', start: 'top top', end: phone ? '+=190%' : '+=170%', pin: true, ease: 'linear',
-    a: { ...SHOT.heroA, scan: -2.8, harness: 0, flow: 0.15, tags: 0 },
+    a: { ...SHOT.heroA, scan: -2.8, harness: 0, flow: 0.15, tags: 0, hood: 0 },
     b: { ...SHOT.heroB, scan: 2.8, flow: 0.35 },
   });
   seg('faults', {
-    trigger: '#arizalar', start: 'top top', end: phone ? '+=360%' : '+=300%', pin: true, ease: 'linear',
-    a: { ...SHOT.faultsA, harness: 1, flow: 0.5, tags: 1, fault: 0 },
-    b: { ...SHOT.faultsB, fault: faults.length + 0.2, flow: 0.8 },
+    trigger: '#arizalar', start: 'top top', end: phone ? '+=280%' : '+=260%', pin: true, ease: 'linear',
+    a: { ...SHOT.faultsA, harness: 1, flow: 0.5, tags: 1, fault: 0, hood: 0 },
+    b: { ...SHOT.faultsB, fault: faults.length + 0.2, flow: 0.8, hood: 1 },
   });
   seg('about', {
     trigger: '#olcum', start: 'top 70%', end: 'bottom 30%', ease: 'linear',
-    a: { ...SHOT.aboutA, tags: 0, flow: 0.4, dim: 0.1 },
+    a: { ...SHOT.aboutA, tags: 0, flow: 0.4, dim: 0.1, hood: 0.6 },
     b: { ...SHOT.aboutB },
   });
   $$('.svc').forEach((el, i) => {
@@ -326,7 +334,7 @@ function buildFilm() {
   });
   seg('process', {
     trigger: '#surec', start: 'top top', end: phone ? '+=260%' : '+=220%', pin: true, ease: 'linear',
-    a: { ...SHOT.process, beam: 0, flow: 0.9, dim: 0, xray: 1 },
+    a: { ...SHOT.process, beam: 0, flow: 0.9, dim: 0, xray: 1, hood: 0 },
     b: { az: SHOT.process.az + Math.PI * 2 },
   });
   seg('reviews', {
@@ -346,7 +354,7 @@ function buildFilm() {
   });
   seg('finale', {
     trigger: '#iletisim', start: 'top top', end: phone ? '+=140%' : '+=120%', pin: true, ease: 'linear',
-    a: { ...SHOT.finaleA, dim: 0, power: 0, flow: 0.2, beam: 0 },
+    a: { ...SHOT.finaleA, dim: 0, power: 0, flow: 0.2, beam: 0, hood: 0 },
     b: { ...SHOT.finaleB, power: 1, flow: 1 },
   });
 }
@@ -371,11 +379,11 @@ function strikeAt(el, opts) {
 
 // --- Kare döngüsü ------------------------------------------------------------------------
 
+const topEl = $('#top');
 const scanPct = $('#scan-pct');
 const scanFound = $('#scan-found');
 const heroFill = $('.hero__layer--fill');
 const heroLine = $('.hero__scanline');
-const tagEls = $$('.tag');
 const faultEls = $$('.fault');
 const statEls = $$('.stat__num');
 const aboutWords = [];
@@ -389,7 +397,7 @@ let lastFoundCount = -1;
 let lastResolved = -1;
 let lastRing = -1;
 let prevY = -1;
-const camKeys = ['tx', 'ty', 'tz', 'az', 'el', 'dist', 'fov', 'sx', 'sy'];
+const camKeys = ['tx', 'ty', 'tz', 'az', 'el', 'dist', 'fov', 'sx', 'sy', 'hood'];
 
 function faultStates() {
   const out = {};
@@ -431,11 +439,10 @@ function tick(time, dtMs) {
     if (!st) return;
     let active = y >= st.start - innerHeight * 0.1 && y <= st.end + innerHeight * 0.1;
     if (phone) {
-      // Telefonda kart yalnızca aksiyon çubuğunun üstünde sabitken görünür; kayarken gizli.
-      const card = el.firstElementChild;
-      const stick = parseFloat(card.style.getPropertyValue('--stick')) || 0;
-      const top = card.getBoundingClientRect().top;
-      active = Math.abs(top - stick) < 4 && el.getBoundingClientRect().top < innerHeight * 0.55;
+      // Telefonda kart yalnızca ekranın altında sabitken görünür; bölüm başında/sonunda kayarken gizli.
+      const cr = el.firstElementChild.getBoundingClientRect();
+      const sr = el.getBoundingClientRect();
+      active = cr.top > sr.top + 2 && cr.bottom < sr.bottom - 2 && sr.top < innerHeight * 0.4;
     }
     el.classList.toggle('is-active', active);
     if (active) {
@@ -450,6 +457,7 @@ function tick(time, dtMs) {
 
   if (y === prevY && !reducedMotion) return;
   prevY = y;
+  topEl.classList.toggle('is-solid', y > 40);
 
   // Kahraman: tarama yüzdesi ve başlık dolumu
   const sp = Math.min(1, Math.max(0, (F.scan + 2.8) / 5.6));
@@ -513,20 +521,66 @@ function tick(time, dtMs) {
   $('#iletisim').style.setProperty('--power', F.power.toFixed(3));
 }
 
-// Arıza etiketlerinin ekran konumları her karede güncellenir (sadece görünürken).
+// Arıza etiketleri: 3D sahnenin üstündeki 2D tuvale çizilir (HUD, dokunmayı almaz, metni örtmez).
+// Etiketler birbirinin üstüne binmez (dikey itme) ve telefonda panelin üst kenarının altına inmez.
+function sizeTags() {
+  tagDpr = Math.min(2, window.devicePixelRatio || 1);
+  tagCanvas.width = Math.round(innerWidth * tagDpr);
+  tagCanvas.height = Math.round(innerHeight * tagDpr);
+}
 function tagTick() {
   const vis = F.tags;
   if (vis < 0.01) {
-    if (tagEls[0]?.style.opacity !== '0') tagEls.forEach((t) => (t.style.opacity = 0));
+    if (tagsDrawn) {
+      tagCtx.clearRect(0, 0, tagCanvas.width, tagCanvas.height);
+      tagsDrawn = false;
+    }
     return;
   }
+  const ctx = tagCtx;
+  ctx.setTransform(tagDpr, 0, 0, tagDpr, 0, 0);
+  ctx.clearRect(0, 0, innerWidth, innerHeight);
+  tagsDrawn = true;
+  const fs = phone ? 11 : 12;
+  ctx.font = `700 ${fs}px 'JetBrains Mono', ui-monospace, monospace`;
+  ctx.textBaseline = 'middle';
+  const top = (parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--header-h')) || 60) + 8;
+  const panel = phone ? $('.faults__panel').getBoundingClientRect().top - 8 : innerHeight - 8;
+  const items = [];
   faults.forEach((f, i) => {
     const p = world.project(f.node);
-    const t = tagEls[i];
-    t.style.transform = `translate(${p.x.toFixed(1)}px, ${p.y.toFixed(1)}px)`;
-    t.style.opacity = p.visible ? vis : 0;
-    t.classList.toggle('is-ok', F.fault > i + 0.5);
+    if (!p.visible) return;
+    const w = ctx.measureText(f.kod).width + 16;
+    items.push({ f, i, px: p.x, py: p.y, x: p.x + 14, y: p.y - 30, w, h: fs + 12, ok: F.fault > i + 0.5 });
   });
+  // Dikey itme: yukarıdan aşağı sırala, çakışanı aşağı kaydır.
+  items.sort((a, b) => a.y - b.y);
+  for (let k = 0; k < items.length; k++) {
+    const it = items[k];
+    it.x = Math.min(it.x, innerWidth - it.w - 8);
+    it.y = Math.max(it.y, top);
+    for (let j = 0; j < k; j++) {
+      const o = items[j];
+      if (it.x < o.x + o.w + 4 && o.x < it.x + it.w + 4 && it.y < o.y + o.h + 4) it.y = o.y + o.h + 4;
+    }
+  }
+  for (const it of items) {
+    if (it.y + it.h > panel) continue;
+    const col = it.ok ? '#2bffa0' : '#ff2e4d';
+    ctx.globalAlpha = vis;
+    ctx.strokeStyle = col;
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(it.px, it.py);
+    ctx.lineTo(it.x, it.y + it.h);
+    ctx.stroke();
+    ctx.fillStyle = 'rgba(4,6,11,.88)';
+    ctx.fillRect(it.x, it.y, it.w, it.h);
+    ctx.strokeRect(it.x + 0.5, it.y + 0.5, it.w - 1, it.h - 1);
+    ctx.fillStyle = col;
+    ctx.fillText(it.f.kod, it.x + 8, it.y + it.h / 2 + 0.5);
+  }
+  ctx.globalAlpha = 1;
 }
 
 // --- Başlatma ----------------------------------------------------------------------------
@@ -546,7 +600,9 @@ function splitAbout() {
 function heroEntrance() {
   const words = $$('.hero__word');
   gsap.fromTo(words, { '--w': 50, opacity: 0 }, { '--w': 72, opacity: 1, duration: 0.9, stagger: 0.08, ease: 'expo.out' });
-  gsap.fromTo('.hero__sub, .hero__cta, .hero__kicker', { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.8, stagger: 0.08, delay: 0.25, ease: 'power3.out' });
+  gsap.fromTo('.hero__sub, .hero__kicker', { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.8, stagger: 0.08, delay: 0.25, ease: 'power3.out' });
+  // Butonlar perde açılırken hemen görünür ve dokunulabilir olsun (ilk dokunuş kaybolmasın).
+  gsap.fromTo('.hero__cta', { opacity: 0.2, y: 8 }, { opacity: 1, y: 0, duration: 0.35, ease: 'power2.out' });
   gsap.fromTo('.hero__readout, .hero__hint', { opacity: 0 }, { opacity: 1, duration: 1, delay: 0.6 });
 }
 
@@ -569,29 +625,33 @@ function runIntro() {
       const b = $('#term-pos').getBoundingClientRect();
       arc.strike(a.right + 4, a.top + a.height / 2, b.left - 4, b.top + b.height / 2, { duration: 380, rough: 0.35, flashAmount: 0.5 });
       const tl = gsap.timeline({
-        delay: 0.35,
+        delay: 0.1,
         onComplete: () => {
           intro.remove();
           lenis?.start();
           resolve();
         },
       });
-      tl.to('.intro__center, .intro__skip', { opacity: 0, duration: 0.15 })
-        .fromTo('.intro__line', { scaleX: 0, opacity: 1 }, { scaleX: 1, duration: 0.22, ease: 'expo.out' }, '<')
-        .to('.intro__half--top', { yPercent: -100, duration: 0.7, ease: 'expo.inOut' }, '+=0.02')
-        .to('.intro__half--bottom', { yPercent: 100, duration: 0.7, ease: 'expo.inOut' }, '<')
-        .to('.intro__line', { opacity: 0, scaleY: 8, duration: 0.5, ease: 'power2.out' }, '<0.1')
-        .add(heroEntrance, '<0.15');
+      tl.to('.intro__center, .intro__skip', { opacity: 0, duration: 0.12 })
+        .fromTo('.intro__line', { scaleX: 0, opacity: 1 }, { scaleX: 1, duration: 0.16, ease: 'expo.out' }, '<')
+        .add(() => intro.classList.add('is-open'))
+        .add(heroEntrance)
+        .to('.intro__half--top', { yPercent: -100, duration: 0.45, ease: 'expo.inOut' })
+        .to('.intro__half--bottom', { yPercent: 100, duration: 0.45, ease: 'expo.inOut' }, '<')
+        .to('.intro__line', { opacity: 0, scaleY: 8, duration: 0.45, ease: 'power2.out' }, '<0.1');
     };
     function update() {
       const t = (performance.now() - start) / 1000;
-      const target = Math.min(1, Math.max(Math.min(t / 1.3, loadProgress), t / 2.5));
-      shown.v += (target - shown.v) * 0.2;
+      const target = Math.min(1, Math.max(Math.min(t / 0.5, loadProgress), t / 0.8));
+      shown.v += (target - shown.v) * 0.25;
       volt.textContent = (shown.v * 12.6).toFixed(1).replace('.', ',').padStart(4, '0') + ' V';
-      if ((t > 1.3 && loadProgress >= 1 && shown.v > 0.97) || t > 2.5) finish();
+      if ((t > 0.5 && loadProgress >= 1 && shown.v > 0.97) || t > 0.8) finish();
     }
     gsap.ticker.add(update);
+    // Dokunma, tekerlek ya da tuş perdeyi hemen kaldırır.
     intro.addEventListener('pointerdown', finish, { once: true });
+    addEventListener('wheel', finish, { once: true, passive: true });
+    addEventListener('touchstart', finish, { once: true, passive: true });
     addEventListener('keydown', finish, { once: true });
   });
 }
@@ -629,7 +689,16 @@ async function start() {
   }
 
   lenis = initSmoothScroll({ lerp: 0.1 });
+  autoHideHeader($('#top'), { offset: 120 });
   buildFilm();
+  if (phone) {
+    // Arıza taramasından dükkâna kadar sayfa tek bir film: alt çubuk çekilir, yukarı kaydırınca
+    // döner (hizmet kartları da ekranın altında tek alt öğe olarak kalır).
+    ScrollTrigger.create({
+      trigger: '.faults', start: 'top 60%', endTrigger: '.shop', end: 'top 70%',
+      onToggle: (st) => setStoryMode(st.isActive ? true : null),
+    });
+  }
   kinetic();
   initInteractions();
 
@@ -668,7 +737,7 @@ async function start() {
     tagTick();
   });
 
-  if (new URLSearchParams(location.search).has('nointro')) {
+  if (new URLSearchParams(location.search).has('nointro') || vitrinModu()) {
     $('#intro').remove();
     heroEntrance();
   } else {

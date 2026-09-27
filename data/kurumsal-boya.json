@@ -77,12 +77,13 @@
       { "soru": "Onarım sırasında aracımı görebilir miyim?", "cevap": "Evet. Atölyeye gelebilir ya da ara aşamaların fotoğraflarını WhatsApp'tan isteyebilirsiniz." }
     ],
     "sssBaslik": "Hasar ve sigorta hakkında",
-    "galeriBaslik": "Kabinimizden çıkanlar",
+    "galeriBaslik": "Boya ve bakım işlerinden örnekler",
+    "yorumBaslik": "Örnek müşteri yorumları",
     "sayfalar": {
-      "kurumsal": { "baslik": "Kurumsal", "metin": "Kim olduğumuz, nasıl çalıştığımız ve neye önem verdiğimiz.", "gorsel": "/img/showroom/panel.jpg" },
+      "kurumsal": { "baslik": "Kurumsal", "metin": "Kim olduğumuz, nasıl çalıştığımız ve neye önem verdiğimiz.", "gorsel": "/img/kurumsal-boya/kurumsal.jpg" },
       "hizmetler": { "baslik": "Hizmetlerimiz", "metin": "Lokal boyadan PPF'ye, her iş için ortalama süre ve kapsam." },
-      "kurumsal-musteriler": { "baslik": "Hasar ve sigorta", "metin": "Kasko, trafik sigortası ve şirket araçları için hasar süreci tek elden.", "gorsel": "/img/showroom/kaput.jpg" },
-      "islerimiz": { "baslik": "İşlerimiz", "metin": "Kabinden çıkan araçlar ve müşterilerimizin yorumları." },
+      "kurumsal-musteriler": { "baslik": "Hasar ve sigorta", "metin": "Kasko, trafik sigortası ve şirket araçları için hasar süreci tek elden.", "gorsel": "/img/kurumsal-boya/hasar.jpg" },
+      "islerimiz": { "baslik": "İşlerimiz", "metin": "Yaptığımız iş türlerinden örnek kareler ve örnek müşteri yorumları." },
       "iletisim": { "baslik": "İletişim", "metin": "Hasar fotoğrafı, randevu ya da bir sorunuz için yazın; aynı gün dönüş yapalım." }
     },
     "konular": ["Hasar / sigorta dosyası", "Fiyat teklifi", "Randevu", "Şirket araçları", "Genel bilgi"],

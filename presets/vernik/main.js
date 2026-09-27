@@ -1,6 +1,6 @@
 import raw from '../../data/showroom.json';
 import {
-  boot, initSmoothScroll, gsap, ScrollTrigger, reducedMotion, esc,
+  boot, initSmoothScroll, gsap, ScrollTrigger, reducedMotion, esc, setStoryMode, autoHideHeader,
   telHref, waHref, mapsHref, mapsEmbed, openStatus, groupedHours, icons, GUNLER,
 } from '../../shared/core.js';
 import { SplitText } from 'gsap/SplitText';
@@ -17,7 +17,7 @@ const $$ = (s, root = document) => [...root.querySelectorAll(s)];
 const fmt = (n) => Number(n).toLocaleString('tr-TR');
 const mobile = matchMedia('(max-width: 899px)').matches;
 const finePointer = matchMedia('(hover: hover) and (pointer: fine)').matches;
-const lowPower = mobile || (navigator.hardwareConcurrency || 8) <= 4 || (navigator.deviceMemory || 8) <= 4;
+const TR_CHARS = 'ABCÇDEFGĞHIİKLMNOÖPRSŞTUÜVYZ';
 
 // "2008'den", "1994'ten", "1990'dan"
 function ablative(n) {
@@ -46,10 +46,11 @@ let boya = BOYALAR[0];
 
 // --- Metin ve linkler ------------------------------------------------------
 const fotoMesaj = 'Merhaba, aracımın fotoğraflarını gönderiyorum. Fiyat alabilir miyim?';
+const hakkinda = d.isletme.hakkinda.replace(/^\d{4}'[a-zçğıöşü]+/i, ablative(d.isletme.kurulus));
 const binds = {
   ad: d.isletme.ad,
   slogan: d.isletme.slogan,
-  hakkinda: d.isletme.hakkinda,
+  hakkinda,
   telefon: d.iletisim.telefon,
   adres: d.iletisim.adres,
   garanti: d.garanti,
@@ -61,6 +62,7 @@ const hrefs = { tel: telHref(d), 'wa-foto': waHref(d, fotoMesaj), maps: mapsHref
 $$('[data-href]').forEach((el) => hrefs[el.dataset.href] && (el.href = hrefs[el.dataset.href]));
 $$('[data-icon]').forEach((el) => (el.outerHTML = icons[el.dataset.icon]));
 $('.top__call').setAttribute('aria-label', `Ara: ${d.iletisim.telefon}`);
+$('.top__brand').classList.toggle('is-long', d.isletme.ad.length > 24);
 
 function refreshStatus() {
   const s = openStatus(d.saatler);
@@ -98,7 +100,7 @@ $('[data-services]').innerHTML = d.hizmetler.map((h) => `
 const yil = new Date().getFullYear() - d.isletme.kurulus;
 $('[data-stats]').innerHTML = d.istatistikler.map((s) => {
   const v = s.deger === 'kurulustan' ? yil : s.deger;
-  return `<li><span class="stat__num" data-to="${v}" data-suffix="${esc(s.sonek || '')}">0</span><span class="stat__lbl">${esc(s.etiket)}</span></li>`;
+  return `<li><span class="stat__num" data-to="${v}" data-suffix="${esc(s.sonek || '')}">${fmt(v)}${esc(s.sonek || '')}</span><span class="stat__lbl">${esc(s.etiket)}</span></li>`;
 }).join('');
 
 $('[data-steps]').innerHTML = d.surec.map((s, i) => `
@@ -109,6 +111,7 @@ $('[data-steps]').innerHTML = d.surec.map((s, i) => `
 
 const stars = (n) => Array.from({ length: 5 }, (_, i) => (i < Math.round(n) ? icons.star : '')).join('');
 $('[data-stars]').innerHTML = stars(d.puan.ortalama);
+$('[data-score]').textContent = d.puan.ortalama.toFixed(1).replace('.', ',');
 $('[data-review-count]').textContent = fmt(d.puan.adet);
 const reviewHtml = d.yorumlar.map((y) => `
   <blockquote class="review">
@@ -123,7 +126,7 @@ $('[data-brands]').innerHTML = brandHtml + brandHtml.replaceAll('<span class="br
 const today = GUNLER[new Date().getDay()];
 $('[data-hours]').innerHTML = groupedHours(d.saatler).map(([gun, saat]) => {
   const isToday = gun.includes(today) || (gun.includes('–') && dayInRange(gun));
-  return `<dt class="${isToday ? 'is-today' : ''}">${gun}</dt><dd>${saat}</dd>`;
+  return `<dt class="${isToday ? 'is-today' : ''}">${esc(gun)}</dt><dd>${esc(saat)}</dd>`;
 }).join('');
 function dayInRange(label) {
   const order = [1, 2, 3, 4, 5, 6, 0];
@@ -131,6 +134,13 @@ function dayInRange(label) {
   const t = order.indexOf(new Date().getDay());
   return t >= a && t <= b;
 }
+
+// Harita yaklaşınca yüklenir
+new IntersectionObserver((entries, io) => {
+  if (!entries[0].isIntersecting) return;
+  $('[data-map]').innerHTML = `<iframe title="${esc(d.isletme.ad)} konumu" src="${mapsEmbed(d)}" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>`;
+  io.disconnect();
+}, { rootMargin: '900px 0px' }).observe($('[data-map]'));
 
 // --- Renk seçici ------------------------------------------------------------
 $('[data-swatches]').innerHTML = BOYALAR.map((b, i) => `
@@ -142,7 +152,7 @@ function applyPaintUi(b) {
   const root = document.documentElement.style;
   root.setProperty('--paint', b.ui);
   root.setProperty('--paint-deep', b.hex);
-  root.setProperty('--on-paint', lum(b.ui) > 0.5 ? '#0b0b0c' : '#ffffff');
+  root.setProperty('--on-paint', lum(b.ui) > 0.45 ? '#0b0b0c' : '#ffffff');
   $$('[data-paint-name]').forEach((el) => (el.textContent = b.ad));
   const cta = $('[data-renk-cta]');
   cta.textContent = `${b.ad} için fiyat al`;
@@ -155,14 +165,47 @@ applyPaintUi(boya);
 const canvas = $('[data-stage]');
 let stage = null;
 try {
-  stage = createScene(canvas, { lowPower });
+  stage = createScene(canvas, { reduced: reducedMotion });
   stage.setPaint(boya.hex, { instant: true });
 } catch (err) {
   console.warn('WebGL yok, fotoğrafla devam', err);
-  canvas.style.background = `center / cover no-repeat url(${import.meta.env.BASE_URL}img/showroom/hero.jpg)`;
+  $('.stage').style.background = `center / cover no-repeat url(${import.meta.env.BASE_URL}img/showroom/hero.jpg)`;
 }
 const S = stage?.state ?? {};
+if (/[?&]debug\b/.test(location.search)) window.__v = { S, ScrollTrigger, gsap, stage, vis: () => visibleCanvas };
 
+// Yükleme: sayfa hemen kullanılabilir; sahne akarken küçük bir gösterge
+const loaderEl = $('[data-loader]');
+const loadBar = $('[data-load-bar]');
+const loadPct = $('[data-load-pct]');
+let loaded = !stage;
+const loadP = stage
+  ? stage.load((p) => {
+      loadBar.style.transform = `scaleX(${p.toFixed(3)})`;
+      loadPct.textContent = Math.round(p * 100);
+    }).then(() => {
+      loaded = true;
+      loaderEl.classList.add('is-done');
+    }).catch((e) => {
+      console.error(e);
+      loaded = true;
+      loaderEl.classList.add('is-done');
+    })
+  : Promise.resolve();
+if (!stage) loaderEl.classList.add('is-done');
+
+let paintTl = null;
+// Film dışındaki sahne hareketleri (seçici, final): film zaman çizelgesine dokunmadan öldürülebilsin
+const own = new Set();
+const ownTween = (t) => {
+  own.add(t);
+  t.eventCallback('onComplete', () => own.delete(t));
+  return t;
+};
+const killOwn = () => {
+  own.forEach((t) => t.kill());
+  own.clear();
+};
 $('[data-swatches]').addEventListener('click', (e) => {
   const btn = e.target.closest('.sw');
   if (!btn) return;
@@ -170,16 +213,15 @@ $('[data-swatches]').addEventListener('click', (e) => {
   if (b === boya) return;
   boya = b;
   applyPaintUi(b);
-  gsap.to('[data-paint-name]', { duration: 0.8, scrambleText: { text: b.ad, chars: 'ABCÇDEFGĞHIİKLMNOÖPRSŞTUÜVYZ', speed: 0.6 } });
+  gsap.to('.chip [data-paint-name]', { duration: 0.8, scrambleText: { text: b.ad, chars: TR_CHARS, speed: 0.6 } });
   if (!stage) return;
   stage.setPaint(b.hex);
-  gsap.killTweensOf(S, 'swap,spray');
-  gsap.fromTo(S, { swap: 0 }, { swap: 1, duration: reducedMotion ? 0.01 : 1.5, ease: 'power1.inOut' });
-  if (!reducedMotion) {
-    gsap.timeline()
-      .to(S, { spray: 1, duration: 0.2 })
-      .to(S, { spray: 0, duration: 0.35 }, 1.2);
-  }
+  // killTweensOf(S) film zaman çizelgesinin içindeki tween'leri de öldürür; yalnız kendi tween'imizi durdur
+  paintTl?.kill();
+  paintTl = gsap.timeline()
+    .fromTo(S, { swap: 0 }, { swap: 1, duration: reducedMotion ? 0.01 : 1.5, ease: 'power1.inOut' }, 0);
+  if (reducedMotion) paintTl.eventCallback('onComplete', () => stage.renderOnce());
+  else paintTl.to(S, { spray: 1, duration: 0.2 }, 0).to(S, { spray: 0, duration: 0.35 }, 1.2);
 });
 
 // Sahne sadece arabanın göründüğü bölümlerde çizer
@@ -196,105 +238,87 @@ function canvasSection(el) {
   });
 }
 
-// --- Hareket azaltma: sabit ama güzel ----------------------------------------
-if (reducedMotion) {
-  document.body.classList.remove('is-loading');
-  $('[data-intro]').remove();
-  $$('[data-canvas]').forEach(canvasSection);
-  if (stage) {
-    Object.assign(S, { px: -4.6, py: 1.3, pz: -5.4, tx: 0, ty: 0.5, tz: 0, tubes: 1, sweep: 1, gloss: 1, swap: 1 });
-    stage.load().then(() => stage.renderOnce());
-  }
-  initBeforeAfter();
-  $$('.stat__num').forEach((el) => (el.textContent = fmt(el.dataset.to) + el.dataset.suffix));
-  $('[data-score]').textContent = d.puan.ortalama.toFixed(1).replace('.', ',');
-  $('[data-map]').innerHTML = `<iframe title="${esc(d.isletme.ad)} konumu" src="${mapsEmbed(d)}" loading="lazy"></iframe>`;
-} else {
-  runIntro();
+// --- Kamera pozları (dünya uzayı: aracın önü -Z, sol yanı -X) -----------------
+const POSES = {
+  p0: { px: -4.5, py: 1.3, pz: -5.5, tx: 0, ty: 0.55, tz: -0.1, fitK: 0.82 },
+  p1: { px: -6.6, py: 1.45, pz: -0.4, tx: 0, ty: 0.6, tz: 0, fitK: 1 },
+  p2: { px: -5.2, py: 2.0, pz: 4.6, tx: 0, ty: 0.55, tz: 0.2, fitK: 1 },
+  p2b: { px: 1.2, py: 2.6, pz: 7.0, tx: 0, ty: 0.55, tz: 0, fitK: 1 },
+  p3: { px: 6.9, py: 3.1, pz: 1.9, tx: -0.15, ty: 0.55, tz: 0, fitK: 1 }, // masaüstünde sağ kenardan taşmasın
+  p4: { px: 0.9, py: 3.8, pz: -4.0, tx: 0, ty: 0.85, tz: -1.1, fitK: 0.5 },
+  p5a: { px: -2.9, py: 0.55, pz: -2.9, tx: -0.8, ty: 0.42, tz: -1.3, fitK: 0.5 },
+  p5b: { px: -2.1, py: 1.0, pz: -4.4, tx: -0.5, ty: 0.72, tz: -1.9, fitK: 0.5 },
+  pick: { px: -4.9, py: 1.5, pz: -5.0, tx: 0, ty: 0.55, tz: 0, fitK: 1 },
+  pickFrom: { px: -1.5, py: 6.5, pz: -6.5, tx: 0, ty: 0.4, tz: 0, fitK: 1 },
+  fin: { px: 0.2, py: 0.85, pz: -6.6, tx: 0, ty: 0.68, tz: 0, fitK: 1 },
+};
+// Dikey ekranda araba metnin üstündeki banda sığdırılır (sahne kutuya göre uzaklığı hesaplar)
+for (const [k, v] of Object.entries(POSES)) {
+  const close = ['p4', 'p5a', 'p5b'].includes(k);
+  Object.assign(v, { fitCar: close ? 0 : 1, rTop: 0.12, rBot: 0.58 }); // bant ortası ≈ metin kartının üstündeki boşluğun ortası
 }
+Object.assign(POSES.p0, { rTop: 0.1, rBot: 0.36 });
+Object.assign(POSES.pick, { rTop: 0.08, rBot: 0.3 });
+Object.assign(POSES.pickFrom, { rTop: 0.08, rBot: 0.3 });
+Object.assign(POSES.fin, { rTop: 0.1, rBot: 0.4 });
+if (mobile) {
+  // Önden 3/4 açı dikey ekranda daha iyi okunur
+  Object.assign(POSES.p0, { px: -2.8, py: 1.5, pz: -6.3 });
+}
+Object.assign(S, POSES.p0);
 
-// --- Açılış -----------------------------------------------------------------
+// --- Açılış: ~1 sn perde; model beklenmez (sahne kendi göstergesiyle yüklenir) ---
 function runIntro() {
   const lenis = initSmoothScroll({ lerp: 0.085 });
   lenis?.stop();
   scrollTo(0, 0);
 
   const intro = $('[data-intro]');
-  const bar = $('[data-intro-bar]');
-  const pct = $('[data-intro-pct]');
   const name = new SplitText('.intro__name', { type: 'chars', charsClass: 'ch' });
   gsap.set(name.chars, { opacity: 0, y: 30 });
   gsap.set('.intro__name', { fontVariationSettings: "'wdth' 75" });
+  // Satır bölme font yüklendikten sonra (yoksa satırlar kayar); en fazla 0,8 sn beklenir
+  Promise.race([document.fonts.load("700 60px 'Bricolage Grotesque'").then(() => document.fonts.ready), new Promise((r) => setTimeout(r, 800))])
+    .then(visibleCanvasInit);
 
-  const shown = { p: 0 };
-  let loaded = !stage;
-  let done = false;
-  const start = performance.now();
-
-  const introTl = gsap.timeline();
-  introTl
-    .to(name.chars, { opacity: 1, y: 0, stagger: 0.025, duration: 0.7, ease: 'power3.out' }, 0.05)
-    .to('.intro__name', { fontVariationSettings: "'wdth' 100", duration: 1.6, ease: 'power2.inOut' }, 0.1);
-
-  const loadP = stage
-    ? stage.load((p) => (shown.target = p)).then(() => (loaded = true)).catch((e) => { console.error(e); loaded = true; })
-    : Promise.resolve();
-
-  // Çubuk gerçek yüklemeyi izler ama en az 1,4 sn sürer
-  gsap.ticker.add(tickBar);
-  function tickBar() {
-    const elapsed = (performance.now() - start) / 1400;
-    const goal = Math.min(loaded ? 1 : Math.min(shown.target ?? 0, 0.96), Math.min(elapsed, 1));
-    shown.p += (goal - shown.p) * 0.12;
-    bar.style.transform = `scaleX(${shown.p})`;
-    pct.textContent = Math.round(shown.p * 100);
-    // Model gelmese de açılış 2,4 sn'yi geçmez; araba hazır olunca kabin yanar
-    if (!done && ((loaded && shown.p > 0.985) || performance.now() - start > 2400)) finish();
-  }
-
-  intro.addEventListener('click', () => {
-    if (done) return;
-    finish(true);
+  let unlocked = false;
+  const unlock = () => {
+    if (unlocked) return;
+    unlocked = true;
+    intro.style.pointerEvents = 'none';
+    document.body.classList.remove('is-loading');
+    lenis?.start();
+  };
+  const tl = gsap.timeline({
+    onComplete: () => {
+      unlock();
+      intro.remove();
+      ScrollTrigger.refresh();
+    },
   });
-
-  function finish(fast = false) {
-    done = true;
-    gsap.ticker.remove(tickBar);
-    if (loaded) {
-      bar.style.transform = 'scaleX(1)';
-      pct.textContent = '100';
-    }
-    visibleCanvasInit();
-    const tl = gsap.timeline({
-      onComplete: () => {
-        intro.remove();
-        ScrollTrigger.refresh();
-      },
-    });
-    // Tüp titrer, sonra perde ortadan ikiye açılır
-    if (!fast) {
-      tl.to('.intro__tube i', { keyframes: [{ opacity: 0.2 }, { opacity: 1 }, { opacity: 0.1 }, { opacity: 1 }], duration: 0.35, ease: 'none' });
-    }
-    tl.to('.intro__core, .intro__skip', { opacity: 0, duration: 0.25 }, '>-0.05')
-      .add(() => {
-        // Perde açılırken sayfa kaydırılabilir olsun
-        intro.style.pointerEvents = 'none';
-        document.body.classList.remove('is-loading');
-        lenis?.start();
-      }, '<')
-      .to('.intro__half--top', { yPercent: -101, duration: 0.9, ease: 'expo.inOut' }, '<0.1')
-      .to('.intro__half--bottom', { yPercent: 101, duration: 0.9, ease: 'expo.inOut' }, '<')
-      .add(() => (loaded ? lightUp(false) : loadP.then(() => lightUp(false))), '<0.1')
-      .add(heroIn, '<0.35');
-  }
+  tl.to(name.chars, { opacity: 1, y: 0, stagger: 0.02, duration: 0.5, ease: 'power3.out' }, 0)
+    .to('.intro__name', { fontVariationSettings: "'wdth' 100", duration: 0.9, ease: 'power2.inOut' }, 0)
+    .to('.intro__tube i', { scaleX: 1, duration: 0.7, ease: 'power2.inOut' }, 0.05)
+    .to('.intro__tube i', { keyframes: [{ opacity: 0.2 }, { opacity: 1 }, { opacity: 0.1 }, { opacity: 1 }], duration: 0.22, ease: 'none' }, 0.72)
+    .to('.intro__core', { opacity: 0, duration: 0.2 }, 0.92)
+    .add(unlock, 0.95)
+    .to('.intro__half--top', { yPercent: -101, duration: 0.8, ease: 'expo.inOut' }, 0.95)
+    .to('.intro__half--bottom', { yPercent: 101, duration: 0.8, ease: 'expo.inOut' }, 0.95)
+    .add(() => (loaded ? lightUp() : loadP.then(lightUp)), 1.0)
+    .add(heroIn, 1.2);
+  // Dokunma, tekerlek, tuş: perde hemen kalkar
+  const skip = () => tl.progress() < 0.98 && tl.progress(1);
+  intro.addEventListener('pointerdown', skip);
+  addEventListener('keydown', skip, { once: true });
+  addEventListener('wheel', skip, { once: true, passive: true });
+  addEventListener('touchstart', skip, { once: true, passive: true });
 }
 
-let introLit = false;
-function lightUp(instant) {
-  if (!stage || introLit) return;
-  introLit = true;
-  if (instant) return gsap.to(S, { tubes: 1, duration: 0.6 });
-  // Kabin ışıkları tek tek, floresan gibi titreyerek yanar
+let lit = false;
+function lightUp() {
+  if (!stage || lit) return;
+  lit = true;
+  // Kabin ışıkları floresan gibi titreyerek yanar, gündüz farı bir kez parlar
   gsap.timeline()
     .to(S, { tubes: 0.18, duration: 0.06 })
     .to(S, { tubes: 0.02, duration: 0.08 })
@@ -308,10 +332,14 @@ function visibleCanvasInit() {
   if (visibleInitDone) return;
   visibleInitDone = true;
   $$('[data-canvas]').forEach(canvasSection);
-  buildFilm();
+  const filmST = buildFilm();
   buildSections();
   initBeforeAfter();
   initCursor();
+  initHeader(filmST);
+  // Tetikleyiciler sayfa sırasına dizilir: süreç pini, önce oluşturulan seçici/final tuval bölümlerini aşağı iter
+  ScrollTrigger.sort();
+  ScrollTrigger.refresh();
 }
 
 // --- Başlık animasyonu yardımcıları -------------------------------------------
@@ -327,61 +355,34 @@ function heroIn() {
   const hero = $('.chap--hero');
   heroSplit = heroSplit || splitTitle($('.chap__title--hero', hero));
   gsap.fromTo(heroSplit.chars, { yPercent: 115, rotate: 6 }, {
-    yPercent: 0, rotate: 0, duration: 1.1, stagger: 0.022, ease: 'expo.out',
+    yPercent: 0, rotate: 0, duration: 1.0, stagger: 0.02, ease: 'expo.out',
   });
   gsap.fromTo(
-    ['.chap__kicker', '.chap__lead', '.chap__actions > *', '.chap--hero .status'].map((s) => hero.querySelectorAll(s)),
-    { opacity: 0, y: 24, filter: 'blur(8px)' },
-    { opacity: 1, y: 0, filter: 'blur(0px)', duration: 0.9, stagger: 0.08, ease: 'power3.out', delay: 0.35, clearProps: 'filter' }
+    ['.chap__kicker', '.chap__lead', '.chap__actions > *', '.status'].map((s) => hero.querySelectorAll(s)),
+    { opacity: 0, y: 24 },
+    { opacity: 1, y: 0, duration: 0.8, stagger: 0.07, ease: 'power3.out', delay: 0.25, clearProps: 'opacity,transform' }
   );
 }
 
-// --- FİLM ---------------------------------------------------------------------
-const POSES = {
-  p0: { px: -4.4, py: 1.25, pz: -5.4, tx: 0, ty: 0.35, tz: -0.2, fitK: 0.82 },
-  p0b: { px: -3.7, py: 1.25, pz: -4.4, tx: 0, ty: 0.4, tz: -0.2, fitK: 0.9 },
-  p1: { px: -6.4, py: 1.5, pz: -0.6, tx: 0, ty: 0.5, tz: 0, fitK: 1 },
-  p2: { px: -5.1, py: 1.9, pz: 4.7, tx: 0, ty: 0.45, tz: 0.3, fitK: 1 },
-  p3: { px: 5.8, py: 2.9, pz: 1.4, tx: 0, ty: 0.4, tz: 0, fitK: 1 },
-  p4: { px: 0.9, py: 3.7, pz: -3.9, tx: 0, ty: 0.75, tz: -1.15, fitK: 0.5 },
-  p5a: { px: -2.9, py: 0.55, pz: -2.8, tx: -0.8, ty: 0.42, tz: -1.2, fitK: 0.5 },
-  p5b: { px: -1.95, py: 0.95, pz: -4.3, tx: -0.45, ty: 0.62, tz: -1.85, fitK: 0.5 },
-  pick: { px: -4.9, py: 1.45, pz: -5.0, tx: 0, ty: 0.42, tz: 0, fitK: 1 },
-  pickFrom: { px: -1.5, py: 6.5, pz: -6.5, tx: 0, ty: 0.3, tz: 0, fitK: 1 },
-  fin: { px: 0.15, py: 0.75, pz: -6.4, tx: 0, ty: 0.58, tz: 0, fitK: 1 },
-};
-// Dikey ekranda araba metnin üstündeki banda sığdırılır (sahne kutuya göre uzaklığı hesaplar)
-for (const [k, v] of Object.entries(POSES)) {
-  const close = ['p4', 'p5a', 'p5b'].includes(k);
-  Object.assign(v, { fitCar: close ? 0 : 1, rTop: 0.09, rBot: 0.42 });
-}
-Object.assign(POSES.p0, { rTop: 0.08, rBot: 0.27 });
-Object.assign(POSES.p0b, { rTop: 0.09, rBot: 0.36 });
-Object.assign(POSES.pick, { rTop: 0.06, rBot: 0.31 }); // başlık ~%32de başlıyor
-Object.assign(POSES.pickFrom, { rTop: 0.06, rBot: 0.31 });
-Object.assign(POSES.fin, { rTop: 0.1, rBot: 0.42 });
-if (mobile) {
-  // Önden 3/4 açı dikey ekranda daha iyi okunur
-  Object.assign(POSES.p0, { px: -2.5, py: 1.5, pz: -6.3 });
-  Object.assign(POSES.p0b, { px: -2.9, py: 1.4, pz: -5.6 });
-}
-Object.assign(S, POSES.p0);
-
+// --- FİLM: tek zaman çizelgesi, birimi "ekran" (1 = bir ekran boyu kaydırma) ------
 function buildFilm() {
+  const film = $('.film');
+  const scenes = $$('[data-scene]');
   const chaps = $$('[data-chap]');
   const rail = $$('.rail li');
-  const splits = chaps.map((c, i) => (i === 0 ? null : {
+  const top = $('.top');
+  const vh = innerHeight;
+  const fTop = film.getBoundingClientRect().top;
+  const S0 = scenes.map((s) => (s.getBoundingClientRect().top - fTop) / vh); // sahnenin pinlendiği an
+  const P = scenes.map((s) => s.offsetHeight / vh - 1); // pin uzunluğu (≤ 3 ekran)
+  const total = (film.offsetHeight - vh) / vh;
+
+  const splits = chaps.map((c) => ({
+    el: c,
     title: splitTitle($('.chap__title', c)),
     text: splitLines($('.chap__text', c)),
-    extra: $$('.chip, .gauge', c),
+    extra: $$('.chap__n, .chip, .gauge', c),
   }));
-  chaps.slice(1).forEach((c) => gsap.set(c, { autoAlpha: 1 }));
-  splits.forEach((s) => {
-    if (!s) return;
-    gsap.set(s.title.chars, { yPercent: 115 });
-    gsap.set(s.text.lines, { yPercent: 105, opacity: 0 });
-    if (s.extra.length) gsap.set(s.extra, { opacity: 0, y: 20 });
-  });
 
   const tl = gsap.timeline({ defaults: { ease: 'none' } });
   let pose = { ...POSES.p0 };
@@ -391,78 +392,94 @@ function buildFilm() {
   };
   const val = (key, from, to, at, dur, ease = 'none') =>
     tl.fromTo(S, { [key]: from }, { [key]: to, duration: dur, ease, immediateRender: false }, at);
+  // Kart görünmezken visibility: hidden (dokunmayı yutmaz, denetimde katman sayılmaz)
   const chapIn = (i, at) => {
     const s = splits[i];
-    tl.fromTo(s.title.chars, { yPercent: 115, rotate: 5, opacity: 1 }, { yPercent: 0, rotate: 0, opacity: 1, stagger: 0.012, duration: 0.45, ease: 'power3.out', immediateRender: false }, at);
-    tl.fromTo(s.text.lines, { yPercent: 105, opacity: 0 }, { yPercent: 0, opacity: 1, stagger: 0.06, duration: 0.4, ease: 'power3.out', immediateRender: false }, at + 0.15);
-    if (s.extra.length) tl.fromTo(s.extra, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.35, immediateRender: false }, at + 0.3);
+    tl.fromTo(s.el, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.02, immediateRender: false }, at);
+    tl.fromTo(s.title.chars, { yPercent: 115, rotate: 5 }, { yPercent: 0, rotate: 0, stagger: 0.008, duration: 0.3, ease: 'power3.out', immediateRender: false }, at);
+    tl.fromTo(s.text.lines, { yPercent: 105, opacity: 0 }, { yPercent: 0, opacity: 1, stagger: 0.04, duration: 0.25, ease: 'power3.out', immediateRender: false }, at + 0.1);
+    if (s.extra.length) tl.fromTo(s.extra, { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.22, immediateRender: false }, at + 0.05);
   };
   const chapOut = (i, at) => {
     const s = splits[i];
-    tl.fromTo(s.title.chars, { yPercent: 0, opacity: 1 }, { yPercent: -115, opacity: 0, stagger: 0.008, duration: 0.35, ease: 'power2.in', immediateRender: false }, at);
-    tl.fromTo([...s.text.lines, ...s.extra], { opacity: 1 }, { opacity: 0, duration: 0.25, immediateRender: false }, at);
+    tl.fromTo(s.title.chars, { yPercent: 0 }, { yPercent: -115, stagger: 0.005, duration: 0.22, ease: 'power2.in', immediateRender: false }, at);
+    tl.fromTo([...s.text.lines, ...s.extra], { opacity: 1 }, { opacity: 0, duration: 0.16, immediateRender: false }, at);
+    tl.fromTo(s.el, { autoAlpha: 1 }, { autoAlpha: 0, duration: 0.02, immediateRender: false }, at + 0.24);
   };
+  splits.forEach((s) => {
+    gsap.set(s.el, { autoAlpha: 0 });
+    gsap.set(s.title.chars, { yPercent: 115 });
+    gsap.set(s.text.lines, { yPercent: 105, opacity: 0 });
+  });
 
-  // 1 Kabin (hero)
-  cam('p0b', 0, 1.3, 'none');
-  tl.add(() => {}, 1.0);
-  tl.fromTo('.chap--hero', { autoAlpha: 1, y: 0 }, { autoAlpha: 0, y: -60, duration: 0.5, immediateRender: false, ease: 'power2.in' }, 0.9);
-  tl.fromTo('.rail', { opacity: 0 }, { opacity: 1, duration: 0.3, immediateRender: false }, 1.1);
+  const [a, b, c] = S0;
+  const [P0, P1, P2] = P;
+
+  // 1 Kabin (hero akışta kayar, yazı söner) → yan profil
+  cam('p1', 0.05, a - 0.05);
+  tl.fromTo('.chap--hero', { autoAlpha: 1, y: 0 }, { autoAlpha: 0, y: -50, duration: a * 0.4, ease: 'power1.in', immediateRender: false }, a * 0.12);
+  tl.fromTo('.hero__hint', { autoAlpha: 1 }, { autoAlpha: 0, duration: 0.15, immediateRender: false }, 0.02);
 
   // 2 Astar
-  cam('p1', 1.3, 1.4);
-  chapIn(1, 1.7);
-  chapOut(1, 3.0);
+  chapIn(0, a + 0.04);
+  chapOut(0, a + P0 * 0.42);
+  // 3 Boya: kapı açılır, tabanca önden arkaya süpürür (kapı içi dahil)
+  cam('p2', a + P0 * 0.4, P0 * 0.32);
+  val('door', 0, 1, a + P0 * 0.44, P0 * 0.16, 'power2.inOut');
+  val('spray', 0, 1, a + P0 * 0.5, 0.08);
+  val('sweep', 0, 1, a + P0 * 0.52, P0 * 0.42);
+  val('spray', 1, 0, a + P0 * 0.94, 0.08);
+  chapIn(1, a + P0 * 0.54);
+  chapOut(1, a + P0 - 0.26);
+  val('door', 1, 0, a + P0 - 0.2, 0.7, 'power2.inOut');
 
-  // 3 Boya: tabanca önden arkaya
-  cam('p2', 3.2, 2.2, 'sine.inOut');
-  val('sweep', 0, 1, 3.4, 1.9);
-  val('spray', 0, 1, 3.35, 0.2);
-  val('spray', 1, 0, 5.2, 0.25);
-  chapIn(2, 3.45);
-  chapOut(2, 5.3);
-
-  // 4 Vernik: yansıma netleşir, ışık bandı gövde boyunca kayar
-  cam('p3', 5.45, 1.3);
-  val('gloss', 0, 1, 5.9, 1.4);
-  val('envRot', 0, Math.PI * 1.1, 5.6, 2.0);
-  chapIn(3, 5.8);
-  chapOut(3, 7.45);
+  // Geçiş → 4 Vernik: yansıma netleşir, ışık bandı gövde boyunca kayar
+  const tr1 = b - (a + P0);
+  cam('p2b', a + P0 - 0.1, tr1 * 0.5 + 0.1, 'sine.in');
+  cam('p3', a + P0 + tr1 * 0.5, tr1 * 0.5 + P1 * 0.1, 'sine.out');
+  val('envRot', 0, Math.PI * 1.1, a + P0 + 0.4, P1 * 0.6);
+  val('gloss', 0, 1, b, P1 * 0.42);
+  chapIn(2, b + 0.04);
+  chapOut(2, b + P1 * 0.44);
 
   // 5 Seramik: su boncuklanır, sonra akıp gider
-  cam('p4', 7.55, 0.95);
-  val('beads', 0, 1, 7.95, 0.8);
-  val('sheet', 0, 1, 8.95, 0.7, 'power1.in');
-  chapIn(4, 7.95);
-  chapOut(4, 9.55);
+  cam('p4', b + P1 * 0.44, P1 * 0.2);
+  val('beads', 0, 1, b + P1 * 0.56, P1 * 0.22);
+  val('sheet', 0, 1, b + P1 * 0.8, P1 * 0.2 - 0.02, 'power1.in');
+  chapIn(3, b + P1 * 0.54);
+  chapOut(3, b + P1 - 0.26);
 
-  // 6 Detay: jant, sonra far; PPF filmi önden sarar
-  cam('p5a', 9.65, 0.8);
-  val('film', 0, 1, 10.0, 1.0);
-  cam('p5b', 10.65, 0.8);
-  val('head', 0, 1, 10.95, 0.35);
-  chapIn(5, 9.95);
+  // Geçiş → 6 Film: jant, sonra far; PPF önden sarar
+  cam('p5a', b + P1, c - (b + P1) + 0.05);
+  val('beads', 1, 0, b + P1, 0.3);
+  val('film', 0, 1, c, P2 * 0.5);
+  cam('p5b', c + P2 * 0.36, P2 * 0.3);
+  val('head', 0, 1, c + P2 * 0.56, P2 * 0.14);
+  chapIn(4, c + 0.04);
+  chapOut(4, c + P2 * 0.72);
 
   // Boya rengi ekranı doldurur
-  tl.fromTo('.flood', { clipPath: 'circle(0% at 50% 45%)' }, { clipPath: 'circle(150% at 50% 45%)', duration: 0.7, ease: 'power2.in', immediateRender: false }, 11.5);
-  tl.to({}, { duration: 0.15 });
+  tl.fromTo('.flood', { clipPath: 'circle(0% at 50% 45%)' }, { clipPath: 'circle(150% at 50% 45%)', duration: P2 * 0.24, ease: 'power2.in', immediateRender: false }, c + P2 * 0.76);
+  if (tl.duration() < total) tl.to({}, { duration: total - tl.duration() });
 
-  const marks = [0, 1.45, 3.25, 5.5, 7.6, 9.7];
+  const marks = [0, a - 0.1, a + P0 * 0.48, b - 0.3, b + P1 * 0.48, c - 0.3];
   let last = -1;
   const gv = $('[data-gloss]');
   const gb = $('[data-gloss-bar]');
   const { once = 38, sonra = 94 } = d.parlaklik || {};
 
-  ScrollTrigger.create({
-    trigger: '.film',
+  // Bir kez uçtan uca çal: her fromTo'nun "geri sarınca dönülecek" değerleri film sırasıyla kaydedilsin
+  // (yoksa ilk oynatma sırasında final/seçicinin yazdığı değerler kaydedilir ve geri dönüşte kamera kayar)
+  tl.progress(1, true).progress(0, true);
+  if (window.__v) window.__v.tl = tl;
+  const st = ScrollTrigger.create({
+    trigger: film,
     start: 'top top',
     end: 'bottom bottom',
-    pin: '.film__pin',
-    pinSpacing: false,
     scrub: 0.9,
     animation: tl,
-    onUpdate: () => {
-      const t = tl.time();
+    onUpdate: (self) => {
+      const t = self.progress * total;
       let idx = 0;
       marks.forEach((m, i) => t >= m && (idx = i));
       if (idx !== last) {
@@ -472,16 +489,54 @@ function buildFilm() {
           li.classList.toggle('is-done', i < idx);
         });
       }
-      gv.textContent = Math.round(once + (sonra - once) * S.gloss);
-      gb.style.transform = `scaleX(${(once + (sonra - once) * S.gloss) / 100})`;
+      top.classList.toggle('is-film', self.isActive && t > a * 0.55 && t < total - P2 * 0.2);
+      const g = once + (sonra - once) * S.gloss;
+      gv.textContent = Math.round(g);
+      gb.style.transform = `scaleX(${g / 100})`;
     },
-    onEnterBack: () => gsap.to(S, { spin: 0, duration: 0.6 }),
+    onLeave: () => top.classList.remove('is-film'),
+    onLeaveBack: () => top.classList.remove('is-film'),
+    onEnterBack: (self) => {
+      // Dışarıdan (seçici/final) değişen değerleri zaman çizelgesi yeniden yazsın: tamamlanmış tween'ler kendiliğinden yazmaz
+      const p = tl.progress();
+      tl.progress(0, true).progress(p, true);
+      killOwn();
+      ownTween(gsap.to(S, { spin: 0, steer: 0, drive: 0, duration: 0.6 }));
+    },
+  });
+
+  // Hikâye modu: hero çıktıktan sonra film boyunca alt çubuk saklanır; kart çubuğun yerine iner
+  ScrollTrigger.create({
+    trigger: film,
+    start: () => `top+=${Math.round(innerHeight * (a - 0.35))} top`,
+    end: () => `bottom-=${Math.round(innerHeight * 0.1)} bottom`,
+    onToggle: (self) => setStoryMode(self.isActive ? true : null),
+  });
+  return st;
+}
+
+// --- Başlık: filmde ray gösterir; filmden sonra katılaşır ve aşağı kaydırırken saklanır ---
+function initHeader(filmST) {
+  const top = $('.top');
+  let stopHide = null;
+  const after = (on) => {
+    top.classList.toggle('is-solid', on);
+    if (on && !stopHide) stopHide = autoHideHeader(top, { offset: 80 });
+    if (!on && stopHide) {
+      stopHide();
+      stopHide = null;
+    }
+  };
+  if (!filmST) return after(true);
+  ScrollTrigger.create({
+    trigger: '.proof', start: 'top 72px',
+    onEnter: () => after(true),
+    onLeaveBack: () => after(false),
   });
 }
 
 // --- Film sonrası bölümler ------------------------------------------------------
 function buildSections() {
-  // Önce/sonra başlığı
   const proofT = splitTitle($('#proof-title'));
   gsap.fromTo(proofT.chars, { yPercent: 115 }, {
     yPercent: 0, stagger: 0.015, ease: 'power3.out',
@@ -491,7 +546,7 @@ function buildSections() {
   // Hizmet satırları: yazı genişler ve aydınlanır, görsel perdeden açılır
   $$('.row').forEach((row) => {
     const tl = gsap.timeline({ scrollTrigger: { trigger: row, start: 'top 88%', end: 'top 38%', scrub: 0.6 } });
-    tl.fromTo($('.row__title', row), { fontVariationSettings: "'wdth' 75", color: '#5e666e' }, { fontVariationSettings: "'wdth' 100", color: '#e7eaed', ease: 'none' });
+    tl.fromTo($('.row__title', row), { fontVariationSettings: "'wdth' 75", color: '#6b737b' }, { fontVariationSettings: "'wdth' 100", color: '#e7eaed', ease: 'none' });
     const img = $('.row__img', row);
     if (img) {
       tl.fromTo(img, { clipPath: 'inset(0% 0% 100% 0% round 16px)' }, { clipPath: 'inset(0% 0% 0% 0% round 16px)', ease: 'power2.out' }, 0);
@@ -513,6 +568,7 @@ function buildSections() {
   $$('.stat__num').forEach((el) => {
     const to = Number(el.dataset.to);
     const o = { v: 0 };
+    el.textContent = '0' + el.dataset.suffix;
     ScrollTrigger.create({
       trigger: el, start: 'top 90%', once: true,
       onEnter: () => gsap.to(o, {
@@ -539,41 +595,45 @@ function buildSections() {
     },
   });
 
-  // Renk seçici: kamera yukarıdan süzülür, araba döner tablaya çıkar
+  // Renk seçici: kamera yukarıdan süzülür, araba döner tablaya çıkar, ön tekerlekler kırılır
   if (stage) {
     ScrollTrigger.create({
       trigger: '.picker', start: 'top 85%', end: 'bottom 15%',
       onToggle: (self) => {
         if (!self.isActive) return;
-        gsap.killTweensOf(S, 'px,py,pz,tx,ty,tz');
-        gsap.set(S, { tubes: 1, sweep: 1, gloss: 1, beads: 0, sheet: 0, film: 0, spray: 0, head: 0, swap: 1 });
+        killOwn();
+        gsap.set(S, { tubes: 1, sweep: 1, gloss: 1, beads: 0, sheet: 0, film: 0, spray: 0, head: 0, door: 0, drive: 0, swap: 1 });
         const from = self.direction > 0 ? POSES.pickFrom : POSES.fin;
-        gsap.fromTo(S, { ...from }, { ...POSES.pick, duration: 1.8, ease: 'expo.out' });
-        gsap.to(S, { spin: 1, duration: 1.5 });
+        ownTween(gsap.fromTo(S, { ...from }, { ...POSES.pick, duration: 1.8, ease: 'expo.out' }));
+        ownTween(gsap.to(S, { spin: 1, steer: 0.34, duration: 1.5 }));
       },
     });
+    // Final: araç farları yanık, kabinin derinliğinden kameraya doğru yuvarlanarak gelir
     ScrollTrigger.create({
       trigger: '.finale', start: 'top 70%', end: 'bottom top',
       onToggle: (self) => {
         if (!self.isActive) return;
-        gsap.killTweensOf(S, 'px,py,pz,tx,ty,tz');
-        gsap.set(S, { tubes: 1, sweep: 1, gloss: 1, beads: 0, sheet: 0, film: 0, spray: 0, swap: 1 });
-        gsap.fromTo(S, { ...POSES.pickFrom, px: 2.5, pz: -8 }, { ...POSES.fin, duration: 2, ease: 'expo.out' });
-        gsap.to(S, { spin: 0.28, head: 1, duration: 1.4 });
+        killOwn();
+        gsap.set(S, { tubes: 1, sweep: 1, gloss: 1, beads: 0, sheet: 0, film: 0, spray: 0, door: 0, swap: 1, spin: 0 });
+        ownTween(gsap.fromTo(S, { ...POSES.fin, px: 1.6, py: 1.2, pz: -8.2 }, { ...POSES.fin, duration: 2.4, ease: 'expo.out' }));
+        if (self.direction > 0) {
+          ownTween(gsap.fromTo(S, { drive: -7.5, steer: 0.12 }, { drive: 0, steer: 0, duration: 2.6, ease: 'power3.out' }));
+        } else ownTween(gsap.to(S, { drive: 0, steer: 0, duration: 0.8 }));
+        ownTween(gsap.to(S, { head: 1, duration: 0.8 }));
       },
     });
   }
   const pickT = splitTitle($('.picker__title'));
   gsap.fromTo(pickT.chars, { yPercent: 115 }, {
     yPercent: 0, stagger: 0.012, ease: 'power3.out',
-    scrollTrigger: { trigger: '.picker', start: 'top 20%', end: 'top -20%', scrub: 0.6 },
+    scrollTrigger: { trigger: '.picker', start: 'top 60%', end: 'top 10%', scrub: 0.6 },
   });
 
   // Puan sayacı
   const sc = { v: 0 };
   ScrollTrigger.create({
     trigger: '.voices', start: 'top 75%', once: true,
-    onEnter: () => gsap.to(sc, {
+    onEnter: () => gsap.fromTo(sc, { v: 0 }, {
       v: d.puan.ortalama, duration: 1.6, ease: 'expo.out',
       onUpdate: () => ($('[data-score]').textContent = sc.v.toFixed(1).replace('.', ',')),
     }),
@@ -595,7 +655,6 @@ function buildSections() {
       r.x += r.dir * (r.base + v * 18) * (dt / 1000);
       if (r.dir < 0 && r.x <= -half) r.x += half;
       if (r.dir > 0 && r.x >= 0) r.x -= half;
-      if (r.dir > 0 && r.x === 0) r.x = -half;
       gsap.set(r.el, { x: r.x, skewX: -r.dir * v * 0.12 });
     }
   });
@@ -608,12 +667,6 @@ function buildSections() {
     scrollTrigger: { trigger: '.finale', start: 'top 55%', end: 'top 0%', scrub: 0.6 },
   });
 
-  // Harita yaklaşınca yüklenir
-  ScrollTrigger.create({
-    trigger: '.finale', start: 'top 180%', once: true,
-    onEnter: () => ($('[data-map]').innerHTML = `<iframe title="${esc(d.isletme.ad)} konumu" src="${mapsEmbed(d)}" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>`),
-  });
-
   initMagnetic();
 }
 
@@ -623,6 +676,7 @@ function initBeforeAfter() {
     const set = (pct) => frame.style.setProperty('--x', `${Math.max(0, Math.min(100, pct))}%`);
     let dragging = false;
     let userMoved = false;
+    let st = null;
     const fromEvent = (e) => {
       const r = frame.getBoundingClientRect();
       set(((e.clientX - r.left) / r.width) * 100);
@@ -638,7 +692,6 @@ function initBeforeAfter() {
     frame.addEventListener('pointerup', () => (dragging = false));
     frame.addEventListener('pointercancel', () => (dragging = false));
     // Kaydırırken çizgi kendiliğinden geçer, dokununca kontrol kullanıcıya geçer
-    let st = null;
     if (!reducedMotion) {
       const o = { x: 88 };
       set(88);
@@ -658,12 +711,16 @@ function initCursor() {
   const xTo = gsap.quickTo(c, 'x', { duration: 0.35, ease: 'power3' });
   const yTo = gsap.quickTo(c, 'y', { duration: 0.35, ease: 'power3' });
   addEventListener('pointermove', (e) => {
+    if (!c.classList.contains('is-on')) gsap.set(c, { x: e.clientX, y: e.clientY });
+    c.classList.add('is-on');
+    c.classList.remove('is-out');
     xTo(e.clientX);
     yTo(e.clientY);
     const t = e.target;
     c.classList.toggle('is-link', !!t.closest?.('a, button'));
     c.classList.toggle('is-drag', !!t.closest?.('[data-ba]'));
   });
+  document.documentElement.addEventListener('pointerleave', () => c.classList.add('is-out'));
 }
 function initMagnetic() {
   if (!finePointer) return;
@@ -681,3 +738,22 @@ function initMagnetic() {
     });
   });
 }
+
+// --- Hareket azaltma: sabit ama güzel ----------------------------------------
+function start() {
+if (reducedMotion) {
+  document.body.classList.remove('is-loading');
+  $('[data-intro]').remove();
+  $$('[data-canvas]').forEach(canvasSection);
+  if (stage) {
+    Object.assign(S, POSES.p0, { tubes: 1, sweep: 1, gloss: 1, swap: 1, head: 0.6 });
+    loadP.then(() => stage.renderOnce());
+    addEventListener('resize', () => loaded && stage.renderOnce());
+  }
+  initBeforeAfter();
+  initHeader(null);
+} else {
+  runIntro();
+}
+}
+start();

@@ -1,7 +1,7 @@
 import raw from '../../data/showroom.json';
 import {
   boot, initSmoothScroll, gsap, ScrollTrigger, reducedMotion,
-  telHref, waHref, mapsHref, mapsEmbed, openStatus, icons, GUNLER,
+  telHref, waHref, mapsHref, mapsEmbed, openStatus, icons, GUNLER, autoHideHeader,
 } from '../../shared/core.js';
 import { SplitText } from 'gsap/SplitText';
 
@@ -25,11 +25,11 @@ function ablative(n) {
 }
 
 // --- Metin ve linkler ------------------------------------------------------
-const fotoMesaj = 'Merhaba, aracımın fotoğraflarını gönderiyorum. Fiyat alabilir miyim?';
+const fotoMesaj = `Merhaba ${d.isletme.ad}, aracımın fotoğraflarını gönderiyorum. Fiyat alabilir miyim?`;
 const binds = {
   ad: d.isletme.ad,
   slogan: d.isletme.slogan,
-  hakkinda: d.isletme.hakkinda,
+  hakkinda: String(d.isletme.hakkinda ?? '').replace(/\b(19|20)\d\d'(?:d|t)[ae]n\b/, ablative(d.isletme.kurulus)), // ?kurulus= ile uyumlu
   telefon: d.iletisim.telefon,
   adres: d.iletisim.adres,
   garanti: d.garanti,
@@ -122,7 +122,7 @@ if (d.puan) {
   $('[data-score]').textContent = d.puan.ortalama.toLocaleString('tr-TR', { minimumFractionDigits: 1 });
   $('[data-stars]').innerHTML = stars(Math.round(d.puan.ortalama));
   $('[data-stars]').setAttribute('aria-hidden', 'true');
-  $('[data-score-text]').textContent = `Google'daki ${fmt(d.puan.adet)} yorumun ortalaması`;
+  $('[data-score-text]').textContent = `5 üzerinden ortalama puan. Yorumlar tanıtım amaçlı örnektir.`;
 }
 $('[data-reviews]').innerHTML = d.yorumlar.map((y) => `
   <li class="review">
@@ -170,11 +170,8 @@ $('[data-brands]').innerHTML = row + row.replace('class="brands__row"', 'class="
 // =============================================================================
 const lenis = initSmoothScroll();
 
-// Header: aşağı kayınca gizlen, yukarı kayınca gel
-ScrollTrigger.create({
-  start: 0, end: 'max',
-  onUpdate: (self) => $('.top').classList.toggle('is-hidden', self.direction === 1 && self.scroll() > 240),
-});
+// Header: aşağı kayınca gizlen, yukarı kayınca gel (odak başlıktayken gizlenmez)
+autoHideHeader($('.top'), { offset: 240 });
 
 if (reducedMotion) {
   $('[data-meter]').textContent = `${d.parlaklik?.once ?? 38} → ${d.parlaklik?.sonra ?? 94}`;
@@ -191,9 +188,12 @@ function runMotion() {
   heroTl
     .from('.hero__img', { scale: 1.2, filter: 'brightness(.25)', duration: 2.4 }, 0)
     .from(split.lines, { yPercent: 115, duration: 1.2, stagger: 0.09 }, 0.25)
-    .fromTo('.hero__sweep', { xPercent: -60 }, { xPercent: 60, duration: 1.8, ease: 'power2.inOut' }, 0.7)
+    // x: 0 şart: GSAP CSS'teki translateX(-70%)'i piksel x olarak okuyup xPercent'e ekliyordu, parıltı metnin üstünde kalıyordu
+    .fromTo('.hero__sweep', { x: 0, xPercent: -60 }, { x: 0, xPercent: 60, duration: 1.8, ease: 'power2.inOut' }, 0.7)
     .to(split.lines, { backgroundPosition: '0% 0', duration: 1.8, ease: 'power2.inOut', stagger: 0.08 }, 0.7)
-    .from(['.hero__kicker', '.hero__lead', '.hero__actions', '.hero .status'], { y: 24, autoAlpha: 0, duration: 1, stagger: 0.07 }, 0.55)
+    .from(['.hero__kicker', '.hero__lead', '.hero .status'], { y: 24, autoAlpha: 0, duration: 1, stagger: 0.07 }, 0.55)
+    // Butonlar erken gelir ve yalnız opaklıkla: açılış sürerken de dokunulabilir (visibility gizlenmez)
+    .from('.hero__actions', { y: 16, opacity: 0, duration: 0.7 }, 0.15)
     .from('.top', { autoAlpha: 0, duration: 1 }, 0.9);
 
   gsap.to('.hero__img', {
@@ -225,14 +225,17 @@ function runMotion() {
   });
   rtl
     .fromTo('.reveal__intro', { autoAlpha: 1, y: 0 }, { autoAlpha: 0, y: -50, duration: 0.14 }, 0.02)
-    .to('.reveal__hud', { autoAlpha: 1, duration: 0.08 }, 0.1)
-    .fromTo(stage, { '--p': -0.06 }, { '--p': 1.06, duration: 0.72, ease: 'power1.inOut' }, 0.16)
-    .to(meter, { v: meterEnd, duration: 0.72, ease: 'power1.inOut', onUpdate: drawMeter }, 0.16)
+    .to('.reveal__hud', { autoAlpha: 1, duration: 0.08 }, 0.13)
+    .fromTo(stage, { '--p': -0.06 }, { '--p': 1.06, duration: 0.66, ease: 'power1.inOut' }, 0.16)
+    .to(meter, { v: meterEnd, duration: 0.66, ease: 'power1.inOut', onUpdate: drawMeter }, 0.16)
     .to('.reveal__label--before', { autoAlpha: 0, y: -16, duration: 0.08 }, 0.5)
     .to('.reveal__label--after', { autoAlpha: 1, y: 0, duration: 0.08 }, 0.54)
     .fromTo('.reveal__img', { scale: 1.1 }, { scale: 1, duration: 0.9 }, 0)
-    .fromTo(stage, { '--seam-o': 1 }, { '--seam-o': 0, duration: 0.06 }, 0.88)
-    .to({}, { duration: 0.06 });
+    .fromTo(stage, { '--seam-o': 1 }, { '--seam-o': 0, duration: 0.06 }, 0.82)
+    .to({}, { duration: 0.12 });
+  // Telefonda alt çubuk pin bitince geri geliyor: HUD ondan hemen önce çekilsin (iki alt katman üst üste binmesin)
+  // (core çubuğu pin bitişine 0,1 ekran kala geri getirir = ilerlemenin ~%96'sı; scrub gecikmesi için %92'de bitsin)
+  if (isMobile()) rtl.to('.reveal__hud', { autoAlpha: 0, duration: 0.04 }, 0.88);
 
   // --- Hizmetler: aktif satır genişler, görsel değişir ------------------------
   $$('.svc').forEach((el) => {
