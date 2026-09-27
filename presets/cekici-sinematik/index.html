@@ -32,56 +32,35 @@
   <div class="cursor" data-cursor aria-hidden="true"><i></i></div>
 
   <header class="top" data-top>
-    <a class="top__brand" href="#" data-bind="ad"></a>
+    <a class="top__brand" href="#sahne" data-bind="ad"></a>
     <p class="top__line"><span class="top__dot"></span><span data-status></span></p>
+    <div class="hud" data-hud aria-hidden="true">
+      <div class="hud__clock"><small>Saat</small><b data-hud-clock>02:14</b></div>
+      <div class="hud__eta" data-hud-eta><small>Varışa</small><b><span data-eta>45</span> dk</b></div>
+    </div>
     <a class="top__call" data-tel data-magnetic><span data-icon="phone"></span><span class="top__num" data-bind="telefon"></span></a>
   </header>
+  <div class="loader" data-loader aria-hidden="true"><i></i><span>Çekici yola hazırlanıyor</span></div>
 
   <main>
-    <!-- Film: yolda kalan araç → çekici yola çıkar → varış → fotoğraf → kasa iner, vinç çeker → teslim -->
-    <section class="film" data-film>
-      <div class="film__sticky">
-        <div class="hud" data-hud aria-hidden="true">
-          <div class="hud__clock"><small>Saat</small><b data-hud-clock>02:14</b></div>
-          <div class="hud__eta" data-hud-eta><small>Varışa</small><b><span data-eta>45</span> dk</b></div>
-          <div class="hud__rec"><i></i>Canlı takip</div>
-        </div>
-
-        <div class="hero" data-hero>
-          <p class="hero__kicker" data-kicker></p>
-          <h1 class="hero__title" data-hero-title></h1>
-          <p class="hero__slogan" data-bind="slogan"></p>
-          <div class="hero__cta">
-            <a class="btn btn--amber" data-tel data-magnetic><span data-icon="phone"></span>Hemen ara</a>
-            <a class="btn btn--ghost" data-wa-konum target="_blank" rel="noopener" data-magnetic><span data-icon="whatsapp"></span>Konum gönder</a>
+    <!-- Film: kahraman + beş kısa durak (yola çıkış → varış → fotoğraf → yükleme → teslim).
+         Her durak kendi yapışkan sahnesi; kart telefonda ekranın en fazla %40'ı. -->
+    <div class="film" data-film>
+      <section class="stop stop--hero" data-stop="hero" id="sahne" aria-labelledby="hero-title">
+        <div class="stop__sticky">
+          <div class="hero" data-hero>
+            <p class="hero__kicker" data-kicker></p>
+            <h1 class="hero__title" id="hero-title" data-hero-title></h1>
+            <p class="hero__slogan" data-bind="slogan"></p>
+            <div class="hero__cta">
+              <a class="btn btn--amber" data-tel data-magnetic><span data-icon="phone"></span>Hemen ara</a>
+              <a class="btn btn--ghost" data-wa-konum target="_blank" rel="noopener" data-magnetic><span data-icon="whatsapp"></span>Konum gönder</a>
+            </div>
           </div>
+          <p class="hint" data-hint aria-hidden="true"><i></i>Kaydırın, yola çıkıyoruz</p>
         </div>
-
-        <ol class="chapters" data-rail aria-label="Çağrıdan teslime"></ol>
-        <div class="cards" data-cards></div>
-
-        <div class="route" data-route aria-hidden="true">
-          <svg viewBox="0 0 220 120">
-            <path class="route__base" d="M16 96 C 60 96, 70 40, 118 44 S 176 20, 204 22" />
-            <path class="route__done" data-route-path d="M16 96 C 60 96, 70 40, 118 44 S 176 20, 204 22" />
-            <circle class="route__a" cx="16" cy="96" r="5" />
-            <circle class="route__b" cx="204" cy="22" r="6" />
-            <circle class="route__truck" data-route-truck r="5" cx="16" cy="96" />
-          </svg>
-          <p><span>Şaşmaz</span><span data-route-to></span></p>
-        </div>
-
-        <div class="shots" data-shots aria-hidden="true"></div>
-        <ul class="onsite" data-onsite aria-hidden="true"></ul>
-
-        <div class="overview" data-overview>
-          <p class="overview__kicker">Çağrıdan teslime</p>
-          <h2 class="overview__title">Ankara'nın her yolunda.</h2>
-        </div>
-
-        <p class="hint" data-hint aria-hidden="true"><i></i>Kaydırın, yola çıkıyoruz</p>
-      </div>
-    </section>
+      </section>
+    </div>
 
     <!-- Hizmetler: yol levhası gibi -->
     <section class="svc" id="hizmetler">
@@ -144,6 +123,7 @@
     <!-- Yorumlar -->
     <section class="reviews" id="yorumlar">
       <header class="reviews__head">
+        <p class="eyebrow eyebrow--amber reviews__eyebrow">Örnek yorumlar</p>
         <p class="reviews__score"><b data-puan>4,8</b><span class="reviews__stars" data-stars></span></p>
         <p class="reviews__count" data-puan-adet></p>
       </header>
@@ -187,7 +167,7 @@
   <footer class="foot">
     <p data-year></p>
     <p data-bind="adres"></p>
-    <p class="foot__small">Fotoğraflar: Pexels. 3D gece sahnesi bu site için kodla çizildi.</p>
+    <p class="foot__small">Fotoğraflar: Pexels, konuyu temsil eder. 3D görseller temsilîdir; yorumlar ve puan örnektir.</p>
   </footer>
 
   <script type="module" src="./main.js"></script>

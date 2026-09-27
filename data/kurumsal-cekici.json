@@ -14,7 +14,7 @@
       "metin": "Çekicide en çok korkulan şey, aracın gittiği gibi gelmemesidir. Biz aracın dört yanını yüklemeden önce fotoğraflayıp size göndeririz; tekerleri kayışla, gövdeyi zincirle sabitleriz ve teslimde aynı hâliyle bırakırız."
     },
     "hizmetOzetBaslik": "Yolda ne olduysa",
-    "yorumBaslik": "Yolda kalıp bizi arayanlar",
+    "yorumBaslik": "Örnek yorumlar: yolda kalıp arayanlar",
     "surecBaslik": "Telefon açıldıktan sonra ne olur",
     "galeriBaslik": "Yoldan kareler",
     "markaBaslik": "Taşıdığımız binek, ticari ve ağır vasıta markaları",
@@ -88,7 +88,7 @@
       "kurumsal": { "baslik": "Kurumsal", "metin": "Kim olduğumuz, telefonu nasıl açtığımız ve bir aracı nasıl teslim ettiğimiz.", "gorsel": "/img/sektor-cekici/arac-tasima.jpg" },
       "hizmetler": { "baslik": "Hizmetlerimiz", "metin": "Çekiciden akü takviyesine, yolda lastik değişiminden ağır vasıta kurtarmaya; her iş için ortalama süre." },
       "kurumsal-musteriler": { "baslik": "Filo ve sigorta", "metin": "Filolara öncelikli çağrı, servislere araç getirme, kaza sonrası sigorta sürecinde taşıma.", "gorsel": "/img/sektor-cekici/agir-vasita.jpg" },
-      "referanslar": { "baslik": "Yoldan ve müşterilerden", "metin": "Yoldan kareler, müşterilerimizin yorumları ve taşıdığımız markalar." },
+      "referanslar": { "baslik": "Yoldan ve müşterilerden", "metin": "Yoldan kareler, örnek müşteri yorumları ve taşıdığımız markalar." },
       "iletisim": { "baslik": "İletişim", "metin": "Acilse arayın. Acil değilse, şehirlerarası taşıma ya da filo için buradan yazın." }
     },
     "konular": ["Çekici çağırmak", "Akü takviye", "Yolda lastik", "Kaza sonrası taşıma", "Şehirlerarası taşıma", "Ağır vasıta kurtarma", "Filo / servis anlaşması", "Genel bilgi"],

@@ -84,7 +84,7 @@ body {
 }
 .top > * { pointer-events: auto; }
 .top__brand {
-  display: inline-flex; align-items: center; gap: 10px; text-decoration: none;
+  display: inline-flex; align-items: center; gap: 10px; text-decoration: none; min-height: 44px;
   font: 800 22px/1 var(--f-disp); text-transform: uppercase; letter-spacing: .02em;
   background: rgb(255 255 255 / .86); padding: 10px 16px 10px 12px; border-radius: 999px;
   backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
@@ -158,13 +158,13 @@ body {
 }
 .kicker__dot { width: 8px; height: 8px; border-radius: 50%; background: var(--kirmizi); box-shadow: 0 0 0 4px rgb(227 36 27 / .18); animation: blink 1.4s steps(2, jump-none) infinite; }
 .hero__title {
-  margin-top: 14px;
-  font: 800 clamp(64px, 19vw, 168px)/.84 var(--f-disp); text-transform: uppercase; letter-spacing: -.01em;
+  margin-top: 22px;
+  font: 800 clamp(64px, 19vw, 168px)/.86 var(--f-disp); text-transform: uppercase; letter-spacing: -.01em;
+  color: var(--kirmizi); animation: rise .9s cubic-bezier(.2,.8,.2,1) both;
 }
-.hero__title span { display: block; animation: rise .9s cubic-bezier(.2,.8,.2,1) both; }
-.hero__title .l2 { color: var(--kirmizi); animation-delay: .08s; }
+.hero__title::first-line { color: var(--murekkep); }
 @keyframes rise { from { opacity: 0; transform: translateY(.35em); } to { opacity: 1; transform: none; } }
-.hero__lead { margin-top: 16px; max-width: 30ch; font-size: 17px; line-height: 1.45; font-weight: 500; animation: rise .9s cubic-bezier(.2,.8,.2,1) both .18s; }
+.hero__lead { margin-top: 26px; max-width: 30ch; font-size: 17px; line-height: 1.45; font-weight: 500; animation: rise .9s cubic-bezier(.2,.8,.2,1) both .18s; }
 .hero__cta { display: none; gap: 10px; margin-top: 26px; animation: rise .9s cubic-bezier(.2,.8,.2,1) both .26s; }
 .hero__hint {
   position: absolute; left: 50%; bottom: calc(96px + env(safe-area-inset-bottom)); transform: translateX(-50%);
@@ -272,9 +272,9 @@ body {
 /* ---- Rakamlar ---- */
 .rakam { background: var(--kirmizi); color: #fff; padding: clamp(48px, 7vw, 90px) 0; }
 .rakam__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 34px 20px; }
-.stat__v { font: 400 clamp(40px, 10.5vw, 88px)/.9 var(--f-sten); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.stat__v { font: 400 clamp(40px, 10.5vw, 88px)/1.02 var(--f-sten); font-variant-numeric: tabular-nums; white-space: nowrap; }
 .stat__v small { font-size: .62em; margin-left: .04em; }
-.stat__l { margin-top: 8px; font-weight: 600; font-size: 14.5px; line-height: 1.3; max-width: 18ch; opacity: .92; }
+.stat__l { margin-top: 10px; font-weight: 600; font-size: 14.5px; line-height: 1.3; max-width: 18ch; opacity: .92; }
 @media (min-width: 900px) { .rakam__grid { grid-template-columns: repeat(4, 1fr); gap: 20px 40px; } .stat__v { font-size: clamp(56px, 5.6vw, 88px); } .stat { border-left: 2px solid rgb(255 255 255 / .35); padding-left: 20px; } }
 
 /* ---- Süreç + mesajlar ---- */
@@ -405,14 +405,14 @@ body {
 .final__tri path { fill: none; stroke: #fff; stroke-width: 9; stroke-linejoin: round; }
 .final__in { position: relative; }
 .final__title { margin-top: 16px; font: 800 clamp(60px, 14vw, 170px)/.86 var(--f-disp); text-transform: uppercase; padding-top: .05em; }
-.final__tel { display: inline-block; margin-top: 18px; font: 400 clamp(40px, 10.6vw, 110px)/1 var(--f-sten); text-decoration: none; white-space: nowrap; }
+.final__tel { display: inline-block; padding: 6px 0; margin-top: 12px; font: 400 clamp(40px, 10.6vw, 110px)/1 var(--f-sten); text-decoration: none; white-space: nowrap; }
 .final__cta { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 30px; }
 
 /* ---- Footer ---- */
 .foot { background: var(--asfalt); color: var(--soluk-k); padding: 48px 0 40px; font-size: 14.5px; }
 .foot__in { display: grid; gap: 10px; }
 .foot__brand { display: flex; align-items: center; gap: 10px; color: #fff; font: 800 26px/1 var(--f-disp); text-transform: uppercase; }
-.foot a { text-decoration: none; color: #fff; }
+.foot a { text-decoration: none; color: #fff; display: inline-flex; align-items: center; min-height: 44px; }
 .foot__small { margin-top: 12px; font-size: 12.5px; opacity: .7; }
 
 @media (prefers-reduced-motion: reduce) {

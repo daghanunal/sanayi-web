@@ -82,7 +82,7 @@ body { background: var(--papir); color: var(--ink); font: 400 17px/1.55 var(--bo
   color: #fff; transition: background-color .3s ease, color .3s ease, box-shadow .3s ease;
 }
 .top.is-solid { background: rgb(236 238 242 / .94); color: var(--ink); box-shadow: 0 1px 0 var(--cizgi); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
-.top__brand { display: flex; align-items: center; gap: 10px; text-decoration: none; font: 800 19px/1 var(--display); font-stretch: 80%; text-transform: uppercase; letter-spacing: .01em; min-width: 0; }
+.top__brand { display: flex; align-items: center; min-height: 44px; gap: 10px; text-decoration: none; font: 800 19px/1 var(--display); font-stretch: 80%; text-transform: uppercase; letter-spacing: .01em; min-width: 0; }
 .top__brand span:last-child { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .top__mark { width: 24px; height: 17px; border: 2.5px solid var(--mor-acik); border-radius: 4px; transform: rotate(-10deg); flex: none; position: relative; }
 .top.is-solid .top__mark { border-color: var(--mor); }
@@ -389,10 +389,10 @@ body { background: var(--papir); color: var(--ink); font: 400 17px/1.55 var(--bo
 
 /* --- Footer --- */
 .foot { background: var(--grafit); color: var(--muted-d); padding: 40px var(--pad) 36px; border-top: 1px solid var(--cizgi-d); display: grid; gap: 6px; font-size: 15px; }
-.foot a { text-decoration: none; color: var(--papir); }
+.foot a { text-decoration: none; color: var(--papir); display: inline-flex; align-items: center; min-height: 44px; }
 .foot__name { font: 850 26px/1.1 var(--display); font-stretch: 75%; text-transform: uppercase; color: var(--papir); margin-bottom: 6px; }
 .foot__small { font-size: 13px; margin-top: 12px; }
-@media (max-width: 899px) { .foot { padding-bottom: 110px; } body { padding-bottom: 0; } }
+@media (max-width: 899px) { .foot { padding-bottom: calc(var(--bar-reserve, 96px) + 24px); } body { padding-bottom: 0; } }
 
 @media (prefers-reduced-motion: reduce) {
   .marka__track { animation: none; }
@@ -410,3 +410,4 @@ body { background: var(--papir); color: var(--ink); font: 400 17px/1.55 var(--bo
   .hero__cta .btn { flex: 1 1 auto; padding: 0 14px; font-size: 15px; min-height: 50px; }
   .hero__cta .btn--ghost { flex: 0 0 auto; }
 }
+@media (max-width: 899px) { .hero__hint { display: none; } }

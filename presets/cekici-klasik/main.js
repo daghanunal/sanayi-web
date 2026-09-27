@@ -163,7 +163,7 @@ $('[data-strip]').innerHTML = `<div class="serit__track">${stripHtml}${stripHtml
 // --- Yorumlar ---------------------------------------------------------------
 const stars = (n) => `<span class="stars" aria-label="${n} üzerinden 5 yıldız">${Array.from({ length: 5 }, (_, i) => `<i class="${i < n ? 'on' : ''}">${star}</i>`).join('')}</span>`;
 if (d.puan) {
-  $('[data-puan]').innerHTML = `<p class="puan__v">${esc(String(d.puan.ortalama).replace('.', ','))}</p><div>${stars(Math.round(d.puan.ortalama))}<p class="puan__n">${nf(d.puan.adet)} değerlendirme</p></div>`;
+  $('[data-puan]').innerHTML = `<p class="puan__v">${esc(String(d.puan.ortalama).replace('.', ','))}</p><div>${stars(Math.round(d.puan.ortalama))}<p class="puan__n">Örnek puan · ${nf(d.puan.adet)} değerlendirme</p></div>`;
 }
 $('[data-reviews]').innerHTML = `<div class="yorum-track">${d.yorumlar
   .map((y) => `<figure class="yorum">${stars(y.puan)}<blockquote>${esc(y.metin)}</blockquote><figcaption><b>${esc(y.ad)}</b>${y.arac ? `<span>${esc(y.arac)}</span>` : ''}</figcaption></figure>`)

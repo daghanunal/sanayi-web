@@ -180,7 +180,8 @@ if (reducedMotion) {
   hero.classList.add('is-static');
 } else {
   const sheet = $('.sheet');
-  const peek = () => sheet.offsetHeight - (small ? 76 : 92);
+  // telefonda kâğıt ilk ekranda alt çubuğun arkasına sarkmasın: tamamen aşağıda bekler
+  const peek = () => (small ? innerHeight - sheet.offsetTop + 12 : sheet.offsetHeight - 92);
   const m = { p: 0 };
   let stamped = false;
   const tl = gsap.timeline({
@@ -191,7 +192,7 @@ if (reducedMotion) {
     },
   });
   tl.fromTo(sheet, { y: peek }, { y: 0, duration: 0.2, ease: 'power2.out' }, 0)
-    .to('.hero__copy', { y: small ? -60 : -30, opacity: small ? 0 : 0.35, duration: 0.18 }, 0)
+    .to('.hero__copy', { y: small ? -60 : -30, autoAlpha: small ? 0 : 0.35, duration: 0.18 }, 0)
     .to('.hero__shade', { opacity: 1, duration: 0.2 }, 0)
     .fromTo('.hero__photo img', { scale: 1.12 }, { scale: 1, duration: 0.3 }, 0)
     .to('.hero__hint', { opacity: 0, duration: 0.05 }, 0)
@@ -208,7 +209,7 @@ if (reducedMotion) {
   // Açılış
   gsap.from('.hero__name', { yPercent: 24, opacity: 0, duration: 0.9, ease: 'power3.out', delay: 0.05 });
   gsap.from(['.hero__since', '.hero__slogan', '.hero__cta'], { y: 16, opacity: 0, duration: 0.7, stagger: 0.08, ease: 'power2.out', delay: 0.2 });
-  gsap.from('.sheet', { yPercent: 18, duration: 1, ease: 'power3.out', delay: 0.3 });
+  if (!small) gsap.from('.sheet', { yPercent: 18, duration: 1, ease: 'power3.out', delay: 0.3 });
 }
 
 // --- Rakamlar ----------------------------------------------------------------
@@ -289,7 +290,7 @@ const stars = (n) => Array.from({ length: 5 }, (_, i) => `<span class="${i < n ?
 $('[data-score]').textContent = nf(d.puan.ortalama, 1);
 $('[data-stars]').innerHTML = stars(Math.round(d.puan.ortalama));
 $('[data-stars]').setAttribute('aria-label', `5 üzerinden ${nf(d.puan.ortalama, 1)}`);
-$('[data-review-count]').textContent = `Google'da ${nf(d.puan.adet)} değerlendirme`;
+$('[data-review-count]').textContent = `Örnek puan · ${nf(d.puan.adet)} değerlendirme`;
 $('[data-reviews]').innerHTML = d.yorumlar.map((y) => `
   <li class="rev">
     <p class="rev__car tw">${esc(y.arac)}</p>

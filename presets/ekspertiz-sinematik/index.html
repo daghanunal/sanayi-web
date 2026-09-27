@@ -11,10 +11,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Encode+Sans+Expanded:wght@500;700;800;900&family=Host+Grotesk:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap&subset=latin-ext" rel="stylesheet" />
 </head>
 <body class="is-loading">
-  <!-- Açılış: boya kalınlık ölçeri kaputa değer, değer okunur, tarama çizgisi sahneyi açar -->
+  <!-- Açılış (≤1,5 sn, dokununca geçer): ölçer kaputa değer, değer okunur, tarama çizgisi perdeyi açar -->
   <div class="intro" data-intro role="presentation">
     <div class="intro__probe">
-      <p class="intro__lbl"><span data-intro-no></span><span>Kaput · ölçüm 1/5</span></p>
+      <p class="intro__lbl"><span data-intro-no></span><span>Kaput · örnek ölçüm</span></p>
       <p class="intro__val"><b data-intro-val>000</b><small>µm</small></p>
       <p class="intro__cls" data-intro-cls>Ölçülüyor</p>
       <div class="intro__bars" data-intro-bars aria-hidden="true"></div>
@@ -25,68 +25,130 @@
   </div>
 
   <canvas class="stage" data-stage aria-hidden="true"></canvas>
+  <div class="loader" data-loader aria-hidden="true"><i></i><span>Bölme hazırlanıyor</span></div>
 
   <header class="top" data-top>
-    <a class="top__brand" href="#" data-bind="ad"></a>
+    <a class="top__brand" href="#sahne" data-bind="ad"></a>
     <p class="top__status" data-status></p>
+    <ol class="rail" data-rail aria-hidden="true"></ol>
     <a class="top__call" data-tel><span data-icon="phone"></span><span class="top__num" data-bind="telefon"></span></a>
   </header>
 
   <main>
-    <!-- Film: bölmeye giriş → tarama kapısı (boya) → lift (şasi) → röntgen (OBD) → merdaneler (dinamo) → kuşbakışı rapor -->
-    <section class="film" data-film>
-      <div class="film__sticky">
-        <div class="hero" data-hero>
-          <p class="hero__since" data-since></p>
-          <h1 class="hero__title" data-hero-title></h1>
-          <p class="hero__slogan" data-bind="slogan"></p>
-          <div class="hero__cta">
-            <a class="btn btn--mint" data-wa-randevu target="_blank" rel="noopener"><span data-icon="whatsapp"></span>Randevu al</a>
-            <a class="btn btn--ghost" data-tel><span data-icon="phone"></span>Hemen ara</a>
+    <!-- Film: bölmeye giriş → tarama kapısı (boya) → lift (şasi) → kapı açık, cihaz bağlı (arıza) → merdaneler (dinamo) → kuşbakışı rapor.
+         Her durak kendi kısa yapışkan sahnesi; kart telefonda ekranın en fazla %40'ı. -->
+    <div class="film" data-film>
+      <section class="stop stop--hero" data-stop="hero" id="sahne" aria-labelledby="hero-title">
+        <div class="stop__sticky">
+          <div class="hero" data-hero>
+            <p class="hero__since" data-since></p>
+            <h1 class="hero__title" id="hero-title" data-hero-title></h1>
+            <p class="hero__slogan" data-bind="slogan"></p>
+            <div class="hero__cta">
+              <a class="btn btn--mint" data-wa-randevu target="_blank" rel="noopener"><span data-icon="whatsapp"></span>Randevu al</a>
+              <a class="btn btn--ghost" data-tel><span data-icon="phone"></span>Hemen ara</a>
+            </div>
+            <p class="hero__today" data-today></p>
           </div>
+          <p class="hint" data-hint aria-hidden="true"><i></i>Kaydırın, araç bölmeye girsin</p>
         </div>
+      </section>
 
-        <ol class="rail" data-rail aria-label="İnceleme adımları"></ol>
-        <div class="chaps" data-chaps></div>
+      <section class="stop" data-stop="boya" id="boya" aria-labelledby="t-boya">
+        <div class="stop__sticky">
+          <article class="card" data-card>
+            <p class="card__no" data-no></p>
+            <h2 class="card__title" id="t-boya" data-title></h2>
+            <div class="card__swap">
+              <p class="card__text" data-text></p>
+              <div class="hud" aria-live="off">
+                <p class="hud__k">Boya kalınlığı · <span data-m-side>sağ taraf</span> · <em>örnek değer</em></p>
+                <div class="hud__row">
+                  <p class="hud__panel" data-m-panel>Ön tampon</p>
+                  <p class="hud__val"><b data-m-val>0</b><small>µm</small></p>
+                  <p class="chip" data-m-cls>—</p>
+                </div>
+                <ul class="legend" data-legend></ul>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
 
-        <!-- Bölüm göstergeleri -->
-        <div class="hud hud--boya" data-hud="boya" aria-hidden="true">
-          <p class="hud__k">Boya kalınlığı · <span data-m-side>sağ taraf</span></p>
-          <p class="hud__panel" data-m-panel>—</p>
-          <p class="hud__val"><b data-m-val>0</b><small>µm</small></p>
-          <p class="chip" data-m-cls>—</p>
-          <ul class="legend" data-legend></ul>
+      <section class="stop" data-stop="sasi" id="sasi" aria-labelledby="t-sasi">
+        <div class="stop__sticky">
+          <article class="card" data-card>
+            <p class="card__no" data-no></p>
+            <h2 class="card__title" id="t-sasi" data-title></h2>
+            <div class="card__swap">
+              <p class="card__text" data-text></p>
+              <div class="hud">
+                <p class="hud__k">Lift · şasi kontrolü</p>
+                <ul class="checks" data-checks></ul>
+              </div>
+            </div>
+          </article>
         </div>
-        <div class="hud hud--sasi" data-hud="sasi" aria-hidden="true">
-          <p class="hud__k">Lift · şasi kontrolü</p>
-          <ul class="checks" data-checks></ul>
-        </div>
-        <div class="hud hud--obd" data-hud="obd" aria-hidden="true">
-          <p class="hud__k">OBD taraması · <span data-obd-count>0</span>/<span data-obd-total></span> beyin</p>
-          <ul class="term" data-term></ul>
-        </div>
-        <div class="hud hud--dyno" data-hud="dyno" aria-hidden="true">
-          <p class="hud__k" data-dyno-lbl></p>
-          <div class="dyno__nums">
-            <p class="hud__val"><b data-dyno-kw>0</b><small>kW</small></p>
-            <p class="dyno__rpm"><b data-dyno-rpm>0</b> d/dk</p>
-          </div>
-          <svg class="dyno__chart" viewBox="0 0 300 110" preserveAspectRatio="none">
-            <path class="dyno__grid" d="M0 27.5H300M0 55H300M0 82.5H300M75 0V110M150 0V110M225 0V110" />
-            <path class="dyno__curve" data-dyno-curve d="" />
-            <circle class="dyno__dot" data-dyno-dot r="4" cx="0" cy="110" />
-          </svg>
-        </div>
-        <div class="hud hud--rapor" data-hud="rapor">
-          <p class="hud__k"><span data-rapor-no></span></p>
-          <h2 class="rapor__title" data-rapor-title></h2>
-          <ul class="rapor__list" data-rapor-list></ul>
-          <p class="rapor__note" data-rapor-note></p>
-        </div>
+      </section>
 
-        <p class="hint" data-hint aria-hidden="true"><i></i>Kaydırın, araç bölmeye girsin</p>
-      </div>
-    </section>
+      <section class="stop" data-stop="obd" id="ariza" aria-labelledby="t-obd">
+        <div class="stop__sticky">
+          <article class="card" data-card>
+            <p class="card__no" data-no></p>
+            <h2 class="card__title" id="t-obd" data-title></h2>
+            <div class="card__swap">
+              <p class="card__text" data-text></p>
+              <div class="hud">
+                <p class="hud__k">OBD taraması · <span data-obd-count>0</span>/<span data-obd-total></span> beyin · örnek araç</p>
+                <ul class="term" data-term></ul>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="stop" data-stop="dyno" id="dinamo" aria-labelledby="t-dyno">
+        <div class="stop__sticky">
+          <article class="card" data-card>
+            <p class="card__no" data-no></p>
+            <h2 class="card__title" id="t-dyno" data-title></h2>
+            <div class="card__swap">
+              <p class="card__text" data-text></p>
+              <div class="hud hud--dyno">
+                <p class="hud__k" data-dyno-lbl></p>
+                <div class="dyno__nums">
+                  <p class="hud__val"><b data-dyno-kw>0</b><small>kW</small></p>
+                  <p class="dyno__rpm"><b data-dyno-rpm>0</b> d/dk</p>
+                </div>
+                <svg class="dyno__chart" viewBox="0 0 300 110" preserveAspectRatio="none" aria-hidden="true">
+                  <path class="dyno__grid" d="M0 27.5H300M0 55H300M0 82.5H300M75 0V110M150 0V110M225 0V110" />
+                  <path class="dyno__curve" data-dyno-curve d="" />
+                  <circle class="dyno__dot" data-dyno-dot r="4" cx="0" cy="110" />
+                </svg>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="stop" data-stop="rapor" id="rapor" aria-labelledby="t-rapor">
+        <div class="stop__sticky">
+          <article class="card card--rapor" data-card>
+            <p class="card__no" data-no></p>
+            <h2 class="card__title" id="t-rapor" data-title></h2>
+            <div class="card__swap">
+              <p class="card__text" data-text></p>
+              <div class="hud">
+                <p class="hud__k" data-rapor-no></p>
+                <ul class="rapor__list" data-rapor-list></ul>
+                <p class="rapor__note" data-rapor-note></p>
+              </div>
+            </div>
+          </article>
+          <div class="tags" data-tags aria-hidden="true"></div>
+        </div>
+      </section>
+    </div>
 
     <!-- Rapor kâğıdı başlar -->
     <div class="paper">
@@ -144,9 +206,9 @@
         <ol class="steps__list" data-steps></ol>
       </section>
 
-      <section class="strip" aria-label="Bölmeden kareler">
+      <section class="strip" aria-label="Ekspertizde bakılan yerler">
         <header class="sec-head sec-head--row">
-          <h2 class="sec-title" data-reveal>Lift altından kareler.</h2>
+          <h2 class="sec-title" data-reveal>Ekspertizde nereye bakılır?</h2>
           <p class="strip__hint">Yana kaydırın</p>
         </header>
         <div class="strip__track" data-gallery tabindex="0"></div>
@@ -155,7 +217,7 @@
       <section class="reviews" id="yorumlar">
         <header class="reviews__head">
           <div>
-            <p class="sec-kicker">Rapor sonrası</p>
+            <p class="sec-kicker">Örnek yorumlar</p>
             <h2 class="sec-title" data-reveal>Getirenler ne diyor?</h2>
           </div>
           <p class="score"><b data-puan>4,8</b><span class="score__stars" data-stars></span><span class="score__n" data-puan-adet></span></p>
@@ -201,7 +263,7 @@
   <footer class="foot">
     <p data-year></p>
     <p data-bind="adres"></p>
-    <p class="foot__small">Fotoğraflar: Pexels. 3D araç ve bölme bu site için kodla çizildi.</p>
+    <p class="foot__small">Fotoğraflar: Pexels, konuyu temsil eder. 3D görseller temsilîdir; ölçüm değerleri, yorumlar ve puan örnektir.</p>
   </footer>
 
   <script type="module" src="./main.js"></script>

@@ -191,13 +191,13 @@ body { overflow-x: clip; }
 .rt-nokta.is-aktif .rt-nokta__hale { animation: rt-hale 1.4s ease-out infinite; }
 @keyframes rt-hale { from { transform: scale(1); opacity: 1; } to { transform: scale(2.2); opacity: 0; } }
 .rt__kaydir { display: block; margin: 10px 6px 0; }
-.rt__kaydir input { width: 100%; accent-color: var(--et-sari); height: 28px; cursor: ew-resize; }
+.rt__kaydir input { width: 100%; accent-color: var(--et-sari); height: 44px; cursor: ew-resize; margin: 0; }
 .rt__kart { background: var(--et-kart); color: var(--k-koyu); border-radius: 4px; padding: 20px 18px 18px; position: relative; min-height: 250px; clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); }
 .rt__kart-ust { font-family: var(--et-mono); font-size: 12px; opacity: .8; }
 .rt__kart-baslik { font-family: var(--k-font-baslik); font-weight: 900; text-transform: uppercase; font-size: clamp(38px, 4vw, 54px); line-height: .88; margin-top: 8px; }
 .rt__kart-metin { margin-top: 12px; font-size: 16.5px; line-height: 1.5; max-width: 44ch; }
 .rt__noktalar { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 16px; }
-.rt__noktalar button { display: inline-flex; align-items: center; gap: 7px; padding: 6px 10px 6px 6px; border-radius: 5px; border: 1.5px solid rgb(13 26 48 / .3); background: transparent; font: inherit; font-size: 13.5px; font-weight: 600; color: var(--k-koyu); cursor: pointer; font-family: var(--et-mono); }
+.rt__noktalar button { display: inline-flex; align-items: center; gap: 7px; min-height: 44px; padding: 6px 12px 6px 8px; border-radius: 5px; border: 1.5px solid rgb(13 26 48 / .3); background: transparent; font: inherit; font-size: 13.5px; font-weight: 600; color: var(--k-koyu); cursor: pointer; font-family: var(--et-mono); }
 .rt__noktalar button span { font-family: var(--k-font-govde); }
 .rt__noktalar button:not(.is-bulundu) { opacity: .5; }
 .rt__noktalar button[aria-current='true'] { background: var(--k-koyu); color: var(--et-sari); border-color: var(--k-koyu); opacity: 1; }

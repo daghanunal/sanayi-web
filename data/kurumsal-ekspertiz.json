@@ -24,9 +24,9 @@
       "metin": "İlan fotoğrafı her aracı temiz gösterir. Boyalı çamurluğu cihaz, kaynaklı podyeyi lift, silinmiş şanzıman arızasını tarama söyler. Biz yalnızca ölçtüğümüzü yazarız; kararı siz verirsiniz."
     },
     "hizmetOzetBaslik": "Bir ekspertizde neler var",
-    "yorumBaslik": "Aracını getirenler ne diyor",
+    "yorumBaslik": "Örnek yorumlar: aracını getirenler",
     "surecBaslik": "Randevudan rapora dört adım",
-    "galeriBaslik": "Atölyeden kareler",
+    "galeriBaslik": "Ekspertizden kareler",
     "markaBaslik": "Sık incelediğimiz markalar",
     "anlasmaBaslik": "Galeriler, filolar ve kiralama firmaları",
     "anlasmaMetin": "Stoğuna araç alan galerilere ve filosunu yenileyen firmalara ayrı sıra ve toplu raporlama.",
@@ -98,7 +98,7 @@
       "kurumsal": { "baslik": "Tamir yapmayız, ölçeriz.", "metin": "2012'den beri Şaşmaz'da yalnızca ekspertiz.", "gorsel": "/img/kurumsal-ekspertiz/alttan.jpg" },
       "hizmetler": { "baslik": "Aracın tamamı, tek seferde.", "metin": "Kaporta, boya, şasi, motor, şanzıman, yürüyen aksam ve elektronik.", "gorsel": "/img/kurumsal-ekspertiz/sasi-alt.jpg" },
       "kurumsal-musteriler": { "baslik": "Galeriler ve filolar için", "metin": "Toplu araçta ayrı sıra, araç bazında rapor geçmişi." },
-      "referanslar": { "baslik": "Lift altından", "metin": "Atölyeden kareler ve aracını getirenlerin yorumları." },
+      "referanslar": { "baslik": "Lift altından", "metin": "Ekspertizden kareler ve örnek yorumlar." },
       "iletisim": { "baslik": "Randevu alın", "metin": "Marka, model ve yılı yazın; uygun saati birlikte ayarlayalım." }
     }
   }

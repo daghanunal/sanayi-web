@@ -4,7 +4,7 @@ import '../../shared/base.css';
 import './style.css';
 import {
   boot, initSmoothScroll, reducedMotion, telHref, waHref, mapsHref, mapsEmbed,
-  openStatus, groupedHours, icons, esc, gsap, ScrollTrigger,
+  openStatus, groupedHours, icons, esc, gsap, ScrollTrigger, vitrinModu,
 } from '../../shared/core.js';
 import { SplitText } from 'gsap/SplitText';
 import { DrawSVGPlugin } from 'gsap/DrawSVGPlugin';
@@ -26,8 +26,9 @@ const easeIn = (t) => t * t * t;
 const nf = (n, digits = 0) => n.toLocaleString('tr-TR', { minimumFractionDigits: digits, maximumFractionDigits: digits });
 const finePointer = matchMedia('(hover: hover) and (pointer: fine)').matches;
 const weak = (navigator.hardwareConcurrency || 8) <= 4 || (navigator.deviceMemory || 8) <= 4;
-const mobile = () => innerWidth < 760;
-const lite = weak || innerWidth < 760;
+const phoneMQ = matchMedia('(max-width: 759px)');
+const mobile = () => phoneMQ.matches;
+const lite = weak || mobile();
 const up = (s) => s.toLocaleUpperCase('tr');
 const low = (s) => s.toLocaleLowerCase('tr');
 
@@ -69,28 +70,41 @@ const heroTitle = $('[data-hero-title]');
 heroTitle.textContent = up(ad);
 heroTitle.style.setProperty('--fit', Math.max(6, ...up(ad).split(/\s+/).map((w) => w.length)));
 
-// Film bölümleri
-const film = d.film.map((f) => ({
-  ...f,
-  metin: f.metin ?? d.surec[f.surec]?.aciklama ?? '',
-}));
-$('[data-rail]').innerHTML = film.map((f, i) => `<li data-rail-i><b>${String(i + 1).padStart(2, '0')}</b><span>${esc(f.etiket)}</span></li>`).join('');
-$('[data-cards]').innerHTML = film.map((f) => `
-  <article class="card" data-card="${esc(f.id)}">
-    <p class="card__kicker"><b>${esc(f.saat)}</b><span>${esc(up(f.etiket))}</span></p>
-    <h2 class="card__title">${esc(f.baslik)}</h2>
-    <p class="card__text">${esc(f.metin)}</p>
-    <a class="card__wa" href="${esc(waHref(d, `Merhaba ${ad}, ${low(f.hizmet)} için arıyorum. Konumum: `))}" target="_blank" rel="noopener">${icons.whatsapp}<span>${esc(f.hizmet)} için yazın</span></a>
-  </article>`).join('');
-$('[data-route-to]').textContent = d.intro.yer.split(',')[0];
-
-const fotoCh = film.find((f) => f.id === 'foto');
-$('[data-shots]').innerHTML = (fotoCh?.kareler ?? []).map((k) => `
-  <figure class="shot" data-shot><canvas width="200" height="140"></canvas><figcaption><span>${esc(k)}</span><i>✓</i></figcaption></figure>`).join('');
+// Film durakları
+const film = d.film.map((f) => ({ ...f, metin: f.metin ?? d.surec[f.surec]?.aciklama ?? '' }));
 const svcByName = Object.fromEntries(d.hizmetler.map((h) => [h.baslik, h]));
-const yerCh = film.find((f) => f.id === 'yerinde');
-$('[data-onsite]').innerHTML = (yerCh?.yerinde ?? []).map((n) => `
-  <li><span>${esc(n)}</span><b>${esc(svcByName[n]?.sure ?? '')}</b></li>`).join('');
+const hedef = d.intro.yer.split(',')[0];
+const LIVE = {
+  yola: () => `
+    <div class="route" data-route aria-hidden="true">
+      <svg viewBox="0 0 220 96">
+        <path class="route__base" d="M16 80 C 60 80, 70 30, 118 34 S 176 14, 204 16" />
+        <path class="route__done" data-route-path d="M16 80 C 60 80, 70 30, 118 34 S 176 14, 204 16" />
+        <circle class="route__a" cx="16" cy="80" r="5" />
+        <circle class="route__b" cx="204" cy="16" r="6" />
+        <circle class="route__truck" data-route-truck r="5" cx="16" cy="80" />
+      </svg>
+      <p><span>Şaşmaz</span><span>${esc(hedef)}</span></p>
+    </div>`,
+  yerinde: (f) => `<ul class="onsite" data-onsite>${(f.yerinde ?? []).map((n) => `<li><span>${esc(n)}</span><b>${esc(svcByName[n]?.sure ?? '')}</b></li>`).join('')}</ul>`,
+  foto: (f) => `<div class="shots" data-shots aria-hidden="true">${(f.kareler ?? []).map((k) => `<figure class="shot" data-shot><canvas width="200" height="140"></canvas><figcaption><span>${esc(k)}</span><i>✓</i></figcaption></figure>`).join('')}</div>`,
+  yukleme: () => `<ol class="ticks" data-ticks>${['Kasa yere iner', 'Vinç aracı kasaya alır', 'Tekerler kayışla sabitlenir'].map((t) => `<li><i></i>${esc(t)}</li>`).join('')}</ol>`,
+  teslim: () => `<ol class="ticks" data-ticks>${['Aracınız istediğiniz adrese', 'Teslim fotoğrafı WhatsApp\'ta', 'Anahtarın kimde olduğu bildirilir'].map((t) => `<li><i></i>${esc(t)}</li>`).join('')}</ol>`,
+};
+$('[data-film]').insertAdjacentHTML('beforeend', film.map((f) => `
+  <section class="stop" data-stop="${esc(f.id)}" id="${esc(f.id)}" aria-labelledby="t-${esc(f.id)}">
+    <div class="stop__sticky">
+      <article class="card" data-card>
+        <p class="card__kicker"><b>${esc(f.saat)}</b><span>${esc(up(f.etiket))}</span></p>
+        <h2 class="card__title" id="t-${esc(f.id)}">${esc(f.baslik)}</h2>
+        <div class="card__swap">
+          <p class="card__text">${esc(f.metin)}</p>
+          <div class="live">${LIVE[f.id] ? LIVE[f.id](f) : ''}</div>
+        </div>
+        <a class="card__wa" href="${esc(waHref(d, `Merhaba ${ad}, ${low(f.hizmet)} için arıyorum. Konumum: `))}" target="_blank" rel="noopener">${icons.whatsapp}<span>${esc(f.hizmet)} için yazın</span></a>
+      </article>
+    </div>
+  </section>`).join(''));
 
 // Hizmetler
 $('[data-services]').innerHTML = d.hizmetler.map((s, i) => `
@@ -124,7 +138,7 @@ $('[data-reel-track]').innerHTML = reelPics.map((g, i) => `
 // Yorumlar
 $('[data-puan]').textContent = nf(d.puan.ortalama, 1);
 $('[data-stars]').innerHTML = icons.star.repeat(5);
-$('[data-puan-adet]').textContent = `${nf(d.puan.adet)} Google yorumu`;
+$('[data-puan-adet]').textContent = `Örnek puan · ${nf(d.puan.adet)} değerlendirme`;
 $('[data-reviews]').innerHTML = d.yorumlar.map((y) => `
   <figure class="rev">
     <p class="rev__stars" aria-label="${Number(y.puan)} yıldız">${icons.star.repeat(Math.max(0, Math.min(5, Number(y.puan) || 0)))}</p>
@@ -174,303 +188,275 @@ geoBtn.addEventListener('click', () => {
 
 const canvas = $('[data-stage]');
 const S = createScene(canvas, { lite });
-if (import.meta.env.DEV) window.__tj = S;
+if (import.meta.env.DEV) window.__cek = S;
 const V = (x, y, z) => new THREE.Vector3(x, y, z);
 const Z = ROAD.shoulder;
-const CARC = V(CAR_X, 0.75, Z);
+const LANE = 1.1;
+const loader = $('[data-loader]');
+S.ready.then(() => loader.classList.add('is-done')).catch(() => loader.classList.add('is-done'));
 
-// Film zaman çizelgesi (0..1)
-const T = {
-  heroOut: [0.05, 0.09],
-  drive: [0.1, 0.34],
-  tilt: [0.6, 0.635],
-  slide: [0.625, 0.66],
-  winch: [0.665, 0.73],
-  back: [0.735, 0.775],
-  leave: [0.79, 0.95],
-};
-const CARD_RANGES = [[0.11, 0.33], [0.355, 0.47], [0.48, 0.585], [0.595, 0.775], [0.785, 0.885]];
-const FOTO = CARD_RANGES[2];
-const DRIVE_FROM = -175;
-
-function truckX(p) {
-  if (p < T.leave[0]) return L(DRIVE_FROM, TRUCK_STOP, easeOut(seg(p, ...T.drive)));
-  return TRUCK_STOP + easeIn(seg(p, ...T.leave)) * 150;
-}
-function truckSpeed(p) {
-  const e = 0.003;
-  return Math.abs(truckX(Math.min(1, p + e)) - truckX(Math.max(0, p - e))) / (2 * e) / 60;
+// Çekici yolu: sağ şeritten gelir, otomobilin önünde emniyet şeridine yanaşır; teslimde şeride döner
+const DRIVE_FROM = -170;
+const laneZ = (x, leaving) => (leaving ? L(Z, LANE, smooth(seg(x, TRUCK_STOP + 4, TRUCK_STOP + 22))) : L(LANE, Z, smooth(seg(x, -9, TRUCK_STOP - 1.5))));
+function truckAt(name, p) {
+  let x;
+  if (name === 'hero') x = DRIVE_FROM - 30;
+  else if (name === 'yola') x = L(DRIVE_FROM, TRUCK_STOP - 34, smooth(seg(p, 0.05, 1)) * 0.3 + seg(p, 0.05, 1) * 0.7);
+  else if (name === 'yerinde') x = L(TRUCK_STOP - 34, TRUCK_STOP, easeOut(seg(p, 0, 0.42)));
+  else if (name === 'teslim') x = TRUCK_STOP + easeIn(seg(p, 0.12, 0.92)) * 150;
+  else x = TRUCK_STOP;
+  const leaving = name === 'teslim';
+  const z = laneZ(x, leaving);
+  const dz = laneZ(x + 0.5, leaving) - laneZ(x - 0.5, leaving);
+  return { x, z, yaw: -Math.atan2(dz, 1) };
 }
 
 // Fotoğraf turu: kamera otomobilin çevresinde döner. Sağ → ön → sol → arka
 function orbitPose(u) {
   const m = mobile();
   const phi = Math.PI / 2 - Math.PI * 1.5 * u;
-  const rx = m ? 5 : 4.4, rz = m ? 12.5 : 7.8;
-  const k = Math.abs(Math.cos(phi)); // uçlarda (ön/arka) yakın: biraz daha yüksek ve geniş
-  return { pos: V(CAR_X + Math.cos(phi) * rx, (m ? 4 : 2.3) + k * 0.8, Z + Math.sin(phi) * rz), look: V(CAR_X, m ? -0.9 : 0.5, Z), fov: (m ? 54 : 40) + k * 14 };
+  const rx = m ? 6.2 : 4.6, rz = m ? 11 : 7.6;
+  const k = Math.abs(Math.cos(phi));
+  return { pos: V(CAR_X + Math.cos(phi) * rx, (m ? 3.4 : 2.2) + k * 0.8, Z + Math.sin(phi) * rz), look: V(CAR_X, 0.55, Z), fov: (m ? 50 : 38) + k * 10, shiftX: m ? 0 : 0.14, shiftY: m ? 0.18 : 0 };
 }
-const fotoU = (p) => seg(p, FOTO[0] + 0.012, FOTO[1] - 0.012);
-
-function POSE(name, p) {
+const P = (pos, look, fov, extra = {}) => ({ pos, look, fov, ...extra });
+const CAM = {
+  hero: (p, m) => m
+    ? P(V(-15, 6.4, 19), V(1.2, 0.2, 2.2), 46, { shiftY: 0.2 })
+    : P(V(L(-15.5, -13.5, p), 4.6, L(15.5, 14, p)), V(-1.5, -0.6, 2.5), 34, { shiftX: 0.16 }),
+  yola: (p, m, T) => {
+    const Tv = V(T.x, 0, T.z);
+    return m
+      ? P(Tv.clone().add(V(-13, 4.6, 8.5)), Tv.clone().add(V(7, 0.6, -1.2)), 54, { shiftY: 0.2 })
+      : P(Tv.clone().add(V(-10.5, 3.1, 6.6)), Tv.clone().add(V(9, 1.4, -1.5)), 42, { shiftX: 0.14 });
+  },
+  yerinde: (p, m) => m
+    ? P(V(L(-12, -10, p), L(4.2, 5, p), 19.5), V(5.8, 0.4, 2.8), 50, { shiftY: 0.2 })
+    : P(V(L(-8.5, -6.8, p), L(2.2, 2.7, p), L(12.5, 12, p)), V(5.6, 1.0, 3), 38, { shiftX: 0.14 }),
+  foto: (p) => orbitPose(seg(p, 0.08, 0.92)),
+  yukleme: (p, m) => {
+    const c = smooth(seg(p, 0.3, 0.55)) * (1 - smooth(seg(p, 0.8, 0.95)));
+    return m
+      ? P(V(L(-11, -5, c), L(5, 3.6, c), L(21, 16.5, c)), V(L(6, 6.4, c), 0.3, 3), 52, { shiftY: 0.2 })
+      : P(V(L(-9, -3.4, c), L(3.2, 2.1, c), L(15, 11.5, c)), V(L(5.8, 6.2, c), 1.1, 3), 42, { shiftX: 0.14 });
+  },
+  teslim: (p, m, T) => {
+    const Tv = V(T.x, 0, T.z);
+    const a = smooth(seg(p, 0.5, 0.95));
+    const near = m ? P(Tv.clone().add(V(11, 3, 10.5)), Tv.clone().add(V(-2.5, 0.8, 0)), 52, { shiftY: 0.2 }) : P(Tv.clone().add(V(9, 2.1, 7.5)), Tv.clone().add(V(-2, 1.6, 0)), 42, { shiftX: 0.14 });
+    const far = m ? P(Tv.clone().add(V(-38, 30, 42)), Tv.clone().add(V(14, 0, -18)), 52, { shiftY: 0.18 }) : P(Tv.clone().add(V(-34, 24, 30)), Tv.clone().add(V(16, 2, -16)), 42, { shiftX: 0.14 });
+    return lerpPose(near, far, a);
+  },
+};
+const PREV = { hero: 'hero', yola: 'hero', yerinde: 'yola', foto: 'yerinde', yukleme: 'foto', teslim: 'yukleme' };
+function lerpPose(A, B, t) {
+  return {
+    pos: A.pos.clone().lerp(B.pos, t), look: A.look.clone().lerp(B.look, t), fov: L(A.fov, B.fov, t),
+    shiftX: L(A.shiftX || 0, B.shiftX || 0, t), shiftY: L(A.shiftY || 0, B.shiftY || 0, t),
+  };
+}
+function camFor(name, p) {
   const m = mobile();
-  const tx = truckX(p);
-  const Tv = V(tx, 0, Z);
-  switch (name) {
-    case 'hero': return m
-      ? { pos: V(-17, 7.6, 20), look: V(1.5, -0.8, 1.2), fov: 50 }
-      : { pos: V(-15.5, 5.2, 15.5), look: V(-2.5, -1.4, 2.5), fov: 36 };
-    case 'chase': return m
-      ? { pos: Tv.clone().add(V(-12.5, 4.4, 7.5)), look: Tv.clone().add(V(8, 0.2, -1.5)), fov: 58 }
-      : { pos: Tv.clone().add(V(-10.5, 3.1, 6.2)), look: Tv.clone().add(V(9, 1.2, -1.5)), fov: 44 };
-    case 'side': return m
-      ? { pos: Tv.clone().add(V(4, 2.2, 11.5)), look: Tv.clone().add(V(-3.5, 0.6, 0)), fov: 56 }
-      : { pos: Tv.clone().add(V(3, 1.5, 9.5)), look: Tv.clone().add(V(-3, 1.3, 0)), fov: 42 };
-    case 'arrive': return m
-      ? { pos: V(-9.5, 3.2, 14), look: V(4.2, 0.2, 2.6), fov: 52 }
-      : { pos: V(-7.5, 1.9, 11.5), look: V(4.2, 1.1, 2.8), fov: 38 };
-    case 'onsite': return m
-      ? { pos: V(-6.5, 4.2, 15), look: V(2.2, -1.6, 3.2), fov: 52 }
-      : { pos: V(-6.2, 2.6, 11.5), look: V(2.4, 0.6, 3.2), fov: 38 };
-    case 'foto': return orbitPose(fotoU(p));
-    case 'load': return m
-      ? { pos: V(-9, 5, 20), look: V(4.4, -1.8, 3), fov: 54 }
-      : { pos: V(-8, 3.2, 14), look: V(4.6, 1.0, 3), fov: 42 };
-    case 'loadClose': return m
-      ? { pos: V(-3.5, 3.2, 15), look: V(5.4, -1.2, 3.1), fov: 52 }
-      : { pos: V(-2.6, 1.8, 11), look: V(5.4, 1.3, 3.1), fov: 42 };
-    case 'depart': return m
-      ? { pos: Tv.clone().add(V(10, 2.8, 10)), look: Tv.clone().add(V(-2.5, 0.8, 0)), fov: 54 }
-      : { pos: Tv.clone().add(V(9, 2.1, 7.5)), look: Tv.clone().add(V(-2, 1.6, 0)), fov: 42 };
-    case 'aerial': return m
-      ? { pos: Tv.clone().add(V(-38, 30, 42)), look: Tv.clone().add(V(14, 0, -18)), fov: 52 }
-      : { pos: Tv.clone().add(V(-34, 24, 30)), look: Tv.clone().add(V(16, 2, -16)), fov: 42 };
-    default: return POSE('hero', p);
-  }
-}
-
-const KF = [
-  [0.0, 'hero'], [0.06, 'hero'], [0.12, 'chase'], [0.27, 'chase'], [0.33, 'side'], [0.36, 'arrive'],
-  [0.38, 'onsite'], [0.465, 'onsite'], [FOTO[0] + 0.012, 'foto'], [FOTO[1] - 0.012, 'foto'],
-  [0.605, 'load'], [0.655, 'load'], [0.69, 'loadClose'], [0.74, 'loadClose'], [0.77, 'load'],
-  [0.8, 'depart'], [0.86, 'depart'], [0.93, 'aerial'], [1.0, 'aerial'],
-];
-
-function filmPose(p) {
-  let i = 0;
-  while (i < KF.length - 2 && p > KF[i + 1][0]) i++;
-  const a = KF[i], b = KF[i + 1];
-  const t = smooth(seg(p, a[0], b[0]));
-  const A = POSE(a[1], p), B = POSE(b[1], p);
-  return { pos: A.pos.lerp(B.pos, t), look: A.look.lerp(B.look, t), fov: L(A.fov, B.fov, t) };
+  const cur = CAM[name](p, m, truckAt(name, p));
+  if (name === 'hero') return cur;
+  const t = smooth(seg(p, 0, 0.18));
+  const pn = PREV[name];
+  return t >= 1 ? cur : lerpPose(CAM[pn](1, m, truckAt(pn, 1)), cur, t);
 }
 
 let flashAmt = 0;
 const flashPos = new THREE.Vector3();
-function filmState(p, time, vel) {
-  const pose = filmPose(p);
-  // Nefes alan kamera
-  const calm = 1 - seg(p, 0.1, 0.12) + seg(p, 0.355, 0.38) * (1 - seg(p, 0.465, 0.48)) + seg(p, 0.93, 0.96);
-  pose.pos.x += Math.sin(time * 0.35) * 0.25 * clamp(calm);
-  pose.pos.y += Math.sin(time * 0.5) * 0.08 * clamp(calm);
-  const tilt = smooth(seg(p, ...T.tilt)) * (1 - smooth(seg(p, T.back[0] + 0.012, T.back[1])));
-  const slide = smooth(seg(p, ...T.slide)) * (1 - smooth(seg(p, T.back[0], T.back[1] - 0.012)));
-  const loaded = p >= T.back[0] ? 1 : 0;
-  const w = smooth(seg(p, ...T.winch));
-  const sp = truckSpeed(p);
-  return {
-    ...pose,
-    truckX: truckX(p), truckZ: Z, speed: sp + vel * 0,
-    tilt, slide, winch: loaded ? 1 : w, loaded,
-    carSpin: seg(p, T.winch[0], T.winch[1]) > 0 && seg(p, T.winch[0], T.winch[1]) < 1 ? 0.6 : 0,
-    straps: p > T.back[0] - 0.005 ? 1 : 0,
-    hazard: p < T.back[0] ? 1 : 0,
-    beacon: 1,
-    work: seg(p, 0.38, 0.41) * (1 - seg(p, 0.78, 0.8)),
-    flash: flashAmt, flashPos,
-  };
+function stateFor(name, p, time) {
+  const s = camFor(name, p);
+  const T = truckAt(name, p);
+  const calm = name === 'hero' || name === 'yerinde' ? 1 : 0;
+  s.pos.x += Math.sin(time * 0.35) * 0.22 * calm;
+  s.pos.y += Math.sin(time * 0.5) * 0.07 * calm;
+  Object.assign(s, {
+    truckX: T.x, truckZ: T.z, truckYaw: T.yaw, tilt: 0, slide: 0, ramps: 0, winch: 0, loaded: 0, straps: 0,
+    hazard: 1, beacon: 1, work: 0, flash: flashAmt, flashPos,
+  });
+  if (name === 'yerinde') s.work = seg(p, 0.35, 0.5);
+  if (name === 'foto') s.work = 1;
+  if (name === 'yukleme') {
+    s.work = 1;
+    const back = smooth(seg(p, 0.84, 0.97));
+    s.tilt = smooth(seg(p, 0.04, 0.18)) * (1 - smooth(seg(p, 0.88, 0.99)));
+    s.slide = smooth(seg(p, 0.1, 0.28)) * (1 - back);
+    s.ramps = smooth(seg(p, 0.2, 0.3)) * (1 - smooth(seg(p, 0.82, 0.88)));
+    s.winch = smooth(seg(p, 0.32, 0.78));
+    s.winching = p > 0.32 && p < 0.78 ? 1 : 0;
+    s.loaded = p >= 0.8 ? 1 : 0;
+    s.straps = p > 0.8 ? 1 : 0;
+    s.hazard = p < 0.8 ? 1 : 0;
+  }
+  if (name === 'teslim') {
+    Object.assign(s, { loaded: 1, winch: 1, straps: 1, hazard: 0 });
+  }
+  return s;
 }
 
 function finaleState(q, time) {
   const m = mobile();
   const a = -0.9 + q * 0.7 + Math.sin(time * 0.15) * 0.05;
-  const c = V(TRUCK_STOP + 1.2, 1.4, Z);
+  const c = V(TRUCK_STOP - 0.6, 1.4, Z);
   const r = m ? 17 : 13;
   return {
     pos: V(c.x + Math.cos(a) * r, m ? 3.6 : 2.4, c.z + Math.sin(-a) * r * 0.8 + 3),
     look: m ? V(c.x - 1, 0.6, c.z) : V(c.x - 3.2, 2.2, c.z + 1.5),
-    fov: m ? 52 : 38,
-    truckX: TRUCK_STOP, truckZ: Z, speed: 0, tilt: 0, slide: 0, winch: 1, loaded: 1, carSpin: 0,
+    fov: m ? 52 : 38, shiftY: m ? -0.12 : 0,
+    truckX: TRUCK_STOP, truckZ: Z, truckYaw: 0, tilt: 0, slide: 0, ramps: 0, winch: 1, loaded: 1,
     straps: 1, hazard: 0, beacon: 1, work: 0, flash: 0,
   };
 }
 
-// --- Film UI -------------------------------------------------------------
+// --- Durak arayüzü -----------------------------------------------------------
 
-const hero = $('[data-hero]');
-const cards = $$('[data-card]');
-const railItems = $$('[data-rail-i]');
-const rail = $('[data-rail]');
-const hud = $('[data-hud]');
+const top = $('[data-top]');
+const hint = $('[data-hint]');
 const clockEl = $('[data-hud-clock]');
 const etaBox = $('[data-hud-eta]');
 const etaB = $('[data-hud-eta] b');
-const route = $('[data-route]');
 const routePath = $('[data-route-path]');
 const routeTruck = $('[data-route-truck]');
-const routeLen = routePath.getTotalLength();
-routePath.style.strokeDasharray = routeLen;
-const shotsBox = $('[data-shots]');
+const routeLen = routePath ? routePath.getTotalLength() : 0;
+if (routePath) routePath.style.strokeDasharray = routeLen;
 const shotEls = $$('[data-shot]');
-const onsite = $('[data-onsite]');
-const onsiteItems = $$('li', onsite);
-const overview = $('[data-overview]');
-const hint = $('[data-hint]');
+const onsiteItems = $$('[data-onsite] li');
 const flashEl = $('[data-flash]');
+const ticks = Object.fromEntries(['yukleme', 'teslim'].map((id) => [id, $$(`[data-stop="${id}"] [data-ticks] li`)]));
 
-// Saat: kurgu noktaları
 const t0 = toMin(d.intro.saat);
-const CLOCK = [[0, t0], [CARD_RANGES[0][0], toMin(film[0].saat)], ...film.slice(1).map((f, i) => [CARD_RANGES[i + 1][0], toMin(f.saat)]), [1, toMin(film.at(-1).saat) + 6]]
-  .map(([p, m]) => [p, m < t0 ? m + 1440 : m]);
-const ETA_TOTAL = CLOCK[2][1] - CLOCK[1][1];
-function clockAt(p) {
-  let i = 0;
-  while (i < CLOCK.length - 2 && p > CLOCK[i + 1][0]) i++;
-  const [pa, ma] = CLOCK[i], [pb, mb] = CLOCK[i + 1];
-  return L(ma, mb, seg(p, pa, pb));
+const mins = film.map((f) => { const m = toMin(f.saat); return m < t0 ? m + 1440 : m; });
+const idxOf = Object.fromEntries(film.map((f, i) => [f.id, i]));
+function clockAt(name, p) {
+  if (name === 'hero') return t0;
+  const i = idxOf[name];
+  const next = mins[i + 1] ?? mins[i] + 6;
+  return L(mins[i], next, name === 'yola' ? seg(p, 0.05, 1) : p);
 }
-
-const vis = (el, v) => {
-  el.style.opacity = v;
-  el.style.visibility = v > 0.01 ? 'visible' : 'hidden';
-};
+const ETA_TOTAL = (mins[1] ?? mins[0] + 30) - mins[0];
 
 const shotTaken = [false, false, false, false];
-const SHOT_AT = [0.02, 0.34, 0.67, 0.985];
-let lastClock = '', lastEta = '';
-let pendingShot = -1;
-function filmUI(p) {
-  const heroOut = seg(p, ...T.heroOut);
-  hero.style.opacity = 1 - heroOut;
-  hero.style.transform = `translate3d(0, ${heroOut * -40}px, 0)`;
-  hero.style.visibility = heroOut >= 1 ? 'hidden' : 'visible';
-  hint.style.opacity = 1 - seg(p, 0, 0.025);
-
-  let active = -1;
-  cards.forEach((card, i) => {
-    const [a, b] = CARD_RANGES[i];
-    const vin = seg(p, a, a + 0.018), vout = seg(p, b - 0.016, b);
-    const v = vin * (1 - vout);
-    card.style.opacity = v;
-    card.style.transform = `translate3d(${(1 - vin) * 34 - vout * 34}px, 0, 0)`;
-    card.style.visibility = v > 0.01 ? 'visible' : 'hidden';
-    if (p >= a && p < b) active = i;
-  });
-  const railOn = seg(p, 0.09, 0.11) * (1 - seg(p, 0.89, 0.91));
-  vis(rail, railOn);
-  railItems.forEach((li, i) => {
-    li.classList.toggle('is-active', i === active);
-    li.classList.toggle('is-done', p >= CARD_RANGES[i][1]);
-  });
-
-  // HUD: saat ve varış süresi
-  vis(hud, 1 - seg(p, 0.9, 0.93));
-  const c = fmt(clockAt(p));
-  if (c !== lastClock) { clockEl.textContent = c; lastClock = c; }
-  const drive = seg(p, ...T.drive);
-  const eta = drive >= 1 ? 'Vardık' : `${Math.ceil(ETA_TOTAL * (1 - drive))} dk`;
-  if (eta !== lastEta) {
-    etaB.textContent = eta;
-    lastEta = eta;
-    etaBox.classList.toggle('is-here', drive >= 1);
-  }
-  etaBox.style.opacity = 1 - seg(p, 0.47, 0.49);
-
-  // Güzergâh
-  const rOn = seg(p, 0.11, 0.13) * (1 - seg(p, 0.34, 0.36));
-  vis(route, rOn);
-  if (rOn > 0.01) {
-    routePath.style.strokeDashoffset = routeLen * (1 - drive);
-    const pt = routePath.getPointAtLength(routeLen * drive);
-    routeTruck.setAttribute('cx', pt.x.toFixed(1));
-    routeTruck.setAttribute('cy', pt.y.toFixed(1));
-  }
-
-  // Yerinde işler
-  const oOn = seg(p, 0.37, 0.385) * (1 - seg(p, 0.455, 0.47));
-  vis(onsite, oOn);
-  onsiteItems.forEach((li, i) => li.classList.toggle('is-on', p > 0.385 + i * 0.022));
-
-  // Fotoğraflar
-  const sOn = seg(p, FOTO[0], FOTO[0] + 0.012) * (1 - seg(p, 0.6, 0.615));
-  vis(shotsBox, sOn);
-  const u = fotoU(p);
-  SHOT_AT.forEach((at, i) => {
-    const hit = p > FOTO[0] + 0.01 && u >= at;
-    if (hit && !shotTaken[i]) {
-      shotTaken[i] = true;
-      pendingShot = i;
-      flashAmt = 1;
-      flashEl.style.opacity = 0.85;
-      shotEls[i].classList.add('is-taken');
+const SHOT_AT = [0.1, 0.36, 0.64, 0.9];
+const pendingShots = [];
+function setOn(els, fn) { els.forEach((el, i) => el.classList.toggle('is-on', fn(i))); }
+const UI = {
+  hero: () => false,
+  yola(p) {
+    const drive = seg(p, 0.05, 1);
+    if (routePath) {
+      routePath.style.strokeDashoffset = routeLen * (1 - drive);
+      const pt = routePath.getPointAtLength(routeLen * drive);
+      routeTruck.setAttribute('cx', pt.x.toFixed(1));
+      routeTruck.setAttribute('cy', pt.y.toFixed(1));
     }
-  });
+    return p > 0.22;
+  },
+  yerinde(p) { setOn(onsiteItems, (i) => p > 0.4 + i * 0.1); return p > 0.35; },
+  foto(p) {
+    const u = seg(p, 0.08, 0.92);
+    SHOT_AT.forEach((at, i) => {
+      const hit = u >= at && p > 0.06;
+      if (hit && !shotTaken[i]) {
+        shotTaken[i] = true;
+        pendingShots.push(i);
+        flashAmt = 1;
+        shotEls[i]?.classList.add('is-taken');
+      }
+    });
+    return p > 0.06;
+  },
+  yukleme(p) { setOn(ticks.yukleme, (i) => p > [0.12, 0.5, 0.82][i]); return p > 0.12; },
+  teslim(p) { setOn(ticks.teslim, (i) => p > [0.2, 0.45, 0.65][i]); return p > 0.2; },
+};
 
-  vis(overview, seg(p, 0.925, 0.95) * (1 - seg(p, 0.99, 1)));
-  overview.style.transform = `translate3d(0, ${(1 - seg(p, 0.925, 0.95)) * 30}px, 0)`;
-}
-
-// Deklanşör: flaş anında WebGL karesini küçük tuvale kopyalar (render ile aynı karede)
 function captureShot(i) {
   const cv = shotEls[i]?.querySelector('canvas');
   if (!cv) return;
   const g = cv.getContext('2d');
   const sw = canvas.width, sh = canvas.height;
   const ar = cv.width / cv.height;
-  let w = sw, h = sw / ar;
+  let w = sw * 0.62, h = w / ar;
   if (h > sh) { h = sh; w = sh * ar; }
-  try {
-    g.drawImage(canvas, (sw - w) / 2, (sh - h) / 2, w, h, 0, 0, cv.width, cv.height);
-  } catch (e) { /* sessiz */ }
+  const cx = mobile() ? sw / 2 : sw * 0.6, cy = mobile() ? sh * 0.32 : sh / 2;
+  try { g.drawImage(canvas, clamp(cx - w / 2, 0, sw - w), clamp(cy - h / 2, 0, sh - h), w, h, 0, 0, cv.width, cv.height); } catch (e) { /* sessiz */ }
+}
+
+const stopEls = $$('[data-stop]');
+let layout = [];
+function measureLayout() {
+  layout = stopEls.map((el) => ({ el, name: el.dataset.stop, top: el.getBoundingClientRect().top + scrollY, height: el.offsetHeight, card: $('[data-card], .hero', el) }));
+}
+const liveCur = new Map();
+let lastClock = '', lastEta = '';
+let filmOn = true, finaleOn = false, finaleQ = 0;
+
+function filmTick(time) {
+  const y = scrollY, vh = innerHeight;
+  let cur = layout[0];
+  for (const l of layout) if (l.top <= y + vh * 0.5) cur = l;
+  const p = clamp((y - cur.top) / Math.max(1, cur.height - vh));
+  for (const l of layout) {
+    if (!l.card) continue;
+    const o = y - (l.top + l.height - vh);
+    const a = o <= 0 ? 1 : clamp(1 - o / (vh * 0.28));
+    const r = Math.round(a * 40) / 40;
+    if (l.a !== r) {
+      l.a = r;
+      l.card.style.opacity = r === 1 ? '' : String(r);
+      l.card.style.visibility = r === 0 ? 'hidden' : '';
+    }
+  }
+  hint.classList.toggle('is-gone', y > vh * 0.12);
+  const live = UI[cur.name](p);
+  const card = cur.name !== 'hero' ? cur.card : null;
+  if (card && liveCur.get(card) !== live) { liveCur.set(card, live); card.classList.toggle('is-live', !!live); }
+  const inFilm = cur.name !== 'hero' && y < cur.top + cur.height - vh * 0.6;
+  if (inFilm !== top.classList.contains('in-film')) top.classList.toggle('in-film', inFilm);
+  // saat ve varış süresi
+  const c = fmt(clockAt(cur.name, p));
+  if (c !== lastClock) { clockEl.textContent = c; lastClock = c; }
+  const arrived = cur.name !== 'hero' && cur.name !== 'yola';
+  const eta = arrived ? 'Vardık' : cur.name === 'hero' ? `${ETA_TOTAL} dk` : `${Math.max(1, Math.ceil(ETA_TOTAL * (1 - seg(p, 0.05, 1))))} dk`;
+  if (eta !== lastEta) {
+    etaB.textContent = eta;
+    lastEta = eta;
+    etaBox.classList.toggle('is-here', arrived);
+  }
+  flashPos.copy(S.camera.position);
+  S.update(stateFor(cur.name, p, time));
+  while (pendingShots.length) captureShot(pendingShots.shift());
 }
 
 // --- Başlangıç -------------------------------------------------------------
 
 const split = new SplitText(heroTitle, { type: 'words,chars', wordsClass: 'hw', charsClass: 'ch' });
-
 let lenis = null;
-let filmP = 0, filmTarget = 0, finaleQ = 0;
-let vel = 0;
-let canvasFinale = 0;
-let filmST = null, finaleST = null;
-let filmVisible = 1;
 
 function setupScroll() {
-  lenis = initSmoothScroll();
-  lenis?.stop();
-  lenis?.on('scroll', (e) => (vel = Math.min(1, Math.abs(e.velocity) / 40)));
-
-  filmST = ScrollTrigger.create({
-    trigger: '[data-film]', start: 'top top', end: 'bottom bottom',
-    onUpdate: (self) => (filmTarget = self.progress),
-  });
+  lenis = initSmoothScroll({ lerp: 0.1 });
+  new IntersectionObserver((entries) => {
+    entries.forEach((e) => {
+      if (e.target.matches('[data-film]')) filmOn = e.isIntersecting;
+      else finaleOn = e.isIntersecting;
+    });
+    canvas.style.visibility = filmOn || finaleOn ? 'visible' : 'hidden';
+  }).observe($('[data-film]'));
+  new IntersectionObserver((entries) => {
+    finaleOn = entries[0].isIntersecting;
+    canvas.style.visibility = filmOn || finaleOn ? 'visible' : 'hidden';
+  }).observe($('[data-finale]'));
   ScrollTrigger.create({
-    trigger: '[data-film]', start: 'bottom bottom', end: 'bottom 30%',
-    onUpdate: (self) => (filmVisible = 1 - self.progress),
-  });
-  finaleST = ScrollTrigger.create({
     trigger: '[data-finale]', start: 'top bottom', end: 'bottom bottom',
     onUpdate: (self) => (finaleQ = self.progress),
   });
   ScrollTrigger.create({
-    trigger: '[data-finale]', start: 'top bottom', end: 'top 25%',
-    onUpdate: (self) => (canvasFinale = self.progress),
-  });
-  ScrollTrigger.create({
     trigger: '#hizmetler', start: 'top 70px',
     endTrigger: '[data-finale]', end: 'top 70px',
-    onToggle: (self) => $('[data-top]').classList.toggle('is-solid', self.isActive),
+    onToggle: (self) => top.classList.toggle('is-solid', self.isActive),
   });
+  ScrollTrigger.addEventListener('refresh', measureLayout);
   contentMotion();
 }
 
@@ -572,10 +558,8 @@ function contentMotion() {
 }
 
 const mq = $('.marquee__inner');
-let mqX = 0;
+let mqX = 0, vel = 0;
 let lastT = performance.now();
-let lastFilmP = -1;
-
 function tick(now) {
   const dt = Math.min(0.05, (now - lastT) / 1000);
   lastT = now;
@@ -584,37 +568,16 @@ function tick(now) {
   flashAmt *= Math.exp(-dt * 9);
   if (flashAmt < 0.01) flashAmt = 0;
   flashEl.style.opacity = flashAmt * 0.85;
-
-  filmP += (filmTarget - filmP) * (1 - Math.exp(-dt * 7));
-  if (Math.abs(filmP - filmTarget) < 0.00005) filmP = filmTarget;
-  const filmActive = !filmST || filmST.progress < 1 || filmVisible > 0.001;
-  if (filmActive && filmP !== lastFilmP) { filmUI(filmP); lastFilmP = filmP; }
-
-  const finaleOn = finaleST && (finaleST.progress > 0 || canvasFinale > 0.001);
-  if (finaleOn && filmVisible <= 0.001) {
-    canvas.style.opacity = canvasFinale;
-    canvas.style.visibility = 'visible';
-    flashPos.set(0, 0, 0);
-    S.update(finaleState(finaleQ, time), now);
-  } else if (filmActive && filmVisible > 0.001) {
-    canvas.style.opacity = filmVisible;
-    canvas.style.visibility = 'visible';
-    flashPos.copy(S.camera.position);
-    S.update(filmState(filmP, time, vel), now);
-    if (pendingShot >= 0) { captureShot(pendingShot); pendingShot = -1; }
-  } else if (canvas.style.visibility !== 'hidden') {
-    canvas.style.visibility = 'hidden';
-  }
-
+  if (filmOn) filmTick(time);
+  else if (finaleOn) S.update(finaleState(finaleQ, time), now);
   const w = mq.scrollWidth / 2;
   mqX -= (40 + vel * 700) * dt;
   if (mqX < -w) mqX += w;
   mq.style.transform = `translate3d(${mqX}px,0,0)`;
-
   requestAnimationFrame(tick);
 }
 
-addEventListener('resize', () => S.resize());
+addEventListener('resize', () => { S.resize(); measureLayout(); });
 
 // Masaüstü: imleç ve mıknatıslı butonlar
 if (finePointer && !reducedMotion) {
@@ -636,47 +599,47 @@ if (finePointer && !reducedMotion) {
   });
 }
 
-// --- Açılış: telefon çalar, açılır, tepe lambası süpürmesiyle sahne açılır -----
+// --- Açılış (≤1,5 sn, dokununca geçer): telefon çalar, açılır, tepe lambası süpürmesiyle sahne açılır -----
 
 function heroIn() {
   gsap.timeline()
-    .fromTo(split.chars, { yPercent: 110, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 0.9, stagger: 0.03, ease: 'power4.out' }, 0)
-    .fromTo(['.hero__kicker', '.hero__slogan', '.hero__cta', '.hud'], { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.7, stagger: 0.07, ease: 'power3.out', clearProps: 'transform' }, 0.25);
+    .fromTo(split.chars, { yPercent: 110, autoAlpha: 0 }, { yPercent: 0, autoAlpha: 1, duration: 0.9, stagger: 0.03, ease: 'power4.out' }, 0)
+    .fromTo(['.hero__kicker', '.hero__slogan', '.hero__cta'], { autoAlpha: 0, y: 14 }, { autoAlpha: 1, y: 0, duration: 0.7, stagger: 0.07, ease: 'power3.out', clearProps: 'transform' }, 0.2);
 }
 
 function runIntro() {
   const intro = $('[data-intro]');
+  if (vitrinModu()) {
+    intro.remove();
+    document.body.classList.remove('is-loading');
+    return heroIn();
+  }
   const knob = $('[data-intro-knob]');
   let done = false;
   const tl = gsap.timeline();
-  tl.fromTo('.intro__phone', { scale: 0.6, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.45, ease: 'back.out(2)' }, 0)
-    .fromTo(['.intro__time', '.intro__label', '.intro__where', '.intro__slide'], { y: 12, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, stagger: 0.05 }, 0.05)
-    .fromTo('.intro__icon', { rotate: -14 }, { rotate: 14, duration: 0.07, repeat: 7, yoyo: true, ease: 'none' }, 0.2)
-    .to(knob, { x: () => knob.parentElement.clientWidth - knob.offsetWidth - 8, duration: 0.45, ease: 'power2.inOut' }, 0.6)
-    .to('.intro__slide', { opacity: 0, duration: 0.2 }, 1.02)
-    .fromTo('[data-intro-answer]', { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.3 }, 1.02)
-    .call(() => {
-      S.compile();
-      S.update(filmState(0, performance.now() / 1000, 0));
-    }, [], 0.3);
-  tl.add(finish, 1.35);
+  tl.fromTo('.intro__phone', { scale: 0.6, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 0.35, ease: 'back.out(2)' }, 0)
+    .fromTo(['.intro__time', '.intro__label', '.intro__where', '.intro__slide'], { y: 12, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.3, stagger: 0.04 }, 0.05)
+    .fromTo('.intro__icon', { rotate: -14 }, { rotate: 14, duration: 0.07, repeat: 5, yoyo: true, ease: 'none' }, 0.15)
+    .to(knob, { x: () => knob.parentElement.clientWidth - knob.offsetWidth - 8, duration: 0.35, ease: 'power2.inOut' }, 0.45)
+    .to('.intro__slide', { autoAlpha: 0, duration: 0.15 }, 0.8)
+    .fromTo('[data-intro-answer]', { autoAlpha: 0, y: 10 }, { autoAlpha: 1, y: 0, duration: 0.25 }, 0.8);
+  tl.add(finish, 1.05);
   function finish() {
     if (done) return;
     done = true;
     tl.kill();
-    lenis?.start();
     document.body.classList.remove('is-loading');
     const o = { a: 0 };
     gsap.timeline({ onComplete: () => intro.remove() })
-      .to('[data-intro-call]', { opacity: 0, scale: 0.94, duration: 0.25, ease: 'power2.in' }, 0)
-      .to(o, {
-        a: 360, duration: 0.8, ease: 'power2.inOut',
-        onUpdate: () => intro.style.setProperty('--sweep', `${o.a}deg`),
-      }, 0.1)
-      .call(heroIn, [], 0.45);
+      .set(intro, { pointerEvents: 'none' }, 0)
+      .to('[data-intro-call]', { autoAlpha: 0, scale: 0.94, duration: 0.2, ease: 'power2.in' }, 0)
+      .to(o, { a: 360, duration: 0.55, ease: 'power2.inOut', onUpdate: () => intro.style.setProperty('--sweep', `${o.a}deg`) }, 0.05)
+      .call(heroIn, [], 0.3);
   }
   intro.addEventListener('pointerdown', finish, { once: true });
   addEventListener('keydown', finish, { once: true });
+  addEventListener('wheel', finish, { once: true, passive: true });
+  addEventListener('touchmove', finish, { once: true, passive: true });
 }
 
 // --- Hareket azaltma -----------------------------------------------------------
@@ -685,14 +648,19 @@ if (reducedMotion) {
   document.documentElement.classList.add('is-static');
   $('[data-intro]').remove();
   document.body.classList.remove('is-loading');
-  S.compile();
-  const still = () => S.update(filmState(0, 0, 0));
+  $$('[data-card]').forEach((c) => c.classList.add('is-live'));
+  $$('.onsite li, .ticks li').forEach((li) => li.classList.add('is-on'));
+  const still = () => S.update(finaleState(0.5, 0));
+  S.ready.then(still);
   still();
   addEventListener('resize', still);
   $$('[data-count]').forEach((el) => (el.textContent = nf(Number(el.dataset.count))));
   $$('[data-sstep]').forEach((s) => s.classList.add('is-on'));
 } else {
+  measureLayout();
   setupScroll();
+  lenis?.on('scroll', (e) => (vel = Math.min(1, Math.abs(e.velocity) / 40)));
   runIntro();
   requestAnimationFrame(tick);
+  S.ready.then(() => { S.compile(); ScrollTrigger.refresh(); });
 }
