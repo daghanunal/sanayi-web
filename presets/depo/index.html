@@ -28,6 +28,8 @@
   <canvas class="stage" data-stage aria-hidden="true"></canvas>
   <div class="cursor" data-cursor aria-hidden="true"><i></i></div>
 
+  <ol class="rail" data-rail aria-hidden="true"></ol>
+
   <header class="top" data-top>
     <a class="top__brand" href="#" data-bind="ad"></a>
     <p class="top__status" data-status></p>
@@ -61,13 +63,9 @@
       </div>
     </section>
 
-    <!-- 2. Raflar: her kategoride bir kutu raftan çıkar, açılır, parça yükselir -->
-    <section class="ch ch--raf" data-ch="raf" id="kategoriler" aria-label="Parça kategorileri">
-      <div class="ch__pin">
-        <ol class="rail" data-rail aria-hidden="true"></ol>
-        <div class="shelfcards" data-shelfcards></div>
-      </div>
-    </section>
+    <!-- 2. Raflar: her kategoride bir kutu raftan çıkar, açılır, parça yükselir.
+         En fazla 3 kategori bir sahnede (pin ≤ 3 ekran); sahneler arasında koridor tabelası (main.js üretir). -->
+    <div class="raflar" data-raf-scenes></div>
 
     <!-- 3. Katalog: parçalar raflardan uçup tek sayfada dizilir -->
     <section class="ch ch--katalog" data-ch="katalog" aria-label="Parça kataloğu">
@@ -77,7 +75,6 @@
           <h2 class="katalog__title" data-katalog-title></h2>
           <p class="katalog__sub" data-katalog-sub></p>
         </div>
-        <div class="katalog__labels" data-cat-labels aria-hidden="true"></div>
       </div>
     </section>
 
@@ -158,7 +155,7 @@
     <!-- 8. Galeri -->
     <section class="galeri">
       <header class="sec-head sec-head--in">
-        <h2 class="stencil">Rafın arkası.</h2>
+        <h2 class="stencil">Raftan kapıya.</h2>
       </header>
       <div class="galeri__track" data-galeri></div>
     </section>
@@ -200,14 +197,15 @@
             <a class="btn btn--ghost btn--big" data-tel data-magnetic><span data-icon="phone"></span>Hemen ara</a>
           </div>
         </div>
-        <footer class="footer">
-          <p class="footer__name" data-bind="ad"></p>
-          <p><span data-bind="adres"></span> <a data-tel data-bind="telefon"></a></p>
-          <p class="footer__small" data-year></p>
-        </footer>
       </div>
     </section>
   </main>
+  <footer class="footer">
+      <p class="footer__name" data-bind="ad"></p>
+      <p><span data-bind="adres"></span> <a data-tel data-bind="telefon"></a></p>
+      <p class="footer__small" data-year></p>
+  </footer>
+
 
   <script type="module" src="./main.js"></script>
 </body>

@@ -2,18 +2,22 @@ import veri from '../../data/depo.json';
 import '../../shared/base.css';
 import './style.css';
 import {
-  boot, initSmoothScroll, reducedMotion, telHref, waHref, mapsHref, mapsEmbed,
+  boot, initSmoothScroll, reducedMotion, telHref, waHref, mapsHref, mapsEmbed, setStoryMode,
   openStatus, groupedHours, icons, esc, gsap, ScrollTrigger,
 } from '../../shared/core.js';
 import { SplitText } from 'gsap/SplitText';
 import { Flip } from 'gsap/Flip';
 import { DrawSVGPlugin } from 'gsap/DrawSVGPlugin';
 import { MotionPathPlugin } from 'gsap/MotionPathPlugin';
+import { pickQuality } from '../../shared/lib3d.js';
 
 gsap.registerPlugin(SplitText, Flip, DrawSVGPlugin, MotionPathPlugin);
 ScrollTrigger.config({ ignoreMobileResize: true });
 
-const d = boot(veri);
+// Örnek puan yapısal veriye (JSON-LD aggregateRating) girmesin: boot'tan önce ayır, sonra geri ekle.
+const { puan: ornekPuan, ...veriLd } = veri;
+const d = boot(veriLd);
+d.puan = ornekPuan;
 const $ = (s, root = document) => root.querySelector(s);
 const $$ = (s, root = document) => [...root.querySelectorAll(s)];
 const nf = (n) => Math.round(n).toLocaleString('tr-TR');
@@ -84,7 +88,7 @@ $('[data-status-big]').textContent = status.text;
 const stops = d.hizmetler;
 document.documentElement.style.setProperty('--n', stops.length);
 $('[data-rail]').innerHTML = stops.map((s, i) => `<li data-rail-i="${i}"><span>${esc(s.raf)}</span><i></i></li>`).join('');
-$('[data-shelfcards]').innerHTML = stops.map((s, i) => `
+const cardHtml = (s, i) => `
   <article class="shelfcard" data-card="${i}">
     <p class="shelfcard__code"><span>Raf</span><b data-scr="${esc(s.raf)}">${esc(s.raf)}</b><span class="shelfcard__n">${String(i + 1).padStart(2, '0')}/${String(stops.length).padStart(2, '0')}</span></p>
     <h3 class="shelfcard__title">${esc(s.baslik)}</h3>
@@ -92,15 +96,45 @@ $('[data-shelfcards]').innerHTML = stops.map((s, i) => `
     <ul class="shelfcard__list">${s.ornekler.map((o) => `<li>${esc(o)}</li>`).join('')}</ul>
     <p class="shelfcard__stok"><b data-stok="${s.stok}">0</b> kalem rafta</p>
     <a class="shelfcard__ask" target="_blank" rel="noopener" href="${esc(waHref(d, `Merhaba ${d.isletme.ad}, ${s.baslik.toLocaleLowerCase('tr')} için parça soracağım. Şasi numaram: `))}">${icons.whatsapp}<span>Bu raftan parça sor</span></a>
-  </article>`).join('');
+  </article>`;
+
+// Raf sahneleri: kategoriler en fazla 3'lü gruplara bölünür (her sahne ≤ 3 ekran pinli).
+// Sahne ilerlemesi genel raf ilerlemesine (from → to, durak cinsinden) çevrilir; aradaki koridor
+// tabelası akışta kayar ve kameranın bir sonraki durağa yürüyüşünü taşır.
+{
+  const n = stops.length;
+  const k = Math.max(1, Math.ceil(n / 3));
+  const chunks = [];
+  for (let c = 0, a = 0; c < k; c++) {
+    const size = Math.ceil((n - a) / (k - c));
+    chunks.push([a, a + size]);
+    a += size;
+  }
+  let html = '';
+  chunks.forEach(([a, b], ci) => {
+    const from = ci === 0 ? 0 : a + 0.12;
+    const to = ci === chunks.length - 1 ? n : b - 0.08;
+    html += `
+    <section class="ch ch--raf" data-ch="raf" data-from="${from}" data-to="${to}" style="--span:${(to - from).toFixed(2)}"${ci === 0 ? ' id="kategoriler"' : ''} aria-label="Parça kategorileri, ${ci + 1}. koridor">
+      <div class="ch__pin"><div class="shelfcards">${stops.slice(a, b).map((s, j) => cardHtml(s, a + j)).join('')}</div></div>
+    </section>`;
+    if (ci < chunks.length - 1) {
+      const [na, nb] = chunks[ci + 1];
+      html += `
+    <div class="aisle" data-ch="raf" data-flow data-from="${to}" data-to="${na + 0.12}">
+      <div class="aisle__sign">
+        <p class="aisle__k"><span>Koridor</span><b>${ci + 2}</b></p>
+        <ul class="aisle__list">${stops.slice(na, nb).map((s) => `<li><b>${esc(s.raf)}</b>${esc(s.baslik)}</li>`).join('')}</ul>
+      </div>
+    </div>`;
+    }
+  });
+  $('[data-raf-scenes]').innerHTML = html;
+}
 
 // Katalog
 $('[data-katalog-title]').textContent = `${nf(stokStat.deger)} çeşit parça, tek çatı altında.`;
 $('[data-katalog-sub]').textContent = 'Rafta olmayanı aynı gün tedarik ediyoruz.';
-const catWrap = $('[data-cat-labels]');
-catWrap.innerHTML = stops.map((s) => `
-  <div class="clabel"><b data-scr="${esc(s.raf)}">${esc(s.raf)}</b><span>${esc(s.ornekler[0])}</span></div>`).join('');
-const catLabels = $$('.clabel', catWrap);
 
 // Süreç adımları (gerçek sıra)
 $('[data-steps]').innerHTML = d.surec.map((s, i) => `
@@ -151,7 +185,7 @@ $('[data-galeri]').innerHTML = d.galeri.map((g, i) => `
 // Yorumlar
 $('[data-puan]').textContent = d.puan.ortalama.toLocaleString('tr-TR', { minimumFractionDigits: 1 });
 $('[data-stars]').innerHTML = icons.star.repeat(5);
-$('[data-puan-adet]').textContent = `${nf(d.puan.adet)} Google yorumu`;
+$('[data-puan-adet]').textContent = 'Örnek yorumlar · 5 üzerinden örnek puan';
 $('[data-yorumlar]').innerHTML = d.yorumlar.map((y) => `
   <figure class="rev">
     <p class="rev__stars" aria-label="${y.puan} yıldız">${icons.star.repeat(y.puan)}</p>
@@ -160,7 +194,7 @@ $('[data-yorumlar]').innerHTML = d.yorumlar.map((y) => `
   </figure>`).join('');
 
 $('[data-hours]').innerHTML = groupedHours(d.saatler).map(([g, h]) => `<dt>${g}</dt><dd>${h}</dd>`).join('');
-$('[data-year]').textContent = `© ${new Date().getFullYear()} ${d.isletme.ad}. Fotoğraflar: Pexels. 3D depo bu site için kodla çizildi.`;
+$('[data-year]').textContent = `© ${new Date().getFullYear()} ${d.isletme.ad}. Fotoğraflar: Pexels. 3D görseller temsilîdir. Yorumlar örnektir.`;
 
 // --- Yardımcılar ------------------------------------------------------------------
 
@@ -279,8 +313,7 @@ let stage = null;
 const canvas = $('[data-stage]');
 async function makeStage() {
   const { createStage } = await import('./scene.js');
-  stage = createStage(canvas, { stops, ad: d.isletme.ad, tel: d.iletisim.telefon, lite, weak });
-  stage.onCatalog(catLabels.map((el) => (x, y) => (el.style.transform = `translate(${x.toFixed(1)}px, ${y.toFixed(1)}px)`)));
+  stage = createStage(canvas, { stops, ad: d.isletme.ad, tel: d.iletisim.telefon, lite, weak, quality: pickQuality() });
   addEventListener('resize', () => stage.resize());
 }
 
@@ -289,15 +322,16 @@ const chapters = $$('[data-ch]').map((el) => ({ el, id: el.dataset.ch }));
 const cards = $$('[data-card]');
 const railItems = $$('[data-rail-i]');
 let lastCard = -1;
-let lastCatOn = [];
 let finalSplit = null;
 let finalShown = false;
 
 function chapterProgress(el) {
   const r = el.getBoundingClientRect();
+  if (el.hasAttribute('data-flow')) return clamp((innerHeight * 0.5 - r.top) / r.height);
   const span = r.height - innerHeight;
   return clamp(-r.top / span);
 }
+const rail = $('[data-rail]');
 
 function uiRaf(p) {
   const n = stops.length;
@@ -333,13 +367,6 @@ function uiRaf(p) {
 }
 
 function uiKatalog(p) {
-  catLabels.forEach((el, i) => {
-    const t = seg(p, 0.3 + i * 0.035, 0.45 + i * 0.035);
-    const on = t > 0.5;
-    el.style.opacity = t;
-    if (on && !lastCatOn[i]) scramble(el.querySelector('[data-scr]'), undefined, 0.45);
-    lastCatOn[i] = on;
-  });
   const head = $('.katalog__head');
   const h = seg(p, 0.38, 0.55);
   head.style.opacity = h;
@@ -372,21 +399,36 @@ function frame() {
   stage.setActive(anyVisible);
   canvas.classList.toggle('is-off', !anyVisible);
   if (!current) return;
-  const p = chapterProgress(current.el);
+  let p = chapterProgress(current.el);
+  if (current.id === 'raf') {
+    const from = Number(current.el.dataset.from);
+    const to = Number(current.el.dataset.to);
+    p = (from + p * (to - from)) / stops.length;
+  }
+  rail.classList.toggle('is-on', current.id === 'raf');
   stage.set(current.id, p);
   stage.setVelocity(velocity);
   if (current.id === 'raf') uiRaf(p);
   else cards.forEach((c) => (c.style.visibility = 'hidden'));
-  if (current.id === 'katalog') {
-    catWrap.style.visibility = 'visible';
-    uiKatalog(p);
-  } else catWrap.style.visibility = 'hidden';
+  if (current.id === 'katalog') uiKatalog(p);
   if (current.id === 'final') uiFinal(p);
 }
 
 // --- Kaydırma sahneleri (DOM) --------------------------------------------------------
 
 function setupScroll() {
+  // Raf sahneleri ve aradaki koridor tabelaları tek hikâye: alt çubuk baştan sona saklı, kart çubuğun yerine iner.
+  // Final sahnesi de baştan sona hikâye: başlık ve alt çubuk çekilir, sahnenin kendi CTA'ları kalır.
+  ScrollTrigger.create({
+    trigger: '.ch--final', start: 'top top', end: 'bottom bottom',
+    onToggle: (st) => setStoryMode(st.isActive ? true : null),
+  });
+  const rafs = $$('.ch--raf');
+  ScrollTrigger.create({
+    trigger: rafs[0], start: 'top+=25% top', endTrigger: rafs.at(-1), end: 'bottom bottom',
+    onToggle: (st) => setStoryMode(st.isActive ? true : null),
+  });
+
   // hero: başlık yukarı ve dağılarak çıkar
   gsap.to('.hero', {
     yPercent: -12, opacity: 0, ease: 'none',
@@ -437,6 +479,8 @@ function setupScroll() {
 
   // galeri: yatay ray
   const track = $('[data-galeri]');
+  const mm = gsap.matchMedia();
+  mm.add('(min-width: 900px)', () => {
   gsap.to(track, {
     x: () => -(track.scrollWidth - innerWidth + 32), ease: 'none',
     scrollTrigger: { trigger: '.galeri', start: 'top top', end: 'bottom bottom', scrub: 0.5, invalidateOnRefresh: true },
@@ -446,6 +490,7 @@ function setupScroll() {
       xPercent: 6, ease: 'none',
       scrollTrigger: { trigger: '.galeri', start: 'top top', end: 'bottom bottom', scrub: true },
     });
+  });
   });
 
   // yorumlar: hızla kayan satır
@@ -507,23 +552,27 @@ function runIntro() {
       const r1 = introTag.getBoundingClientRect();
       const r2 = heroTag.getBoundingClientRect();
       gsap.set(introTag, { transformOrigin: '0 0' });
-      gsap.timeline({ onComplete: () => { heroTag.style.visibility = ''; intro.remove(); resolve(); } })
-        .to(intro.querySelector('.intro__skip'), { opacity: 0, duration: 0.2 }, 0)
-        .to(intro, { backgroundColor: 'rgba(21,25,30,0)', duration: 0.7, ease: 'power2.inOut' }, 0.1)
+      // perde hemen dokunulmaz olur: etiket uçarken alttaki butonlara dokunulabilir
+      intro.style.pointerEvents = 'none';
+      gsap.timeline({ onComplete: () => { heroTag.style.visibility = ''; intro.remove(); } })
+        .to(intro.querySelector('.intro__skip'), { autoAlpha: 0, duration: 0.15 }, 0)
+        .to(intro, { backgroundColor: 'rgba(21,25,30,0)', duration: 0.5, ease: 'power2.inOut' }, 0.05)
         .to(introTag, {
           x: r2.left - r1.left, y: r2.top - r1.top, scaleX: r2.width / r1.width, scaleY: r2.height / r1.height,
-          rotate: -2, duration: 0.8, ease: 'power3.inOut',
-        }, 0.05);
+          rotate: -2, duration: 0.6, ease: 'power3.inOut',
+        }, 0.02);
+      resolve();
       void state;
     };
     const tl = gsap.timeline({ onComplete: finish });
-    tl.fromTo('.tag--intro .tag__bars i', { scaleY: 0 }, { scaleY: 1, stagger: 0.012, duration: 0.3, ease: 'power2.out' }, 0)
-      .fromTo('[data-laser]', { top: '8%' }, { top: '92%', duration: 0.55, repeat: 2, yoyo: true, ease: 'sine.inOut' }, 0.2)
-      .add(scramble(nameEl, d.isletme.ad, 1.1), 0.35)
-      .to(prog, { v: 100, duration: 1.7, ease: 'power1.inOut', onUpdate: () => (pct.textContent = String(Math.round(prog.v)).padStart(3, '0')) }, 0)
-      .to('.tag--intro', { boxShadow: '0 0 0 3px #ee6a24, 0 30px 80px rgba(0,0,0,.5)', duration: 0.12, yoyo: true, repeat: 1 }, 1.8);
-    intro.addEventListener('click', () => finish(), { once: true });
-    setTimeout(finish, 2500);
+    tl.fromTo('.tag--intro .tag__bars i', { scaleY: 0 }, { scaleY: 1, stagger: 0.008, duration: 0.25, ease: 'power2.out' }, 0)
+      .fromTo('[data-laser]', { top: '8%' }, { top: '92%', duration: 0.45, repeat: 1, yoyo: true, ease: 'sine.inOut' }, 0.15)
+      .add(scramble(nameEl, d.isletme.ad, 0.8), 0.25)
+      .to(prog, { v: 100, duration: 1.15, ease: 'power1.inOut', onUpdate: () => (pct.textContent = String(Math.round(prog.v)).padStart(3, '0')) }, 0)
+      .to('.tag--intro', { boxShadow: '0 0 0 3px #ee6a24, 0 30px 80px rgba(0,0,0,.5)', duration: 0.1, yoyo: true, repeat: 1 }, 1.15);
+    // dokunma, kaydırma ya da tuşla hemen geçilir
+    for (const ev of ['pointerdown', 'wheel', 'touchstart', 'keydown']) addEventListener(ev, finish, { once: true, passive: true });
+    setTimeout(finish, 1400);
   });
 }
 
@@ -588,7 +637,7 @@ function cursorAndMagnets() {
   scrollTo(0, 0);
   cursorAndMagnets();
   const stageReady = makeStage();
-  await Promise.race([document.fonts.ready, new Promise((r) => setTimeout(r, 900))]);
+  await Promise.race([document.fonts.ready, new Promise((r) => setTimeout(r, 400))]);
   await runIntro();
   await stageReady;
   finalSplit = new SplitText('[data-final-title]', { type: 'chars,words' });

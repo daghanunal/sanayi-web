@@ -9,7 +9,10 @@ import { DrawSVGPlugin } from 'gsap/DrawSVGPlugin';
 gsap.registerPlugin(DrawSVGPlugin);
 ScrollTrigger.config({ ignoreMobileResize: true });
 
-const d = boot({ ...raw, ...extra });
+// Örnek puan yapısal veriye (JSON-LD aggregateRating) girmesin: boot'tan önce ayır, sonra geri ekle.
+const { puan: ornekPuan, ...veriLd } = { ...raw, ...extra };
+const d = boot(veriLd);
+d.puan = ornekPuan;
 const $ = (s, root = document) => root.querySelector(s);
 const $$ = (s, root = document) => [...root.querySelectorAll(s)];
 const fmt = (n) => Number(n).toLocaleString('tr-TR');
@@ -33,7 +36,7 @@ const binds = {
   adres: d.iletisim.adres,
   garanti: d.garanti,
   since: `Şaşmaz Oto Sanayi · ${ablative(d.isletme.kurulus)} beri`,
-  copy: `© ${new Date().getFullYear()} ${d.isletme.ad}`,
+  copy: `© ${new Date().getFullYear()} ${d.isletme.ad}. Fotoğraflar: Pexels, temsilîdir. Parça görselleri 3D, temsilîdir. Yorumlar örnektir.`,
 };
 $$('[data-bind]').forEach((el) => (el.textContent = binds[el.dataset.bind] ?? ''));
 const hrefs = {
@@ -281,7 +284,7 @@ const yildiz = (n) => Array.from({ length: 5 }, (_, i) => `<span class="${i < Ma
 if (d.puan) {
   $('[data-puan]').innerHTML = `
     <p class="puan__deger">${esc(String(d.puan.ortalama).replace('.', ','))}</p>
-    <div><div class="yildiz" aria-label="5 üzerinden ${esc(String(d.puan.ortalama))}">${yildiz(d.puan.ortalama)}</div><p class="puan__adet">${esc(fmt(d.puan.adet))} müşteri yorumu</p></div>`;
+    <div><div class="yildiz" aria-label="5 üzerinden ${esc(String(d.puan.ortalama))}">${yildiz(d.puan.ortalama)}</div><p class="puan__adet">Örnek yorumlar · 5 üzerinden örnek puan</p></div>`;
 }
 $('[data-yorumlar]').innerHTML = (d.yorumlar ?? []).map((y) => `
   <figure class="yorum">

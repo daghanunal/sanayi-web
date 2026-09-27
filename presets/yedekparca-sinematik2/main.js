@@ -7,6 +7,7 @@ import {
 } from '../../shared/core.js';
 import { SplitText } from 'gsap/SplitText';
 import { createStage } from './scene.js';
+import { pickQuality } from '../../shared/lib3d.js';
 
 gsap.registerPlugin(SplitText);
 ScrollTrigger.config({ ignoreMobileResize: true });
@@ -14,7 +15,10 @@ ScrollTrigger.config({ ignoreMobileResize: true });
 // Ek veri (opsiyonel) derleme sırasında birleştirilir
 const ekler = import.meta.glob('../../data/yedekparca-sinematik2.json', { eager: true, import: 'default' });
 const ek = Object.values(ekler)[0] ?? {};
-const d = boot({ ...veri, ...ek });
+// Örnek puan yapısal veriye (JSON-LD aggregateRating) girmesin: boot'tan önce ayır, sonra geri ekle.
+const { puan: ornekPuan, ...veriLd } = { ...veri, ...ek };
+const d = boot(veriLd);
+d.puan = ornekPuan;
 
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
@@ -48,7 +52,7 @@ $$('[data-icon]').forEach((el) => (el.innerHTML = icons[el.dataset.icon]));
 $('[data-brand]').setAttribute('aria-label', `${d.isletme.ad}, sayfa başı`);
 $('[data-kicker]').textContent = `Şaşmaz Oto Sanayi · ${ablative(d.isletme.kurulus)} beri`;
 $('[data-since]').textContent = `${yil} yıldır aynı tezgâhta`;
-$('[data-year]').textContent = `© ${new Date().getFullYear()} ${d.isletme.ad}`;
+$('[data-year]').textContent = `© ${new Date().getFullYear()} ${d.isletme.ad}. Fotoğraflar: Pexels. 3D görseller temsilîdir. Yorumlar örnektir.`;
 
 const status = openStatus(d.saatler);
 $$('[data-status]').forEach((el) => {
@@ -83,10 +87,11 @@ const H = d.hizmetler.slice(0, 7);
 const KINDS = ['disk', 'filtre', 'amortisor', 'triger', 'debriyaj', 'buji', 'piston'];
 const kinds = H.map((h, i) => (KINDS.includes(h.parca) ? h.parca : KINDS[i % 7]));
 const PASTEL = ['#dcd2f8', '#cdeedf', '#fad6c3', '#d0e2fa', '#f3e7b2', '#f6cfdd', '#d8e6c8'];
-$('[data-v-total]').textContent = String(H.length).padStart(2, '0');
-$('[data-vdots]').innerHTML = H.map((h, i) => `<li style="--i:${i}"><i></i><span>${esc(h.baslik)}</span></li>`).join('');
+$$('[data-v-total]').forEach((el) => (el.textContent = String(H.length).padStart(2, '0')));
+$$('[data-vdots]').forEach((el) => (el.innerHTML = H.map((h, i) => `<li style="--i:${i}"><i></i><span>${esc(h.baslik)}</span></li>`).join('')));
 $('[data-v-list]').innerHTML = H.map((h) => `<li>${esc(h.baslik)}: ${esc(h.aciklama)}</li>`).join('');
-const vcard = $('[data-vcard]');
+const vcard = $$('[data-vcard]');
+const setAll = (sel, fn) => $$(sel).forEach(fn);
 let vIndex = -1;
 const stockObj = { v: 0 };
 function showPart(i) {
@@ -95,14 +100,14 @@ function showPart(i) {
   vIndex = i;
   const h = H[i];
   const fill = () => {
-    $('[data-v-raf]').textContent = h.raf ? `Raf ${h.raf}` : 'Rafta';
-    $('[data-v-n]').textContent = String(i + 1).padStart(2, '0');
-    $('[data-v-title]').textContent = h.baslik;
-    $('[data-v-desc]').textContent = h.aciklama;
-    $('[data-v-chips]').innerHTML = (h.ornekler ?? []).map((o) => `<li>${esc(o)}</li>`).join('');
+    setAll('[data-v-raf]', (el) => (el.textContent = h.raf ? `Raf ${h.raf}` : 'Rafta'));
+    setAll('[data-v-n]', (el) => (el.textContent = String(i + 1).padStart(2, '0')));
+    setAll('[data-v-title]', (el) => (el.textContent = h.baslik));
+    setAll('[data-v-desc]', (el) => (el.textContent = h.aciklama));
+    setAll('[data-v-chips]', (el) => (el.innerHTML = (h.ornekler ?? []).map((o) => `<li>${esc(o)}</li>`).join('')));
     gsap.fromTo(stockObj, { v: (h.stok ?? 0) * 0.6 }, {
       v: h.stok ?? 0, duration: 0.8, ease: 'power2.out',
-      onUpdate: () => ($('[data-v-stock]').textContent = nf(stockObj.v)),
+      onUpdate: () => setAll('[data-v-stock]', (el) => (el.textContent = nf(stockObj.v))),
     });
   };
   $$('[data-vdots] li').forEach((li, k) => li.classList.toggle('is-on', k === i));
@@ -154,7 +159,7 @@ $$('[data-marquee]').forEach((el) => {
 if (d.puan) {
   $('[data-puan]').textContent = String(d.puan.ortalama).replace('.', ',');
   $('[data-puan-stars]').innerHTML = Array.from({ length: 5 }, (_, i) => `<i class="${i < Math.round(d.puan.ortalama) ? 'on' : ''}">${icons.star}</i>`).join('');
-  $('[data-puan-meta]').textContent = `${nf(d.puan.adet)} Google yorumunun ortalaması`;
+  $('[data-puan-meta]').textContent = 'Örnek yorumlar · 5 üzerinden örnek puan';
 }
 $('[data-yorumlar]').innerHTML = d.yorumlar.map((y, i) => `
   <li class="yorum" style="--r:${[-2, 1.5, -1, 2, -1.5][i % 5]}deg">
@@ -192,7 +197,7 @@ const canvas = $('[data-stage]');
 let stage = null;
 const introState = { p: reducedMotion ? 1 : 0 };
 try {
-  stage = createStage(canvas, { kinds, lite });
+  stage = createStage(canvas, { kinds, lite, quality: pickQuality() });
   stage.setSize(innerWidth, innerHeight);
 } catch (e) {
   document.documentElement.classList.add('no-webgl');
@@ -203,7 +208,7 @@ addEventListener('resize', () => {
 });
 
 // Film zamanı
-const films = $$('[data-film]').map((el) => ({ el, i: Number(el.dataset.film), top: 0, len: 1 }));
+const films = $$('[data-film]').map((el) => ({ el, i: Number(el.dataset.film), end: Number(el.dataset.filmEnd || Number(el.dataset.film) + 1), top: 0, len: 1 }));
 // Uzun işletme adında (mobilde 4+ satır) giriş parçaları harflerin altına insin
 let heroDrop = 0;
 function measure() {
@@ -217,14 +222,15 @@ function measure() {
 }
 measure();
 ScrollTrigger.addEventListener('refresh', measure);
+// Her film bölümü T aralığı taşır (data-film → data-film-end). Ardışık bölümler arasında zaman durur.
 function filmT(y) {
   let T = 0;
   let prev = -1;
   for (const f of films) {
-    const gap = f.i !== prev + 1;
+    const gap = Math.abs(f.i - prev) > 1e-6;
     const start = gap ? f.top - innerHeight : f.top;
-    if (y >= start) T = f.i + (y >= f.top ? clamp((y - f.top) / f.len) : 0);
-    prev = f.i;
+    if (y >= start) T = f.i + (y >= f.top ? clamp((y - f.top) / f.len) : 0) * (f.end - f.i);
+    prev = f.end;
   }
   return T;
 }
@@ -271,7 +277,7 @@ function activeFAt(T) {
   return i + sm(seg(x - i, 0.3, 0.7));
 }
 
-const fades = [['.film--vitrin .stick', 1], ['.film--sasi .stick', 2], ['.film--stats .stick', 3], ['.film--teslimat .stick', 4]].map(([q, i]) => [$(q), i]);
+const fades = [['.film--vitrin-b .stick', 1], ['.film--sasi .stick', 2], ['.film--stats .stick', 3], ['.film--teslimat .stick', 4]].map(([q, i]) => [$(q), i]);
 let t0 = performance.now();
 function frame() {
   const y = window.scrollY;

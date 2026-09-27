@@ -4,6 +4,8 @@
 import * as THREE from 'three';
 import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js';
 import { createPart, partMaterials } from './parts.js';
+import { loadEnv } from '../../shared/lib3d.js';
+import { loadRealParts } from './realparts.js';
 
 const TAU = Math.PI * 2;
 const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
@@ -79,6 +81,19 @@ function boxTexture(variant) {
     g.fillStyle = '#16171a';
     g.font = '600 15px monospace';
     g.fillText(`${'ABCDEF'[variant]}-${String(10 + variant * 7).padStart(2, '0')}  ${1200 + variant * 311}`, lx + 10, ly + 66);
+    // kenar kararması ve alt temas gölgesi (ucuz ortam kapatması)
+    const ao = g.createLinearGradient(0, h, 0, h * 0.62);
+    ao.addColorStop(0, 'rgba(35,22,10,.55)');
+    ao.addColorStop(1, 'rgba(35,22,10,0)');
+    g.fillStyle = ao;
+    g.fillRect(0, h * 0.62, w, h * 0.38);
+    const side = g.createLinearGradient(0, 0, w, 0);
+    side.addColorStop(0, 'rgba(40,25,12,.22)');
+    side.addColorStop(0.12, 'rgba(40,25,12,0)');
+    side.addColorStop(0.88, 'rgba(40,25,12,0)');
+    side.addColorStop(1, 'rgba(40,25,12,.22)');
+    g.fillStyle = side;
+    g.fillRect(0, 0, w, h);
     // ok işareti
     g.strokeStyle = 'rgba(30,20,10,.55)';
     g.lineWidth = 3;
@@ -180,11 +195,14 @@ function drawShipLabel(c, { ad, tel }) {
 
 // --- Sahne -----------------------------------------------------------------
 
-export function createStage(canvas, { stops, ad, tel, lite, weak }) {
+export function createStage(canvas, { stops, ad, tel, lite, weak, quality = 'hi' }) {
+  const hi = quality === 'hi' && !weak;
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: !weak, alpha: false, powerPreference: 'high-performance' });
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.15;
+  renderer.toneMappingExposure = 1.05;
+  renderer.shadowMap.enabled = hi;
+  renderer.shadowMap.type = THREE.PCFShadowMap;
   const maxDpr = weak ? 1.1 : lite ? 1.35 : 1.5;
   let dpr = Math.min(devicePixelRatio, maxDpr);
   renderer.setPixelRatio(dpr);
@@ -195,11 +213,16 @@ export function createStage(canvas, { stops, ad, tel, lite, weak }) {
   scene.fog = new THREE.Fog(FOG, 5, lite ? 30 : 38);
   const pmrem = new THREE.PMREMGenerator(renderer);
   const envTex = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+  pmrem.dispose();
+  // Önce oda ortamı, HDRI (atölye) gelince onunla değişir: metal parçalar gerçek bir ortamı yansıtır.
+  scene.environment = envTex;
+  scene.environmentIntensity = 0.55;
+  loadEnv('workshop', renderer, { quality }).then((t) => { scene.environment = t; scene.environmentIntensity = 0.5; }).catch(() => {});
 
   const camera = new THREE.PerspectiveCamera(50, 1, 0.05, 80);
   scene.add(camera);
 
-  scene.add(new THREE.HemisphereLight(0xb7c4d2, 0x3a2c1e, 0.9));
+  scene.add(new THREE.HemisphereLight(0xb7c4d2, 0x3a2c1e, 0.55));
   const head = new THREE.PointLight(0xffe2b8, 26, 0, 1.6);
   scene.add(head);
   const ahead = new THREE.PointLight(0xffe9c8, 34, 0, 1.6);
@@ -213,15 +236,18 @@ export function createStage(canvas, { stops, ad, tel, lite, weak }) {
   // Zemin
   const floor = new THREE.Mesh(
     new THREE.PlaneGeometry(8, 110),
-    new THREE.MeshLambertMaterial({ map: floorTexture() })
+    // epoksi zemin: hafif parlak, tavan ışıkları üstünde yumuşakça yansır
+    new THREE.MeshStandardMaterial({ map: floorTexture(), roughness: 0.62, metalness: 0.05 })
   );
+  floor.receiveShadow = true;
   floor.rotation.x = -Math.PI / 2;
   floor.position.set(0, 0, Z0 - 55);
   scene.add(floor);
 
   // Raf dikmeleri ve kirişleri
-  const rackMat = new THREE.MeshLambertMaterial({ color: 0x2b5e93 });
-  const beamMat = new THREE.MeshLambertMaterial({ color: 0xee6a24 });
+  // elektrostatik boyalı çelik raf: hafif metalik, yarı mat
+  const rackMat = new THREE.MeshStandardMaterial({ color: 0x2b5e93, roughness: 0.48, metalness: 0.35 });
+  const beamMat = new THREE.MeshStandardMaterial({ color: 0xe0621f, roughness: 0.42, metalness: 0.3 });
   const upGeo = new THREE.BoxGeometry(0.08, 4.4, 0.08);
   const beamGeo = new THREE.BoxGeometry(0.06, 0.12, BAY);
   const ups = new THREE.InstancedMesh(upGeo, rackMat, (BAYS + 1) * 4);
@@ -249,8 +275,23 @@ export function createStage(canvas, { stops, ad, tel, lite, weak }) {
   }
   scene.add(ups, beams);
 
+  // Galvaniz raf tablaları (kutuların oturduğu sac)
+  const deckMat = new THREE.MeshStandardMaterial({ color: 0x9aa1a8, roughness: 0.38, metalness: 0.75 });
+  const decks = new THREE.InstancedMesh(new THREE.BoxGeometry(RACK_OUT - RACK_IN + 0.08, 0.018, BAY - 0.04), deckMat, BAYS * LEVELS.length * 2);
+  let di = 0;
+  for (let k = 0; k < BAYS; k++) {
+    for (const y of LEVELS) {
+      for (const s of [1, -1]) {
+        m4.makeTranslation(s * (RACK_IN + RACK_OUT) / 2, y + 0.052, Z0 - k * BAY - BAY / 2);
+        decks.setMatrixAt(di++, m4);
+      }
+    }
+  }
+  decks.receiveShadow = true;
+  scene.add(decks);
+
   // Rafta kutular: 4 doku çeşidi → 4 instanced mesh
-  const boxMats = [0, 1, 2, 3].map((v) => new THREE.MeshLambertMaterial({ map: boxTexture(v) }));
+  const boxMats = [0, 1, 2, 3].map((v) => new THREE.MeshStandardMaterial({ map: boxTexture(v), roughness: 0.93, metalness: 0 }));
   const unit = new THREE.BoxGeometry(1, 1, 1);
   const buckets = [[], [], [], []];
   const featSlots = stops.map((_, i) => stopZ(i));
@@ -283,6 +324,7 @@ export function createStage(canvas, { stops, ad, tel, lite, weak }) {
   buckets.forEach((list, v) => {
     const im = new THREE.InstancedMesh(unit, boxMats[v], list.length);
     list.forEach((mat, i) => im.setMatrixAt(i, mat));
+    im.receiveShadow = true;
     scene.add(im);
   });
 
@@ -300,9 +342,8 @@ export function createStage(canvas, { stops, ad, tel, lite, weak }) {
 
   // --- Öne çıkan kutular ve parçalar -----------------------------------------
   const M = partMaterials();
-  for (const mat of Object.values(M)) if (mat.isMeshStandardMaterial) mat.envMap = envTex;
-  const kraftInner = new THREE.MeshLambertMaterial({ color: 0x8e6a40, side: THREE.DoubleSide });
-  const kraftOuter = new THREE.MeshLambertMaterial({ map: boxTexture(1), side: THREE.DoubleSide });
+  const kraftInner = new THREE.MeshStandardMaterial({ color: 0x7e5c36, roughness: 0.95, side: THREE.DoubleSide });
+  const kraftOuter = new THREE.MeshStandardMaterial({ map: boxTexture(1), roughness: 0.92, side: THREE.DoubleSide });
   const BW = 0.8; // z
   const BH = 0.52;
   const BD = 0.78; // x
@@ -314,7 +355,7 @@ export function createStage(canvas, { stops, ad, tel, lite, weak }) {
     const bottom = plane(d, w, kraftInner);
     bottom.rotation.x = -Math.PI / 2;
     bottom.position.y = -h / 2;
-    const face = new THREE.MeshLambertMaterial({ map: labelTex, side: THREE.DoubleSide });
+    const face = new THREE.MeshStandardMaterial({ map: labelTex, roughness: 0.85, side: THREE.DoubleSide });
     const front = plane(w, h, face); // koridora bakan yüz (-x)
     front.rotation.y = -Math.PI / 2;
     front.position.x = -d / 2;
@@ -327,10 +368,12 @@ export function createStage(canvas, { stops, ad, tel, lite, weak }) {
     right.position.z = -w / 2;
     right.rotation.y = Math.PI;
     g.add(bottom, front, back, left, right);
+    g.traverse((o) => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
     const flaps = [1, -1].map((s) => {
       const pivot = new THREE.Group();
       pivot.position.set(0, h / 2, (s * w) / 2);
       const f = plane(d, w / 2, kraftOuter);
+      f.castShadow = true;
       f.rotation.x = -Math.PI / 2;
       f.position.z = (-s * w) / 4;
       pivot.add(f);
@@ -346,12 +389,88 @@ export function createStage(canvas, { stops, ad, tel, lite, weak }) {
     b.g.position.copy(home);
     scene.add(b.g);
     const part = createPart(stop.parca, M, lite);
+    part.traverse((o) => { if (o.isMesh) o.castShadow = true; });
     const holder = new THREE.Group();
     holder.add(part);
     holder.visible = false;
     scene.add(holder);
-    return { ...b, home, part: holder, inner: part };
+    return { ...b, home, part: holder, inner: part, kind: stop.parca };
   });
+
+  // Gerçekçi parçalar arka planda yüklenir; gelince kodla çizilmiş parçanın yerini alır.
+  loadRealParts([...new Set(feats.map((f) => f.kind))], { quality, renderer }).then((real) => {
+    const used = new Set();
+    feats.forEach((f) => {
+      const src = real[f.kind];
+      if (!src) return;
+      let next = used.has(f.kind) ? src.clone(true) : src;
+      used.add(f.kind);
+      if (f.kind === 'buji') {
+        // ateşleme: gerçek bobin + kodla çizilmiş buji yan yana
+        const pair = new THREE.Group();
+        next.scale.multiplyScalar(0.78);
+        next.position.x = -0.12;
+        const plug = f.inner;
+        plug.scale.multiplyScalar(0.72);
+        plug.position.x = 0.2;
+        pair.add(next, plug);
+        f.part.remove(f.inner);
+        f.part.add(pair);
+        f.inner = pair;
+        f.real = true;
+        return;
+      }
+      f.part.remove(f.inner);
+      f.part.add(next);
+      f.inner = next;
+      f.real = true;
+    });
+  }).catch(() => {});
+
+  // Yumuşak gölgeli iş lambası: o an raftan çıkan kutunun üstünde (yalnız masaüstü/güçlü cihaz)
+  const spot = new THREE.SpotLight(0xffe6c4, hi ? 38 : 0, 7, 0.62, 0.7, 1.4);
+  spot.visible = hi;
+  spot.castShadow = hi;
+  spot.shadow.mapSize.set(1024, 1024);
+  spot.shadow.bias = -0.0008;
+  spot.shadow.normalBias = 0.02;
+  spot.shadow.radius = 4;
+  spot.shadow.camera.near = 0.4;
+  spot.shadow.camera.far = 7;
+  scene.add(spot, spot.target);
+
+  // Katalog etiketleri: sahnenin içinde sprite (DOM katmanı değil; telefonda üst üste binen etiket yok)
+  function labelSprite(code, name) {
+    const c = document.createElement('canvas');
+    c.width = 512;
+    c.height = 150;
+    const g = c.getContext('2d');
+    g.font = '600 44px "IBM Plex Mono", monospace';
+    const cw = g.measureText(code).width + 28;
+    g.fillStyle = '#ee6a24';
+    g.beginPath();
+    g.roundRect((512 - cw) / 2, 4, cw, 60, 6);
+    g.fill();
+    g.fillStyle = '#16171a';
+    g.textAlign = 'center';
+    g.textBaseline = 'middle';
+    g.fillText(code, 256, 36);
+    g.font = '700 46px "Hanken Grotesk", sans-serif';
+    g.shadowColor = 'rgba(0,0,0,.9)';
+    g.shadowBlur = 14;
+    g.fillStyle = '#f3efe3';
+    let label = name;
+    while (g.measureText(label).width > 500 && label.length > 4) label = label.slice(0, -2) + '…';
+    g.fillText(label, 256, 110);
+    const t = new THREE.CanvasTexture(c);
+    t.colorSpace = THREE.SRGBColorSpace;
+    const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: t, transparent: true, depthTest: false, fog: false, toneMapped: false, opacity: 0 }));
+    sp.renderOrder = 10;
+    sp.visible = false;
+    scene.add(sp);
+    return sp;
+  }
+  const catSprites = feats.map((f, i) => labelSprite(stops[i].raf, stops[i].ornekler?.[0] || stops[i].baslik));
 
   // Katalog dizilimi
   function gridPos(i, portrait) {
@@ -361,7 +480,7 @@ export function createStage(canvas, { stops, ad, tel, lite, weak }) {
       const col = i % 2;
       const row = Math.floor(i / 2);
       const last = i === n - 1 && n % 2 === 1;
-      return V(last ? 0 : col ? 0.48 : -0.48, 2.95 - row * 0.72, base);
+      return V(last ? 0 : col ? 0.5 : -0.5, 3.2 - row * 0.78, base);
     }
     const row = i < 4 ? 0 : 1;
     const inRow = row ? 3 : 4;
@@ -381,11 +500,11 @@ export function createStage(canvas, { stops, ad, tel, lite, weak }) {
   shipRoot.add(ship.g);
   const label = new THREE.Mesh(
     new THREE.PlaneGeometry(0.62, 0.41),
-    new THREE.MeshLambertMaterial({ map: shipTex, transparent: true })
+    new THREE.MeshStandardMaterial({ map: shipTex, roughness: 0.8, transparent: true })
   );
   label.position.set(0.12, 0.02, 0.476);
   shipRoot.add(label);
-  const tapeMat = new THREE.MeshLambertMaterial({ color: 0xee6a24 });
+  const tapeMat = new THREE.MeshStandardMaterial({ color: 0xee6a24, roughness: 0.35, metalness: 0 });
   const tape = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.004, 1.0), tapeMat);
   tape.position.set(0, 0.335, 0);
   tape.geometry.translate(0, 0, 0.5);
@@ -395,7 +514,8 @@ export function createStage(canvas, { stops, ad, tel, lite, weak }) {
   tapeFront.geometry.translate(0, -0.09, 0);
   tapeFront.position.set(0, 0.335, 0.479);
   shipRoot.add(tapeFront);
-  const pallet = new THREE.Mesh(new THREE.BoxGeometry(1.5, 0.14, 1.2), new THREE.MeshLambertMaterial({ color: 0x9c7446 }));
+  const pallet = new THREE.Mesh(new THREE.BoxGeometry(1.5, 0.14, 1.2), new THREE.MeshStandardMaterial({ color: 0x9c7446, roughness: 0.9 }));
+  pallet.receiveShadow = true;
   pallet.position.y = -0.4;
   shipRoot.add(pallet);
   shipRoot.position.set(0, 0.53, 2.4);
@@ -440,10 +560,12 @@ export function createStage(canvas, { stops, ad, tel, lite, weak }) {
     return into;
   }
   const A = { pos: V(0, 0, 0), tgt: V(0, 0, 0) };
+  const spotAt = V(0.9, 1.3, stopZ(0));
   const B = { pos: V(0, 0, 0), tgt: V(0, 0, 0) };
 
   function poseHero(p) {
     feats.forEach((_, k) => resetFeat(k));
+    spotAt.set(0.9, feats[0].home.y, feats[0].home.z);
     const t = io(p);
     wantPos.set(Math.sin(clock * 0.3) * 0.06, 1.62, L(6.2, 3.4, t));
     wantTgt.set(0, 1.5, -12);
@@ -484,6 +606,7 @@ export function createStage(canvas, { stops, ad, tel, lite, weak }) {
     const q = x - i;
     feats.forEach((_, k) => k !== i && resetFeat(k));
     featState(i, q);
+    spotAt.set(0.9, feats[i].home.y, feats[i].home.z + 0.3);
     // kamera: durak başında bir önceki duraktan gelir
     stopPose(i, B);
     if (i === 0) {
@@ -509,15 +632,24 @@ export function createStage(canvas, { stops, ad, tel, lite, weak }) {
       const to = gridPos(i, portrait);
       f.part.position.lerpVectors(from, to, t);
       f.part.position.y += Math.sin(t * Math.PI) * 0.9;
-      f.part.scale.setScalar(L(0.5, portrait ? 0.68 : 0.78, t));
+      f.part.scale.setScalar(L(0.5, portrait ? 0.8 : 0.78, t));
       f.part.visible = t > 0.001;
       f.part.rotation.y = clock * 0.5 + i * 0.9;
       f.part.rotation.x = 0.15;
+      const sp = catSprites[i];
+      const lt = seg(p, 0.3 + i * 0.035, 0.45 + i * 0.035);
+      sp.visible = lt > 0.01;
+      sp.material.opacity = lt;
+      sp.position.copy(f.part.position);
+      sp.position.y -= portrait ? 0.36 : 0.4;
+      const sw = portrait ? 0.5 : 0.46;
+      sp.scale.set(sw, sw * (150 / 512), 1);
     });
     stopPose(n - 1, A);
     const base = stopZ(n - 1) - 8.5;
-    B.pos.set(0, portrait ? 1.95 : 1.55, base + (portrait ? 3.7 : 3.3));
-    B.tgt.set(0, portrait ? 1.85 : 1.5, base);
+    spotAt.set(0, 1.4, base);
+    B.pos.set(0, portrait ? 2.0 : 1.55, base + (portrait ? 3.75 : 3.3));
+    B.tgt.set(0, portrait ? 2.02 : 1.5, base);
     const t = io(seg(p, 0, 0.35));
     wantPos.lerpVectors(A.pos, B.pos, t);
     wantTgt.lerpVectors(A.tgt, B.tgt, t);
@@ -528,6 +660,7 @@ export function createStage(canvas, { stops, ad, tel, lite, weak }) {
   function poseFinal(p) {
     feats.forEach((_, k) => resetFeat(k));
     shipRoot.visible = true;
+    spotAt.set(0, 0.5, 2.4);
     const close = io(seg(p, 0.08, 0.36));
     for (const { pivot, s } of ship.flaps) pivot.rotation.x = s * (1 - close) * 2.2;
     const tp = io(seg(p, 0.36, 0.56));
@@ -573,6 +706,7 @@ export function createStage(canvas, { stops, ad, tel, lite, weak }) {
     if (!active || document.hidden) return;
     clock += dt;
     shipRoot.visible = false;
+    if (chapter !== 'katalog') for (const sp of catSprites) sp.visible = false;
     if (chapter === 'hero') poseHero(prog);
     else if (chapter === 'raf') poseRaf(prog);
     else if (chapter === 'katalog') poseKatalog(prog);
@@ -585,6 +719,10 @@ export function createStage(canvas, { stops, ad, tel, lite, weak }) {
     camera.lookAt(camTgt);
     camera.rotation.z += clamp(vel * 0.0006, -0.03, 0.03);
     camera.setViewOffset(W, H, 0, viewY * H, W, H);
+    if (hi) {
+      spot.position.set(spotAt.x - 0.9, spotAt.y + 2.3, spotAt.z + 1.4);
+      spot.target.position.copy(spotAt);
+    }
     head.position.set(camPos.x + 0.4, 3.2, camPos.z - 1.5);
     ahead.position.set(0.3, 3.6, camPos.z - 9);
     renderer.render(scene, camera);

@@ -4,6 +4,8 @@
 import * as THREE from 'three';
 import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js';
 import { createMaterials, createPart } from './parts.js';
+import { loadEnv } from '../../shared/lib3d.js';
+import { loadRealParts } from './realparts.js';
 
 const TAU = Math.PI * 2;
 const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
@@ -45,26 +47,44 @@ const CAM = [
   [7.0, [0, 1.8, 6.9], [0, 0.72, 0]],
 ];
 
-export function createStage(canvas, { kinds, lite }) {
+export function createStage(canvas, { kinds, lite, quality = 'hi' }) {
+  const hi = quality === 'hi' && !lite;
   const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: !lite, powerPreference: 'high-performance' });
   renderer.setClearColor(0x000000, 0);
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 1.05;
+  renderer.shadowMap.enabled = hi;
+  renderer.shadowMap.type = THREE.PCFShadowMap;
 
   const scene = new THREE.Scene();
   const pmrem = new THREE.PMREMGenerator(renderer);
   scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.03).texture;
   scene.environmentIntensity = 0.95;
   pmrem.dispose();
+  // Stüdyo HDRI: softbox yansımaları metal parçalara gerçek bir stüdyo çekimi görünümü verir
+  loadEnv('studio', renderer, { quality }).then((t) => { scene.environment = t; scene.environmentIntensity = 1.05; }).catch(() => {});
 
   const key = new THREE.DirectionalLight(0xffffff, 2.2);
   key.position.set(3, 6, 4);
+  key.castShadow = hi;
+  key.shadow.mapSize.set(1024, 1024);
+  key.shadow.camera.left = key.shadow.camera.bottom = -2.2;
+  key.shadow.camera.right = key.shadow.camera.top = 2.2;
+  key.shadow.camera.near = 2;
+  key.shadow.camera.far = 14;
+  key.shadow.bias = -0.0006;
+  key.shadow.normalBias = 0.02;
+  key.shadow.radius = 5;
   scene.add(key);
   const rim = new THREE.DirectionalLight(0xc9b8ff, 1.6);
   rim.position.set(-4, 2, -3);
   scene.add(rim);
   scene.add(new THREE.HemisphereLight(0xffffff, 0x6a5a8a, 0.5));
+  // alçak ön dolgu: koyu çelik yüzeyler (volan, blok) kararıp delik gibi görünmesin
+  const fill = new THREE.DirectionalLight(0xf3eeff, 0.9);
+  fill.position.set(-3.5, 1.2, 5);
+  scene.add(fill);
 
   const camera = new THREE.PerspectiveCamera(36, 1, 0.1, 80);
 
@@ -72,7 +92,9 @@ export function createStage(canvas, { kinds, lite }) {
   const pedMat = new THREE.MeshStandardMaterial({ color: 0xcfc3f2, roughness: 0.55, metalness: 0 });
   const pedestal = new THREE.Group();
   const prof = [[0, -6], [0.98, -6], [0.98, -0.07], [0.965, -0.02], [0.93, 0], [0, 0]].map(([x, y]) => new THREE.Vector2(x, y));
-  pedestal.add(new THREE.Mesh(new THREE.LatheGeometry(prof, lite ? 64 : 96), pedMat));
+  const pedMesh = new THREE.Mesh(new THREE.LatheGeometry(prof, lite ? 64 : 96), pedMat);
+  pedMesh.receiveShadow = true;
+  pedestal.add(pedMesh);
   const M = createMaterials();
   const lip = new THREE.Mesh(new THREE.TorusGeometry(0.95, 0.014, 8, lite ? 80 : 128), M.krom);
   lip.rotation.x = Math.PI / 2;
@@ -111,11 +133,36 @@ export function createStage(canvas, { kinds, lite }) {
   const parts = kinds.map((k, i) => {
     const holder = new THREE.Group();
     const spin = new THREE.Group();
-    spin.add(createPart(k, M, lite));
+    const inner = createPart(k, M, lite);
+    inner.traverse((o) => { if (o.isMesh) o.castShadow = true; });
+    spin.add(inner);
     holder.add(spin);
     scene.add(holder);
-    return { holder, spin, phase: i * 1.7 };
+    return { holder, spin, inner, kind: k, phase: i * 1.7 };
   });
+
+  // Gerçekçi parçalar gelince kodla çizilmiş olanların yerini alır (kayış, amortisör, debriyaj kodla kalır)
+  loadRealParts([...new Set(kinds)], { quality, renderer }).then((real) => {
+    const used = new Set();
+    parts.forEach((pt) => {
+      const src = real[pt.kind];
+      if (!src) return;
+      let next = used.has(pt.kind) ? src.clone(true) : src;
+      used.add(pt.kind);
+      if (pt.kind === 'buji') {
+        const pair = new THREE.Group();
+        next.position.x = -0.2;
+        const plug = pt.inner;
+        plug.scale.multiplyScalar(0.7);
+        plug.position.x = 0.26;
+        pair.add(next, plug);
+        next = pair;
+      }
+      pt.spin.remove(pt.inner);
+      pt.spin.add(next);
+      pt.inner = next;
+    });
+  }).catch(() => {});
 
   let W = 1, H = 1, aspect = 1, mobile = false;
   function setSize(w, h) {

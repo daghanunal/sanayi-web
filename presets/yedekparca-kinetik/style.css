@@ -76,6 +76,7 @@ body {
   backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
 }
 .top__brand {
+  display: flex; align-items: center; min-height: 44px;
   font: 700 19px/1.35 var(--disp); letter-spacing: .01em; text-decoration: none;
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; padding-top: 2px;
 }
@@ -84,7 +85,7 @@ body {
 .top__status.is-open i { background: var(--pink); box-shadow: 0 0 0 3px rgb(255 46 136 / .25); animation: nabiz 1.6s infinite; }
 @keyframes nabiz { 50% { box-shadow: 0 0 0 6px rgb(255 46 136 / 0); } }
 .top__call {
-  display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 12px;
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 44px; min-width: 44px; padding: 0 12px;
   background: var(--ink); color: var(--kagit); text-decoration: none; border-radius: 3px;
   font: 700 14px/1 var(--mono); flex: none;
 }
@@ -159,7 +160,7 @@ body {
 .vin__lab span:last-child { color: rgb(233 235 240 / .8); }
 .vin__lab.is-on { opacity: 1; transform: none; }
 .vin__result {
-  position: absolute; left: var(--gut); right: var(--gut); bottom: max(124px, 19svh);
+  position: absolute; left: var(--gut); right: var(--gut); bottom: calc(var(--bar-space, 96px) + 40px); max-height: 40svh;
   padding: 22px 20px 20px; background: var(--kagit); color: var(--ink);
   box-shadow: 8px 8px 0 var(--pink);
   opacity: 0; transform: translateY(60%) rotate(4deg); transition: opacity .4s, transform .7s cubic-bezier(.2,1.3,.3,1);
@@ -179,7 +180,7 @@ body {
 .vin.is-done .vin__stamp { opacity: 1; transform: rotate(-6deg) scale(1); }
 .vin.is-done .vin__code { transform: scale(.62); opacity: .5; }
 .vin.is-done .vin__labels { opacity: 0; }
-.vin__bar { position: absolute; left: var(--gut); right: var(--gut); bottom: 96px; height: 3px; background: rgb(255 255 255 / .12); }
+.vin__bar { position: absolute; left: var(--gut); right: var(--gut); bottom: calc(var(--bar-space, 96px) + 10px); transition: bottom .35s; height: 3px; background: rgb(255 255 255 / .12); }
 .vin__bar i { display: block; height: 100%; background: var(--pink); transform-origin: left; transform: scaleX(var(--p, 0)); }
 
 @media (min-width: 900px) {
@@ -238,9 +239,9 @@ body {
 .chips { display: flex; flex-wrap: wrap; gap: 6px; }
 .chips li { padding: 5px 9px 4px; border: 1.5px solid var(--ink); font: 500 12px/1.2 var(--mono); }
 .kat__ask {
-  justify-self: start; display: inline-flex; align-items: center; gap: 8px; margin-top: 4px;
+  justify-self: start; display: inline-flex; align-items: center; gap: 8px; margin-top: 4px; min-height: 44px;
   font: 700 15px/1 var(--sans); color: var(--ink); text-decoration: none;
-  border-bottom: 3px solid var(--pink); padding-bottom: 4px;
+  border-bottom: 3px solid var(--pink); padding: 0 2px;
 }
 .kat__ask svg { width: 18px; height: 18px; color: var(--pink-koyu); }
 @media (min-width: 900px) {
@@ -266,7 +267,7 @@ body {
 .panel--0 { background: var(--kagit); color: var(--ink); }
 .panel--1 { background: var(--ink-2); color: var(--kagit); }
 .panel--2 { background: var(--pink); color: var(--ink); }
-.panel__no { position: absolute; top: 84px; left: var(--gut); }
+.panel__no { margin-bottom: 14px; opacity: .8; }
 .panel__yer { font: 800 24px/1.15 var(--sans); max-width: 16ch; }
 .panel__sure {
   font: 700 var(--fs, 90px)/1.1 var(--disp); padding-top: .02em; margin-top: 12px;
@@ -274,7 +275,7 @@ body {
 .panel--0 .panel__sure { color: var(--pink); text-shadow: .03em .03em 0 var(--ink); }
 .panel--1 .panel__sure { color: var(--pink); }
 .panel__not { margin-top: 20px; font-size: 17px; max-width: 30ch; }
-.teslim__rail { position: absolute; left: var(--gut); right: var(--gut); bottom: 110px; height: 4px; background: rgb(128 128 150 / .35); }
+.teslim__rail { position: absolute; left: var(--gut); right: var(--gut); bottom: calc(var(--bar-space, 96px) + 18px); transition: bottom .35s; height: 4px; background: rgb(128 128 150 / .35); }
 .teslim__rail i { display: block; height: 100%; background: var(--pink); transform-origin: left; transform: scaleX(0); outline: 2px solid var(--ink); }
 @media (min-width: 900px) {
   .panel { width: 62vw; padding-bottom: 120px; }
@@ -295,17 +296,17 @@ body {
 .stat { padding: 18px 12px 20px 0; border-bottom: 1px solid var(--cizgi); }
 .stat:nth-child(odd) { border-right: 1px solid var(--cizgi); }
 .stat:nth-child(even) { padding-left: 14px; }
-.stat__n { font: 700 clamp(54px, 15vw, 150px)/.9 var(--disp); padding-top: .1em; white-space: nowrap; }
+.stat__n { font: 700 clamp(46px, 13vw, 150px)/1 var(--disp); padding-top: .06em; white-space: nowrap; }
 .stat__n span { color: var(--pink); }
 .stat:nth-child(2) .stat__n, .stat:nth-child(3) .stat__n { color: var(--pink); }
 .stat:nth-child(2) .stat__n span, .stat:nth-child(3) .stat__n span { color: var(--ink); }
-.stat__l { margin-top: 6px; font: 500 12px/1.35 var(--mono); text-transform: uppercase; letter-spacing: .04em; color: var(--soluk); }
+.stat__l { margin-top: 12px; font: 500 12px/1.35 var(--mono); text-transform: uppercase; letter-spacing: .04em; color: var(--soluk); }
 .about__garanti { margin-top: 28px; font: 600 18px/1.4 var(--sans); max-width: 50ch; }
 @media (min-width: 900px) {
   .stats { grid-template-columns: repeat(4, 1fr); }
   .stat { border-right: 1px solid var(--cizgi); padding-left: 16px; }
   .stat:first-child { padding-left: 0; }
-  .stat__n { font-size: clamp(64px, 7.4vw, 124px); }
+  .stat__n { font-size: clamp(52px, 5.4vw, 100px); }
 }
 
 /* --- Afişler --------------------------------------------------------------- */
@@ -352,9 +353,9 @@ body {
 .stars svg { width: 100%; height: 100%; }
 .cards { display: grid; gap: 16px; }
 .card {
-  position: sticky; top: calc(74px + var(--i) * 14px);
+  position: relative;
   padding: 24px 20px 22px; background: var(--kagit); border: 3px solid var(--ink);
-  box-shadow: 6px 6px 0 var(--ink); min-height: 250px; display: grid; align-content: space-between; gap: 16px;
+  box-shadow: 6px 6px 0 var(--ink); display: grid; align-content: space-between; gap: 16px;
 }
 .card--1 { background: var(--ink); color: var(--kagit); box-shadow: 6px 6px 0 var(--pink); }
 .card--2 { background: var(--pink); color: var(--ink); }
@@ -364,7 +365,6 @@ body {
 .card__who .mono { opacity: .75; }
 @media (min-width: 900px) {
   .cards { grid-template-columns: repeat(3, 1fr); gap: 22px; }
-  .card { position: relative; top: 0; }
   .card:nth-child(3n+2) { transform: translateY(40px); }
 }
 
@@ -372,10 +372,10 @@ body {
 .dukkan { background: var(--ink); color: var(--kagit); padding: 90px 0; }
 .dukkan .mono { color: var(--pink); }
 .dukkan__grid { display: grid; gap: 34px; }
-.sign { margin-top: 8px; }
-.sign__w { display: block; font: 700 clamp(110px, 36vw, 240px)/.82 var(--disp); padding-top: .12em; color: var(--soluk); }
+.sign { margin-top: 14px; }
+.sign__w { display: block; font: 700 clamp(96px, 32vw, 240px)/1 var(--disp); color: #8a90b3; }
 .sign.is-open .sign__w { color: var(--pink); }
-.sign__t { display: block; margin-top: 10px; font: 700 18px/1.3 var(--sans); }
+.sign__t { display: block; margin-top: 14px; font: 700 18px/1.3 var(--sans); }
 .hours { width: 100%; margin-top: 26px; border-collapse: collapse; }
 .hours th, .hours td { padding: 12px 0; border-bottom: 1px solid rgb(233 235 240 / .18); text-align: left; font: 500 15px/1.3 var(--mono); }
 .hours td { text-align: right; }
@@ -401,15 +401,13 @@ body {
 }
 
 /* --- Footer ---------------------------------------------------------------- */
-.foot { background: var(--ink); color: var(--kagit); padding: 50px 0 120px; }
+.foot { background: var(--ink); color: var(--kagit); padding: 50px 0 calc(var(--bar-reserve, 96px) + 24px); }
 .foot__in { display: grid; gap: 14px; }
 .foot__brand { font: 700 30px/1 var(--disp); padding-top: .1em; }
 .foot a { color: var(--pink); }
 .foot__small { color: rgb(233 235 240 / .6); }
 @media (min-width: 900px) { .foot { padding-bottom: 50px; } .foot__in { grid-template-columns: 1fr 1fr auto; align-items: end; } }
 
-/* Vitrin çubuğu için alt boşluk */
-.is-vitrin .foot { padding-bottom: 120px; }
 
 /* Azaltılmış hareket */
 .rm .vin__stage { height: auto; min-height: 100svh; }
@@ -430,3 +428,28 @@ body {
 .rm .vin__scan { display: none; }
 .rm .vin__scan + .vin__labels { margin-top: 22px; }
 @media (min-width: 900px) { .vin__scan { font-size: 18px; margin-top: 30px; } }
+
+/* Sayfa sonu: alt boşluk footer'ın içinde (lacivert), gövdenin altında açık şerit kalmaz. */
+@media (max-width: 899px) { body { padding-bottom: 0; } }
+.is-vitrin body { padding-bottom: 0; }
+@media (min-width: 900px) { .is-vitrin .foot { padding-bottom: calc(var(--bar-reserve, 96px) + 16px); } }
+
+/* Odak halkası: iki renkli baskıya uygun kalın pembe çerçeve */
+:where(a, button, input, [tabindex]):focus-visible { outline: 3px solid var(--pink); outline-offset: 3px; }
+.btn--pink:focus-visible, .final :where(a):focus-visible { outline-color: var(--ink); }
+
+/* Telefon hero: fotoğraf başlığın içinde, kısa "ADINI" satırının boşluğuna oturan bir pencere
+   (yazının arkasında kalmaz); CTA'lar ve bant ilk ekranda, alt çubuğun üstünde. */
+@media (max-width: 899px) {
+  .hero__title { margin-top: 12px; }
+  .hero__in { display: flex; flex-direction: column; min-height: calc(100svh - 58px); }
+  .hero__photo { top: 0; right: auto; width: 0; aspect-ratio: auto; transform: rotate(-2deg); }
+  .hero__foot { margin-top: auto; gap: 14px; padding-bottom: calc(var(--bar-reserve, 84px) + 62px); }
+  .hero__lead { font-size: 17px; }
+  .hero__cta { grid-template-columns: auto auto; justify-content: start; }
+  .hero__cta .btn { min-height: 50px; padding: 0 16px; font-size: 15px; }
+  .tape { bottom: calc(var(--bar-reserve, 84px) + 4px); }
+  .tape__in { font-size: 19px; padding: 8px 0 6px; }
+}
+@media (max-width: 899px) and (max-height: 760px) { .hero__lead { display: none; } }
+@media (max-width: 374px) { .hero__cta .btn { padding: 0 12px; font-size: 14px; gap: 8px; } .hero__cta .btn svg { width: 18px; height: 18px; } }

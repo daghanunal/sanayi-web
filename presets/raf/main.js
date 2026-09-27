@@ -10,7 +10,10 @@ import { partSvg } from './parts.js';
 gsap.registerPlugin(SplitText, DrawSVGPlugin);
 ScrollTrigger.config({ ignoreMobileResize: true });
 
-const d = boot(raw);
+// Örnek puan yapısal veriye (JSON-LD aggregateRating) girmesin: boot'tan önce ayır, sonra geri ekle.
+const { puan: ornekPuan, ...rawLd } = raw;
+const d = boot(rawLd);
+d.puan = ornekPuan;
 const $ = (s, root = document) => root.querySelector(s);
 const $$ = (s, root = document) => [...root.querySelectorAll(s)];
 const fmt = (n) => Number(n).toLocaleString('tr-TR');
@@ -152,6 +155,26 @@ $('[data-brands]').innerHTML = d.markalar.map((m, i) =>
 const pb = d.parcaMarkalari.map((m) => `<span>${esc(m)}</span>`).join('');
 $('[data-partbrands]').innerHTML = `<div class="partbrands__row">${pb}${pb}</div>`;
 
+// --- Katalog plakası (3D görsel) -------------------------------------------------
+// Görseldeki parçalar sabit; raf kodu verideki gruptan (parca anahtarı) okunur.
+{
+  const rafOf = (k) => d.hizmetler.find((h) => h.parca === k)?.raf;
+  const PLATE = [
+    { ad: 'Fren diski ve kaliper', k: 'disk', x: 22, y: 47 },
+    { ad: 'Yağ filtresi', k: 'filtre', x: 29, y: 13 },
+    { ad: 'Triger kayışı ve gergi', k: 'triger', x: 60, y: 11 },
+    { ad: 'Piston ve biyel', k: 'piston', x: 44, y: 38 },
+    { ad: 'Volan', k: 'debriyaj', x: 81, y: 36 },
+    { ad: 'Ateşleme bobini', k: 'buji', x: 45, y: 76 },
+    { ad: 'Silindir kapak civatası', k: 'piston', x: 70, y: 78 },
+  ];
+  $('[data-plate-pins]').innerHTML = PLATE.map((p, i) => `<li style="--x:${p.x}%;--y:${p.y}%">${i + 1}</li>`).join('');
+  $('[data-plate-legend]').innerHTML = PLATE.map((p, i) => {
+    const raf = rafOf(p.k);
+    return `<li><span class="plate__n">${i + 1}</span><span>${esc(p.ad)}</span>${raf ? `<span class="plate__raf">Raf ${esc(raf)}</span>` : ''}</li>`;
+  }).join('');
+}
+
 // --- Galeri ---------------------------------------------------------------------
 const galeri = [
   { src: d.galeri[0].src, alt: d.galeri[0].alt },
@@ -166,7 +189,7 @@ $('[data-gallery]').innerHTML = galeri.map((g, i) => `
 // --- Yorumlar -------------------------------------------------------------------
 $('[data-score]').textContent = d.puan.ortalama.toLocaleString('tr-TR', { minimumFractionDigits: 1 });
 $('[data-stars]').innerHTML = icons.star.repeat(5);
-$('[data-score-count]').textContent = `${fmt(d.puan.adet)} değerlendirme`;
+$('[data-score-count]').textContent = 'Örnek yorumlar · 5 üzerinden örnek puan';
 $('[data-reviews]').innerHTML = d.yorumlar.map((r) => `
   <li class="rev">
     <span class="rev__stars" aria-label="${r.puan} yıldız">${icons.star.repeat(r.puan)}</span>
@@ -229,6 +252,12 @@ if (!reducedMotion) {
       .from(row.querySelectorAll('.row__main > *, .row__raf, .row__stok, .row__ask'), { y: 14, autoAlpha: 0, duration: 0.5, stagger: 0.05 }, 0.1)
       .add(() => scramble(row.querySelector('[data-scramble]')), 0.3);
   });
+
+  // Katalog plakası: fotoğraf açılır, numaralar sırayla düşer
+  const pt = gsap.timeline({ scrollTrigger: { trigger: '.plate', start: 'top 80%', once: true } });
+  pt.from('.plate__img', { clipPath: 'inset(0 0 100% 0)', duration: 1, ease: 'power3.inOut' })
+    .from('.plate__pins li', { scale: 0, autoAlpha: 0, duration: 0.4, stagger: 0.07, ease: 'back.out(2)' }, 0.6)
+    .from('.plate__legend li', { y: 10, autoAlpha: 0, duration: 0.4, stagger: 0.05 }, 0.7);
 
   // Süreç adımları: bağlantı çizgisi
   gsap.fromTo('.steps', { '--progress': 0 }, {

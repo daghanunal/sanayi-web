@@ -51,11 +51,11 @@
     { "src": "/img/depo/yuksek-raf.jpg", "alt": "Tavana kadar yükselen turuncu raflarda kutular" },
     { "src": "/img/depo/karanlik-raf.jpg", "alt": "Akşam saatinde deponun raf aralığı" }
   ],
-  "puan": { "ortalama": 4.8, "adet": 527 },
+  "puan": { "ortalama": 4.8 },
   "yorumlar": [
     { "ad": "Serkan A.", "puan": 5, "metin": "Şasi numarasını attım, on dakikada orijinal ve muadil fiyatı geldi. Yarım saat sonra balata dükkândaydı.", "arac": "Oto servis, Şaşmaz" },
     { "ad": "Hakan T.", "puan": 5, "metin": "Yanlış triger seti sipariş etmişim, hiç sorun çıkarmadan aynı gün değiştirdiler.", "arac": "2015 Fiat Doblo" },
-    { "ad": "Emre K.", "puan": 5, "metin": "Başka yerde bulamadığım sensörü ertesi sabah getirdiler. Fiyatı da piyasanın altındaydı.", "arac": "2012 Renault Fluence" },
+    { "ad": "Emre K.", "puan": 5, "metin": "Başka yerde bulamadığım sensörü ertesi sabah getirdiler.", "arac": "2012 Renault Fluence" },
     { "ad": "Murat Y.", "puan": 4, "metin": "Bakım setini hazır paket yapıyorlar, filtreler tek tek aramaktan kurtardı. Öğlen biraz kalabalık oluyor.", "arac": "2018 Toyota Corolla" },
     { "ad": "Oğuz D.", "puan": 5, "metin": "On yıldır parçamı buradan alıyorum. Muadilin hangisi iyi, hangisi değil dürüstçe söylüyorlar.", "arac": "Mekanik usta, Şaşmaz" }
   ],

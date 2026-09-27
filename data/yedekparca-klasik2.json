@@ -1,13 +1,13 @@
 {
   "preset": "yedekparca-klasik2",
   "parcaFoto": {
-    "disk": "/img/depo/disk.jpg",
-    "filtre": "/img/yedekparca-klasik2/yag.jpg",
-    "amortisor": "/img/yedekparca-klasik2/aski.jpg",
-    "triger": "/img/yedekparca-klasik2/disliler.jpg",
-    "debriyaj": "/img/yedekparca-klasik2/kafa.jpg",
-    "buji": "/img/yedekparca-klasik2/kablolar.jpg",
-    "piston": "/img/yedekparca-klasik2/eksantrik.jpg"
+    "disk": "/img/yedekparca-klasik2/3d-fren.jpg",
+    "filtre": "/img/yedekparca-klasik2/3d-filtre.jpg",
+    "amortisor": "/img/yedekparca-klasik2/3d-amortisor.jpg",
+    "triger": "/img/yedekparca-klasik2/3d-triger.jpg",
+    "debriyaj": "/img/yedekparca-klasik2/3d-volan.jpg",
+    "buji": "/img/yedekparca-klasik2/3d-bobin.jpg",
+    "piston": "/img/yedekparca-klasik2/3d-piston.jpg"
   },
   "heroFoto": "/img/depo/koridor.jpg",
   "depoFoto": [

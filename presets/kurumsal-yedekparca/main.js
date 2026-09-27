@@ -9,8 +9,15 @@ import './style.css';
 // Depo verisini motorun şemasına çevir: ürün grubu → hizmet (raf kodu ve örnek parçalar ayrıntıda).
 const v = derinBirlestir(ana, ek);
 const nf = new Intl.NumberFormat('tr-TR');
+// Ürün gruplarına stüdyo çekimi gibi 3D parça görselleri (Cycles; temsilî).
+const B3 = import.meta.env.BASE_URL + 'img/kurumsal-yedekparca/3d-';
+const GORSEL = { disk: 'fren', filtre: 'filtre', amortisor: 'amortisor', triger: 'triger', debriyaj: 'volan', buji: 'bobin', piston: 'piston' };
+// Yorumlar örnektir: uydurma puan ve "N değerlendirme" sayısı gösterilmez.
+delete v.puan;
+v.kurumsal = { ...v.kurumsal, yorumBaslik: 'Örnek müşteri yorumları' };
 v.hizmetler = v.hizmetler.map((h) => ({
   ...h,
+  gorsel: GORSEL[h.parca] ? `${B3}${GORSEL[h.parca]}.jpg` : undefined,
   kisa: h.ornekler?.join(', '),
   sure: null,
   detay: [
@@ -35,6 +42,7 @@ kurumsal({
     baslikEki: 'Oto yedek parça | Şaşmaz, Ankara',
     teklifEtiketi: 'Parça sorun',
     hizmetEtiketi: 'Ürün grupları',
+    altNot: 'Fotoğraflar Pexels; 3D parça görselleri temsilîdir; yorumlar örnektir.',
     css: {
       zemin: '#f1f3f6', yuzey: '#e2e7ee', metin: '#0b1526', soluk: '#4e5a6c', cizgi: 'rgb(11 21 38 / .13)',
       vurgu: '#1f3fd1', 'vurgu-metin': '#ffffff', koyu: '#0a1122', 'koyu-metin': '#e8edf5', 'koyu-soluk': '#95a1b5',
@@ -69,3 +77,14 @@ kurumsal({
     { href: `https://wa.me/${d.iletisim.whatsapp}`, dis: true, ikon: icons.whatsapp, etiket: 'WhatsApp' },
   ],
 });
+
+// Motorun hizmet sayfasındaki "Bu hizmet için teklif isteyin" bağlantısı parça deposuna uymuyor:
+// sayfa her çizildiğinde metni "Bu gruptan parça sorun" yap (motorda bu metin için seçenek yok).
+{
+  const fix = () => document.querySelectorAll('.k-hizmet .k-link').forEach((a) => {
+    const t = a.firstChild;
+    if (t && t.nodeType === 3 && /Bu hizmet için/.test(t.textContent)) t.textContent = 'Bu gruptan parça sorun ';
+  });
+  new MutationObserver(fix).observe(document.body, { childList: true, subtree: true });
+  fix();
+}

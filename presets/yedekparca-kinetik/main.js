@@ -4,12 +4,15 @@ import raw from '../../data/depo.json';
 import extra from '../../data/yedekparca-kinetik.json';
 import {
   boot, initSmoothScroll, reducedMotion, gsap, ScrollTrigger, asset,
-  telHref, waHref, mapsHref, mapsEmbed, openStatus, groupedHours, icons, esc,
+  telHref, waHref, mapsHref, mapsEmbed, openStatus, groupedHours, icons, esc, setStoryMode,
 } from '../../shared/core.js';
 
 // Kinetik aile: WebGL yok. İki renkli afiş baskısı: lacivert mürekkep, floresan pembe.
 // Hareketin tamamı transform, opacity ve sınıf değişimi.
-const d = boot({ ...raw, ...extra, preset: 'yedekparca-kinetik' });
+// Örnek puan yapısal veriye (JSON-LD aggregateRating) girmesin: boot'tan önce ayır, sonra geri ekle.
+const { puan: ornekPuan, ...veriLd } = { ...raw, ...extra, preset: 'yedekparca-kinetik' };
+const d = boot(veriLd);
+d.puan = ornekPuan;
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 const root = document.documentElement;
@@ -57,7 +60,7 @@ $('#hero').innerHTML = `
   <div class="hero__in">
     <p class="hero__meta mono"><span>Şaşmaz Oto Sanayi</span><span>${esc(denEki(yil))} beri</span><span>Etimesgut</span></p>
     <h1 class="hero__title" id="hero-title" aria-label="${esc(d.hero.satirlar.join(' '))}">
-      <span aria-hidden="true" class="only-m">${d.hero.satirlar.map((s, i) => line(s, i % 2 ? 'ln--pink' : '')).join('')}</span>
+      <span aria-hidden="true" class="only-m">${d.hero.satirlar.map((s, i) => line(s, i % 2 ? 'ln--pink' : '', 0.116)).join('')}</span>
       <span aria-hidden="true" class="only-d">${heroD(d.hero.satirlar).map((s, i) => line(s, i % 2 ? 'ln--pink' : '', 0.22)).join('')}</span>
     </h1>
     <figure class="hero__photo" aria-hidden="true"><img src="${asset('/img/yedekparca-kinetik/disk-p.jpg')}" alt="" width="1400" height="933" fetchpriority="high" /></figure>
@@ -200,7 +203,7 @@ $('#afis').innerHTML = `
       <figure class="poster poster--${i}">
         <div class="poster__img"><img src="${asset(a.src)}" alt="${esc(a.alt)}" width="1000" height="1250" loading="lazy" /></div>
         <figcaption>
-          <span class="poster__w" data-fit data-max="190">${esc(up(a.kelime))}</span>
+          <span class="poster__w" data-fit data-k="0.9" data-max="190">${esc(up(a.kelime))}</span>
           <span class="poster__n mono">${esc(a.not)}</span>
         </figcaption>
       </figure>`).join('')}
@@ -225,13 +228,13 @@ $('#yorumlar').innerHTML = `
       <p class="yorum__score"><b data-count="${P.ortalama}" data-dec="1">${String(P.ortalama).replace('.', ',')}</b></p>
       <div>
         ${stars(Math.round(P.ortalama))}
-        <p class="mono">${nf(P.adet)} Google değerlendirmesi</p>
+        <p class="mono">Örnek yorumlar · 5 üzerinden örnek puan</p>
         <h2 class="h2">Ustalar ne diyor?</h2>
       </div>
     </header>
     <ul class="cards">
       ${d.yorumlar.map((y, i) => `
-        <li class="card card--${i % 3}" style="--i:${i}">
+        <li class="card card--${i % 3}">
           ${stars(y.puan)}
           <blockquote>“${esc(y.metin)}”</blockquote>
           <p class="card__who"><b>${esc(y.ad)}</b> <span class="mono">${esc(y.arac)}</span></p>
@@ -276,7 +279,7 @@ $('#foot').innerHTML = `
   <div class="wrap foot__in">
     <p class="foot__brand">${esc(up(d.isletme.ad))}</p>
     <p>${esc(d.iletisim.adres)}<br><a href="${telHref(d)}">${tel}</a></p>
-    <p class="mono foot__small">© ${new Date().getFullYear()} ${ad}. Fotoğraflar: Pexels.</p>
+    <p class="mono foot__small">© ${new Date().getFullYear()} ${ad}. Fotoğraflar: Pexels, temsilîdir. Yorumlar örnektir.</p>
   </div>`;
 
 // --- Harita: yaklaşınca yükle ---------------------------------------------------------
@@ -298,7 +301,7 @@ function fitAll() {
     const bs = getComputedStyle(box);
     const avail = box.clientWidth - parseFloat(bs.paddingLeft) - parseFloat(bs.paddingRight);
     if (!w || !avail) continue;
-    let fs = (avail / w) * 100 * 0.995;
+    let fs = (avail / w) * 100 * 0.995 * (Number(el.dataset.k) || 1);
     const max = Number(el.dataset.max);
     if (max) fs = Math.min(fs, max);
     const mvh = Number(el.dataset.maxvh);
@@ -316,15 +319,38 @@ function fitAll() {
     if (widest && avail > 0) el.style.setProperty('--fs', `${Math.min(cap, (avail / widest) * 100 * 0.97).toFixed(1)}px`);
   }
 }
+// Telefonda hero fotoğrafı: "ADINI" satırının sağındaki boşluğa pencere gibi oturur.
+function placeHeroPhoto() {
+  const ph = $('.hero__photo');
+  if (innerWidth >= 900) { ph.removeAttribute('style'); return; }
+  const lns = $$('#hero .only-m .ln');
+  const box = $('.hero__in').getBoundingClientRect();
+  // en kısa satırı bul (varsayılan metinde "ADINI")
+  let best = null;
+  for (const ln of lns) {
+    const r = ln.getBoundingClientRect();
+    const w = ln.firstElementChild.getBoundingClientRect().width;
+    const free = r.width - w;
+    if (!best || free > best.free) best = { r, w, free };
+  }
+  if (!best || best.free < 90) { ph.style.display = 'none'; return; }
+  const h = best.r.height * 0.78;
+  Object.assign(ph.style, {
+    display: '', left: `${best.r.left - box.left + best.w + 14}px`, top: `${best.r.top - box.top + (best.r.height - h) / 2}px`,
+    width: `${best.free - 14}px`, height: `${h}px`,
+  });
+}
 fitAll();
+placeHeroPhoto();
 let fitW = innerWidth;
 addEventListener('resize', () => {
   if (Math.abs(innerWidth - fitW) < 2) return;
   fitW = innerWidth;
   fitAll();
+  placeHeroPhoto();
   ScrollTrigger.refresh();
 });
-document.fonts?.ready.then(() => { fitAll(); ScrollTrigger.refresh(); });
+document.fonts?.ready.then(() => { fitAll(); placeHeroPhoto(); ScrollTrigger.refresh(); });
 
 // --- Sayaç ----------------------------------------------------------------------------------
 
@@ -416,6 +442,8 @@ if (reducedMotion) {
   ScrollTrigger.create({
     trigger: vin, start: 'top top', end: () => `+=${innerHeight * (mobile() ? 2.6 : 2.4)}`, pin: '.vin__stage', scrub: true,
     onUpdate: (st) => vinAt(st.progress),
+    // pin boyunca alt çubuk saklı: eşleşme kartı çubuğun boşluğuna iner, ikisi aynı anda görünmez
+    onToggle: (st) => setStoryMode(st.isActive ? true : null),
   });
   // Numara kilitlenmeden önce ekrana girince de biraz karışsın.
   let scr = 0;
@@ -479,7 +507,15 @@ if (reducedMotion) {
   $$('.poster').forEach((p, i) => {
     const st = { trigger: p, start: 'top bottom', end: 'bottom top', scrub: true };
     gsap.fromTo($('img', p), { yPercent: -8 }, { yPercent: 8, ease: 'none', scrollTrigger: st });
-    gsap.fromTo($('.poster__w', p), { xPercent: i % 2 ? -18 : 18 }, { xPercent: i % 2 ? 6 : -6, ease: 'none', scrollTrigger: st });
+    gsap.fromTo($('.poster__w', p), { xPercent: i % 2 ? -6 : 6 }, { xPercent: i % 2 ? 2 : -2, ease: 'none', scrollTrigger: st });
+  });
+
+  // Yorum kartları: sırayla yandan eğik girer, yerine oturur (yapışkan deste yok, metin hiç örtülmez).
+  $$('.card').forEach((c, i) => {
+    gsap.fromTo(c, { xPercent: i % 2 ? 14 : -14, rotate: i % 2 ? 3 : -3, autoAlpha: 0 }, {
+      xPercent: 0, rotate: 0, autoAlpha: 1, ease: 'power3.out', duration: 0.8,
+      scrollTrigger: { trigger: c, start: 'top 88%', toggleActions: 'play none none reverse' },
+    });
   });
 
   // Bölüm girişlerinde başlık çizgisi dolsun.
@@ -513,5 +549,5 @@ if (reducedMotion) {
     }
   });
 
-  addEventListener('load', () => { fitAll(); measure(); ScrollTrigger.refresh(); });
+  addEventListener('load', () => { fitAll(); placeHeroPhoto(); measure(); ScrollTrigger.refresh(); });
 }

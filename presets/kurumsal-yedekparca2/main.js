@@ -20,6 +20,9 @@ v.hizmetler = v.hizmetler.map((h) => ({
   ],
 }));
 
+// Yorumlar örnektir: uydurma puan ve "N değerlendirme" sayısı gösterilmez.
+delete v.puan;
+v.kurumsal = { ...v.kurumsal, yorumBaslik: 'Tezgâhtan örnek yorumlar' };
 // Karşılaştırmalı fiyat iddiası taşımasın.
 v.yorumlar = (v.yorumlar || []).map((y) => ({ ...y, metin: y.metin.replace(/\s*Fiyatı da piyasanın altındaydı\./, '') }));
 
@@ -34,6 +37,7 @@ kurumsal({
     baslikEki: 'Oto yedek parça | Şaşmaz, Ankara',
     teklifEtiketi: 'Parça sorun',
     hizmetEtiketi: 'Ürün grupları',
+    altNot: 'Fotoğraflar Pexels, temsilîdir; yorumlar örnektir.',
     css: {
       zemin: '#d7eadc', yuzey: '#c5dfcd', metin: '#0c2a2a', soluk: '#3d5c57', cizgi: 'rgb(12 42 42 / .2)',
       vurgu: '#ff4a1c', 'vurgu-metin': '#0c2a2a', koyu: '#0c2a2a', 'koyu-metin': '#d7eadc', 'koyu-soluk': '#8db3a5',
@@ -69,3 +73,14 @@ kurumsal({
     { href: `https://wa.me/${d.iletisim.whatsapp}`, dis: true, ikon: icons.whatsapp, etiket: 'WhatsApp' },
   ],
 });
+
+// Motorun hizmet sayfasındaki "Bu hizmet için teklif isteyin" bağlantısı parça deposuna uymuyor:
+// sayfa her çizildiğinde metni "Bu gruptan parça sorun" yap (motorda bu metin için seçenek yok).
+{
+  const fix = () => document.querySelectorAll('.k-hizmet .k-link').forEach((a) => {
+    const t = a.firstChild;
+    if (t && t.nodeType === 3 && /Bu hizmet için/.test(t.textContent)) t.textContent = 'Bu gruptan parça sorun ';
+  });
+  new MutationObserver(fix).observe(document.body, { childList: true, subtree: true });
+  fix();
+}
