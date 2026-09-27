@@ -2,7 +2,7 @@ import '../../shared/base.css';
 import ana from '../../data/usta.json';
 import ek from '../../data/kurumsal-doseme2.json';
 import { kurumsal, derinBirlestir } from '../_kurumsal/engine.js';
-import { icMekan, pepita, mesai } from './extra.js';
+import { icMekan, pepita, mesai, ldVerisi } from './extra.js';
 import './style.css';
 
 // "Pepita" yönü: safran zemin, patlıcan mürekkebi, ahududu vurgu; kaz ayağı deseni ve tırtıklı makas kenarları.
@@ -27,6 +27,7 @@ kurumsal({
     heroGorsel: `${B}img/usta/t-1987.jpg`,
     heroAlt: 'Dikey dikişli kahverengi deri koltuklarıyla klasik bir aracın iç mekânı',
     logoAlt: 'Oto döşeme atölyesi',
+    altNot: 'Fotoğraflar temsilîdir (Pexels).',
     baslikEki: 'Oto döşeme: koltuk, tavan, kapı, direksiyon | Şaşmaz, Ankara',
     teklifEtiketi: 'Teklif isteyin',
     hizmetEtiketi: 'Hizmetler',
@@ -49,4 +50,5 @@ kurumsal({
     { id: 'iletisim', baslik: 'İletişim', bolumler: ['iletisim'] },
   ],
   ekstralar: { icMekan, pepita, mesai },
+  ld: ldVerisi,
 });

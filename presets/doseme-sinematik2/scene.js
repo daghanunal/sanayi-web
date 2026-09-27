@@ -1,8 +1,11 @@
-// Örtü: tek kalıcı WebGL sahnesi. Kobalt boşlukta asılı tek bir kumaş parçası.
-// Kumaş rüzgârda dalgalanır; tebeşirle kalıp çizilir, makasla kesilir, pembe iplikle dikilir,
-// gerilip dolgulanır; sonra kumaş → alcantara → nappa → kapitone olarak dönüşür.
-// Finalde örtü, altındaki çağrıyı açarak uçar. main.js her karede bir "poz" verir.
+// Örtü: tek kalıcı WebGL sahnesi. Kobalt boşlukta, stüdyo ışığında gerçek bir spor koltuk (lib3d `seat`)
+// ve onun sırt kılıfı olan tek bir kumaş parçası. Söküm: koltuk parçalarına ayrılır, kılıf öne süzülür;
+// kalıp tebeşirle çizilir, makasla kesilir, pembe iplikle dikilir, gerilip koltuğa geri oturur.
+// Malzeme: kılıf kumaş → alcantara → nappa → kapitone olarak çapraz bir dikiş cephesiyle dönüşür
+// (iki koltuk kopyası, kesme düzlemleri). Finalde örtü, altındaki çağrıyı açarak uçar.
+// main.js her karede bir "poz" verir: { seat: {...}, cloth: {...} | null }.
 import * as THREE from 'three';
+import { loadAsset, loadEnv, pickQuality } from '../../shared/lib3d.js';
 
 const W = 3.2;
 const H = 4.0;
@@ -232,16 +235,40 @@ const FRAG = /* glsl */ `
   }
 `;
 
-export function createStage(canvas, { lite = false, weak = false } = {}) {
+
+// Malzeme sırası ve renkleri (kartela ile aynı): [döşeme, orta panel]
+export const VARIANTS = ['fabric', 'alcantara', 'leather', 'quilted'];
+export const COLORS = [
+  ['#ebe5d8', '#ded7c8'], // kumaş: tebeşir
+  ['#5d6190', '#4b4e78'], // alcantara: sis mavisi
+  ['#b3142f', '#9a1129'], // nappa: kiraz
+  ['#1d1d26', '#18181f'], // kapitone: gece, pembe iplik
+];
+const WORN = ['#857d70', '#766f63']; // sökülecek eski kumaş: solmuş, kirli bej
+const THREAD = '#ff7fbe';
+const SLOTS = ['upholstery', 'insert'];
+const REST_RECLINE = 0.2967; // backrest dinlenme açısı (GLB'deki)
+const TAN = Math.tan((30 * Math.PI) / 360);
+const CAM_Z = 9;
+
+export async function createStage(canvas, { lite = false, weak = false } = {}) {
+  const q = pickQuality();
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: !weak, alpha: true, powerPreference: 'high-performance' });
   renderer.setClearColor(0x000000, 0);
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.12;
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFShadowMap;
+  renderer.localClippingEnabled = true;
   let dpr = Math.min(window.devicePixelRatio || 1, weak ? 1.1 : lite ? 1.35 : 1.5);
   renderer.setPixelRatio(dpr);
 
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(30, 1, 0.1, 60);
-  camera.position.set(0, 0, 9);
+  camera.position.set(0, 0, CAM_Z);
 
+  // --- Kumaş (kılıf / örtü) ---
   const seg = weak ? [80, 100] : lite ? [110, 138] : [150, 188];
   const geo = new THREE.PlaneGeometry(W, H, seg[0], seg[1]);
   const uniforms = {
@@ -251,12 +278,111 @@ export function createStage(canvas, { lite = false, weak = false } = {}) {
     uThread: { value: new THREE.Color(1.0, 0.52, 0.76) },
     uRim: { value: new THREE.Color(0.32, 0.42, 1.0) },
   };
-  const mat = new THREE.ShaderMaterial({
-    vertexShader: VERT, fragmentShader: FRAG, uniforms, side: THREE.DoubleSide,
-  });
-  const cloth = new THREE.Mesh(geo, mat);
+  const clothMat = new THREE.ShaderMaterial({ vertexShader: VERT, fragmentShader: FRAG, uniforms, side: THREE.DoubleSide });
+  const cloth = new THREE.Mesh(geo, clothMat);
   cloth.frustumCulled = false;
+  cloth.renderOrder = 2;
   scene.add(cloth);
+
+  // --- Işık: yüksek anahtar, soğuk stüdyo ---
+  const key = new THREE.DirectionalLight(0xf2f5ff, 2.3);
+  key.castShadow = true;
+  key.shadow.mapSize.set(q === 'lo' ? 1024 : 2048, q === 'lo' ? 1024 : 2048);
+  key.shadow.radius = 5;
+  key.shadow.bias = -0.0005;
+  key.shadow.normalBias = 0.03;
+  const rim = new THREE.DirectionalLight(0x9db4ff, 3.4);
+  const kick = new THREE.DirectionalLight(0xff9ccd, 0.7);
+  scene.add(key, key.target, rim, rim.target, kick, kick.target);
+
+  const [env, seat] = await Promise.all([
+    loadEnv('studio', renderer, { quality: q }).catch(() => null),
+    loadAsset('seat', { quality: q, renderer }),
+  ]);
+  if (env) scene.environment = env;
+  scene.environmentIntensity = 0.95;
+
+  const M = seat.materials;
+  const N = seat.nodes;
+  if (M.stitch) M.stitch.color.set(THREAD);
+  VARIANTS.forEach((v, i) => SLOTS.forEach((s, j) => M[`${s}_${v}`]?.color.set(COLORS[i][j])));
+  const cNew = COLORS[0].map((c) => new THREE.Color(c));
+  const cWorn = WORN.map((c) => new THREE.Color(c));
+  // Kesme düzlemi: her döşeme malzemesinde tek düzlem (sayı değişmesin, shader yeniden derlenmesin)
+  // Cephe boyunca ince pembe ışık: kesme düzlemine uzaklıkla parlayan yayım (dikiş hattı gibi)
+  const seamGlow = { value: 0 };
+  const seamW = { value: 0.03 };
+  const addSeam = (shader) => {
+    shader.uniforms.uSeamGlow = seamGlow;
+    shader.uniforms.uSeamW = seamW;
+    shader.fragmentShader = shader.fragmentShader
+      .replace('#include <common>', '#include <common>\nuniform float uSeamGlow;\nuniform float uSeamW;')
+      .replace('#include <emissivemap_fragment>', `#include <emissivemap_fragment>
+      #if NUM_CLIPPING_PLANES > 0
+        float seamD = dot(vClipPosition, clippingPlanes[0].xyz) - clippingPlanes[0].w;
+        totalEmissiveRadiance += vec3(1.0, 0.36, 0.68) * uSeamGlow * exp(-pow(seamD / uSeamW, 2.0));
+      #endif`);
+  };
+  const planeOf = new Map();
+  for (const v of VARIANTS) for (const s of SLOTS) {
+    const m = M[`${s}_${v}`];
+    if (!m) continue;
+    const pl = new THREE.Plane(new THREE.Vector3(0, 1, 0), 1e4);
+    m.clippingPlanes = [pl];
+    m.onBeforeCompile = addSeam;
+    m.customProgramCacheKey = () => 'ds2-seam';
+    m.needsUpdate = true;
+    planeOf.set(m, pl);
+  }
+  const isSlot = (m) => m && SLOTS.some((s) => m.name.startsWith(s + '_'));
+
+  // Koltuğu merkezine göre döndürmek için: rig (konum/ölçek/dönüş) > holder (merkez ofseti) > koltuk
+  const rig = new THREE.Group();
+  const holder = new THREE.Group();
+  rig.add(holder);
+  holder.add(seat.scene);
+  seat.explode(0);
+  const box = new THREE.Box3().setFromObject(seat.scene);
+  const c = box.getCenter(new THREE.Vector3());
+  holder.position.set(-c.x, -c.y, -c.z);
+  const seatH = box.max.y - box.min.y;
+
+  // Dönüşüm cephesi için ikinci kopya: yalnız döşeme parçaları
+  const seatB = seat.scene.clone(true);
+  const nodesB = {};
+  seatB.traverse((o) => {
+    if (o.name) nodesB[o.name] ||= o;
+    if (o.isMesh && !(o.userData && o.userData.swatch)) o.visible = isSlot(o.material);
+  });
+  seatB.visible = false;
+  holder.add(seatB);
+  const SYNC = ['backrest', 'headrest', 'cushion', 'base'].filter((n) => N[n] && nodesB[n]);
+
+  // Gölge yakalayıcı zemin
+  const floor = new THREE.Mesh(new THREE.PlaneGeometry(3.2, 3.2), new THREE.ShadowMaterial({ color: 0x070b3d, opacity: 0.34 }));
+  floor.rotation.x = -Math.PI / 2;
+  floor.position.y = box.min.y + 0.002;
+  floor.receiveShadow = true;
+  holder.add(floor);
+  scene.add(rig);
+
+  function assign(root, variant) {
+    root.traverse((o) => {
+      if (!o.isMesh || (o.userData && o.userData.swatch) || !isSlot(o.material)) return;
+      const slot = o.material.name.slice(0, o.material.name.indexOf('_'));
+      const m = M[`${slot}_${variant}`];
+      if (m) o.material = m;
+    });
+  }
+  let varA = 'fabric';
+  let varB = null;
+  assign(seat.scene, varA);
+
+  const keepAll = (pl) => { pl.normal.set(0, 1, 0); pl.constant = 1e4; };
+  const D = new THREE.Vector3(0.3, 0.95, 0.1).normalize();
+  const tmp = new THREE.Vector3();
+  const anchorBox = new THREE.Box3();
+  const anchorC = new THREE.Vector3();
 
   let vw = 1, vh = 1;
   function resize() {
@@ -265,12 +391,11 @@ export function createStage(canvas, { lite = false, weak = false } = {}) {
     renderer.setSize(w, h, false);
     camera.aspect = w / h;
     camera.updateProjectionMatrix();
-    vh = 2 * Math.tan((camera.fov * Math.PI) / 360) * camera.position.z;
+    vh = 2 * TAN * CAM_Z;
     vw = vh * camera.aspect;
   }
   resize();
 
-  // Zayıf cihaz: kare süresi uzun kalırsa çözünürlüğü düşür
   let slow = 0;
   function watch(dt) {
     if (dt > 0.034) slow++;
@@ -284,26 +409,124 @@ export function createStage(canvas, { lite = false, weak = false } = {}) {
   }
 
   let time = 0;
+  let shadowS = 0;
   function render(po, dt) {
-    time += dt * (po.speed ?? 1);
+    time += dt;
     watch(dt);
-    const scale = Math.min((po.size * vh) / H, ((po.maxW ?? 1) * vw) / W);
-    cloth.scale.setScalar(scale);
-    cloth.position.set((po.nx * vw) / 2, (po.ny * vh) / 2, 0);
-    cloth.rotation.set(po.rx ?? 0, po.ry ?? 0, po.rz ?? 0);
-    const u = uniforms;
-    u.uTime.value = time;
-    u.uWind.value = po.wind ?? 0;
-    u.uFold.value = po.fold ?? 0;
-    u.uPuff.value = po.puff ?? 0;
-    u.uMat.value = po.mat ?? 0;
-    u.uFly.value = po.fly ?? 0;
-    u.uChalk.value = po.chalk ?? 0;
-    u.uCut.value = po.cut ?? 0;
-    u.uStitch.value = po.stitch ?? 0;
-    u.uFreq.value = po.freq ?? 1;
+    const s = po.seat;
+    rig.visible = !!s && s.vis !== 0;
+    if (rig.visible) {
+      const ex = s.explode ?? 0;
+      // Parçalar açılınca kadraja sığsın: ölçek küçülür, yukarı açılan sırt için biraz aşağı iner
+      const scale = Math.min((s.size * vh) / seatH, ((s.maxW ?? 1) * vw) / 0.95) / (1 + 0.5 * ex);
+      rig.scale.setScalar(scale);
+      rig.position.set((s.nx * vw) / 2, (s.ny * vh) / 2 - 0.16 * ex * scale, s.z ?? 0);
+      const spin = (s.spin ?? 0) * Math.sin(time * 0.45) * 0.16;
+      rig.rotation.set(s.pitch ?? 0.1, s.yaw + spin, 0);
+      seat.explode(ex);
+      if (N.backrest) N.backrest.rotation.z = REST_RECLINE + (s.recline ?? 0);
+      if (N.headrest) N.headrest.position.y += s.head ?? 0;
+      // Işık: odak kumaşa geçince koltuk karanlıkta kalır
+      const li = s.light ?? 1;
+      key.intensity = 2.3 * li;
+      rim.intensity = 3.4 * (0.5 + 0.5 * li);
+      kick.intensity = 0.7 * li;
+      scene.environmentIntensity = 0.95 * (0.08 + 0.92 * li);
+      const P = rig.position;
+      key.target.position.copy(P);
+      rim.target.position.copy(P);
+      kick.target.position.copy(P);
+      key.position.set(P.x - 3.2, P.y + 6, P.z + 5);
+      rim.position.set(P.x + 4, P.y + 2.5, P.z - 6);
+      kick.position.set(P.x - 5, P.y - 1, P.z - 2);
+      if (Math.abs(shadowS - scale) > 0.01) {
+        shadowS = scale;
+        const e = scale * 1.1;
+        Object.assign(key.shadow.camera, { left: -e, right: e, top: e, bottom: -e, near: 0.5, far: 20 });
+        key.shadow.camera.updateProjectionMatrix();
+      }
+      // Eski kumaş → yeni kumaş
+      const worn = s.worn ?? 0;
+      if (M.upholstery_fabric) M.upholstery_fabric.color.lerpColors(cNew[0], cWorn[0], worn);
+      if (M.insert_fabric) M.insert_fabric.color.lerpColors(cNew[1], cWorn[1], worn);
+
+      // Malzeme dönüşümü
+      const m = Math.max(0, Math.min(3, s.mat ?? 0));
+      const i0 = Math.min(2, Math.floor(m));
+      const f = m - i0;
+      const sweeping = m < 3 && f > 0.002 && f < 0.998;
+      const a = sweeping ? VARIANTS[i0] : VARIANTS[Math.round(m)];
+      const b = sweeping ? VARIANTS[i0 + 1] : null;
+      if (a !== varA) { assign(seat.scene, a); varA = a; }
+      if (b && b !== varB) { assign(seatB, b); varB = b; }
+      seatB.visible = !!b;
+      seamGlow.value = b ? 2.6 * Math.sin(Math.PI * Math.min(1, Math.max(0, f * 1.3 - 0.15))) : 0;
+      seamW.value = 0.018 * scale;
+      for (const pl of planeOf.values()) keepAll(pl);
+      if (b) {
+        for (const n of SYNC) { nodesB[n].position.copy(N[n].position); nodesB[n].quaternion.copy(N[n].quaternion); }
+        const R = scale * 0.72;
+        const mid = D.dot(tmp.copy(rig.position));
+        const h = mid - R + 2 * R * (f * 1.3 - 0.15);
+        for (const sl of SLOTS) {
+          const pa = planeOf.get(M[`${sl}_${a}`]);
+          const pb = planeOf.get(M[`${sl}_${b}`]);
+          if (pa) { pa.normal.copy(D); pa.constant = -h; }
+          if (pb) { pb.normal.copy(D).negate(); pb.constant = h; }
+        }
+      }
+    }
+
+    const cp = po.cloth;
+    cloth.visible = !!cp;
+    if (cp) {
+      const cz = cp.z ?? 0;
+      const vhC = 2 * TAN * (CAM_Z - cz);
+      const vwC = vhC * camera.aspect;
+      let sc = Math.min((cp.size * vhC) / H, ((cp.maxW ?? 1) * vwC) / W);
+      let px = (cp.nx * vwC) / 2, py = (cp.ny * vhC) / 2, pz = cz;
+      let rx = cp.rx ?? 0, ry = cp.ry ?? 0, rz = cp.rz ?? 0;
+      const t = cp.toSeat ?? 0;
+      if (t > 0 && rig.visible && N.backrest_pad) {
+        // Kılıf koltuğun sırtına oturur: sırt minderinin dünya kutusuna doğru
+        rig.updateMatrixWorld(true);
+        anchorBox.setFromObject(N.backrest_pad);
+        anchorBox.getCenter(anchorC);
+        const hb = (anchorBox.max.y - anchorBox.min.y) * 0.92;
+        const k = t * t * (3 - 2 * t);
+        px += (anchorC.x - px) * k;
+        py += (anchorC.y - py) * k;
+        pz += (anchorC.z + 0.05 * rig.scale.x - pz) * k;
+        sc += ((hb / 3.44) * 0.92 - sc) * k;
+        ry += (rig.rotation.y + Math.PI / 2 - ry) * k;
+        rx += (-0.3 - rx) * k;
+        rz += (0 - rz) * k;
+      }
+      cloth.scale.setScalar(Math.max(0.0001, sc));
+      cloth.position.set(px, py, pz);
+      cloth.rotation.set(rx, ry, rz);
+      const u = uniforms;
+      u.uTime.value = time;
+      u.uWind.value = cp.wind ?? 0;
+      u.uFold.value = cp.fold ?? 0;
+      u.uPuff.value = cp.puff ?? 0;
+      u.uMat.value = cp.mat ?? 0;
+      u.uFly.value = cp.fly ?? 0;
+      u.uChalk.value = cp.chalk ?? 0;
+      u.uCut.value = cp.cut ?? 0;
+      u.uStitch.value = cp.stitch ?? 0;
+      u.uFreq.value = cp.freq ?? 1;
+    }
     renderer.render(scene, camera);
   }
 
-  return { render, resize };
+  // Dört malzemenin shader'ını baştan derle: ilk dönüşümde takılma olmasın
+  try {
+    seatB.visible = true;
+    for (const v of VARIANTS) { assign(seatB, v); renderer.compile(scene, camera); }
+  } catch (_) { /* derleme ilk karede olur */ }
+  seatB.visible = false;
+  varB = VARIANTS[VARIANTS.length - 1];
+
+  return { render, resize, quality: q };
 }

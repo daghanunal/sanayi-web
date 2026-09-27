@@ -133,7 +133,7 @@ $('#tasarla').innerHTML = `
     <form class="studio__form" aria-label="Koltuk tasarımı">
       <fieldset><legend>Malzeme</legend><div class="chips">${opt('malzeme', MALZEMELER, 'deri', (o) => `<i class="sw sw--${o.id}"></i>`)}</div></fieldset>
       <fieldset><legend>Renk</legend><div class="chips chips--color">${opt('renk', RENKLER, 'konyak', (o) => `<i class="sw" style="--c:${o.hex}"></i>`)}</div></fieldset>
-      <fieldset><legend>İplik</legend><div class="chips">${opt('iplik', IPLIKLER, 'sari', (o) => `<i class="sw sw--thread" style="--c:${o.hex ?? 'transparent'}"></i>`)}</div></fieldset>
+      <fieldset><legend>İplik</legend><div class="chips">${opt('iplik', IPLIKLER, 'beyaz', (o) => `<i class="sw sw--thread" style="--c:${o.hex ?? 'transparent'}"></i>`)}</div></fieldset>
       <fieldset><legend>Desen</legend><div class="chips">${opt('desen', DESENLER, 'kapitone', (o) => `<i class="sw sw--${o.id}"></i>`)}</div></fieldset>
       <p class="studio__summary" aria-live="polite"></p>
       <a class="btn btn--thread studio__send" target="_blank" rel="noopener">${icons.whatsapp}<span>Bu tasarımı gönder</span></a>
@@ -142,8 +142,8 @@ $('#tasarla').innerHTML = `
 
 $('#atolye').innerHTML = `
   <header class="sec-head">
-    <h2>Atölyeden</h2>
-    <p>Kalıp, kesim, dikiş. Hepsi bu dükkânda, bu ellerle.</p>
+    <h2>İşin inceliği</h2>
+    <p>Kalıp, kesim, dikiş, restorasyon: döşemenin her aşamasından kareler.</p>
   </header>
   <div class="works__grid">
     ${d.galeri.map((g) => `<figure class="work"><img src="${g.src}" alt="${esc(g.alt)}" loading="lazy"></figure>`).join('')}
@@ -156,8 +156,9 @@ $('#atolye').innerHTML = `
 const stars = (n) => Array.from({ length: 5 }, (_, i) => `<span class="${i < n ? 'on' : ''}">${icons.star}</span>`).join('');
 $('#yorumlar').innerHTML = `
   <header class="reviews__head">
+    <p class="reviews__tag">Örnek yorumlar</p>
     <p class="reviews__score"><strong>${d.puan.ortalama.toLocaleString('tr-TR')}</strong><span class="stars" aria-label="5 üzerinden ${d.puan.ortalama}">${stars(5)}</span></p>
-    <h2>${d.puan.adet} müşterimiz Google'da yorum bıraktı</h2>
+    <h2>Müşterilerimiz ne diyor</h2>
   </header>
   <ul class="reviews__list">
     ${d.yorumlar.map((y) => `
@@ -190,8 +191,8 @@ $('#randevu').innerHTML = `
 $('.foot').innerHTML = `
   <p class="foot__name">${esc(d.isletme.ad)}</p>
   <p>${esc(d.iletisim.adres)}</p>
-  <p><a href="${telHref(d)}">${esc(d.iletisim.telefon)}</a></p>
-  <p class="foot__copy">© ${buYil} ${esc(d.isletme.ad)}. ${beri} Şaşmaz'da.</p>`;
+  <p><a class="foot__tel" href="${telHref(d)}">${icons.phone}<span>${esc(d.iletisim.telefon)}</span></a></p>
+  <p class="foot__copy">© ${buYil} ${esc(d.isletme.ad)}. ${beri} Şaşmaz'da. Fotoğraflar: Pexels · 3D görseller temsilîdir · Yorumlar örnektir.</p>`;
 
 // --- Koltuk tasarlama --------------------------------------------------------
 
@@ -328,7 +329,7 @@ const SEAM_SECTIONS = ['#hero', '#hakkimizda', '#hizmetler', '#rakamlar', '#tasa
 const NEEDLE = `
   <g class="needle"><g transform="scale(1.45)">
     <path d="M-58,-2.4 L-8,-1.3 L0,0 L-8,1.3 L-58,2.4 Q-63,0 -58,-2.4 Z" fill="url(#needle-steel)"/>
-    <ellipse cx="-52" cy="0" rx="3.6" ry="0.9" fill="#1d1411"/>
+    <ellipse cx="-52" cy="0" rx="3.6" ry="0.9" fill="#071a1c"/>
   </g></g>`;
 let seamTriggers = [];
 let lastWidth = 0;
@@ -339,33 +340,39 @@ function seamPath(x0, y0, x1, y1, knot) {
   return `M${x0},${y0} C${x0},${y0 + h * 0.42} ${x1},${y1 - h * 0.42} ${x1},${y1}`;
 }
 
+// Bölüm boyu sonradan değişirse (geç yüklenen görsel, yazı tipi) dikiş yeniden çizilir; yalnız genişlik değil, boylar da anahtar.
+const seamKey = () => innerWidth + ':' + SEAM_SECTIONS.map((sel) => $(sel)?.offsetHeight ?? 0).join(',');
 function buildSeams() {
-  if (innerWidth === lastWidth && seamTriggers.length) return;
-  lastWidth = innerWidth;
+  const key = seamKey();
+  if (key === lastWidth && seamTriggers.length) return;
+  lastWidth = key;
   seamTriggers.forEach((t) => t.kill());
   seamTriggers = [];
   $$('.seam').forEach((s) => s.remove());
 
-  const mobile = innerWidth < 700;
-  const xs = mobile ? [0.94, 0.06, 0.95, 0.05, 0.94, 0.06, 0.95, 0.06, 0.5] : [0.9, 0.06, 0.94, 0.08, 0.93, 0.05, 0.92, 0.07, 0.5];
+  // Dikiş sağ kenar boşluğundan iner, hafifçe salınır: metnin üstünden hiç geçmez.
+  const pad = Math.min(72, Math.max(20, innerWidth * 0.05));
+  // Konumlar sayfa koordinatında tutulur: bazı bölümler 1320 px ile sınırlı ve ortalı, bazıları tam genişlikte.
+  const pageW = document.documentElement.clientWidth;
+  const gutterX = (i) => pageW - pad * (i % 2 ? 0.62 : 0.4);
   let prevX = null;
 
   SEAM_SECTIONS.forEach((sel, i) => {
     const sec = $(sel);
     const w = sec.offsetWidth;
     const h = sec.offsetHeight;
+    const left = sec.getBoundingClientRect().left;
     const first = i === 0;
     const last = i === SEAM_SECTIONS.length - 1;
-    const x0 = first ? w * (mobile ? 0.82 : 0.72) : prevX;
+    const x0 = (first ? gutterX(1) : prevX) - left;
     const y0 = first ? h * 0.2 : 0;
-    const x1 = w * xs[i];
+    const x1 = last ? w * 0.5 : gutterX(i) - left;
     const y1 = last ? $('.finale__actions').offsetTop + $('.finale__actions').offsetHeight + 44 : h;
-    prevX = x1;
+    prevX = x1 + left;
     const d = seamPath(x0, y0, x1, y1, last);
 
     const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     svg.classList.add('seam');
-    svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
     svg.setAttribute('aria-hidden', 'true');
     svg.innerHTML = `
       <defs>
@@ -425,3 +432,7 @@ addEventListener('resize', () => {
   resizeTimer = setTimeout(buildSeams, 300);
 });
 addEventListener('load', () => ScrollTrigger.refresh());
+if (!reducedMotion && 'ResizeObserver' in window) {
+  const ro = new ResizeObserver(() => { clearTimeout(resizeTimer); resizeTimer = setTimeout(buildSeams, 300); });
+  SEAM_SECTIONS.forEach((sel) => $(sel) && ro.observe($(sel)));
+}

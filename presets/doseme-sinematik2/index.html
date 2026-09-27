@@ -46,7 +46,7 @@
   </header>
 
   <main>
-    <!-- 1. Kahraman + atölye: kumaş sökülür, kalıbı çizilir, kesilir, dikilir, gerilir -->
+    <!-- 1. Kahraman: stüdyo ışığında eski koltuk -->
     <section class="ch ch--hero" data-ch="hero">
       <div class="ch__pin">
         <div class="hero" data-hero>
@@ -55,15 +55,20 @@
           <p class="hero__slogan" data-bind="slogan"></p>
           <div class="hero__cta">
             <a class="btn btn--pink" data-tel><span data-icon="phone"></span>Hemen ara</a>
-            <a class="btn btn--line" data-wa target="_blank" rel="noopener"><span data-icon="whatsapp"></span>WhatsApp'tan yaz</a>
+            <a class="btn btn--line" data-wa target="_blank" rel="noopener"><span data-icon="whatsapp"></span>WhatsApp</a>
           </div>
-          <p class="hint" aria-hidden="true"><i></i>Kaydırın, kumaşı biçelim</p>
+          <p class="hint" aria-hidden="true"><i></i>Kaydırın, koltuğu sökelim</p>
         </div>
+      </div>
+    </section>
 
+    <!-- 2. Tezgâh: koltuk sökülür, kılıfın kalıbı çizilir, kesilir, dikilir, gerilip geri oturur -->
+    <section class="ch ch--atolye" data-ch="atolye" aria-label="Tezgâhta bir koltuk">
+      <div class="ch__pin">
         <div class="steps" data-steps aria-live="polite">
           <div class="steps__head">
             <p class="steps__kicker">Tezgâhta bir koltuk</p>
-            <p class="gauge" aria-hidden="true"><span data-gauge-label>Söküm</span><b><span data-gauge>0</span><small>%</small></b></p>
+            <p class="gauge" aria-hidden="true"><b><span data-gauge>0</span><small>%</small></b></p>
           </div>
           <ol class="steps__rail" data-steps-rail></ol>
           <div class="steps__body" data-steps-body></div>
@@ -71,18 +76,20 @@
       </div>
     </section>
 
-    <!-- 2. Malzeme: aynı panel kumaştan kapitoneye dönüşür -->
+    <!-- 3. Malzeme: aynı koltuk kumaştan kapitoneye dönüşür -->
     <section class="ch ch--mat" data-ch="mat" id="malzeme">
       <div class="ch__pin">
         <div class="mat">
-          <p class="mat__kicker">Malzemeyi birlikte seçeriz</p>
-          <p class="mat__idx"><b data-mat-idx>01</b><span>/ 04</span></p>
+          <div class="mat__head">
+            <p class="mat__kicker">Malzemeyi birlikte seçeriz</p>
+            <p class="mat__idx"><b data-mat-idx>01</b><span>/ 04</span></p>
+          </div>
           <h2 class="mat__name" data-mat-name></h2>
           <p class="mat__alt" data-mat-alt></p>
           <p class="mat__txt" data-mat-txt></p>
           <ul class="mat__chips" data-mat-chips></ul>
+          <ol class="kartela" data-kartela aria-hidden="true"></ol>
         </div>
-        <ol class="kartela" data-kartela aria-hidden="true"></ol>
       </div>
     </section>
 
@@ -117,6 +124,7 @@
 
     <section class="rev" id="yorumlar" aria-labelledby="rev-h">
       <div class="rev__head">
+        <p class="kicker kicker--pink">Örnek yorumlar</p>
         <h2 id="rev-h" class="rev__title">Oturan <em>ne diyor</em></h2>
         <p class="rev__score"><b data-puan></b><span class="rev__stars" data-stars></span><span class="rev__count" data-puan-adet></span></p>
       </div>
@@ -164,8 +172,8 @@
   <footer class="foot">
     <p class="foot__name" data-bind="ad"></p>
     <p data-bind="adres"></p>
-    <p><a data-tel data-bind="telefon"></a></p>
-    <p class="foot__small" data-year></p>
+    <p><a class="foot__tel" data-tel><span data-icon="phone"></span><span data-bind="telefon"></span></a></p>
+    <p class="foot__small"><span data-year></span> · Fotoğraflar: Pexels · 3D görseller temsilîdir</p>
   </footer>
 
   <script type="module" src="./main.js"></script>

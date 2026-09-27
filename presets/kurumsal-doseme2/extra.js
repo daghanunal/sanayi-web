@@ -35,7 +35,7 @@ const P = Object.fromEntries(PARCALAR.map((p) => [p.id, p]));
 // Üstten görünüş (viewBox 0 0 260 520). Her parça: görünen şekil + geniş dokunma alanı.
 const koltuk = (id, x, y, w, h) => `
   <g class="im-p" data-p="${id}" role="button" tabindex="0" aria-pressed="false" aria-label="${esc(P[id].ad)}">
-    <rect class="im-hit" x="${x - 6}" y="${y - 6}" width="${w + 12}" height="${h + 12}" />
+    <rect class="im-hit" x="${x - 6}" y="${y}" width="${w + 12}" height="${h + 6}" />
     <rect class="im-s" x="${x}" y="${y}" width="${w}" height="${h}" rx="14" />
     <rect class="im-d" x="${x + 7}" y="${y + 7}" width="${w - 14}" height="${h * 0.62}" rx="9" />
     <path class="im-d" d="M${x + 7} ${y + h * 0.78}h${w - 14}" />
@@ -43,7 +43,7 @@ const koltuk = (id, x, y, w, h) => `
   </g>`;
 const kapi = (id, x, y, h) => `
   <g class="im-p" data-p="${id}" role="button" tabindex="0" aria-pressed="false" aria-label="${esc(P[id].ad)}">
-    <rect class="im-hit" x="${x - 9}" y="${y - 4}" width="34" height="${h + 8}" />
+    <rect class="im-hit" x="${x < 130 ? x - 26 : x - 11}" y="${y - 4}" width="53" height="${h + 8}" />
     <rect class="im-s" x="${x}" y="${y}" width="16" height="${h}" rx="6" />
     <path class="im-d" d="M${x + 8} ${y + 14}v${h - 28}" />
   </g>`;
@@ -59,14 +59,16 @@ const ARAC_SVG = `
     <path class="im-ayna" d="M18 170l14-8v22zM242 170l-14-8v22z" />
     <path class="im-cam" d="M66 112c40-12 88-12 128 0l-10 40c-36-8-72-8-108 0z" />
     <path class="im-cam" d="M76 420c36 7 72 7 108 0l8 30c-40 10-84 10-124 0z" />
+    <rect class="im-tavan" x="50" y="158" width="160" height="254" rx="30" />
     <g class="im-p im-p--tavan" data-p="tavan" role="button" tabindex="0" aria-pressed="false" aria-label="Tavan">
-      <rect class="im-hit im-hit--cizgi" x="50" y="158" width="160" height="254" rx="30" />
-      <rect class="im-s" x="50" y="158" width="160" height="254" rx="30" />
+      <rect class="im-hit" x="78" y="98" width="104" height="50" />
+      <rect class="im-s" x="84" y="108" width="92" height="32" rx="16" />
+      <text class="im-t" x="130" y="129">TAVAN</text>
     </g>
     <g class="im-p" data-p="direksiyon" role="button" tabindex="0" aria-pressed="false" aria-label="Direksiyon">
-      <circle class="im-hit" cx="92" cy="176" r="24" />
-      <circle class="im-s" cx="92" cy="176" r="15" />
-      <path class="im-d" d="M77 176h30M92 176v15" />
+      <circle class="im-hit" cx="92" cy="175" r="25" />
+      <circle class="im-s" cx="92" cy="175" r="15" />
+      <path class="im-d" d="M77 175h30M92 175v15" />
     </g>
     ${koltuk('surucu', 64, 200, 56, 88)}
     ${koltuk('yolcu', 140, 200, 56, 88)}
@@ -132,6 +134,7 @@ export const icMekan = {
     ]);
     let aktif = 'surucu';
     const svg = el.querySelector('.im-arac');
+    const cizgi = svg.querySelector('.im-tavan');
     const duzen = el.querySelector('.im__duzen');
     const liste = el.querySelector('[data-o="liste"]');
     const gonder = el.querySelector('.im__gonder');
@@ -145,6 +148,8 @@ export const icMekan = {
         g.classList.toggle('is-aktif', id === aktif);
         g.setAttribute('aria-pressed', secim.has(id));
       });
+      cizgi.classList.toggle('is-secili', secim.has('tavan'));
+      cizgi.classList.toggle('is-aktif', aktif === 'tavan');
       // Düzenleyici: aktif parçanın sorunları
       const p = P[aktif];
       if (p && secim.has(aktif)) {
@@ -192,7 +197,7 @@ export const icMekan = {
       if (!reducedMotion) {
         const g = svg.querySelector(`[data-p="${id}"] .im-s`);
         gsap.fromTo(g, { scale: 0.86, transformOrigin: 'center', transformBox: 'fill-box' }, { scale: 1, duration: 0.5, ease: 'back.out(3)' });
-        gsap.from(duzen.querySelectorAll('.im-cip'), { y: 10, opacity: 0, duration: 0.3, stagger: 0.03, ease: 'power2.out' });
+        gsap.from(duzen.querySelectorAll('.im-cip'), { y: 10, autoAlpha: 0, duration: 0.3, stagger: 0.03, ease: 'power2.out' });
       }
     };
 
@@ -284,8 +289,8 @@ export const pepita = {
         scrollTrigger: { trigger: el, start: 'top 95%', end: 'center 55%', scrub: 0.6 },
       }
     );
-    gsap.fromTo(el.querySelector('.pp__etiket'), { rotation: -9, y: 60 }, {
-      rotation: -3, y: -20, ease: 'none',
+    gsap.fromTo(el.querySelector('.pp__etiket'), { rotation: -4, y: 60 }, {
+      rotation: -1.5, y: -20, ease: 'none',
       scrollTrigger: { trigger: el, start: 'top bottom', end: 'bottom top', scrub: true },
     });
 
@@ -297,9 +302,9 @@ export const pepita = {
         const eski = satirlar[i];
         i = (k + 1) % satirlar.length;
         const yeni = satirlar[i];
-        gsap.to(eski, { yPercent: -110, opacity: 0, duration: 0.45, ease: 'power3.in', onComplete: () => eski.classList.remove('is-on') });
+        gsap.to(eski, { yPercent: -110, autoAlpha: 0, duration: 0.45, ease: 'power3.in', onComplete: () => eski.classList.remove('is-on') });
         yeni.classList.add('is-on');
-        gsap.fromTo(yeni, { yPercent: 110, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 0.6, delay: 0.35, ease: 'power3.out' });
+        gsap.fromTo(yeni, { yPercent: 110, autoAlpha: 0 }, { yPercent: 0, autoAlpha: 1, duration: 0.6, delay: 0.35, ease: 'power3.out' });
       }, k * 2.4 + 2.4);
     });
     const io = new IntersectionObserver(([e]) => (e.isIntersecting ? dongu.play() : dongu.pause()));
@@ -348,3 +353,14 @@ export const mesai = {
     io.observe(kutu);
   },
 };
+
+// JSON-LD: örnek yorum puanı yapılandırılmış veriye girmesin.
+export const ldVerisi = (d) => ({
+  '@context': 'https://schema.org',
+  '@type': 'AutoRepair',
+  name: d.isletme.ad,
+  description: d.isletme.slogan,
+  telephone: d.iletisim.telefon,
+  foundingDate: String(d.isletme.kurulus),
+  address: { '@type': 'PostalAddress', streetAddress: d.iletisim.adres, addressLocality: 'Etimesgut', addressRegion: 'Ankara', addressCountry: 'TR' },
+});

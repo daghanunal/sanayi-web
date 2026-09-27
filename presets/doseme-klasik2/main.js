@@ -51,11 +51,7 @@ $('#hero').innerHTML = `
       <div class="hero__photo">
         <img src="${heroImg}" alt="Yeniden döşenmiş, dikey pilili bej deri koltuk, atölye zemininde" fetchpriority="high" width="2000" height="2500">
         <span class="hero__fade" aria-hidden="true"></span>
-        ${d.etiketler.map((t, i) => `
-          <div class="tag tag--${t.yon === 'sag' ? 'sag' : 'sol'}" style="--x:${Number(t.x)}%;--y:${Number(t.y)}%">
-            <i class="tag__dot"></i><span class="tag__line"></span>
-            <span class="tag__txt"><em>${no(i)}</em><b>${esc(t.baslik)}</b><span>${esc(t.metin)}</span></span>
-          </div>`).join('')}
+        ${d.etiketler.map((t, i) => `<div class="tag tag--${t.yon === 'sag' ? 'sag' : 'sol'}" style="--x:${Number(t.x)}%;--y:${Number(t.y)}%"><i class="tag__dot" data-n="${i + 1}" aria-hidden="true"></i><span class="tag__line"></span></div>`).join('')}
       </div>
     </div>
 
@@ -78,12 +74,29 @@ $('#hero').innerHTML = `
       <p class="hero__kicker"><i></i>${esc(d.isletme.sektor)} · Şaşmaz'da ${esc(beri)}</p>
       <h1 class="hero__title">${esc(d.isletme.slogan)}</h1>
       <p class="hero__sub">Koltuk, tavan, direksiyon, kapı döşemesi. Kalıbını biz çıkarır, dikişini biz atarız.</p>
+      <ol class="hero__legend" aria-label="Koltukta neye bakıyoruz">
+        ${d.etiketler.map((t, i) => `<li><i>${i + 1}</i><b>${esc(t.baslik)}</b><span>${esc(t.metin)}</span></li>`).join('')}
+      </ol>
       <div class="hero__actions">${btnCall()}${btnWa('hide-sm')}</div>
     </div>
 
     <p class="hero__zoom" aria-hidden="true"><span>Büyütme</span><b data-zoom>×3,0</b></p>
     <p class="hero__hint" aria-hidden="true"><i></i>Kaydırın, uzaklaşalım</p>
   </div>`;
+
+// Etiket yazıları yalnız geniş ekranda fotoğrafın üstünde; telefonda başlığın altındaki listede.
+const deskMQ = window.matchMedia('(min-width: 900px)');
+const syncTags = () => {
+  $$('.hero__photo .tag').forEach((tag, i) => {
+    const has = tag.querySelector('.tag__txt');
+    if (deskMQ.matches && !has) {
+      const t = d.etiketler[i];
+      tag.insertAdjacentHTML('beforeend', `<span class="tag__txt"><em>${no(i)}</em><b>${esc(t.baslik)}</b><span>${esc(t.metin)}</span></span>`);
+    } else if (!deskMQ.matches && has) has.remove();
+  });
+};
+syncTags();
+deskMQ.addEventListener('change', syncTags);
 
 // Uzun dükkân adları da ekrana sığsın: en uzun kelimeye göre punto küçülür.
 const nameEl = $('.hero__name');
@@ -197,7 +210,7 @@ const galeri = [ek0, ...gRest.slice(0, 4), ek1, ...gRest.slice(4), ...ekRest, g0
 $('#atolye').innerHTML = `
   <div class="wrap">
     <header class="head">
-      <p class="label"><em>06</em> Atölyeden</p>
+      <p class="label"><em>06</em> Yakın plan</p>
       <h2>Yakından bakın. Dikişe, kenara, köşeye.</h2>
     </header>
     <div class="gallery__grid">
@@ -217,12 +230,12 @@ const stars = (n) => Array.from({ length: 5 }, (_, i) => `<span class="${i < n ?
 $('#yorumlar').innerHTML = `
   <div class="wrap reviews__grid">
     <div class="reviews__score">
-      <p class="label"><em>07</em> Yorumlar</p>
+      <p class="label"><em>07</em> Örnek yorumlar</p>
       <strong>${d.puan.ortalama.toLocaleString('tr-TR', { minimumFractionDigits: 1 })}</strong>
       <span class="stars" aria-label="5 üzerinden ${d.puan.ortalama}">${stars(5)}</span>
-      <p>Google'da ${nf.format(d.puan.adet)} yorum</p>
+      <p>5 üzerinden · örnek puan</p>
     </div>
-    <div class="rail rail--flat" tabindex="0" aria-label="Müşteri yorumları">
+    <div class="rail rail--flat" tabindex="0" aria-label="Örnek müşteri yorumları">
       <ul class="rail__list reviews__list">
         ${d.yorumlar.map((y) => `
           <li class="review">
@@ -266,8 +279,8 @@ $('.foot').innerHTML = `
   <div class="wrap foot__grid">
     <p class="foot__name">${esc(d.isletme.ad)}</p>
     <p>${esc(d.iletisim.adres)}</p>
-    <p><a href="${telHref(d)}">${esc(d.iletisim.telefon)}</a></p>
-    <p class="foot__copy">© ${buYil} ${esc(d.isletme.ad)} · ${esc(beri)} Şaşmaz'da</p>
+    <p><a class="foot__tel" href="${telHref(d)}">${icons.phone}<span>${esc(d.iletisim.telefon)}</span></a></p>
+    <p class="foot__copy">© ${buYil} ${esc(d.isletme.ad)} · ${esc(beri)} Şaşmaz'da · Fotoğraflar temsilîdir (Pexels), yorumlar örnektir.</p>
   </div>`;
 
 // --- Harita: yaklaşınca yükle ------------------------------------------------------
@@ -311,6 +324,7 @@ if (reducedMotion) {
   let s0 = start();
   const zoomState = { p: 0 };
 
+  gsap.set('.hero__copy', { autoAlpha: 0 });
   gsap.set('.hero__copy > *', { autoAlpha: 0, y: 26 });
   gsap.set('.tag', { autoAlpha: 0 });
   gsap.set('.tag__line', { scaleX: 0 });
@@ -336,14 +350,16 @@ if (reducedMotion) {
     .to('.hero__intro', { autoAlpha: 0, y: -60, duration: 0.22 }, 0.02)
     .to('.hero__lens', { autoAlpha: 0, scale: 1.6, duration: 0.3 }, 0)
     .to('.hero__hint', { autoAlpha: 0, duration: 0.08 }, 0)
-    .to('.hero__zoom', { autoAlpha: 0, y: -10, duration: 0.08 }, 0.5)
+    .to('.hero__zoom', { autoAlpha: 0, y: -10, duration: 0.08 }, mobile() ? 0.3 : 0.5)
+    .to('.hero__copy', { autoAlpha: 1, duration: 0.01 }, 0.41)
     .to('.hero__copy > *', { autoAlpha: 1, y: 0, duration: 0.12, stagger: 0.05 }, 0.42);
   $$('.tag').forEach((t, i) => {
     const at = 0.58 + i * 0.09;
     tl.to(t, { autoAlpha: 1, duration: 0.03 }, at)
       .fromTo(t.querySelector('.tag__dot'), { scale: 0 }, { scale: 1, duration: 0.05, ease: 'back.out(3)' }, at)
-      .to(t.querySelector('.tag__line'), { scaleX: 1, duration: 0.06 }, at + 0.03)
-      .fromTo(t.querySelector('.tag__txt'), { autoAlpha: 0, x: t.classList.contains('tag--sol') ? 10 : -10 }, { autoAlpha: 1, x: 0, duration: 0.06 }, at + 0.06);
+      .to(t.querySelector('.tag__line'), { scaleX: 1, duration: 0.06 }, at + 0.03);
+    const txt = t.querySelector('.tag__txt');
+    if (txt) tl.fromTo(txt, { autoAlpha: 0, x: t.classList.contains('tag--sol') ? 10 : -10 }, { autoAlpha: 1, x: 0, duration: 0.06 }, at + 0.06);
   });
   tl.to({}, { duration: 0.08 });
 
@@ -396,9 +412,19 @@ if (reducedMotion) {
     scrollTrigger: { trigger: '#rakamlar', start: 'top bottom', end: 'bottom top', scrub: true },
   });
 
-  // Tezgâh kartları: sıradaki kart gelince öncekinin üstü kararır
+  // Telefonda kartlar akışta kalır; soldaki dikiş ipliği kaydırdıkça ilerler.
+  gsap.fromTo('.steps__list', { '--prog': 0 }, {
+    '--prog': 1, ease: 'none',
+    scrollTrigger: { trigger: '.steps__list', start: 'top 70%', end: 'bottom 60%', scrub: true },
+  });
+  ScrollTrigger.batch('.step', {
+    start: 'top 85%', once: true,
+    onEnter: (els) => els.forEach((el) => el.classList.add('is-in')),
+  });
+
+  // Masaüstü: kartlar üst üste biner, sıradaki kart gelince öncekinin üstü kararır
   $$('.step').forEach((st, i, all) => {
-    if (i === all.length - 1) return;
+    if (i === all.length - 1 || mobile()) return;
     gsap.to(st, {
       '--dim': 1, ease: 'none',
       scrollTrigger: { trigger: all[i + 1], start: 'top bottom', end: 'top 30%', scrub: true },

@@ -193,14 +193,14 @@ $('#kartela').innerHTML = `
   <div class="deck__pin">
     <header class="deck__head">
       <h2 class="sec-title sec-title--light">Kartelayı çevirin.</h2>
-      <p>Hangi malzeme nereye yakışır, ne kadar dayanır? Beş seçenek, hepsi atölyede.</p>
+      <p>Hangi malzeme nereye yakışır, ne kadar dayanır? Beş seçenek; kartelayı çevirin, farkı görün.</p>
     </header>
     <div class="deck__stage">
       <div class="deck__fan">
         ${malzemeler.map((m, i) => `
           <article class="swatch" data-i="${i}">
             <div class="swatch__img" style="background-image:url('${m.gorsel}')"></div>
-            <div class="swatch__label"><span>No. ${String(i + 1).padStart(2, '0')}</span><strong>${esc(m.ad)}</strong></div>
+            <div class="swatch__label"></div>
             <span class="swatch__rivet"></span>
           </article>`).join('')}
       </div>
@@ -360,7 +360,7 @@ $('#kalip').innerHTML = `
 
 $('#hizmetler').innerHTML = `
   <header class="svc__head">
-    <h2 class="sec-title sec-title--light">Tezgâhtan çıkan işler</h2>
+    <h2 class="sec-title sec-title--light">Neler yapıyoruz</h2>
     <p>Süreleri aracın durumuna göre değişir; kesin süreyi aracı görünce söyleriz.</p>
   </header>
   <ul class="svc__list">
@@ -438,9 +438,10 @@ $('#markalar').innerHTML = `
 const stars = (n) => Array.from({ length: 5 }, (_, i) => `<i class="${i < Math.round(n) ? 'on' : ''}">${icons.star}</i>`).join('');
 $('#yorumlar').innerHTML = `
   <header class="tags__head">
+    <p class="tags__tag">Örnek yorumlar</p>
     <div class="tags__score">
       <strong data-count-dec="${d.puan.ortalama}">${String(d.puan.ortalama).replace('.', ',')}</strong>
-      <div><span class="tags__stars">${stars(d.puan.ortalama)}</span><span>${fmt(d.puan.adet)} değerlendirme</span></div>
+      <div><span class="tags__stars">${stars(d.puan.ortalama)}</span><span>5 üzerinden, örnek puan</span></div>
     </div>
     <h2 class="sec-title">Koltuğunu yaptıranlar anlatıyor</h2>
   </header>
@@ -498,7 +499,7 @@ $('.foot').innerHTML = `
     <strong>${esc(d.isletme.ad)}</strong>
     <span>${esc(d.iletisim.adres)}</span>
     <a href="${telHref(d)}">${esc(d.iletisim.telefon)}</a>
-    <small>© ${buYil} ${esc(d.isletme.ad)}. Fotoğraflar: Pexels.</small>
+    <small>© ${buYil} ${esc(d.isletme.ad)}. Fotoğraflar: Pexels, temsilîdir. Yorumlar örnektir.</small>
   </div>`;
 
 // --- Harita: yaklaşınca yükle ------------------------------------------------
@@ -522,6 +523,8 @@ new IntersectionObserver((entries, io) => {
 const heroTitleHost = $('.stitch-title');
 let heroTitle;
 
+// Etiket yalnız öndeki kartta yazılı: arkadaki kartlar salt görsel, tek bir etiket okunur.
+const swatchLabel = (i) => `<span>No. ${String(i + 1).padStart(2, '0')}</span><strong>${esc(malzemeler[i].ad)}</strong>`;
 function applyDeck(t) {
   $$('.swatch').forEach((el, i) => {
     const diff = i - t;
@@ -529,7 +532,11 @@ function applyDeck(t) {
     const lift = diff < 0 ? 0 : Math.min(diff, 3) * 6;
     el.style.transform = `translate3d(${lift}px, ${-lift}px, 0) rotate(${rot.toFixed(2)}deg)`;
     el.style.zIndex = String(100 - Math.round(Math.abs(diff) * 10));
-    el.classList.toggle('is-active', Math.abs(diff) < 0.5);
+    const on = Math.abs(diff) < 0.5;
+    if (on !== el.classList.contains('is-active')) {
+      el.classList.toggle('is-active', on);
+      el.querySelector('.swatch__label').innerHTML = on ? swatchLabel(i) : '';
+    }
   });
 }
 let deckActive = -1;
@@ -609,6 +616,7 @@ function fitYears() {
 function staticState() {
   if (heroTitle) finishStitch(heroTitle.svg);
   applyDeck(0);
+  $$('.swatch__label').forEach((l, i) => (l.innerHTML = swatchLabel(i)));
   setDeckActive(0);
   setQuiltActive(0);
   setPatternStep(2);
@@ -641,13 +649,16 @@ async function init() {
     .to(intro, { yPercent: -100, duration: 0.55, ease: 'power3.inOut' }, 1.15)
     .from('.hero__label, .hero__lead, .hero__cta, .hero__chalk', { y: 24, autoAlpha: 0, stagger: 0.08, duration: 0.6, ease: 'power3.out' }, 1.35)
     .from('.hero__photo', { y: -60, rotation: 14, autoAlpha: 0, duration: 0.9, ease: 'back.out(1.6)' }, 1.3);
-  intro.addEventListener('pointerdown', () => introTl.progress(1), { once: true });
+  // Dokunma, tekerlek ya da tuş perdeyi hemen kaldırır; vitrin modunda perde hiç beklemez.
+  const skipIntro = () => { if (introTl.progress() < 1) introTl.progress(1); };
+  ['pointerdown', 'touchstart', 'wheel', 'keydown'].forEach((ev) => window.addEventListener(ev, skipIntro, { once: true, passive: true }));
   document.body.style.overflow = 'hidden';
   introTl.eventCallback('onComplete', () => {
     document.body.style.overflow = '';
     intro.remove();
     heroTl.play();
   });
+  if (new URLSearchParams(location.search).has('vitrin')) introTl.progress(1);
 
   // Hero: kaydırınca fotoğraf sallanır, başlık hafifçe kalkar.
   gsap.to('.hero__photo', {

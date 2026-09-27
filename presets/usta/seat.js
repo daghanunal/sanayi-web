@@ -13,12 +13,13 @@ export const RENKLER = [
   { id: 'taba', ad: 'Taba', hex: '#b27a41' },
   { id: 'fume', ad: 'Füme', hex: '#4b4c50' },
   { id: 'bej', ad: 'Bej', hex: '#c9b28f' },
+  { id: 'petrol', ad: 'Petrol', hex: '#1d4a4e' },
 ];
 
 export const IPLIKLER = [
   { id: 'sari', ad: 'Sarı', hex: '#f0c649' },
   { id: 'kirmizi', ad: 'Kırmızı', hex: '#d2362c' },
-  { id: 'beyaz', ad: 'Beyaz', hex: '#f1ece2' },
+  { id: 'beyaz', ad: 'Krem', hex: '#efdcb4' },
   { id: 'ton', ad: 'Ton sür ton', hex: null },
 ];
 

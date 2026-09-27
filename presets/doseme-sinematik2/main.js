@@ -1,13 +1,14 @@
 // Örtü: sinematik aileden ikinci oto döşeme preseti.
-// Kobalt boşlukta tek bir kumaş parçası: söküm → kalıp → kesim → dikiş → gergi,
-// sonra aynı panel kumaş → alcantara → nappa → kapitone. Finalde örtü uçar, çağrı açılır.
+// Kobalt boşlukta, yüksek anahtarlı stüdyo ışığında gerçek bir koltuk (lib3d seat):
+// söküm → kalıp → kesim → dikiş → gergi, sonra aynı koltuk kumaş → alcantara → nappa → kapitone.
+// Finalde örtü uçar, çağrı açılır.
 import usta from '../../data/usta.json';
 import ext from '../../data/doseme-sinematik2.json';
 import '../../shared/base.css';
 import './style.css';
 import {
   boot, initSmoothScroll, reducedMotion, gsap, ScrollTrigger, esc,
-  telHref, waHref, mapsHref, mapsEmbed, openStatus, groupedHours, icons,
+  telHref, waHref, mapsHref, mapsEmbed, openStatus, groupedHours, icons, storyZone,
 } from '../../shared/core.js';
 import { SplitText } from 'gsap/SplitText';
 import { DrawSVGPlugin } from 'gsap/DrawSVGPlugin';
@@ -54,6 +55,7 @@ $('.top__brand').setAttribute('aria-label', `${d.isletme.ad}, sayfa başı`);
 $('[data-since]').textContent = `Şaşmaz'da ${ablative(kurulus)} beri`;
 $('[data-yas]').textContent = yas;
 $('[data-year]').textContent = `© ${buYil} ${d.isletme.ad}`;
+$('.foot__tel').setAttribute('aria-label', `Ara: ${d.iletisim.telefon}`);
 $('[data-final-title]').textContent = d.finalBaslik;
 $('[data-final-alt]').textContent = d.finalAlt;
 
@@ -80,8 +82,8 @@ const stepEls = $$('[data-step]');
 
 // Malzemeler (renkler sahnedeki panelle aynı)
 const SW = [
-  { bg: '#ede6da', fg: '#1a1a1a' }, { bg: '#403f49', fg: '#fff' },
-  { bg: '#a8122a', fg: '#fff' }, { bg: '#141418', fg: '#ff8cc6', quilt: true },
+  { bg: '#ebe5d8', fg: '#10143f' }, { bg: '#5d6190', fg: '#fff' },
+  { bg: '#b3142f', fg: '#fff' }, { bg: '#1d1d26', fg: '#ff8cc6', quilt: true },
 ];
 const mats = d.malzemeler.slice(0, 4);
 $('[data-kartela]').innerHTML = mats.map((m, i) => `
@@ -123,7 +125,7 @@ $('[data-tarihce]').innerHTML = tarihce.map((t) => `
 // Yorumlar
 $('[data-puan]').textContent = d.puan.ortalama.toLocaleString('tr-TR', { minimumFractionDigits: 1 });
 $('[data-stars]').innerHTML = icons.star.repeat(5);
-$('[data-puan-adet]').textContent = `${nf(d.puan.adet)} değerlendirme`;
+$('[data-puan-adet]').textContent = 'örnek puan';
 $('[data-rev]').innerHTML = d.yorumlar.map((y) => `
   <figure class="card">
     <p class="card__stars" aria-label="${Number(y.puan) || 5} yıldız">${icons.star.repeat(Number(y.puan) || 5)}</p>
@@ -148,100 +150,182 @@ const canvas = $('[data-stage]');
 async function makeStage() {
   try {
     const { createStage } = await import('./scene.js');
-    stage = createStage(canvas, { lite, weak });
+    stage = await createStage(canvas, { lite, weak });
     addEventListener('resize', () => stage.resize());
   } catch (e) {
+    console.warn('3D sahne açılamadı', e);
     document.documentElement.classList.add('no-gl');
   }
 }
 
 const portrait = () => innerHeight > innerWidth * 1.05;
-const S0 = 0.16;
-const SL = 0.164;
-const sStart = (k) => S0 + SL * k;
+const HP = Math.PI / 2;
+const mixPose = (a, b, t) => {
+  const o = {};
+  for (const k of Object.keys(a)) o[k] = typeof a[k] === 'number' && typeof b[k] === 'number' ? L(a[k], b[k], t) : (t < 0.5 ? a[k] : b[k]);
+  return o;
+};
+
+// Telefonda sahne, başlık ile kartın arasındaki boşluğa oturur: kartların üst kenarı ölçülür
+// (pin içindeki konum; kaydırmadan bağımsız). Yüklemede ve boyut değişince yenilenir.
+const REG = {};
+function measureRegions() {
+  const vh = innerHeight;
+  const top = ($('.top')?.getBoundingClientRect().bottom || 64) + 10;
+  const inPin = (el) => {
+    const pin = el.closest('.ch__pin');
+    return el.getBoundingClientRect().top - pin.getBoundingClientRect().top;
+  };
+  const since = $('.hero__since');
+  REG.vh = vh;
+  REG.hero = [top, inPin(since) - 16];
+  REG.work = [top, inPin(stepsEl) - 16];
+  // Malzeme kartı içeriğe göre uzar: en uzun metnin üst kenarı esas alınır
+  let mt = Infinity;
+  mats.forEach((_, i) => { setMat(i); mt = Math.min(mt, inPin(matBox)); });
+  setMat(Math.max(0, matNow));
+  REG.show = [top, mt - 18];
+}
+function fit(f, key, k = 1) {
+  const r = REG[key];
+  if (!r || !REG.vh) return f;
+  const h = Math.max(80, r[1] - r[0]);
+  return { ...f, ny: 1 - (r[0] + r[1]) / REG.vh, size: Math.min(f.size, (h / REG.vh) * 0.95 * k) };
+}
+
+// Kadrajlar: telefonda koltuk üst yarıda (kart altta), masaüstünde sağda (metin solda)
+function frames() {
+  const por = portrait();
+  const F = framesRaw(por);
+  if (!por) return F;
+  return {
+    hero: fit(F.hero, 'hero'), work: fit(F.work, 'work'), bench: fit(F.bench, 'work', 0.92),
+    show: fit(F.show, 'show'), cloth: fit(F.cloth, 'work', 0.82),
+  };
+}
+function framesRaw(por) {
+  return {
+    hero: por
+      ? { nx: 0.02, ny: 0.34, size: 0.44, maxW: 0.9, yaw: -HP + 0.66, pitch: 0.12 }
+      : { nx: 0.44, ny: -0.05, size: 0.74, maxW: 0.5, yaw: -HP + 0.72, pitch: 0.1 },
+    work: por // söküm başı: yandan
+      ? { nx: 0.0, ny: 0.26, size: 0.44, maxW: 0.9, yaw: -HP + 1.2, pitch: 0.16 }
+      : { nx: 0.44, ny: -0.04, size: 0.66, maxW: 0.5, yaw: -HP + 1.25, pitch: 0.14 },
+    bench: por // tezgâh: parçaları açık koltuk solda, kılıf sağda
+      ? { nx: -0.24, ny: 0.2, size: 0.4, maxW: 0.56, yaw: -HP + 0.95, pitch: 0.18 }
+      : { nx: 0.22, ny: -0.02, size: 0.62, maxW: 0.34, yaw: -HP + 0.95, pitch: 0.16 },
+    show: por // ürün çekimi: 3/4, hafif üstten
+      ? { nx: 0.0, ny: 0.2, size: 0.5, maxW: 0.92, yaw: -HP + 0.6, pitch: 0.2 }
+      : { nx: 0.44, ny: -0.05, size: 0.7, maxW: 0.5, yaw: -HP + 0.62, pitch: 0.16 },
+    cloth: por
+      ? { nx: 0.24, ny: 0.13, size: 0.36, maxW: 0.6 }
+      : { nx: 0.62, ny: -0.02, size: 0.56, maxW: 0.34 },
+  };
+}
+
+const NS = 5; // adım sayısı
+const stepOf = (p) => clamp(Math.floor(p * NS), 0, NS - 1);
+const sA = (k) => k / NS;
 
 function poseHero(p) {
-  const por = portrait();
-  const a = por
-    ? { nx: 0.1, ny: 0.64, size: 0.48, maxW: 0.9, rx: -0.3, ry: 0.42, rz: 0.14 }
-    : { nx: 0.46, ny: 0.0, size: 0.88, maxW: 0.5, rx: -0.18, ry: -0.5, rz: 0.1 };
-  const b = por
-    ? { nx: 0, ny: 0.38, size: 0.5, maxW: 0.84, rx: -0.04, ry: 0, rz: 0 }
-    : { nx: 0.4, ny: 0.0, size: 0.84, maxW: 0.5, rx: 0, ry: -0.12, rz: 0 };
-  const t = io(seg(p, 0.06, sStart(1)));
-  const o = {};
-  for (const k of Object.keys(a)) o[k] = L(a[k], b[k], t);
-  const tight = io(seg(p, sStart(4) + 0.01, sStart(5) - 0.04));
-  o.wind = L(L(1, 0.55, seg(p, 0.1, sStart(1))), 0.04, tight);
-  o.fold = L(L(0.7, 0.35, seg(p, 0.1, sStart(1))), 0, tight);
-  o.chalk = seg(p, sStart(1) + 0.02, sStart(2) - 0.03);
-  o.cut = seg(p, sStart(2) + 0.02, sStart(3) - 0.03);
-  o.stitch = seg(p, sStart(3) + 0.02, sStart(4) - 0.03);
-  o.puff = tight;
-  o.mat = 0;
-  o.ry += Math.sin(p * 9) * 0.04 * (1 - tight);
-  return o;
+  const F = frames();
+  const t = io(seg(p, 0.25, 1));
+  return {
+    seat: { ...mixPose(F.hero, F.work, t * 0.25), explode: 0, worn: 1, light: 1, spin: 1 - t, mat: 0, recline: 0, head: 0 },
+    cloth: null,
+  };
+}
+
+function poseAtolye(p) {
+  const F = frames();
+  const out = io(seg(p, 0.0, sA(1) - 0.02)); // söküm
+  const back = io(seg(p, sA(4) + 0.1, 0.97)); // gergi: toparlanma
+  const seatBase = mixPose(mixPose(mixPose(F.hero, F.work, 0.25), F.bench, out), F.show, back);
+  const explode = L(1.15 * out, 0, back);
+  const light = L(L(1, 0.45, io(seg(p, sA(0) + 0.08, sA(1)))), 1, io(seg(p, sA(4) + 0.08, sA(4) + 0.16)));
+  const seat = {
+    ...seatBase, explode, light, worn: 1 - io(seg(p, sA(4) + 0.12, sA(4) + 0.17)),
+    head: 0.04 * out * (1 - back), recline: 0.2 * out * (1 - back), spin: 0.4, mat: 0,
+  };
+  seat.yaw += Math.sin(p * 7) * 0.05 * (1 - back);
+
+  // Kılıf: sırttan kalkar, öne süzülür; kalıp, kesim, dikiş; gerilir ve sırta geri oturur
+  const lift = 1 - io(seg(p, 0.02, sA(1) - 0.03));
+  const tight = io(seg(p, sA(4) + 0.005, sA(4) + 0.1));
+  const home = seg(p, sA(4) + 0.1, 0.965);
+  let cloth = null;
+  if (p > 0.012 && home < 1) {
+    const cf = F.cloth;
+    cloth = {
+      ...cf, z: 2.2,
+      rx: -0.06 + Math.sin(p * 5) * 0.04, ry: -0.18 + Math.sin(p * 9) * 0.05 * (1 - tight), rz: 0.04 * (1 - tight),
+      wind: L(L(1, 0.55, 1 - lift), 0.05, tight), fold: L(0.35, 0, tight),
+      chalk: seg(p, sA(1) + 0.02, sA(2) - 0.03),
+      cut: seg(p, sA(2) + 0.02, sA(3) - 0.03),
+      stitch: seg(p, sA(3) + 0.02, sA(4) - 0.03),
+      puff: tight, mat: 0,
+      toSeat: Math.max(lift, home),
+    };
+  }
+  return { seat, cloth };
 }
 
 function matValue(p) {
-  const m = seg(p, 0.05, 0.92) * 3;
+  const m = seg(p, 0.06, 0.9) * 3;
   const k = Math.min(2, Math.floor(m));
-  return m >= 3 ? 3 : k + gsap.parseEase('power1.inOut')(seg(m - k, 0.25, 0.75));
+  return m >= 3 ? 3 : k + gsap.parseEase('power1.inOut')(seg(m - k, 0.3, 0.8));
 }
 function poseMat(p) {
-  const por = portrait();
-  const base = por
-    ? { nx: 0, ny: 0.38, size: 0.5, maxW: 0.84 }
-    : { nx: 0.4, ny: 0.0, size: 0.84, maxW: 0.5 };
-  const sw = Math.sin(p * Math.PI * 2);
-  return {
-    ...base,
-    rx: por ? -0.04 + sw * 0.05 : sw * 0.06,
-    ry: (por ? 0 : -0.12) + Math.sin(p * Math.PI * 3) * 0.32,
-    rz: 0,
-    wind: 0.04, fold: 0, chalk: 0, cut: 1, stitch: 1, puff: 1,
-    mat: matValue(p),
-    size: base.size * (1 + 0.08 * Math.sin(p * Math.PI)),
-  };
+  const F = frames();
+  const seat = { ...F.show, explode: 0, worn: 0, light: 1, spin: 0, head: 0, recline: 0, mat: matValue(p) };
+  seat.yaw += Math.sin(p * Math.PI * 2) * 0.55;
+  seat.pitch += Math.sin(p * Math.PI) * 0.06;
+  seat.size *= 1 + 0.06 * Math.sin(p * Math.PI);
+  return { seat, cloth: null };
 }
 
 function poseFinal(p) {
   const drop = gsap.parseEase('power3.out')(seg(p, 0.02, 0.24));
+  const ar = innerWidth / innerHeight;
   return {
-    nx: 0, ny: L(2.6, 0, drop), size: 1, cover: true, rx: -0.12 * (1 - drop), ry: 0, rz: L(-0.12, 0, drop),
-    wind: L(1.3, 0.35, drop) + seg(p, 0.36, 0.5) * 0.8, fold: 0.9, chalk: 0, cut: 0, stitch: 0, puff: 0, mat: 0,
-    fly: io(seg(p, 0.4, 0.82)), freq: 0.45,
+    seat: null,
+    cloth: {
+      nx: 0, ny: L(2.6, 0, drop), z: 0, size: Math.max(1.14, (1.14 * ar * 4) / 3.2), maxW: 99,
+      rx: -0.12 * (1 - drop), ry: 0, rz: L(-0.12, 0, drop),
+      wind: L(1.3, 0.35, drop) + seg(p, 0.36, 0.5) * 0.8, fold: 0.9, chalk: 0, cut: 0, stitch: 0, puff: 0, mat: 0,
+      fly: io(seg(p, 0.4, 0.82)), freq: 0.45,
+    },
   };
 }
 
-const POSES = { hero: poseHero, mat: poseMat, final: poseFinal };
+const POSES = { hero: poseHero, atolye: poseAtolye, mat: poseMat, final: poseFinal };
 
 // --- Bölüm metinleri ------------------------------------------------------------
 
 const heroEl = $('[data-hero]');
 const stepsEl = $('[data-steps]');
 const gaugeEl = $('[data-gauge]');
-const gaugeLabel = $('[data-gauge-label]');
-let stepNow = -1;
+const show = (el, v) => gsap.set(el, { autoAlpha: v });
 function textHero(p) {
-  const out = seg(p, 0.07, 0.14);
-  heroEl.style.opacity = 1 - out;
+  const out = seg(p, 0.35, 0.95);
+  show(heroEl, 1 - out);
   heroEl.style.transform = `translate3d(0, ${(-out * 40).toFixed(1)}px, 0)`;
-  heroEl.style.visibility = out >= 1 ? 'hidden' : 'visible';
-  const inn = seg(p, 0.13, 0.18) * (1 - seg(p, 0.955, 0.985));
-  stepsEl.style.opacity = inn;
-  stepsEl.style.visibility = inn <= 0 ? 'hidden' : 'visible';
-  const k = clamp(Math.floor((p - S0) / SL), 0, steps.length - 1);
+}
+
+let stepNow = -1;
+function textAtolye(p) {
+  const inn = seg(p, 0.0, 0.035) * (1 - seg(p, 0.975, 1));
+  show(stepsEl, inn);
+  const k = stepOf(p);
   if (k !== stepNow) {
     const prev = stepNow;
     stepNow = k;
     railItems.forEach((li, i) => { li.classList.toggle('is-on', i === k); li.classList.toggle('is-done', i < k); });
-    stepEls.forEach((el, i) => el.classList.toggle('is-on', i === k));
+    stepEls.forEach((el, i) => { el.classList.toggle('is-on', i === k); el.setAttribute('aria-hidden', i === k ? 'false' : 'true'); });
     const el = stepEls[k];
-    if (prev !== -1 && !reducedMotion) gsap.fromTo(el.children, { y: 24, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, stagger: 0.06, ease: 'power3.out', overwrite: true });
-    gaugeLabel.textContent = steps[k].baslik;
+    if (prev !== -1 && !reducedMotion) gsap.fromTo(el.children, { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, stagger: 0.06, ease: 'power3.out', overwrite: true });
   }
-  const local = Math.round(seg(p, sStart(k), sStart(k + 1) - 0.02) * 100);
+  const local = Math.round(seg(p, sA(k), sA(k + 1) - 0.02) * 100);
   const txt = String(local);
   if (gaugeEl.textContent !== txt) gaugeEl.textContent = txt;
 }
@@ -270,11 +354,11 @@ function textMat(p) {
     matNow = i;
     setMat(i);
     if (!first && !reducedMotion) {
-      gsap.fromTo([matName, matAlt, matTxt, matChips], { y: 30, opacity: 0, clipPath: 'inset(0 0 100% 0)' },
-        { y: 0, opacity: 1, clipPath: 'inset(-20% 0 -20% 0)', duration: 0.6, stagger: 0.05, ease: 'power3.out', overwrite: true });
+      gsap.fromTo([matName, matAlt, matTxt, matChips], { y: 24, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.55, stagger: 0.05, ease: 'power3.out', overwrite: true });
     }
   }
-  matBox.style.opacity = seg(p, 0, 0.05);
+  show(matBox, seg(p, 0, 0.04) * (1 - seg(p, 0.97, 1)));
 }
 
 const finalEl = $('[data-final]');
@@ -283,29 +367,32 @@ const finalHint = $('[data-final-hint]');
 const finalVeil = $('[data-final-veil]');
 document.body.append(finalHint, finalVeil);
 function textFinal(p) {
-  const show = seg(p, 0.5, 0.74);
-  finalEl.style.opacity = show;
-  finalEl.style.transform = `translate3d(0, ${((1 - show) * 30).toFixed(1)}px, 0) scale(${(0.96 + show * 0.04).toFixed(3)})`;
-  finalEl.style.visibility = show <= 0 ? 'hidden' : 'visible';
-  finalHint.style.opacity = seg(p, 0.1, 0.17) * (1 - seg(p, 0.38, 0.46));
+  const s = seg(p, 0.5, 0.74);
+  show(finalEl, s);
+  finalEl.style.transform = `translate3d(0, ${((1 - s) * 30).toFixed(1)}px, 0) scale(${(0.96 + s * 0.04).toFixed(3)})`;
+  show(finalHint, seg(p, 0.1, 0.17) * (1 - seg(p, 0.38, 0.46)));
   const veil = seg(p, 0.12, 0.22) * (1 - seg(p, 0.38, 0.45));
-  finalVeil.style.opacity = veil;
-  finalVeil.style.visibility = veil <= 0 ? 'hidden' : 'visible';
+  show(finalVeil, veil);
   finalVeil.style.transform = `translate3d(-50%, calc(-50% + ${(L(24, 0, seg(p, 0.12, 0.24)) - seg(p, 0.36, 0.45) * 120).toFixed(1)}px), 0)`;
 }
-const TEXT = { hero: textHero, mat: textMat, final: textFinal };
+const TEXT = { hero: textHero, atolye: textAtolye, mat: textMat, final: textFinal };
 
-// Aktif bölüm: ekranın ortasındaki bölüm (sonraki bölüm öncelikli). Görünen her bölümün metni güncellenir.
+// Aktif bölüm: tepesine ulaşılmış son bölüm (bölümler -100vh ile üst üste biner).
+// Pin bitip bölüm ekrandan çıkarken sahne kapanır (arkada boşuna çizilmez).
 const chapters = $$('[data-ch]').map((el) => ({ id: el.dataset.ch, el }));
 function scan() {
-  const mid = innerHeight / 2;
+  const vh = innerHeight;
   let act = null;
   for (const c of chapters) {
     const r = c.el.getBoundingClientRect();
-    const span = r.height - innerHeight;
+    const span = r.height - vh;
     const p = span > 0 ? clamp(-r.top / span) : 0.5;
-    if (r.bottom > 0 && r.top < innerHeight) TEXT[c.id](p);
-    if (r.top <= mid && r.bottom > mid) act = { id: c.id, p };
+    if (r.bottom > 0 && r.top < vh) TEXT[c.id](p);
+    if (r.top <= 1 && r.bottom > vh * 0.45) act = { id: c.id, p };
+  }
+  if (!act) {
+    const r = chapters[0].el.getBoundingClientRect();
+    if (r.top > 1 && r.top < vh) act = { id: chapters[0].id, p: 0 };
   }
   return act;
 }
@@ -324,18 +411,11 @@ function frame() {
     current = key;
     document.body.dataset.scene = key;
   }
-  if (!id || done || !stage) return;
-  const po = POSES[id](a.p);
-  if (po.cover) {
-    // Ekranı kaplayacak ölçek
-    const ar = innerWidth / innerHeight;
-    po.size = Math.max(1.14, (1.14 * ar * 4) / 3.2);
-    po.maxW = 99;
-  }
-  stage.render(po, dt);
+  if (!id || done || !stage || document.hidden) return;
+  stage.render(POSES[id](a.p), dt);
 }
 
-// --- Açılış -----------------------------------------------------------------
+// --- Açılış (≤ 2,5 sn; dokununca geçilir; vitrin ve azaltılmış harekette yok) ------------
 
 let lenis = null;
 async function runIntro() {
@@ -345,35 +425,42 @@ async function runIntro() {
   const needle = $('[data-intro-needle]');
   const count = $('[data-intro-count]');
   name.textContent = d.isletme.ad;
+  let finished = false;
   const finish = () => {
+    if (finished) return;
+    finished = true;
     intro.remove();
     document.body.classList.remove('is-loading');
     lenis?.start();
     ScrollTrigger.refresh();
     heroIn();
   };
-  if (reducedMotion) { finish(); return; }
+  const vitrin = document.documentElement.classList.contains('is-vitrin');
+  if (reducedMotion || vitrin) { finish(); return; }
   const split = new SplitText(name, { type: 'chars' });
   const tl = gsap.timeline({ paused: true });
   const o = { v: 0 };
-  tl.from(split.chars, { yPercent: 60, opacity: 0, duration: 0.5, stagger: 0.025, ease: 'power3.out' }, 0)
+  tl.from(split.chars, { yPercent: 60, opacity: 0, duration: 0.4, stagger: 0.02, ease: 'power3.out' }, 0)
     .fromTo(o, { v: 0 }, {
-      v: 1, duration: 1.25, ease: 'power1.inOut',
+      v: 1, duration: 0.95, ease: 'power1.inOut',
       onUpdate: () => {
         line.setAttribute('x2', (o.v * 1000).toFixed(1));
         needle.style.transform = `translate3d(${(o.v * 100).toFixed(2)}vw, 0, 0)`;
         count.textContent = String(Math.round(o.v * 120)).padStart(3, '0');
       },
-    }, 0.15)
-    .to(needle, { opacity: 0, duration: 0.2 }, '>-0.05')
-    .to('[data-intro-top]', { yPercent: -100, duration: 0.85, ease: 'power4.inOut' }, '+=0.1')
-    .to('[data-intro-bot]', { yPercent: 100, duration: 0.85, ease: 'power4.inOut' }, '<')
-    .to('.intro__seam', { opacity: 0, duration: 0.3 }, '<')
-    .add(() => heroIn(), '<0.35')
-    .add(() => { intro.remove(); document.body.classList.remove('is-loading'); lenis?.start(); ScrollTrigger.refresh(); });
-  intro.addEventListener('pointerdown', () => tl.timeScale(4), { once: true });
-  await Promise.race([document.fonts.ready, new Promise((r) => setTimeout(r, 1200))]);
-  await stageReady;
+    }, 0.1)
+    .to(needle, { opacity: 0, duration: 0.15 }, '>-0.05')
+    .to('[data-intro-top]', { yPercent: -100, duration: 0.7, ease: 'power4.inOut' }, '+=0.05')
+    .to('[data-intro-bot]', { yPercent: 100, duration: 0.7, ease: 'power4.inOut' }, '<')
+    .to('.intro__seam', { opacity: 0, duration: 0.25 }, '<')
+    .add(() => { intro.style.pointerEvents = 'none'; heroIn(); }, '<0.25')
+    .add(finish);
+  // Dokunuş: perde hemen açılır
+  intro.addEventListener('pointerdown', () => { tl.play(); tl.timeScale(5); }, { once: true });
+  // Güvenlik: sahne ya da fontlar gecikse de perde 2,5 sn'de kalkar
+  setTimeout(() => { if (!finished) { tl.play(); tl.timeScale(4); } }, 1600);
+  setTimeout(finish, 2600);
+  await Promise.race([Promise.all([document.fonts.ready, stageReady]), new Promise((r) => setTimeout(r, 900))]);
   tl.play();
 }
 
@@ -383,7 +470,9 @@ function heroIn() {
   heroDone = true;
   if (reducedMotion) return;
   gsap.from('.ln__in', { yPercent: 110, duration: 1.0, stagger: 0.08, ease: 'power4.out' });
-  gsap.from(['.hero__since', '.hero__slogan', '.hero__cta', '.hint'], { y: 24, opacity: 0, duration: 0.8, stagger: 0.07, delay: 0.25, ease: 'power3.out' });
+  gsap.from(['.hero__since', '.hero__slogan', '.hint'], { y: 24, opacity: 0, duration: 0.8, stagger: 0.07, delay: 0.25, ease: 'power3.out' });
+  // Düğmeler: yalnız konum; ilk dokunuşta hep tıklanabilir kalsın
+  gsap.from('.hero__cta', { y: 18, duration: 0.7, delay: 0.3, ease: 'power3.out' });
 }
 
 // --- Kaydırma animasyonları ---------------------------------------------------------
@@ -475,6 +564,12 @@ const stageReady = makeStage();
 setMat(0);
 matNow = 0;
 textHero(0);
+textAtolye(0);
 scrollBits();
+measureRegions();
+document.fonts?.ready.then(measureRegions);
+addEventListener('resize', () => requestAnimationFrame(measureRegions));
+storyZone($('.ch--atolye'));
+storyZone($('.ch--mat'));
 gsap.ticker.add(frame);
 runIntro();

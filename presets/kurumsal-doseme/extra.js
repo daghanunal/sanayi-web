@@ -154,3 +154,51 @@ export const filoKoltuk = {
     guncelle(true);
   },
 };
+
+// --- Sektör imzası: koltuğun katmanları ---------------------------------------------
+// Kütüphanedeki koltuğun (lib3d seat) patlatılmış Cycles render'ı + yukarıdan aşağı katman listesi.
+// Görsel temsilîdir ve öyle etiketlenir.
+const KATMANLAR = [
+  ['Baş dayama', 'Kılıfı söküp aynı kalıpla yeniden dikeriz; çökmüş süngeri ölçüsünde yenileriz.'],
+  ['Sırt', 'Yanak süngerleri ve sırt panosu elden geçer. Dikiş aralığını ve iplik rengini baştan birlikte seçeriz.'],
+  ['Oturak', 'En çok yıpranan katman. Çöken sünger ölçüye göre değişir; eski süngerin üstüne kılıf geçirmeyiz.'],
+  ['Yan kapak ve ısıtma', 'Plastik kapaklar sökülüp temizlenir. Isıtma pedi isteyene bu aşamada, kılıfın altına yerleşir.'],
+  ['İskelet ve ray', 'Kaynak, yay ve ray kilitleri kontrol edilir; gıcırtı ve boşluk giderilir.'],
+];
+const ok = `<svg class="k-ok" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+
+export const katmanlar = {
+  render() {
+    const img = `${import.meta.env.BASE_URL}img/kurumsal-doseme/koltuk-3d.jpg`;
+    const konu = encodeURIComponent('Koltuk döşeme teklifi');
+    return `
+      <section class="k-bolum kt" aria-labelledby="kt-baslik">
+        <div class="k-kap kt__ic">
+          <figure class="kt__gorsel" data-perde>
+            <img src="${img}" alt="Başlık, sırt, oturak ve iskelet olarak parçalarına ayrılmış bir araç koltuğunun temsilî 3D çizimi" loading="lazy" width="1000" height="1150">
+            <figcaption>Temsilî 3D çizim</figcaption>
+          </figure>
+          <div class="kt__metin">
+            <p class="kt__ust">Koltuğun katmanları</p>
+            <h2 class="k-h2" id="kt-baslik" data-bol>Koltuğu söker, katman katman yeniden kurarız.</h2>
+            <p class="k-lead">Yeni kılıfı eskisinin üstüne geçirmeyiz. Koltuk araçtan sökülür, tezgâhta parçalarına ayrılır; her katman ayrı elden geçer ve aynı kalıpla yeniden bir araya gelir.</p>
+            <ol class="kt__liste" data-sira>
+              ${KATMANLAR.map(([a, b], i) => `<li><span class="kt__no">${String(i + 1).padStart(2, '0')}</span><div><h3>${esc(a)}</h3><p>${esc(b)}</p></div></li>`).join('')}
+            </ol>
+            <a class="k-link kt__link" href="#/iletisim?konu=${konu}" data-rota="iletisim?konu=${konu}">Koltuk döşeme için yazın ${ok}</a>
+          </div>
+        </div>
+      </section>`;
+  },
+};
+
+// JSON-LD: örnek yorum puanı yapılandırılmış veriye girmesin.
+export const ldVerisi = (d) => ({
+  '@context': 'https://schema.org',
+  '@type': 'AutoRepair',
+  name: d.isletme.ad,
+  description: d.isletme.slogan,
+  telephone: d.iletisim.telefon,
+  foundingDate: String(d.isletme.kurulus),
+  address: { '@type': 'PostalAddress', streetAddress: d.iletisim.adres, addressLocality: 'Etimesgut', addressRegion: 'Ankara', addressCountry: 'TR' },
+});

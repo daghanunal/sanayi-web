@@ -2,7 +2,7 @@ import raw from '../../data/usta.json';
 import '../../shared/base.css';
 import './style.css';
 import {
-  boot, initSmoothScroll, gsap, ScrollTrigger, reducedMotion, esc,
+  boot, initSmoothScroll, gsap, ScrollTrigger, reducedMotion, esc, vitrinModu, autoHideHeader, setStoryMode,
   telHref, waHref, mapsHref, mapsEmbed, openStatus, groupedHours, icons,
 } from '../../shared/core.js';
 import { SplitText } from 'gsap/SplitText';
@@ -20,7 +20,6 @@ const buYil = new Date().getFullYear();
 const kurulus = d.isletme.kurulus;
 const yas = buYil - kurulus;
 const isDesk = () => innerWidth >= 900;
-const lowEnd = (navigator.hardwareConcurrency || 8) <= 4 || innerWidth < 600;
 if (reducedMotion) document.documentElement.classList.add('rm');
 
 // Türkçe ayrılma eki: 1987'den, 1990'dan, 2004'ten…
@@ -43,6 +42,7 @@ $$('[data-status]').forEach((el) => {
 });
 const topCall = $('[data-tel]');
 topCall.href = telHref(d);
+topCall.setAttribute('aria-label', `Ara: ${d.iletisim.telefon}`);
 topCall.innerHTML = `${icons.phone}<span>${esc(d.iletisim.telefon)}</span>`;
 
 const btnCall = (label = 'Hemen ara') =>
@@ -50,14 +50,16 @@ const btnCall = (label = 'Hemen ara') =>
 const btnWa = (label = "WhatsApp'tan yaz", msg) =>
   `<a class="btn btn--line mag" href="${waHref(d, msg)}" target="_blank" rel="noopener">${icons.whatsapp}<span>${label}</span></a>`;
 
-$('#hero').innerHTML = `
-  <p class="hero__kicker">Şaşmaz Oto Sanayi'nde ${beri}</p>
-  <h1 class="hero__title" aria-label="İskeletinden son dikişine kadar biz.">
-    <span class="ln">İskeletinden</span><span class="ln">son dikişine</span><span class="ln">kadar biz.</span>
-  </h1>
-  <p class="hero__sub">${esc(d.isletme.ad)}: koltuk, tavan, direksiyon ve kapı döşemesi. ${yas} yıldır aynı tezgâhta, babadan oğula.</p>
-  <div class="hero__cta">${btnCall()}${btnWa()}</div>
-  <p class="hero__hint" aria-hidden="true"><i></i>Kaydırın, koltuğu birlikte döşeyelim</p>`;
+$('#bas').innerHTML = `
+  <div class="hero__inner">
+    <p class="hero__kicker"><i></i>Şaşmaz Oto Sanayi'nde ${beri}</p>
+    <h1 class="hero__title" aria-label="İskeletinden son dikişine kadar biz.">
+      <span class="ln">İskeletinden</span><span class="ln">son dikişine</span><span class="ln">kadar biz.</span>
+    </h1>
+    <p class="hero__sub">${esc(d.isletme.ad)}: koltuk, tavan, direksiyon ve kapı döşemesi. ${yas} yıldır aynı tezgâhta.</p>
+    <div class="hero__cta">${btnCall()}${btnWa()}</div>
+    <p class="hero__hint" aria-hidden="true"><i></i>Kaydırın, koltuğu birlikte söküp yeniden döşeyelim</p>
+  </div>`;
 
 const ADIMLAR = [
   { baslik: 'Önce iskelet', metin: 'Koltuğu çıplak iskeletine kadar sökeriz. Gevşeyen yayı gerer, çatlayan kaynağı yeniden çekeriz.' },
@@ -69,26 +71,32 @@ const ADIMLAR = [
 $('#adimlar').innerHTML = ADIMLAR.map(
   (a, i) => `
   <article class="step" data-step="${i}">
-    <p class="step__no" aria-hidden="true"><span>${i + 1}</span><small>/ ${ADIMLAR.length}</small></p>
-    <h2 class="step__title">${a.baslik}</h2>
-    <p class="step__text">${a.metin}</p>
+    <div class="step__card">
+      <p class="step__no" aria-hidden="true"><span>${i + 1}</span><small>/ ${ADIMLAR.length}</small></p>
+      <h2 class="step__title">${a.baslik}</h2>
+      <p class="step__text">${a.metin}</p>
+    </div>
   </article>`
 ).join('');
 
 $('#hizmetler').innerHTML = `
   <header class="svcs__head">
-    <h2>Neler yapıyoruz</h2>
-    <p>Aracın içinde elimizin değmediği yer kalmıyor. Fiyatı işe başlamadan söylüyoruz.</p>
+    <p class="eyebrow">Neler yapıyoruz</p>
+    <h2 class="svcs__title">Aracın içinde elimizin değmediği yer kalmıyor.</h2>
+    <p class="svcs__lead">Fiyatı işe başlamadan söylüyoruz. Süreler koltuğun durumuna göre değişebilir.</p>
   </header>
-  <div class="svcs__list">
+  <ol class="svcs__list">
     ${d.hizmetler.map((h, i) => `
-      <article class="svc" data-i="${i}">
-        <h3 class="svc__title" data-text="${esc(h.baslik)}">${esc(h.baslik)}</h3>
-        <p class="svc__text">${esc(h.aciklama)}</p>
-        <p class="svc__time">Süre: <b>${esc(h.sure)}</b></p>
-      </article>`).join('')}
-  </div>
-  <ol class="svcs__dots" aria-hidden="true">${d.hizmetler.map(() => '<li></li>').join('')}</ol>`;
+      <li class="svc">
+        <figure class="svc__img">${h.gorsel ? `<img src="${esc(h.gorsel)}" alt="${esc(h.baslik)}" loading="lazy" width="600" height="400">` : ''}</figure>
+        <div class="svc__body">
+          <p class="svc__no">${String(i + 1).padStart(2, '0')}</p>
+          <h3 class="svc__title" data-text="${esc(h.baslik)}">${esc(h.baslik)}</h3>
+          <p class="svc__text">${esc(h.aciklama)}</p>
+          <p class="svc__time">Süre: <b>${esc(h.sure)}</b></p>
+        </div>
+      </li>`).join('')}
+  </ol>`;
 
 // Tarihçe: kuruluş yılı değişirse ondan önceki kayıtlar düşer
 const tarihce = d.tarihce
@@ -96,18 +104,17 @@ const tarihce = d.tarihce
   .filter((t, i) => i === 0 || t.yil === null || t.yil > kurulus)
   .map((t) => ({ ...t, goster: t.yil ?? buYil, etiket: t.yil ?? 'Bugün' }));
 const her = $('#tarihce');
-her.style.setProperty('--n', tarihce.length);
 $('.her__stage', her).innerHTML = `
   <div class="her__photos">
     ${tarihce.map((t, i) => `
       <figure class="her__ph" data-i="${i}">
-        <img class="her__sep" src="${t.gorsel}" alt="" loading="lazy">
-        <img class="her__col" src="${t.gorsel}" alt="${esc(t.baslik)}" loading="lazy">
+        <img class="her__sep" src="${esc(t.gorsel)}" alt="" loading="lazy">
+        <img class="her__col" src="${esc(t.gorsel)}" alt="" loading="lazy">
       </figure>`).join('')}
   </div>
   <div class="her__shade"></div>
   <header class="her__head">
-    <h2>Babadan oğula ${yas} yıl</h2>
+    <h2>${yas} yıl, aynı tezgâh</h2>
     <p>Tek makineyle açılan dükkândan bugüne.</p>
   </header>
   <div class="her__odo" aria-hidden="true">
@@ -125,17 +132,18 @@ $('.her__stage', her).innerHTML = `
     <path class="her__guide" d="M0,5 L1000,5"/><path class="her__line" d="M0,5 L1000,5"/>
   </svg>`;
 
+// Yapılandırıcı seçenekleri → lib3d koltuk varyantları
 const MALZEMELER = [
-  { id: 'deri', ad: 'Hakiki deri', props: { roughness: 0.52, clearcoat: 0.18, clearcoatRoughness: 0.42, sheen: 0.25, sheenRoughness: 0.45, specularIntensity: 1 }, mat: 0, ton: 1, parilti: 1.8 },
-  { id: 'alcantara', ad: 'Alcantara', props: { roughness: 0.96, clearcoat: 0, clearcoatRoughness: 0.8, sheen: 0.5, sheenRoughness: 0.85, specularIntensity: 0.1 }, mat: 1, ton: 0.58, parilti: 1.3 },
-  { id: 'kumas', ad: 'Kumaş', props: { roughness: 0.9, clearcoat: 0, clearcoatRoughness: 0.8, sheen: 0.3, sheenRoughness: 0.7, specularIntensity: 0.3 }, mat: 2, ton: 0.9, parilti: 1.4 },
+  { id: 'deri', ad: 'Hakiki deri', up: 'leather', ins: 'leather', ton: 1 },
+  { id: 'alcantara', ad: 'Alcantara', up: 'alcantara', ins: 'alcantara', ton: 0.72 },
+  { id: 'kumas', ad: 'Kumaş', up: 'fabric', ins: 'fabric', ton: 0.85 },
 ];
 const RENKLER = [
-  { id: 'siyah', ad: 'Siyah', hex: '#1f1512' },
-  { id: 'konyak', ad: 'Konyak', hex: '#8c4a20' },
+  { id: 'konyak', ad: 'Konyak', hex: '#6f3519' },
   { id: 'bordo', ad: 'Bordo', hex: '#5a171d' },
+  { id: 'siyah', ad: 'Siyah', hex: '#221a17' },
   { id: 'taba', ad: 'Taba', hex: '#b27a41' },
-  { id: 'fume', ad: 'Füme', hex: '#45464a' },
+  { id: 'fume', ad: 'Füme', hex: '#4a4b4f' },
   { id: 'bej', ad: 'Bej', hex: '#c9b28f' },
 ];
 const IPLIKLER = [
@@ -145,9 +153,9 @@ const IPLIKLER = [
   { id: 'ton', ad: 'Ton sür ton', hex: null },
 ];
 const DESENLER = [
-  { id: 'kapitone', ad: 'Kapitone', v: 0 },
-  { id: 'dilim', ad: 'Dikey dilim', v: 1 },
-  { id: 'duz', ad: 'Düz', v: 2 },
+  { id: 'kapitone', ad: 'Kapitone' },
+  { id: 'dilim', ad: 'Dikey dilim' },
+  { id: 'duz', ad: 'Düz' },
 ];
 const secim = { malzeme: MALZEMELER[0], renk: RENKLER[0], iplik: IPLIKLER[0], desen: DESENLER[0] };
 
@@ -157,7 +165,7 @@ const chipGroup = (key, title, list, swatch) => `
     <div class="cfg__chips">
       ${list.map((o, i) => `
         <button type="button" class="chip${i === 0 ? ' is-on' : ''}" data-k="${key}" data-id="${o.id}" aria-pressed="${i === 0}">
-          ${swatch ? `<i style="--sw:${o.hex || 'conic-gradient(#1f1512 0 25%, #8c4a20 0 50%, #5a171d 0 75%, #c9b28f 0)'}"></i>` : ''}${o.ad}
+          ${swatch ? `<i style="--sw:${o.hex || 'conic-gradient(#221a17 0 25%, #8c4a20 0 50%, #5a171d 0 75%, #c9b28f 0)'}"></i>` : ''}${o.ad}
         </button>`).join('')}
     </div>
   </fieldset>`;
@@ -192,20 +200,22 @@ $('#yorumlar').innerHTML = `
   <div class="proof__top">
     <div class="proof__score">
       <p class="proof__big"><span data-score>0,0</span></p>
-      <div>${stars(d.puan.ortalama)}<p>${fmt(d.puan.adet)} müşteri değerlendirmesi</p></div>
+      <div>${stars(d.puan.ortalama)}<p>Örnek puan · ${fmt(d.puan.adet)} değerlendirme</p></div>
     </div>
     <ul class="proof__stats">
       ${stats.map((s) => `<li><b data-count="${s.deger}" data-suffix="${esc(s.sonek)}">0</b><span>${esc(s.etiket)}</span></li>`).join('')}
     </ul>
   </div>
-  <h2 class="proof__title">Müşterilerimiz ne diyor</h2>
+  <div class="proof__head">
+    <p class="tag">Örnek yorumlar</p>
+    <h2 class="proof__title">Müşterilerimiz ne diyor</h2>
+  </div>
   <div class="proof__rows">
     <div class="marq" data-dir="-1"><div class="marq__track">${d.yorumlar.map(reviewCard).join('')}</div></div>
     <div class="marq" data-dir="1"><div class="marq__track">${[...d.yorumlar].reverse().map(reviewCard).join('')}</div></div>
   </div>
-  <div class="marq marq--brands" data-dir="-1" aria-label="Çalıştığımız markalar"><div class="marq__track">${d.markalar.map((m) => `<span>${esc(m)}</span>`).join('')}</div></div>`;
+  <div class="marq marq--brands" data-dir="-1" aria-label="Döşemesini yaptığımız markalar"><div class="marq__track">${d.markalar.map((m) => `<span>${esc(m)}</span>`).join('')}</div></div>`;
 
-const bugunIdx = [6, 0, 1, 2, 3, 4, 5][new Date().getDay()];
 $('#iletisim').innerHTML = `
   <div class="visit__info">
     <h2>Dükkânımıza uğrayın</h2>
@@ -220,7 +230,6 @@ $('#iletisim').innerHTML = `
     </div>
   </div>
   <div class="visit__map"><iframe title="${esc(d.isletme.ad)} konumu" data-src="${mapsEmbed(d)}" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe></div>`;
-void bugunIdx;
 
 $('#son').innerHTML = `
   <div class="fin__inner">
@@ -232,10 +241,26 @@ $('#son').innerHTML = `
 $('.foot').innerHTML = `
   <div class="foot__name">${esc(d.isletme.ad)}</div>
   <p>${esc(d.iletisim.adres)}</p>
-  <p><a href="${telHref(d)}">${esc(d.iletisim.telefon)}</a></p>
-  <p class="foot__small">© ${buYil} ${esc(d.isletme.ad)}. Fotoğraflar: Pexels. 3D koltuk bu site için kodla çizildi.</p>`;
+  <p><a class="foot__tel" href="${telHref(d)}">${icons.phone}<span>${esc(d.iletisim.telefon)}</span></a></p>
+  <p class="foot__small">© ${buYil} ${esc(d.isletme.ad)}. Fotoğraflar: Pexels. 3D görseller temsilîdir.</p>`;
 
-// --- Yapılandırıcı ---------------------------------------------------------
+// --- 3D --------------------------------------------------------------------
+
+const canvas = $('#gl');
+const glow = document.createElement('div');
+glow.className = 'glow';
+canvas.before(glow);
+let seat = null;
+try {
+  seat = createSeat(canvas);
+  seat.ready.catch((e) => {
+    console.warn('3D koltuk yüklenemedi', e);
+    document.documentElement.classList.add('no-gl');
+  });
+} catch (e) {
+  document.documentElement.classList.add('no-gl');
+  console.warn('WebGL yok', e);
+}
 
 function tonThread(hex) {
   const c = hex.match(/\w\w/g).map((h) => parseInt(h, 16));
@@ -251,33 +276,18 @@ function cfgSummary() {
 }
 cfgSummary();
 
-// --- 3D --------------------------------------------------------------------
-
-const canvas = $('#gl');
-const glow = document.createElement('div');
-glow.className = 'glow';
-canvas.before(glow);
-let seat = null;
-try {
-  seat = createSeat(canvas, { low: lowEnd });
-} catch (e) {
-  document.documentElement.classList.add('no-gl');
-  console.warn('WebGL yok', e);
-}
-
 function applyConfig(animate = true) {
   if (!seat) return;
-  const dur = animate ? 0.8 : 0;
-  // Süet ve kumaş ışığı yutar: aynı renk biraz koyu görünür, parlaması da kendi tonunda kalır
-  const c = seat.U.uColor.value.clone().set(secim.renk.hex).multiplyScalar(secim.malzeme.ton);
-  gsap.to(seat.U.uColor.value, { r: c.r, g: c.g, b: c.b, duration: dur, ease: 'power2.out' });
-  const th = seat.U.uThread.value.clone().set(secim.iplik.hex || tonThread(secim.renk.hex));
-  gsap.to(seat.U.uThread.value, { r: th.r, g: th.g, b: th.b, duration: dur });
-  gsap.to([seat.matInsert, seat.matPlain], { ...secim.malzeme.props, duration: dur });
-  const sh = c.clone().multiplyScalar(secim.malzeme.parilti);
-  for (const m of [seat.matInsert, seat.matPlain]) gsap.to(m.sheenColor, { r: sh.r, g: sh.g, b: sh.b, duration: dur });
-  gsap.to(seat.U.uMat, { value: secim.malzeme.mat, duration: dur });
-  if (reducedMotion) setTimeout(() => seat.renderOnce(), dur * 1000 + 50);
+  const m = secim.malzeme;
+  seat.setConfig({
+    upholstery: m.up,
+    insert: secim.desen.id === 'kapitone' ? 'quilted' : m.ins,
+    color: secim.renk.hex,
+    tone: m.ton,
+    thread: secim.iplik.hex || tonThread(secim.renk.hex),
+    plain: secim.desen.id === 'duz',
+  }, gsap, animate ? 0.8 : 0);
+  if (reducedMotion) setTimeout(() => seat.renderOnce(), animate ? 900 : 30);
 }
 
 $('#tasarla').addEventListener('click', (e) => {
@@ -293,12 +303,10 @@ $('#tasarla').addEventListener('click', (e) => {
   });
   cfgSummary();
   if (!seat) return;
-  if (k === 'desen' && prev !== secim.desen) {
-    seat.U.uPattern.value = secim.desen.v;
-    if (!reducedMotion) gsap.fromTo(seat.extra, { restitch: 0 }, { restitch: 1, duration: 1.8, ease: 'none' });
+  if (k === 'desen' && prev !== secim.desen && !reducedMotion) {
+    gsap.fromTo(seat.extra, { restitch: 0 }, { restitch: 1, duration: 1.4, ease: 'power1.inOut' });
   }
   applyConfig(!reducedMotion);
-  if (reducedMotion) seat.renderOnce();
 });
 
 // Sürükleyerek çevirme
@@ -339,53 +347,67 @@ new IntersectionObserver((entries, io) => {
 // --- Scroll'a bağlı 3D anahtar kareleri --------------------------------------
 
 const top = (el) => el.getBoundingClientRect().top + scrollY;
-const film = $('#film');
-const cfg = $('#tasarla');
-const cover = $('.cover');
-const fin = $('#son');
 const vh = () => innerHeight;
+const cfg = $('#tasarla');
+const fin = $('#son');
+const svcsEl = $('#hizmetler');
+const cover = $('.cover');
+const steps = $$('.step');
+const mid = (el) => top(el) + el.offsetHeight / 2 - vh() / 2;
 
 const POSE = {
-  hero: () => ({ frame: 1, foam: 0, wrap: 0, stitch: 0, heat: 0, theta: 0.75, phi: 0.2, dist: 2.35, tx: 0, ty: 0.42, tz: 0, spin: 0, sx: isDesk() ? 0.17 : 0, sy: isDesk() ? 0 : -0.17, dim: 1, turn: 0, cfg: 0 }),
-  config: () => ({ frame: 1, foam: 1, wrap: 1, stitch: 1, heat: 0, theta: 0.6, phi: 0.16, dist: isDesk() ? 2.25 : 3.3, tx: 0, ty: 0.42, tz: 0, spin: 0, sx: isDesk() ? -0.2 : 0, sy: isDesk() ? 0 : -0.23, dim: 1, turn: 0, cfg: 1 }),
-  finale: () => ({ frame: 1, foam: 1, wrap: 1, stitch: 1, heat: 0, theta: 0.2, phi: 0.2, dist: 2.45, tx: 0, ty: 0.45, tz: 0, spin: 0, sx: isDesk() ? 0.18 : 0, sy: isDesk() ? 0.02 : 0.2, dim: 0.95, turn: 1, cfg: 0 }),
+  hero: () => ({
+    ...DEFAULT_STATE, theta: 0.78, phi: 0.05, dist: 3.05, ty: 0.6,
+    sx: isDesk() ? 0.2 : 0, sy: isDesk() ? 0 : -0.25,
+  }),
+  config: () => ({
+    frame: 0, explode: 0, foam: 1, wrap: 1, stitch: 1, heat: 0, recline: 0, head: 0,
+    theta: 0.62, phi: 0.1, dist: isDesk() ? 3.0 : 3.6, tx: 0, ty: 0.62, tz: 0,
+    sx: isDesk() ? -0.21 : 0, sy: isDesk() ? 0 : -0.26, dim: 1, turn: 0, cfg: 1,
+  }),
+  finale: () => ({
+    frame: 0, explode: 0, foam: 1, wrap: 1, stitch: 1, heat: 0, recline: 0.7, head: 1,
+    theta: 0.35, phi: 0.12, dist: 3.3, tx: 0, ty: 0.62, tz: 0,
+    sx: isDesk() ? 0.19 : 0, sy: isDesk() ? 0.02 : 0.2, dim: 0.95, turn: 1, cfg: 0,
+  }),
 };
-const filmAt = (f) => () => top(film) + f * (film.offsetHeight - vh());
-const K = [
-  [filmAt(0), POSE.hero],
-  [filmAt(0.08), () => ({ theta: 1.15, dist: 2.0 })],
-  [filmAt(0.16), () => ({ theta: 1.45, phi: 0.36, dist: 1.8, ty: 0.4, sx: isDesk() ? 0.2 : 0 })],
-  [filmAt(0.21), () => ({ foam: 0 })],
-  [filmAt(0.29), () => ({ foam: 1, theta: -0.55, phi: 0.24, dist: 2.0 })],
-  [filmAt(0.33), () => ({ wrap: 0 })],
-  [filmAt(0.42), () => ({ wrap: 1, theta: 0.3, phi: 0.12, dist: 2.15 })],
-  [filmAt(0.46), () => ({ stitch: 0, ty: 0.5, dist: 1.6, tz: -0.1 })],
-  [filmAt(0.57), () => ({ stitch: 1, ty: 0.66, tz: -0.2, dist: 1.0, theta: 0.1, phi: 0.05 })],
-  [filmAt(0.61), () => ({ heat: 0, ty: 0.5, dist: 1.3, phi: 0.5 })],
-  [filmAt(0.71), () => ({ heat: 1, ty: 0.32, tz: 0.02, dist: 0.95, phi: 1.02, theta: 0.28 })],
-  [filmAt(0.75), () => ({ heat: 1 })],
-  [filmAt(0.82), () => ({ heat: 0, ty: 0.42, tz: 0, phi: 0.16, theta: 0.6, spin: 0, sx: isDesk() ? -0.19 : 0, sy: isDesk() ? 0 : -0.24, dist: isDesk() ? 2.3 : 2.9 })],
-  [filmAt(1), () => ({ spin: TAU, dim: 0.5 })],
-  [() => top(her) + vh(), () => ({ spin: TAU, dim: 0.5 })],
-  [() => top(her) + her.offsetHeight - 2 * vh(), POSE.config],
-  [() => top(cover), POSE.config],
-  [() => top(fin) - vh(), POSE.finale],
-  [() => document.documentElement.scrollHeight - vh(), () => ({ ...POSE.finale(), ...(isDesk() ? {} : { sy: -0.06, dist: 3.5 }) })],
+const STEP_POSE = [
+  // 1 İskelet: deri ve sünger gitmiş, parçalar aralanmış, kalıp çizgileri
+  () => ({ foam: 0, wrap: 0, stitch: 0, frame: 1, explode: 0.5, theta: 1.2, phi: 0.2, dist: 3.5, ty: 0.64, sx: isDesk() ? 0.2 : 0, sy: isDesk() ? 0 : -0.2 }),
+  // 2 Sünger dolar, parçalar yerine oturur
+  () => ({ foam: 1, explode: 0, frame: 0.2, theta: -0.62, phi: 0.14, dist: 3.1, ty: 0.6 }),
+  // 3 Deri yukarıdan aşağı giydirilir
+  () => ({ wrap: 1, frame: 0, theta: 0.32, phi: 0.08, dist: 3.0, ty: 0.62 }),
+  // 4 Dikiş: sırtlığa yakın plan
+  () => ({ stitch: 1, theta: 0.18, phi: 0.04, dist: isDesk() ? 2.0 : 1.45, ty: 0.98, tz: 0.02, sx: isDesk() ? 0.14 : 0, sy: isDesk() ? 0 : -0.14 }),
+  // 5 Isıtma: minderi üstten
+  () => ({ heat: 1, theta: 0.3, phi: 0.92, dist: isDesk() ? 2.3 : 1.75, ty: 0.42, tz: 0.08, sx: isDesk() ? 0.16 : 0, sy: isDesk() ? 0 : -0.16 }),
 ];
+
 let keys = [];
-let covered = [];
 function buildKeys() {
+  const K = [[0, POSE.hero]];
+  const s0 = mid(steps[0]);
+  // Söküm: önce deri kalkar, sonra sünger boşalır
+  K.push([s0 * 0.45, () => ({ wrap: 0, stitch: 0, theta: 1.0, dist: 3.2 })]);
+  steps.forEach((el, i) => {
+    const m = mid(el);
+    // Kart ekrana girdiğinde poz hazır; kart yukarı çıkarken bir sonrakine geçer
+    K.push([m - vh() * 0.12, STEP_POSE[i]], [m + vh() * 0.38, () => ({})]);
+  });
+  K.push([top(svcsEl) - vh() * 0.2, () => ({ heat: 0, spin: 0, dim: 0.6, theta: 0.62, dist: 3.4, ty: 0.62, tz: 0, phi: 0.1 })]);
+  K.push([top(cfg) - vh() * 0.5, POSE.config]);
+  K.push([top(cfg) + cfg.offsetHeight - vh(), POSE.config]);
+  K.push([top(cover) + cover.offsetHeight - vh() * 0.8, () => ({ ...POSE.finale(), turn: 0.2 })]);
+  K.push([top(fin), POSE.finale]);
+  K.push([document.documentElement.scrollHeight - vh(), () => ({ ...POSE.finale(), ...(isDesk() ? {} : { sy: -0.05, dist: 3.8 }) })]);
+  K.sort((a, b) => a[0] - b[0]);
   let prev = { ...DEFAULT_STATE };
-  keys = K.map(([p, v]) => ({ pos: p(), vals: v() }))
-    .map((k) => {
-      k.full = { ...prev, ...k.vals };
-      prev = k.full;
-      return k;
-    });
-  covered = [
-    [top(her) + vh() + 4, top(her) + her.offsetHeight - 2 * vh() - 4],
-    [top(cover) + 4, top(cover) + cover.offsetHeight - vh() - 4],
-  ];
+  keys = K.map(([pos, v]) => {
+    const full = { ...prev, ...v() };
+    prev = full;
+    return { pos, full };
+  });
 }
 function sample(y, out) {
   if (y <= keys[0].pos) return Object.assign(out, keys[0].full);
@@ -400,28 +422,36 @@ function sample(y, out) {
   }
   return Object.assign(out, keys[keys.length - 1].full);
 }
+// Ekranı tamamen örten opak bölümler: arkadaki 3D çizilmez
+const covers = [svcsEl, her, cover];
+function isCovered() {
+  const h = vh();
+  for (const el of covers) {
+    const r = el.getBoundingClientRect();
+    if (r.top <= 0 && r.bottom >= h) return true;
+  }
+  return false;
+}
 
 // --- Yumuşak scroll ve döngü --------------------------------------------------
 
 const lenis = initSmoothScroll({ lerp: 0.085 });
-if (lenis) lenis.stop();
+const header = $('#top');
+autoHideHeader(header, { offset: 120 });
 
 if (seat) {
-  seat.U.uPattern.value = 0;
-  applyConfig(false);
+  seat.ready.then(() => applyConfig(false)).catch(() => {});
   if (reducedMotion) {
     Object.assign(seat.target, POSE.config(), { sx: isDesk() ? -0.2 : 0 });
     Object.assign(seat.cur, seat.target);
     seat.extra.intro = 1;
-    seat.ready.then(() => seat.renderOnce());
+    seat.ready.then(() => seat.renderOnce()).catch(() => {});
     window.addEventListener('resize', () => seat.renderOnce());
   } else {
     gsap.ticker.add(() => {
-      const y = scrollY;
       if (!keys.length) return;
-      sample(y, seat.target);
-      const hidden = covered.some(([a, b]) => y > a && y < b);
-      seat.setActive(!hidden);
+      sample(scrollY, seat.target);
+      seat.setActive(!isCovered());
       seat.frame();
     });
   }
@@ -437,61 +467,56 @@ function heroIn() {
   const tl = gsap.timeline();
   const lines = $$('.hero__title .ln');
   const chars = lines.map((l) => new SplitText(l, { type: 'chars' }).chars).flat();
-  tl.from(chars, { yPercent: 110, fontStretch: '150%', duration: 1.1, ease: 'expo.out', stagger: 0.022 })
-    .from('.hero__kicker', { opacity: 0, x: -20, duration: 0.6 }, 0.1)
-    .from('.hero__sub, .hero__cta > *, .hero__hint', { opacity: 0, y: 24, duration: 0.8, stagger: 0.08, ease: 'power3.out' }, 0.35)
-    .from('.top', { yPercent: -100, opacity: 0, duration: 0.8, ease: 'power3.out' }, 0.2);
-  if (seat) tl.to(seat.extra, { intro: 1, duration: 2.2, ease: 'power2.inOut' }, 0);
+  tl.from(chars, { yPercent: 110, fontStretch: '150%', duration: 1.0, ease: 'expo.out', stagger: 0.02 })
+    .from('.hero__kicker', { autoAlpha: 0, x: -20, duration: 0.6 }, 0.1)
+    .from('.hero__sub, .hero__cta > *, .hero__hint', { autoAlpha: 0, y: 24, duration: 0.7, stagger: 0.07, ease: 'power3.out', clearProps: 'transform' }, 0.25)
+    .from('.top__in', { yPercent: -100, autoAlpha: 0, duration: 0.7, ease: 'power3.out', clearProps: 'all' }, 0.15);
+  if (seat) tl.to(seat.extra, { intro: 1, duration: 1.8, ease: 'power2.inOut' }, 0);
   return tl;
 }
 
-function buildFilm() {
-  const tl = gsap.timeline({
-    defaults: { ease: 'none' },
-    scrollTrigger: { trigger: film, start: 'top top', end: 'bottom bottom', scrub: 0.6 },
-  });
-  tl.set({}, {}, 100);
-  // Hero çıkışı
-  tl.to('.hero__title .ln', { yPercent: -60, opacity: 0, stagger: 0.8, duration: 5 }, 1)
-    .to('.hero__kicker, .hero__sub, .hero__cta, .hero__hint', { y: -40, opacity: 0, duration: 4, stagger: 0.5 }, 0.5);
-
-  // Adımlar
-  const W = [[8, 19.5], [20, 32.5], [33, 45.5], [46, 60.5], [61, 76]];
-  $$('.step').forEach((el, i) => {
-    const [a, b] = W[i];
+function buildSteps() {
+  steps.forEach((el) => {
     const title = splitChars($('.step__title', el));
-    tl.set(el, { visibility: 'visible' }, a - 0.01)
-      .fromTo($('.step__no span', el), { yPercent: 100, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 2.2 }, a)
-      .fromTo(title.chars, { yPercent: 115, rotate: 6 }, { yPercent: 0, rotate: 0, stagger: 0.07, duration: 2.4 }, a + 0.3)
-      .fromTo($('.step__text', el), { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 2 }, a + 1.4)
-      .to(title.chars, { yPercent: -115, stagger: 0.04, duration: 2 }, b - 2.4)
-      .to([$('.step__no span', el), $('.step__text', el)], { opacity: 0, y: -30, duration: 1.8 }, b - 2.2)
-      .set(el, { visibility: 'hidden' }, b);
+    const tl = gsap.timeline({
+      scrollTrigger: { trigger: el, start: 'top 62%', toggleActions: 'play none none reverse' },
+    });
+    tl.fromTo($('.step__no span', el), { yPercent: 100, autoAlpha: 0 }, { yPercent: 0, autoAlpha: 1, duration: 0.7, ease: 'power3.out' })
+      .fromTo(title.chars, { yPercent: 115, rotate: 6 }, { yPercent: 0, rotate: 0, stagger: 0.02, duration: 0.7, ease: 'power3.out' }, 0.08)
+      .fromTo($('.step__text', el), { autoAlpha: 0, y: 24 }, { autoAlpha: 1, y: 0, duration: 0.6, ease: 'power2.out' }, 0.3);
   });
-
   // Isıtma bölümünde turuncu parıltı
-  tl.fromTo(glow, { '--heat': 0 }, { '--heat': 1, duration: 8 }, 62).to(glow, { '--heat': 0, duration: 5 }, 76);
+  const last = steps[steps.length - 1];
+  gsap.fromTo(glow, { '--heat': 0 }, {
+    '--heat': 1, ease: 'none',
+    scrollTrigger: { trigger: last, start: 'top 80%', end: 'center center', scrub: 0.5 },
+  });
+  gsap.to(glow, {
+    '--heat': 0, ease: 'none', immediateRender: false,
+    scrollTrigger: { trigger: last, start: 'bottom 90%', end: 'bottom 40%', scrub: 0.5 },
+  });
+}
 
-  // Hizmetler
-  const svcs = $$('.svc');
-  const head = $('.svcs__head');
-  tl.set('#hizmetler', { visibility: 'visible' }, 77)
-    .fromTo(head, { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 2 }, 77);
-  const span = 21 / svcs.length;
-  svcs.forEach((el, i) => {
-    const a = 79 + i * span;
+function buildServices() {
+  const head = splitChars('.svcs__title');
+  gsap.fromTo(head.chars, { yPercent: 110 }, {
+    yPercent: 0, stagger: 0.012, ease: 'none',
+    scrollTrigger: { trigger: '.svcs__head', start: 'top 85%', end: 'top 40%', scrub: 0.4 },
+  });
+  $$('.svc').forEach((el) => {
     const t = $('.svc__title', el);
-    tl.set(el, { visibility: 'visible' }, a - 0.01)
-      .fromTo(t, { fontStretch: '50%', opacity: 0 }, { fontStretch: '100%', opacity: 1, duration: span * 0.5, ease: 'power2.out' }, a)
-      .to(t, { scrambleText: { text: t.dataset.text, chars: 'abcçdefgğhıijklmnoöprsştuüvyz', speed: 0.5 }, duration: span * 0.45 }, a)
-      .fromTo([$('.svc__text', el), $('.svc__time', el)], { opacity: 0, y: 20 }, { opacity: 1, y: 0, stagger: span * 0.1, duration: span * 0.3 }, a + span * 0.2)
-      .to($$('.svcs__dots li')[i], { '--on': 1, duration: span * 0.3 }, a);
-    if (i < svcs.length - 1) {
-      tl.to(el, { opacity: 0, y: -30, duration: span * 0.2 }, a + span * 0.8).set(el, { visibility: 'hidden' }, a + span);
+    const img = $('.svc__img img', el);
+    const tl = gsap.timeline({ scrollTrigger: { trigger: el, start: 'top 82%', once: true } });
+    tl.fromTo(t, { fontStretch: '60%' }, { fontStretch: '100%', duration: 0.8, ease: 'power2.out' })
+      .to(t, { scrambleText: { text: t.dataset.text, chars: 'abcçdefgğhıijklmnoöprsştuüvyz', speed: 0.6 }, duration: 0.7 }, 0)
+      .fromTo([$('.svc__text', el), $('.svc__time', el)], { autoAlpha: 0, y: 16 }, { autoAlpha: 1, y: 0, stagger: 0.08, duration: 0.5 }, 0.2);
+    if (img) {
+      gsap.fromTo(img, { scale: 1.15, yPercent: -6 }, {
+        scale: 1.02, yPercent: 6, ease: 'none',
+        scrollTrigger: { trigger: el, start: 'top bottom', end: 'bottom top', scrub: true },
+      });
     }
   });
-  tl.to('#hizmetler', { opacity: 0, duration: 1.2 }, 98.6);
-  tl.fromTo('.film__rail i', { scaleY: 0 }, { scaleY: 1, duration: 100 }, 0);
 }
 
 let odoPrev = null;
@@ -516,51 +541,58 @@ function buildHeritage() {
   const cards = $$('.her__card');
   const odo = { v: tarihce[0].goster };
   setOdo(odo.v);
+  // Giriş perdesi kaydırılırken (pin başlamadan) açılır; pin yalnızca bölümler için
+  gsap.fromTo(stage, { clipPath: 'inset(12% 8% 12% 8% round 28px)' }, {
+    clipPath: 'inset(0% 0% 0% 0% round 0px)', ease: 'none',
+    scrollTrigger: { trigger: her, start: 'top 90%', end: 'top top', scrub: 0.4 },
+  });
   const tl = gsap.timeline({
     defaults: { ease: 'none' },
     scrollTrigger: { trigger: her, start: 'top top', end: 'bottom bottom', scrub: 0.5 },
   });
-  const total = n + 1;
-  tl.set({}, {}, total);
-  tl.fromTo(stage, { clipPath: 'circle(0% at 50% 55%)' }, { clipPath: 'circle(100% at 50% 55%)', duration: 0.8, ease: 'power2.in' }, 0)
-    .fromTo('.her__head', { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.4 }, 0.35)
-    .fromTo('.her__line', { strokeDashoffset: 1000 }, { strokeDashoffset: 0, duration: n - 0.2 }, 0.8);
+  tl.set({}, {}, n);
+  // Pin boyunca alt çubuk saklanır (tek alt öğe: hikâye kartı)
+  ScrollTrigger.create({
+    trigger: her, start: 'top top', end: 'bottom bottom',
+    onToggle: (s) => setStoryMode(s.isActive ? true : null),
+  });
+  tl.fromTo('.her__head', { autoAlpha: 0, y: 30 }, { autoAlpha: 1, y: 0, duration: 0.25 }, 0)
+    .fromTo('.her__line', { strokeDashoffset: 1000 }, { strokeDashoffset: 0, duration: n - 0.2 }, 0);
   tarihce.forEach((t, i) => {
-    const s = 0.8 + i;
+    const s = i;
     const ph = phs[i];
     const card = cards[i];
     const split = splitChars($('h3', card));
     if (i > 0) {
-      tl.fromTo(ph, { clipPath: 'inset(100% 0% 0% 0%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: 0.4, ease: 'power2.inOut' }, s - 0.15)
-        .fromTo(odo, { v: tarihce[i - 1].goster }, { v: t.goster, duration: 0.4, ease: 'power1.inOut', immediateRender: false, onUpdate: () => setOdo(odo.v) }, s - 0.15)
-        .to(cards[i - 1], { opacity: 0, y: -40, duration: 0.2 }, s - 0.2);
+      tl.fromTo(ph, { clipPath: 'inset(100% 0% 0% 0%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: 0.4, ease: 'power2.inOut' }, s - 0.2)
+        .fromTo(odo, { v: tarihce[i - 1].goster }, { v: t.goster, duration: 0.4, ease: 'power1.inOut', immediateRender: false, onUpdate: () => setOdo(odo.v) }, s - 0.2)
+        .to(cards[i - 1], { autoAlpha: 0, y: -30, duration: 0.18 }, s - 0.22);
     } else {
-      tl.fromTo(ph, { clipPath: 'inset(0% 0% 0% 0%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: 0.01 }, 0);
+      tl.set(ph, { clipPath: 'inset(0% 0% 0% 0%)' }, 0);
     }
-    tl.fromTo($('.her__col', ph), { opacity: 0 }, { opacity: 1, duration: 0.55 }, s + 0.15)
-      .fromTo($$('img', ph), { scale: 1.18 }, { scale: 1, duration: 1.2 }, s - 0.2)
-      .fromTo(card, { opacity: 0 }, { opacity: 1, duration: 0.05 }, s)
-      .fromTo($('.her__year', card), { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: 0.25 }, s)
-      .fromTo(split.chars, { yPercent: 110 }, { yPercent: 0, stagger: 0.008, duration: 0.3 }, s + 0.05)
-      .fromTo($('p:last-child', card), { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.25 }, s + 0.2);
+    tl.fromTo($('.her__col', ph), { opacity: 0 }, { opacity: 1, duration: 0.5 }, s + 0.05)
+      .fromTo($$('img', ph), { scale: 1.16 }, { scale: 1, duration: 1.1 }, s - 0.2)
+      .fromTo(card, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.04 }, s - 0.02)
+      .fromTo($('.her__year', card), { autoAlpha: 0, x: -24 }, { autoAlpha: 1, x: 0, duration: 0.22 }, s)
+      .fromTo(split.chars, { yPercent: 110 }, { yPercent: 0, stagger: 0.006, duration: 0.26 }, s + 0.03)
+      .fromTo($('p:last-child', card), { autoAlpha: 0, y: 16 }, { autoAlpha: 1, y: 0, duration: 0.22 }, s + 0.14);
   });
-  tl.to(stage, { clipPath: 'circle(0% at 50% 45%)', duration: 0.8, ease: 'power2.out' }, n + 0.2);
   odo.v = tarihce[0].goster;
   setOdo(odo.v);
 }
 
 function buildConfigIn() {
-  gsap.fromTo('.cfg__panel', { opacity: 0, y: 80 }, {
-    opacity: 1, y: 0, ease: 'none',
-    scrollTrigger: { trigger: cfg, start: 'top 95%', end: 'top 35%', scrub: 0.5 },
+  gsap.fromTo('.cfg__panel', { autoAlpha: 0, y: 70 }, {
+    autoAlpha: 1, y: 0, ease: 'none',
+    scrollTrigger: { trigger: cfg, start: 'top 95%', end: 'top 40%', scrub: 0.5 },
   });
-  gsap.fromTo('.cfg__panel .chip', { opacity: 0, scale: 0.6 }, {
-    opacity: 1, scale: 1, stagger: 0.02, ease: 'back.out(2)',
-    scrollTrigger: { trigger: cfg, start: 'top 70%', end: 'top 20%', scrub: 0.5 },
+  gsap.fromTo('.cfg__panel .chip', { autoAlpha: 0, scale: 0.7 }, {
+    autoAlpha: 1, scale: 1, stagger: 0.015, ease: 'back.out(2)',
+    scrollTrigger: { trigger: cfg, start: 'top 75%', end: 'top 30%', scrub: 0.5 },
   });
   ScrollTrigger.create({
-    trigger: cfg, start: 'top 50%', once: true,
-    onEnter: () => seat && gsap.fromTo(seat.extra, { restitch: 0 }, { restitch: 1, duration: 2.2, ease: 'none' }),
+    trigger: cfg, start: 'top 45%', once: true,
+    onEnter: () => seat && gsap.fromTo(seat.extra, { restitch: 0 }, { restitch: 1, duration: 1.8, ease: 'power1.inOut' }),
   });
 }
 
@@ -594,6 +626,7 @@ function buildProof() {
   const marqs = $$('.marq').map((m) => {
     const track = $('.marq__track', m);
     track.innerHTML += track.innerHTML;
+    [...track.children].slice(track.children.length / 2).forEach((c) => c.setAttribute('aria-hidden', 'true'));
     return { track, dir: +m.dataset.dir, x: 0, w: 0, active: false };
   });
   const measure = () => marqs.forEach((q) => (q.w = q.track.scrollWidth / 2));
@@ -616,14 +649,13 @@ function buildProof() {
       q.track.style.transform = `translate3d(${q.x}px,0,0) skewX(${-skew * q.dir}deg)`;
     });
   });
-  gsap.fromTo('.visit__info > *', { opacity: 0, y: 40 }, {
-    opacity: 1, y: 0, stagger: 0.1, ease: 'power3.out', duration: 0.9,
-    scrollTrigger: { trigger: '#iletisim', start: 'top 70%', once: true },
+  gsap.fromTo('.visit__info > *', { autoAlpha: 0, y: 40 }, {
+    autoAlpha: 1, y: 0, stagger: 0.1, ease: 'power3.out', duration: 0.9,
+    scrollTrigger: { trigger: '#iletisim', start: 'top 75%', once: true },
   });
 }
 
 function syncFootHeight() {
-  // Mobil aksiyon çubuğu için body'ye eklenen alt boşluk da son ekranın parçası
   const pad = parseFloat(getComputedStyle(document.body).paddingBottom) || 0;
   document.documentElement.style.setProperty('--foot-h', `${$('.foot').offsetHeight + pad}px`);
 }
@@ -639,17 +671,17 @@ function buildFinale() {
     });
   });
   const words = $$('.fin__title .w');
-  gsap.fromTo(words, { yPercent: 120, fontStretch: '50%', opacity: 0 }, {
-    yPercent: 0, fontStretch: '100%', opacity: 1, stagger: 0.15, ease: 'none',
-    scrollTrigger: { trigger: fin, start: 'top 85%', end: 'top 20%', scrub: 0.5 },
+  gsap.fromTo(words, { yPercent: 120, fontStretch: '50%', autoAlpha: 0 }, {
+    yPercent: 0, fontStretch: '100%', autoAlpha: 1, stagger: 0.15, ease: 'none',
+    scrollTrigger: { trigger: fin, start: 'top 85%', end: 'top 30%', scrub: 0.5 },
   });
-  gsap.fromTo('.fin__note, .fin__cta', { opacity: 0, y: 30 }, {
-    opacity: 1, y: 0, ease: 'none',
-    scrollTrigger: { trigger: fin, start: 'top 45%', end: 'top 8%', scrub: 0.5 },
+  gsap.fromTo('.fin__note, .fin__cta', { autoAlpha: 0, y: 30 }, {
+    autoAlpha: 1, y: 0, ease: 'power2.out', duration: 0.7,
+    scrollTrigger: { trigger: fin, start: 'top 55%', toggleActions: 'play none none reverse' },
   });
 }
 
-// --- Açılış ------------------------------------------------------------------
+// --- Açılış (≤ 2 sn, dokununca geçer) ---------------------------------------------
 
 function runIntro() {
   const intro = $('#intro');
@@ -657,46 +689,38 @@ function runIntro() {
   const name = $('.intro__name');
   const nameChars = new SplitText(name, { type: 'chars' }).chars;
   const p = { v: 0 };
-  let ready = !seat;
-  seat?.ready.then(() => (ready = true)).catch(() => (ready = true));
   gsap.set('.intro__stitch', { strokeDashoffset: 600 });
-  gsap.from(nameChars, { yPercent: 100, opacity: 0, fontStretch: '150%', stagger: 0.03, duration: 0.9, ease: 'expo.out' });
-  const prog = gsap.to(p, {
-    v: 100, duration: 1.3, ease: 'power1.inOut',
-    onUpdate: () => {
-      const v = ready ? p.v : Math.min(p.v, 92);
-      count.textContent = String(Math.round(v)).padStart(3, '0');
-      gsap.set('.intro__stitch', { strokeDashoffset: 600 - v * 6 });
-      if (p.v >= 100 && ready) done();
-    },
-    onComplete: () => {
-      if (ready) done();
-      else seat.ready.finally(done);
-    },
-  });
+  gsap.from(nameChars, { yPercent: 100, autoAlpha: 0, fontStretch: '150%', stagger: 0.03, duration: 0.8, ease: 'expo.out' });
   let finished = false;
+  // 3D hazır olmasa da perde en geç 1,6 sn'de kalkar; koltuk hazır olunca ışığı açılır
+  const prog = gsap.to(p, {
+    v: 100, duration: 1.2, ease: 'power1.inOut',
+    onUpdate: () => {
+      count.textContent = String(Math.round(p.v)).padStart(3, '0');
+      gsap.set('.intro__stitch', { strokeDashoffset: 600 - p.v * 6 });
+    },
+    onComplete: () => done(),
+  });
   function done() {
     if (finished) return;
     finished = true;
     prog.kill();
     count.textContent = '100';
     gsap.set('.intro__stitch', { strokeDashoffset: 0 });
+    intro.style.pointerEvents = 'none';
     const tl = gsap.timeline();
-    tl.to('.intro__center', { scale: 0.92, opacity: 0, duration: 0.35, ease: 'power2.in' })
-      .to('.intro__skip', { opacity: 0, duration: 0.25 }, 0)
-      .to('.intro__half--top', { yPercent: -100, duration: 0.8, ease: 'expo.inOut' }, 0.2)
-      .to('.intro__half--bot', { yPercent: 100, duration: 0.8, ease: 'expo.inOut' }, 0.2)
-      .add(heroIn(), 0.4)
-      .call(() => {
-        intro.remove();
-        lenis?.start();
-        ScrollTrigger.refresh();
-      }, null, 1.0);
+    tl.to('.intro__center', { scale: 0.94, autoAlpha: 0, duration: 0.3, ease: 'power2.in' })
+      .to('.intro__skip', { autoAlpha: 0, duration: 0.2 }, 0)
+      .to('.intro__half--top', { yPercent: -100, duration: 0.7, ease: 'expo.inOut' }, 0.15)
+      .to('.intro__half--bot', { yPercent: 100, duration: 0.7, ease: 'expo.inOut' }, 0.15)
+      .add(heroIn(), 0.3)
+      .call(() => intro.remove(), null, 0.9);
+    lenis?.start();
   }
-  intro.addEventListener('pointerdown', () => {
-    if (ready) done();
-    else gsap.to(p, { v: 100, duration: 0.3 });
-  });
+  intro.addEventListener('pointerdown', done);
+  addEventListener('wheel', done, { once: true, passive: true });
+  addEventListener('touchmove', done, { once: true, passive: true });
+  addEventListener('keydown', done, { once: true });
 }
 
 // --- Etkileşimler ------------------------------------------------------------
@@ -724,6 +748,8 @@ function cursor() {
     return;
   }
   document.documentElement.classList.add('has-cursor');
+  cur.style.opacity = '0';
+  window.addEventListener('pointermove', () => (cur.style.opacity = '1'), { once: true });
   const dot = $('.cursor__dot', cur);
   const ring = $('.cursor__ring', cur);
   const dx = gsap.quickTo(dot, 'x', { duration: 0.08 });
@@ -751,7 +777,8 @@ if (reducedMotion) {
   $('[data-score]').textContent = d.puan.ortalama.toFixed(1).replace('.', ',');
   $$('[data-count]').forEach((el) => (el.textContent = fmt(+el.dataset.count) + el.dataset.suffix));
 } else {
-  buildFilm();
+  buildSteps();
+  buildServices();
   buildHeritage();
   buildConfigIn();
   buildProof();
@@ -759,5 +786,22 @@ if (reducedMotion) {
   ScrollTrigger.addEventListener('refresh', buildKeys);
   document.fonts.ready.then(() => ScrollTrigger.refresh());
   buildKeys();
-  runIntro();
+  if (vitrinModu() || sessionStorageSeen()) {
+    // Vitrinden gelen ya da perdeyi görmüş ziyaretçiye perde yok
+    $('#intro').remove();
+    heroIn();
+  } else {
+    lenis?.stop();
+    runIntro();
+  }
+}
+
+function sessionStorageSeen() {
+  try {
+    const seen = sessionStorage.getItem('kapitone-intro') === '1';
+    sessionStorage.setItem('kapitone-intro', '1');
+    return seen;
+  } catch (_) {
+    return false;
+  }
 }
