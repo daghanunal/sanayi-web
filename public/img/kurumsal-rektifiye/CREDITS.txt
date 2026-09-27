@@ -1,0 +1,1 @@
+kurumsal-rektifiye: krank-3d.jpg / kesit-3d.jpg — 3D görsel, lib3d engine v2 (bu proje, prosedürel), Blender Cycles render (.shots/yukseltme/mikron/tools/render_rk.py)

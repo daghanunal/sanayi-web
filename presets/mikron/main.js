@@ -1,7 +1,7 @@
 import raw from '../../data/mikron.json';
 import {
   boot, initSmoothScroll, reducedMotion, gsap, ScrollTrigger, esc,
-  telHref, waHref, mapsHref, mapsEmbed, openStatus, groupedHours, icons,
+  telHref, waHref, mapsHref, mapsEmbed, openStatus, groupedHours, icons, setStoryMode,
 } from '../../shared/core.js';
 import { SplitText } from 'gsap/SplitText';
 import { ScrambleTextPlugin } from 'gsap/ScrambleTextPlugin';
@@ -151,7 +151,7 @@ $('[data-galeri]').innerHTML = d.galeri
 const stars = (n) => Array.from({ length: 5 }, (_, i) => (i < n ? icons.star : '')).join('');
 $('[data-puan]').textContent = String(d.puan.ortalama).replace('.', ',');
 $('[data-stars]').innerHTML = stars(5);
-$('[data-puan-adet]').textContent = `${nf.format(d.puan.adet)} Google yorumu`;
+$('[data-puan-adet]').textContent = d.puan.adet ? `${nf.format(d.puan.adet)} değerlendirme` : '';
 $('[data-yorumlar]').innerHTML = d.yorumlar
   .map(
     (y) => `<figure class="yorum"><div class="yorum__stars" aria-label="${y.puan} yıldız">${stars(y.puan)}</div>
@@ -257,16 +257,16 @@ function makeDim(label) {
   };
 }
 const DIMS = [
-  { a: 'journalA', b: 'journalB', off: 70, win: [0.16, 0.39], text: (s) => `Ø 54,${String(Math.round(40 - s.grind * 40)).padStart(3, '0')}` },
-  { a: 'boreA', b: 'boreB', off: 0, win: [0.52, 0.74], text: () => 'Ø 75,25 +0,01' },
-  { a: 'deckA', b: 'deckB', off: 30, win: [0.82, 1.01], text: (s) => (s.cut > 0.98 ? 'Düzlemsellik 0,02' : 'Düzlemsellik ölçülüyor') },
+  { a: 'journalA', b: 'journalB', off: 70, win: [0.16, 0.385], text: (s) => `Ø 54,${String(Math.round(40 - s.grind * 40)).padStart(3, '0')}` },
+  { a: 'boreA', b: 'boreB', off: 0, win: [0.5, 0.74], text: () => 'Ø 75,25 +0,01' },
+  { a: 'deckA', b: 'deckB', off: 30, win: [0.8, 0.995], text: (s) => (s.cut > 0.98 ? 'Düzlemsellik 0,02' : 'Düzlemsellik ölçülüyor') },
 ].map((c) => ({ ...c, dim: makeDim('') }));
 
 // HUD okumaları
 const HUD = [
-  { win: [0.14, 0.39], label: 'Ovalite', from: 0.06, to: 0.004, tol: 0.005, key: 'grind' },
-  { win: [0.5, 0.75], label: 'Koniklik', from: 0.05, to: 0.004, tol: 0.005, key: 'hone' },
-  { win: [0.8, 1.01], label: 'Çarpılma', from: 0.12, to: 0.02, tol: 0.02, key: 'cut' },
+  { win: [0.13, 0.38], label: 'Ovalite', from: 0.06, to: 0.004, tol: 0.005, key: 'grind' },
+  { win: [0.46, 0.735], label: 'Koniklik', from: 0.05, to: 0.004, tol: 0.005, key: 'hone' },
+  { win: [0.79, 0.995], label: 'Çarpılma', from: 0.12, to: 0.02, tol: 0.02, key: 'cut' },
 ];
 const hud = $('.hud');
 const hudLabel = $('[data-hud-label]'), hudVal = $('[data-hud-val]'), hudTol = $('[data-hud-tol]'), hudVerdict = $('[data-hud-verdict]');
@@ -339,7 +339,7 @@ function playIntro() {
     const o = { v: 0 };
     const tl = gsap.timeline({ onComplete: finish });
     tl.to(o, {
-      v: 1, duration: 1.5, ease: 'power2.inOut',
+      v: 1, duration: 1.15, ease: 'power2.inOut',
       onUpdate() {
         const k = o.v;
         const wobble = Math.sin(k * 18) * (1 - k) * 160;
@@ -353,12 +353,15 @@ function playIntro() {
         read.textContent = '0,000';
         $('.gauge--intro .gauge__needle').style.stroke = 'var(--go)';
       })
-      .to({}, { duration: 0.25 })
-      .to('.intro__core', { autoAlpha: 0, scale: 0.96, duration: 0.3, ease: 'power2.in' })
-      .to('.intro__shutter--l', { xPercent: -101, duration: 0.6, ease: 'expo.inOut' }, '<0.15')
-      .to('.intro__shutter--r', { xPercent: 101, duration: 0.6, ease: 'expo.inOut' }, '<');
+      .to({}, { duration: 0.18 })
+      .to('.intro__core', { autoAlpha: 0, scale: 0.96, duration: 0.25, ease: 'power2.in' })
+      .to('.intro__shutter--l', { xPercent: -101, duration: 0.55, ease: 'expo.inOut' }, '<0.1')
+      .to('.intro__shutter--r', { xPercent: 101, duration: 0.55, ease: 'expo.inOut' }, '<');
     gsap.from('.intro__name', { yPercent: 40, autoAlpha: 0, duration: 0.6, ease: 'power3.out', delay: 0.15 });
-    intro.addEventListener('pointerdown', () => tl.progress(0.999), { once: true });
+    const skip = () => tl.progress(0.999);
+    intro.addEventListener('pointerdown', skip, { once: true });
+    addEventListener('wheel', skip, { once: true, passive: true });
+    addEventListener('keydown', skip, { once: true });
     function finish() {
       intro.remove();
       resolve();
@@ -372,67 +375,83 @@ function playIntro() {
 
 function heroIn() {
   const split = splitHead($('.hero__title'));
-  gsap.set('.chap--hero', { autoAlpha: 1 });
   const tl = gsap.timeline();
-  tl.from(split.chars, { yPercent: 115, rotate: 6, duration: 0.9, ease: 'expo.out', stagger: 0.028 })
+  tl.from(split.chars, { yPercent: 115, rotate: 6, duration: 0.8, ease: 'expo.out', stagger: 0.024 })
     .from(['.chap__since', '.hero__lead', '.hero__cta', '.hero__hint'], { autoAlpha: 0, y: 18, duration: 0.6, stagger: 0.08, ease: 'power3.out' }, 0.25);
   return tl;
 }
 
 let filmST = null;
+// Kaydırma → film ilerlemesi (p). Hero akışta geçer, üç istasyon ayrı ayrı pinlenir (≤ 2 ekran),
+// istasyonlar arasındaki bir ekranlık geçişte kesit perdesi kapanır ve kamera sonraki istasyona kesilir.
+const P_KEYS = [0, 0.1, 0.385, 0.43, 0.742, 0.775, 1];
 function buildFilm() {
-  const chaps = $$('.chap');
-  const dur = phone ? 6.2 : 7;
-  // bölüm pencereleri: [giriş başı, çıkış sonu]
-  const W = [
-    [-1, 0.1],
-    [0.13, 0.38],
-    [0.49, 0.74],
-    [0.8, 1.02],
-  ];
+  const pins = phone ? [1.9, 1.8, 1.5] : [2.1, 2.0, 1.6];
+  const acts = $$('.act');
+  const sts = acts.map((el, i) =>
+    ScrollTrigger.create({ trigger: el, start: 'top top', end: () => `+=${innerHeight * pins[i]}`, pin: true, anticipatePin: 1 })
+  );
   const tl = gsap.timeline({ paused: true, defaults: { ease: 'none' } });
-  chaps.forEach((el, i) => {
-    const [a, b] = W[i];
-    const title = $('.chap__title, .hero__title', el);
-    const split = title ? splitHead(title) : null;
-    if (i > 0) {
-      tl.fromTo(el, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.012 }, a);
-      if (split) tl.fromTo(split.chars, { yPercent: 115 }, { yPercent: 0, stagger: 0.0015, duration: 0.03, ease: 'power3.out' }, a);
-      tl.fromTo($$('.antet, .chap__txt', el), { autoAlpha: 0, y: 16 }, { autoAlpha: 1, y: 0, duration: 0.03, stagger: 0.01 }, a + 0.01);
-    }
-    if (b < 1) {
-      if (split) tl.to(split.chars, { yPercent: -115, stagger: 0.001, duration: 0.025, ease: 'power2.in' }, b - 0.035);
-      tl.to(el, { autoAlpha: 0, duration: 0.02 }, b - 0.02);
-    }
-  });
-  // kamera istasyon değiştirirken kesit taraması ekranı kapatır
-  for (const [el, a] of [[$('[data-wipe="1"]'), 0.393], [$('[data-wipe="2"]'), 0.742]]) {
-    tl.fromTo(el, { clipPath: 'inset(0% 0% 0% 100%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: 0.024, ease: 'power2.inOut' }, a)
-      .fromTo($('p', el), { xPercent: 30, autoAlpha: 0 }, { xPercent: 0, autoAlpha: 1, duration: 0.02 }, a + 0.008)
-      .to(el, { clipPath: 'inset(0% 100% 0% 0%)', duration: 0.024, ease: 'power2.inOut' }, a + 0.034)
-      .to($('p', el), { xPercent: -30, autoAlpha: 0, duration: 0.018 }, a + 0.032);
+  for (const [el, a] of [[$('[data-wipe="1"]'), 0.3865], [$('[data-wipe="2"]'), 0.7435]]) {
+    const w = el === $('[data-wipe="1"]') ? 0.043 : 0.031;
+    tl.fromTo(el, { clipPath: 'inset(0% 0% 0% 100%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: w * 0.42, ease: 'power2.inOut' }, a)
+      .fromTo($('p', el), { xPercent: 30, autoAlpha: 0 }, { xPercent: 0, autoAlpha: 1, duration: w * 0.3 }, a + w * 0.12)
+      .to(el, { clipPath: 'inset(0% 100% 0% 0%)', duration: w * 0.42, ease: 'power2.inOut' }, a + w * 0.55)
+      .to($('p', el), { xPercent: -30, autoAlpha: 0, duration: w * 0.28 }, a + w * 0.55);
   }
   tl.fromTo('.scale__fill', { scaleX: 0 }, { scaleX: 1, duration: 1 }, 0);
   tl.to({}, { duration: 0.001 }, 1);
-
+  const bounds = () => [0, sts[0].start, sts[0].end, sts[1].start, sts[1].end, sts[2].start, sts[2].end];
+  let B = null;
+  const progressAt = (y) => {
+    if (!B) B = bounds();
+    if (y <= B[0]) return 0;
+    for (let i = 0; i < B.length - 1; i++) {
+      if (y <= B[i + 1]) return P_KEYS[i] + (P_KEYS[i + 1] - P_KEYS[i]) * ((y - B[i]) / Math.max(1, B[i + 1] - B[i]));
+    }
+    return 1;
+  };
+  const update = () => {
+    const p = progressAt(window.__lenis ? window.__lenis.scroll : scrollY);
+    scene?.setProgress(p);
+    tl.progress(p);
+  };
   filmST = ScrollTrigger.create({
-    trigger: '.film',
-    start: 'top top',
-    end: () => `+=${innerHeight * dur}`,
-    pin: true,
-    scrub: true,
-    anticipatePin: 1,
-    onUpdate(self) {
-      scene?.setProgress(self.progress);
-      tl.progress(self.progress);
+    trigger: '#film', start: 'top top', end: () => sts[2].end,
+    onUpdate: update,
+    onRefresh: () => { B = bounds(); update(); },
+  });
+  // telefonda istasyonlar boyunca alt çubuk ve başlık çekilir (hikâye modu); geçişlerde de sahne ekranı kaplar
+  if (phone) {
+    ScrollTrigger.create({
+      trigger: '.act--a', start: () => sts[0].start + innerHeight * 0.05, end: () => sts[2].end - innerHeight * 0.1,
+      onToggle: (st) => setStoryMode(st.isActive ? true : null),
+    });
+  }
+  // film bitip sonraki bölüm ekranı kaplayınca sabit sahne gizlensin ve render dursun
+  const view = $('.film__view');
+  ScrollTrigger.create({
+    trigger: '#film', start: 'top bottom', end: 'bottom top',
+    onToggle: (st) => {
+      gsap.set(view, { autoAlpha: st.isActive ? 1 : 0 });
+      if (st.isActive) scene?.start();
+      else scene?.stop();
     },
   });
-  // film bitince sahne yukarı kayarak çıkar; tamamen çıkınca render dursun
-  ScrollTrigger.create({
-    start: () => filmST.end,
-    end: () => filmST.end + innerHeight,
-    onLeave: () => scene?.stop(),
-    onEnterBack: () => scene?.start(),
+  // istasyon çıkarken metni sönsün (kesit perdesiyle üst üste binmesin)
+  acts.forEach((el, i) => {
+    gsap.fromTo($('.chap', el), { autoAlpha: 1 }, {
+      autoAlpha: 0, ease: 'none', immediateRender: false,
+      scrollTrigger: { start: () => sts[i].end + innerHeight * 0.04, end: () => sts[i].end + innerHeight * 0.3, scrub: true },
+    });
+  });
+  // istasyon başlıkları sahneye girerken
+  acts.forEach((el) => {
+    const title = $('.chap__title', el);
+    const split = splitHead(title);
+    const tl2 = gsap.timeline({ scrollTrigger: { trigger: el, start: 'top 70%', toggleActions: 'play none none reverse' } });
+    tl2.from(split.chars, { yPercent: 115, stagger: 0.02, duration: 0.7, ease: 'expo.out' })
+      .from($$('.antet, .chap__txt', el), { autoAlpha: 0, y: 16, duration: 0.5, stagger: 0.08, ease: 'power3.out' }, 0.1);
   });
   window.__film = filmST; // ekran görüntüsü betikleri için
 }

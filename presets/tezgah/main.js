@@ -1,7 +1,7 @@
 import raw from '../../data/mikron.json';
 import {
   boot, initSmoothScroll, reducedMotion, gsap, ScrollTrigger, esc, asset,
-  telHref, waHref, mapsHref, mapsEmbed, openStatus, groupedHours, icons,
+  telHref, waHref, mapsHref, mapsEmbed, openStatus, groupedHours, icons, setStoryMode,
 } from '../../shared/core.js';
 import { DrawSVGPlugin } from 'gsap/DrawSVGPlugin';
 import { crankSVG, chainSVG, VIEWBOX } from './drawing.js';
@@ -265,14 +265,15 @@ function motion() {
   gsap.set(q('.cl'), { scaleX: 0, transformOrigin: '0% 50%' });
   gsap.set(q('.arr, .dt, .sym'), { opacity: 0 });
   gsap.set('.sheet__border rect', { drawSVG: '0%' });
-  gsap.set('.sheet', { yPercent: 104, opacity: 1 });
+  gsap.set('.sheet', { yPercent: 115, autoAlpha: 0 });
 
   const tl = gsap.timeline({
     defaults: { ease: 'none' },
     scrollTrigger: { trigger: '.hero', start: 'top top', end: '+=240%', pin: true, scrub: 0.6, anticipatePin: 1 },
   });
-  tl.to('.hero__copy', { yPercent: -18, opacity: 0, duration: 0.5 }, 0)
+  tl.to('.hero__copy', { yPercent: -18, autoAlpha: 0, duration: 0.3 }, 0)
     .to('.hero__tint', { opacity: 1, duration: 0.6 }, 0)
+    .set('.sheet', { autoAlpha: 1 }, 0.1)
     .to('.sheet', { yPercent: 0, duration: 0.9, ease: 'power2.out' }, 0.1)
     .to('.sheet__border rect', { drawSVG: '100%', duration: 0.6 }, 0.7)
     .from('.zone', { opacity: 0, duration: 0.3, stagger: 0.05 }, 0.9)
@@ -289,6 +290,14 @@ function motion() {
     .fromTo('.antet .stamp', { scale: 2.4, opacity: 0, rotate: -24 }, { scale: 1, opacity: 1, rotate: -8, duration: 0.25, ease: 'back.out(3)' }, 3.6)
     .from('.sheet__note', { opacity: 0, duration: 0.3 }, 3.6)
     .to({}, { duration: 0.4 });
+
+  // Telefonda pafta inerken alt çubuk çekilir (kart çubuğun yerine iner)
+  if (narrow.matches) {
+    ScrollTrigger.create({
+      trigger: '.hero', start: 'top top-=8', end: () => `+=${innerHeight * 2.3}`,
+      onToggle: (s) => setStoryMode(s.isActive ? true : null),
+    });
+  }
 
   // Bölüm başlıkları: ince çizgi ve başlık yükselir (her bölümde tek, sakin hareket)
   $$('.sec-head, .intro__grid > div:first-child, .sizes__grid > div:first-child, .report__grid > div:first-child, .reviews__head, .visit__grid > div:first-child').forEach((el) => {

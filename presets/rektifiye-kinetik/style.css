@@ -61,6 +61,7 @@ body {
   border-bottom: 1.5px solid var(--murekkep);
 }
 .ust__ad {
+  display: inline-flex; align-items: center; min-height: 44px;
   font-weight: 800; font-stretch: 118%; font-size: 17px; text-decoration: none;
   letter-spacing: -.01em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0;
 }
@@ -71,13 +72,13 @@ body {
 .ust__durum::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: var(--murekkep-3); }
 .ust__durum.is-open::before { background: var(--turuncu); box-shadow: 0 0 0 3px rgb(255 90 26 / .25); }
 .ust__tel {
-  display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 14px;
+  display: inline-flex; align-items: center; gap: 8px; height: 44px; padding: 0 14px;
   background: var(--murekkep); color: var(--nane-acik); border-radius: 3px;
   text-decoration: none; font: 600 14px var(--m); white-space: nowrap;
 }
 .ust__tel svg { width: 17px; height: 17px; }
 @media (max-width: 699px) {
-  .ust__tel { width: 40px; padding: 0; justify-content: center; }
+  .ust__tel { width: 44px; padding: 0; justify-content: center; }
   .ust__tel span { display: none; }
 }
 
@@ -381,8 +382,8 @@ body {
 /* --- 7. Rakamlar -------------------------------------------------------------- */
 .rakamlar { padding: clamp(80px, 11vw, 160px) var(--gut) clamp(40px, 6vw, 100px); }
 .rakam-liste { display: grid; gap: 34px; margin-top: 34px; }
-.rakam { display: grid; gap: 4px; }
-.rakam dd { margin: 0; display: flex; align-items: baseline; font-weight: 850; font-stretch: 75%; line-height: .9; letter-spacing: -.03em; font-size: clamp(76px, 22vw, 180px); font-variant-numeric: tabular-nums; }
+.rakam { display: grid; gap: 10px; }
+.rakam dd { margin: 0; display: flex; align-items: baseline; font-weight: 850; font-stretch: 75%; line-height: 1; letter-spacing: -.03em; font-size: clamp(76px, 22vw, 180px); font-variant-numeric: tabular-nums; }
 .rakam dd span { color: var(--turuncu-koyu); font-size: .5em; margin-left: .05em; }
 .rakam dt { font: 500 14px var(--m); text-transform: uppercase; letter-spacing: .05em; }
 .rakam__ok { width: 100%; height: 10px; transform-origin: 0 50%; }
@@ -463,3 +464,5 @@ body {
   .parca__doku, .bant__ic, .konum__durum.is-open i { animation: none; }
   .hizmet__baslik { transition: none; }
 }
+
+.puan__ornek { display: inline-block; margin-top: 8px; padding: 3px 8px; border: 1.5px solid currentColor; font-size: 11px; text-transform: uppercase; letter-spacing: .06em; }

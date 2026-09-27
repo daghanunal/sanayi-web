@@ -57,7 +57,7 @@ svg { overflow: visible; }
   color: var(--kagit); transition: background-color .3s ease, color .3s ease, box-shadow .3s ease;
 }
 .top.is-solid { background: rgb(239 236 226 / .96); color: var(--grafit); box-shadow: 0 1px 0 rgb(32 35 39 / .16); }
-.top__brand { font-weight: 800; font-size: 19px; letter-spacing: -.01em; text-decoration: none; margin-right: auto; }
+.top__brand { font-weight: 800; font-size: 19px; letter-spacing: -.01em; text-decoration: none; margin-right: auto; min-height: 44px; display: inline-flex; align-items: center; }
 .top__nav { display: flex; gap: 22px; font-size: 15px; }
 .top__nav a { text-decoration: none; opacity: .85; }
 .top__nav a:hover { opacity: 1; text-decoration: underline; text-underline-offset: 4px; }
@@ -65,7 +65,7 @@ svg { overflow: visible; }
 .status::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: var(--kirmizi); }
 .status.is-open::before { background: #3f9a5b; }
 .top__call {
-  display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px; border-radius: 4px;
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 10px 16px; border-radius: 4px; min-height: 44px; min-width: 44px;
   background: var(--kirmizi); color: #fff; text-decoration: none; font: 600 15px var(--f);
 }
 .top__call svg { width: 17px; height: 17px; }
@@ -157,7 +157,7 @@ svg { overflow: visible; }
 
 @media (max-width: 899px) {
   .sheet {
-    inset: 68px 12px 96px; grid-template-columns: 1fr; grid-template-rows: auto minmax(0, 1fr) auto auto;
+    inset: 68px 12px calc(var(--bar-space) + 12px); grid-template-columns: 1fr; transition: bottom .35s; grid-template-rows: auto minmax(0, 1fr) auto auto;
     padding: 22px 18px 16px; gap: 10px;
   }
   .sheet__drawing { grid-column: 1; grid-row: 2; }
@@ -179,6 +179,13 @@ svg { overflow: visible; }
 }
 @media (max-width: 899px) and (max-height: 720px) {
   .sheet__note { display: none; }
+}
+@media (max-width: 899px) {
+  .hero__copy { bottom: calc(var(--bar-reserve) + 12px); }
+  .hero__hint { display: none; }
+  .hero__slogan { margin: 12px 0 20px; }
+  .hero__actions .btn { min-height: 48px; padding: 0 16px; font-size: 15px; }
+  .hero__actions .btn--line-light { display: none; } /* alt çubukta WhatsApp var */
 }
 
 /* --- Ortak bölüm stilleri ---------------------------------------------- */
@@ -219,7 +226,7 @@ section { position: relative; }
 .order__tol { color: var(--kirmizi); }
 .order__lbl { display: none; }
 .order__ask a {
-  display: inline-flex; align-items: center; gap: 6px; padding: 8px 12px; border-radius: 4px;
+  display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 4px; min-height: 44px;
   border: 1.5px solid var(--grafit); text-decoration: none; font-weight: 600; font-size: 14px;
 }
 .order__ask a:hover { background: var(--grafit); color: var(--kagit); }
@@ -402,3 +409,5 @@ button.sizes__row:hover { background: rgb(239 236 226 / .07); }
 .rm .sheet { position: relative; inset: auto; opacity: 1; margin: 0 max(12px, calc((100% - 1240px) / 2)); min-height: 560px; }
 @media (max-width: 899px) { .rm .sheet { min-height: 720px; } }
 @media (prefers-reduced-motion: reduce) { .codes__track { animation: none; } }
+
+.etiket { display: inline-block; font: 500 12px var(--m); color: var(--kirmizi); border: 1.5px solid currentColor; padding: 3px 8px; border-radius: 3px; margin-bottom: 12px; transform: rotate(-1.5deg); }

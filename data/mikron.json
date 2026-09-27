@@ -58,10 +58,10 @@
   ],
   "markalar": ["K9K", "1.3 Multijet", "1.6 TDI", "DV6", "1.5 dCi", "M9R", "2.5 TDI", "D4CB", "1.9 JTD", "OM651", "Doblo 1.3", "Transit 2.4"],
   "galeri": [
-    { "src": "/img/mikron/torna.jpg", "alt": "Atölyede torna tezgâhı ve ayna" },
+    { "src": "/img/mikron/torna.jpg", "alt": "Torna tezgâhı ve ayna" },
     { "src": "/img/mikron/freze.jpg", "alt": "Soğutma sıvısı hortumuyla çalışan freze tezgâhı" },
     { "src": "/img/mikron/tezgah.jpg", "alt": "Yağlı, yıllarca çalışmış işleme tezgâhı" },
-    { "src": "/img/mikron/atolye.jpg", "alt": "Atölyede tezgâh başında çalışan usta" }
+    { "src": "/img/mikron/atolye.jpg", "alt": "Tezgâh başında işleme" }
   ],
   "puan": { "ortalama": 4.9, "adet": 176 },
   "yorumlar": [

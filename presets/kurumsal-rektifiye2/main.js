@@ -11,7 +11,10 @@ import './style.css';
 // (saman → bronz → mor → mavi) tek imza. Açık, soğuk, ölçü kâğıdı temizliğinde bir kurumsal site.
 const B = import.meta.env.BASE_URL;
 const v = derinBirlestir(ana, ek);
+// Yorumlar örnektir: uydurma puan ve "N değerlendirme" sayısı gösterilmez.
+delete v.puan;
 const GORSEL = {
+  'Silindir honlama': `${B}img/kurumsal-rektifiye2/kesit-3d.jpg`,
   'Supap ve yuva işleme': `${B}img/kurumsal-rektifiye2/kafa.jpg`,
   'Torna ve freze işleri': `${B}img/kurumsal-rektifiye2/talas.jpg`,
   'Biyel ve yatak yuvası': `${B}img/kurumsal-rektifiye2/disli.jpg`,
@@ -30,6 +33,7 @@ v.yorumlar = (v.yorumlar || []).map((y) => (ROL[y.ad] ? { ...y, ad: ROL[y.ad][0]
 v.galeri = [
   { src: `${B}img/kurumsal-rektifiye2/talas.jpg`, alt: 'Freze ucunun altından sıçrayan talaş' },
   ...(v.galeri || []),
+  { src: `${B}img/kurumsal-rektifiye2/kesit-3d.jpg`, alt: 'Kesit: çapraz hon izli silindirler (temsilî 3D görsel)' },
   { src: `${B}img/kurumsal-rektifiye2/kafa.jpg`, alt: 'Tezgâhta bekleyen eksantrik miller ve silindir kapağı' },
 ];
 
@@ -85,6 +89,7 @@ kurumsal({
     yer: "Şaşmaz'da",
     heroGorsel: `${B}img/kurumsal-rektifiye2/talas.jpg`,
     heroAlt: 'Freze ucunun altından sıçrayan çelik talaş',
+    altNot: 'Fotoğraflar: Pexels. 3D görseller temsilîdir.',
     logoAlt: 'Rektifiye · Torna · Ölçü',
     baslikEki: 'Motor rektifiye ve torna | Şaşmaz, Ankara',
     teklifEtiketi: 'İş fişi',

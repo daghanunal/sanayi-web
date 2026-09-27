@@ -47,61 +47,70 @@
   </header>
 
   <main id="top">
-    <!-- Film: kaydırmayla oynatılan tezgâh sahnesi -->
-    <section class="film" aria-label="Tezgâhta ne yapıyoruz">
-      <canvas class="stage" aria-hidden="true"></canvas>
-      <div class="stage-shade" aria-hidden="true"></div>
-      <svg class="dims" aria-hidden="true"></svg>
-
-      <div class="wipe" data-wipe="1" aria-hidden="true"><p>Detay B<span>Silindir bloğu, ölçek 2:1</span></p></div>
-      <div class="wipe" data-wipe="2" aria-hidden="true"><p>Detay C<span>Silindir kapağı, ölçek 1:2</span></p></div>
-      <div class="scale" aria-hidden="true"><div class="scale__fill"></div></div>
-
-      <div class="hud" aria-hidden="true">
-        <svg class="gauge gauge--hud" viewBox="0 0 200 200">
-          <circle class="gauge__rim" cx="100" cy="100" r="92" />
-          <circle class="gauge__face" cx="100" cy="100" r="84" />
-          <g class="gauge__ticks"></g>
-          <line class="gauge__needle" x1="100" y1="112" x2="100" y2="26" />
-          <circle class="gauge__hub" cx="100" cy="100" r="6" />
-        </svg>
-        <div class="hud__txt">
-          <p class="hud__label" data-hud-label>Ovalite</p>
-          <p class="hud__val"><span data-hud-val>0,060</span><small> mm</small></p>
-          <p class="hud__tol">Tolerans <span data-hud-tol>0,005</span> mm</p>
-          <p class="hud__verdict" data-hud-verdict>Ölçü dışı</p>
+    <!-- Film: kaydırmayla oynatılan tezgâh sahnesi. Sahne sabit arka planda; üstünden hero ve üç kısa
+         pinli istasyon geçer (her biri ≤ 2 ekran), aralarda kesit taraması perdesi kamerayı taşır. -->
+    <div class="film" id="film">
+      <div class="film__view" aria-hidden="true">
+        <canvas class="stage"></canvas>
+        <div class="stage-shade"></div>
+        <svg class="dims"></svg>
+        <div class="wipe" data-wipe="1"><p>Detay B<span>Silindir bloğu, kesit A–A</span></p></div>
+        <div class="wipe" data-wipe="2"><p>Detay C<span>Silindir kapağı, ölçek 1:2</span></p></div>
+        <div class="scale"><div class="scale__fill"></div></div>
+        <div class="hud">
+          <svg class="gauge gauge--hud" viewBox="0 0 200 200">
+            <circle class="gauge__rim" cx="100" cy="100" r="92" />
+            <circle class="gauge__face" cx="100" cy="100" r="84" />
+            <g class="gauge__ticks"></g>
+            <line class="gauge__needle" x1="100" y1="112" x2="100" y2="26" />
+            <circle class="gauge__hub" cx="100" cy="100" r="6" />
+          </svg>
+          <div class="hud__txt">
+            <p class="hud__label" data-hud-label>Ovalite</p>
+            <p class="hud__val"><span data-hud-val>0,060</span><small> mm</small></p>
+            <p class="hud__tol">Tolerans <span data-hud-tol>0,005</span> mm</p>
+            <p class="hud__verdict" data-hud-verdict>Ölçü dışı</p>
+          </div>
         </div>
       </div>
 
-      <div class="chap chap--hero" data-ch="0">
-        <p class="chap__since" data-since></p>
-        <h1 class="hero__title" data-name></h1>
-        <p class="hero__lead" data-slogan></p>
-        <div class="hero__cta">
-          <a class="btn btn--blue mag" data-tel-btn>Ara</a>
-          <a class="btn btn--line mag" data-wa>WhatsApp'tan yaz</a>
+      <section class="hero" aria-label="Giriş">
+        <div class="chap chap--hero">
+          <p class="chap__since" data-since></p>
+          <h1 class="hero__title" data-name></h1>
+          <p class="hero__lead" data-slogan></p>
+          <div class="hero__cta">
+            <a class="btn btn--blue mag" data-tel-btn>Ara</a>
+            <a class="btn btn--line mag" data-wa>WhatsApp'tan yaz</a>
+          </div>
+          <p class="hero__hint">Kaydırın, krankı tezgâha alalım</p>
         </div>
-        <p class="hero__hint">Kaydırın, krankı tezgâha alalım</p>
-      </div>
+      </section>
 
-      <div class="chap" data-ch="1">
-        <div class="antet"><span>İş</span><b>Krank taşlama</b><span>Tolerans</span><b>±0,005 mm</b></div>
-        <h2 class="chap__title">Ovalite taşta kalır.</h2>
-        <p class="chap__txt">Muylu her dönüşte biraz daha yuvarlaklaşır. Çizik, morarma, yatak izi gider; yüzey ayna gibi çıkar. Taşlamadan sonra her muylu iki yönden ölçülür.</p>
-      </div>
+      <section class="act act--a" aria-label="Krank taşlama">
+        <div class="chap">
+          <div class="antet"><span>İş</span><b>Krank taşlama</b><span>Tolerans</span><b>±0,005 mm</b></div>
+          <h2 class="chap__title">Ovalite taşta kalır.</h2>
+          <p class="chap__txt">Muylu her dönüşte biraz daha yuvarlaklaşır. Çizik, morarma, yatak izi gider; yüzey ayna gibi çıkar. Taşlamadan sonra her muylu iki yönden ölçülür.</p>
+        </div>
+      </section>
 
-      <div class="chap" data-ch="2">
-        <div class="antet"><span>İş</span><b>Silindir honlama</b><span>Açı</span><b>60° çapraz</b></div>
-        <h2 class="chap__title">Çapraz iz yağ tutar.</h2>
-        <p class="chap__txt">Silindiri yeni piston ölçüsüne getirir, hon taşıyla çapraz izi veririz. Segman oturur, motor yağ yakmaz.</p>
-      </div>
+      <section class="act act--b" aria-label="Silindir honlama">
+        <div class="chap">
+          <div class="antet"><span>İş</span><b>Silindir honlama</b><span>Açı</span><b>60° çapraz</b></div>
+          <h2 class="chap__title">Çapraz iz yağ tutar.</h2>
+          <p class="chap__txt">Silindiri yeni piston ölçüsüne getirir, hon taşıyla çapraz izi veririz. Segman oturur, motor yağ yakmaz.</p>
+        </div>
+      </section>
 
-      <div class="chap" data-ch="3">
-        <div class="antet"><span>İş</span><b>Kafa planyası</b><span>Çarpılma</span><b>≤ 0,02 mm</b></div>
-        <h2 class="chap__title">Conta yüzeyi düz olur.</h2>
-        <p class="chap__txt">Hararetten çarpılan kafayı frezede alırız. Cetvel ve sentiyle ölçer, ne kadar alındığını rapora yazarız.</p>
-      </div>
-    </section>
+      <section class="act act--c" aria-label="Kafa planyası">
+        <div class="chap">
+          <div class="antet"><span>İş</span><b>Kafa planyası</b><span>Çarpılma</span><b>≤ 0,02 mm</b></div>
+          <h2 class="chap__title">Conta yüzeyi düz olur.</h2>
+          <p class="chap__txt">Hararetten çarpılan kafayı frezede alırız. Cetvel ve sentiyle ölçer, ne kadar alındığını rapora yazarız.</p>
+        </div>
+      </section>
+    </div>
 
     <!-- Ölçü seçici -->
     <section class="olcu" id="olcu">
@@ -195,7 +204,7 @@
     <!-- Atölye -->
     <section class="galeri">
       <div class="wrap">
-        <h2 class="sec-title" data-kin>Atölye</h2>
+        <h2 class="sec-title" data-kin>Torna, freze, taşlama</h2>
       </div>
       <div class="galeri__track" data-galeri></div>
     </section>
@@ -203,7 +212,7 @@
     <!-- Yorumlar -->
     <section class="yorumlar">
       <div class="wrap yorumlar__head">
-        <h2 class="sec-title" data-kin>Ustalar ne diyor</h2>
+        <div><p class="etiket">Örnek yorumlar</p><h2 class="sec-title" data-kin>Ustalar ne diyor</h2></div>
         <p class="puan"><span class="puan__n" data-puan>4,9</span><span class="puan__s" data-stars></span><span class="puan__c" data-puan-adet></span></p>
       </div>
       <div class="yorumlar__row" data-yorumlar></div>
@@ -260,7 +269,7 @@
       <p class="foot__name" data-name></p>
       <p data-address></p>
       <p><a data-tel-plain></a></p>
-      <p class="foot__small">© <span data-year></span> <span data-name></span>. Fotoğraflar: Pexels. Tezgâh sahnesi bu site için kodla çizildi.</p>
+      <p class="foot__small">© <span data-year></span> <span data-name></span>. Fotoğraflar: Pexels. 3D görseller temsilîdir.</p>
     </div>
   </footer>
 

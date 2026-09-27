@@ -447,7 +447,7 @@ if (reducedMotion) {
   ScrollTrigger.create({
     trigger: '.buyutme',
     start: 'top top',
-    end: `+=${adimSay * 80}%`,
+    end: `+=${Math.round(Math.min(2.6, adimSay * 0.65) * 100)}%`,
     pin: '.buyutme__sahne',
     scrub: 0.4,
     onUpdate: (self) => buyutmeYaz(self.progress * adimSay),

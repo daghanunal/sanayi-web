@@ -8,6 +8,8 @@ import { olcuSecici } from './extra.js';
 import './style.css';
 
 const v = derinBirlestir(ana, ek);
+// Yorumlar örnektir: uydurma puan ve "N değerlendirme" sayısı gösterilmez.
+delete v.puan;
 // Hizmetlerin tolerans alanı motorun "detay" kutucuklarına.
 v.hizmetler = v.hizmetler.map((h) => ({ ...h, detay: h.tolerans ? [['Tolerans', h.tolerans], ['Süre', h.sure]] : undefined, sure: null, kisa: h.aciklama.split('. ')[0].replace(/\.$/, '') + '.' }));
 
@@ -34,8 +36,9 @@ kurumsal({
     hero: 'tam',
     gecis: 'perde',
     yer: "Şaşmaz'da",
-    heroGorsel: `${B}img/mikron/torna.jpg`,
-    heroAlt: 'Atölyede torna tezgâhı ve ayna',
+    heroGorsel: `${B}img/kurumsal-rektifiye/krank-3d.jpg`,
+    heroAlt: 'Taşlanmış muyluları parlayan krank mili (temsilî 3D görsel)',
+    altNot: 'Fotoğraflar: Pexels. 3D görseller temsilîdir.',
     logoAlt: 'Motor rektifiye · torna',
     baslikEki: 'Motor rektifiye ve torna | Şaşmaz, Ankara',
     teklifEtiketi: 'İş gönderin',

@@ -1,7 +1,7 @@
 import raw from '../../data/mikron.json';
 import {
   boot, initSmoothScroll, reducedMotion, gsap, ScrollTrigger, esc, asset,
-  telHref, waHref, mapsHref, mapsEmbed, openStatus, groupedHours, icons, GUNLER,
+  telHref, waHref, mapsHref, mapsEmbed, openStatus, groupedHours, icons, GUNLER, setStoryMode,
 } from '../../shared/core.js';
 
 const d = boot(raw);
@@ -102,14 +102,14 @@ hatchB.innerHTML = hb;
 // ------------------------------------------------------------------ hakkında
 const aboutEl = $('[data-about]');
 const words = d.isletme.hakkinda.split(/\s+/);
-const pillAt = { 3: 'ayna', [Math.floor(words.length * 0.62)]: 'krank' };
+const pillAt = { 3: 'ayna', [Math.floor(words.length * 0.62)]: 'krank-3d' };
 aboutEl.innerHTML = words.map((w, i) => {
   const pill = pillAt[i] ? ` <span class="pill-img w" style="background-image:url('${IMG(pillAt[i])}')" aria-hidden="true"></span>` : '';
   return `<span class="w">${esc(w)}</span>${pill}`;
 }).join(' ');
 
 // ------------------------------------------------------------------ hizmetler
-const svcImgs = ['krank', 'blok', 'honlu', 'kafa', 'kafa', 'blok', 'krank-masa', 'ayna'];
+const svcImgs = ['krank-3d', 'kesit-3d', 'blok', 'kafa', 'kafa', 'blok', 'krank-3d', 'ayna'];
 const svcImg = (i) => IMG(svcImgs[i % svcImgs.length]);
 $('[data-services]').innerHTML = d.hizmetler.map((h, i) => `<li data-i="${i}">
     <span class="svc__no mono">${String(i + 1).padStart(2, '0')} / ${String(d.hizmetler.length).padStart(2, '0')}</span>
@@ -189,7 +189,7 @@ $('[data-steps]').innerHTML = d.surec.map((s, i) => `<li>
 
 const extra = [
   { src: IMG('blok'), alt: 'Yeni honlanmış dört silindirli blok' },
-  { src: IMG('krank-masa'), alt: 'Taşlanmayı bekleyen krank milleri' },
+  { src: IMG('kesit-3d'), alt: 'Kesit: honlanmış silindirler (3D görsel)' },
   { src: IMG('ayna'), alt: 'Torna aynası ve ayna ayakları' },
   { src: IMG('kafa'), alt: 'Silindir kapağı ve eksantrik milleri' },
 ];
@@ -204,7 +204,7 @@ $('[data-engines]').innerHTML = (d.markalar || []).map((m) => `<li>${esc(m)}</li
 const stars = (n) => Array.from({ length: 5 }, (_, i) => `<span class="${i < n ? '' : 'off'}">${icons.star}</span>`).join('');
 $('[data-score]').textContent = d.puan.ortalama.toLocaleString('tr-TR', { minimumFractionDigits: 1 });
 $('[data-stars]').innerHTML = stars(Math.round(d.puan.ortalama));
-$('[data-score-count]').textContent = `${d.puan.adet} Google yorumu`;
+$('[data-score-count]').textContent = `${d.puan.adet} değerlendirme`;
 $('[data-reviews]').innerHTML = d.yorumlar.map((r) => `<li>
   <span class="rv__stars" aria-label="${r.puan} yıldız">${stars(r.puan)}</span>
   <p class="rv__t">${esc(r.metin)}</p>
@@ -313,13 +313,24 @@ if (reducedMotion) {
     .to('.hero__text', { autoAlpha: 0, y: -50, duration: 1, ease: 'power1.in' }, 5.1)
     .to('.readout', { autoAlpha: 0, y: 30, duration: 0.9, ease: 'power1.in' }, 5.1)
     .to(['.bore__ring', '.bore__pointer'], { autoAlpha: 0, duration: 0.8 }, 5.2)
+    .set(['.bore__ring', '.readout'], { display: 'none' }, 6.1)
     .to(['.bore__hatch', '.bore__glint'], { autoAlpha: 0, duration: 0.9 }, 5.5)
     .to(zoom, { z: 1, duration: 3, ease: 'power1.in', onUpdate: applyZoom }, mobile ? 5.0 : 5.4)
     .to(bore, { y: () => (mobile ? stage.clientHeight / 2 - (bore.offsetTop + bore.offsetWidth / 2) : 0), duration: 1.8, ease: 'power2.inOut' }, 5.0)
+    .to('.hero__endbg', { autoAlpha: 1, duration: 0.4 }, mobile ? 7.6 : 8.0)
+    .set(bore, { autoAlpha: 0 }, mobile ? 8.05 : 8.45)
     .to('.hero__shade', { opacity: 1, duration: 1 }, 7.6)
     .fromTo('.hero__end', { autoAlpha: 0, y: 40 }, { autoAlpha: 1, y: 0, duration: 1, ease: 'power2.out' }, 7.9)
     .from('.hero__end-list li', { autoAlpha: 0, y: 20, stagger: 0.12, duration: 0.6 }, 8.2)
     .to({}, { duration: 0.8 });
+
+  // Telefonda kovan sahnesi boyunca alt çubuk çekilir
+  if (mobile) {
+    ScrollTrigger.create({
+      trigger: hero, start: 'top top-=8', end: () => `+=${Math.round(innerHeight * 1.6)}`,
+      onToggle: (s) => setStoryMode(s.isActive ? true : null),
+    });
+  }
 
   // Hakkında: kelimeler okundukça koyulaşır
   gsap.to('.about__lead .w', {

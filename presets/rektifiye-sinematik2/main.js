@@ -2,7 +2,7 @@ import ana from '../../data/mikron.json';
 import ek from '../../data/rektifiye-sinematik2.json';
 import {
   boot, initSmoothScroll, reducedMotion, gsap, ScrollTrigger, esc,
-  telHref, waHref, mapsHref, mapsEmbed, openStatus, groupedHours, icons,
+  telHref, waHref, mapsHref, mapsEmbed, openStatus, groupedHours, icons, setStoryMode,
 } from '../../shared/core.js';
 import { SplitText } from 'gsap/SplitText';
 import { DrawSVGPlugin } from 'gsap/DrawSVGPlugin';
@@ -505,24 +505,28 @@ $$('[data-count]').forEach((el) => {
 });
 
 // ------------------------------------------------------------------ film
+// Sahne (canvas + fon) sabit. Hero akışta geçer; iki pinli perde ≤ 2,4 ekran. Kaydırma → p:
+//   hero 0 → 0,12 · perde A (torna + numune) 0,12 → 0,6 · geçiş (ışıklar söner) 0,6 → 0,64 · perde B (taşlama + ölçü) 0,64 → 1
 const film = $('.film');
-const chaps = $$('.chap');
+const chaps = $$('.act .chap');
 const steps = $$('.steps li');
 const hudLbl = $('[data-hud-lbl]'), hudVal = $('[data-hud-val]'), hudUnit = $('[data-hud-unit]'), hudBar = $('[data-hud-bar]');
-const hud = $('.hud');
+const hudBox = $('.film__hud');
 const dark = $('.backdrop__dark');
 const flash = $('.flash');
 const stage = $('.stage');
+// [girişBaşı, girişSonu, çıkışBaşı, çıkışSonu]; perdenin son kartı sönmez, bölümle birlikte kayar
 const WIN = [
-  [-1, 0, 0.1, 0.14],
-  [0.15, 0.19, 0.36, 0.4],
-  [0.43, 0.47, 0.56, 0.6],
-  [0.63, 0.67, 0.77, 0.8],
-  [0.85, 0.88, 1.2, 1.3],
+  [0.07, 0.12, 0.37, 0.41],
+  [0.43, 0.47, 9, 9],
+  [0.6, 0.63, 0.78, 0.81],
+  [0.84, 0.87, 9, 9],
 ];
+const P_KEYS = [0, 0.12, 0.6, 0.64, 1];
 let scene = null;
 let filmP = 0;
 let lastHud = '';
+let hudOn = false;
 
 function applyFilm(p) {
   filmP = p;
@@ -535,18 +539,22 @@ function applyFilm(p) {
     c.style.visibility = o < 0.01 ? 'hidden' : 'visible';
     c.classList.toggle('is-on', o > 0.5);
   });
-  const act = p < 0.14 ? -1 : p < 0.42 ? 0 : p < 0.61 ? 1 : p < 0.82 ? 2 : 3;
+  const act = p < 0.12 ? -1 : p < 0.42 ? 0 : p < 0.61 ? 1 : p < 0.82 ? 2 : 3;
   steps.forEach((s, i) => s.classList.toggle('is-on', i === act));
   steps.forEach((s, i) => s.classList.toggle('is-done', i < act));
   const dk = smooth(0.58, 0.65, p);
   dark.style.opacity = dk.toFixed(3);
-  document.documentElement.classList.toggle('is-dark', dk > 0.5 && p < 0.99);
+  document.documentElement.classList.toggle('is-dark', dk > 0.5 && p < 0.999);
   film.classList.toggle('film--dk', dk > 0.5);
-  flash.style.opacity = clamp01(1 - Math.abs(p - 0.805) / 0.022).toFixed(3);
+  flash.style.opacity = clamp01(1 - Math.abs(p - 0.815) / 0.022).toFixed(3);
 
-  // HUD
-  const hv = smooth(0.12, 0.17, p);
-  hud.style.opacity = hv.toFixed(3);
+  // HUD yalnız perdeler boyunca (hero'da yok)
+  const show = p > 0.125 && p < 0.998;
+  if (show !== hudOn) {
+    hudOn = show;
+    gsap.to(hudBox, { autoAlpha: show ? 1 : 0, duration: 0.3, overwrite: true });
+    document.documentElement.classList.toggle('hud-on', show);
+  }
   let lbl, val, unit, bar;
   if (p < 0.42) {
     const feed = smooth(0.13, 0.4, p);
@@ -583,12 +591,34 @@ function applyFilm(p) {
   hudBar.style.transform = `scaleX(${bar.toFixed(3)})`;
 }
 
+const acts = $$('.act');
+const pins = phone ? [2.3, 2.3] : [2.5, 2.5];
+const actST = reducedMotion
+  ? []
+  : acts.map((el, i) => ScrollTrigger.create({ trigger: el, start: 'top top', end: () => `+=${innerHeight * pins[i]}`, pin: true, anticipatePin: 1 }));
+let B = null;
+const bounds = () => (actST.length ? [0, actST[0].start, actST[0].end, actST[1].start, actST[1].end] : null);
+const progressAt = (y) => {
+  if (!B) return 0;
+  if (y <= 0) return 0;
+  for (let i = 0; i < B.length - 1; i++) {
+    if (y <= B[i + 1]) return P_KEYS[i] + (P_KEYS[i + 1] - P_KEYS[i]) * ((y - B[i]) / Math.max(1, B[i + 1] - B[i]));
+  }
+  return 1;
+};
 const filmST = ScrollTrigger.create({
   trigger: film,
   start: 'top top',
-  end: 'bottom bottom',
-  onUpdate: (s) => applyFilm(s.progress),
+  end: () => (actST[1] ? actST[1].end : 'bottom bottom'),
+  onUpdate: () => applyFilm(progressAt(scrollY)),
+  onRefresh: () => { B = bounds(); applyFilm(progressAt(scrollY)); },
 });
+if (phone && actST.length) {
+  ScrollTrigger.create({
+    start: () => actST[0].start + innerHeight * 0.05, end: () => actST[1].end - innerHeight * 0.1,
+    onToggle: (st) => setStoryMode(st.isActive ? true : null),
+  });
+}
 let filmVis = null, sonST = null;
 filmVis = ScrollTrigger.create({
   trigger: film,
@@ -658,15 +688,16 @@ function runIntro() {
   const tl = gsap.timeline({
     onComplete: done,
   });
-  tl.from('.ayna', { scale: 0.7, opacity: 0, duration: 0.5, ease: 'power3.out' })
-    .from('.intro__name', { y: 20, opacity: 0, duration: 0.5 }, 0.15)
-    .fromTo('.ayna__jaw', { attr: { y: -100 } }, { attr: { y: -76 }, duration: 0.45, ease: 'back.in(2)', stagger: 0.04 }, 0.35)
-    .to('.ayna__spin', { rotate: 1440, duration: 1.6, ease: 'power2.in', transformOrigin: '50% 50%' }, 0.8)
-    .to(rpm, { v: 1450, duration: 1.6, ease: 'power2.in', onUpdate: () => (rpmEl.textContent = nf.format(Math.round(rpm.v / 10) * 10)) }, 0.8)
-    .to('.ayna__ring', { stroke: 'url(#tavG)', duration: 0.01 }, 1.7)
-    .to(intro, { clipPath: 'circle(0% at 50% 50%)', duration: 0.8, ease: 'power3.inOut' }, 2.3)
-    .from('.chap--hero > *', { y: 30, opacity: 0, stagger: 0.07, duration: 0.7, ease: 'power3.out' }, 2.65)
-    .from('.hdr', { y: -30, opacity: 0, duration: 0.6 }, 2.7);
+  tl.from('.ayna', { scale: 0.7, opacity: 0, duration: 0.4, ease: 'power3.out' })
+    .from('.intro__name', { y: 20, opacity: 0, duration: 0.4 }, 0.1)
+    .fromTo('.ayna__jaw', { attr: { y: -100 } }, { attr: { y: -76 }, duration: 0.35, ease: 'back.in(2)', stagger: 0.03 }, 0.25)
+    .to('.ayna__spin', { rotate: 1080, duration: 1.0, ease: 'power2.in', transformOrigin: '50% 50%' }, 0.55)
+    .to(rpm, { v: 1450, duration: 1.0, ease: 'power2.in', onUpdate: () => (rpmEl.textContent = nf.format(Math.round(rpm.v / 10) * 10)) }, 0.55)
+    .to('.ayna__ring', { stroke: 'url(#tavG)', duration: 0.01 }, 1.2)
+    .to(intro, { clipPath: 'circle(0% at 50% 50%)', duration: 0.6, ease: 'power3.inOut' }, 1.55)
+    .add(done, 2.15)
+    .from('.chap--hero > *', { y: 30, opacity: 0, stagger: 0.07, duration: 0.7, ease: 'power3.out' }, 1.8)
+    .from('.hdr', { y: -30, opacity: 0, duration: 0.6, clearProps: 'transform' }, 1.85);
   let finished = false;
   function done() {
     if (finished) return;
@@ -675,15 +706,15 @@ function runIntro() {
     document.documentElement.classList.remove('is-intro');
     lenis?.start();
   }
-  intro.addEventListener('click', () => {
+  const skip = () => {
+    if (finished) return;
     tl.progress(1);
     done();
-  });
-  setTimeout(() => {
-    if (!finished) {
-      tl.progress(1);
-      done();
-    }
-  }, 6000);
+  };
+  intro.addEventListener('pointerdown', skip);
+  addEventListener('wheel', skip, { once: true, passive: true });
+  addEventListener('touchmove', skip, { once: true, passive: true });
+  addEventListener('keydown', skip, { once: true });
+  setTimeout(skip, 3000);
 }
 runIntro();

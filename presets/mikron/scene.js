@@ -3,6 +3,7 @@
 // Dışarıya: createScene(canvas, opts) → { setProgress(p), anchors, project(v3), resize(), start(), stop(), render() }
 import * as THREE from 'three';
 import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js';
+import { loadAsset, loadEnv, pickQuality } from '../../shared/lib3d.js';
 
 const smooth = (a, b, x) => {
   const t = Math.min(1, Math.max(0, (x - a) / (b - a)));
@@ -393,8 +394,8 @@ function buildCrank(q) {
   const group = new THREE.Group();
   const mat = steel({ roughness: 0.28 });
   const webMat = steel({ color: 0x565c63, roughness: 0.62, metalness: 0.85 });
-  const seg = q.low ? 28 : 56;
-  const webGeo = webGeometry(q.low ? 10 : 20);
+  const seg = q.low ? 44 : 64;
+  const webGeo = webGeometry(q.low ? 16 : 24);
   const maps = scoredMaps(q.low ? 512 : 1024);
   const hero = journalMaterial(maps);
   // dizilim: burun, M1, W, R1, W, M2, W, R2, W, M3 ...
@@ -567,6 +568,151 @@ function buildBlock(q) {
   return { group, bores, hone, r, h, top, W, D };
 }
 
+// ---------------------------------------------------------------- B2: gerçek blok (lib3d engine v2, kesit)
+
+// Hon başlığı: kardan mafsallı mil, gövde, 4 eğrisel taş + 4 bronz kılavuz pabucu
+function buildHone(r, low) {
+  const hone = new THREE.Group();
+  const shaftMat = steel({ color: 0x9aa0a6, roughness: 0.22 });
+  const darkMat = steel({ color: 0x4a5057, roughness: 0.38 });
+  const shaft = new THREE.Mesh(new THREE.CylinderGeometry(0.055, 0.055, 2.6, 20), shaftMat);
+  shaft.position.y = 1.72;
+  hone.add(shaft);
+  // kardan mafsalı: iki çatal + haç
+  const uj = new THREE.Group();
+  const fork = new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.12, 0.05), darkMat);
+  const f1 = fork.clone(); f1.position.set(0, 0.07, 0.07);
+  const f2 = fork.clone(); f2.position.set(0, 0.07, -0.07);
+  const f3 = fork.clone(); f3.rotation.y = Math.PI / 2; f3.position.set(0.07, -0.07, 0);
+  const f4 = f3.clone(); f4.position.x = -0.07;
+  const cross = new THREE.Mesh(new THREE.SphereGeometry(0.05, 16, 12), shaftMat);
+  uj.add(f1, f2, f3, f4, cross);
+  uj.position.y = 0.36;
+  hone.add(uj);
+  const body = new THREE.Mesh(new THREE.CylinderGeometry(r * 0.62, r * 0.62, 0.46, 32), steel({ color: 0x80878f, roughness: 0.28 }));
+  hone.add(body);
+  const collar = new THREE.Mesh(new THREE.CylinderGeometry(r * 0.7, r * 0.66, 0.06, 32), darkMat);
+  collar.position.y = 0.26;
+  hone.add(collar);
+  const sector = (r0, r1, a, h) => {
+    const sh = new THREE.Shape();
+    sh.absarc(0, 0, r1, -a / 2, a / 2, false);
+    sh.absarc(0, 0, r0, a / 2, -a / 2, true);
+    const g = new THREE.ExtrudeGeometry(sh, { depth: h, bevelEnabled: true, bevelThickness: 0.008, bevelSize: 0.006, bevelSegments: 2, curveSegments: low ? 6 : 12 });
+    g.translate(0, 0, -h / 2);
+    g.rotateX(Math.PI / 2);
+    return g;
+  };
+  const stoneMat = new THREE.MeshStandardMaterial({ color: 0x3a3d42, roughness: 1, metalness: 0 });
+  const shoeMat = new THREE.MeshStandardMaterial({ color: 0x9a7448, roughness: 0.45, metalness: 1 });
+  const stoneGeo = sector(r * 0.8, r - 0.012, 0.42, 0.4);
+  const shoeGeo = sector(r * 0.78, r - 0.016, 0.3, 0.3);
+  for (let i = 0; i < 4; i++) {
+    const st = new THREE.Mesh(stoneGeo, stoneMat);
+    st.rotation.y = (i / 4) * Math.PI * 2;
+    hone.add(st);
+    const sh = new THREE.Mesh(shoeGeo, shoeMat);
+    sh.rotation.y = (i / 4) * Math.PI * 2 + Math.PI / 4;
+    hone.add(sh);
+  }
+  hone.traverse((o) => { if (o.isMesh) o.castShadow = true; });
+  return hone;
+}
+
+// Engine v2 bloğunu ölçekler, yalnız bloğu bırakır, z = 0 düzleminde keser; kesit yüzü tarama, silindir
+// yüzeyi honlama gölgelendiricisi. Döndürür: { group, bores[{x}], r, h, top, setHone(i, v) }
+const XC = [-0.132, -0.044, 0.044, 0.132]; // soldan sağa (silindir 4 … 1)
+function engineBlock(asset, { S, BX, top, clip }) {
+  const g = new THREE.Group();
+  const root = asset.scene;
+  const eng = asset.nodes.block.parent;
+  for (const n of eng.children) if (n !== asset.nodes.block) n.visible = false;
+  const DECK = 0.370, BOT = 0.222, R = 0.039;
+  root.scale.setScalar(S);
+  root.position.set(BX, top - DECK * S, 0);
+  g.add(root);
+  const hone = { value: new THREE.Vector4(0, 0, 0, 0) };
+  const bx = XC.map((x) => BX + x * S);
+  const uBx = { value: new THREE.Vector4(...bx) };
+  const section = `
+    if (!gl_FrontFacing) {
+      // kesit yüzü: bakış ışınının z = 0 düzlemini kestiği nokta → düz görünen 45° tarama
+      vec3 rd = vWp - cameraPosition;
+      vec3 cp = cameraPosition + rd * (-cameraPosition.z / min(rd.z, -1e-4));
+      float hv = fract((cp.x + cp.y) * 13.0);
+      float hl = 1.0 - smoothstep(0.02, 0.06, min(hv, 1.0 - hv));
+      vec3 base = vec3(0.23, 0.245, 0.27);
+      gl_FragColor = vec4(mix(base, vec3(0.42, 0.5, 1.0), hl * 0.85), 1.0);
+    }`;
+  const vert = (sh) => {
+    sh.vertexShader = sh.vertexShader
+      .replace('#include <common>', '#include <common>\nvarying vec3 vWp;')
+      .replace('#include <worldpos_vertex>', '#include <worldpos_vertex>\nvWp = (modelMatrix * vec4(transformed, 1.0)).xyz;');
+  };
+  asset.nodes.block.traverse((o) => {
+    if (!o.isMesh) return;
+    o.castShadow = false;
+    o.receiveShadow = true;
+    const mats = (Array.isArray(o.material) ? o.material : [o.material]).map((m0) => {
+      const m = m0.clone();
+      m.clippingPlanes = [clip];
+      m.side = THREE.DoubleSide;
+      m.shadowSide = THREE.FrontSide;
+      const isBore = m0.name === 'bore';
+      if (isBore) {
+        m.color.set(0xd2d6da);
+        m.map = null;
+        m.metalness = 0.75;
+        m.roughness = 0.36;
+      }
+      m.onBeforeCompile = (sh) => {
+        vert(sh);
+        sh.uniforms.uHone = hone;
+        sh.uniforms.uBx = uBx;
+        let head = `#include <common>
+          varying vec3 vWp; uniform vec4 uHone; uniform vec4 uBx;
+          float hsh(float n){ return fract(sin(n) * 43758.5453); }
+          float lines(float x, float w){ float f = fract(x); return 1.0 - smoothstep(0.0, w, min(f, 1.0 - f)); }`;
+        sh.fragmentShader = sh.fragmentShader.replace('#include <common>', head);
+        if (isBore) {
+          sh.fragmentShader = sh.fragmentShader.replace(
+            '#include <roughnessmap_fragment>',
+            `#include <roughnessmap_fragment>
+            vec4 dd = abs(vec4(vWp.x) - uBx);
+            float mn = min(min(dd.x, dd.y), min(dd.z, dd.w));
+            float hn = dd.x == mn ? uHone.x : dd.y == mn ? uHone.y : dd.z == mn ? uHone.z : uHone.w;
+            float cx = dd.x == mn ? uBx.x : dd.y == mn ? uBx.y : dd.z == mn ? uBx.z : uBx.w;
+            float s = atan(vWp.z, vWp.x - cx) * ${(R * S * 45).toFixed(3)};
+            float t = vWp.y * 45.0;
+            float bore = lines(t * 1.6 + s * 0.004, 0.12) * 0.5;
+            float scuff = lines(s * 0.35 + hsh(floor(s * 0.35)) * 3.0, 0.03) * step(0.6, hsh(floor(s * 0.35) + 7.0));
+            float k = 0.577;
+            float h1 = lines((t + s * k) * 0.9, 0.08) + lines((t + s * k) * 0.37 + 0.3, 0.05) * 0.6;
+            float h2 = lines((t - s * k) * 0.9, 0.08) + lines((t - s * k) * 0.37 + 0.6, 0.05) * 0.6;
+            float hone = clamp(h1 + h2, 0.0, 1.0);
+            float before = clamp(bore + scuff, 0.0, 1.0);
+            float mark = mix(before, hone, hn) * step(${(top - 1.36).toFixed(3)}, vWp.y);
+            roughnessFactor = mix(mix(0.62, 0.18, hn), 0.7, mark);
+            diffuseColor.rgb *= mix(1.0, mix(0.55, 0.5, hn), mark);
+            diffuseColor.rgb = mix(diffuseColor.rgb, diffuseColor.rgb * vec3(0.62, 0.5, 0.38), (1.0 - hn) * 0.8);`
+          );
+        }
+        sh.fragmentShader = sh.fragmentShader.replace('#include <dithering_fragment>', '#include <dithering_fragment>' + section);
+      };
+      return m;
+    });
+    o.material = Array.isArray(o.material) ? mats : mats[0];
+  });
+  return {
+    group: g,
+    bores: bx.map((x) => ({ x: x - BX })),
+    r: R * S,
+    h: (DECK - BOT) * S,
+    top,
+    setHone(arr) { hone.value.set(arr[0], arr[1], arr[2], arr[3]); },
+  };
+}
+
 // ---------------------------------------------------------------- C: kafa
 
 function buildHead(q) {
@@ -644,7 +790,10 @@ export function createScene(canvas, { low = false, reduced = false } = {}) {
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, maxDpr));
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.05;
+  renderer.toneMappingExposure = 1.0;
+  renderer.localClippingEnabled = true;
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFShadowMap;
 
   const scene = new THREE.Scene();
   scene.background = new THREE.Color(0x0f1113);
@@ -652,11 +801,27 @@ export function createScene(canvas, { low = false, reduced = false } = {}) {
   const pmrem = new THREE.PMREMGenerator(renderer);
   scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
   scene.environmentIntensity = 0.75;
+  // gerçek atölye ışığı (HDRI) gelince yansımalar onunla; arka plan koyu kalır
+  const envQ = low ? 'lo' : pickQuality();
+  loadEnv('workshop', renderer, { quality: envQ })
+    .then((tex) => {
+      scene.environment = tex;
+      scene.environmentIntensity = 0.55;
+      scene.environmentRotation.set(0, 1.9, 0);
+    })
+    .catch(() => {});
 
   const camera = new THREE.PerspectiveCamera(34, 1, 0.05, 60);
 
-  const key = new THREE.DirectionalLight(0xfff1e0, 2.2);
+  const key = new THREE.DirectionalLight(0xfff1e0, 2.4);
   key.position.set(3, 5, 4);
+  key.castShadow = true;
+  key.shadow.mapSize.set(low ? 1024 : 2048, low ? 1024 : 2048);
+  key.shadow.bias = -0.0004;
+  key.shadow.normalBias = 0.02;
+  key.shadow.radius = 4;
+  Object.assign(key.shadow.camera, { left: -3.2, right: 3.2, top: 3.2, bottom: -3.2, near: 0.5, far: 16 });
+  scene.add(key.target);
   const rim = new THREE.DirectionalLight(0x6f86ff, 2.4);
   rim.position.set(-4, 2, -5);
   const fill = new THREE.HemisphereLight(0xb8c4d8, 0x1a1c20, 0.35);
@@ -674,13 +839,35 @@ export function createScene(canvas, { low = false, reduced = false } = {}) {
   contactLight.position.set(crank.heroX, 0.15, -J.mainR - 0.05);
   scene.add(contactLight);
 
-  // B: blok (x = 10)
+  // B: blok (x = 10). Önce kodla çizilmiş kesit; gerçek blok (lib3d engine v2) yüklenince yerini alır.
   const BX = 10;
-  const block = buildBlock(q);
-  block.group.position.x = BX;
-  scene.add(block.group);
-  const boreLight = new THREE.PointLight(0xdfe7ff, 1.6, 4, 2);
-  boreLight.position.set(BX, 0.9, 1.2);
+  const proc = buildBlock(q);
+  proc.group.position.x = BX;
+  scene.add(proc.group);
+  const block = {
+    bores: proc.bores, hone: proc.hone, r: proc.r, top: proc.top, h: proc.h,
+    setHone: (arr) => proc.bores.forEach((b, i) => (b.mat.userData.u.uHone.value = arr[i])),
+  };
+  const clip = new THREE.Plane(new THREE.Vector3(0, 0, -1), 0);
+  const ready = loadAsset('engine', { version: 2, quality: envQ, renderer })
+    .then((asset) => {
+      const eb = engineBlock(asset, { S: 9.6, BX, top: proc.top, clip });
+      scene.add(eb.group);
+      scene.remove(proc.group);
+      proc.group.remove(proc.hone);
+      const hone = buildHone(eb.r, low);
+      hone.position.copy(proc.hone.position);
+      eb.group.add(hone);
+      hone.position.x = BX + eb.bores[0].x;
+      hone.position.y = eb.top + 0.9;
+      Object.assign(block, { bores: eb.bores, hone, r: eb.r, top: eb.top, h: eb.h, setHone: eb.setHone, real: true });
+      anchors.boreA.set(bx2 - eb.r, eb.top - 0.75, 0);
+      anchors.boreB.set(bx2 + eb.r, eb.top - 0.75, 0);
+      renderer.compile(scene, camera);
+    })
+    .catch((e) => console.warn('blok yüklenemedi, kesit çizimi kalıyor', e));
+  const boreLight = new THREE.PointLight(0xe6ecff, 5, 7, 1.6);
+  boreLight.position.set(BX - 0.2, 1.2, 2.2);
   scene.add(boreLight);
 
   // C: kafa (x = 20)
@@ -695,6 +882,12 @@ export function createScene(canvas, { low = false, reduced = false } = {}) {
   const chips = particles(low ? 120 : 260, { size: 5, color: 0xd9dde2, additive: false });
   const trails = streaks(low ? 220 : 520);
   scene.add(sparks.points, coolant.points, chips.points, trails.lines);
+  scene.traverse((o) => {
+    if (o.isMesh) {
+      o.castShadow = true;
+      o.receiveShadow = true;
+    }
+  });
 
   // --- kamera kareleri (p: film ilerlemesi 0..1, wide: dar ekranda geri çekilme ağırlığı)
   const hx = crank.heroX;
@@ -705,10 +898,15 @@ export function createScene(canvas, { low = false, reduced = false } = {}) {
     { p: 0.17, pos: [hx + 0.05, 1.08, 1.02], tgt: [hx, -0.02, -0.34], wide: 0.15 },
     { p: 0.34, pos: [hx + 0.03, 0.9, 0.82], tgt: [hx, 0.0, -0.3], wide: 0.1 },
     { p: 0.385, pos: [hx + 1.9, 1.9, 2.7], tgt: [hx - 0.2, 0, -0.3], wide: 1 },
-    { p: 0.43, pos: [BX + 2.4, 2.0, 3.6], tgt: [BX, -0.25, -0.3], wide: 1 },
-    { p: 0.5, pos: [BX + 1.7, 1.6, 3.3], tgt: [BX - 0.2, -0.2, -0.3], wide: 1 },
-    { p: 0.56, pos: [bx2 + 0.95, 0.95, 2.2], tgt: [bx2 + 0.2, -0.2, -0.3], wide: 0.55 },
-    { p: 0.72, pos: [bx2 + 1.6, 0.65, 2.3], tgt: [bx2 + 0.7, -0.25, -0.3], wide: 0.6 },
+    { p: 0.404, pos: [hx + 2.2, 2.0, 3.0], tgt: [hx - 0.2, 0, -0.3], wide: 1 },
+    // kesit perdesi ekranı kapattığında kamera B istasyonuna kesilir
+    { p: 0.408, pos: [BX + 2.9, 2.3, 4.4], tgt: [BX, -0.35, -0.3], wide: 1 },
+    { p: 0.43, pos: [BX + 2.6, 2.1, 4.1], tgt: [BX, -0.35, -0.3], wide: 1 },
+    { p: 0.5, pos: [BX + 1.8, 1.6, 3.7], tgt: [BX - 0.2, -0.3, -0.3], wide: 1 },
+    { p: 0.56, pos: [bx2 + 0.95, 0.95, 2.3], tgt: [bx2 + 0.2, -0.25, -0.3], wide: 0.55 },
+    { p: 0.72, pos: [bx2 + 1.6, 0.65, 2.4], tgt: [bx2 + 0.7, -0.3, -0.3], wide: 0.6 },
+    { p: 0.755, pos: [bx2 + 1.9, 0.8, 2.8], tgt: [bx2 + 0.7, -0.3, -0.3], wide: 0.7 },
+    { p: 0.76, pos: [HX + 2.6, 2.7, 3.8], tgt: [HX, 0, 0], wide: 1 },
     { p: 0.775, pos: [HX + 2.2, 2.4, 3.3], tgt: [HX, 0, 0], wide: 1 },
     { p: 0.86, pos: [HX + 1.1, 1.7, 2.5], tgt: [HX, 0.1, 0], wide: 0.9 },
     { p: 0.96, pos: [HX + 0.3, 1.3, 2.2], tgt: [HX + 0.1, 0.15, 0], wide: 0.85 },
@@ -791,7 +989,7 @@ export function createScene(canvas, { low = false, reduced = false } = {}) {
   function step(dt) {
     t += dt;
     const { pos, tgt } = cameraAt(S.p);
-    if (!camPos || dt === 0) {
+    if (!camPos || dt === 0 || camPos.distanceTo(pos) > 4) {
       camPos = pos.clone();
       camTgt = tgt.clone();
     } else {
@@ -801,6 +999,8 @@ export function createScene(canvas, { low = false, reduced = false } = {}) {
     }
     camera.position.copy(camPos);
     camera.lookAt(camTgt);
+    key.target.position.copy(camTgt);
+    key.position.set(camTgt.x + 3, camTgt.y + 5, camTgt.z + 4);
 
     // A: krank döner, taş yaklaşır ve döner
     const grinding = S.wheelIn > 0.98 && S.grind < 1 && S.p < 0.4;
@@ -830,11 +1030,12 @@ export function createScene(canvas, { low = false, reduced = false } = {}) {
     coolant.update(dt, -4, 1.2);
 
     // B: hon başlığı sıradaki silindirde döner ve iner-çıkar
-    block.bores.forEach((b, i) => (b.mat.userData.u.uHone.value = S.hone[i]));
+    block.setHone(S.hone);
     const active = S.p > 0.5 && S.p < 0.74 && S.hone[S.honeBore] < 1;
     const bb = block.bores[S.honeBore];
     const hTarget = active ? block.top - block.h * 0.5 + Math.sin(t * 5.2) * block.h * 0.28 : block.top + 0.9;
-    block.hone.position.x = lerp(block.hone.position.x || bb.x, bb.x, 0.12);
+    const hx0 = block.real ? BX + bb.x : bb.x;
+    block.hone.position.x = lerp(block.hone.position.x || hx0, hx0, 0.12);
     block.hone.position.y = lerp(block.hone.position.y, hTarget, active ? 0.35 : 0.06);
     spinHone += dt * (active ? 9 : 1.5);
     block.hone.rotation.y = spinHone;
@@ -873,6 +1074,7 @@ export function createScene(canvas, { low = false, reduced = false } = {}) {
   resize();
   setProgress(0);
   return {
+    ready,
     setProgress,
     state: S,
     anchors,

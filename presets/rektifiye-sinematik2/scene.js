@@ -6,6 +6,8 @@
 // Dışarıya: createScene(canvas, opts) → { setProgress(p), setFinal(t|null), start(), stop(), resize(), renderOnce() }
 import * as THREE from 'three';
 import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js';
+import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js';
+import { loadEnv } from '../../shared/lib3d.js';
 
 const clamp01 = (x) => Math.min(1, Math.max(0, x));
 const smooth = (a, b, x) => {
@@ -43,19 +45,35 @@ export function createScene(canvas, { phone = false, low = false } = {}) {
   renderer.setPixelRatio(DPR);
   renderer.setClearColor(0x000000, 0);
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.05;
+  renderer.toneMappingExposure = 1.0;
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFShadowMap;
 
   const scene = new THREE.Scene();
   const pmrem = new THREE.PMREMGenerator(renderer);
   scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.03).texture;
   scene.environmentIntensity = 1;
   pmrem.dispose();
+  // aydınlık atölye HDRI'si: tornalanan çelikte tavan ışığı yansımaları
+  let envBase = 1;
+  loadEnv('workshop', renderer, { quality: phone || low ? 'lo' : 'hi' })
+    .then((tex) => {
+      scene.environment = tex;
+      scene.environmentRotation.set(0, -0.6, 0);
+      envBase = 1.3;
+    })
+    .catch(() => {});
 
   const camera = new THREE.PerspectiveCamera(phone ? 44 : 30, 1, 0.03, 220);
   const UP_ANGLE = phone ? 0.95 : 0; // telefonda mil çapraz dursun, dikey ekranı doldursun
 
   const key = new THREE.DirectionalLight(0xffffff, 1.6);
   key.position.set(3, 6, 5);
+  key.castShadow = true;
+  key.shadow.mapSize.set(low ? 1024 : 2048, low ? 1024 : 2048);
+  key.shadow.bias = -0.0005;
+  key.shadow.normalBias = 0.03;
+  Object.assign(key.shadow.camera, { left: -7, right: 7, top: 6, bottom: -6, near: 1, far: 20 });
   scene.add(key);
   const rim = new THREE.DirectionalLight(0xc9d6ff, 0.8);
   rim.position.set(-5, 2, -4);
@@ -188,55 +206,109 @@ export function createScene(canvas, { phone = false, low = false } = {}) {
   }
 
   // ---------------------------------------------------------------- torna: ayna, fener mili, kızak
-  const enamel = new THREE.MeshStandardMaterial({ color: '#d5d9df', metalness: 0.15, roughness: 0.42 });
+  // Emaye boyalı döküm, taşlanmış kızak yolları, üç ayaklı ayna (kademeli ayaklar, anahtar yuvaları),
+  // kalemlik ve eşkenar dörtgen karbür uç.
+  const castTex = canvasTex(256, 256, (g, w, h) => {
+    g.fillStyle = '#808080';
+    g.fillRect(0, 0, w, h);
+    for (let i = 0; i < 5000; i++) {
+      const v = 110 + Math.random() * 60;
+      g.fillStyle = `rgba(${v},${v},${v},.5)`;
+      g.fillRect(Math.random() * w, Math.random() * h, 1 + Math.random() * 2, 1 + Math.random() * 2);
+    }
+  });
+  castTex.repeat.set(3, 3);
+  const enamel = new THREE.MeshStandardMaterial({ color: '#d5d9df', metalness: 0.1, roughness: 0.38, roughnessMap: castTex });
   const enamelLight = new THREE.Color('#d5d9df'), enamelNight = new THREE.Color('#34343f');
-  const enamelDark = new THREE.MeshStandardMaterial({ color: '#2a2d35', metalness: 0.4, roughness: 0.5 });
+  const enamelDark = new THREE.MeshStandardMaterial({ color: '#2a2d35', metalness: 0.35, roughness: 0.45 });
   const steelDark = new THREE.MeshStandardMaterial({ color: '#6c7079', metalness: 1, roughness: 0.3 });
+  const ground = new THREE.MeshStandardMaterial({ color: '#c3c7cf', metalness: 1, roughness: 0.16 });
   const chuck = new THREE.Group();
-  const body = new THREE.Mesh(new THREE.CylinderGeometry(1.6, 1.6, 0.8, 64, 1), steelDark);
-  body.rotation.z = Math.PI / 2;
-  body.position.x = -3.12;
-  chuck.add(body);
-  const face = new THREE.Mesh(new THREE.CylinderGeometry(1.45, 1.6, 0.06, 64, 1), new THREE.MeshStandardMaterial({ color: '#9aa0aa', metalness: 1, roughness: 0.22 }));
-  face.rotation.z = Math.PI / 2;
-  face.position.x = -2.7;
-  chuck.add(face);
-  const jawMat = new THREE.MeshStandardMaterial({ color: '#b9bec7', metalness: 1, roughness: 0.28 });
-  for (let i = 0; i < 3; i++) {
-    const a = (i / 3) * Math.PI * 2;
-    const jaw = new THREE.Mesh(new THREE.BoxGeometry(0.42, 0.46, 0.32), jawMat);
-    jaw.position.set(-2.5, Math.cos(a) * 1.23, Math.sin(a) * 1.23);
-    jaw.rotation.x = a;
-    chuck.add(jaw);
+  {
+    // ayna gövdesi: arka flanş, gövde, pahlar, ön yüz girintisi (x ekseni boyunca döndürülmüş profil)
+    const prof = [
+      [0.0, -3.62], [1.05, -3.62], [1.1, -3.56], [1.1, -3.4], [1.52, -3.34], [1.6, -3.26], [1.6, -2.84],
+      [1.54, -2.76], [1.3, -2.74], [1.26, -2.72], [0.46, -2.72], [0.42, -2.76], [0.0, -2.76],
+    ].map(([r, x]) => new THREE.Vector2(r, x));
+    const g = new THREE.LatheGeometry(prof, low ? 48 : 96);
+    g.rotateZ(-Math.PI / 2);
+    const bodyM = new THREE.MeshStandardMaterial({ color: '#8a9099', metalness: 1, roughness: 0.34 });
+    chuck.add(new THREE.Mesh(g, bodyM));
+    // ön yüzde ayak kanalları ve anahtar yuvaları
+    const jawMat = new THREE.MeshStandardMaterial({ color: '#b9bec7', metalness: 1, roughness: 0.24 });
+    const slotMat = new THREE.MeshStandardMaterial({ color: '#3b3f47', metalness: 0.8, roughness: 0.5 });
+    for (let i = 0; i < 3; i++) {
+      const a = (i / 3) * Math.PI * 2;
+      const jaw = new THREE.Group();
+      // kademeli ayak: üç basamak (iç yüz parçayı r = 1,0'da sıkar)
+      for (const [x0, x1, y0, y1] of [[-2.72, -2.3, 1.0, 1.26], [-2.72, -2.44, 1.26, 1.44], [-2.72, -2.57, 1.44, 1.58]]) {
+        const m = new THREE.Mesh(new RoundedBoxGeometry(x1 - x0, y1 - y0 + 0.01, 0.3, 2, 0.02), jawMat);
+        m.position.set((x0 + x1) / 2, (y0 + y1) / 2, 0);
+        jaw.add(m);
+      }
+      const slot = new THREE.Mesh(new THREE.BoxGeometry(0.02, 1.1, 0.42), slotMat);
+      slot.position.set(-2.715, 1.05, 0);
+      jaw.add(slot);
+      jaw.rotation.x = a;
+      chuck.add(jaw);
+      const key = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.07, 0.05, 16), slotMat);
+      key.rotation.z = Math.PI / 2;
+      key.position.set(-2.72, Math.cos(a + Math.PI / 3) * 1.1, Math.sin(a + Math.PI / 3) * 1.1);
+      chuck.add(key);
+    }
   }
   world.add(chuck);
-  const head = new THREE.Mesh(new THREE.BoxGeometry(2.4, 4.2, 3.4), enamel);
-  head.position.set(-4.75, -0.3, -0.2);
+  const head = new THREE.Mesh(new RoundedBoxGeometry(2.4, 4.2, 3.4, 3, 0.16), enamel);
+  head.position.set(-4.95, -0.3, -0.2);
   world.add(head);
-  const bed = new THREE.Mesh(new THREE.BoxGeometry(12, 0.7, 2.2), enamel);
+  const nose = new THREE.Mesh(new THREE.CylinderGeometry(1.0, 1.1, 0.3, 48), steelDark);
+  nose.rotation.z = Math.PI / 2;
+  nose.position.x = -3.72;
+  world.add(nose);
+  const plate = new THREE.Mesh(new RoundedBoxGeometry(0.04, 0.5, 1.2, 1, 0.02), enamelDark);
+  plate.position.set(-3.74, 1.2, 0.9);
+  world.add(plate);
+  const bed = new THREE.Mesh(new RoundedBoxGeometry(12, 0.7, 2.2, 2, 0.08), enamel);
   bed.position.set(0.5, -2.35, -0.3);
   world.add(bed);
-  const bedWay = new THREE.Mesh(new THREE.BoxGeometry(12, 0.12, 0.3), steelDark);
+  const bedWay = new THREE.Mesh(new THREE.BoxGeometry(12, 0.12, 0.3), ground);
   bedWay.position.set(0.5, -1.94, 0.55);
   world.add(bedWay);
   const bedWay2 = bedWay.clone();
   bedWay2.position.z = -1.1;
   world.add(bedWay2);
+  const vWay = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.16, 12, 4, 1), ground);
+  vWay.rotation.z = Math.PI / 2;
+  vWay.rotation.x = Math.PI / 4;
+  vWay.position.set(0.5, -1.98, -0.25);
+  world.add(vWay);
 
-  // Kalem
+  // Kalem: kalemlik bloğu, sap, eşkenar dörtgen (80°) TiN kaplı karbür uç
   const tool = new THREE.Group();
-  const holder = new THREE.Mesh(new THREE.BoxGeometry(0.3, 1.6, 0.34), enamelDark);
+  const post = new THREE.Mesh(new RoundedBoxGeometry(0.62, 0.7, 0.62, 2, 0.04), enamelDark);
+  post.position.set(0.28, 1.95, -0.3);
+  tool.add(post);
+  const holder = new THREE.Mesh(new RoundedBoxGeometry(0.3, 1.6, 0.34, 2, 0.03), steelDark);
   holder.position.set(0.12, 0.86, -0.12);
   holder.rotation.x = -0.18;
   tool.add(holder);
-  const insert = new THREE.Mesh(
-    new THREE.CylinderGeometry(0.2, 0.2, 0.07, 3),
-    new THREE.MeshStandardMaterial({ color: '#d8a93f', metalness: 1, roughness: 0.25 })
-  );
+  const rh = new THREE.Shape();
+  const A = (40 * Math.PI) / 180, L = 0.2;
+  rh.moveTo(L * Math.cos(A), 0);
+  rh.lineTo(0, L * Math.sin(A));
+  rh.lineTo(-L * Math.cos(A), 0);
+  rh.lineTo(0, -L * Math.sin(A));
+  rh.closePath();
+  const insGeo = new THREE.ExtrudeGeometry(rh, { depth: 0.06, bevelEnabled: true, bevelThickness: 0.008, bevelSize: 0.008, bevelSegments: 2 });
+  insGeo.translate(0, 0, -0.03);
+  const insert = new THREE.Mesh(insGeo, new THREE.MeshStandardMaterial({ color: '#d8a93f', metalness: 1, roughness: 0.22 }));
   insert.rotation.x = Math.PI / 2;
-  insert.rotation.y = Math.PI / 6;
-  insert.position.set(0.14, 0.12, 0);
+  insert.rotation.z = -0.6;
+  insert.position.set(0.14, 0.1, 0);
   tool.add(insert);
+  const clamp = new THREE.Mesh(new RoundedBoxGeometry(0.2, 0.08, 0.2, 1, 0.02), steelDark);
+  clamp.position.set(0.14, 0.16, 0);
+  tool.add(clamp);
   world.add(tool);
 
   // ---------------------------------------------------------------- talaş şeridi
@@ -447,6 +519,14 @@ export function createScene(canvas, { phone = false, low = false } = {}) {
   scene.add(tunnel);
   tunnel.visible = false;
 
+  world.traverse((o) => {
+    if (o.isMesh && o !== chip) {
+      o.castShadow = o !== bed;
+      o.receiveShadow = true;
+    }
+  });
+  part.castShadow = true;
+
   // ---------------------------------------------------------------- kamera anahtarları
   const K = phone
     ? {
@@ -493,7 +573,7 @@ export function createScene(canvas, { phone = false, low = false } = {}) {
 
     updatePart(feed, prof);
     partMat.roughness = lerp(0.36, 0.06, polish);
-    scene.environmentIntensity = lerp(1, 0.55, dark);
+    scene.environmentIntensity = lerp(envBase, 0.5, dark);
     enamel.color.copy(enamelLight).lerp(enamelNight, dark);
     key.intensity = lerp(1.6, 0.35, dark);
     rim.intensity = lerp(0.8, 1.6, dark);
@@ -563,7 +643,7 @@ export function createScene(canvas, { phone = false, low = false } = {}) {
       ox = fin ? 0.16 : inTunnel ? 0.12 * (1 - tun) : lerp(0.36, 0.2, smooth(0.1, 0.2, p));
     } else {
       const heroW = 1 - smooth(0.1, 0.18, p);
-      oy = fin ? -0.12 : inTunnel ? 0 : lerp(-0.16, 0.2, heroW);
+      oy = fin ? -0.12 : inTunnel ? 0 : lerp(-0.16, 0.3, heroW);
     }
     if (Math.abs(ox - lastOx) > 1e-4 || Math.abs(oy - lastOy) > 1e-4) {
       lastOx = ox;

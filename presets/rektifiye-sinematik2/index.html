@@ -61,17 +61,23 @@
   </header>
 
   <main id="top">
-    <!-- Film: torna, talaş, numune, taşlama, talaş tüneli -->
-    <section class="film" aria-label="Tezgâhta ne oluyor">
-      <div class="film__stick">
-        <div class="hud" aria-hidden="true">
+    <!-- Film: sahne sabit arka planda. Hero akışta geçer; iki kısa pinli perde (torna + numune, taşlama + ölçü),
+         aralarında ışıklar söner. -->
+    <div class="film" id="film">
+      <div class="film__hud" aria-hidden="true">
+        <div class="hud">
           <p class="hud__lbl" data-hud-lbl>Ham çap</p>
           <p class="hud__val"><span data-hud-val>Ø 80,00</span></p>
           <p class="hud__unit" data-hud-unit>mm</p>
           <div class="hud__bar"><i data-hud-bar></i></div>
         </div>
+        <ol class="steps">
+          <li>Torna</li><li>Numune</li><li>Taşlama</li><li>Ölçü</li>
+        </ol>
+      </div>
 
-        <div class="chap chap--hero" data-ch="0">
+      <section class="hero" aria-label="Giriş">
+        <div class="chap chap--hero">
           <p class="chap__kick" data-since></p>
           <h1 class="hero__title" data-name></h1>
           <p class="hero__lead" data-slogan></p>
@@ -81,36 +87,34 @@
           </div>
           <p class="hero__hint"><span></span>Kaydırın, tezgâhı çalıştıralım</p>
         </div>
+      </section>
 
+      <section class="act act--a" aria-label="Torna ve numuneden parça">
         <div class="chap" data-ch="1">
           <p class="chap__kick">01 · Torna</p>
           <h2 class="chap__title">Talaş kıvrılır, ölçü iner.</h2>
           <p class="chap__txt">Kalem her paso birkaç yüzde bir milimetre alır. Talaşın rengi bize kesme sıcaklığını söyler: saman sarısı iyi, mor dikkat, mavi fazla.</p>
         </div>
-
         <div class="chap" data-ch="2">
           <p class="chap__kick">02 · Numuneden parça</p>
           <h2 class="chap__title">Aynısını işleriz.</h2>
           <p class="chap__txt">Burç, flanş, mil, adaptör. Çizim ya da eski parçayı getirin; kademe kademe ölçer, aynı ölçüde çıkarırız.</p>
         </div>
+      </section>
 
+      <section class="act act--b" aria-label="Taşlama ve ölçü">
         <div class="chap" data-ch="3">
           <p class="chap__kick">03 · Taşlama</p>
           <h2 class="chap__title">Işıklar söner, taş konuşur.</h2>
           <p class="chap__txt">Krank muylusu taşın altında ayna gibi olur. Çizik, ovalite, yatak izi kıvılcımla gider. Sonra iki yönden ölçülür.</p>
         </div>
-
         <div class="chap chap--tunel" data-ch="4">
           <p class="chap__kick">04 · Ölçü</p>
           <h2 class="chap__title">Beş mikron.</h2>
           <p class="chap__txt">Bir saç teli bunun on dört katı kalın. Motor bu farkı hisseder; biz de ölçeriz, rapora yazarız.</p>
         </div>
-
-        <ol class="steps" aria-hidden="true">
-          <li>Torna</li><li>Numune</li><li>Taşlama</li><li>Ölçü</li>
-        </ol>
-      </div>
-    </section>
+      </section>
+    </div>
 
     <!-- Hizmetler -->
     <section class="isler" id="isler">
@@ -184,11 +188,11 @@
     </section>
 
     <!-- Galeri -->
-    <section class="galeri" aria-label="Atölyeden">
+    <section class="galeri" aria-label="Tezgâh, taş, freze">
       <div class="wrap">
         <header class="sec-head sec-head--row">
-          <h2 class="sec-title" data-split>Atölyeden</h2>
-          <p class="sec-lead">Tezgâh, taş, freze. Parçayı kendi gözünüzle görmek isterseniz uğrayın.</p>
+          <h2 class="sec-title" data-split>Tezgâh, taş, freze</h2>
+          <p class="sec-lead">Parçanızın hangi tezgâhtan geçeceğini merak ederseniz uğrayın, işlenirken gösterelim.</p>
         </header>
       </div>
       <div class="galeri__track" data-galeri data-lenis-prevent-touch></div>
@@ -198,7 +202,7 @@
     <section class="yorumlar">
       <div class="wrap">
         <header class="sec-head sec-head--row">
-          <h2 class="sec-title" data-split>Ustalar ne diyor</h2>
+          <div class="yorumlar__bas"><p class="etiket">Örnek yorumlar</p><h2 class="sec-title" data-split>Ustalar ne diyor</h2></div>
           <p class="puan"><b data-puan></b><span class="puan__s" data-stars></span><span data-puan-adet></span></p>
         </header>
         <div class="yorumlar__grid" data-yorumlar></div>
@@ -247,7 +251,7 @@
       <p class="foot__name" data-name></p>
       <p data-address></p>
       <p><a data-tel-plain></a></p>
-      <p class="foot__small">© <span data-year></span> <span data-name></span>. Fotoğraflar: Pexels. Torna sahnesi bu site için kodla üretildi.</p>
+      <p class="foot__small">© <span data-year></span> <span data-name></span>. Fotoğraflar: Pexels. 3D görseller temsilîdir.</p>
     </div>
   </footer>
 

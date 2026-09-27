@@ -142,3 +142,8 @@
 .k-btn:focus-visible { outline: 2px solid currentColor; outline-offset: -5px; }
 
 .k-rakamlar dd { font-size: clamp(34px, 4.4vw, 62px); }
+
+/* Hero: temsilî krank render'ı; telefonda krank kadrajın içinde kalsın */
+@media (max-width: 899px) {
+  .k-hero__gorsel img { object-position: 68% 50%; }
+}
