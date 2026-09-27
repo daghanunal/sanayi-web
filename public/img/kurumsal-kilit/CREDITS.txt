@@ -14,3 +14,8 @@ kodlama.jpg: "Electronic Device Used in Cars" — https://www.pexels.com/photo/e
 kontak.jpg: "Car ignition turning on" — https://www.pexels.com/photo/car-ignition-turning-on-17124738/
 (sektor-kilit görsellerinin sıkıştırılmış kopyaları)
 silindir-kesit-3d.jpg: temsilî 3D render — lib3d lock varlığı (ön yarılar gizli kesit), Blender Cycles, Poly Haven CC0 "studio" HDRI. Fotoğraf değildir.
+
+Görsel temizliği (2026-09-27, plaka/logo/firma adı; kadraj ve boyut aynı):
+dukkan.jpg: ustanın yeleğindeki esnaf odası logosu, bardaktaki yazı, asılı ürün kartlarındaki markalar (Zafer, Basel, Yumak) ve makine etiketi bulanıklaştırıldı
+kodlama.jpg: OBD cihazındaki ürün logosu (BlueDriver) ve üst etiket yazısı kaldırıldı
+yedek-anahtar.jpg: anahtarlık kayışındaki PEUGEOT yazısı ve metal amblem bulanıklaştırıldı

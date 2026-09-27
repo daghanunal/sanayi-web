@@ -13,3 +13,9 @@ cekici.jpg: "Mercedes-Benz Cargo Truck" https://www.pexels.com/photo/mercedes-be
 eksantrik.jpg: "Engine Cylinder Head with Camshafts" https://www.pexels.com/photo/engine-cylinder-head-with-camshafts-7565172/
 usta.jpg: "A Mechanic Tuning an Engine" https://www.pexels.com/photo/a-mechanic-tuning-an-engine-7564872/
 yolda.jpg: "View of a Mercedes-Benz Actros Driving on a Street" https://www.pexels.com/photo/view-of-a-mercedes-benz-actros-driving-on-a-street-20097991/
+
+Görsel temizliği (2026-09-27, plaka/logo/firma adı; kadraj ve boyut aynı):
+cekici.jpg: plaka ve bayi çerçevesi (köşede) bulanıklaştırıldı
+dizel-motor.jpg: arka plandaki sponsor branda/araç yazıları (Inbon), şapka ve tişört logoları (Formula Truck, CAT), motor üzerindeki üretici yazıları (Mahle, ISC) bulanıklaştırıldı
+komparator.jpg: komparatör kadranındaki üretici logosu (Mitutoyo) kaldırıldı
+yolda.jpg: dorsedeki firma/marka yazıları (Häcker, Blaupunkt) kaldırıldı, plaka bulanıklaştırıldı

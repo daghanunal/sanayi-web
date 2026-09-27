@@ -13,3 +13,6 @@ motor-bolmesi.jpg: Pexels 4116220 "Red Car Engine Bay" — https://www.pexels.co
 kaput-alti.jpg: Pexels 3807277 "Man in Black Jacket and Black Knit Cap Inspecting Car Engine" — https://www.pexels.com/photo/3807277/
 frigorifik-tir.jpg: Pexels 11053640 "Photo of a White Truck with Lights" (Sergei Skrynnik) — https://www.pexels.com/photo/photo-of-a-white-truck-with-lights-11053640/
 tezgah.jpg: Pexels 3822900 "Self employed male mechanic working in garage" — https://www.pexels.com/photo/self-employed-male-mechanic-working-in-garage-3822900/
+
+Görsel temizliği (2026-09-27, plaka/logo/firma adı; kadraj ve boyut aynı):
+frigorifik-tir.jpg: soğutma ünitesindeki üretici yazısı ve çekici plakası bulanıklaştırıldı

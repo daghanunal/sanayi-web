@@ -8,3 +8,6 @@ kirmizi-kapi.jpg: https://www.pexels.com/photo/5233262/ (kurumsal-boya2/pasta-ki
 kaput-yansima.jpg: https://www.pexels.com/photo/30679981/ (üst kısmı kırpıldı; amblem kadraj dışında)
 kaput-yansima-once.jpg: showroom/kaput-once.jpg ile aynı kırpım (canlandırma amaçlı işlenmiş "önce" karesi)
 Ayrıca public/img/showroom/ altındaki fotoğraflar kullanılıyor (kaynaklar oradaki CREDITS.txt'de).
+
+Görsel temizliği (2026-09-27, plaka/logo/firma adı; kadraj ve boyut aynı):
+mavi-yakin.jpg: marşpiyeldeki sponsor/ürün çıkartmaları (Tein, Whiteline vb.) bulanıklaştırıldı

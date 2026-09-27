@@ -4,3 +4,7 @@ kamyonlar.jpg: "Photo of Trucks in a Row on a Car Park" — Pexels, https://www.
 park.jpg: "Aerial Photography Of Trucks Parked" — Pexels, https://www.pexels.com/photo/aerial-photography-of-trucks-parked-2800121/ (Pexels lisansı)
 Ayrıca public/img/tonaj/ altındaki usta.jpg, beyaz.jpg, kaput.jpg kullanılır (kaynakları orada).
 tir.webp, teker.webp: lib3d çekici + dorse (assets3d, bu proje), Blender Cycles render; temsilîdir.
+
+Görsel temizliği (2026-09-27, plaka/logo/firma adı; kadraj ve boyut aynı):
+filo-havadan.jpg: çekici tavanlarındaki plaka/filo numaraları ve tanker üzerindeki firma adları bulanıklaştırıldı
+kamyonlar.jpg: iki plaka bulanıklaştırıldı

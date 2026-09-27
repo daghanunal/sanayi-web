@@ -2,3 +2,8 @@ Tüm fotoğraflar Pexels lisansıyla (ücretsiz, ticari kullanım serbest); kayn
 hero-temiz*.jpg, hero-kirli*.jpg: "Car wheel washing with water jet" — https://www.pexels.com/photo/car-wheel-washing-with-water-jet-4876678/
   (hero-kirli: aynı fotoğrafa prosedürel çamur katmanı eklendi; üretici .shots/yikama-klasik/gen/mud.py)
 k/*.jpg: public/img/sektor-yikama/ görsellerinin 1200px küçültülmüş kopyaları.
+
+Görsel temizliği (2026-09-27, plaka/logo/firma adı; kadraj ve boyut aynı):
+k/cila-2.jpg: ustanın tişörtündeki ürün markası baskısı ve kol yazısı kaldırıldı
+k/kopuk.jpg: yıkama perdesindeki işletme adı bulanıklaştırıldı
+k/yikama-garaj.jpg: yıkama perdesindeki işletme adı bulanıklaştırıldı

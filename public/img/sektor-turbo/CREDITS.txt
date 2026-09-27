@@ -11,3 +11,6 @@ dizel-motor.jpg: cottonbro studio — https://www.pexels.com/photo/7564866/
 atolye.jpg: cottonbro studio — https://www.pexels.com/photo/7564862/
 krom-turbo.jpg: "Metal Part of Engine", Garvin St. Villier — https://www.pexels.com/photo/metal-part-of-engine-14277598/
 motor-turbo.jpg: "Car Engine with Turbo", Jacob Moore — https://www.pexels.com/photo/car-engine-with-turbo-12565885/
+
+Görsel temizliği (2026-09-27, plaka/logo/firma adı; kadraj ve boyut aynı):
+krom-turbo.jpg: turbo üzerindeki döküm marka plakası bulanıklaştırıldı, hortumdaki ürün markası (Mishimoto) kaldırıldı

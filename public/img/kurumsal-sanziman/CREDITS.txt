@@ -3,3 +3,9 @@ kesit.jpg: Pexels 28721763 "Detailed view of a car transmission cutaway" — htt
 tamir.jpg: Pexels 29181492 "Mechanic uses tools to repair car transmission" — https://www.pexels.com/photo/29181492/
 dsg-kol.jpg: Pexels 4227726 "Automatic car shifter" — https://www.pexels.com/photo/4227726/
 Diğerleri public/img/sektor-sanziman/ içinden küçültülmüş kopyalar; kaynaklar oradaki CREDITS.txt'de.
+
+Görsel temizliği (2026-09-27, plaka/logo/firma adı; kadraj ve boyut aynı):
+atolye.jpg: duvardaki marka afiş/tabelaları (Michelin, Berga) ve camdaki galeri kartı bulanıklaştırıldı
+obd.jpg: OBD cihazındaki ürün logosu (BlueDriver) ve üst etiket yazısı kaldırıldı
+teshis.jpg: teşhis cihazındaki üretici logosu (MaxiSys) kaldırıldı
+yag.jpg: yağ bidonundaki marka etiketi (Shell / VW / MAXI) bulanıklaştırıldı

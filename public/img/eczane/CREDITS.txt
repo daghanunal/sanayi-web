@@ -7,3 +7,6 @@ dermo.jpg: "Close-Up Shot of Skincare Products" https://www.pexels.com/photo/clo
 bebek.jpg: "Person Holding the Newborn Baby's Hand" https://www.pexels.com/photo/person-holding-the-newborn-baby-s-hand-14890759/
 uygulama.jpg: "Person Holding Pill Box" https://www.pexels.com/photo/person-holding-pill-box-5712676/
 ilaclar.jpg: "Person Holding Medicines" https://www.pexels.com/photo/person-holding-medicines-4047011/
+
+Görsel temizliği (2026-09-27, plaka/logo/firma adı; kadraj ve boyut aynı):
+tezgah.jpg: ilaç markası tabela/afişleri (Tafirol, Acción), ürün kutusu etiketleri ve camdaki not bulanıklaştırıldı

@@ -7,3 +7,11 @@ vinc-kurtarma.jpg: "A Car Being Towed Away" — https://www.pexels.com/photo/a-c
 cekici-sehir.jpg: "A Yellow Flat Bed Truck on a Street Near a Pedestrian Lane" — https://www.pexels.com/photo/a-yellow-flat-bed-truck-on-a-street-near-a-pedestrian-lane-11383127/
 agir-vasita.jpg: "White Volvo Semi-truck on Side of Road" — https://www.pexels.com/photo/white-volvo-semi-truck-on-side-of-road-2199293/
 (Kaynak: public/img/sektor-cekici, 1200px'e küçültüldü)
+
+Görsel temizliği (2026-09-27, plaka/logo/firma adı; kadraj ve boyut aynı):
+agir-vasita.jpg: arka kamyonun plakası bulanıklaştırıldı
+aku-kablo.jpg: akü etiketi markası kaldırıldı
+cekici-sehir.jpg: kabin ve kasa üzerindeki telefon numaraları, "ASSISTANCE" ve kapı yazısı kaldırıldı, plaka ve ROSSMANN tabelaları bulanıklaştırıldı
+cekici-yukleme.jpg: "DURAN" yazısı, tişört logosu ve telefon, taşıyıcıdaki iki Ford logosu kaldırıldı
+vinc-kurtarma.jpg: iki araç plakası bulanıklaştırıldı, çekici kapısındaki telefonlu firma etiketi kaldırıldı
+yolda-lastik.jpg: tişörtteki firma logosu kaldırıldı

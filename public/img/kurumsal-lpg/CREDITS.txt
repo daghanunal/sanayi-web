@@ -15,3 +15,9 @@ yol.jpg: Pexels 221284
 atolye.jpg: Pexels 29286299 (iddea photo)
 Lisans: Pexels License (ücretsiz ticari kullanım)
 kit-ustten-3d.jpg: temsilî 3D render — lib3d lpg_kit varlığı, Blender Cycles, Poly Haven CC0 "garage" HDRI. Fotoğraf değildir. (eller.jpg artık hat bölümünde kullanılmıyor.)
+
+Görsel temizliği (2026-09-27, plaka/logo/firma adı; kadraj ve boyut aynı):
+lift.jpg: arka plandaki işletme tabelası (URSA yazısı ve logosu) kaldırıldı
+tespit.jpg: teşhis cihazındaki üretici logosu (MaxiSys) kaldırıldı
+yol-genis.jpg: otoyoldaki araç plakaları, panelvandaki ve uzaktaki tırdaki firma yazıları bulanıklaştırıldı
+yol.jpg: otoyoldaki araç plakaları, panelvandaki ve uzaktaki tırdaki firma yazıları bulanıklaştırıldı

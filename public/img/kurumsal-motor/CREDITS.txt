@@ -6,3 +6,8 @@ motor-3d.jpg, motor-3d-genis.jpg: temsilî 3D çizim — lib3d "engine" varlığ
   (betik: .shots/yukseltme/render/studio_engine.py; explode 0.8, az 38, el 14, stüdyo HDRI 0.15 + alan ışıkları)
 Lisans: Pexels License (ücretsiz ticari kullanım)
 revizyon.jpg, eller.jpg, yag.jpg: garaj presetinden kopya (Pexels 8985519 Artem Podrez, 12555016, 13065700 Daniel Andraski)
+
+Görsel temizliği (2026-09-27, plaka/logo/firma adı; kadraj ve boyut aynı):
+atolye.jpg: duvardaki marka tabela/çıkartmaları (3CV, Motorcraft, Ford Granada afiş yazısı) bulanıklaştırıldı
+filo-gece.jpg: panelvandaki posta şirketi logosu, web adresleri, telefon ve filo numarası kaldırıldı (kırmızı-lacivert şerit kaldı)
+yag.jpg: yağ bidonundaki marka etiketi (Shell / VW / MAXI) bulanıklaştırıldı

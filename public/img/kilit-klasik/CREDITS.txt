@@ -16,3 +16,8 @@ kontak.jpg: "Car ignition turning on" — https://www.pexels.com/photo/car-ignit
 (kilit-klasik: yukarıdaki sektor-kilit görsellerinin küçültülmüş kopyaları)
 
 gece-far.jpg: "Sleek sports car at night with headlights on" — https://www.pexels.com/photo/32723285/
+
+Görsel temizliği (2026-09-27, plaka/logo/firma adı; kadraj ve boyut aynı):
+dukkan.jpg: ustanın yeleğindeki esnaf odası logosu, bardaktaki yazı, asılı ürün kartlarındaki markalar (Zafer, Basel, Yumak) ve makine etiketi bulanıklaştırıldı
+kodlama.jpg: OBD cihazındaki ürün logosu (BlueDriver) ve üst etiket yazısı kaldırıldı
+yedek-anahtar.jpg: anahtarlık kayışındaki PEUGEOT yazısı ve metal amblem bulanıklaştırıldı

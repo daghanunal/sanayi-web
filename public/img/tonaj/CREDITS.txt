@@ -1,3 +1,6 @@
 usta.jpg: "Mechanic and Truck" — Pexels, https://www.pexels.com/photo/mechanic-and-truck-7019378/ (Pexels lisansı)
 beyaz.jpg: "Photo of a White Truck with Lights" — Sergei Skrynnik, Pexels, https://www.pexels.com/photo/photo-of-a-white-truck-with-lights-11053640/ (Pexels lisansı)
 kaput.jpg: "A Man Looking under the Hood of a Truck with a Garage Work Light" — Pexels, https://www.pexels.com/photo/a-man-looking-under-the-hood-of-a-truck-with-a-garage-work-light-7541346/ (Pexels lisansı)
+
+Görsel temizliği (2026-09-27, plaka/logo/firma adı; kadraj ve boyut aynı):
+beyaz.jpg: soğutma ünitesindeki üretici yazısı ve çekici plakası bulanıklaştırıldı

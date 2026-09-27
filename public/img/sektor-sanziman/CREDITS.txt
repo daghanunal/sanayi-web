@@ -13,3 +13,9 @@ usta-tablet.jpg: Pexels 6870332 — https://www.pexels.com/photo/6870332/
 yag.jpg: Pexels 13065700 "Close up of Hand Pouring Oil to Engine" — https://www.pexels.com/photo/close-up-of-hand-pouring-oil-to-engine-13065700/
 motor-bolmesi.jpg: Pexels 10490621 "A Mechanic Opening the Oil Filler Cap of a Car Engine" — https://www.pexels.com/photo/a-mechanic-opening-the-oil-filler-cap-of-a-car-engine-10490621/
 kaput-alti.jpg: Pexels 3807277 "Man in Black Jacket and Black Knit Cap Inspecting Car Engine" — https://www.pexels.com/photo/3807277/
+
+Görsel temizliği (2026-09-27, plaka/logo/firma adı; kadraj ve boyut aynı):
+atolye.jpg: duvardaki marka afiş/tabelaları (Michelin, Berga) ve camdaki galeri kartı bulanıklaştırıldı
+obd.jpg: OBD cihazındaki ürün logosu (BlueDriver) ve üst etiket yazısı kaldırıldı
+teshis.jpg: teşhis cihazındaki üretici logosu (MaxiSys) kaldırıldı
+yag.jpg: yağ bidonundaki marka etiketi (Shell / VW / MAXI) bulanıklaştırıldı

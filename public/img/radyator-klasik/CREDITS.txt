@@ -6,3 +6,6 @@ on-panel.jpg: Pexels 34351909 — https://www.pexels.com/photo/34351909/
 is-makinesi.jpg: Pexels 5622425 — https://www.pexels.com/photo/5622425/
 Diğerleri public/img/sektor-radyator/ klasöründen yeniden sıkıştırılmış kopyalar (kaynaklar orada CREDITS.txt içinde).
 radyator-parcalar.jpg — Blender Cycles render'ı, lib3d 'radiator (patlatılmış)' varlığı (kendi üretimimiz, üçüncü taraf model yok; HDRI: Poly Haven CC0). Temsilîdir.
+
+Görsel temizliği (2026-09-27, plaka/logo/firma adı; kadraj ve boyut aynı):
+on-panel.jpg: radyatör peteğindeki büyük üretici logosu petek dokusuyla kapatıldı

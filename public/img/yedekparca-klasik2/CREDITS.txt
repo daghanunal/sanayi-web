@@ -10,3 +10,6 @@ kablolar.jpg: https://www.pexels.com/photo/17072947/ (elektrik-klasik2 ile aynı
 aski.jpg: https://www.pexels.com/photo/6870302/ (Gustavo Fring; lastik-klasik2 ile aynı kaynak, kırpıldı)
 
 3d-*.jpg: bu site için lib3d modellerinden (motor v2, jant/fren) ve Blender'da kurulan amortisörden Cycles ile render edildi; temsilîdir.
+
+Görsel temizliği (2026-09-27, plaka/logo/firma adı; kadraj ve boyut aynı):
+yag.jpg: yağ bidonundaki marka etiketi (Shell / VW / MAXI) bulanıklaştırıldı

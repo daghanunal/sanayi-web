@@ -4,3 +4,6 @@ lift.jpg: Pexels 8986132 "Mechanic evaluating a car on a lift" — https://www.p
 eksantrik.jpg: Pexels 29226626 "Close-up of camshaft in engine assembly" — https://www.pexels.com/photo/29226626/
 Lisans: Pexels License (ücretsiz ticari kullanım)
 revizyon.jpg, yag.jpg: garaj presetinden kopya (Pexels 8985519 Artem Podrez, 13065700 Daniel Andraski)
+
+Görsel temizliği (2026-09-27, plaka/logo/firma adı; kadraj ve boyut aynı):
+yag.jpg: yağ bidonundaki marka etiketi (Shell / VW / MAXI) bulanıklaştırıldı

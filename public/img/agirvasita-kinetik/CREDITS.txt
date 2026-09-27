@@ -4,3 +4,7 @@ gece.jpg: "Car Lights on the Highway at Night" https://www.pexels.com/photo/car-
 cekici.jpg: "Mercedes-Benz Cargo Truck" https://www.pexels.com/photo/mercedes-benz-cargo-truck-16100082/
 Ayrıca public/img/tonaj/ altındaki beyaz.jpg kullanılır (kaynakları orada).
 cekici-3d.webp, teker.webp: lib3d çekici (assets3d, bu proje), Blender Cycles render; temsilîdir.
+
+Görsel temizliği (2026-09-27, plaka/logo/firma adı; kadraj ve boyut aynı):
+actros.jpg: dorsedeki firma/marka yazıları (Häcker, Blaupunkt) kaldırıldı, plaka bulanıklaştırıldı
+cekici.jpg: plaka ve bayi çerçevesi (köşede) bulanıklaştırıldı

@@ -3,3 +3,18 @@ kaynaklardan yeniden boyutlandırılıp sıkıştırıldı (kaynak listesi: publ
 giris-m.jpg, giris-d.jpg: "Man Standing Near Broken Car on Road" — https://www.pexels.com/photo/man-standing-near-broken-car-on-road-13151295/
 varis-m.jpg, varis-d.jpg: "A Car on a Tow Truck" — https://www.pexels.com/photo/a-car-on-a-tow-truck-17429097/
 Diğerleri aynı adla public/img/sektor-cekici/ kaynaklarıyla aynıdır.
+
+Görsel temizliği (2026-09-27, plaka/logo/firma adı; kadraj ve boyut aynı):
+agir-kurtarma.jpg: "KURTA" yazısı ve vinç üzerindeki üretici web adresi kaldırıldı, plaka (TT 924FJ) ve bayi çerçevesi bulanıklaştırıldı
+agir-vasita.jpg: arka kamyonun plakası bulanıklaştırıldı
+aku-kablo.jpg: akü etiketi markası kaldırıldı
+arac-tasima.jpg: "GÜVEN" yazısı kaldırıldı, plaka (34 EIF 81) ve bayi çerçevesi bulanıklaştırıldı
+cekici-sehir.jpg: kabin ve kasa üzerindeki telefon numaraları, "ASSISTANCE" ve kapı yazısı kaldırıldı, plaka ve ROSSMANN tabelaları bulanıklaştırıldı
+cekici-yukleme.jpg: "DURAN" yazısı, tişört logosu ve telefon, taşıyıcıdaki iki Ford logosu kaldırıldı
+giris-d.jpg: plaka bulanıklaştırıldı (kırpılmış kopya)
+giris-m.jpg: plaka bulanıklaştırıldı (kırpılmış kopya)
+varis-d.jpg: "DURAN" yazısı, tişört logosu ve telefon, taşıyıcıdaki iki Ford logosu kaldırıldı (kırpılmış kopya)
+varis-m.jpg: "DURAN" yazısı, tişört logosu ve telefon, taşıyıcıdaki iki Ford logosu kaldırıldı (kırpılmış kopya)
+vinc-kurtarma.jpg: iki araç plakası bulanıklaştırıldı, çekici kapısındaki telefonlu firma etiketi kaldırıldı
+yolda-kalan.jpg: plaka bulanıklaştırıldı
+yolda-lastik.jpg: tişörtteki firma logosu kaldırıldı

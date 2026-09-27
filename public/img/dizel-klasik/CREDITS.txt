@@ -7,3 +7,9 @@ parca.jpg: "Greasy Hand Holding Black Metallic Spare Parts" https://www.pexels.c
 pompa.jpg: "Rustic Diesel Engine on Wooden Pallet Outdoors" https://www.pexels.com/photo/rustic-diesel-engine-on-wooden-pallet-outdoors-34640514/
 k-*.jpg: public/img/sektor-dizel/ görsellerinin küçültülmüş kopyaları (kaynaklar oradaki CREDITS.txt'de).
 enjektor-kesit.jpg — Blender Cycles render'ı, lib3d 'injector (dış görünüş + kesit)' varlığı (kendi üretimimiz, üçüncü taraf model yok; HDRI: Poly Haven CC0). Temsilîdir.
+
+Görsel temizliği (2026-09-27, plaka/logo/firma adı; kadraj ve boyut aynı):
+k-cekici.jpg: plaka ve bayi çerçevesi (köşede) bulanıklaştırıldı
+k-komparator.jpg: komparatör kadranındaki üretici logosu (Mitutoyo) kaldırıldı
+k-yolda.jpg: dorsedeki firma/marka yazıları (Häcker, Blaupunkt) kaldırıldı, plaka bulanıklaştırıldı
+tezgah.jpg: sprey kutusundaki ürün markası (PRISA) bulanıklaştırıldı

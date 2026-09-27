@@ -8,3 +8,6 @@ sunroof.jpg: https://www.pexels.com/photo/modern-car-interior-with-sunroof-view-
 yagmur.jpg: https://www.pexels.com/photo/rain-drops-on-vehicle-windshield-1765286/
 yapistirma.jpg: https://www.pexels.com/photo/auto-glass-technician-putting-glue-from-glass-placement-11950155/
 yol.jpg: https://www.pexels.com/photo/gray-concrete-road-near-hill-5665284/ (kırpıldı, 2048×1024; kristal 3D sahnesinde camın ardındaki manzara)
+
+Görsel temizliği (2026-09-27, plaka/logo/firma adı; kadraj ve boyut aynı):
+yapistirma.jpg: ustanın sweatshirt'ündeki firma yazısı kaldırıldı

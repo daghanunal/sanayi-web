@@ -13,3 +13,14 @@ gece-yol.jpg: "Car Lights on the Highway at Night" — https://www.pexels.com/ph
 agir-vasita.jpg: "White Volvo Semi-truck on Side of Road" — https://www.pexels.com/photo/white-volvo-semi-truck-on-side-of-road-2199293/
 lastik-degisimi.jpg: "A Man Fixing a Flat Tire" — https://www.pexels.com/photo/a-man-fixing-a-flat-tire-12478166/
 yolda-kalan.jpg: "Man Standing Near Broken Car on Road" — https://www.pexels.com/photo/man-standing-near-broken-car-on-road-13151295/
+
+Görsel temizliği (2026-09-27, plaka/logo/firma adı; kadraj ve boyut aynı):
+agir-kurtarma.jpg: "KURTA" yazısı ve vinç üzerindeki üretici web adresi kaldırıldı, plaka (TT 924FJ) ve bayi çerçevesi bulanıklaştırıldı
+agir-vasita.jpg: arka kamyonun plakası bulanıklaştırıldı
+aku-kablo.jpg: akü etiketi markası kaldırıldı
+arac-tasima.jpg: "GÜVEN" yazısı kaldırıldı, plaka (34 EIF 81) ve bayi çerçevesi bulanıklaştırıldı
+cekici-sehir.jpg: kabin ve kasa üzerindeki telefon numaraları, "ASSISTANCE" ve kapı yazısı kaldırıldı, plaka ve ROSSMANN tabelaları bulanıklaştırıldı
+cekici-yukleme.jpg: "DURAN" yazısı, tişört logosu ve telefon, taşıyıcıdaki iki Ford logosu kaldırıldı
+vinc-kurtarma.jpg: iki araç plakası bulanıklaştırıldı, çekici kapısındaki telefonlu firma etiketi kaldırıldı
+yolda-kalan.jpg: plaka bulanıklaştırıldı
+yolda-lastik.jpg: tişörtteki firma logosu kaldırıldı

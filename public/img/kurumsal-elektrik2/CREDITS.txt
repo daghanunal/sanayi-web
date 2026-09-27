@@ -10,3 +10,6 @@ garaj-far.jpg: https://www.pexels.com/photo/sleek-black-car-in-underground-parki
 eller.jpg: https://www.pexels.com/photo/person-holding-black-and-gray-car-engine-8478264/
 filo.jpg: https://www.pexels.com/photo/row-of-bright-yellow-vans-parked-outdoors-32980265/
 beyin.jpg: https://www.pexels.com/photo/technician-repairing-circuit-board-with-multimeter-38264253/
+
+Görsel temizliği (2026-09-27, plaka/logo/firma adı; kadraj ve boyut aynı):
+aku-kablo.jpg: akü etiketi markası kaldırıldı

@@ -1,1 +1,4 @@
 Görseller public/img/sektor-radyator/ kaynaklarından küçültülmüş kopyalardır (Pexels lisansı). Ayrıntılı kaynaklar: public/img/sektor-radyator/CREDITS.txt
+
+Görsel temizliği (2026-09-27, plaka/logo/firma adı; kadraj ve boyut aynı):
+frigorifik-tir.jpg: soğutma ünitesindeki üretici yazısı ve çekici plakası bulanıklaştırıldı

@@ -9,3 +9,7 @@ tek-uc.jpg: https://www.pexels.com/photo/a-close-up-of-a-car-exhaust-pipe-272589
 Diğer görseller public/img/manifold/ klasöründen (bkz. oradaki CREDITS.txt).
 lift-3d.jpg, lift-3d-genis.jpg: temsilî 3D çizim — lib3d "garage" + "car" + "exhaust" varlıkları (assets3d, prosedürel, marka yok),
   Blender Cycles (betik: .shots/yukseltme/egzoz-tools/lift_scene.py; lift 1,55 m, garaj HDRI + alan ışıkları)
+
+Görsel temizliği (2026-09-27, plaka/logo/firma adı; kadraj ve boyut aynı):
+hero-dik.jpg: egzoz uçlarındaki ürün logoları (Remus) kaldırıldı
+tek-uc.jpg: egzoz ucundaki ürün logosu (GReddy) kaldırıldı

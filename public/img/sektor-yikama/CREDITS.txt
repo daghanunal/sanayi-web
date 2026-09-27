@@ -11,3 +11,8 @@ cila.jpg: "A Person Polishing the Black Car" — https://www.pexels.com/photo/a-
 cila-2.jpg: "Man Polishing a Car" — https://www.pexels.com/photo/man-polishing-a-car-14908957/
 jant.jpg: "Car wheel washing with water jet" — https://www.pexels.com/photo/car-wheel-washing-with-water-jet-4876678/
 ic-mekan.jpg: "A Clean Car Interior" — https://www.pexels.com/photo/a-clean-car-interior-5288724/
+
+Görsel temizliği (2026-09-27, plaka/logo/firma adı; kadraj ve boyut aynı):
+cila-2.jpg: ustanın tişörtündeki ürün markası baskısı ve kol yazısı kaldırıldı
+kopuk.jpg: yıkama perdesindeki işletme adı bulanıklaştırıldı
+yikama-garaj.jpg: yıkama perdesindeki işletme adı bulanıklaştırıldı

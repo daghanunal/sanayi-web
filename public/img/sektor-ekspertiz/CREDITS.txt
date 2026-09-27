@@ -13,3 +13,6 @@ gosterge.jpg      https://www.pexels.com/photo/close-up-of-the-speedometer-on-th
 el-sikisma.jpg    https://www.pexels.com/photo/a-person-giving-a-car-key-to-another-person-while-shaking-his-hands-7144207/ (Antoni Shkraba)
 arac-sirasi.jpg   https://www.pexels.com/photo/row-of-cars-parked-in-an-urban-parking-lot-29566909/ (Luke Miller)
 anahtar.jpg       https://www.pexels.com/photo/person-in-grey-shirt-handing-keys-97079/
+
+Görsel temizliği (2026-09-27, plaka/logo/firma adı; kadraj ve boyut aynı):
+obd-cihaz.jpg: teşhis cihazındaki üretici logosu (MaxiSys) kaldırıldı

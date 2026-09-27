@@ -15,3 +15,7 @@ s-jant.jpg      https://www.pexels.com/photo/5693651/
 s-klasik.jpg    https://www.pexels.com/photo/4969923/
 s-kaporta.jpg   https://www.pexels.com/photo/person-welding-car-10551343/ (public/img/egzoz-klasik2/kivilcim.jpg kopyası)
 Not: g-tesla-y.jpg ve g-corvette.jpg üzerindeki plakalar bulanıklaştırıldı.
+
+Görsel temizliği (2026-09-27, plaka/logo/firma adı; kadraj ve boyut aynı):
+g-i8.jpg: ön plaka yerindeki model levhası ve zemindeki müze yazısı bulanıklaştırıldı
+s-yikama.jpg: yıkama perdesindeki işletme adı bulanıklaştırıldı

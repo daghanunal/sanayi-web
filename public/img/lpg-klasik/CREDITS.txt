@@ -5,3 +5,8 @@ tespit.jpg: Pexels 4116193 · manometre.jpg: Pexels 16679542 · tablet.jpg: Pexe
 lift.jpg: Pexels 3894030 (Modified Pov) · motor-kirmizi.jpg: Pexels 4116220 · yol.jpg: Pexels 221284
 atolye.jpg: Pexels 29286299 (iddea photo) · gosterge.jpg: Pexels 9737313 (Erik Mclean) · yakit.jpg: Pexels 20500733
 lpg-kiti-3d.jpg, lpg-kiti-3d-k.jpg: temsilî 3D render — lib3d lpg_kit varlığı (bu projede Blender ile üretildi), Blender Cycles, Poly Haven CC0 "studio" HDRI. Fotoğraf değildir.
+
+Görsel temizliği (2026-09-27, plaka/logo/firma adı; kadraj ve boyut aynı):
+lift.jpg: arka plandaki işletme tabelası (URSA yazısı ve logosu) kaldırıldı
+tespit.jpg: teşhis cihazındaki üretici logosu (MaxiSys) kaldırıldı
+yol.jpg: otoyoldaki araç plakaları, panelvandaki ve uzaktaki tırdaki firma yazıları bulanıklaştırıldı

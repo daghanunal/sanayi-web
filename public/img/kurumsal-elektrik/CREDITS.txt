@@ -11,3 +11,7 @@ far.jpg: https://www.pexels.com/photo/front-light-on-modern-black-car-16352272/
 hibrit.jpg: https://www.pexels.com/photo/close-up-of-electric-car-charger-14242296/
 motor.jpg: https://www.pexels.com/photo/a-mechanic-working-on-a-car-8478230/
 aku-3d.jpg: lib3d "battery" varlığının Blender Cycles çizimi (public/lib3d, markasız), temsilî. Betik: .shots/yukseltme/kurumsal-elektrik/tools/render.sh
+
+Görsel temizliği (2026-09-27, plaka/logo/firma adı; kadraj ve boyut aynı):
+hibrit.jpg: lastik yanağındaki marka yazısı (Pirelli) kaldırıldı
+tablet.jpg: teşhis cihazındaki üretici logosu (MaxiSys) kaldırıldı

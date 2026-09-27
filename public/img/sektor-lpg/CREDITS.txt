@@ -13,3 +13,8 @@ gosterge.jpg: Pexels 9737313 (Erik Mclean)
 yol.jpg: Pexels 221284
 atolye.jpg: Pexels 29286299 (iddea photo)
 Lisans: Pexels License (ücretsiz ticari kullanım)
+
+Görsel temizliği (2026-09-27, plaka/logo/firma adı; kadraj ve boyut aynı):
+lift.jpg: arka plandaki işletme tabelası (URSA yazısı ve logosu) kaldırıldı
+tespit.jpg: teşhis cihazındaki üretici logosu (MaxiSys) kaldırıldı
+yol.jpg: otoyoldaki araç plakaları, panelvandaki ve uzaktaki tırdaki firma yazıları bulanıklaştırıldı

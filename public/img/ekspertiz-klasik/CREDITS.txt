@@ -15,3 +15,6 @@ arac-sirasi.jpg   https://www.pexels.com/photo/row-of-cars-parked-in-an-urban-pa
 anahtar.jpg       https://www.pexels.com/photo/person-in-grey-shirt-handing-keys-97079/
 
 (Bu klasördeki dosyalar public/img/sektor-ekspertiz/ görsellerinin küçültülmüş kopyalarıdır.)
+
+Görsel temizliği (2026-09-27, plaka/logo/firma adı; kadraj ve boyut aynı):
+obd-cihaz.jpg: teşhis cihazındaki üretici logosu (MaxiSys) kaldırıldı

@@ -16,3 +16,7 @@ Kaynak: https://www.pexels.com/photo/<id>/
 Lisans: Pexels License (ücretsiz ticari kullanım)
 
 2026-09-27: ocak.jpg arka plandaki içecek dolabı logosu temizlendi.
+
+Görsel temizliği (2026-09-27, plaka/logo/firma adı; kadraj ve boyut aynı):
+meze-masa.jpg: peçetedeki restoran logosu (köşede) bulanıklaştırıldı
+ocak.jpg: ocakbaşı tabelasındaki işletme adı ve önlükteki logo bulanıklaştırıldı

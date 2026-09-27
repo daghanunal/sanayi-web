@@ -8,3 +8,6 @@ Lisans: Pexels License (ücretsiz ticari kullanım)
 krank-montaj.jpg: Pexels 33559376 ("Mechanic installing crankshaft in engine block"), https://www.pexels.com/photo/mechanic-installing-crankshaft-in-engine-block-33559376/
 kapak-montaj.jpg: Pexels 8986047 ("Man repairing an engine"), https://www.pexels.com/photo/man-repairing-an-engine-8986047/
 Hero motoru: public/lib3d/engine (projenin kendi Blender varlığı) + Poly Haven "garage" HDRI (CC0), gerçek zamanlı three.js.
+
+Görsel temizliği (2026-09-27, plaka/logo/firma adı; kadraj ve boyut aynı):
+yag.jpg: yağ bidonundaki marka etiketi (Shell / VW / MAXI) bulanıklaştırıldı
