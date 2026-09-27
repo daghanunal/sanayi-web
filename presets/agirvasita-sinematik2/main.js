@@ -126,7 +126,7 @@ $('[data-garanti]').textContent = d.garanti;
 // Yorumlar: telsiz mesajları
 $('[data-score]').innerHTML = `
   <b>${esc(nf(d.puan.ortalama, 1))}</b>
-  <div><p class="score__stars" aria-hidden="true">${icons.star.repeat(5)}</p><p>${esc(nf(d.puan.adet))} Google yorumu</p></div>`;
+  <div><p class="score__stars" aria-hidden="true">${icons.star.repeat(5)}</p><p>Örnek puan · ${esc(nf(d.puan.adet))} değerlendirme</p></div>`;
 $('[data-msgs]').innerHTML = d.yorumlar.map((y, i) => `
   <li class="msg ${i % 2 ? 'msg--r' : ''}">
     <p class="msg__meta"><span class="msg__ch">KANAL ${esc(String(9 + (i % 3)))}</span><b>${esc(y.ad)}</b><span>${esc(y.arac)}</span></p>
@@ -169,16 +169,16 @@ try {
 } catch (e) {
   document.documentElement.classList.add('no-webgl');
 }
-document.fonts?.ready.then(() => document.fonts.load("900 80px 'Overpass'")).then(() => S?.redrawSigns());
+document.fonts?.ready.then(() => document.fonts.load("900 80px 'Saira Semi Condensed'")).then(() => S?.redrawSigns());
 if (import.meta.env.DEV) window.__av = { S, signs };
 
 // Kamera pozları [kamX, kamY, kamZ, bakX, bakY, bakZ]. Araç -z yönüne gider.
 const CAMS = {
-  hero: [-6.8, 1.4, -18.5, -2.6, 2.6, -3],
+  hero: [4.4, 1.3, -18.5, 3.2, 2.5, -3],
   side: [-12.5, 2.6, -2, 0, 2.3, -3],
   chase0: [-3.6, 7, 24, 0, 3, -34],
   stop0: [-8.2, 4.4, 3, -1.6, 3.2, -30],
-  stop1: [4.4, 2.6, 7, 0, 2.6, -32],
+  stop1: [5.2, 3.4, 17, 0, 2.2, -30],
   stop2: [-2.6, 1.3, 16, 0, 2.2, -34],
   stop3: [3.6, 8.5, 17, -0.5, 3.4, -32],
   stop4: [-6.4, 5, 8, -0.4, 3.4, -32],
@@ -190,6 +190,7 @@ const CAMS = {
 };
 // Dikey ekranda dar açıda tır kadrajdan çıkmasın diye bazı pozlar değişir
 const CAMS_P = {
+  hero: [-6.8, 1.4, -18.5, -2.6, 2.6, -3],
   stop0: [-4.6, 4.2, 9, 1.4, 2.8, -30],
 };
 const K = 0.06; // metre / piksel
@@ -314,20 +315,31 @@ requestAnimationFrame(frame);
 
 function intro() {
   const el = $('[data-intro]');
+  let finished = false;
   const done = () => {
+    if (finished) return;
+    finished = true;
     document.body.classList.remove('is-loading');
     el.remove();
     started = true;
+    lenis?.start();
     heroIn();
   };
-  if (reducedMotion) return done();
+  if (reducedMotion || document.documentElement.classList.contains('is-vitrin')) return done();
   lenis?.stop();
-  const tl = gsap.timeline({ onComplete: () => { lenis?.start(); done(); } });
-  tl.fromTo('[data-intro-sign]', { filter: 'brightness(0.08)', scale: 0.86 }, { filter: 'brightness(1)', scale: 1, duration: 1.1, ease: 'power2.out' })
-    .fromTo('[data-intro-shine]', { xPercent: -120 }, { xPercent: 260, duration: 0.8, ease: 'power2.inOut' }, 0.5)
-    .to('[data-intro-sign]', { scale: 1.9, opacity: 0, duration: 0.7, ease: 'power3.in' }, 1.7)
-    .to(el, { opacity: 0, duration: 0.5 }, 2.05);
-  el.addEventListener('click', () => tl.progress(1), { once: true });
+  // tabela farla aydınlanır (en fazla ~2 sn), model hazır olunca ya da dokununca yol başlar
+  let ok = false;
+  const tl = gsap.timeline({ onComplete: done });
+  tl.fromTo('[data-intro-sign]', { filter: 'brightness(0.08)', scale: 0.9 }, { filter: 'brightness(1)', scale: 1, duration: 0.8, ease: 'power2.out' })
+    .fromTo('[data-intro-shine]', { xPercent: -120 }, { xPercent: 260, duration: 0.6, ease: 'power2.inOut' }, 0.35)
+    .call(() => { if (!ok) tl.pause(); }, [], 1.1)
+    .call(() => gsap.set(el, { pointerEvents: 'none' }))
+    .to('[data-intro-sign]', { scale: 1.7, autoAlpha: 0, duration: 0.45, ease: 'power3.in' })
+    .to(el, { autoAlpha: 0, duration: 0.35 }, '-=0.2');
+  const go = () => { ok = true; if (tl.paused()) tl.play(); };
+  setTimeout(done, 3000);
+  Promise.race([S?.readyP || Promise.resolve(), new Promise((r) => setTimeout(r, 1300))]).then(() => setTimeout(go, 150));
+  el.addEventListener('pointerdown', () => { go(); tl.timeScale(2.5); }, { once: true });
 }
 
 function heroIn() {

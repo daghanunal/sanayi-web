@@ -3,3 +3,4 @@ actros.jpg: "View of a Mercedes-Benz Actros Driving on a Street" https://www.pex
 gece.jpg: "Car Lights on the Highway at Night" https://www.pexels.com/photo/car-lights-on-the-highway-at-night-15444512/
 cekici.jpg: "Mercedes-Benz Cargo Truck" https://www.pexels.com/photo/mercedes-benz-cargo-truck-16100082/
 Ayrıca public/img/tonaj/ altındaki beyaz.jpg kullanılır (kaynakları orada).
+cekici-3d.webp, teker.webp: lib3d çekici (assets3d, bu proje), Blender Cycles render; temsilîdir.

@@ -30,10 +30,16 @@
         <div class="hero__karart" aria-hidden="true"></div>
         <div class="hero__serit" aria-hidden="true"><i data-serit></i></div>
 
-        <div class="gantry" data-gantry>
-          <div class="gantry__kiris" aria-hidden="true"></div>
+        <!-- Tabela iki katman: yazısız levha (ekranı kaplayana dek büyür) + üstünde aynı ölçüde yazı katmanı (büyümenin başında söner) -->
+        <div class="gantry" data-gantry aria-hidden="true">
+          <div class="gantry__kiris"></div>
           <div class="tabela" data-tabela>
-            <i class="tabela__parlama" data-parlama aria-hidden="true"></i>
+            <i class="tabela__parlama" data-parlama></i>
+            <div class="tabela__bos" data-bos></div>
+          </div>
+        </div>
+        <div class="gantry gantry--yazi" data-gantry-yazi>
+          <div class="tabela tabela--yazi">
             <div class="tabela__ic" data-tabela-ic>
               <div class="tabela__ust">
                 <span class="kalkan" aria-hidden="true">7/24</span>
@@ -168,7 +174,7 @@
     <!-- Galeri -->
     <section class="galeri">
       <div class="kap">
-        <p class="etiket etiket--yesil">Dükkândan</p>
+        <p class="etiket etiket--yesil">Ağır vasıta bakımı</p>
         <h2 class="baslik baslik--koyu" data-galeri-baslik data-split></h2>
       </div>
       <div class="galeri__serit" data-galeri tabindex="0" aria-label="Fotoğraflar, yana kaydırın"></div>

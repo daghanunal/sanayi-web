@@ -1,4 +1,4 @@
-/* Gece Seferi: otoyol yeşili, reflektif beyaz, sodyum turuncusu. Overpass (otoyol tabelası harfi). */
+/* Gece Seferi: otoyol yeşili, reflektif beyaz, sodyum turuncusu. Saira Semi Condensed (DIN tabela harfi soyu). */
 :root {
   --night: #0b1a1f;
   --night-2: #102a30;
@@ -13,8 +13,8 @@
   --paper: #e9ede5;
   --ink: #0c1b1f;
   --ink-muted: #4c5e5f;
-  --body: 'Overpass', system-ui, sans-serif;
-  --mono: 'Overpass Mono', ui-monospace, monospace;
+  --body: 'Saira Semi Condensed', 'Arial Narrow', system-ui, sans-serif;
+  --mono: 'Red Hat Mono', ui-monospace, monospace;
   --pad: clamp(16px, 5vw, 72px);
   --focus: var(--tab);
   --bar-bg: #08161a;
@@ -81,7 +81,7 @@ body.is-loading { overflow: hidden; }
   background: linear-gradient(100deg, transparent, rgb(255 255 255 / .5), transparent);
   transform: skewX(-18deg) translateX(-120%); pointer-events: none;
 }
-.intro__skip { position: absolute; bottom: calc(28px + env(safe-area-inset-bottom)); font: 600 13px var(--mono); color: #6f8584; letter-spacing: .06em; }
+.intro__skip { position: absolute; top: calc(50% + 150px); font: 600 13px var(--mono); color: #6f8584; letter-spacing: .06em; }
 
 /* --- Sahne ------------------------------------------------------------------------------ */
 .stage { position: fixed; inset: 0; width: 100%; height: 100vh; height: 100lvh; z-index: 0; }
@@ -92,16 +92,16 @@ body.is-loading { overflow: hidden; }
 main, .foot { position: relative; z-index: 2; }
 
 .hud {
-  position: fixed; z-index: 55; right: calc(var(--pad) + 52px); top: 11px; height: 38px;
-  display: flex; align-items: center; gap: 8px;
+  flex: none; height: 38px; display: flex; align-items: center; gap: 8px;
   padding: 7px 12px 5px 12px; border-radius: 8px;
   background: var(--sign); color: var(--white); box-shadow: inset 0 0 0 2px var(--white);
   font: 900 14px/1 var(--body); letter-spacing: .04em;
-  opacity: 0; transform: translateY(-8px); transition: opacity .4s, transform .4s;
+  opacity: 0; visibility: hidden; transform: translateY(-6px); transition: opacity .4s, transform .4s, visibility .4s;
 }
-.hud.is-on { opacity: 1; transform: none; }
+.hud.is-on { opacity: 1; visibility: visible; transform: none; }
 .hud svg { width: 14px; height: 14px; margin-top: -3px; }
-.hud__km { font: 700 13px/1 var(--mono); padding-left: 8px; margin-left: 2px; border-left: 1px solid rgb(255 255 255 / .4); }
+.hud__km { font: 700 13px/1 var(--mono); padding-left: 8px; margin-left: 2px; border-left: 1px solid rgb(255 255 255 / .4); min-width: 7ch; }
+@media (max-width: 400px) { .hud__to { display: none; } .hud { padding: 7px 10px 5px; } .hud__km { border-left: 0; padding-left: 2px; } }
 
 /* --- Üst çubuk -------------------------------------------------------------------------- */
 .top {
@@ -110,13 +110,13 @@ main, .foot { position: relative; z-index: 2; }
   background: rgb(6 16 19 / .95);
 }
 .top::after { content: ''; position: absolute; inset: 100% 0 auto; height: 22px; background: linear-gradient(rgb(6 16 19 / .55), transparent); pointer-events: none; }
-.top__brand { font: 900 19px/1 var(--body); text-decoration: none; padding-top: 3px; margin-right: auto; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.top__brand { font: 900 19px/1 var(--body); text-decoration: none; padding-top: 3px; margin-right: auto; min-height: 44px; display: inline-flex; align-items: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
 .top__status { display: none; align-items: center; gap: 7px; font: 600 12px/1 var(--mono); color: var(--muted); white-space: nowrap; }
 .top__status::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: #7b8a8a; }
 .top__status.is-open::before { background: var(--sign-hi); box-shadow: 0 0 10px var(--sign-hi); }
 .top__call {
   display: inline-flex; align-items: center; gap: 8px; flex: none;
-  height: 42px; min-width: 42px; justify-content: center; padding: 0 10px; border-radius: 9px;
+  height: 44px; min-width: 44px; justify-content: center; padding: 0 10px; border-radius: 9px;
   background: var(--sign); color: #fff; text-decoration: none; font: 800 15px/1 var(--body);
   box-shadow: inset 0 0 0 2px rgb(255 255 255 / .85);
 }
@@ -127,8 +127,6 @@ main, .foot { position: relative; z-index: 2; }
   .top__num { display: inline; }
   .top__status { display: flex; }
   .top__call { padding: 0 16px; }
-  .hud { top: 17px; right: auto; left: 50%; height: 38px; margin-left: -80px; }
-  .hud.is-on { transform: none; }
 }
 
 /* --- Hero ------------------------------------------------------------------------------- */
@@ -390,17 +388,17 @@ main, .foot { position: relative; z-index: 2; }
 .final__title { font: 900 clamp(54px, 15vw, 150px)/.9 var(--body); letter-spacing: -.025em; margin-top: 16px; padding-top: .1em; text-shadow: 0 6px 40px rgb(0 0 0 / .5); }
 .final__title .ch { display: inline-block; }
 .final__text { color: #d7e1dd; font-size: 18px; margin-top: 12px; }
-.final__tel { display: inline-block; margin: 14px 0 22px; font: 700 clamp(30px, 8.6vw, 64px)/1 var(--mono); color: var(--white); text-decoration: none; letter-spacing: -.02em; border-bottom: 4px solid var(--sign-hi); padding-bottom: 6px; white-space: nowrap; }
+.final__tel { display: inline-flex; align-items: center; min-height: 52px; margin: 14px 0 22px; font: 700 clamp(30px, 8.6vw, 64px)/1 var(--mono); color: var(--white); text-decoration: none; letter-spacing: -.02em; border-bottom: 4px solid var(--sign-hi); padding-bottom: 6px; white-space: nowrap; }
 .final__cta { display: flex; flex-wrap: wrap; gap: 10px; }
 .final__cta .btn { flex: 1 1 200px; max-width: 290px; }
 
 /* --- Footer ----------------------------------------------------------------------------- */
-.foot { padding: 48px 0 calc(110px + env(safe-area-inset-bottom)); border-top: 1px solid var(--line); color: var(--muted); font-size: 15px; }
+.foot { padding: 48px 0 32px; border-top: 1px solid var(--line); color: var(--muted); font-size: 15px; }
 .foot .wrap { display: grid; gap: 8px; }
 .foot__name { font: 900 22px/1 var(--body); color: var(--white); padding-top: 3px; }
-.foot a { text-decoration: none; }
+.foot a { text-decoration: none; display: inline-flex; align-items: center; min-height: 44px; }
 .foot__small { font-size: 12px; color: #6d8281; margin-top: 10px; }
-@media (min-width: 900px) { .foot { padding-bottom: 48px; } .is-vitrin .foot { padding-bottom: 110px; } }
+
 
 @media (prefers-reduced-motion: reduce) {
   .brands__track, .hero__sos i, .msg__ch::before, .final__tag i { animation: none; }

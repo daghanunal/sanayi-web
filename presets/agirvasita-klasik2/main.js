@@ -57,7 +57,7 @@ set('[data-marka-baslik]', d.markaBaslik);
 set('[data-konum-baslik]', d.konumBaslik);
 set('[data-final-baslik]', d.finalBaslik);
 set('[data-final-metin]', d.finalMetin);
-set('[data-copy]', `© ${new Date().getFullYear()} ${d.isletme.ad}. Fotoğraflar: Pexels.`);
+set('[data-copy]', `© ${new Date().getFullYear()} ${d.isletme.ad}. Fotoğraflar: Pexels (temsilî).`);
 
 // Uzun dükkân adları tabelaya sığsın
 const adUz = d.isletme.ad.length;
@@ -133,7 +133,7 @@ $('[data-surec]').innerHTML = d.surec
 
 // --- Yorum panosu ----------------------------------------------------------
 $('[data-puan]').textContent = nf(d.puan.ortalama, 1);
-$('[data-puan-adet]').textContent = `${d.puan.adet} değerlendirme`;
+$('[data-puan-adet]').textContent = `Örnek puan · ${d.puan.adet} değerlendirme`;
 $('[data-yildiz]').innerHTML = icons.star.repeat(5);
 const yorumlar = d.yorumlar;
 const noktaKap = $('[data-pano-nokta]');
@@ -232,10 +232,20 @@ if (reducedMotion) {
   bolumler();
 }
 
+// Yazısız levha, yazı katmanıyla aynı yükseklikte olsun (iki katman üst üste tam oturur)
+const bos = $('[data-bos]');
+const icEl = $('[data-tabela-ic]');
+const bosEsitle = () => { bos.style.height = `${icEl.offsetHeight}px`; };
+bosEsitle();
+new ResizeObserver(bosEsitle).observe(icEl);
+document.fonts?.ready.then(bosEsitle);
+
 // İMZA: köprü tabelasının altından geçmek
 function hero() {
   const pin = $('[data-hero-pin]');
   const gantry = $('[data-gantry]');
+  const yazi = $('[data-gantry-yazi]');
+  const ikisi = [gantry, yazi];
   const tabela = $('[data-tabela]');
   const ic = $('[data-tabela-ic]');
   const km = $('[data-km]');
@@ -245,7 +255,7 @@ function hero() {
   const acilis = gsap.timeline({ defaults: { ease: 'power3.out' } });
   acilis
     .from('[data-hero-foto]', { scale: 1.25, duration: 1.8, ease: 'power2.out' }, 0)
-    .from(gantry, { yPercent: -60, opacity: 0, duration: 1.1 }, 0.1)
+    .from(ikisi, { yPercent: -60, opacity: 0, duration: 1.1 }, 0.1)
     .from($$('.tabela__ust, .tabela__ad, .tabela__cikis', ic), { y: 18, opacity: 0, stagger: 0.09, duration: 0.7 }, 0.55)
     .from($$('.hero__slogan, .hero__cta, .hero__ipucu'), { y: 24, opacity: 0, stagger: 0.08, duration: 0.7 }, 0.8);
 
@@ -259,14 +269,14 @@ function hero() {
     return { s, x: innerWidth / 2 - cx, y: innerHeight / 2 - cy, ox: cx - gr.left, oy: cy - gr.top };
   };
   let h = hedef();
-  gsap.set(gantry, { transformOrigin: () => `${h.ox}px ${h.oy}px` });
+  gsap.set(ikisi, { transformOrigin: () => `${h.ox}px ${h.oy}px` });
 
   const tl = gsap.timeline({
     defaults: { ease: 'none' },
     scrollTrigger: {
       trigger: pin, start: 'top top', end: () => `+=${innerHeight * (mobil ? 1.5 : 1.7)}`,
       pin: true, scrub: 0.6, anticipatePin: 1, invalidateOnRefresh: true,
-      onRefreshInit: () => { gsap.set(gantry, { clearProps: 'transform' }); h = hedef(); gsap.set(gantry, { transformOrigin: `${h.ox}px ${h.oy}px` }); },
+      onRefreshInit: () => { gsap.set(ikisi, { clearProps: 'transform' }); h = hedef(); gsap.set(ikisi, { transformOrigin: `${h.ox}px ${h.oy}px` }); },
     },
   });
   tl.to('[data-hero-alt]', { opacity: 0, y: 40, duration: 0.25 }, 0)
@@ -276,9 +286,9 @@ function hero() {
       v: 0, duration: 0.7,
       onUpdate: () => { km.textContent = nf(Math.max(0, sayac.v), 1); },
     }, 0)
-    .to(gantry, { scale: () => h.s, x: () => h.x, y: () => h.y, duration: 0.8, ease: 'power2.in' }, 0)
+    .to(ikisi, { scale: () => h.s, x: () => h.x, y: () => h.y, duration: 0.8, ease: 'power2.in' }, 0)
     .fromTo(tabela, { '--parlak': 1 }, { '--parlak': 0, duration: 0.15 }, 0.6)
-    .to(ic, { opacity: 0, duration: 0.2 }, 0.62)
+    .to(yazi, { autoAlpha: 0, duration: 0.14 }, 0.3)
     .to('.gantry__kiris', { opacity: 0, duration: 0.15 }, 0.55)
     .to('.hero__karart', { opacity: 1, duration: 0.3 }, 0.6)
     .fromTo('[data-vardin]', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.2 }, 0.8)

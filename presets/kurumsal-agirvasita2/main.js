@@ -5,7 +5,7 @@ import { kurumsal, derinBirlestir } from '../_kurumsal/engine.js';
 import { tabelaHero, yolYardim, olcumler, sanayiSaat } from './extra.js';
 import './style.css';
 
-// Otoyol: karayolu yön tabelası dili. Otoyol yeşili, reflektif beyaz, asfalt; Overpass (otoyol yazısı soyundan).
+// Devlet yolu (D-200): karayolu yön tabelası dili. Devlet yolu mavisi, reflektif beyaz, asfalt; Public Sans başlık.
 // Portal tabela hero'su, etkileşimli mesafe tabelası (yol yardım), yuvarlak levhalarda ölçüm.
 const v = derinBirlestir(ana, ek);
 v.istatistikler = v.istatistikler.map((s) => {
@@ -24,15 +24,15 @@ kurumsal({
     gecis: 'yan',
     yer: "Şaşmaz'da",
     heroGorsel: `${B}img/kurumsal-agirvasita2/gece-yol.jpg`,
-    heroAlt: 'Gece otoyolda far izleri',
+    heroAlt: 'Gece yolda far izleri',
     logoAlt: 'Ağır vasıta servisi · 7/24 yol yardım',
     baslikEki: 'Ağır vasıta servisi ve 7/24 yol yardım | Şaşmaz, Ankara',
     teklifEtiketi: 'Randevu isteyin',
     css: {
       zemin: '#eef1ee', yuzey: '#dfe6e1', metin: '#0c1a14', soluk: '#4b5a52', cizgi: 'rgb(12 26 20 / .14)',
-      vurgu: '#00704a', 'vurgu-metin': '#ffffff', koyu: '#101614', 'koyu-metin': '#eef1ee', 'koyu-soluk': '#9aa7a0',
-      gecis: 'linear-gradient(90deg, #00704a 0 46%, #fff 46% 46.6%, #00704a 46.6% 53.4%, #fff 53.4% 54%, #00704a 54%)',
-      'font-baslik': "'Overpass', 'Arial Narrow', sans-serif", 'font-govde': "'Public Sans', system-ui, sans-serif",
+      vurgu: '#1450a3', 'vurgu-metin': '#ffffff', koyu: '#101614', 'koyu-metin': '#eef1ee', 'koyu-soluk': '#9aa7a0',
+      gecis: 'linear-gradient(90deg, #1450a3 0 46%, #fff 46% 46.6%, #1450a3 46.6% 53.4%, #fff 53.4% 54%, #1450a3 54%)',
+      'font-baslik': "'Public Sans', 'Arial Narrow', sans-serif", 'font-govde': "'Public Sans', system-ui, sans-serif",
       'baslik-agirlik': '800', 'baslik-harf': '-0.02em', 'baslik-satir': '0.98', radius: '10px', 'radius-buyuk': '16px',
       h1: 'clamp(46px, 7vw, 112px)', h2: 'clamp(34px, 4.6vw, 68px)',
     },

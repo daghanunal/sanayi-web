@@ -4,10 +4,10 @@ import '../../shared/base.css';
 import './style.css';
 import {
   boot, initSmoothScroll, reducedMotion, telHref, waHref, mapsHref, mapsEmbed,
-  openStatus, groupedHours, icons, esc, gsap, ScrollTrigger,
+  openStatus, groupedHours, icons, esc, gsap, ScrollTrigger, autoHideHeader,
 } from '../../shared/core.js';
 import { SplitText } from 'gsap/SplitText';
-import { truckSVG, wheelCenters, WHEEL_R } from './truck.js';
+import { truckHTML, WHEEL_R, IMG_W } from './truck.js';
 import { chassisSVG, NOKTALAR } from './chassis.js';
 
 gsap.registerPlugin(SplitText);
@@ -58,7 +58,7 @@ set('[data-tako-baslik]', d.takograf.baslik);
 set('[data-tako-metin]', d.takograf.metin);
 set('[data-final-baslik]', d.finalBaslik);
 set('[data-final-metin]', d.finalMetin);
-set('[data-alt-kucuk]', `© ${new Date().getFullYear()} ${d.isletme.ad}. Fotoğraflar: Pexels.`);
+set('[data-alt-kucuk]', `© ${new Date().getFullYear()} ${d.isletme.ad}. Fotoğraflar: Pexels (temsilî). 3D görseller temsilîdir.`);
 
 $('[data-hero-title]').innerHTML = d.isletme.ad
   .split(/\s+/)
@@ -142,7 +142,7 @@ $('[data-fis]').innerHTML = `
       )
       .join('')}
   </ul>
-  <p class="fis__toplam"><span>Müşteri puanı</span><b>${nf(d.puan.ortalama, 1)} / 5</b></p>
+  <p class="fis__toplam"><span>Müşteri puanı (örnek)</span><b>${nf(d.puan.ortalama, 1)} / 5</b></p>
   <p class="fis__not">${esc(d.garanti)}</p>
   <p class="fis__barkod" aria-hidden="true"></p>`;
 
@@ -163,7 +163,7 @@ $('[data-galeri]').innerHTML = d.galeri
 const yildiz = (n) => icons.star.repeat(n);
 $('[data-puan]').textContent = nf(d.puan.ortalama, 1);
 $('[data-yildiz]').innerHTML = yildiz(Math.round(d.puan.ortalama));
-$('[data-puan-adet]').textContent = `${d.puan.adet} değerlendirme`;
+$('[data-puan-adet]').textContent = `Örnek yorumlar · örnek puan, ${d.puan.adet} değerlendirme`;
 $('[data-yorumlar]').innerHTML = d.yorumlar
   .map(
     (y) => `
@@ -201,31 +201,34 @@ new IntersectionObserver(
 // --- Tır --------------------------------------------------------------------
 
 const tirKap = $('[data-tir]');
-tirKap.innerHTML = truckSVG(esc(d.isletme.ad));
-const svg = $('svg', tirKap);
-const perde = $('[data-curtain]', svg);
+tirKap.innerHTML = truckHTML(esc(d.isletme.ad));
+const svg = $('.truck', tirKap);
+const perde = $('[data-curtain] b', svg);
 perde.textContent = d.isletme.ad.toLocaleUpperCase('tr');
 
-// Brandadaki yazıyı alana sığdır (genişlik 700, yükseklik 130 birim)
+// Brandadaki yazıyı alana sığdır
 function perdeSigdir() {
-  perde.setAttribute('font-size', 118);
-  const w = perde.getComputedTextLength();
-  const size = Math.min(128, (118 * 900) / Math.max(w, 1));
-  perde.setAttribute('font-size', size.toFixed(1));
-  perde.setAttribute('y', (126 + size * 0.36).toFixed(1));
+  const kutu = perde.parentElement;
+  const w = kutu.clientWidth, h = kutu.clientHeight;
+  if (!w) return;
+  perde.style.fontSize = '100px';
+  const oran = Math.min((w * 0.92) / Math.max(perde.scrollWidth, 1), (h * 0.8) / 100);
+  perde.style.fontSize = `${(100 * Math.min(oran, h * 0.0074)).toFixed(1)}px`;
 }
 perdeSigdir();
 document.fonts?.ready.then(perdeSigdir);
+addEventListener('resize', perdeSigdir);
 
-const wheels = $$('[data-wheel]', svg).map((g, i) => ({ g, c: wheelCenters[i] }));
+const wheels = $$('[data-wheel]', svg);
 const tekerDon = (px) => {
-  // px: SVG birimiyle alınan yol; açı = yol / yarıçap
+  // px: görsel birimiyle alınan yol; açı = yol / yarıçap
   const deg = ((px / WHEEL_R) * 180) / Math.PI;
-  wheels.forEach(({ g, c }) => g.setAttribute('transform', `rotate(${deg.toFixed(1)} ${c[0]} ${c[1]})`));
+  const t = `rotate(${deg.toFixed(1)}deg)`;
+  wheels.forEach((g) => (g.style.transform = t));
 };
 
-// SVG ekranda kaç piksel? Ekran pikselini SVG birimine çevirmek için
-const olcek = () => svg.getBoundingClientRect().width / 1200;
+// Görsel ekranda kaç piksel? Ekran pikselini görsel birimine çevirmek için
+const olcek = () => svg.getBoundingClientRect().width / IMG_W;
 
 // --- Hareket ----------------------------------------------------------------
 
@@ -339,6 +342,9 @@ if (reducedMotion) {
   $$('[data-kart]').forEach((k) => k.classList.add('is-olcum'));
   $$('.surec__adim li').forEach((li) => li.classList.add('is-yandi'));
 }
+
+// Telefonda başlık aşağı kaydırınca saklanır (yapışkan şasi çizimiyle aynı anda iki üst öğe olmasın)
+if (innerWidth < 900) autoHideHeader($('[data-top]'), { offset: 120 });
 
 // Header: hero geçilince zemini koyulaşır
 ScrollTrigger.create({

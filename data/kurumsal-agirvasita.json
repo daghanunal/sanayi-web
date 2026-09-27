@@ -11,6 +11,7 @@
       "baslik": "Araç yatarsa para kaybedersiniz",
       "metin": "İşi o hesapla yaparız. Arızayı cihazla tespit eder, parçayı ve süreyi baştan söyleriz. Onayınız olmadan ek iş yapmaz, fren ve süspansiyon işlerini yükte deneyip teslim ederiz."
     },
+    "yorumBaslik": "Örnek müşteri yorumları",
     "hizmetOzetBaslik": "Motordan freninin havasına",
     "hizmetEk": {
       "Motor bakım ve revizyon": {
@@ -54,7 +55,7 @@
         "Tek araçlı nakliyecinin yanında nakliye, dağıtım ve servis filolarıyla da çalışıyoruz. Her aracın dosyasını tutar, bakım zamanını hatırlatır, yolda kalan araca servis aracımızla gideriz."
       ],
       "gorsel": "/img/tonaj/usta.jpg",
-      "gorselAlt": "Ustamız kamyonun önünde çalışıyor"
+      "gorselAlt": "Kamyonun önünde parça üzerinde çalışan usta"
     },
     "misyon": "Aracı en kısa sürede, söylediğimiz sürede ve doğru teşhisle yola geri çıkarmak.",
     "vizyon": "Ankara'dan geçen nakliyecinin ve filo sahibinin aklına ilk gelen, sözünde duran ağır vasıta servisi olmak.",

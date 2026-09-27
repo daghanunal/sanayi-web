@@ -19,7 +19,7 @@ kurumsal({
     gecis: 'perde',
     yer: "Şaşmaz'da",
     heroGorsel: `${import.meta.env.BASE_URL}img/tonaj/kaput.jpg`,
-    heroAlt: 'Ustamız iş lambasıyla kamyonun kaputu altında çalışıyor',
+    heroAlt: 'İş lambasıyla kamyon motoruna bakan usta',
     logoAlt: 'Ağır vasıta ve filo servisi',
     baslikEki: 'Ağır vasıta ve filo servisi | Şaşmaz, Ankara',
     teklifEtiketi: 'Sözleşme teklifi',

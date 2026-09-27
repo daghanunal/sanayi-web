@@ -7,7 +7,7 @@ import '../../shared/base.css';
 import './style.css';
 import {
   boot, initSmoothScroll, reducedMotion, gsap, ScrollTrigger, esc,
-  telHref, waHref, mapsHref, mapsEmbed, openStatus, groupedHours, icons,
+  telHref, waHref, mapsHref, mapsEmbed, openStatus, groupedHours, icons, asset,
 } from '../../shared/core.js';
 
 const d = boot({ ...veri, ...ek, preset: 'agirvasita-kinetik' });
@@ -167,26 +167,22 @@ $('[data-stats]').innerHTML = d.istatistikler
 // --- Konvoy -------------------------------------------------------------------
 
 $('[data-konvoy-ust]').textContent = d.konvoy.ust;
-$('[data-arka]').textContent = 'ANKARA → ŞAŞMAZ → ETİMESGUT → ANKARA → ŞAŞMAZ → ETİMESGUT';
+$('[data-arka]').dataset.yazi = 'ANKARA → ŞAŞMAZ → ETİMESGUT → ANKARA → ŞAŞMAZ → ETİMESGUT'; // süs: metin CSS'ten (okunmaz, dokunulmaz)
 // Başlıktaki {n}: hizmet sayısı yazıyla (Sekiz dorse iş…).
 const sayiYazi = ['Sıfır', 'Tek', 'İki', 'Üç', 'Dört', 'Beş', 'Altı', 'Yedi', 'Sekiz', 'Dokuz', 'On', 'On bir', 'On iki'];
 const nHiz = d.hizmetler.length;
 $('[data-konvoy-baslik]').textContent = d.konvoy.baslik.replace('{n}', sayiYazi[nHiz] ?? String(nHiz));
 const teker = (cls = '') => `<span class="teker ${cls}" aria-hidden="true"><i></i></span>`;
+// Çekici: lib3d çekicinin Cycles render'ı (sol yandan, ön solda, tekersiz) + dönen teker görselleri.
+// Konumlar 1400 × 904 birimlik render kadrajına göre (render_av.py --shot cekici çıktısı).
+const CW = 1400, CH = 904, CR = 119.3 * 1.01;
+const cTeker = (x) => `<img class="cekici__teker" src="${asset('/img/agirvasita-kinetik/teker.webp')}" alt="" width="320" height="320" style="left:${(((x - CR) / CW) * 100).toFixed(2)}%;top:${(((758.4 - CR) / CH) * 100).toFixed(2)}%;width:${(((2 * CR) / CW) * 100).toFixed(2)}%" />`;
 const cekici = `
   <div class="cekici" aria-hidden="true">
-    <span class="cekici__spoiler"></span>
-    <span class="cekici__ayna"></span>
-    <div class="cekici__kabin">
-      <span class="cekici__cam"></span>
-      <span class="cekici__kapi"></span>
-      <span class="cekici__tampon"></span>
-      <span class="cekici__izgara"></span>
-      <span class="cekici__far"></span>
-      <span class="cekici__ad">${esc(up(d.isletme.ad))}</span>
-    </div>
-    <div class="cekici__sasi"></div>
-    <div class="cekici__tekerler">${teker()}${teker()}${teker()}</div>
+    <img class="cekici__govde" src="${asset('/img/agirvasita-kinetik/cekici-3d.webp')}" alt="" width="${CW}" height="${CH}" decoding="async" />
+    ${cTeker(355.6)}${cTeker(1177.8)}
+    <span class="cekici__ad"><b>${esc(up(d.isletme.ad))}</b></span>
+    <i class="cekici__far"></i>
   </div>`;
 $('[data-tren]').innerHTML =
   cekici +
@@ -267,7 +263,7 @@ $('[data-brands]').innerHTML = d.markalar.map((m) => `<li>${esc(m)}</li>`).join(
 const puanStr = fmt(d.puan.ortalama, 1);
 $('[data-puan]').innerHTML = `<b>${esc(puanStr)}</b><span>${icons.star.repeat(5)}</span>`;
 $('[data-puan]').setAttribute('aria-label', `5 üzerinden ${puanStr}`);
-$('[data-puan-alt]').textContent = `${nf.format(d.puan.adet)} değerlendirme, 5 üzerinden ${puanStr}.`;
+$('[data-puan-alt]').textContent = `Örnek yorumlar · örnek puan: ${nf.format(d.puan.adet)} değerlendirme, 5 üzerinden ${puanStr}.`;
 $('[data-reviews]').innerHTML = d.yorumlar
   .map(
     (y) => `
@@ -359,7 +355,7 @@ document.fonts.ready.then(() => {
     scrollTrigger: {
       trigger: '.konvoy',
       start: 'top top',
-      end: () => `+=${mesafe() * (mobil() ? 1.1 : 0.9)}`,
+      end: () => `+=${Math.min(mesafe() * (mobil() ? 1.1 : 0.9), innerHeight * 2.8)}`, // pin ≤ 3 ekran
       pin: '.konvoy__pin',
       scrub: 0.5,
       invalidateOnRefresh: true,

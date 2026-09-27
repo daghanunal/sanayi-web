@@ -1,8 +1,8 @@
-// Gece seferi: otoyolda giden kodla çizilmiş çekici + dorse, sodyum lambalar, yeşil otoyol
-// tabelaları (portal). Sayfa kaydıkça yol akar; her bölümün portalı aracın üstünden geçer.
+// Gece seferi: otoyolda giden lib3d çekici + 13,6 m tenteli dorse (kütüphane varlıkları), sodyum
+// lambalar, "night" HDRI yansımaları, aya bağlı yumuşak gölge, yeşil otoyol tabelaları (portal). Sayfa kaydıkça yol akar; her bölümün portalı aracın üstünden geçer.
 // Sonda araç emniyet şeridine çeker, dörtlüler yanar, yol yardım aracı tepe lambasıyla gelir.
 import * as THREE from 'three';
-import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js';
+import { loadAsset, loadEnv, pickQuality } from '../../shared/lib3d.js';
 
 const LANE = 3.6;
 const WHEEL_R = 0.52;
@@ -75,7 +75,7 @@ export function drawSign(g, w, h, { tab = '', main = '', sub = '', arrow = 'down
   g.fillStyle = '#f2f4ee';
   g.textBaseline = 'alphabetic';
   if (tab) {
-    g.font = '800 40px Overpass, sans-serif';
+    g.font = "800 40px 'Saira Semi Condensed', sans-serif";
     const tw = g.measureText(tab).width + 40;
     g.fillStyle = '#ffc42e';
     g.beginPath();
@@ -87,14 +87,14 @@ export function drawSign(g, w, h, { tab = '', main = '', sub = '', arrow = 'down
   }
   // Başlık: sığana kadar küçült
   let size = 150;
-  g.font = `900 ${size}px Overpass, sans-serif`;
+  g.font = `900 ${size}px 'Saira Semi Condensed', sans-serif`;
   while (g.measureText(main).width > w - 120 && size > 60) {
     size -= 6;
-    g.font = `900 ${size}px Overpass, sans-serif`;
+    g.font = `900 ${size}px 'Saira Semi Condensed', sans-serif`;
   }
   g.fillText(main, 52, tab ? 150 + size * 0.72 : h * 0.5 + size * 0.3);
   if (sub) {
-    g.font = '600 46px Overpass, sans-serif';
+    g.font = "600 46px 'Saira Semi Condensed', sans-serif";
     g.globalAlpha = 0.92;
     g.fillText(sub, 56, h - 58);
     g.globalAlpha = 1;
@@ -127,276 +127,56 @@ function makeMat(color, o = {}) {
 // --- Çekici + dorse -----------------------------------------------------------------------
 // Araç -z yönüne bakar. Ön tampon z ≈ -8.6, dorse arkası z ≈ 8.8. Zemin y = 0.
 export function drawTrailerSide(g, w, h, { name = '', tel = '' } = {}) {
-  g.fillStyle = '#e9ebe6';
-  g.fillRect(0, 0, w, h);
-  for (let x = 0; x < w; x += 48) {
-    g.fillStyle = 'rgba(0,0,0,0.06)';
-    g.fillRect(x, 0, 3, h);
-    g.fillStyle = 'rgba(255,255,255,0.5)';
-    g.fillRect(x + 3, 0, 2, h);
-  }
-  const grd = g.createLinearGradient(0, 0, 0, h);
-  grd.addColorStop(0, 'rgba(255,255,255,0.15)');
-  grd.addColorStop(1, 'rgba(0,0,0,0.12)');
-  g.fillStyle = grd;
-  g.fillRect(0, 0, w, h);
-  // yeşil kuşak
+  // tente üstüne basılan çıkartma: zemin saydam (tentenin kıvrımları görünür)
+  g.clearRect(0, 0, w, h);
   g.fillStyle = '#0b7a4b';
-  g.fillRect(0, h * 0.72, w, h * 0.12);
+  g.fillRect(0, h * 0.74, w, h * 0.12);
   g.fillStyle = '#ffc42e';
-  g.fillRect(0, h * 0.84, w, h * 0.025);
+  g.fillRect(0, h * 0.86, w, h * 0.025);
   if (name) {
     let size = 190;
-    g.font = `900 ${size}px Overpass, sans-serif`;
-    while (g.measureText(name).width > w * 0.8 && size > 60) { size -= 8; g.font = `900 ${size}px Overpass, sans-serif`; }
+    g.font = `900 ${size}px 'Saira Semi Condensed', sans-serif`;
+    while (g.measureText(name).width > w * 0.8 && size > 60) { size -= 8; g.font = `900 ${size}px 'Saira Semi Condensed', sans-serif`; }
     g.fillStyle = '#0b7a4b';
-    g.fillText(name, w * 0.06, h * 0.5);
-    g.font = '700 64px Overpass, sans-serif';
+    g.fillText(name, w * 0.06, h * 0.52);
+    g.font = "700 60px 'Saira Semi Condensed', sans-serif";
     g.fillStyle = '#1b2a2e';
-    g.fillText(`AĞIR VASITA SERVİSİ · YOL YARDIM ${tel}`, w * 0.06 + 6, h * 0.64);
+    g.fillText(`AĞIR VASITA SERVİSİ · YOL YARDIM ${tel}`, w * 0.06 + 6, h * 0.66);
   }
-}
-
-function makeTruck({ cab = 0x1f5e57, trailer = 0xe9ebe6, lite = false, tape = 0xffb423, sideTex = null } = {}) {
-  const root = new THREE.Group();
-  const cabM = makeMat(cab, { metalness: 0.55, roughness: 0.32 });
-  const darkM = makeMat(0x121416, { roughness: 0.8 });
-  const chromeM = makeMat(0xc9cdd0, { metalness: 1, roughness: 0.22 });
-  const glassM = makeMat(0x0b1418, { metalness: 0.9, roughness: 0.08 });
-  const trailerM = makeMat(trailer, { roughness: 0.62 });
-  const tireM = makeMat(0x0d0e0f, { roughness: 0.95 });
-  const hubM = makeMat(0x9aa0a4, { metalness: 0.8, roughness: 0.35 });
-  const headM = new THREE.MeshBasicMaterial({ color: 0xfff6e0 });
-  const tailM = new THREE.MeshBasicMaterial({ color: 0xff2a1f });
-  const markerM = new THREE.MeshBasicMaterial({ color: 0xffa21a });
-  const tapeM = new THREE.MeshBasicMaterial({ color: tape });
-  const tapeRedM = new THREE.MeshBasicMaterial({ color: 0xd8261c });
-  const hazardM = new THREE.MeshBasicMaterial({ color: 0x4a2a05 });
-  const box = (w, h, d, m, x, y, z, parent = root) => {
-    const mesh = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), m);
-    mesh.position.set(x, y, z);
-    parent.add(mesh);
-    return mesh;
-  };
-
-  // Kabin
-  const cabG = new THREE.Group();
-  root.add(cabG);
-  box(2.5, 2.75, 2.3, cabM, 0, 2.45, -7.35, cabG);
-  // kabin üstü rüzgarlık (eğik)
-  const spoiler = box(2.44, 0.7, 1.8, cabM, 0, 4.05, -6.9, cabG);
-  spoiler.rotation.x = -0.18;
-  const wsTex = canvasTex(256, 128, (g, w, h) => {
-    const gr = g.createLinearGradient(0, 0, w * 0.3, h);
-    gr.addColorStop(0, '#2c4b54'); gr.addColorStop(0.45, '#0c171b'); gr.addColorStop(1, '#16262b');
-    g.fillStyle = gr; g.fillRect(0, 0, w, h);
-    g.fillStyle = 'rgba(255,190,110,0.35)'; g.fillRect(20, h - 22, w - 40, 6); // gösterge ışığı
-    g.fillStyle = 'rgba(255,255,255,0.08)'; g.beginPath(); g.moveTo(w * 0.55, 0); g.lineTo(w * 0.75, 0); g.lineTo(w * 0.45, h); g.lineTo(w * 0.25, h); g.fill();
-  });
-  box(2.36, 1.02, 0.06, new THREE.MeshStandardMaterial({ map: wsTex, metalness: 0.5, roughness: 0.15 }), 0, 3.1, -8.52, cabG);
-  box(2.5, 0.22, 0.4, cabM, 0, 3.72, -8.58, cabG); // güneşlik
-  box(0.06, 1.1, 0.06, darkM, 0, 3.1, -8.56, cabG);
-  // ızgara
-  const grilleT = canvasTex(128, 128, (g, w, h) => {
-    g.fillStyle = '#0d0f10'; g.fillRect(0, 0, w, h);
-    g.fillStyle = '#6c7377';
-    for (let y = 8; y < h; y += 16) g.fillRect(6, y, w - 12, 5);
-  });
-  box(1.7, 1.05, 0.08, new THREE.MeshStandardMaterial({ map: grilleT, metalness: 0.6, roughness: 0.4 }), 0, 1.95, -8.52, cabG);
-  box(2.56, 0.46, 0.4, darkM, 0, 0.98, -8.45, cabG); // tampon
-  box(0.5, 0.2, 0.06, headM, -0.95, 1.36, -8.66, cabG);
-  box(0.5, 0.2, 0.06, headM, 0.95, 1.36, -8.66, cabG);
-  // tavan LED bar
-  for (let i = 0; i < 6; i++) box(0.18, 0.1, 0.1, headM, -0.8 + i * 0.32, 4.28, -7.72, cabG);
-  // aynalar
-  for (const s of [-1, 1]) {
-    box(0.08, 0.08, 0.5, chromeM, s * 1.38, 3.1, -8.2, cabG);
-    box(0.12, 0.62, 0.26, darkM, s * 1.48, 2.95, -8.4, cabG);
-  }
-  // sinyal/dörtlü lambalar (köşeler)
-  const hazards = [];
-  for (const s of [-1, 1]) hazards.push(box(0.14, 0.14, 0.14, hazardM, s * 1.24, 1.36, -8.56, cabG));
-  // yakıt depoları
-  for (const s of [-1, 1]) {
-    const tank = new THREE.Mesh(new THREE.CylinderGeometry(0.34, 0.34, 1.5, lite ? 12 : 20), chromeM);
-    tank.rotation.x = Math.PI / 2;
-    tank.position.set(s * 1.05, 0.95, -5.1);
-    root.add(tank);
-  }
-  // şasi
-  box(0.95, 0.3, 8.4, darkM, 0, 0.9, -4.4);
-  box(2.1, 0.12, 1.2, darkM, 0, 1.12, -2.6); // beşinci teker
-
-  // Dorse
-  const rearTex = canvasTex(256, 256, (g, w, h) => {
-    g.fillStyle = '#dcdfd9'; g.fillRect(0, 0, w, h);
-    g.fillStyle = '#9aa0a0'; g.fillRect(w / 2 - 2, 0, 4, h);
-    for (const x of [0.22, 0.4, 0.6, 0.78]) { g.fillStyle = '#7d8486'; g.fillRect(w * x - 3, 0, 6, h); g.fillStyle = '#5a6163'; g.fillRect(w * x - 8, h * 0.55, 16, 10); }
-    g.fillStyle = '#b9bdb8'; for (const y of [0.12, 0.5, 0.88]) g.fillRect(0, h * y, w, 5);
-  });
-  const sideM = sideTex ? new THREE.MeshStandardMaterial({ map: sideTex, roughness: 0.6 }) : trailerM;
-  const trailerBox = new THREE.Mesh(new THREE.BoxGeometry(2.55, 2.85, 13.4), [
-    sideM, sideM, trailerM, trailerM, new THREE.MeshStandardMaterial({ map: rearTex, roughness: 0.6 }), trailerM,
-  ]);
-  trailerBox.position.set(0, 2.78, 2.1);
-  root.add(trailerBox);
-  box(2.4, 0.26, 13.2, darkM, 0, 1.22, 2.1);
-  // kontur bantları (reflektif)
-  for (const s of [-1, 1]) {
-    box(0.02, 0.08, 13.3, tapeM, s * 1.285, 1.46, 2.1);
-    box(0.02, 0.08, 13.3, tapeM, s * 1.285, 4.12, 2.1);
-    box(0.02, 2.66, 0.08, tapeM, s * 1.285, 2.78, -4.52);
-    box(0.02, 2.66, 0.08, tapeM, s * 1.285, 2.78, 8.72);
-    for (let z = -3.6; z < 8.6; z += 2.2) box(0.04, 0.09, 0.14, markerM, s * 1.29, 1.2, z);
-  }
-  // arka: kırmızı bant, stop lambaları
-  box(2.5, 0.08, 0.02, tapeRedM, 0, 4.12, 8.81);
-  box(2.5, 0.08, 0.02, tapeRedM, 0, 1.5, 8.81);
-  box(0.06, 2.5, 0.02, tapeRedM, -1.22, 2.78, 8.81);
-  box(0.06, 2.5, 0.02, tapeRedM, 1.22, 2.78, 8.81);
-  for (const s of [-1, 1]) {
-    box(0.42, 0.18, 0.06, tailM, s * 0.9, 1.05, 8.82);
-    hazards.push(box(0.16, 0.16, 0.06, hazardM, s * 0.46, 1.05, 8.82));
-    hazards.push(box(0.04, 0.12, 0.3, hazardM, s * 1.29, 1.2, -3.8));
-  }
-  box(2.5, 0.12, 0.2, darkM, 0, 0.8, 8.7); // alt bariyer
-
-  // Tekerlekler
-  const wheelG = new THREE.CylinderGeometry(WHEEL_R, WHEEL_R, 0.34, lite ? 14 : 22);
-  wheelG.rotateZ(Math.PI / 2);
-  const hubG = new THREE.CylinderGeometry(0.26, 0.26, 0.36, 10);
-  hubG.rotateZ(Math.PI / 2);
-  const wheels = [];
-  const axles = [
-    [-7.1, false], [-3.4, true], [-2.05, true], [4.3, true], [5.65, true], [7.0, true],
-  ];
-  for (const [z, dual] of axles) {
-    for (const s of [-1, 1]) {
-      const offs = dual ? [0.92, 1.18] : [1.08];
-      for (const o of offs) {
-        const w = new THREE.Mesh(wheelG, tireM);
-        w.position.set(s * o, WHEEL_R, z);
-        root.add(w);
-        wheels.push(w);
-        if (o === offs.at(-1)) {
-          const hb = new THREE.Mesh(hubG, hubM);
-          hb.position.set(s * (o + 0.01), WHEEL_R, z);
-          root.add(hb);
-          wheels.push(hb);
-        }
-      }
-    }
-  }
-  return { root, wheels, hazards, hazardM, cabG };
 }
 
 // Yol yardım aracı (kamyonet) + turuncu tepe lambası
 function drawVanSide(g, w, h, { tel = '' }) {
-  g.fillStyle = '#eef0ea';
-  g.fillRect(0, 0, w, h);
-  // kabin camı (ön tarafta, dokunun solu = aracın önü)
-  g.fillStyle = '#0b1418';
-  g.beginPath();
-  g.roundRect(24, 40, w * 0.2, h * 0.34, 14);
-  g.fill();
-  // yan cam şeridi
-  g.fillRect(w * 0.27, 40, w * 0.68, h * 0.2);
-  // yeşil bant + turuncu ince çizgi
+  // panelvan yan çıkartması (saydam zemin): yeşil bant + turuncu çizgi + yazı
+  g.clearRect(0, 0, w, h);
   g.fillStyle = GREEN;
-  g.fillRect(0, h * 0.5, w, h * 0.2);
+  g.fillRect(0, h * 0.3, w, h * 0.34);
   g.fillStyle = '#ff9a1f';
-  g.fillRect(0, h * 0.72, w, h * 0.035);
+  g.fillRect(0, h * 0.66, w, h * 0.05);
   g.fillStyle = '#f2f4ee';
   g.textBaseline = 'middle';
-  g.font = '900 84px Overpass, sans-serif';
-  g.fillText('YOL YARDIM 7/24', w * 0.06, h * 0.605);
+  g.font = "900 96px 'Saira Semi Condensed', sans-serif";
+  g.fillText('YOL YARDIM 7/24', w * 0.05, h * 0.475);
   g.fillStyle = '#10181a';
-  g.font = '800 54px Overpass, sans-serif';
-  g.fillText(tel, w * 0.06, h * 0.86);
+  g.font = "800 64px 'Saira Semi Condensed', sans-serif";
+  g.fillText(tel, w * 0.05, h * 0.84);
 }
-function drawVanRear(g, w, h) {
-  g.fillStyle = '#eef0ea';
-  g.fillRect(0, 0, w, h);
-  // arka kapı camları
-  g.fillStyle = '#0b1418';
-  g.fillRect(w * 0.08, h * 0.08, w * 0.39, h * 0.28);
-  g.fillRect(w * 0.53, h * 0.08, w * 0.39, h * 0.28);
-  // kırmızı-sarı reflektif şevron
-  g.save();
-  g.beginPath();
-  g.rect(0, h * 0.5, w, h * 0.5);
-  g.clip();
-  g.fillStyle = '#ffc42e';
-  g.fillRect(0, h * 0.5, w, h * 0.5);
-  g.fillStyle = '#d8261c';
-  for (let x = -h; x < w + h; x += 90) {
-    g.beginPath();
-    g.moveTo(x, h); g.lineTo(x + 45, h); g.lineTo(x + 45 + h * 0.5, h * 0.5); g.lineTo(x + h * 0.5, h * 0.5);
-    g.fill();
-  }
-  g.restore();
-  // kapı arası çizgi
-  g.fillStyle = 'rgba(0,0,0,0.35)';
-  g.fillRect(w * 0.497, 0, 4, h);
-  g.fillStyle = '#10181a';
-  g.textAlign = 'center';
-  g.textBaseline = 'middle';
-  g.font = '900 64px Overpass, sans-serif';
-  g.fillText('YOL YARDIM', w / 2, h * 0.43);
-  g.textAlign = 'left';
-}
-function makeVan(tel = '') {
-  const g = new THREE.Group();
-  const white = makeMat(0xeef0ea, { roughness: 0.4, metalness: 0.2 });
-  const dark = makeMat(0x111315, { roughness: 0.8 });
-  const glass = makeMat(0x0b1418, { metalness: 0.9, roughness: 0.1 });
-  const add = (w, h, d, m, x, y, z) => {
-    const b = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), m);
-    b.position.set(x, y, z);
-    g.add(b);
-    return b;
-  };
-  add(2.0, 1.9, 4.2, white, 0, 1.55, 0.4);
-  add(2.0, 1.2, 1.4, white, 0, 1.2, -2.3);
-  add(1.9, 0.62, 0.05, glass, 0, 2.0, -1.62).rotation.x = -0.5;
-  add(2.1, 0.3, 0.3, dark, 0, 0.62, -3.0);
-  add(2.1, 0.28, 0.26, dark, 0, 0.62, 2.6);
-  // yan ve arka giydirme
-  const sideTex = canvasTex(1024, 512, (c, w, h) => drawVanSide(c, w, h, { tel }));
-  const rearTex = canvasTex(512, 512, (c, w, h) => drawVanRear(c, w, h));
-  const sideM = new THREE.MeshStandardMaterial({ map: sideTex, roughness: 0.45, metalness: 0.1 });
-  const rearM = new THREE.MeshStandardMaterial({ map: rearTex, roughness: 0.45, metalness: 0.1 });
-  // yalnız sol yüz (kameraya bakan taraf)
-  const side = new THREE.Mesh(new THREE.PlaneGeometry(4.2, 1.9), sideM);
-  side.position.set(-1.012, 1.55, 0.4);
-  side.rotation.y = -Math.PI / 2;
-  g.add(side);
-  add(0.02, 0.3, 1.38, new THREE.MeshBasicMaterial({ color: 0x0b7a4b }), -1.005, 1.2, -2.3);
-  const rear = new THREE.Mesh(new THREE.PlaneGeometry(2.0, 1.9), rearM);
-  rear.position.set(0, 1.55, 2.512);
-  g.add(rear);
-  const head = new THREE.MeshBasicMaterial({ color: 0xfff6e0 });
-  add(0.36, 0.16, 0.05, head, -0.66, 1.1, -3.02);
-  add(0.36, 0.16, 0.05, head, 0.66, 1.1, -3.02);
-  const tail = new THREE.MeshBasicMaterial({ color: 0xff2a18 });
-  add(0.14, 0.42, 0.04, tail, -0.9, 1.05, 2.53);
-  add(0.14, 0.42, 0.04, tail, 0.9, 1.05, 2.53);
-  const beaconM = new THREE.MeshBasicMaterial({ color: 0xffa21a });
-  add(1.3, 0.08, 0.36, dark, 0, 2.52, -0.6);
-  const beacon = add(1.1, 0.16, 0.3, beaconM, 0, 2.62, -0.6);
-  const wg = new THREE.CylinderGeometry(0.38, 0.38, 0.26, 14);
-  wg.rotateZ(Math.PI / 2);
-  const tm = makeMat(0x0d0e0f, { roughness: 0.95 });
-  for (const z of [-1.9, 1.8]) for (const s of [-1, 1]) {
-    const w = new THREE.Mesh(wg, tm);
-    w.position.set(s * 0.92, 0.38, z);
-    g.add(w);
-  }
-  const redraw = () => {
-    drawVanSide(sideTex.image.getContext('2d'), 1024, 512, { tel }); sideTex.needsUpdate = true;
-    drawVanRear(rearTex.image.getContext('2d'), 512, 512); rearTex.needsUpdate = true;
-  };
-  return { root: g, beacon, beaconM, redraw };
+
+// Kütüphane varlığının kopyası: boya malzemesi ayrı (renk farkı), tekerlekler kendi başına döner
+function cloneRig(asset, color) {
+  const root = asset.scene.clone(true);
+  const paint = asset.materials.paint ? asset.materials.paint.clone() : null;
+  if (paint && color != null) paint.color.set(color);
+  const info = Object.fromEntries(asset.wheels.map((w) => [w.o.name, w]));
+  const wheels = [];
+  root.traverse((o) => {
+    if (o.isMesh && paint) {
+      if (Array.isArray(o.material)) o.material = o.material.map((m) => (m.name === 'paint' ? paint : m));
+      else if (o.material.name === 'paint') o.material = paint;
+    }
+    if (info[o.name]) wheels.push({ o, s: info[o.name].s, r: info[o.name].r });
+  });
+  return { root, roll: (d) => { for (const w of wheels) w.o.rotation.z -= (w.s * d) / w.r; } };
 }
 
 export function createScene(canvas, { lite = false, signs = [], finalSign = null, name = '', tel = '' } = {}) {
@@ -408,9 +188,9 @@ export function createScene(canvas, { lite = false, signs = [], finalSign = null
   renderer.setPixelRatio(dpr);
 
   const scene = new THREE.Scene();
-  const pmrem = new THREE.PMREMGenerator(renderer);
-  scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
-  scene.environmentIntensity = 0.28;
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFShadowMap;
+  scene.environmentIntensity = 0.32;
   const FOG = new THREE.Color(0x0f2127);
   scene.fog = new THREE.Fog(FOG, 30, 190);
   scene.background = FOG;
@@ -498,6 +278,7 @@ export function createScene(canvas, { lite = false, signs = [], finalSign = null
   const road = new THREE.Mesh(new THREE.PlaneGeometry(11, ROAD_LEN), new THREE.MeshStandardMaterial({ map: rTex, roughness: 0.82, metalness: 0.05 }));
   road.rotation.x = -Math.PI / 2;
   road.position.set(-0.5, 0, -ROAD_LEN / 2 + 60);
+  road.receiveShadow = true;
   world.add(road);
   // karşı yön
   const road2 = road.clone();
@@ -622,10 +403,14 @@ export function createScene(canvas, { lite = false, signs = [], finalSign = null
     }
   }
 
-  // Tır
-  const sideTex = canvasTex(2048, 512, (c, w, h) => drawTrailerSide(c, w, h, { name, tel }));
-  const truck = makeTruck({ lite, sideTex });
+  // Tır: lib3d çekici + dorse. Varlıklar +x'e bakar; sahnede araç −z yönüne gider (rig y ekseninde 90° döner).
+  const truck = { root: new THREE.Group(), T: null, R: null, amber: [], ready: false };
   scene.add(truck.root);
+  const rig = new THREE.Group();
+  rig.rotation.y = Math.PI / 2;
+  rig.position.z = -5.3; // ön tampon z ≈ −8.6, dorse arkası z ≈ +8.65
+  truck.root.add(rig);
+  const sideTex = canvasTex(2048, 512, (c, w, h) => drawTrailerSide(c, w, h, { name, tel }));
   // far ışığı: yola düşen havuz + hafif koni
   const beamTex = canvasTex(128, 256, (g, w, h) => {
     const gr = g.createRadialGradient(w / 2, h * 0.95, 4, w / 2, h * 0.7, h * 0.75);
@@ -637,55 +422,127 @@ export function createScene(canvas, { lite = false, signs = [], finalSign = null
   });
   const beam = new THREE.Mesh(
     new THREE.PlaneGeometry(7, 22),
-    new THREE.MeshBasicMaterial({ map: beamTex, blending: THREE.AdditiveBlending, transparent: true, depthWrite: false, opacity: 0.55 })
+    new THREE.MeshBasicMaterial({ map: beamTex, blending: THREE.AdditiveBlending, transparent: true, depthWrite: false, opacity: 0.5 })
   );
   beam.rotation.x = -Math.PI / 2;
-  beam.position.set(0, 0.03, -19);
+  beam.position.set(0, 0.03, -19.2);
   truck.root.add(beam);
-  const coneM = new THREE.MeshBasicMaterial({ color: 0xfff0d0, transparent: true, opacity: 0.05, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide });
-  for (const s of [-1, 1]) {
+  const coneM = new THREE.MeshBasicMaterial({ color: 0xfff0d0, transparent: true, opacity: 0.04, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide });
+  for (const sd of [-1, 1]) {
     const cone = new THREE.Mesh(new THREE.ConeGeometry(2.4, 16, 16, 1, true), coneM);
     cone.rotation.x = Math.PI / 2 - 0.05;
-    cone.position.set(s * 0.95, 1.1, -16.6);
+    cone.position.set(sd * 0.95, 0.75, -16.6);
     truck.root.add(cone);
   }
-  // far parlaması
-  const flareM = new THREE.SpriteMaterial({ map: carGlow, color: 0xfff3dc, blending: THREE.AdditiveBlending, depthWrite: false, transparent: true, opacity: 0.9 });
-  for (const s of [-0.95, 0.95]) {
+  const flareM = new THREE.SpriteMaterial({ map: carGlow, color: 0xfff3dc, blending: THREE.AdditiveBlending, depthWrite: false, transparent: true, opacity: 0.85 });
+  for (const sd of [-0.95, 0.95]) {
     const f = new THREE.Sprite(flareM);
-    f.scale.set(1.8, 1.8, 1);
-    f.position.set(s, 1.36, -8.75);
+    f.scale.set(1.5, 1.5, 1);
+    f.position.set(sd, 0.74, -8.66);
     truck.root.add(f);
   }
-  for (let i = 0; i < 6; i++) {
-    const f = new THREE.Sprite(flareM);
-    f.scale.set(0.7, 0.7, 1);
-    f.position.set(-0.8 + i * 0.32, 4.28, -7.85);
-    truck.root.add(f);
-  }
-  const headLight = new THREE.PointLight(0xfff0d8, 30, 24, 1.4);
-  headLight.position.set(0, 2, -12);
-  truck.root.add(headLight);
+  const headLight = new THREE.SpotLight(0xfff0d8, 60, 30, 0.5, 0.6, 1.3);
+  headLight.position.set(0, 0.9, -8.8);
+  headLight.target.position.set(0, 0, -24);
+  truck.root.add(headLight, headLight.target);
 
-  // Konvoy (filo bölümü için)
+  // Ay: araca bağlı yumuşak gölge (yol akarken gölge araçla birlikte kalır)
+  const shadowSun = new THREE.DirectionalLight(0xa9c2d8, 0.9);
+  shadowSun.position.set(-9, 16, -6);
+  shadowSun.target.position.set(0, 0, 0);
+  shadowSun.castShadow = true;
+  shadowSun.shadow.mapSize.set(lite ? 1024 : 2048, lite ? 1024 : 2048);
+  const sc = shadowSun.shadow.camera;
+  sc.left = -8; sc.right = 8; sc.top = 13; sc.bottom = -13; sc.near = 2; sc.far = 40;
+  shadowSun.shadow.bias = -0.0005;
+  shadowSun.shadow.normalBias = 0.03;
+  shadowSun.shadow.radius = 4;
+  truck.root.add(shadowSun, shadowSun.target);
+
+  // Konvoy (filo bölümü için) ve yol yardım aracı: varlıklar yüklenince kurulur
   const convoy = [];
   const cc = lite ? [[0x9c2f22, -3.6, -26]] : [[0x9c2f22, -3.6, -26], [0x273746, 0, 30]];
-  for (const [col, x, z] of cc) {
-    const t = makeTruck({ cab: col, trailer: 0xd7d9d4, lite: true });
-    t.root.position.set(x, 0, z);
-    t.root.visible = false;
-    scene.add(t.root);
-    convoy.push(t);
-  }
-
-  // Yol yardım aracı
-  const van = makeVan(tel);
+  const van = { root: new THREE.Group(), beaconM: new THREE.MeshStandardMaterial({ color: 0x3a2206, emissive: 0xffa21a, emissiveIntensity: 0, roughness: 0.3 }), redraw: () => {} };
   van.root.position.set(3.3, 0, 60);
   van.root.visible = false;
   scene.add(van.root);
   const beaconLight = new THREE.PointLight(0xffa21a, 0, 16, 1.5);
-  beaconLight.position.set(0, 3.2, -0.6);
+  beaconLight.position.set(0, 2.6, 0);
   van.root.add(beaconLight);
+  const vanTex = canvasTex(1024, 512, (c, w, h) => drawVanSide(c, w, h, { tel }));
+  van.redraw = () => { drawVanSide(vanTex.image.getContext('2d'), 1024, 512, { tel }); vanTex.needsUpdate = true; };
+
+  const q = pickQuality();
+  const readyP = (async () => {
+    const [env, T, R, VAN] = await Promise.all([
+      loadEnv('night', renderer, { quality: q }),
+      loadAsset('truck', { quality: q, renderer }),
+      loadAsset('trailer', { quality: q, renderer }),
+      loadAsset('van', { quality: q, renderer }),
+    ]);
+    scene.environment = env;
+    truck.T = T;
+    truck.R = R;
+    // kabin koyu yeşil metalik; dorse tentesi kırık beyaz
+    T.materials.paint.color.set(0x1d5a52);
+    T.materials.paint.metalness = 0.45;
+    T.materials.paint.roughness = 0.3;
+    if (R.materials.paint) R.materials.paint.color.set(0x1d5a52);
+    if (R.materials.curtain) R.materials.curtain.color.set(0xeceee8);
+    rig.add(T.scene, R.scene);
+    R.scene.position.set(-1.5, 0, 0);
+    R.nodes.landing_legs.position.y = 0.3;
+    for (const a of [T, R]) {
+      if (a.materials.light_amber) truck.amber.push(a.materials.light_amber);
+      if (a.materials.light_tail) a.materials.light_tail.emissiveIntensity = 2.2;
+    }
+    T.materials.light_head.emissiveIntensity = 6;
+    // tente çıkartması: iki yanda
+    const decalM = new THREE.MeshStandardMaterial({ map: sideTex, transparent: true, roughness: 0.7, polygonOffset: true, polygonOffsetFactor: -2 });
+    for (const sd of [-1, 1]) {
+      const pl = new THREE.Mesh(new THREE.PlaneGeometry(12.2, 3.05), decalM);
+      pl.position.set(-5.7, 2.62, sd * 1.325);
+      if (sd < 0) pl.rotation.y = Math.PI;
+      pl.receiveShadow = true;
+      R.scene.add(pl);
+    }
+    // konvoy: aynı varlıkların kopyaları, farklı kabin rengi
+    for (const [col, x, z] of cc) {
+      const g = new THREE.Group();
+      const r2 = new THREE.Group();
+      r2.rotation.y = Math.PI / 2;
+      r2.position.z = -5.3;
+      g.add(r2);
+      const ct = cloneRig(T, col), cr = cloneRig(R, null);
+      cr.root.position.set(-1.5, 0, 0);
+      r2.add(ct.root, cr.root);
+      g.position.set(x, 0, z);
+      g.visible = false;
+      scene.add(g);
+      convoy.push({ root: g, roll: (d) => { ct.roll(d); cr.roll(d); } });
+    }
+    // yol yardım panelvanı: beyaz, tepe lambası, yan çıkartma
+    VAN.materials.paint.color.set(0xeef0ea);
+    const vr = new THREE.Group();
+    vr.rotation.y = Math.PI / 2;
+    vr.add(VAN.scene);
+    van.root.add(vr);
+    const bar = new THREE.Mesh(new THREE.BoxGeometry(0.34, 0.12, 1.2), van.beaconM);
+    bar.position.set(0.9, 2.02, 0);
+    VAN.scene.add(bar);
+    const vd = new THREE.MeshStandardMaterial({ map: vanTex, transparent: true, roughness: 0.4, polygonOffset: true, polygonOffsetFactor: -2 });
+    for (const sd of [-1, 1]) {
+      const pl = new THREE.Mesh(new THREE.PlaneGeometry(3.0, 1.5), vd);
+      pl.position.set(-0.55, 1.05, sd * 0.985);
+      if (sd < 0) pl.rotation.y = Math.PI;
+      VAN.scene.add(pl);
+    }
+    van.lights = VAN.materials.light_head;
+    if (VAN.materials.light_head) VAN.materials.light_head.emissiveIntensity = 4;
+    if (VAN.materials.light_tail) VAN.materials.light_tail.emissiveIntensity = 2;
+    van.roll = (d) => VAN.roll(d);
+    truck.ready = true;
+  })();
 
   // Portallar (tabelalar)
   const gantryPostM = makeMat(0x7d8488, { metalness: 0.7, roughness: 0.4 });
@@ -779,7 +636,7 @@ export function createScene(canvas, { lite = false, signs = [], finalSign = null
     flow.position.z = ((flowZ % POST_GAP) + POST_GAP) % POST_GAP;
     rTex.offset.y = (flowZ / SEG) % 1;
     road2.material.map.offset.y = (-flowZ / SEG) % 1;
-    for (const w of truck.wheels) w.rotation.x -= dTravel / WHEEL_R;
+    if (truck.ready) { truck.T.roll(dTravel); truck.R.roll(dTravel); }
 
     // karşı yön
     for (const o of oncoming) {
@@ -813,20 +670,22 @@ export function createScene(canvas, { lite = false, signs = [], finalSign = null
     truck.root.position.x = e * 3.3;
     truck.root.rotation.y = -Math.sin(Math.min(1, f * 1.6) * Math.PI) * 0.06;
     const blink = f > 0.35 && Math.sin(s.time * 7) > 0;
-    truck.hazardM.color.setHex(blink ? 0xffa21a : 0x4a2a05);
+    for (const m of truck.amber) m.emissiveIntensity = blink ? 7 : 0.15;
     van.root.visible = f > 0.3;
     if (van.root.visible) {
       const vz = 70 - smoothstep01(Math.min(1, (f - 0.3) / 0.6)) * 52;
+      if (van.roll && van.lastZ != null) van.roll(van.lastZ - vz);
+      van.lastZ = vz;
       van.root.position.set(3.4, 0, vz);
       const pulse = 0.5 + 0.5 * Math.sin(s.time * 9);
-      van.beaconM.color.setRGB(1, 0.45 + pulse * 0.25, 0.05 + pulse * 0.1);
+      van.beaconM.emissiveIntensity = 1 + pulse * 5;
       beaconLight.intensity = 10 + pulse * 30;
     }
     for (const c of convoy) c.root.visible = s.convoy > 0.01;
     if (s.convoy > 0.01) {
       convoy[0].root.position.z = -26 - (1 - s.convoy) * 40;
       if (convoy[1]) convoy[1].root.position.z = 32 + (1 - s.convoy) * 40;
-      for (const c of convoy) for (const w of c.wheels) w.rotation.x -= dTravel / WHEEL_R;
+      for (const c of convoy) c.roll(dTravel);
     }
 
     // Kamera (yumuşak takip)
@@ -862,5 +721,5 @@ export function createScene(canvas, { lite = false, signs = [], finalSign = null
     renderer.render(scene, camera);
   }
 
-  return { update, render, resize, redrawSigns, snap, camera, renderer, setCam: (c) => { camPos.set(c[0], c[1], c[2]); camLook.set(c[3], c[4], c[5]); } };
+  return { update, render, resize, redrawSigns, snap, camera, renderer, readyP, isReady: () => truck.ready, setCam: (c) => { camPos.set(c[0], c[1], c[2]); camLook.set(c[3], c[4], c[5]); } };
 }

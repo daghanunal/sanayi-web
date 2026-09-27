@@ -104,7 +104,7 @@ a { color: inherit; }
 
 /* --- HERO: köprü tabelası --------------------------------------------- */
 .hero { position: relative; }
-.hero__pin { position: relative; height: 100vh; height: 100svh; overflow: hidden; background: #000; }
+.hero__pin { position: relative; height: 100vh; height: 100svh; overflow: hidden; background: #000; display: flex; flex-direction: column; justify-content: flex-end; }
 .hero__foto {
   position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 45%;
   will-change: transform; filter: saturate(1.1) contrast(1.05);
@@ -117,9 +117,13 @@ a { color: inherit; }
 .hero__serit i { position: absolute; inset: -100% 0 0; background: repeating-linear-gradient(var(--beyaz) 0 40px, transparent 40px 80px); will-change: transform; }
 
 .gantry {
-  position: absolute; left: 50%; top: clamp(84px, 13vh, 140px); width: min(92vw, 980px); translate: -50% 0;
+  position: absolute; left: 50%; top: clamp(96px, 15vh, 150px); width: min(92vw, 980px); margin-left: calc(min(92vw, 980px) / -2);
   will-change: transform; z-index: 2;
 }
+.gantry--yazi { z-index: 3; pointer-events: none; }
+.gantry--yazi .tabela { background: transparent; box-shadow: none; }
+.gantry--yazi .tabela::before, .gantry--yazi .tabela::after { display: none; }
+.tabela__bos { min-height: 120px; }
 .gantry__kiris {
   position: absolute; left: -40vw; right: -40vw; top: -34px; height: 26px;
   background:
@@ -176,7 +180,7 @@ a { color: inherit; }
 .vardin__cizgi { display: block; width: min(60vw, 420px); height: 6px; margin: 22px 0 18px; border-radius: 3px; background: repeating-linear-gradient(90deg, var(--beyaz) 0 34px, transparent 34px 52px); transform-origin: left; }
 .vardin__ad { margin: 0; font: 800 clamp(18px, 2.2vw, 26px)/1.2 var(--f); color: rgb(255 255 255 / 0.85); }
 .hero__alt {
-  position: absolute; left: 0; right: 0; bottom: 0; z-index: 3; padding: 0 var(--pad) clamp(34px, 6vh, 64px);
+  position: relative; z-index: 3; padding: 0 var(--pad) clamp(34px, 6vh, 64px);
   display: grid; justify-items: center; text-align: center; gap: 18px;
 }
 .hero__slogan { margin: 0; max-width: 24ch; font: 800 clamp(22px, 3vw, 34px)/1.15 var(--f); text-shadow: 0 2px 20px rgb(0 0 0 / 0.8); text-wrap: balance; }
@@ -186,7 +190,7 @@ a { color: inherit; }
 @keyframes in { 0% { transform: scaleY(0); transform-origin: top; } 50% { transform: scaleY(1); transform-origin: top; } 51% { transform-origin: bottom; } 100% { transform: scaleY(0); transform-origin: bottom; } }
 
 @media (max-width: 760px) {
-  .gantry { top: 96px; }
+  .gantry { top: 24svh; }
   .tabela { border-radius: 14px; padding: 8px; }
   .tabela::before { inset: 8px; border-width: 3px; border-radius: 9px; }
   .tabela__ic { padding: 18px 18px 16px; }
@@ -194,7 +198,8 @@ a { color: inherit; }
   .tabela__tur { font-size: 12px; }
   .kalkan { min-width: 52px; height: 30px; font-size: 14px; }
   .hero__cta .btn { flex: 1 1 150px; }
-  .hero__alt { padding-bottom: 104px; gap: 14px; }
+  .hero__alt { padding-bottom: calc(var(--bar-space, 20px) + 18px); gap: 14px; }
+  .hero__ipucu { display: none; }
   .hero__serit { display: none; }
 }
 
@@ -303,7 +308,7 @@ a { color: inherit; }
 }
 .led::after { content: ''; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(rgb(0 0 0 / 0.55) 30%, transparent 31%) 0 0 / 3px 3px; }
 .led__etiket { margin: 0 0 10px; font: 700 12px/1 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: #8b9398; }
-.led__satir { display: flex; align-items: flex-end; gap: 14px; }
+.led__satir { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 10px 14px; }
 .led__grup { display: grid; gap: 8px; }
 .led__grup > span:last-child { display: flex; align-items: baseline; gap: 8px; white-space: nowrap; }
 .led__ne { font: 700 11px/1 var(--mono); text-transform: uppercase; color: #8b9398; letter-spacing: 0.06em; }
@@ -475,3 +480,10 @@ a { color: inherit; }
 .tabela__tur { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 0 0.55em; }
 .tabela__tur i { width: 0.28em; height: 0.28em; border-radius: 50%; background: currentColor; opacity: 0.8; }
 .hero__ipucu { padding: 6px 12px; border-radius: 999px; background: rgb(0 0 0 / 0.55); color: rgb(255 255 255 / 0.8); }
+
+@media (max-width: 400px) { .led__deger { font-size: 28px; } .led__satir { gap: 8px 10px; } .led { padding: 16px 14px 14px; } }
+/* Dokunma hedefleri ≥ 44 px */
+.top__brand { min-height: 44px; }
+.top__yardim, .top__call { min-height: 44px; min-width: 44px; justify-content: center; }
+.servis__tel { display: inline-flex; align-items: center; min-height: 48px; }
+.pano__nokta button { width: 44px; height: 44px; }

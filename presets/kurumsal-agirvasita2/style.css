@@ -1,10 +1,11 @@
-/* Otoyol: karayolu yön tabelası dili. Otoyol yeşili + reflektif beyaz çerçeve, hizmet mavisi, asfalt.
-   Overpass (otoyol yazısı soyu) başlık, Public Sans gövde, Overpass Mono sayılar.
+/* Devlet yolu (D-200, İstanbul yolu): karayolu yön tabelası dili. Devlet yolu mavisi + reflektif beyaz
+   çerçeve, otoyol yeşili ikincil (saatler, yardım), asfalt. Public Sans başlık, Public Sans gövde, Overpass Mono sayılar.
+   (--ot-yesil adı tarihsel: ana levha rengi.)
    Her "levha": yuvarlak köşe + içte beyaz çerçeve (box-shadow). */
 :root {
-  --ot-yesil: #00704a;
-  --ot-yesil-koyu: #004f34;
-  --ot-mavi: #1450a3;
+  --ot-yesil: #1450a3;
+  --ot-yesil-koyu: #0c3876;
+  --ot-mavi: #00704a;
   --ot-asfalt: #101614;
   --ot-kirmizi: #d3202f;
   --ot-mono: 'Overpass Mono', ui-monospace, monospace;
@@ -41,7 +42,7 @@ body { background: var(--k-zemin); }
 [data-hero='tam'] body:not(.k-ana) .k-ust:not(.is-kucuk) .k-nav a::after { background: var(--k-vurgu); }
 .k-menu {
   background: linear-gradient(90deg, transparent 0 22px, rgb(255 255 255 / .5) 22px 25px, transparent 25px) 0 0 / 100% 64px,
-    repeating-linear-gradient(180deg, transparent 0 30px, #004f34 30px 64px) 0 0 / 30px 100% no-repeat, var(--ot-yesil-koyu);
+    repeating-linear-gradient(180deg, transparent 0 30px, #0c3876 30px 64px) 0 0 / 30px 100% no-repeat, var(--ot-yesil-koyu);
   padding-left: 48px;
 }
 .k-menu a { font-weight: 800; }
@@ -227,7 +228,7 @@ body { background: var(--k-zemin); }
 .ot-olc__sekme::-webkit-scrollbar { display: none; }
 @media (min-width: 900px) { .ot-olc__sekme { margin-inline: 0; padding-inline: 0; flex-wrap: wrap; } }
 .ot-olc__sekme button {
-  flex: none; cursor: pointer; font: 800 16px/1 var(--k-font-baslik); padding: 13px 16px 11px; border-radius: 10px;
+  flex: none; cursor: pointer; font: 800 16px/1 var(--k-font-baslik); min-height: 44px; padding: 13px 16px 11px; border-radius: 10px;
   border: 1.5px solid var(--k-cizgi); background: #fff; color: var(--k-metin); transition: background .2s, color .2s;
 }
 .ot-olc__sekme button[aria-selected='true'] { background: var(--ot-yesil); color: #fff; border-color: var(--ot-yesil); box-shadow: inset 0 0 0 2px var(--ot-yesil), inset 0 0 0 3.5px #fff; }
@@ -256,7 +257,7 @@ body { background: var(--k-zemin); }
 /* İç sayfa başlığı: yön tabelası */
 .k-sb__baslik {
   display: inline-block; max-width: 100%; background: var(--ot-yesil); color: #fff; border-radius: 16px;
-  padding: .2em .34em .1em; box-shadow: inset 0 0 0 5px var(--ot-yesil), inset 0 0 0 8px #fff, 0 18px 40px rgb(0 60 40 / .18);
+  padding: .2em .34em .1em; box-shadow: inset 0 0 0 5px var(--ot-yesil), inset 0 0 0 8px #fff, 0 18px 40px rgb(10 40 90 / .18);
   font-size: clamp(40px, 7vw, 108px);
 }
 
@@ -281,3 +282,5 @@ body { background: var(--k-zemin); }
 .ot-saat__harita { min-height: 340px; border-radius: 16px; overflow: hidden; background: var(--ot-asfalt); display: grid; place-items: center; color: #9aa7a0; font: 600 12px/1 var(--ot-mono); box-shadow: var(--ot-cerceve); }
 .ot-saat__harita iframe { width: 100%; height: 100%; min-height: 340px; border: 0; display: block; }
 @media (max-width: 899px) { .ot-saat__tabela .k-butonlar .k-btn { width: 100%; justify-content: center; } }
+
+.ot-olc__metin .k-link { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; }
