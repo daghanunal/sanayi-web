@@ -49,13 +49,7 @@
           <p class="hero__slogan" data-bind="slogan"></p>
         </div>
 
-        <div class="stick" aria-hidden="true">
-          <span class="stick__rod"></span>
-          <span class="stick__zone"></span>
-          <span class="stick__mark stick__mark--max mono">MAX</span>
-          <span class="stick__mark stick__mark--min mono">MIN</span>
-          <span class="stick__lvl mono" data-lvl>%<b data-lvl-num>14</b></span>
-        </div>
+        <div class="stick" aria-hidden="true"><span class="stick__rod"></span><span class="stick__zone"></span><span class="stick__mark stick__mark--max mono">MAX</span><span class="stick__mark stick__mark--min mono">MIN</span><span class="stick__lvl mono" data-lvl>%<b data-lvl-num>14</b></span></div>
 
         <div class="hero__foot">
           <div class="gcard" aria-live="polite">
@@ -133,14 +127,17 @@
     </section>
 
     <!-- Galeri -->
-    <section class="gal" aria-label="Atölyeden kareler">
+    <section class="gal" aria-label="Şanzıman işlerinden kareler">
       <div class="gal__track" data-gallery></div>
     </section>
 
     <!-- Yorumlar -->
     <section class="yorum" id="yorumlar" aria-labelledby="yorum-h">
       <div class="yorum__head">
-        <h2 class="h2" id="yorum-h">Vitesi <em>yağ gibi geçenler.</em></h2>
+        <div>
+          <p class="eyebrow mono">Örnek yorumlar</p>
+          <h2 class="h2" id="yorum-h">Vitesi <em>yağ gibi geçenler.</em></h2>
+        </div>
         <div class="score">
           <p class="score__num" data-score></p>
           <div>
@@ -191,8 +188,8 @@
   <footer class="foot">
     <p class="foot__name" data-bind="ad"></p>
     <p data-bind="adres"></p>
-    <p><a data-tel data-bind="telefon"></a></p>
-    <p class="foot__small">© <span data-year></span> <span data-bind="ad"></span>. Fotoğraflar: Pexels.</p>
+    <p><a class="foot__tel" data-tel data-bind="telefon"></a></p>
+    <p class="foot__small">© <span data-year></span> <span data-bind="ad"></span>. Fotoğraflar: Pexels, temsilîdir. Yorumlar ve puan örnektir.</p>
   </footer>
 
   <script type="module" src="./main.js"></script>

@@ -88,7 +88,17 @@ function setStage(i, animate) {
 }
 
 // p: 0..1 → seviye (yüzde), kademeler arasında doğrusal
-let H = hero.querySelector('.hero__pin').offsetHeight;
+const pinEl = hero.querySelector('.hero__pin');
+const stickEl = $('.stick');
+let H = 0, SB = 0;
+// Çubuk kutusu telefonda başlık ile alt çubuk arasında durur; işaretler yine hero yüksekliğine göre (yağ yüzeyiyle hizalı)
+function measureHero() {
+  H = pinEl.offsetHeight;
+  SB = Math.max(0, H - (stickEl.offsetTop + stickEl.offsetHeight));
+  hero.style.setProperty('--H', `${H}px`);
+  hero.style.setProperty('--SB', `${SB}px`);
+}
+measureHero();
 let lastLvl = -1;
 const intro = { off: 0 };
 function setLevel(p) {
@@ -96,7 +106,7 @@ function setLevel(p) {
   const lvl = S[k].seviye + (S[k + 1].seviye - S[k].seviye) * f;
   const y = H * (1 - lvl / 100) + intro.off;
   oil.style.transform = `translate3d(0, ${y.toFixed(1)}px, 0)`;
-  lvlEl.style.transform = `translate3d(0, ${(-H * lvl / 100).toFixed(1)}px, 0)`;
+  lvlEl.style.transform = `translate3d(0, ${(-(H * lvl / 100) + SB).toFixed(1)}px, 0)`;
   const fresh = Math.min(1, Math.max(0, (p - 0.15) / 0.7));
   oilNew.style.opacity = fresh.toFixed(3);
   oilOld.style.opacity = (1 - fresh).toFixed(3);
@@ -136,7 +146,7 @@ if (reducedMotion) {
   gsap.from(['.hero__since', '.hero__slogan', '.hero__foot > *'], { y: 16, opacity: 0, duration: 0.7, stagger: 0.08, ease: 'power2.out', delay: 0.2 });
   gsap.from('.stick', { opacity: 0, x: 20, duration: 0.8, ease: 'power3.out', delay: 0.3 });
 }
-addEventListener('resize', () => { H = hero.querySelector('.hero__pin').offsetHeight; setLevel(prog); });
+addEventListener('resize', () => { measureHero(); setLevel(prog); });
 
 // --- Şanzıman tipleri --------------------------------------------------------
 const tabs = $('[data-tabs]');
@@ -232,7 +242,7 @@ const stars = (n) => Array.from({ length: 5 }, (_, i) => `<span class="${i < n ?
 $('[data-score]').textContent = nf(d.puan.ortalama, 1);
 $('[data-stars]').innerHTML = stars(Math.round(d.puan.ortalama));
 $('[data-stars]').setAttribute('aria-label', `5 üzerinden ${nf(d.puan.ortalama, 1)}`);
-$('[data-review-count]').textContent = `Google'da ${nf(d.puan.adet)} değerlendirme`;
+$('[data-review-count]').textContent = `Örnek puan · ${nf(d.puan.adet)} değerlendirme`;
 $('[data-reviews]').innerHTML = d.yorumlar.map((y) => `
   <li class="rev">
     <p class="rev__stars" aria-label="${Number(y.puan)} yıldız">${stars(y.puan)}</p>
@@ -296,4 +306,4 @@ if (!reducedMotion) {
   $$('.step').forEach((s) => s.classList.add('is-done'));
 }
 
-addEventListener('load', () => { H = hero.querySelector('.hero__pin').offsetHeight; setLevel(prog); ScrollTrigger.refresh(); });
+addEventListener('load', () => { measureHero(); setLevel(prog); ScrollTrigger.refresh(); });

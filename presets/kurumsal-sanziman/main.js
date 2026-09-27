@@ -24,6 +24,7 @@ kurumsal({
     baslikEki: 'Otomatik şanzıman, DSG ve CVT tamiri | Şaşmaz, Ankara',
     teklifEtiketi: 'Şanzımanımı baktırayım',
     hizmetEtiketi: 'Şanzıman işleri',
+    altNot: 'Fotoğraflar temsilîdir (Pexels). Yorumlar ve puan örnektir.',
     css: {
       zemin: '#f2eff3', yuzey: '#e6e0e8', metin: '#1c0a18', soluk: '#5d4f5b', cizgi: 'rgb(28 10 24 / .14)',
       vurgu: '#ff9a1f', 'vurgu-metin': '#1c0a18', koyu: '#1c0a18', 'koyu-metin': '#f4eef3', 'koyu-soluk': '#b3a1b0',

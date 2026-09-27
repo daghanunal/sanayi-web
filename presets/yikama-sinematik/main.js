@@ -3,7 +3,7 @@ import './style.css';
 import raw from '../../data/sektor-yikama.json';
 import {
   boot, initSmoothScroll, reducedMotion, gsap, ScrollTrigger, esc,
-  telHref, waHref, mapsHref, mapsEmbed, openStatus, groupedHours, icons, GUNLER,
+  telHref, waHref, mapsHref, mapsEmbed, openStatus, groupedHours, icons, GUNLER, vitrinModu,
 } from '../../shared/core.js';
 import { SplitText } from 'gsap/SplitText';
 import { createWorld } from './scene.js';
@@ -43,7 +43,7 @@ const bugun = d.saatler[new Date().getDay()];
 
 // --- Render ----------------------------------------------------------------------------
 
-const logo = `<svg viewBox="0 0 30 24" aria-hidden="true"><circle cx="10" cy="14" r="7" fill="#ff7a33"/><circle cx="21" cy="8" r="5" fill="#27e3f0"/><circle cx="22" cy="19" r="3.5" fill="#7dffb4"/><circle cx="7.5" cy="11.5" r="1.8" fill="#fff" opacity=".8"/></svg>`;
+const logo = `<svg viewBox="0 0 30 24" aria-hidden="true"><circle cx="10" cy="14" r="7" fill="#ff5c9d"/><circle cx="21" cy="8" r="5" fill="#27e3f0"/><circle cx="22" cy="19" r="3.5" fill="#7dffb4"/><circle cx="7.5" cy="11.5" r="1.8" fill="#fff" opacity=".8"/></svg>`;
 
 $('#top').innerHTML = `
   <a class="top__brand" href="#sahne">${logo}<span>${ad}</span></a>
@@ -54,6 +54,8 @@ const HUD = [
   ['kir', 'Kontrol'], ['kopuk', 'Köpük'], ['durulama', 'Durulama'], ['jant', 'Jant'],
   ['ic', 'İç temizlik'], ['cila', 'Cila'], ['filo', 'Filo'],
 ];
+// Telefonda program göstergesi başlığın ikinci satırıdır (tek üst öğe)
+if (phone) $('#top').append($('#hud'));
 $('#hud').innerHTML = `<p class="hud__lbl">Program</p><ol>${HUD.map(([k, t], i) => `<li data-hud="${k}"><i>${i + 1}</i><span>${t}</span></li>`).join('')}</ol><div class="hud__bar"><b id="hud-bar"></b></div>`;
 
 const sticky = (inner, extra = '') => `<div class="scene__sticky ${extra}"><div class="copy">${inner}</div></div>`;
@@ -210,7 +212,7 @@ $('#biz').innerHTML = `
 
 $('#bolme').innerHTML = `
   <div class="wrap">
-    <p class="kicker kicker--ink">Bölmeden</p>
+    <p class="kicker kicker--ink">Yıkamadan kareler</p>
     <h2 class="h2 h2--ink" id="shop-title" data-reveal>Köpüğün altında ne var?</h2>
     <ul class="gallery">
       ${d.galeri.map((g, i) => `<li class="gallery__item g${i % 6}"><img src="${g.src}" alt="${esc(g.alt)}" loading="lazy" width="1200" height="800"></li>`).join('')}
@@ -227,10 +229,10 @@ const reviewCard = (y, i) => `
 $('#yorumlar').innerHTML = `
   <div class="wrap reviews__head">
     <div>
-      <p class="kicker kicker--ink">Yorumlar</p>
+      <p class="kicker kicker--ink">Örnek yorumlar</p>
       <h2 class="h2 h2--ink" id="reviews-title" data-reveal>Aracını teslim alan anlatsın.</h2>
     </div>
-    <p class="score"><b data-count="${d.puan.ortalama}" data-decimals="1">0</b><span>${stars(d.puan.ortalama)}<small>${fmt(d.puan.adet)} Google yorumu</small></span></p>
+    <p class="score"><b data-count="${d.puan.ortalama}" data-decimals="1">0</b><span>${stars(d.puan.ortalama)}<small>Örnek puan · ${fmt(d.puan.adet)} değerlendirme</small></span></p>
   </div>
   <div class="reviews__rail"><ul class="reviews__track">${[...d.yorumlar, ...d.yorumlar].map(reviewCard).join('')}</ul></div>`;
 
@@ -267,8 +269,8 @@ $('#iletisim').innerHTML = sticky(`
 
 $('#foot').innerHTML = `
   <div class="wrap foot__grid">
-    <p><b>${ad}</b><br>${esc(d.iletisim.adres)}<br><a href="${telHref(d)}">${esc(d.iletisim.telefon)}</a></p>
-    <p class="foot__small">© ${yil} ${ad}. Fotoğraflar: Pexels. 3D yıkama bölmesi ve araç bu site için üretildi.</p>
+    <p><b>${ad}</b><br>${esc(d.iletisim.adres)}<br><a class="foot__tel" href="${telHref(d)}">${esc(d.iletisim.telefon)}</a></p>
+    <p class="foot__small">© ${yil} ${ad}. Fotoğraflar: Pexels, temsilîdir. 3D görseller temsilîdir; yorumlar ve puan örnektir.</p>
   </div>`;
 
 // Kir etiketleri (3D noktalara bağlı)
@@ -556,7 +558,7 @@ const SCENES = {
     S.fleetP = seg(p, 0.05, 0.98);
   },
   final(p) {
-    enterView('final', p, 0.4);
+    world.view('final');
     world.orbit(-10 + p * 20);
     clean();
     S.lights = 1;
@@ -619,6 +621,8 @@ function tick() {
   setHud(cur.name, clamp((y - f0) / Math.max(1, last.top + last.height - vh - f0)));
   if (active !== cur.el) {
     active = cur.el;
+    // son sahne düz bölümlerden sonra gelir: kamera filodan süzülmesin, doğrudan yerine otursun
+    if (cur.name === 'final') world.snap();
     if (!$('.beat', cur.el)) reveal($('[data-reveal]', cur.el));
   }
 }
@@ -672,6 +676,6 @@ world.render();
 document.fonts?.ready.then(() => world.setName(d.isletme.ad));
 const fontsReady = Promise.race([document.fonts?.ready ?? Promise.resolve(), new Promise((r) => setTimeout(r, 700))]);
 fontsReady
-  .then(() => (reducedMotion ? $('#intro').remove() : runIntro($('#intro'), $('#foam'), d.isletme.ad)))
+  .then(() => (reducedMotion || vitrinModu() ? $('#intro').remove() : runIntro($('#intro'), $('#foam'), d.isletme.ad)))
   .then(() => reveal($('#hero-title')));
 start();

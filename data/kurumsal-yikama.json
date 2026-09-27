@@ -8,7 +8,7 @@
       "ikincilRota": "kurumsal-musteriler"
     },
     "hizmetOzetBaslik": "Yıkamadan cilaya, yaptığımız işler",
-    "yorumBaslik": "Aracını teslim alanlar ne diyor",
+    "yorumBaslik": "Örnek yorumlar: aracını teslim alanlar",
     "anlasmalar": [
       {
         "baslik": "Şirket filoları",
@@ -79,7 +79,7 @@
       "kurumsal": { "baslik": "Kurumsal", "metin": "Kim olduğumuz, nasıl çalıştığımız ve bir yıkamayı nasıl teslim ettiğimiz.", "gorsel": "/img/sektor-yikama/fircalama.jpg" },
       "hizmetler": { "baslik": "Hizmetlerimiz", "metin": "Yirmi dakikalık dış yıkamadan bir gün süren pasta-cilaya, her işin süresi ve kapsamı." },
       "kurumsal-musteriler": { "baslik": "Filo yıkama", "metin": "Şirket araçlarınız için sabit gün ve saatte, sıraya girmeden düzenli yıkama.", "gorsel": "/img/sektor-yikama/kopuk.jpg" },
-      "referanslar": { "baslik": "Bölmeden ve müşterilerden", "metin": "Yıkama bölmesinden kareler, müşterilerimizin yorumları ve yıkadığımız markalar." },
+      "referanslar": { "baslik": "Kareler ve yorumlar", "metin": "Yıkama işlerinden kareler, örnek müşteri yorumları ve yıkadığımız markalar." },
       "iletisim": { "baslik": "İletişim", "metin": "Aracınızı ve istediğiniz işi yazın; ne zaman hazır olacağını söyleyelim." }
     },
     "konular": ["Detaylı iç-dış temizlik", "Koltuk / tavan yıkama", "Pasta ve cila", "Motor yıkama", "Filo yıkama", "Galeri / kiralama", "Genel bilgi"],

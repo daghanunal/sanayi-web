@@ -70,7 +70,7 @@ a { color: inherit; }
   padding: 0 var(--g); color: #fff; transition: background .3s, box-shadow .3s;
 }
 .top.is-solid { background: rgb(17 20 24 / .92); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); box-shadow: 0 1px 0 var(--line-d); }
-.top__brand { display: flex; align-items: center; gap: 12px; text-decoration: none; min-width: 0; }
+.top__brand { display: flex; align-items: center; gap: 12px; min-height: 44px; text-decoration: none; min-width: 0; border-radius: 8px; }
 .top__name { font: 800 17px/1.1 var(--disp); font-variation-settings: 'wdth' 82; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .top__mark { flex: none; width: 30px; height: 30px; display: grid; place-items: center; border-radius: 8px; background: var(--atf); }
 .top__mark svg { width: 14px; height: 18px; fill: #fff; }
@@ -129,15 +129,15 @@ a { color: inherit; }
 
 /* Yağ çubuğu (dipstick): hero'nun tam boyu, işaretler yüzde ile */
 .stick { position: absolute; top: 0; bottom: 0; right: calc(var(--g) + 8px); width: 44px; pointer-events: none; }
-.stick__rod { position: absolute; right: 0; top: 70px; bottom: 0; width: 6px; border-radius: 3px 3px 0 0; background: linear-gradient(90deg, #8e969f, #eef0f2 45%, #9ba3ac); box-shadow: 0 0 0 1px rgb(0 0 0 / .25); }
+.stick__rod { position: absolute; right: 0; top: 70px; bottom: calc(var(--SB, 0px) * -1); width: 6px; border-radius: 3px 3px 0 0; background: linear-gradient(90deg, #8e969f, #eef0f2 45%, #9ba3ac); box-shadow: 0 0 0 1px rgb(0 0 0 / .25); }
 .stick__rod::before { content: ''; position: absolute; left: 50%; top: -14px; width: 26px; height: 14px; margin-left: -13px; border-radius: 7px 7px 3px 3px; background: var(--atf); box-shadow: 0 4px 14px rgb(215 25 63 / .5); }
 .stick__zone {
-  position: absolute; right: -3px; width: 12px; bottom: 35%; height: 43%; border-top: 2px solid #fff; border-bottom: 2px solid #fff;
+  position: absolute; right: -3px; width: 12px; bottom: calc(var(--H, 100vh) * .35 - var(--SB, 0px)); height: calc(var(--H, 100vh) * .43); border-top: 2px solid #fff; border-bottom: 2px solid #fff;
   background: repeating-linear-gradient(135deg, rgb(255 255 255 / .75) 0 1.5px, transparent 1.5px 6px);
 }
 .stick__mark { position: absolute; right: 18px; font-size: 11px; font-weight: 700; letter-spacing: .12em; line-height: 1; transform-origin: right center; }
-.stick__mark--max { bottom: 78%; margin-bottom: -6px; }
-.stick__mark--min { bottom: 35%; margin-bottom: -5px; color: rgb(255 255 255 / .7); }
+.stick__mark--max { bottom: calc(var(--H, 100vh) * .78 - var(--SB, 0px)); margin-bottom: -6px; }
+.stick__mark--min { bottom: calc(var(--H, 100vh) * .35 - var(--SB, 0px)); margin-bottom: -5px; color: rgb(255 255 255 / .7); }
 .stick__lvl {
   position: absolute; right: 16px; bottom: 0; margin-bottom: -12px; padding: 5px 8px; border-radius: 6px; font-size: 13px; font-weight: 700;
   background: #fff; color: var(--ink); white-space: nowrap; will-change: transform; box-shadow: 0 6px 20px rgb(0 0 0 / .3);
@@ -163,6 +163,13 @@ a { color: inherit; }
 .hero__hint span { width: 1px; height: 22px; background: currentColor; animation: hint 1.6s ease-in-out infinite; transform-origin: top; }
 @keyframes hint { 0%, 100% { transform: scaleY(.3); } 50% { transform: scaleY(1); } }
 
+@media (max-width: 899px) {
+  /* Telefonda yazılar pinli sahnenin akışında: tek üst (başlık) + tek alt (çubuk) kalır, yazı çubuğun üstünde biter */
+  .hero__pin { display: flex; flex-direction: column; box-sizing: border-box; padding: 84px calc(var(--g) + 58px) calc(var(--bar-reserve, 96px) + 12px) var(--g); }
+  .hero__copy, .hero__foot { position: relative; z-index: 2; left: auto; right: auto; top: auto; bottom: auto; }
+  .hero__foot { margin-top: auto; }
+  .stick { top: 60px; bottom: var(--bar-reserve, 96px); }
+}
 @media (max-height: 700px) and (max-width: 899px) {
   .gcard__text { display: none; }
 }
@@ -209,7 +216,7 @@ a { color: inherit; }
 .tp__photo { position: relative; margin: 0; aspect-ratio: 4 / 3; border-radius: 16px; overflow: hidden; background: var(--ink); }
 .tp__photo img { width: 100%; height: 100%; object-fit: cover; }
 .tp__photo::after { content: ''; position: absolute; inset: 45% 0 0; background: linear-gradient(transparent, rgb(10 12 16 / .78)); pointer-events: none; }
-.tp__kod { position: absolute; z-index: 1; left: 14px; bottom: 8px; font: 900 72px/1 var(--disp); font-variation-settings: 'wdth' 75; color: #fff; text-shadow: 0 4px 24px rgb(0 0 0 / .45); }
+.tp__kod { position: absolute; z-index: 1; left: 14px; bottom: 10px; padding-top: .08em; font: 900 64px/1.08 var(--disp); font-variation-settings: 'wdth' 75; color: #fff; text-shadow: 0 4px 24px rgb(0 0 0 / .45); }
 .tp__alt { margin: 0; font-size: 13px; text-transform: uppercase; letter-spacing: .12em; color: var(--atf); }
 .tp__ad { margin: 6px 0 0; font: 850 34px/1 var(--disp); font-variation-settings: 'wdth' 80; }
 .tp__metin { margin: 12px 0 0; color: var(--mute); }
@@ -412,6 +419,7 @@ a { color: inherit; }
 .foot { background: var(--ink); color: var(--mute-d); padding: 44px var(--g) 36px; font-size: 14px; border-top: 1px solid var(--line-d); }
 .foot p { margin: 0 0 6px; }
 .foot a { text-decoration: none; color: #fff; }
+.foot__tel { display: inline-flex; align-items: center; min-height: 44px; font-weight: 700; }
 .foot__name { font: 800 22px/1.1 var(--disp); color: #fff; margin-bottom: 12px !important; }
 .foot__small { margin-top: 18px !important; font-size: 12px; opacity: .7; }
 

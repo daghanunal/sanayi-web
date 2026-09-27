@@ -390,7 +390,7 @@ export const planla = {
         <div class="k-kap">
           <div class="pl__bas">
             ${etiket('Yıkama planı')}
-            <h2 class="k-h2" id="pl-baslik" data-bol>Aracın nereye ihtiyacı var? Üstüne dokunun.</h2>
+            <h2 class="k-h2" id="pl-baslik" data-bol>Aracın nereye ihtiyacı var? İşaretleyin.</h2>
             <p class="k-lead">Kaporta, jant, koltuk, tavan, motor… Temizlenmesini istediğiniz yerleri seçin; ne kadar süreceğini söyleyelim, planı tek dokunuşla bize yazın.</p>
           </div>
           <div class="pl__ic">
@@ -464,6 +464,16 @@ export const planla = {
       guncelle(k.checked ? id : null);
     };
     kutular.forEach((k) => k.addEventListener('change', () => guncelle(k.checked ? k.value : null)));
+    // Telefonda çizimdeki bölgeler parmakla seçilemeyecek kadar küçük ve iç içe: çizim yalnız gösterir,
+    // seçim alttaki büyük düğmelerle yapılır (dokunma alanı ≥ 44 px, çakışma yok)
+    if (matchMedia('(max-width: 899px), (pointer: coarse)').matches) {
+      svg.setAttribute('aria-hidden', 'true');
+      svg.removeAttribute('role');
+      zonlar.forEach((z) => { z.removeAttribute('tabindex'); z.removeAttribute('role'); });
+      svg.classList.add('is-gosterim');
+      const ip = el.querySelector('.pl__ipucu');
+      if (ip) ip.textContent = 'Aşağıdan seçin, çizimde yanar';
+    }
     zonlar.forEach((z) => {
       const tik = () => { degistir(BOLGE_IS[z.dataset.zon]); el.classList.add('is-dokundu'); };
       z.addEventListener('click', tik);

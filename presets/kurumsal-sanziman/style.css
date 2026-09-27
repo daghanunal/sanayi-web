@@ -52,8 +52,10 @@
   .sz-hero__metin > * { order: 3; }
   .sz-hero .sz-etiket { order: 0; }
   .sz-hero__baslik { order: 1; }
-  .sz-hero__sahne { order: 2; margin-top: 28px; }
-  .sz-hero__lead { margin-top: 26px; }
+  .sz-hero__sahne { order: 2; margin-top: 24px; }
+  /* Telefonda birincil düğme ilk ekranda: görselin hemen altında, uzun metin ondan sonra */
+  .sz-hero .k-butonlar { order: 3; margin-top: 18px; }
+  .sz-hero__lead { order: 4; margin-top: 22px; }
 }
 @media (min-width: 1000px) {
   .sz-hero__ic { grid-template-columns: 5fr 7fr; gap: 48px; }
@@ -128,7 +130,7 @@ body.k-ana .k-ust:not(.is-kucuk) .k-ust__teklif { background: #fff; color: var(-
 .sz-sekme { display: flex; background: rgb(255 255 255 / .06); border-radius: 999px; padding: 4px; gap: 2px; max-width: 100%; overflow-x: auto; scrollbar-width: none; }
 .sz-sekme::-webkit-scrollbar { display: none; }
 .sz-sekme button {
-  border: 0; background: transparent; color: var(--k-koyu-soluk); font: 600 13.5px/1 var(--k-font-govde); padding: 10px 13px; border-radius: 999px;
+  border: 0; background: transparent; color: var(--k-koyu-soluk); font: 600 13.5px/1 var(--k-font-govde); min-height: 44px; padding: 0 14px; border-radius: 999px;
   cursor: pointer; white-space: nowrap; transition: background .25s, color .25s;
 }
 .sz-sekme button[aria-checked='true'] { background: var(--k-vurgu); color: var(--k-koyu); }
@@ -160,7 +162,7 @@ body.k-ana .k-ust:not(.is-kucuk) .k-ust__teklif { background: #fff; color: var(-
 .sz-cipler { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0 22px; }
 .sz-cipler button {
   border: 1.5px solid var(--k-cizgi); background: var(--k-zemin); color: var(--k-metin); font: 600 14.5px/1 var(--k-font-govde);
-  padding: 11px 14px; border-radius: 999px; cursor: pointer; transition: background .2s, color .2s, border-color .2s;
+  min-height: 44px; padding: 0 16px; border-radius: 999px; cursor: pointer; transition: background .2s, color .2s, border-color .2s;
 }
 .sz-cipler button:hover { border-color: var(--k-metin); }
 .sz-cipler button[aria-checked='true'] { background: var(--k-koyu); color: #fff; border-color: var(--k-koyu); }
@@ -266,3 +268,5 @@ body.k-ana .k-ust:not(.is-kucuk) .k-ust__teklif { background: #fff; color: var(-
 @media (prefers-reduced-motion: reduce) {
   .sz-kesit__notlar i, .sz-isaret .h { animation: none; }
 }
+
+.sz-sekme button:focus-visible, .sz-cipler button:focus-visible { outline: 2px solid var(--k-vurgu); outline-offset: 2px; }

@@ -1,19 +1,20 @@
 // Köpük 3D sahnesi: gece yıkama bölmesi, neon kemerler, ıslak zemin yansıması.
-// Araç (Blender'da SDF ile üretildi) tozlu gelir → basınçlı su → üç renk köpük → durulama →
-// jant → iç temizlik (röntgen) → pasta-cila → filo kuyruğu kemerlerden geçer.
-// Araç yerel koordinatları: ön +x, yukarı +y, en ±z (gövde ±0.96, boy ±2.15, tavan ~1.45).
+// Araç (lib3d car_sedan, gerçekçi sedan) tozlu gelir → basınçlı su → üç renk köpük → durulama →
+// jant → iç temizlik (röntgen) → pasta-cila → filo kuyruğu kemerlerden geçer. Işık: garaj HDRI'si + neon
+// LED bantlardan kurulmuş ortam, tavandan yumuşak gölge.
+// Araç koordinatları: ön +x, yukarı +y, en ±z (gövde ±0,9, boy −2,38…2,34, tavan ~1,48).
 import * as THREE from 'three';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js';
+import { HDRLoader } from 'three/examples/jsm/loaders/HDRLoader.js';
+import { loadAsset, pickQuality, manifest, LIB3D_URL } from '../../shared/lib3d.js';
 
 const BASE = import.meta.env.BASE_URL;
-const WX = 1.34;
+const WX = 1.375;
 const WY = 0.34;
 const WZ = 0.8;
 const FLEET = 6;
 const FLEET_GAP = 5.4;
 
-const PINK = new THREE.Color('#ff7a33');
+const PINK = new THREE.Color('#ff5c9d');
 const BLUE = new THREE.Color('#27e3f0');
 const LEMON = new THREE.Color('#7dffb4');
 
@@ -30,129 +31,82 @@ const NOISE = /* glsl */ `
     return sqrt(d); }
 `;
 
-// Gövde malzemesi: cam, trim, far ve kapı çizgileri konumdan; kir, köpük, su, çizik, parıltı uniform'dan.
-function bodyMaterial(U, { fleet = false } = {}) {
-  const m = new THREE.MeshPhysicalMaterial({
-    color: fleet ? '#eef1f7' : '#06222c',
-    metalness: fleet ? 0.1 : 0.55,
-    roughness: 0.32,
-    clearcoat: 1,
-    clearcoatRoughness: 0.06,
-  });
+// Kir / köpük / su / çizik / parıltı: lib3d sedanın kendi malzemelerine (boya, cam, plastik) eklenir.
+// Konum aracın yerel çerçevesinde: dünya konumu − uOrigin (filo kopyalarının her biri kendi uOrigin'ini taşır).
+// kind: 'paint' (her şey), 'glass' (kir filmi, köpük, damla), 'trim' (kir + köpük)
+function grime(m, U, kind, key) {
+  const paint = kind === 'paint', glass = kind === 'glass';
   m.onBeforeCompile = (sh) => {
     Object.assign(sh.uniforms, U);
     sh.vertexShader = sh.vertexShader
       .replace('#include <common>', `#include <common>
-        varying vec3 vLp; varying vec3 vLn; ${fleet ? 'attribute float aDirt; varying float vDirt;' : ''}`)
-      .replace('#include <beginnormal_vertex>', `#include <beginnormal_vertex>
-        vLn = objectNormal;`)
+        varying vec3 vWp; varying vec3 vWn;`)
       .replace('#include <begin_vertex>', `#include <begin_vertex>
-        vLp = position; ${fleet ? 'vDirt = aDirt;' : ''}`);
+        vWp = (modelMatrix * vec4(transformed, 1.0)).xyz; vWn = normalize(mat3(modelMatrix) * objectNormal);`);
     sh.fragmentShader = sh.fragmentShader
       .replace('#include <common>', `#include <common>
-        uniform float uDirt, uRinse, uFoam, uWet, uSwirl, uPolish, uGleam, uGleamAmt, uTime, uLights;
-        varying vec3 vLp; varying vec3 vLn; ${fleet ? 'varying float vDirt;' : ''}
+        uniform float uDirt, uRinse, uFoam, uWet, uSwirl, uPolish, uGleam, uGleamAmt, uTime; uniform vec3 uOrigin;
+        varying vec3 vWp; varying vec3 vWn;
         ${NOISE}
-        float gRough, gClear, gMetal, gCCR; vec3 gEmis;`)
+        float gDirt, gFoam, gBeads, gSwirl, gClean; vec3 gEmis;`)
       .replace('#include <color_fragment>', `#include <color_fragment>
-        vec3 p = vLp; vec3 n = normalize(vLn);
+        vec3 p = vWp - uOrigin; vec3 n = normalize(vWn);
         float up = p.y; float side = abs(n.z);
-        float ax = abs(p.x); float az = abs(p.z);
-        // camlar
-        float sideWin = smoothstep(1.0, 1.025, up) * (1.0 - smoothstep(1.34, 1.365, up)) * smoothstep(0.5, 0.62, side)
-          * smoothstep(-1.82, -1.78, p.x) * (1.0 - smoothstep(0.86, 0.9, p.x - (up - 1.0) * 0.9)) * smoothstep(0.06, 0.075, abs(p.x + 0.42));
-        float wind = smoothstep(1.02, 1.05, up) * smoothstep(0.3, 0.4, n.x) * (1.0 - smoothstep(0.42, 0.52, side));
-        float rear = smoothstep(1.02, 1.05, up) * smoothstep(0.35, 0.45, -n.x) * (1.0 - smoothstep(0.42, 0.52, side));
-        float glass = clamp(sideWin + wind + rear, 0.0, 1.0);
-        // alt trim (tampon altı, marşpiyel)
-        float trim = 1.0 - smoothstep(0.3, 0.32, up);
-        // farlar ve stoplar
-        float head = smoothstep(1.95, 2.0, p.x) * smoothstep(0.7, 0.72, up) * (1.0 - smoothstep(0.84, 0.86, up)) * smoothstep(0.42, 0.45, az) * (1.0 - smoothstep(0.8, 0.83, az));
-        float tail = smoothstep(1.96, 2.02, -p.x) * smoothstep(0.84, 0.86, up) * (1.0 - smoothstep(0.98, 1.0, up)) * smoothstep(0.5, 0.53, az);
-        float grille = smoothstep(2.02, 2.06, p.x) * smoothstep(0.44, 0.46, up) * (1.0 - smoothstep(0.62, 0.64, up)) * (1.0 - smoothstep(0.5, 0.53, az));
-        grille *= 0.6 + 0.4 * step(0.5, fract(up * 38.0));
-        // kapı çizgileri
-        float seam = 0.0;
-        float onSide = smoothstep(0.55, 0.7, side) * smoothstep(0.34, 0.36, up) * (1.0 - smoothstep(1.0, 1.02, up));
-        seam += 1.0 - smoothstep(0.004, 0.009, abs(p.x - 0.93 + (up - 0.35) * 0.05));
-        seam += 1.0 - smoothstep(0.004, 0.009, abs(p.x + 0.42));
-        seam += 1.0 - smoothstep(0.004, 0.009, abs(p.x + 1.62 - (up - 0.35) * 0.08));
-        seam = clamp(seam, 0.0, 1.0) * onSide * (1.0 - glass);
-        float handle = onSide * (1.0 - smoothstep(0.05, 0.06, abs(up - 0.86))) * (1.0 - smoothstep(0.06, 0.07, min(abs(p.x - 0.62), abs(p.x + 0.72))));
-
         // kir: altta ve arkada daha yoğun, çamur sıçrakları
         float dn = fbm(p * vec3(2.2, 3.1, 2.2));
         float low = 1.0 - smoothstep(0.2, 1.3, up);
-        float film = 0.3 + 0.35 * low - glass * 0.15;
-        float dirtM = film + smoothstep(0.45, 0.75, dn * 0.8 + low * 0.45 - p.x * 0.04) * 0.4;
+        // ince toz filmi her yerde, altta ve arkada kalın kir; boya yer yer görünür kalır
+        float dirtM = 0.16 + 0.42 * low + smoothstep(0.5, 0.8, dn * 0.8 + low * 0.45 - p.x * 0.04) * 0.36;
         float splat = smoothstep(0.62, 0.72, vn(p * 7.0 + 2.0)) * low;
-        dirtM = clamp(max(dirtM, splat), 0.0, 0.96);
-        ${fleet ? 'float dirtAmt = vDirt; float rinsed = 0.0;' : `float dirtAmt = uDirt;
+        dirtM = clamp(max(dirtM, splat), 0.0, 0.92) * ${glass ? '0.45' : '1.0'};
         float edge = uRinse + (vn(vec3(p.y * 3.0, p.z * 3.0, uTime * 0.6)) - 0.5) * 0.35;
-        float rinsed = smoothstep(edge - 0.06, edge + 0.06, p.x);`}
-        dirtM *= dirtAmt * (1.0 - rinsed);
-
-        // köpük: topak topak büyür, üç renk
+        float rinsed = smoothstep(edge - 0.06, edge + 0.06, p.x);
+        dirtM *= uDirt * (1.0 - rinsed);
+        // köpük: topak topak büyür, üç renk (pembe, mavi, limon)
         vec2 q = side > 0.6 ? p.xy : (abs(n.y) > 0.6 ? p.xz : p.zy);
         float fnz = fbm(p * 1.7 + 3.1);
-        float foamM = 0.0;
-        vec3 foamCol = vec3(1.0);
-        ${fleet ? '' : `
-        foamM = smoothstep(0.0, 0.06, uFoam * 1.35 - fnz - (1.0 - up) * 0.1) * (1.0 - rinsed);
+        float foamM = smoothstep(0.0, 0.06, uFoam * 1.35 - fnz - (1.0 - up) * 0.1) * (1.0 - rinsed);
         float tri = fbm(p * 0.8 + 5.0);
-        vec3 fc = mix(mix(vec3(1.0, 0.56, 0.75), vec3(0.5, 0.84, 1.0), smoothstep(0.4, 0.47, tri)), vec3(1.0, 0.92, 0.55), smoothstep(0.55, 0.62, tri));
+        vec3 fc = mix(mix(vec3(1.0, 0.5, 0.72), vec3(0.5, 0.84, 1.0), smoothstep(0.4, 0.47, tri)), vec3(1.0, 0.92, 0.55), smoothstep(0.55, 0.62, tri));
         float bub = cells(q * 26.0);
         float bub2 = cells(q * 61.0 + 4.0);
-        foamCol = mix(fc, vec3(1.0), 0.08 + 0.35 * smoothstep(0.25, 0.6, bub)) * (0.82 + 0.18 * smoothstep(0.1, 0.4, bub2));`}
-
-        // su damlaları ve kılcal çizikler
-        float beads = (1.0 - smoothstep(0.1, 0.2, cells(q * 34.0))) * ${fleet ? '0.0' : 'uWet * rinsed'};
+        vec3 foamCol = mix(fc, vec3(1.0), 0.08 + 0.35 * smoothstep(0.25, 0.6, bub)) * (0.82 + 0.18 * smoothstep(0.1, 0.4, bub2));
+        // su damlaları
+        float beads = (1.0 - smoothstep(0.1, 0.2, cells(q * 34.0))) * uWet * rinsed * ${kind === 'trim' ? '0.4' : '1.0'};
+        // kılcal çizikler (yalnız boya): pasta makinesi geçtiği yerde kaybolur
         float topS = smoothstep(0.5, 0.8, n.y) + smoothstep(0.5, 0.8, side) * 0.6;
-        vec2 cq = q * 1.6; vec2 ci = floor(cq);
+        float swirl = 0.0;
+        ${paint ? `vec2 cq = q * 1.6; vec2 ci = floor(cq);
         vec2 cc = ci + vec2(h3(vec3(ci, 3.0)), h3(vec3(ci, 9.0)));
         float rr = length(cq - cc);
-        float swirl = smoothstep(0.55, 0.95, sin(rr * 260.0 + h3(vec3(ci, 5.0)) * 40.0)) * (1.0 - smoothstep(0.4, 0.9, rr));
-        ${fleet ? 'swirl = 0.0;' : 'swirl *= uSwirl * topS * (1.0 - smoothstep(uPolish - 0.08, uPolish + 0.08, p.x));'}
-
-        vec3 paint = diffuseColor.rgb;
-        vec3 c = paint;
-        c = mix(c, vec3(0.012, 0.016, 0.03), glass);
-        c = mix(c, vec3(0.03, 0.03, 0.04), max(trim, grille));
-        c = mix(c, vec3(0.9, 0.9, 0.95), head * 0.4);
-        c = mix(c, vec3(0.5, 0.02, 0.04), tail);
-        c = mix(c, c * 0.25, seam);
-        c = mix(c, vec3(0.5), handle * 0.35);
-        c += swirl * 0.14;
+        swirl = smoothstep(0.55, 0.95, sin(rr * 260.0 + h3(vec3(ci, 5.0)) * 40.0)) * (1.0 - smoothstep(0.4, 0.9, rr));
+        swirl *= uSwirl * topS * (1.0 - smoothstep(uPolish - 0.08, uPolish + 0.08, p.x));` : ''}
         vec3 dirtCol = mix(vec3(0.36, 0.3, 0.22), vec3(0.6, 0.53, 0.42), smoothstep(0.3, 0.7, dn) * (1.0 - splat)) * (0.88 + 0.24 * vn(p * 30.0));
+        vec3 c = diffuseColor.rgb + swirl * 0.14;
         c = mix(c, dirtCol, dirtM);
         c = mix(c, foamCol, foamM);
         c += beads * 0.05;
         diffuseColor.rgb = c;
-
-        float clean = (1.0 - dirtM) * (1.0 - foamM);
-        gRough = mix(mix(0.3, 0.04, glass), 0.6, max(trim, grille));
-        gRough = mix(gRough, 0.95, dirtM);
-        gRough = mix(gRough, 0.5, foamM);
-        gRough = mix(gRough, 0.55, swirl * 0.6);
-        gRough = mix(gRough, 0.05, beads);
-        gClear = clean * (1.0 - max(trim, grille)) * (1.0 - swirl * 0.4);
-        gCCR = 0.04 + swirl * 0.3;
-        gMetal = ${fleet ? '0.1' : '0.55'} * (1.0 - glass) * clean * (1.0 - max(trim, grille)) * (1.0 - tail) * (1.0 - head);
+        ${glass ? 'diffuseColor.a = max(diffuseColor.a, max(dirtM * 0.9, foamM));' : ''}
+        gDirt = dirtM; gFoam = foamM; gBeads = beads; gSwirl = swirl; gClean = (1.0 - dirtM) * (1.0 - foamM);
         float gb = exp(-pow((p.x + p.y * 0.5 - uGleam) * 5.0, 2.0));
-        gEmis = vec3(0.95, 0.97, 1.0) * head * (0.5 + 2.5 * uLights) * (1.0 - dirtM * 0.7)
-              + vec3(1.0, 0.05, 0.1) * tail * (0.4 + 1.2 * uLights)
-              + vec3(0.85, 0.9, 1.0) * gb * uGleamAmt * clean * 0.55 * (0.3 + 0.7 * topS)
-              + foamCol * foamM * 0.06;`)
+        gEmis = ${paint ? 'vec3(0.85, 0.9, 1.0) * gb * uGleamAmt * gClean * 0.5 * (0.3 + 0.7 * topS) +' : ''} foamCol * foamM * 0.06;`)
       .replace('#include <roughnessmap_fragment>', `#include <roughnessmap_fragment>
-        roughnessFactor = gRough;`)
+        roughnessFactor = mix(roughnessFactor, 0.95, gDirt);
+        roughnessFactor = mix(roughnessFactor, 0.5, gFoam);
+        roughnessFactor = mix(roughnessFactor, 0.55, gSwirl * 0.6);
+        roughnessFactor = mix(roughnessFactor, 0.05, gBeads);`)
       .replace('#include <metalnessmap_fragment>', `#include <metalnessmap_fragment>
-        metalnessFactor = gMetal;`)
+        metalnessFactor *= gClean;`)
       .replace('#include <emissivemap_fragment>', `#include <emissivemap_fragment>
         totalEmissiveRadiance += gEmis;`)
       .replace('#include <lights_physical_fragment>', `#include <lights_physical_fragment>
-        material.clearcoat *= gClear; material.clearcoatRoughness = gCCR;`);
+        #ifdef USE_CLEARCOAT
+          material.clearcoat *= gClean * (1.0 - gSwirl * 0.4); material.clearcoatRoughness = max(material.clearcoatRoughness, gSwirl * 0.3);
+        #endif`);
   };
-  m.customProgramCacheKey = () => (fleet ? 'kopuk-fleet' : 'kopuk-body');
+  m.customProgramCacheKey = () => 'kopuk-' + key;
+  m.needsUpdate = true;
   return m;
 }
 
@@ -175,31 +129,32 @@ function xrayMaterial(U) {
   });
 }
 
-function seatMaterial(U) {
-  const m = new THREE.MeshStandardMaterial({ color: '#d3e2e2', roughness: 0.85 });
+// Koltuk / döşeme: röntgen taraması geçtikçe lekeli kumaş temizlenir (yalnız röntgen açıkken kirli görünür)
+function seatInject(m, U, key) {
   m.onBeforeCompile = (sh) => {
     Object.assign(sh.uniforms, U);
     sh.vertexShader = sh.vertexShader
-      .replace('#include <common>', '#include <common>\nvarying vec3 vLp;')
-      .replace('#include <begin_vertex>', '#include <begin_vertex>\nvLp = position;');
+      .replace('#include <common>', '#include <common>\nvarying vec3 vWp;')
+      .replace('#include <begin_vertex>', '#include <begin_vertex>\nvWp = (modelMatrix * vec4(transformed, 1.0)).xyz;');
     sh.fragmentShader = sh.fragmentShader
       .replace('#include <common>', `#include <common>
-        uniform float uScan, uXray; varying vec3 vLp; ${NOISE}`)
+        uniform float uScan, uXray; uniform vec3 uOrigin; varying vec3 vWp; ${NOISE}`)
       .replace('#include <color_fragment>', `#include <color_fragment>
-        float st = smoothstep(0.5, 0.62, fbm(vLp * 5.0)) ;
-        float cleaned = smoothstep(uScan - 0.05, uScan + 0.05, vLp.x);
+        vec3 lp = vWp - uOrigin;
+        float st = smoothstep(0.5, 0.62, fbm(lp * 5.0));
+        float cleaned = smoothstep(uScan - 0.05, uScan + 0.05, lp.x);
         vec3 dirty = mix(vec3(0.5, 0.45, 0.4), vec3(0.28, 0.22, 0.16), st);
-        diffuseColor.rgb = mix(dirty, diffuseColor.rgb, cleaned);`)
+        diffuseColor.rgb = mix(diffuseColor.rgb, mix(dirty, diffuseColor.rgb, cleaned), uXray);`)
       .replace('#include <emissivemap_fragment>', `#include <emissivemap_fragment>
-        float bd = exp(-pow((vLp.x - uScan) * 9.0, 2.0));
-        totalEmissiveRadiance += vec3(0.24, 0.77, 1.0) * bd * 0.9 + vec3(0.1, 0.12, 0.2) * cleaned * 0.4;`);
+        float bd = exp(-pow((lp.x - uScan) * 9.0, 2.0));
+        totalEmissiveRadiance += (vec3(0.24, 0.77, 1.0) * bd * 0.9 + vec3(0.1, 0.12, 0.2) * cleaned * 0.4) * uXray;`);
   };
-  m.customProgramCacheKey = () => 'kopuk-seat';
-  return m;
+  m.customProgramCacheKey = () => 'kopuk-seat-' + key;
+  m.needsUpdate = true;
 }
 
-function rimMaterial(U) {
-  const m = new THREE.MeshStandardMaterial({ color: '#d9dde6', metalness: 0.9, roughness: 0.22 });
+// Jant: fren tozu (uDust) fırçalandıkça kaybolur
+function rimInject(m, U, key) {
   m.onBeforeCompile = (sh) => {
     Object.assign(sh.uniforms, U);
     sh.vertexShader = sh.vertexShader
@@ -209,15 +164,15 @@ function rimMaterial(U) {
       .replace('#include <common>', `#include <common>
         uniform float uDust; varying vec3 vLp; ${NOISE} float gD;`)
       .replace('#include <color_fragment>', `#include <color_fragment>
-        gD = uDust * smoothstep(0.3, 0.6, fbm(vLp * 14.0) + 0.25);
+        gD = uDust * smoothstep(0.3, 0.6, fbm(vLp * 40.0) + 0.25);
         diffuseColor.rgb = mix(diffuseColor.rgb, vec3(0.2, 0.15, 0.1), gD);`)
       .replace('#include <roughnessmap_fragment>', `#include <roughnessmap_fragment>
         roughnessFactor = mix(roughnessFactor, 0.95, gD);`)
       .replace('#include <metalnessmap_fragment>', `#include <metalnessmap_fragment>
         metalnessFactor = mix(metalnessFactor, 0.1, gD);`);
   };
-  m.customProgramCacheKey = () => 'kopuk-rim';
-  return m;
+  m.customProgramCacheKey = () => 'kopuk-rim-' + key;
+  m.needsUpdate = true;
 }
 
 // --- Parçacıklar --------------------------------------------------------------------------
@@ -343,12 +298,12 @@ function neonTexture(label) {
     x.font = `600 ${size}px "Bricolage Grotesque", "Arial Rounded MT Bold", sans-serif`;
     x.textAlign = 'center';
     x.textBaseline = 'middle';
-    x.shadowColor = '#ff7a33';
+    x.shadowColor = '#ff5c9d';
     x.shadowBlur = 60;
-    x.fillStyle = '#ffa36b';
+    x.fillStyle = '#ff9cc4';
     x.fillText(txt, 1024, 270);
     x.shadowBlur = 18;
-    x.fillStyle = '#ffe4d2';
+    x.fillStyle = '#ffe3ef';
     x.fillText(txt, 1024, 270);
     tex.needsUpdate = true;
   };
@@ -381,16 +336,20 @@ function tileTexture() {
 }
 
 // Ortam haritası: karanlık bölme, tavanda beyaz, yanlarda mandalina ve camgöbeği LED bantlar
-function envScene() {
+// hdr verilirse arka küre garaj HDRI'sidir (kısılmış), LED bantlar onun önünde
+function envScene(hdr) {
   const s = new THREE.Scene();
-  s.add(new THREE.Mesh(new THREE.SphereGeometry(20, 32, 16), new THREE.MeshBasicMaterial({ color: '#020e11', side: THREE.BackSide })));
+  const skyMat = hdr
+    ? new THREE.MeshBasicMaterial({ map: hdr, color: new THREE.Color(0.42, 0.5, 0.52), side: THREE.BackSide })
+    : new THREE.MeshBasicMaterial({ color: '#020e11', side: THREE.BackSide });
+  s.add(new THREE.Mesh(new THREE.SphereGeometry(20, 48, 24), skyMat));
   const strip = (color, w, h, d, x, y, z, k = 1) => {
     const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), new THREE.MeshBasicMaterial({ color: new THREE.Color(color).multiplyScalar(k) }));
     m.position.set(x, y, z);
     s.add(m);
   };
   for (let i = -2; i <= 2; i++) strip('#ffffff', 12, 0.2, 0.5, 0, 6, i * 2.2, 3.2);
-  strip('#ff7a33', 16, 0.5, 0.2, 0, 2.2, 7, 2.2);
+  strip('#ff5c9d', 16, 0.5, 0.2, 0, 2.2, 7, 2.2);
   strip('#27e3f0', 16, 0.5, 0.2, 0, 2.2, -7, 2.2);
   strip('#7dffb4', 0.2, 1.8, 10, -9, 1.5, 0, 1.6);
   strip('#ffffff', 0.2, 3, 8, 9, 3, 0, 1.4);
@@ -400,25 +359,48 @@ function envScene() {
 
 // --- Dünya -------------------------------------------------------------------------------
 export function createWorld(canvas, { name, phone, low, onReady }) {
+  const q = pickQuality();
+  const lo = low || q === 'lo';
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: !low, powerPreference: 'high-performance' });
   const dpr = Math.min(devicePixelRatio || 1, low ? 1 : phone ? 1.25 : 1.5);
   renderer.setPixelRatio(dpr);
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.1;
+  renderer.toneMappingExposure = 1.05;
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFShadowMap;
   const BG = new THREE.Color('#04191e');
   renderer.setClearColor(BG);
 
   const scene = new THREE.Scene();
   scene.fog = new THREE.Fog(BG, 14, 42);
   const camera = new THREE.PerspectiveCamera(32, 1, 0.1, 90);
+  // Ortam: önce yalnız LED bantlı karanlık bölme; garaj HDRI'si gelince onun önüne kurulur (gerçek yansıma + neon)
   const pmrem = new THREE.PMREMGenerator(renderer);
   scene.environment = pmrem.fromScene(envScene(), 0.02).texture;
   scene.environmentIntensity = 1.0;
-  const hemi = new THREE.HemisphereLight('#9fe8ec', '#041d22', 0.6);
-  const key = new THREE.DirectionalLight('#ffffff', 1.6);
-  key.position.set(3, 7, 4);
-  scene.add(hemi, key);
+  manifest().then((m) => {
+    const e = m.envs.garage;
+    return new HDRLoader().loadAsync(LIB3D_URL + (e[q] || e.hi).file);
+  }).then((hdr) => {
+    hdr.mapping = THREE.UVMapping;
+    const old = scene.environment;
+    scene.environment = pmrem.fromScene(envScene(hdr), 0.02).texture;
+    old.dispose();
+    hdr.dispose();
+  }).catch(() => {});
+  const hemi = new THREE.HemisphereLight('#9fe8ec', '#041d22', 0.35);
+  // Tavan ışığı: yumuşak gölge (araç zemine otursun)
+  const key = new THREE.DirectionalLight('#ffffff', 1.5);
+  key.position.set(2.5, 8, 3.5);
+  key.castShadow = true;
+  key.shadow.mapSize.set(lo ? 1024 : 2048, lo ? 1024 : 2048);
+  key.shadow.bias = -0.0004;
+  key.shadow.normalBias = 0.02;
+  key.shadow.radius = 5;
+  key.shadow.blurSamples = 10;
+  Object.assign(key.shadow.camera, { left: -7, right: 7, top: 5, bottom: -5, near: 2, far: 16 });
+  scene.add(hemi, key, key.target);
 
   // Tek durum nesnesi: main.js her karede sıfırlar ve sahneye göre yazar.
   const S = {
@@ -432,23 +414,25 @@ export function createWorld(canvas, { name, phone, low, onReady }) {
     uPolish: { value: 3 }, uGleam: { value: -4 }, uGleamAmt: { value: 0 }, uTime: { value: 0 }, uLights: { value: 0 },
     uSpray: { value: 0 }, uSprayX: { value: 0 }, uPR: { value: dpr * innerHeight * 0.5 }, uFall: { value: 0 },
     uCurtain: { value: 0 }, uDust: { value: 1 }, uXray: { value: 0 }, uScan: { value: 2.4 },
+    uOrigin: { value: new THREE.Vector3() },
   };
-  const UF = { ...U }; // filo: aynı uniform'lar, kir örnek başına
 
-  // Zemin: ıslak, yarı saydam; altında aynalanmış sahne
+  // Zemin: ıslak, yarı saydam; altında aynalanmış sahne; tavan ışığının gölgesini alır
   const floorMat = new THREE.MeshStandardMaterial({
     color: '#041b21', roughness: 0.18, metalness: 0.3, transparent: true, opacity: low ? 1 : 0.84, map: tileTexture(),
   });
   floorMat.map.repeat.set(20, 20);
   const floor = new THREE.Mesh(new THREE.PlaneGeometry(80, 80), floorMat);
   floor.rotation.x = -Math.PI / 2;
+  floor.receiveShadow = true;
   scene.add(floor);
 
   const world = new THREE.Group(); // aynalanacak her şey
   scene.add(world);
   const mirror = new THREE.Group();
   mirror.scale.y = -1;
-  if (!low) scene.add(mirror);
+  const useMirror = !low && !phone;
+  if (useMirror) scene.add(mirror);
 
   // Arka duvar + neon ad
   const wall = new THREE.Mesh(new THREE.PlaneGeometry(60, 12), new THREE.MeshStandardMaterial({ color: '#05222a', roughness: 0.7 }));
@@ -468,9 +452,9 @@ export function createWorld(canvas, { name, phone, low, onReady }) {
 
   // Kemerler: araç üzerinden geçen neon çerçeveler
   const arches = new THREE.Group();
-  const archCols = ['#27e3f0', '#ff7a33', '#7dffb4', '#ffffff'];
+  const archCols = ['#27e3f0', '#ff5c9d', '#7dffb4', '#ffffff'];
   const archX = [-3.3, -1.1, 1.1, 3.3];
-  const tube = new THREE.TubeGeometry(roundedRectPath(4.4, 2.9, 0.6), 60, 0.035, 8, false);
+  const tube = new THREE.TubeGeometry(roundedRectPath(4.6, 2.9, 0.6), 60, 0.035, 8, false);
   const archMats = archCols.map((c) => ledMat(c, 2.2));
   archX.forEach((x, i) => {
     const g = new THREE.Group();
@@ -480,27 +464,20 @@ export function createWorld(canvas, { name, phone, low, onReady }) {
   });
   world.add(arches);
 
-  // Araç
+  // Araç: lib3d sedan (gerçekçi gövde, cam, jant, iç döşeme); kir ve köpük onun malzemelerine eklenir
   const car = new THREE.Group();
   world.add(car);
-  const bodyMat = bodyMaterial(U);
   const xrayMat = xrayMaterial(U);
-  const seatMat = seatMaterial(U);
-  const rimMat = rimMaterial(U);
-  const tireMat = new THREE.MeshStandardMaterial({ color: '#141418', roughness: 0.85, metalness: 0 });
-  const fleetMat = bodyMaterial(UF, { fleet: true });
-
-  let body = null;
+  let A = null;
   let interior = null;
-  const wheels = [];
-  const mirrorBodies = [];
-  let fleetBody = null;
-  let fleetMirror = null;
-  let fleetTires = null;
-  let fleetRims = null;
-  let fleetDirt = null;
+  const xrayMeshes = []; // [mesh, özgün malzeme]
+  let mirrorCar = null;
+  let fleet = [];
   let heights = null;
   let ready = false;
+  let rolled = 0;
+  let tyreMats = [];
+  let lamps = {};
 
   // Pasta makinesi
   const polisher = new THREE.Group();
@@ -510,6 +487,7 @@ export function createWorld(canvas, { name, phone, low, onReady }) {
   const handle = new THREE.Mesh(new THREE.BoxGeometry(0.42, 0.07, 0.08), head.material);
   handle.position.set(-0.18, 0.2, 0);
   polisher.add(pad, head, handle);
+  polisher.traverse((o) => { if (o.isMesh) o.castShadow = true; });
   polisher.visible = false;
   world.add(polisher);
 
@@ -519,90 +497,80 @@ export function createWorld(canvas, { name, phone, low, onReady }) {
   const curtain = rinseCurtain(U);
   world.add(spray, flakes, curtain);
 
-  const loader = new GLTFLoader();
-  const draco = new DRACOLoader();
-  draco.setDecoderPath(BASE + 'draco/');
-  loader.setDRACOLoader(draco);
-  loader.load(BASE + 'img/yikama-sinematik/araba.glb', (gltf) => {
-    const geo = {};
-    gltf.scene.traverse((o) => {
-      if (o.isMesh) {
-        o.updateWorldMatrix(true, false);
-        const g = o.geometry.clone();
-        g.applyMatrix4(o.matrixWorld);
-        geo[o.name] = g;
-      }
+  const TRIM = ['trim_black', 'plastic_black', 'grille', 'arch_liner', 'lamp_glass', 'tail_lens', 'plate', 'chrome'];
+  loadAsset('car_sedan', { quality: q, renderer }).then((asset) => {
+    A = asset;
+    const root = A.scene;
+    car.add(root);
+    const Mt = A.materials;
+    // Koyu gece mavisi metalik boya: temizlenince neon kemerleri yansıtır
+    Mt.paint.color.set('#0c2c3a');
+    Mt.paint.metalness = 0.6;
+    Mt.paint.roughness = 0.3;
+    if ('clearcoat' in Mt.paint) { Mt.paint.clearcoat = 1; Mt.paint.clearcoatRoughness = 0.05; }
+    grime(Mt.paint, U, 'paint', 'paint');
+    if (Mt.glass) grime(Mt.glass, U, 'glass', 'glass');
+    for (const n of TRIM) if (Mt[n]) grime(Mt[n], U, 'trim', n);
+    for (const n of ['rim_face', 'rim_paint']) if (Mt[n]) rimInject(Mt[n], U, n);
+    for (const n of ['seat', 'interior', 'dash']) if (Mt[n]) seatInject(Mt[n], U, n);
+    tyreMats = ['tyre_side', 'tyre_tread'].map((n) => Mt[n]).filter(Boolean);
+    lamps = { head: Mt.light_head, tail: Mt.light_tail };
+    interior = A.nodes.interior;
+    // Röntgen: tekerlek ve iç döşeme dışındaki her şey camgöbeği kabuğa döner
+    root.traverse((o) => {
+      if (!o.isMesh) return;
+      let p = o, skip = false;
+      while (p && p !== root) { if (p === interior || /^(wheel|steer|hub)_/.test(p.name)) { skip = true; break; } p = p.parent; }
+      if (!skip) xrayMeshes.push([o, o.material]);
     });
-    body = new THREE.Mesh(geo.Body, bodyMat);
-    interior = new THREE.Mesh(geo.Interior, seatMat);
-    interior.visible = false;
-    car.add(body, interior);
-    const mkWheel = () => {
-      const w = new THREE.Group();
-      w.add(new THREE.Mesh(geo.Tire, tireMat), new THREE.Mesh(geo.Rim, rimMat));
-      return w;
-    };
-    for (const [sx, sz] of [[1, 1], [1, -1], [-1, 1], [-1, -1]]) {
-      const holder = new THREE.Group();
-      holder.position.set(sx * WX, WY, sz * WZ);
-      if (sz > 0) holder.rotation.y = Math.PI; // jant yüzü dışarı baksın
-      const w = mkWheel();
-      holder.add(w);
-      car.add(holder);
-      wheels.push({ w, sz });
+    // Zemin aynası (masaüstü): aynı geometri ve malzemeler, gölge düşürmez
+    if (useMirror) {
+      mirrorCar = root.clone(true);
+      mirrorCar.traverse((o) => { if (o.isMesh) { o.castShadow = false; o.receiveShadow = false; } });
+      mirror.add(mirrorCar);
+      mirror.add(arches.clone());
     }
-    // ayna kopyası
-    const mc = new THREE.Group();
-    const mb = new THREE.Mesh(geo.Body, bodyMat);
-    mirrorBodies.push(mb);
-    mc.add(mb);
-    for (const { w } of wheels) {
-      const h = w.parent.clone();
-      mc.add(h);
+    // Filo: beyaz sedanlar sırayla kemerlerden geçer; her birinin kendi kir miktarı ve konumu
+    const FN = phone || low ? 4 : FLEET;
+    for (let i = 0; i < FN; i++) {
+      const c = root.clone(true);
+      const Ui = { ...U, uDirt: { value: 1 }, uOrigin: { value: new THREE.Vector3() }, uRinse: { value: 4 }, uFoam: { value: 0 }, uSwirl: { value: 0 }, uWet: { value: 0 }, uGleamAmt: { value: 0 } };
+      const pm = Mt.paint.clone();
+      pm.color.set('#eef1f5');
+      pm.metalness = 0.15;
+      grime(pm, Ui, 'paint', 'fleet');
+      c.traverse((o) => {
+        if (!o.isMesh) return;
+        if (o.material === Mt.paint) o.material = pm;
+        if (lo) o.castShadow = false;
+      });
+      c.visible = false;
+      world.add(c);
+      fleet.push({ c, Ui });
     }
-    mirror.add(mc);
-    mirror.userData.car = mc;
-    mirror.add(arches.clone());
-
-    // Filo: aynı gövde, beyaz, örnek başına kir
-    const fg = geo.Body.clone();
-    fleetDirt = new THREE.InstancedBufferAttribute(new Float32Array(FLEET).fill(1), 1);
-    fg.setAttribute('aDirt', fleetDirt);
-    fleetBody = new THREE.InstancedMesh(fg, fleetMat, FLEET);
-    fleetTires = new THREE.InstancedMesh(geo.Tire, tireMat, FLEET * 4);
-    fleetRims = new THREE.InstancedMesh(geo.Rim, rimMat, FLEET * 4);
-    [fleetBody, fleetTires, fleetRims].forEach((m) => { m.visible = false; m.frustumCulled = false; world.add(m); });
-    if (!low && !phone) {
-      fleetMirror = new THREE.InstancedMesh(fg, fleetMat, FLEET);
-      fleetMirror.instanceMatrix = fleetBody.instanceMatrix;
-      fleetMirror.visible = false;
-      fleetMirror.frustumCulled = false;
-      mirror.add(fleetMirror);
-    }
-
     // Kaput üst yüzeyinin yüksekliği (pasta makinesi için)
+    root.updateMatrixWorld(true);
     const ray = new THREE.Raycaster();
     heights = [];
+    const hood = A.nodes.hood || root;
     for (let i = 0; i <= 40; i++) {
       const x = 0.6 + (i / 40) * 1.6;
       ray.set(new THREE.Vector3(x, 3, 0.25), new THREE.Vector3(0, -1, 0));
-      const hit = ray.intersectObject(body)[0];
+      const hit = ray.intersectObject(hood, true)[0] || ray.intersectObject(root, true)[0];
       heights.push(hit ? hit.point.y : 0.95);
     }
     // Tüm programları baştan derle: sahne geçişlerinde takılma olmasın
-    body.material = xrayMat;
-    interior.visible = true;
-    [fleetBody, fleetTires, fleetRims].forEach((m) => (m.visible = true));
+    for (const [m] of xrayMeshes) m.material = xrayMat;
+    fleet.forEach((f) => (f.c.visible = true));
     polisher.visible = true;
     renderer.compile(scene, camera);
-    body.material = bodyMat;
+    for (const [m, orig] of xrayMeshes) m.material = orig;
     renderer.compile(scene, camera);
-    interior.visible = false;
-    [fleetBody, fleetTires, fleetRims].forEach((m) => (m.visible = false));
+    fleet.forEach((f) => (f.c.visible = false));
     polisher.visible = false;
     ready = true;
     onReady?.();
-  });
+  }).catch((e) => console.warn('araç modeli yüklenemedi', e));
 
   // --- Kamera görünümleri: hedef + küresel konum ------------------------------------------
   const deg = Math.PI / 180;
@@ -670,50 +638,31 @@ export function createWorld(canvas, { name, phone, low, onReady }) {
   }
   resize();
 
-  const clock = new THREE.Clock();
+  const timer = new THREE.Timer();
   let time = 0;
-  const m4 = new THREE.Matrix4();
-  const q = new THREE.Quaternion();
   const pos = new THREE.Vector3();
-  const one = new THREE.Vector3(1, 1, 1);
-  const yAxisFlip = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), Math.PI);
 
   function applyFleet(show) {
-    if (!fleetBody) return;
-    fleetBody.visible = fleetTires.visible = fleetRims.visible = show;
-    if (fleetMirror) fleetMirror.visible = show;
+    for (const f of fleet) f.c.visible = show;
     if (!show) return;
-    const shift = S.fleetP * FLEET_GAP * (FLEET - 1) + 1.5;
-    for (let i = 0; i < FLEET; i++) {
+    const n = fleet.length;
+    const shift = S.fleetP * FLEET_GAP * (n - 1) + 1.5;
+    fleet.forEach((f, i) => {
       const x = -i * FLEET_GAP + shift - FLEET_GAP * 0.5 - 4;
-      pos.set(x, 0, 0);
-      m4.compose(pos, q.identity(), one);
-      fleetBody.setMatrixAt(i, m4);
-      fleetDirt.array[i] = 1 - smoothstep(-2.2, 2.4, x);
-      const roll = -x / 0.335;
-      let k = 0;
-      for (const [sx, sz] of [[1, 1], [1, -1], [-1, 1], [-1, -1]]) {
-        const wq = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 0, 1), sz > 0 ? -roll : roll);
-        const base = sz > 0 ? yAxisFlip.clone().multiply(wq) : wq;
-        pos.set(x + sx * WX, WY, sz * WZ);
-        m4.compose(pos, base, one);
-        fleetTires.setMatrixAt(i * 4 + k, m4);
-        fleetRims.setMatrixAt(i * 4 + k, m4);
-        k++;
-      }
-    }
-    fleetBody.instanceMatrix.needsUpdate = true;
-    fleetTires.instanceMatrix.needsUpdate = true;
-    fleetRims.instanceMatrix.needsUpdate = true;
-    fleetDirt.needsUpdate = true;
+      f.c.position.set(x, 0, 0);
+      f.Ui.uOrigin.value.set(x, 0, 0);
+      f.Ui.uDirt.value = 1 - smoothstep(-2.2, 2.4, x);
+    });
   }
   function smoothstep(a, b, v) {
     const t = Math.min(1, Math.max(0, (v - a) / (b - a)));
     return t * t * (3 - 2 * t);
   }
 
+  let xrayOn = false;
   function render() {
-    const dt = Math.min(clock.getDelta(), 0.05);
+    timer.update();
+    const dt = Math.min(timer.getDelta(), 0.05);
     time += dt;
     // kamera yumuşak takip
     const k = 1 - Math.pow(0.0015, dt);
@@ -732,6 +681,9 @@ export function createWorld(canvas, { name, phone, low, onReady }) {
     camera.lookAt(cur.t);
     camera.setViewOffset(W, H, cur.sx * W, cur.sy * H, W, H);
     camera.updateProjectionMatrix();
+    // gölge kamerası bakılan yeri izler (filo sahnesinde araçlar uzakta)
+    key.target.position.set(cur.t.x, 0, 0);
+    key.position.set(cur.t.x + 2.5, 8, 3.5);
 
     // uniform'lar
     U.uTime.value = time;
@@ -751,22 +703,29 @@ export function createWorld(canvas, { name, phone, low, onReady }) {
     U.uDust.value = S.dust;
     U.uXray.value = S.xray;
     U.uScan.value = S.scan;
+    U.uOrigin.value.set(0, S.carY, 0);
     spray.visible = S.spray > 0.01;
     flakes.visible = S.fall > 0.01;
     curtain.visible = S.curtain > 0.01;
     curtain.position.x = S.rinse;
-    tireMat.roughness = 0.85 - S.tireShine * 0.6;
+    for (const m of tyreMats) m.roughness = 0.85 - S.tireShine * 0.55;
     neon.material.opacity = S.neon;
     arches.visible = S.arch > 0.01;
 
-    if (body) {
+    if (A) {
       const x = S.xray > 0.01;
-      body.material = x ? xrayMat : bodyMat;
-      interior.visible = x;
+      if (x !== xrayOn) {
+        xrayOn = x;
+        for (const [m, orig] of xrayMeshes) m.material = x ? xrayMat : orig;
+      }
+      if (lamps.head) lamps.head.emissiveIntensity = 0.4 + 2.6 * S.lights;
+      if (lamps.tail) lamps.tail.emissiveIntensity = 0.5 + 1.5 * S.lights;
       car.visible = S.fleet < 0.5;
-      if (mirror.userData.car) mirror.userData.car.visible = car.visible && !x;
+      if (mirrorCar) mirrorCar.visible = car.visible && !x;
       car.position.y = S.carY;
-      for (const { w, sz } of wheels) w.rotation.z = (sz > 0 ? 1 : -1) * S.spinAngle;
+      // tekerlekler: açı farkı kadar ileri yuvarla (roll metre alır)
+      const d = (S.spinAngle - rolled) * 0.33;
+      if (Math.abs(d) > 1e-5) { A.roll(d); rolled = S.spinAngle; }
       polisher.visible = S.polisher > 0.01;
       if (polisher.visible && heights) {
         const px = 2.05 - S.polishPath * 1.4;

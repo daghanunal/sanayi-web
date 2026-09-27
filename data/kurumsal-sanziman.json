@@ -5,7 +5,7 @@
     { "src": "/img/kurumsal-sanziman/teshis.jpg", "alt": "Teşhis tableti ile şanzıman arıza kaydı okunuyor" },
     { "src": "/img/kurumsal-sanziman/dsg-kol.jpg", "alt": "Çift kavramalı şanzımanlı aracın vites kolu" },
     { "src": "/img/kurumsal-sanziman/mekatronik.jpg", "alt": "Elektronik kontrol kartı yakın plan" },
-    { "src": "/img/kurumsal-sanziman/lift.jpg", "alt": "Atölyede lift üzerindeki araç" },
+    { "src": "/img/kurumsal-sanziman/lift.jpg", "alt": "Lift üzerinde araç" },
     { "src": "/img/kurumsal-sanziman/dislilar.jpg", "alt": "Birbirine geçen metal dişliler" },
     { "src": "/img/kurumsal-sanziman/yag.jpg", "alt": "Araca yeni yağ dolduruluyor" },
     { "src": "/img/kurumsal-sanziman/usta-tablet.jpg", "alt": "Usta araç başında teşhis cihazıyla çalışıyor" }
@@ -23,9 +23,9 @@
       "metin": "Vites vuruyor, kalkışta titriyor ya da devir fırlıyorsa önce sebebi buluruz. Şanzımanı indirmeden arıza kaydına, canlı veriye ve yağa bakarız; indirmek gerekiyorsa bunu, nedenini ve fiyatını işe başlamadan söyleriz."
     },
     "hizmetOzetBaslik": "Tezgâhtaki işler",
-    "yorumBaslik": "Vitesi düzelenler ne diyor",
+    "yorumBaslik": "Örnek yorumlar: vitesi düzelenler",
     "surecBaslik": "Bir şanzıman bizde nasıl ilerler",
-    "galeriBaslik": "Atölyeden",
+    "galeriBaslik": "Şanzıman işlerinden kareler",
     "markaBaslik": "Otomatik şanzımanına baktığımız markalar",
     "anlasmaBaslik": "Servisler ve filolar",
     "anlasmaMetin": "Şanzımanı söküp getiren sanayi ustalarına ve aracı yoldan çekemeyen filolara ayrı sıra açıyoruz.",

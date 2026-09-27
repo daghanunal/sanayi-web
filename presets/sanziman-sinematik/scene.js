@@ -1,17 +1,20 @@
-// Kodla çizilmiş "patlatılmış şanzıman hattı": planet dişli seti, kesitli tork konvertörü,
-// mekatronik valf gövdesi, DSG çift kavrama ve CVT kasnak-kayış. Hepsi X ekseni üzerinde dizili.
+// "Patlatılmış şanzıman hattı": başta kütüphanenin gerçekçi şanzıman kutusu (lib3d gearbox, kapak açılır,
+// dişliler döner), ardından planet dişli seti, kesitli tork konvertörü, mekatronik valf gövdesi, DSG çift
+// kavrama ve CVT kasnak-kayış. Hepsi X ekseni üzerinde, stüdyo HDRI ışığında, yumuşak gölgeli zeminde.
 // Dişliler gerçek diş sayılarıyla birbirine geçer (güneş 18, uydu 12, çember 42).
 // Sahne durumu dışarıdan `update(state)` ile verilir; kamera kurgusu main.js'te.
 import * as THREE from 'three';
 import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js';
 import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js';
+import { loadAsset, loadEnv, pickQuality } from '../../shared/lib3d.js';
 
 const V = (x, y, z) => new THREE.Vector3(x, y, z);
 const TAU = Math.PI * 2;
 const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
 const L = (a, b, t) => a + (b - a) * t;
 
-export const ISTASYON = { planet: 0, tork: 14, meka: 28, dsg: 42, cvt: 56 };
+export const ISTASYON = { kutu: -16, planet: 0, tork: 14, meka: 28, dsg: 42, cvt: 56 };
+export const ZEMIN = -3.1; // gölge zemini (planet balata paketinin altı)
 export const PETROL = 0x0a1a1f;
 
 // --- Dişli profilleri ---------------------------------------------------------
@@ -116,56 +119,141 @@ function flowMaterial(color) {
   });
 }
 
+// Fırçalanmış metal pürüzlülük haritası: ince yatay çizgiler (tornalanmış / taşlanmış yüzey)
+function brushedTex(size = 256) {
+  const c = document.createElement('canvas');
+  c.width = c.height = size;
+  const g = c.getContext('2d');
+  g.fillStyle = 'rgb(150,150,150)';
+  g.fillRect(0, 0, size, size);
+  for (let i = 0; i < size * 3; i++) {
+    const v = 110 + Math.random() * 110;
+    g.fillStyle = `rgba(${v},${v},${v},${0.18 + Math.random() * 0.3})`;
+    g.fillRect(Math.random() * size - size * 0.5, Math.random() * size, size * (0.3 + Math.random()), 1);
+  }
+  const t = new THREE.CanvasTexture(c);
+  t.wrapS = t.wrapT = THREE.RepeatWrapping;
+  t.colorSpace = THREE.NoColorSpace;
+  return t;
+}
+// Balata yüzeyi: kâğıt/kompozit tanesi (tümsek haritası)
+function grainTex(size = 128) {
+  const c = document.createElement('canvas');
+  c.width = c.height = size;
+  const g = c.getContext('2d');
+  const img = g.createImageData(size, size);
+  for (let i = 0; i < size * size; i++) {
+    const v = 90 + Math.random() * 120;
+    img.data[i * 4] = img.data[i * 4 + 1] = img.data[i * 4 + 2] = v;
+    img.data[i * 4 + 3] = 255;
+  }
+  g.putImageData(img, 0, 0);
+  const t = new THREE.CanvasTexture(c);
+  t.wrapS = t.wrapT = THREE.RepeatWrapping;
+  t.colorSpace = THREE.NoColorSpace;
+  return t;
+}
+
 export function createScene(canvas, { lite = false } = {}) {
+  const q = pickQuality();
+  const lo = q === 'lo';
+  lite = lite || lo;
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: !lite, alpha: true, powerPreference: 'high-performance' });
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.05;
+  renderer.toneMappingExposure = 1.0;
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFShadowMap;
   let dpr = Math.min(devicePixelRatio || 1, lite ? 1.25 : 1.5);
   renderer.setPixelRatio(dpr);
   renderer.setClearColor(0x000000, 0);
 
   const scene = new THREE.Scene();
+  // HDRI gelene kadar hafif oda ışığı; sonra stüdyo softbox HDRI'si (yansımalar metali gerçek gösterir)
   const pmrem = new THREE.PMREMGenerator(renderer);
   scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
-  scene.environmentIntensity = 0.55;
+  pmrem.dispose();
+  scene.environmentIntensity = 0.5;
   scene.fog = new THREE.Fog(PETROL, 9, 26);
 
   const camera = new THREE.PerspectiveCamera(40, 1, 0.05, 120);
   scene.add(camera);
 
-  scene.add(new THREE.HemisphereLight(0x9fc6c9, 0x081215, 0.55));
-  const key = new THREE.DirectionalLight(0xfff0dc, 2.2);
-  key.position.set(8, 9, 7);
-  scene.add(key);
-  const rim = new THREE.DirectionalLight(0xff2e4d, 2.4); // ATF kırmızısı kontur ışığı
-  rim.position.set(-7, 3, -8);
+  scene.add(new THREE.HemisphereLight(0x9fc6c9, 0x081215, 0.25));
+  // Anahtar ışık: sıcak beyaz, yumuşak gölge; etkin istasyonu izler
+  const key = new THREE.DirectionalLight(0xfff0dc, 2.4);
+  key.castShadow = true;
+  key.shadow.mapSize.set(lo ? 1024 : 2048, lo ? 1024 : 2048);
+  key.shadow.bias = -0.0005;
+  key.shadow.normalBias = 0.035;
+  key.shadow.radius = 4;
+  key.shadow.blurSamples = 10;
+  Object.assign(key.shadow.camera, { left: -8, right: 8, top: 8, bottom: -8, near: 1, far: 34 });
+  scene.add(key, key.target);
+  // Kontur: soğuk nane ışığı (arka üst) + alttan zayıf petrol dolgusu
+  const rim = new THREE.DirectionalLight(0x8ff0dc, 1.6);
+  rim.position.set(-7, 4, -8);
   scene.add(rim);
-  const fill = new THREE.DirectionalLight(0x7fd4d0, 0.6);
+  const fill = new THREE.DirectionalLight(0x7fd4d0, 0.35);
   fill.position.set(-4, -5, 6);
   scene.add(fill);
-  // Etkin istasyonun yanında gezen kırmızı nokta ışık
+  // Etkin istasyonun yanında gezen nokta ışık: arızada kırmızı, düzelince nane
   const glow = new THREE.PointLight(0xff2e4d, 0, 7, 1.5);
   scene.add(glow);
+  const RED = new THREE.Color(0xff2e4d), MINT = new THREE.Color(0x3be3c3), fixCol = new THREE.Color();
+
+  // Gölge zemini: görünmez, yalnız yumuşak gölgeyi alır (parçalar havada değil, tezgâhta)
+  const floor = new THREE.Mesh(new THREE.PlaneGeometry(240, 60), new THREE.ShadowMaterial({ color: 0x000000, opacity: 0.5 }));
+  floor.rotation.x = -Math.PI / 2;
+  floor.position.set(20, ZEMIN, 0);
+  floor.receiveShadow = true;
+  scene.add(floor);
 
   // --- Malzemeler -------------------------------------------------------------
+  const brushed = brushedTex(lite ? 128 : 256);
+  brushed.repeat.set(2, 2);
+  const grain = grainTex(lite ? 64 : 128);
+  grain.repeat.set(4, 4);
+  const metal = (o) => new THREE.MeshPhysicalMaterial({ metalness: 1, roughnessMap: brushed, ...o });
   const M = {
-    steel: new THREE.MeshStandardMaterial({ color: 0xc3c9cc, roughness: 0.26, metalness: 1 }),
-    steel2: new THREE.MeshStandardMaterial({ color: 0x8a959a, roughness: 0.38, metalness: 1 }),
-    dark: new THREE.MeshStandardMaterial({ color: 0x3a4549, roughness: 0.5, metalness: 0.85 }),
-    brass: new THREE.MeshStandardMaterial({ color: 0xd4ad62, roughness: 0.28, metalness: 1 }),
-    copper: new THREE.MeshStandardMaterial({ color: 0xc46a3c, roughness: 0.32, metalness: 1 }),
-    friction: new THREE.MeshStandardMaterial({ color: 0x4a3326, roughness: 0.92, metalness: 0, emissive: 0xff2e4d, emissiveIntensity: 0 }),
-    frictionB: new THREE.MeshStandardMaterial({ color: 0x4a3326, roughness: 0.92, metalness: 0, emissive: 0xff2e4d, emissiveIntensity: 0 }),
-    alu: new THREE.MeshStandardMaterial({ color: 0x9aa4a6, roughness: 0.55, metalness: 0.8 }),
-    plastic: new THREE.MeshStandardMaterial({ color: 0x121719, roughness: 0.6, metalness: 0.1 }),
+    steel: metal({ color: 0xc9cfd2, roughness: 0.42 }),
+    steel2: metal({ color: 0x8e999e, roughness: 0.6 }),
+    dark: new THREE.MeshStandardMaterial({ color: 0x353f43, roughness: 0.55, metalness: 0.85 }),
+    brass: metal({ color: 0xd8b068, roughness: 0.4, clearcoat: 0.3, clearcoatRoughness: 0.35 }),
+    copper: metal({ color: 0xc46a3c, roughness: 0.5, clearcoat: 0.6, clearcoatRoughness: 0.2 }),
+    friction: new THREE.MeshStandardMaterial({ color: 0x4d3527, roughness: 0.95, metalness: 0, bumpMap: grain, bumpScale: 1.5, emissive: 0xff2e4d, emissiveIntensity: 0 }),
+    frictionB: new THREE.MeshStandardMaterial({ color: 0x4d3527, roughness: 0.95, metalness: 0, bumpMap: grain, bumpScale: 1.5, emissive: 0xff2e4d, emissiveIntensity: 0 }),
+    alu: new THREE.MeshPhysicalMaterial({ color: 0xa2acae, roughness: 0.62, metalness: 0.85, roughnessMap: grain }),
+    plastic: new THREE.MeshPhysicalMaterial({ color: 0x121719, roughness: 0.55, metalness: 0.05, clearcoat: 0.4, clearcoatRoughness: 0.4 }),
     ruby: new THREE.MeshStandardMaterial({ color: 0x3a0610, roughness: 0.3, metalness: 0.2, emissive: 0xff2e4d, emissiveIntensity: 0.6 }),
-    shell: new THREE.MeshStandardMaterial({ color: 0xb3bcbf, roughness: 0.3, metalness: 1, side: THREE.DoubleSide }),
+    shell: metal({ color: 0xbcc5c8, roughness: 0.45, side: THREE.DoubleSide }),
     shellIn: new THREE.MeshStandardMaterial({ color: 0x6d2a31, roughness: 0.45, metalness: 0.7, side: THREE.DoubleSide }),
-    pcb: new THREE.MeshStandardMaterial({ color: 0x0e3b36, roughness: 0.55, metalness: 0.2 }),
+    pcb: new THREE.MeshPhysicalMaterial({ color: 0x0e3b36, roughness: 0.5, metalness: 0.15, clearcoat: 0.8, clearcoatRoughness: 0.25 }),
   };
   for (const m of Object.values(M)) m.side = THREE.DoubleSide;
   const units = {};
+
+  // ===== 0. Şanzıman kutusu (lib3d gearbox): kapak açılır, dişli takımı döner ==========
+  const GS = 10.5; // 0,47 m kutu → sahnede ~4,9 birim
+  const kutu = new THREE.Group();
+  kutu.position.set(ISTASYON.kutu, ZEMIN, 0);
+  scene.add(kutu);
+  units.kutu = kutu;
+  let GB = null, caseParts = [];
+  const readyP = Promise.all([
+    loadEnv('studio', renderer, { quality: q }).then((env) => { scene.environment = env; }).catch(() => {}),
+    loadAsset('gearbox', { quality: q, renderer }).then((gb) => {
+      GB = gb;
+      const g = gb.scene;
+      g.scale.setScalar(GS);
+      // kutunun ortası istasyon merkezine (x: −0,468…0,002, z: −0,191…0,247)
+      g.position.set(0.233 * GS, 0, -0.028 * GS);
+      kutu.add(g);
+      const Mt = gb.materials;
+      if (Mt.case_alu) { Mt.case_alu.color.set(0xc3cbcd); Mt.case_alu.roughness = 0.45; Mt.case_alu.metalness = 0.6; }
+      caseParts = ['case_gear', 'end_cover'].map((n) => gb.explodeData[n]).filter(Boolean);
+    }).catch((e) => console.warn('şanzıman modeli yüklenemedi', e)),
+  ]);
 
   // ===== 1. Planet dişli seti ==================================================
   const ZS = 18, ZP = 12, ZR = 42, MOD = 0.1;
@@ -519,6 +607,13 @@ export function createScene(canvas, { lite = false } = {}) {
   oil.frustumCulled = false;
   scene.add(oil);
 
+  // Kodla kurulan parçalar da gölge düşürür ve alır
+  for (const id of ['planet', 'tork', 'meka', 'dsg', 'cvt']) {
+    units[id].traverse((o) => {
+      if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; }
+    });
+  }
+
   // --- Boyut ve güncelleme ------------------------------------------------------
   let width = 1, height = 1;
   function resize() {
@@ -532,9 +627,9 @@ export function createScene(canvas, { lite = false } = {}) {
 
   let last = performance.now();
   let slowFrames = 0;
-  let sunA = 0, torkA = 0, turbA = 0, dsgA = 0, cvtA = 0, beltS = 0, oilS = 0;
+  let sunA = 0, torkA = 0, turbA = 0, dsgA = 0, cvtA = 0, beltS = 0, oilS = 0, gbA = 0;
   const bp = V(0, 0, 0);
-  const IDS = ['planet', 'tork', 'meka', 'dsg', 'cvt'];
+  const IDS = ['kutu', 'planet', 'tork', 'meka', 'dsg', 'cvt'];
 
   // s: { pos, look, fov, k:{planet,tork,meka,dsg,cvt,yag}, q:{...}, spin, assemble, env, oil }
   function update(s, now = performance.now()) {
@@ -542,6 +637,7 @@ export function createScene(canvas, { lite = false } = {}) {
     last = now;
     const t = now / 1000;
     const k = s.k, q = s.q;
+    const spin = s.spin;
 
     camera.position.copy(s.pos);
     camera.fov = s.fov;
@@ -558,14 +654,32 @@ export function createScene(canvas, { lite = false } = {}) {
       units[id].scale.setScalar(Math.max(0.001, e));
     }
 
-    // Kırmızı nokta ışık etkin istasyonu izler
+    // Anahtar ışık ve gölge kamerası bakılan istasyonla birlikte kayar
+    key.target.position.set(s.look.x, ZEMIN, 0);
+    key.position.set(s.look.x + 7, ZEMIN + 15, 9);
+
+    // Arıza → onarım rengi: balata parıltısı ve nokta ışık kırmızıdan naneye döner
+    fixCol.copy(RED).lerp(MINT, clamp(s.fix ?? 0));
+    M.friction.emissive.copy(fixCol);
+    M.frictionB.emissive.copy(fixCol);
+    glow.color.copy(fixCol);
+
+    // Nokta ışık etkin istasyonu izler
     let gx = 0, gk = 0;
-    for (const id of IDS) { gx += ISTASYON[id] * k[id]; gk += k[id]; }
+    for (const id of IDS) { const w = k[id] || 0; gx += ISTASYON[id] * w; gk += w; }
     if (gk > 0.001) glow.position.set(gx / gk + 1.6, 1.6, 2.2);
-    glow.intensity = gk * 14;
+    glow.intensity = gk * 12;
+
+    // 0. Şanzıman kutusu: yavaş döner, kapak (dişli gövdesi + 5. vites kapağı) açılır, dişliler döner
+    if (units.kutu.visible && GB) {
+      kutu.rotation.y = q.turn ?? 0;
+      const op = clamp(q.open ?? 0);
+      for (const e of caseParts) e.node.position.copy(e.base).addScaledVector(e.dir, op * 1.25);
+      gbA += dt * (0.6 + spin * 2.4 + op * 1.6);
+      GB.spin(gbA);
+    }
 
     // 1. Planet
-    const spin = s.spin;
     if (units.planet.visible) {
       const as = s.assemble;
       sunA += dt * spin * 2.4;
@@ -614,7 +728,7 @@ export function createScene(canvas, { lite = false } = {}) {
         sol.position.y = 0.52 + on * 0.03 * k.meka;
       });
       led.material.emissiveIntensity = (Math.sin(t * 9) > 0 ? 3 : 0.3) * (1 - q.meka) + q.meka * 0.3;
-      led.material.emissive.setHex(q.meka > 0.6 ? 0x42f5b0 : 0xff2e4d);
+      led.material.emissive.setHex(q.meka > 0.6 ? 0x3be3c3 : 0xff2e4d);
       units.meka.rotation.y = 0.25 + Math.sin(t * 0.3) * 0.06;
     }
 
@@ -626,6 +740,8 @@ export function createScene(canvas, { lite = false } = {}) {
       k2.forEach((m, i) => (m.position.z = 0.44 - i * gap2));
       piston1.position.z = 0.44 - 9 * gap1 - 0.02;
       piston2.position.z = 0.44 - 9 * gap2 - 0.02;
+      fricK1.emissive.copy(fixCol);
+      fricK2.emissive.copy(fixCol);
       fricK1.emissiveIntensity = e1 * (0.5 + k.dsg * 0.8);
       fricK2.emissiveIntensity = e2 * (0.5 + k.dsg * 0.8);
       dsgA += dt * (1.5 + spin * 2);
@@ -677,7 +793,7 @@ export function createScene(canvas, { lite = false } = {}) {
     scene.fog.near = s.fogNear ?? 9;
     scene.fog.far = s.fogFar ?? 26;
     scene.environmentIntensity = s.env ?? 0.55;
-    rim.intensity = s.rim ?? 2.4;
+    rim.intensity = s.rim ?? 1.6;
 
     renderer.render(scene, camera);
 
@@ -693,8 +809,8 @@ export function createScene(canvas, { lite = false } = {}) {
   }
 
   return {
-    renderer, camera, update, resize,
+    renderer, camera, update, resize, ready: readyP,
     ratio: (q) => { const r1 = L(0.5, 1.12, q); return solveR2(r1) / r1; },
-    compile: () => renderer.compile(scene, camera),
+    compile: () => { try { renderer.compile(scene, camera); } catch (_) {} },
   };
 }

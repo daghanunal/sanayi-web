@@ -168,8 +168,10 @@
 @media (min-width: 1000px) { .pl__ic { grid-template-columns: 7fr 4fr; gap: 48px; align-items: start; } }
 .pl__arac-tip { display: inline-flex; padding: 4px; border-radius: 999px; background: rgb(255 255 255 / .07); gap: 2px; }
 .pl__arac-tip button, .fl__secim button {
-  font: inherit; font-size: 14px; font-weight: 600; border: 0; cursor: pointer; padding: 9px 14px; border-radius: 999px; background: transparent; color: inherit; transition: background .25s, color .25s;
+  font: inherit; font-size: 14px; font-weight: 600; border: 0; cursor: pointer; min-height: 44px; padding: 0 16px; border-radius: 999px; background: transparent; color: inherit; transition: background .25s, color .25s;
 }
+.pl__svg.is-gosterim { pointer-events: none; }
+.pl__svg.is-gosterim .pl__zon { cursor: default; }
 .pl__arac-tip button[aria-checked='true'] { background: var(--k-koyu-metin); color: var(--k-koyu); }
 .pl__cizim { position: relative; margin: 18px 0 8px; }
 .pl__svg { display: block; width: 100%; height: auto; overflow: visible; }

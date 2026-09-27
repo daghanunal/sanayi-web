@@ -377,7 +377,7 @@ const stars = (n) => Array.from({ length: 5 }, (_, i) => `<span class="${i < n ?
 $('[data-score]').textContent = nf(d.puan.ortalama, 1);
 $('[data-stars]').innerHTML = stars(Math.round(d.puan.ortalama));
 $('[data-stars]').setAttribute('aria-label', `5 üzerinden ${nf(d.puan.ortalama, 1)}`);
-$('[data-review-count]').textContent = `Google'da ${nf(d.puan.adet)} değerlendirme`;
+$('[data-review-count]').textContent = `Örnek puan · ${nf(d.puan.adet)} değerlendirme`;
 $('[data-reviews]').innerHTML = d.yorumlar.map((y, i) => `
   <li class="rev rev--${i % 3}">
     <p class="rev__stars" aria-label="${Number(y.puan)} yıldız">${stars(y.puan)}</p>

@@ -1,2 +1,3 @@
-araba.glb: bu site için Blender + OpenVDB ile SDF'den üretildi (.shots/yikama-sinematik/car.py). Lisans sorunu yok.
+3D araç: lib3d car_sedan (assets3d/, kendi üretimimiz, marka/logo yok). Işık: lib3d garaj HDRI (Poly Haven, CC0) + neon LED bantlar.
+araba.glb: eski SDF araç; artık kullanılmıyor (silinebilir).
 Fotoğraflar: public/img/sektor-yikama/ (Pexels, bkz. oradaki CREDITS.txt).

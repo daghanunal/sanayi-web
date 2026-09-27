@@ -48,7 +48,7 @@ export function runIntro(el, cv, label) {
   x.scale(r, r);
 
   const PAL = [
-    ['#ffa36b', '#ff7a33'],
+    ['#ff9cc4', '#ff5c9d'],
     ['#8ff0f5', '#27e3f0'],
     ['#c8ffe0', '#5cf5a0'],
     ['#ffffff', '#d3ece9'],
@@ -62,7 +62,7 @@ export function runIntro(el, cv, label) {
       const tx = (gx + (gy % 2 ? 0.5 : 0) + (rand() - 0.5) * 0.5) * cell;
       const ty = (gy + (rand() - 0.5) * 0.5) * cell;
       const rad = cell * (0.55 + rand() * 0.45);
-      const delay = (1 - ty / h) * 0.55 + rand() * 0.22;
+      const delay = (1 - ty / h) * 0.4 + rand() * 0.16;
       const cx = tx - w / 2;
       const cy = ty - h * 0.42;
       bubbles.push({ tx, ty, rad, delay, col: PAL[Math.floor(rand() * 4)], pop: Math.hypot(cx, cy) / Math.hypot(w, h), k: 0, s: 1, a: 1 });
@@ -70,7 +70,7 @@ export function runIntro(el, cv, label) {
   }
   // küçük kabarcıklar
   for (let i = 0; i < bubbles.length * 0.5; i++) {
-    bubbles.push({ tx: rand() * w, ty: rand() * h, rad: cell * (0.12 + rand() * 0.2), delay: 0.3 + rand() * 0.6, col: PAL[3], pop: rand(), k: 0, s: 1, a: 1 });
+    bubbles.push({ tx: rand() * w, ty: rand() * h, rad: cell * (0.12 + rand() * 0.2), delay: 0.2 + rand() * 0.45, col: PAL[3], pop: rand(), k: 0, s: 1, a: 1 });
   }
 
   // yazı ölçüsü
@@ -159,23 +159,19 @@ export function runIntro(el, cv, label) {
       if (done) return;
       done = true;
       tl.kill();
-      gsap.to(el, {
-        opacity: 0,
-        duration: 0.3,
-        onComplete: () => {
-          el.remove();
-          document.documentElement.classList.remove('is-intro');
-        },
-      });
+      // kalkarken ne kaydırmayı kilitler ne de ilk dokunuşu yutar
+      el.style.pointerEvents = 'none';
+      document.documentElement.classList.remove('is-intro');
+      gsap.to(el, { opacity: 0, duration: 0.3, onComplete: () => el.remove() });
       resolve();
     };
     el.addEventListener('pointerdown', finish, { once: true });
     addEventListener('keydown', finish, { once: true });
-    bubbles.forEach((b) => tl.to(b, { k: 1, duration: 0.75, ease: 'back.out(1.4)' }, b.delay));
-    tl.to(st, { text: 1, duration: 0.45, ease: 'power2.out' }, 0.75);
-    bubbles.forEach((b) => tl.to(b, { s: 1.3, a: 0, duration: 0.28, ease: 'power1.out' }, 1.75 + b.pop * 0.55));
-    tl.to(st, { bg: 0, duration: 0.5, ease: 'power1.inOut' }, 1.85);
-    tl.to(st, { text: 0, duration: 0.3 }, 2.05);
-    tl.call(finish, null, 2.45);
+    bubbles.forEach((b) => tl.to(b, { k: 1, duration: 0.6, ease: 'back.out(1.4)' }, b.delay));
+    tl.to(st, { text: 1, duration: 0.4, ease: 'power2.out' }, 0.55);
+    bubbles.forEach((b) => tl.to(b, { s: 1.3, a: 0, duration: 0.25, ease: 'power1.out' }, 1.25 + b.pop * 0.4));
+    tl.to(st, { bg: 0, duration: 0.4, ease: 'power1.inOut' }, 1.3);
+    tl.to(st, { text: 0, duration: 0.25 }, 1.45);
+    tl.call(finish, null, 1.75);
   });
 }
