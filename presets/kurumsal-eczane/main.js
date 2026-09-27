@@ -2,7 +2,7 @@ import '../../shared/base.css';
 import ana from '../../data/eczane.json';
 import ek from '../../data/kurumsal-eczane.json';
 import { kurumsal, derinBirlestir } from '../_kurumsal/engine.js';
-import { nobetDurum } from './extra.js';
+import { hero, etiket, nobetDurum, yorumlar } from './extra.js';
 import './style.css';
 
 const GUN = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
@@ -10,34 +10,36 @@ const GUN = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', '
 kurumsal({
   veri: derinBirlestir(ana, ek),
   tema: {
-    hero: 'yazi',
+    hero: 'bolunmus',
     gecis: 'yan',
     yer: "Etimesgut'ta",
-    heroGorsel: `${import.meta.env.BASE_URL}img/eczane/tezgah.jpg`,
-    heroAlt: 'Eczane tezgâhı',
+    heroGorsel: `${import.meta.env.BASE_URL}img/kurumsal-eczane/recete-masa-3d.jpg`,
+    heroAlt: 'Lacivert masada örnek e-reçete çıktısı, ilaç kutuları, blister ve krem tüpü (3D görsel)',
     logoAlt: 'Eczane',
     baslikEki: 'Eczane | Etimesgut, Ankara',
     teklifEtiketi: 'Reçete gönder',
     hizmetEtiketi: 'Hizmetlerimiz',
     metinBoyutu: true,
+    altNot: 'Fotoğraflar temsilîdir (Pexels). 3D görseller temsilîdir. Yorumlar ve nöbet takvimi örnektir. Sitedeki bilgiler tanıtım amaçlıdır; ilaç kullanımıyla ilgili kararlarınız için hekiminize ve eczacınıza danışın.',
+    // "Kurumsal Nöbet" yönü: serin porselen zemin, eczane lacivert-mavisi, kırmızı yalnızca "E" işaretinde ve nöbette.
     css: {
-      zemin: '#fbfaf6', yuzey: '#efede6', metin: '#0f1a1c', soluk: '#465255', cizgi: 'rgb(15 26 28 / .16)',
-      vurgu: '#1d5c45', 'vurgu-metin': '#ffffff', koyu: '#10231d', 'koyu-metin': '#eef1ec', 'koyu-soluk': '#a9b8b1',
-      gecis: '#c8102e',
-      'font-baslik': "'Lexend', system-ui, sans-serif", 'font-govde': "'Atkinson Hyperlegible', system-ui, sans-serif",
-      'baslik-agirlik': '600', 'baslik-harf': '-0.02em', 'baslik-satir': '1.05', radius: '14px', 'radius-buyuk': '22px',
-      govde: '18px', h2: 'clamp(30px, 4vw, 52px)',
+      zemin: '#f5f7fa', yuzey: '#e8edf4', metin: '#0e1a2b', soluk: '#46546a', cizgi: 'rgb(14 26 43 / .15)',
+      vurgu: '#1f4f8f', 'vurgu-metin': '#ffffff', koyu: '#0d2240', 'koyu-metin': '#eef2f8', 'koyu-soluk': '#a8b7cc',
+      gecis: 'linear-gradient(90deg, #0d2240 0 70%, #c8102e 70% 100%)',
+      'font-baslik': "'Manrope', system-ui, sans-serif", 'font-govde': "'Atkinson Hyperlegible', system-ui, sans-serif",
+      'baslik-agirlik': '700', 'baslik-harf': '-0.025em', 'baslik-satir': '1.02', radius: '12px', 'radius-buyuk': '20px',
+      govde: '18px', h2: 'clamp(30px, 4vw, 54px)',
     },
   },
   sayfalar: [
-    { id: 'anasayfa', baslik: 'Ana Sayfa', bolumler: ['hero', 'nobetDurum', 'hizmetOzet', 'ozet', 'rakamlar', 'yorumlar', 'cta'] },
+    { id: 'anasayfa', baslik: 'Ana Sayfa', bolumler: ['hero', 'nobetDurum', 'etiket', 'hizmetOzet', 'ozet', 'rakamlar', 'yorumlar', 'cta'] },
     { id: 'kurumsal', baslik: 'Eczanemiz', bolumler: ['hakkimizda', 'vizyon', 'kalite', 'cta'] },
-    { id: 'hizmetler', baslik: 'Hizmetler', bolumler: ['hizmetler', 'surec', 'cta'] },
+    { id: 'hizmetler', baslik: 'Hizmetler', bolumler: ['hizmetler', 'etiket', 'surec', 'cta'] },
     { id: 'kurumlar', baslik: 'Kurumlar', bolumler: ['anlasmalar', 'cta'] },
     { id: 'sss', baslik: 'Sorular', bolumler: ['sss', 'yorumlar', 'cta'] },
     { id: 'iletisim', baslik: 'İletişim', bolumler: ['nobetDurum', 'iletisim'] },
   ],
-  ekstralar: { nobetDurum },
+  ekstralar: { hero, etiket, nobetDurum, yorumlar },
   ld: (d) => ({
     '@context': 'https://schema.org',
     '@type': 'Pharmacy',
@@ -49,6 +51,5 @@ kurumsal({
     openingHoursSpecification: d.saatler
       .map((s, i) => (s ? { '@type': 'OpeningHoursSpecification', dayOfWeek: `https://schema.org/${GUN[i]}`, opens: s.split('-')[0], closes: s.split('-')[1] } : null))
       .filter(Boolean),
-    ...(d.puan && { aggregateRating: { '@type': 'AggregateRating', ratingValue: d.puan.ortalama, reviewCount: d.puan.adet } }),
   }),
 });

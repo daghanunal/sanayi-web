@@ -3,7 +3,7 @@ import ana from '../../data/alcibay.json';
 import ek from '../../data/kurumsal-alci.json';
 import { kurumsal, derinBirlestir } from '../_kurumsal/engine.js';
 import { icons } from '../../shared/core.js';
-import { urunBul } from './extra.js';
+import { urunBul, fabrikalar, hero } from './extra.js';
 import './style.css';
 
 // Alçıbay verisini motorun ortak şemasına çevir (ürünler → hizmetler, fabrikalar → konumlar, rakamlar).
@@ -35,32 +35,33 @@ const B = import.meta.env.BASE_URL;
 kurumsal({
   veri: v,
   tema: {
-    hero: 'tam',
+    hero: 'bolunmus',
     gecis: 'perde',
-    heroGorsel: `${B}img/alcibay/kose-isik.jpg`,
-    heroAlt: 'Işık alan pürüzsüz alçı duvar köşesi',
-    logo: `${B}img/alcibay/logo.png`,
-    logoAcik: `${B}img/alcibay/logo-acik.png`,
+    heroGorsel: `${B}img/kurumsal-alci/fabrika-3d.jpg`,
+    heroAlt: 'Beton zeminde üç alçı torbası ve arkada alçı plaka yığını (temsilî 3D görsel)',
+    logoAlt: 'Yapı alçıları · Alçı plaka',
     baslikEki: 'Yapı alçıları ve alçı plaka',
     teklifEtiketi: 'Bize ulaşın',
     hizmetEtiketi: 'Ürünler',
-    altNot: 'Bu sayfa Alçıbay için hazırlanmış bir tasarım önerisidir. Ürün bilgileri alcibay.com’dan alınmıştır; görsellerin bir kısmı temsilidir (Pexels).',
+    altNot: 'Bu sayfa Alçıbay için hazırlanmış bir tasarım önerisidir. Ürün bilgileri, adresler, kapasiteler ve belgeler alcibay.com’da yayımlanan bilgilerdir. Torba ve plaka görselleri temsilî 3D çizimlerdir; gerçek ambalaj farklıdır. Fotoğraflar temsilîdir (Pexels).',
+    // "Kurumsal Fabrika" yönü: mineral beyazı zemin, derin gece mavisi vurgu, beton grisi paneller; ölçüler IBM Plex Mono.
+    // Kardeşlerden ayrışır: marka turuncusu yalnızca amiral sayfada (alcibay), perdah kiremit, kinetik elektrik mavisi.
     css: {
-      zemin: '#f4f3ef', yuzey: '#e8e6e0', metin: '#1b1d1e', soluk: '#5c6061', cizgi: 'rgb(27 29 30 / .14)',
-      vurgu: '#f29d20', 'vurgu-metin': '#1b1d1e', koyu: '#1c1e1f', 'koyu-metin': '#efede8', 'koyu-soluk': '#a3a6a6',
-      gecis: '#fbfaf7',
-      'font-baslik': "'Red Hat Display', system-ui, sans-serif", 'font-govde': "'Red Hat Text', system-ui, sans-serif",
-      'baslik-agirlik': '700', 'baslik-harf': '-0.025em', 'baslik-satir': '0.98', radius: '0px', 'radius-buyuk': '0px',
+      zemin: '#f2f3f1', yuzey: '#e4e7e5', metin: '#151b24', soluk: '#525c67', cizgi: 'rgb(21 27 36 / .14)',
+      vurgu: '#1c2e55', 'vurgu-metin': '#ffffff', koyu: '#131c2e', 'koyu-metin': '#eef1f5', 'koyu-soluk': '#a3adbd',
+      gecis: 'repeating-linear-gradient(90deg, #131c2e 0 38px, #1c2e55 38px 40px)',
+      'font-baslik': "'IBM Plex Sans', system-ui, sans-serif", 'font-govde': "'IBM Plex Sans', system-ui, sans-serif",
+      'baslik-agirlik': '600', 'baslik-harf': '-0.03em', 'baslik-satir': '1', radius: '2px', 'radius-buyuk': '4px',
     },
   },
   sayfalar: [
-    { id: 'anasayfa', baslik: 'Ana Sayfa', bolumler: ['hero', 'ozet', 'hizmetOzet', 'rakamlar', 'urunBul', 'cta'] },
-    { id: 'kurumsal', baslik: 'Kurumsal', bolumler: ['hakkimizda', 'kalite', 'tarihce', 'cta'] },
+    { id: 'anasayfa', baslik: 'Ana Sayfa', bolumler: ['hero', 'ozet', 'hizmetOzet', 'fabrikalar', 'urunBul', 'cta'] },
+    { id: 'kurumsal', baslik: 'Kurumsal', bolumler: ['hakkimizda', 'fabrikalar', 'kalite', 'tarihce', 'cta'] },
     { id: 'urunler', baslik: 'Ürünler', bolumler: ['hizmetler', 'cta'] },
     { id: 'urun-secici', baslik: 'Ürün Seçici', bolumler: ['urunBul', 'cta'] },
     { id: 'iletisim', baslik: 'Fabrikalar ve İletişim', menu: 'İletişim', bolumler: ['iletisim'] },
   ],
-  ekstralar: { urunBul },
+  ekstralar: { urunBul, fabrikalar, hero },
   ld: (d) => ({
     '@context': 'https://schema.org',
     '@type': ['Organization', 'Manufacturer'],

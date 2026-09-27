@@ -3,8 +3,9 @@ import '../../shared/base.css';
 import './style.css';
 import {
   boot, initSmoothScroll, gsap, ScrollTrigger, reducedMotion, esc,
-  telHref, waHref, mapsHref, mapsEmbed, openStatus, groupedHours, icons, GUNLER,
+  telHref, waHref, mapsHref, mapsEmbed, openStatus, groupedHours, icons, GUNLER, setStoryMode,
 } from '../../shared/core.js';
+import { pickQuality } from '../../shared/lib3d.js';
 import { SplitText } from 'gsap/SplitText';
 import { createPills } from './pills.js';
 
@@ -47,7 +48,6 @@ function pharmacyLd() {
     foundingDate: String(kurulus),
     address: { '@type': 'PostalAddress', streetAddress: d.iletisim.adres, addressLocality: 'Etimesgut', addressRegion: 'Ankara', addressCountry: 'TR' },
     openingHoursSpecification: saatSpec,
-    aggregateRating: { '@type': 'AggregateRating', ratingValue: d.puan.ortalama, reviewCount: d.puan.adet },
   });
   document.title = `${d.isletme.ad} | Eczane | Etimesgut, Ankara`;
 }
@@ -82,7 +82,7 @@ const setBig = (on) => {
 try { if (localStorage.getItem('eczane-yazi') === '1') html.classList.add('big'), yazi.setAttribute('aria-pressed', 'true'); } catch {}
 yazi.addEventListener('click', () => setBig(!html.classList.contains('big')));
 
-// --- Film bölümleri ---------------------------------------------------------
+// --- Film: hero + duraklar ---------------------------------------------------
 $('#hero').innerHTML = `
   <p class="kicker">Etimesgut'ta ${ablative(kurulus)} beri</p>
   <h1 class="hero__title">${ad}</h1>
@@ -91,29 +91,37 @@ $('#hero').innerHTML = `
   <p class="hero__status ${st.open ? 'is-open' : ''}"><i aria-hidden="true"></i>${esc(st.text)}</p>`;
 
 $('#about').innerHTML = `
-  <p class="kicker kicker--dark">${yas} yıldır aynı mahallede</p>
-  <h2 class="ch__title">Mahallenin eczanesi.</h2>
-  <p class="ch__text">${esc(d.isletme.hakkinda)}</p>`;
+  <p class="card__kicker">${yas} yıldır aynı mahallede</p>
+  <h2 class="card__title">Mahallenin eczanesi.</h2>
+  <p class="card__text">${esc(d.isletme.hakkinda)}</p>`;
 
-const steps = $$('.ch--step');
+// Telefonda 1. adımın kartında kısa sohbet (masaüstünde sağdaki telefon)
+const miniChat = `
+  <div class="mini" aria-hidden="true">
+    <div class="mini__msg mini__msg--me"><span class="mini__rx"><b>E-REÇETE</b> 2K7M4QX</span></div>
+    <div class="mini__msg mini__msg--them"><b>Reçeteniz hazır.</b> Kimlikle gelmeniz yeterli.</div>
+  </div>`;
+const steps = $$('.card--step');
 d.surec.forEach((s, i) => {
+  if (!steps[i]) return;
   steps[i].innerHTML = `
-    <p class="step__no"><span>${i + 1}</span> / ${d.surec.length}</p>
-    <h2 class="ch__title">${esc(s.baslik)}</h2>
-    <p class="ch__text">${esc(s.aciklama)}</p>
-    ${i === 0 ? `<div class="cta">${btnWa("WhatsApp'tan gönderin")}</div>` : ''}
-    ${i === 2 ? `<p class="ch__note">${esc(d.garanti)}</p>` : ''}`;
+    <p class="card__no"><span>${i + 1}</span> / ${d.surec.length}</p>
+    <h2 class="card__title">${esc(s.baslik)}</h2>
+    <p class="card__text">${esc(s.aciklama)}</p>
+    ${i === 0 ? `${miniChat}<div class="cta cta--card">${btnWa("WhatsApp'tan gönderin")}</div>` : ''}
+    ${i === 2 ? `<p class="card__note">${esc(d.garanti)}</p>` : ''}`;
 });
+if (steps[0]) steps[0].classList.add('card--chat');
 $('#rail').innerHTML = d.surec.map((s, i) => `<li><span>${i + 1}</span>${esc(s.baslik)}</li>`).join('');
 
-// Telefondaki WhatsApp sohbeti (1. adım)
+// Telefondaki WhatsApp sohbeti (1. adım, masaüstü)
 $('#phone').innerHTML = `
   <div class="phone__screen">
     <div class="phone__bar"><span class="logo logo--sm">E</span><b>${ad}</b><small>çevrimiçi</small></div>
     <div class="phone__chat">
       <div class="msg msg--me msg--rx">
         <div class="rx">
-          <p class="rx__head"><b>E-REÇETE</b><span>T.C. Sağlık Bakanlığı</span></p>
+          <p class="rx__head"><b>E-REÇETE</b><span>Örnek</span></p>
           <p class="rx__code">Reçete no <b>2K7M4QX</b></p>
           <p class="rx__line"></p><p class="rx__line rx__line--s"></p><p class="rx__line"></p>
         </div>
@@ -192,15 +200,39 @@ $('#nobet').innerHTML = `
       <p class="sec__lead">${esc(nobetDurum)}</p>
       <p class="sec__lead">Bu gece nöbetçi eczaneler için ${esc(d.nobet.kaynak)}'nın güncel listesine bakın. Nöbetçi olduğumuz geceler kapımızda da yazar.</p>
       <div class="cta"><a class="btn btn--red mag" href="${esc(d.nobet.url)}" target="_blank" rel="noopener"><span>Nöbetçi eczaneleri gör</span></a></div>
+      ${nobetTakvim()}
     </div>
   </div>`;
+
+// Örnek nöbet takvimi: bu ayın günleri, iki gün işaretli. Gerçek nöbet günleri odanın çizelgesiyle belirlenir.
+function nobetTakvim() {
+  const now = new Date();
+  const y = now.getFullYear(), m = now.getMonth();
+  const gunSay = new Date(y, m + 1, 0).getDate();
+  const bas = (new Date(y, m, 1).getDay() + 6) % 7; // Pazartesi başlangıç
+  const nobet = [9, 23];
+  const ay = now.toLocaleDateString('tr-TR', { month: 'long' });
+  const hucre = [];
+  for (let i = 0; i < bas; i++) hucre.push('<li class="is-bos"></li>');
+  for (let g = 1; g <= gunSay; g++) {
+    const cls = [nobet.includes(g) ? 'is-nobet' : '', g === now.getDate() ? 'is-bugun' : ''].filter(Boolean).join(' ');
+    hucre.push(`<li${cls ? ` class="${cls}"` : ''}>${g}</li>`);
+  }
+  return `
+    <figure class="takvim" aria-label="Örnek nöbet takvimi">
+      <figcaption><b>${esc(ay[0].toLocaleUpperCase('tr-TR') + ay.slice(1))} nöbet günleri</b><span class="etiket">Örnek</span></figcaption>
+      <ol class="takvim__gun" aria-hidden="true">${['Pt', 'Sa', 'Ça', 'Pe', 'Cu', 'Ct', 'Pz'].map((g) => `<li>${g}</li>`).join('')}</ol>
+      <ol class="takvim__ay">${hucre.join('')}</ol>
+      <p class="takvim__not">Örnek görünüm. Nöbet günleri her ay oda çizelgesiyle belirlenir; güncel bilgi için yukarıdaki listeye bakın.</p>
+    </figure>`;
+}
 
 // --- Yorumlar ---------------------------------------------------------------
 const star = (n) => Array.from({ length: 5 }, (_, i) => `<span class="${i < n ? 'on' : ''}">${icons.star}</span>`).join('');
 $('#yorumlar').innerHTML = `
   <header class="reviews__head">
     <p class="reviews__score"><b data-score="${d.puan.ortalama}">${String(d.puan.ortalama).replace('.', ',')}</b><span class="stars stars--big" aria-hidden="true">${star(5)}</span></p>
-    <p class="reviews__count">Google'da ${fmt(d.puan.adet)} değerlendirme</p>
+    <p class="reviews__count"><span class="etiket etiket--koyu">Örnek yorumlar</span> Puan ve yorumlar tanıtım içindir.</p>
     <h2 class="sec__title">Mahalleli ne diyor</h2>
   </header>
   <ul class="reviews__list">
@@ -254,7 +286,7 @@ $('#foot').innerHTML = `
   <p>${esc(d.iletisim.adres)}</p>
   <p><a href="${telHref(d)}">${esc(d.iletisim.telefon)}</a></p>
   <p class="foot__small">Bu sitedeki bilgiler tanıtım amaçlıdır. İlaç kullanımıyla ilgili kararlarınız için hekiminize ve eczacınıza danışın.</p>
-  <p class="foot__small">© ${buYil} ${ad}. Fotoğraflar: Pexels. 3D sahne bu site için kodla hazırlandı.</p>`;
+  <p class="foot__small">© ${buYil} ${ad}. Fotoğraflar temsilîdir (Pexels). 3D görseller temsilîdir. Yorumlar örnektir.</p>`;
 
 // Harita: yaklaşınca yükle
 const mapEl = $('#map');
@@ -266,15 +298,17 @@ new IntersectionObserver((entries, io) => {
 
 // --- 3D sahne ---------------------------------------------------------------
 const canvas = $('#gl');
+const quality = pickQuality();
 let pills = null;
 try {
-  pills = createPills(canvas, { name: d.isletme.ad, lowEnd, still: reducedMotion });
+  pills = createPills(canvas, { name: d.isletme.ad, lowEnd, quality, still: reducedMotion });
 } catch (e) {
   html.classList.add('no-gl');
 }
 addEventListener('resize', () => pills?.resize());
 
 const lenis = initSmoothScroll();
+const top = $('#top');
 
 // --- Hareketsiz mod ---------------------------------------------------------
 if (reducedMotion) {
@@ -283,85 +317,103 @@ if (reducedMotion) {
     pills.setState({ film: 0, intro: 1 });
     pills.renderOnce();
   }
-  ScrollTrigger.create({
-    trigger: '#film', start: 'top top', end: () => `top+=${innerHeight * 0.85} top`,
-    onToggle: (s) => {
-      canvas.classList.toggle('is-off', !s.isActive);
-      $('#top').classList.toggle('is-night', s.isActive);
-    },
-  });
-  addEventListener('scroll', () => {
-    const night = scrollY < innerHeight * 0.85;
-    $('#top').classList.toggle('is-night', night);
-    $('#top').classList.toggle('is-solid', !night);
-  }, { passive: true });
+  const night = () => {
+    const n = scrollY < innerHeight * 0.85;
+    top.classList.toggle('is-night', n);
+    top.classList.toggle('is-solid', !n);
+  };
+  night();
+  addEventListener('scroll', night, { passive: true });
   $$('[data-count]').forEach((el) => (el.textContent = fmt(+el.dataset.count)));
   $$('[data-bp]').forEach((el) => (el.textContent = el.dataset.bp));
+  $$('.mini__msg').forEach((m) => m.classList.add('is-on'));
 } else {
   motion();
 }
 
 function motion() {
   const film = $('#film');
-  const chs = $$('.ch', film);
+  const stops = $$('.stop', film);
+  const cards = $$('.card', film);
   const phone = $('#phone');
-  const rail = $$('#rail li');
-  // Bölüm aralıkları (film ilerlemesine göre)
-  const RANGES = [[-1, 0.13], [0.17, 0.33], [0.37, 0.5], [0.54, 0.74], [0.78, 0.94]];
+  const railEl = $('#rail');
+  const rail = $$('li', railEl);
+  // Sahne aralıkları (0..1): hakkımızda, 1. adım (sohbet), 2. adım (blister), 3. adım (dönen blister)
+  const RANGES = [[0.17, 0.33], [0.37, 0.5], [0.54, 0.74], [0.78, 0.94]];
   const state = { film: 0, intro: 0 };
-  const top = $('#top');
 
-  // Hero başlığı satır satır
+  // Kaydırma konumu → sahne ilerlemesi: her durağın kartı yapışık kaldığı sürece kendi aralığında ilerler.
+  let anchors = [[0, 0], [1, 1]];
+  const measure = () => {
+    const vh = innerHeight;
+    const ft = film.offsetTop;
+    const list = [[0, 0]];
+    stops.forEach((st, i) => {
+      const [a, b] = RANGES[i];
+      const t0 = ft + st.offsetTop - vh * 0.55;
+      const t1 = ft + st.offsetTop + st.offsetHeight - vh * 0.98;
+      list.push([Math.max(list[list.length - 1][0] + 1, t0), a + 0.01], [Math.max(t0 + 2, t1), b - 0.01]);
+    });
+    list.push([Math.max(list[list.length - 1][0] + 1, ft + film.offsetHeight - vh * 0.7), 1]);
+    anchors = list;
+  };
+  const progressAt = (y) => {
+    if (y <= anchors[0][0]) return anchors[0][1];
+    for (let i = 1; i < anchors.length; i++) {
+      const [y1, f1] = anchors[i];
+      if (y <= y1) {
+        const [y0, f0] = anchors[i - 1];
+        return f0 + ((y - y0) / (y1 - y0)) * (f1 - f0);
+      }
+    }
+    return 1;
+  };
+
+  // Hero başlığı harf harf
   const title = $('.hero__title');
   const split = new SplitText(title, { type: 'chars,words', charsClass: 'char' });
   gsap.set(split.chars, { yPercent: 110, opacity: 0 });
-  gsap.set(['.hero__sub', '#hero .cta', '.hero__status', '#hero .kicker'], { opacity: 0, y: 24 });
+  gsap.set(['.hero__sub', '#hero .cta', '.hero__status', '#hero .kicker'], { autoAlpha: 0, y: 24 });
 
-  // Telefon sohbeti: adım 1 içinde sırayla
   const msgs = $$('.msg', phone);
+  const desk = () => innerWidth >= 900;
 
   function paint(f) {
     state.film = f;
     pills?.setState(state);
     film.style.setProperty('--night', String(1 - gsap.utils.clamp(0, 1, (f - 0.12) / 0.16)));
-    chs.forEach((ch, i) => {
-      const [a, b] = RANGES[i];
-      const inT = gsap.utils.clamp(0, 1, (f - a) / 0.035);
-      const outT = gsap.utils.clamp(0, 1, (b - f) / 0.035);
-      const v = i === 0 ? outT : Math.min(inT, outT);
-      ch.style.opacity = v;
-      ch.style.transform = `translate3d(0, ${(1 - v) * (f < a + 0.02 ? 40 : -40)}px, 0)`;
-      ch.style.visibility = v < 0.01 ? 'hidden' : 'visible';
-    });
-    // Telefon 1. adımda görünür, 2. adımın başında kaybolur
-    const pIn = gsap.utils.clamp(0, 1, (f - 0.34) / 0.05);
-    const pOut = gsap.utils.clamp(0, 1, (0.56 - f) / 0.04);
-    const pv = Math.min(pIn, pOut);
-    phone.style.opacity = pv;
-    phone.style.visibility = pv < 0.01 ? 'hidden' : 'visible';
-    phone.style.setProperty('--p', pv);
-    const chatT = gsap.utils.clamp(0, 1, (f - 0.37) / 0.15);
-    msgs.forEach((m, i) => {
-      const at = [0.02, 0.2, 0.4, 0.55, 0.85][i];
-      const on = chatT >= at;
-      m.classList.toggle('is-on', i === 2 ? on && chatT < 0.55 : on);
-    });
-    // Adım rayı
-    const stepIdx = f < 0.36 ? -1 : f < 0.52 ? 0 : f < 0.76 ? 1 : f < 0.95 ? 2 : 3;
-    rail.forEach((li, i) => {
-      li.classList.toggle('is-on', i === stepIdx);
-      li.classList.toggle('is-done', i < stepIdx);
-    });
-    $('#rail').classList.toggle('is-shown', f > 0.35 && f < 0.95);
+    if (desk()) {
+      // Telefon 1. adımda görünür, 2. adımın başında kaybolur
+      const pIn = gsap.utils.clamp(0, 1, (f - 0.34) / 0.05);
+      const pOut = gsap.utils.clamp(0, 1, (0.56 - f) / 0.04);
+      const pv = Math.min(pIn, pOut);
+      phone.style.opacity = pv;
+      phone.style.visibility = pv < 0.01 ? 'hidden' : 'visible';
+      phone.style.setProperty('--p', pv);
+      const chatT = gsap.utils.clamp(0, 1, (f - 0.37) / 0.14);
+      msgs.forEach((m, i) => {
+        const at = [0.02, 0.2, 0.4, 0.55, 0.85][i];
+        const on = chatT >= at;
+        m.classList.toggle('is-on', i === 2 ? on && chatT < 0.55 : on);
+      });
+      const stepIdx = f < 0.36 ? -1 : f < 0.52 ? 0 : f < 0.76 ? 1 : f < 0.95 ? 2 : 3;
+      rail.forEach((li, i) => {
+        li.classList.toggle('is-on', i === stepIdx);
+        li.classList.toggle('is-done', i < stepIdx);
+      });
+      railEl.classList.toggle('is-shown', f > 0.35 && f < 0.95);
+    }
     top.classList.toggle('is-night', f < 0.2);
   }
+  measure();
   paint(0);
 
   ScrollTrigger.create({
     trigger: film,
     start: 'top top',
-    end: 'bottom bottom',
-    onUpdate: (s) => paint(s.progress),
+    end: 'bottom top',
+    onRefresh: measure,
+    onUpdate: () => paint(progressAt(scrollY)),
   });
   ScrollTrigger.create({
     trigger: film,
@@ -369,44 +421,83 @@ function motion() {
     end: 'bottom top',
     onToggle: (s) => {
       canvas.classList.toggle('is-off', !s.isActive);
+      if (!s.isActive) {
+        phone.style.visibility = 'hidden';
+        railEl.classList.remove('is-shown');
+      }
       if (!pills) return;
       s.isActive ? pills.start() : pills.stop();
     },
   });
 
-  // --- Giriş --------------------------------------------------------------
+  // Duraklar boyunca hikâye modu: alt çubuk iner, kart onun boşluğuna oturur (hero ve sonrası çubuklu)
+  ScrollTrigger.create({
+    trigger: stops[0], endTrigger: stops[stops.length - 1], start: 'top 70%', end: () => `bottom ${Math.round(innerHeight * 0.9)}px`,
+    onToggle: (st) => setStoryMode(st.isActive ? true : null),
+  });
+
+  // Kartlar: durağa girerken belirir, durak biterken söner (görünmezken dokunmayı yutmaz)
+  cards.forEach((card) => {
+    const stop = card.parentElement;
+    gsap.fromTo(card, { autoAlpha: 0, y: 40 }, {
+      autoAlpha: 1, y: 0, ease: 'power2.out',
+      scrollTrigger: { trigger: stop, start: 'top 92%', end: 'top 55%', scrub: 0.4 },
+    });
+    gsap.to(card, {
+      autoAlpha: 0, y: -30, ease: 'power1.in', immediateRender: false,
+      scrollTrigger: { trigger: stop, start: 'bottom 98%', end: 'bottom 70%', scrub: 0.4 },
+    });
+  });
+  // Telefonda kart içi sohbet: kart görününce mesajlar sırayla gelir
+  const mini = $$('.mini__msg');
+  if (mini.length) {
+    ScrollTrigger.create({
+      trigger: mini[0].closest('.stop'), start: 'top 45%',
+      onEnter: () => mini.forEach((m, i) => setTimeout(() => m.classList.add("is-on"), 120 + i * 700)),
+    });
+  }
+
+  // --- Giriş (≤ 2 sn, dokununca geçer; vitrinde yok) -------------------------
   const intro = $('#intro');
   const sign = $('.intro__sign', intro);
-  // 9x12 ızgarada "E" (sahnedeki kapsül tabelasıyla aynı desen)
-  const E = [];
-  for (let y = 0; y < 12; y++)
-    for (let x = 0; x < 9; x++) {
-      const s = 2;
-      const on = x < s + 0.3 || y < s + 0.3 || y >= 12 - s || (y >= 5 && y < 5 + s && x < 7);
-      E.push(on);
-    }
-  sign.innerHTML = E.map((on) => `<i class="${on ? 'on' : ''}"></i>`).join('');
-  lenis?.stop();
-  const dots = $$('.on', sign);
-  const tl = gsap.timeline({ defaults: { ease: 'power2.out' } });
-  tl.to(dots, { opacity: 1, scale: 1, duration: 0.25, stagger: { each: 0.012, from: 'random' } })
-    .to('.intro__name', { opacity: 1, y: 0, duration: 0.5 }, 0.55)
-    .to(sign, { filter: 'brightness(1.6)', duration: 0.12, yoyo: true, repeat: 1 }, 1.0)
-    .to(state, { intro: 1, duration: 1.6, ease: 'power3.inOut', onUpdate: () => pills?.setState(state) }, 1.05)
-    .to(intro, { opacity: 0, duration: 0.55, ease: 'power1.in' }, 1.35)
-    .add(() => {
-      intro.remove();
-      lenis?.start();
-    }, 1.9)
-    .to(split.chars, { yPercent: 0, opacity: 1, duration: 0.8, stagger: 0.022, ease: 'power4.out' }, 1.45)
-    .to(['#hero .kicker', '.hero__sub', '#hero .cta', '.hero__status'], { opacity: 1, y: 0, duration: 0.7, stagger: 0.08 }, 1.7);
+  const heroIn = () => gsap.timeline()
+    .to(split.chars, { yPercent: 0, opacity: 1, duration: 0.8, stagger: 0.022, ease: 'power4.out' }, 0)
+    .to(['#hero .kicker', '.hero__sub', '#hero .cta', '.hero__status'], { autoAlpha: 1, y: 0, duration: 0.6, stagger: 0.07 }, 0.2);
+  if (html.classList.contains('is-vitrin')) {
+    intro.remove();
+    gsap.to(state, { intro: 1, duration: 1.4, ease: 'power3.inOut', onUpdate: () => pills?.setState(state) });
+    heroIn();
+  } else {
+    const E = [];
+    for (let y = 0; y < 12; y++)
+      for (let x = 0; x < 9; x++) {
+        const s = 2;
+        E.push(x < s + 0.3 || y < s + 0.3 || y >= 12 - s || (y >= 5 && y < 5 + s && x < 7));
+      }
+    sign.innerHTML = E.map((on) => `<i class="${on ? 'on' : ''}"></i>`).join('');
+    lenis?.stop();
+    const dots = $$('.on', sign);
+    const tl = gsap.timeline({ defaults: { ease: 'power2.out' } });
+    tl.to(dots, { opacity: 1, scale: 1, duration: 0.22, stagger: { each: 0.01, from: 'random' } })
+      .to('.intro__name', { opacity: 1, y: 0, duration: 0.45 }, 0.45)
+      .to(sign, { filter: 'brightness(1.6)', duration: 0.12, yoyo: true, repeat: 1 }, 0.85)
+      .to(state, { intro: 1, duration: 1.5, ease: 'power3.inOut', onUpdate: () => pills?.setState(state) }, 0.9)
+      .to(intro, { autoAlpha: 0, duration: 0.45, ease: 'power1.in' }, 1.15)
+      .add(() => {
+        intro.remove();
+        lenis?.start();
+      }, 1.6)
+      .add(heroIn(), 1.25);
+    const skip = () => {
+      if (tl.progress() < 1) tl.progress(1);
+    };
+    intro.addEventListener('pointerdown', skip, { once: true });
+    addEventListener('keydown', skip, { once: true });
+    addEventListener('wheel', skip, { once: true, passive: true });
+    addEventListener('touchmove', skip, { once: true, passive: true });
+  }
   pills?.compile();
   pills?.start();
-  const skip = () => {
-    if (tl.progress() < 1) tl.progress(1);
-  };
-  intro.addEventListener('pointerdown', skip, { once: true });
-  addEventListener('keydown', skip, { once: true });
 
   // --- Rakamlar -------------------------------------------------------------
   $$('[data-count]').forEach((el) => {

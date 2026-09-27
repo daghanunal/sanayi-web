@@ -1,37 +1,156 @@
-/* Kurumsal eczane: sakin, erişilebilir, büyük yazı. Kırmızı yalnızca eczane "E" işaretinde ve geçişte. */
-.k-logo { flex-direction: row; align-items: center; gap: 10px; }
+/* Kurumsal eczane, "Kurumsal Nöbet" yönü: serin porselen zemin, eczane lacivert-mavisi, geniş ve okunur yazı.
+   Kırmızı yalnızca eczane "E" işaretinde, nöbet düğmesinde ve nöbet günlerinde. El yazısı (Caveat) yalnızca kutu etiketinde. */
+:root {
+  --ec-kirmizi: #c8102e;
+  --ec-kirmizi-koyu: #a00d25;
+  --ec-yesil: #1f8a5b;
+  --ec-kagit: #fffdf4;
+  --ec-murekkep: #1b2f6b;
+  --ec-el: 'Caveat', 'Bradley Hand', cursive;
+}
+
+/* --- Logo: E işareti --- */
+.k-logo { display: grid; grid-template-columns: auto 1fr; column-gap: 10px; align-items: center; }
 .k-logo::before {
-  content: 'E'; display: grid; place-items: center; width: 38px; height: 38px; border-radius: 10px; background: #c8102e; color: #fff;
-  font-family: var(--k-font-baslik); font-weight: 600; font-size: 22px; line-height: 1; flex: none;
+  content: 'E'; grid-row: 1 / span 2; display: grid; place-items: center; width: 40px; height: 40px; border-radius: 10px;
+  background: #fff; color: var(--ec-kirmizi); box-shadow: inset 0 0 0 2.5px var(--ec-kirmizi);
+  font-family: var(--k-font-baslik); font-weight: 800; font-size: 23px; line-height: 1; flex: none;
 }
 .k-logo > * { display: block; }
-.k-logo { display: grid; grid-template-columns: auto 1fr; column-gap: 10px; }
-.k-logo::before { grid-row: 1 / span 2; }
-.k-hero__ust { color: var(--k-vurgu); }
-.k-hero__baslik { max-width: 12ch; }
+.k-logo__ad { font-weight: 800; letter-spacing: -0.02em; }
+.k-logo__alt { color: var(--k-soluk); font-size: 12.5px; letter-spacing: .02em; }
+.k-ust__tel { font-weight: 700; }
+
+/* --- Ortak --- */
+.k-hero__ust, .ec-ust { color: var(--k-vurgu); font-weight: 700; letter-spacing: .01em; }
+.ec-ust { margin-bottom: 14px; display: flex; align-items: center; gap: 10px; }
+.ec-ust::before { content: ''; width: 22px; height: 3px; border-radius: 2px; background: var(--ec-kirmizi); }
 .k-lead { color: var(--k-soluk); }
 .k-btn { min-height: 56px; font-size: 17px; }
-.k-hozet__liste a { padding: 30px 0; }
+.k-h1 { font-weight: 800; }
+.ec-rozet {
+  display: inline-flex; align-items: center; min-height: 22px; padding: 0 9px; border-radius: 999px;
+  background: #fff1d6; color: #6f4700; font-size: 12px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; flex: none;
+}
+
+/* --- Hero: 3D masa + durum kartı --- */
+.k-hero__baslik { max-width: 12ch; }
+.k-hero__gorsel { box-shadow: 0 40px 80px -40px rgb(13 34 64 / .55); }
+.ec-durum {
+  position: absolute; left: 16px; bottom: 16px; z-index: 2; display: flex; align-items: center; gap: 12px;
+  padding: 12px 16px 12px 14px; border-radius: 14px; background: rgb(255 255 255 / .94); color: var(--k-metin);
+  box-shadow: 0 16px 40px -18px rgb(13 34 64 / .5); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+}
+.ec-durum__lamba { width: 12px; height: 12px; border-radius: 50%; background: var(--ec-yesil); box-shadow: 0 0 0 5px rgb(31 138 91 / .18); flex: none; }
+.ec-durum.is-kapali .ec-durum__lamba { background: #e0572f; box-shadow: 0 0 0 5px rgb(224 87 47 / .18); }
+.ec-durum__metin { display: grid; line-height: 1.2; }
+.ec-durum__metin b { font-family: var(--k-font-baslik); font-size: 16px; }
+.ec-durum__metin small { color: var(--k-soluk); font-size: 13.5px; }
+.ec-temsili {
+  position: absolute; right: 12px; top: 12px; z-index: 2; padding: 4px 9px; border-radius: 999px;
+  background: rgb(13 34 64 / .55); color: #fff; font-size: 11.5px; letter-spacing: .03em;
+}
+@media (prefers-reduced-motion: no-preference) { .ec-durum.is-acik .ec-durum__lamba { animation: ec-nabiz 2.4s ease-in-out infinite; } }
+@keyframes ec-nabiz { 50% { box-shadow: 0 0 0 10px rgb(31 138 91 / 0); } }
+
+/* --- Rakamlar --- */
 .k-rakamlar { background: var(--k-yuzey); color: var(--k-metin); }
 .k-rakamlar dt { color: var(--k-soluk); }
 .k-rakamlar__liste > div { border-color: var(--k-cizgi); }
 .k-rakamlar dd { color: var(--k-vurgu); }
+.k-hozet__liste a { padding: 28px 0; }
 
+/* --- Nöbet ve saatler --- */
 .nobet__ic { display: grid; gap: 16px; }
-@media (min-width: 900px) { .nobet__ic { grid-template-columns: 5fr 4fr 4fr; } }
+@media (min-width: 900px) { .nobet__ic { grid-template-columns: 5fr 4fr 5fr; } }
 .nobet__ic > div { border-radius: var(--k-radius-buyuk); padding: clamp(22px, 3vw, 34px); display: grid; gap: 12px; align-content: start; }
 .nobet__durum { background: var(--k-vurgu); color: #fff; position: relative; overflow: hidden; }
 .nobet__durum.is-kapali { background: var(--k-koyu); }
+.nobet__durum::after {
+  content: 'E'; position: absolute; right: -18px; bottom: -48px; font: 800 220px/1 var(--k-font-baslik); color: rgb(255 255 255 / .06); pointer-events: none;
+}
 .nobet__lamba { width: 18px; height: 18px; border-radius: 50%; background: #7ee2a8; box-shadow: 0 0 0 8px rgb(126 226 168 / .22), 0 0 30px rgb(126 226 168 / .7); }
 .is-kapali .nobet__lamba { background: #ff8a80; box-shadow: 0 0 0 8px rgb(255 138 128 / .2); }
-@media (prefers-reduced-motion: no-preference) { .nobet__lamba { animation: nabiz 2.4s ease-in-out infinite; } }
+@media (prefers-reduced-motion: no-preference) { .is-acik .nobet__lamba { animation: nabiz 2.4s ease-in-out infinite; } }
 @keyframes nabiz { 50% { box-shadow: 0 0 0 14px rgb(126 226 168 / 0), 0 0 30px rgb(126 226 168 / .4); } }
-.nobet__baslik { font-family: var(--k-font-baslik); font-weight: 600; font-size: clamp(34px, 4.4vw, 56px); line-height: 1; letter-spacing: -0.02em; margin-top: 8px; }
-.nobet__metin { font-size: 20px; }
-.nobet__durum .k-btn--ikincil { color: #fff; border-color: rgb(255 255 255 / .45); justify-self: start; }
-.nobet__saat, .nobet__gece { background: var(--k-yuzey); }
+.nobet__baslik { font-family: var(--k-font-baslik); font-weight: 800; font-size: clamp(34px, 4.2vw, 54px); line-height: 1; letter-spacing: -0.03em; margin-top: 8px; }
+.nobet__metin { font-size: 20px; color: rgb(255 255 255 / .9); }
+.nobet__durum .k-btn--ikincil { color: #fff; border-color: rgb(255 255 255 / .45); justify-self: start; position: relative; z-index: 1; }
+.nobet__saat, .nobet__gece { background: #fff; box-shadow: inset 0 0 0 1px var(--k-cizgi); }
 .nobet__saat dl { display: grid; gap: 10px; }
 .nobet__saat dl div { display: flex; justify-content: space-between; gap: 12px; border-bottom: 1px dashed var(--k-cizgi); padding-bottom: 10px; }
 .nobet__saat dd { margin: 0; font-weight: 700; font-variant-numeric: tabular-nums; }
-.nobet__gece .k-btn { background: #c8102e; border-color: #c8102e; justify-self: start; }
+.nobet__btn { background: var(--ec-kirmizi); border-color: var(--ec-kirmizi); color: #fff; justify-self: start; }
+.nobet__btn:hover { background: var(--ec-kirmizi-koyu); border-color: var(--ec-kirmizi-koyu); }
 [data-sayfa='iletisim'] .nobet { padding-bottom: 0; }
+
+.ec-takvim { margin: 8px 0 0; padding: 14px; border-radius: 14px; background: var(--k-zemin); }
+.ec-takvim figcaption { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 10px; font-size: 16px; }
+.ec-takvim ol { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; text-align: center; }
+.ec-takvim__gun li { font-size: 12px; font-weight: 700; color: var(--k-soluk); padding-bottom: 2px; }
+.ec-takvim__ay li { font-size: 14px; font-variant-numeric: tabular-nums; padding: 7px 0; border-radius: 8px; }
+.ec-takvim__ay li.is-bugun { box-shadow: inset 0 0 0 2px var(--k-vurgu); font-weight: 700; }
+.ec-takvim__ay li.is-nobet { background: var(--ec-kirmizi); color: #fff; font-weight: 700; }
+.ec-takvim__not { margin-top: 10px; font-size: 13.5px; color: var(--k-soluk); }
+
+/* --- İmza: kutu etiketi --- */
+.ec-etiket { background: linear-gradient(180deg, var(--k-zemin), var(--k-yuzey)); }
+.ec-etiket__bas { max-width: 760px; margin-bottom: clamp(28px, 4vw, 48px); }
+.ec-etiket__bas .k-h2 { max-width: 20ch; }
+.ec-etiket__ic { display: grid; gap: 20px; align-items: stretch; }
+@media (min-width: 960px) { .ec-etiket__ic { grid-template-columns: 5fr 7fr; gap: 28px; } }
+.ec-panel { display: grid; gap: 22px; align-content: start; padding: clamp(20px, 3vw, 32px); border-radius: var(--k-radius-buyuk); background: #fff; box-shadow: inset 0 0 0 1px var(--k-cizgi); }
+.ec-panel fieldset { border: 0; margin: 0; padding: 0; min-width: 0; }
+.ec-panel legend { padding: 0; margin-bottom: 10px; font-weight: 700; font-size: 16px; }
+.ec-ciper { display: flex; flex-wrap: wrap; gap: 8px; }
+.ec-cip {
+  min-height: 46px; padding: 0 16px; border-radius: 999px; border: 1.5px solid var(--k-cizgi); background: var(--k-zemin);
+  color: var(--k-metin); font: 600 16px var(--k-font-govde); cursor: pointer; transition: background .2s, color .2s, border-color .2s;
+}
+.ec-cip:hover { border-color: var(--k-vurgu); }
+.ec-cip[aria-checked='true'] { background: var(--k-vurgu); border-color: var(--k-vurgu); color: #fff; }
+.ec-cip:focus-visible { outline: 3px solid var(--k-vurgu); outline-offset: 2px; }
+.ec-wa { justify-self: start; }
+.ec-wa svg { width: 20px; height: 20px; }
+
+.ec-sahne {
+  position: relative; margin: 0; padding: clamp(24px, 4vw, 44px) clamp(18px, 3vw, 36px) 22px; border-radius: var(--k-radius-buyuk);
+  background: radial-gradient(120% 90% at 30% 20%, #2e4a74, var(--k-koyu) 70%); color: var(--k-koyu-metin);
+  display: grid; gap: 22px; align-content: center; overflow: hidden;
+}
+.ec-kutu { position: relative; width: min(440px, 100%); margin: 8px auto 0; aspect-ratio: 2 / 1; }
+.ec-kutu__ust {
+  position: absolute; inset: 0 0 auto; height: 14%; transform: translateY(-96%) skewX(-24deg); transform-origin: bottom left;
+  background: linear-gradient(90deg, #dfe5ee, #f4f6fa); border-radius: 4px 4px 0 0; margin-left: 5%; width: 95%;
+}
+.ec-kutu__yuz {
+  position: absolute; inset: 0; border-radius: 4px; overflow: hidden;
+  background: linear-gradient(180deg, #fbfcfd, #eef1f5); box-shadow: 0 30px 50px -24px rgb(0 0 0 / .6), inset 0 0 0 1px rgb(255 255 255 / .6);
+}
+.ec-kutu__cizgi { position: absolute; left: 7%; top: 14%; width: 44%; height: 7%; border-radius: 4px; background: #4a5566; }
+.ec-kutu__cizgi--k { top: 27%; width: 30%; height: 4.5%; background: #a7b0bd; }
+.ec-kutu__bant { position: absolute; left: 0; right: 0; bottom: 0; height: 32%; background: linear-gradient(170deg, #1b7a8e 0 50%, #135c6d 50%); clip-path: polygon(0 40%, 55% 0, 100% 45%, 100% 100%, 0 100%); }
+.ec-yapiskan {
+  position: absolute; right: 5%; top: 30%; width: 62%; padding: 10px 14px 12px; border-radius: 3px;
+  background: var(--ec-kagit); color: var(--ec-murekkep); transform: rotate(-2.5deg);
+  box-shadow: 0 8px 18px -8px rgb(0 0 0 / .45); font-family: var(--ec-el);
+}
+.ec-yapiskan__satir { font-size: clamp(24px, 4.2vw, 34px); font-weight: 700; line-height: 1.05; }
+.ec-yapiskan__satir--k { font-size: clamp(19px, 3.2vw, 26px); font-weight: 600; margin-top: 2px; }
+.ec-yapiskan__imza { display: block; width: 58%; height: 3px; margin-top: 6px; border-radius: 2px; background: var(--ec-kirmizi); transform: rotate(-1deg); }
+.ec-gun { width: min(460px, 100%); margin: 6px auto 0; }
+.ec-gun__serit { position: relative; height: 44px; border-radius: 12px; background: linear-gradient(90deg, #13254a 0 20%, #2f5c9a 32%, #7aa8d8 50%, #2f5c9a 70%, #13254a 88%); }
+.ec-gun__saat { position: absolute; bottom: -22px; left: calc(var(--x) * 100%); transform: translateX(-50%); font-size: 12px; color: var(--k-koyu-soluk); font-variant-numeric: tabular-nums; }
+.ec-gun__saat:first-child { transform: none; }
+.ec-gun__doz {
+  position: absolute; top: 50%; left: calc(var(--x) * 100%); width: 26px; height: 12px; border-radius: 6px; transform: translate(-50%, -50%) scale(.3);
+  background: linear-gradient(90deg, #fff 50%, var(--ec-kirmizi) 50%); opacity: 0; transition: opacity .3s, transform .4s cubic-bezier(.2, .9, .3, 1.4);
+}
+.ec-gun__doz.is-on { opacity: 1; transform: translate(-50%, -50%) scale(1); box-shadow: 0 0 0 4px rgb(255 255 255 / .18); }
+.ec-sahne__not { margin-top: 18px; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; font-size: 14.5px; color: var(--k-koyu-soluk); }
+
+@media (max-width: 599px) {
+  .ec-durum { left: 10px; bottom: 10px; padding: 10px 12px; }
+  .ec-cip { padding: 0 14px; font-size: 15.5px; }
+  .ec-yapiskan { width: 70%; right: 3%; }
+}

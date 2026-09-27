@@ -69,7 +69,7 @@
    "id": "perlitli",
    "ad": "Perlitli Sıva Alçısı",
    "renk": "#009640",
-   "torba": "/img/alcibay/torba-perlitli.png",
+   "torba": "/img/alcibay/torba-perlitli.webp",
    "kisa": "Beton, gazbeton, tuğla vb. yüzeylerin ilk kat sıva alçısı.",
    "artilar": [
     "Hafif",
@@ -188,7 +188,7 @@
    "id": "saten",
    "ad": "Saten Perdah Alçısı",
    "renk": "#c51939",
-   "torba": "/img/alcibay/torba-saten.png",
+   "torba": "/img/alcibay/torba-saten.webp",
    "kisa": "Pürüzsüz yüzeyler için son kat perdah alçısı. Boyaya hazır yüzey verir.",
    "artilar": [
     "Boyaya hazır yüzey",
@@ -304,7 +304,7 @@
    "id": "makina",
    "ad": "Makina Sıva Alçısı",
    "renk": "#db912a",
-   "torba": "/img/alcibay/torba-makina.png",
+   "torba": "/img/alcibay/torba-makina.webp",
    "kisa": "Makineyle uygulanan ilk kat sıva alçısı. Tek katta pürüzsüz yüzey, saten gerektirmez.",
    "artilar": [
     "Tek katta pürüzsüz yüzey",
@@ -429,7 +429,7 @@
    "id": "bereketli",
    "ad": "Bereketli Makina Sıva Alçısı",
    "renk": "#1e2459",
-   "torba": "/img/alcibay/torba-bereketli.png",
+   "torba": "/img/alcibay/torba-bereketli.webp",
    "kisa": "Makineyle uygulanan sıva alçısı. Teknik bilgi için teknik danışmanlığımızı arayın.",
    "artilar": [],
    "anahtar": [],
@@ -441,7 +441,7 @@
    "id": "kartonpiyer",
    "ad": "Kartonpiyer Alçısı",
    "renk": "#0168a4",
-   "torba": "/img/alcibay/torba-kartonpiyer.png",
+   "torba": "/img/alcibay/torba-kartonpiyer.webp",
    "kisa": "İç mekânda dekorasyon ve tadilat işleri için kalıp alçısı.",
    "artilar": [
     "Estetik",
@@ -542,7 +542,7 @@
    "id": "yapistirma",
    "ad": "Alçı Plaka Yapıştırma Alçısı",
    "renk": "#3a3d40",
-   "torba": "/img/alcibay/torba-yapistirma.png",
+   "torba": "/img/alcibay/torba-yapistirma.webp",
    "kisa": "Beton, gazbeton, tuğla vb. yüzeylere alçı plaka yapıştırmak için.",
    "artilar": [
     "Yüksek yapışma",
@@ -612,7 +612,7 @@
    "id": "derz",
    "ad": "Alçı Plaka Derz Dolgu Alçısı",
    "renk": "#007d9a",
-   "torba": "/img/alcibay/torba-derz.png",
+   "torba": "/img/alcibay/torba-derz.webp",
    "kisa": "Alçı plakaların ek yerlerini ve ara boşluklarını kapatmak için.",
    "artilar": [
     "Kolay uygulanır",
@@ -692,7 +692,7 @@
     "#9aa0a3"
    ],
    "kartonAd": "gri karton",
-   "gorsel": "/img/alcibay/panel-s.jpg",
+   "gorsel": "/img/alcibay/panel-s.webp",
    "standart": "TS EN 520 + A1, Tip A",
    "metin": "Yüzeyi düzgün, hafif standart plaka. Her iki yüzü, esneklik ve dayanım veren gri özel kartonla kaplı.",
    "alanlar": "Asma tavan, bölme duvar, duvar giydirme, kuru sıva",
@@ -749,7 +749,7 @@
     "#4fa672"
    ],
    "kartonAd": "yeşil karton",
-   "gorsel": "/img/alcibay/panel-w.jpg",
+   "gorsel": "/img/alcibay/panel-w.webp",
    "standart": "TS EN 520 + A1, Tip H",
    "metin": "Suyu itme özelliği olan plaka. Üzerine fayans ve seramik uygulanabilir.",
    "alanlar": "Islak hacimler, bölme ve giydirme duvar, asma tavan, şaft duvarları, kuru sıva",
@@ -799,7 +799,7 @@
     "#d0525f"
    ],
    "kartonAd": "kırmızı karton",
-   "gorsel": "/img/alcibay/panel-f.jpg",
+   "gorsel": "/img/alcibay/panel-f.webp",
    "standart": "TS EN 520 + A1, Tip F",
    "metin": "Cam elyaf katkılı, yangın dayanımı artırılmış plaka.",
    "alanlar": "Bölme ve giydirme duvar, şaft duvarları, asma tavan, çelik yapılar",
@@ -836,7 +836,7 @@
     "#4fa672"
    ],
    "kartonAd": "kırmızı ve yeşil karton",
-   "gorsel": "/img/alcibay/panel-wf.jpg",
+   "gorsel": "/img/alcibay/panel-wf.webp",
    "standart": "TS EN 520 + A1, Tip HF",
    "metin": "Hem yangın hem su dayanımı artırılmış plaka. Üzerine fayans ve seramik uygulanabilir.",
    "alanlar": "Çelik yapılar, ıslak hacimler, bölme duvar, şaft duvarları, asma tavan",

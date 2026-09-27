@@ -1,7 +1,7 @@
 import '../../shared/base.css';
 import './style.css';
 import raw from '../../data/alcibay.json';
-import { boot, initSmoothScroll, esc, asset, icons, gsap, ScrollTrigger, reducedMotion, vitrinModu } from '../../shared/core.js';
+import { boot, initSmoothScroll, esc, asset, icons, gsap, ScrollTrigger, reducedMotion, vitrinModu, setStoryMode } from '../../shared/core.js';
 import { SplitText } from 'gsap/SplitText';
 import { DrawSVGPlugin } from 'gsap/DrawSVGPlugin';
 import { createGL } from './gl.js';
@@ -55,16 +55,17 @@ if (!vitrinModu()) {
 }
 
 const kapasite = konumlar.reduce((a, k) => a + (k.kapasite || 0), 0);
+document.getElementById('intro-logo').textContent = is.ad;
 
 // ---------------------------------------------------------------------------
 // Render
 // ---------------------------------------------------------------------------
 
 document.getElementById('top').innerHTML = `
-  <a class="top__logo" href="#giris" aria-label="${esc(is.ad)} ana sayfa">
-    <img class="top__logo-acik" src="${asset('/img/alcibay/logo-acik.png')}" alt="${esc(is.ad)}" width="144" height="25">
-    <img class="top__logo-koyu" src="${asset('/img/alcibay/logo.png')}" alt="" width="144" height="25">
-  </a>
+  <a class="top__logo" href="#giris" aria-label="${esc(is.ad)} ana sayfa"><span class="wm">${esc(is.ad)}</span></a>
+  <div class="top__kesit" aria-hidden="true">
+    <span class="tk tk--t"><i></i>Tuğla</span><span class="tk tk--s"><i></i>Sıva</span><span class="tk tk--p"><i></i>Perdah</span>
+  </div>
   <nav class="top__nav" aria-label="Bölümler">
     <a href="#urunler">Alçılar</a><a href="#plaka">Alçı plaka</a><a href="#fabrikalar">Fabrikalar</a><a href="#iletisim">İletişim</a>
   </nav>
@@ -96,33 +97,35 @@ const ADIMLAR = [
 ];
 
 document.getElementById('katman').innerHTML = `
-  <div class="wall__pin">
-    <h2 class="sr-only" id="wall-title">Katman katman bir alçı duvar</h2>
-    <div class="wall__trowel" id="trowel" aria-hidden="true">
-      <svg viewBox="0 0 160 90"><path d="M8 70 L112 70 Q124 70 124 60 L124 56 L8 56 Q2 56 2 63 Q2 70 8 70Z" fill="#c9ced1" stroke="#7b8286" stroke-width="2"/><path d="M60 56 L60 40 L96 22" fill="none" stroke="#7b8286" stroke-width="5" stroke-linecap="round"/><rect x="92" y="6" width="58" height="22" rx="11" transform="rotate(-28 121 17)" fill="#f29d20"/></svg>
-    </div>
-    <ol class="wall__steps">
-      ${ADIMLAR.map((a, i) => {
-        const u = a.urun && urun(a.urun);
-        return `<li class="wall__step" data-i="${i}">
-          <p class="wall__n">${i === 0 ? '' : `${i}/4`}</p>
+  <h2 class="sr-only" id="wall-title">Katman katman bir alçı duvar</h2>
+  <div class="wall__stops">
+    ${ADIMLAR.map((a, i) => {
+      const u = a.urun && urun(a.urun);
+      return `<div class="wstop" data-i="${i}">
+        <article class="wcard">
+          <p class="wall__n">${i === 0 ? 'Geri saralım' : `${i}/4`}</p>
           <h3>${a.baslik}</h3>
           <p>${a.metin}</p>
           ${u ? `<button type="button" class="chip" data-urun="${u.id}" style="--c:${u.renk}"><span class="chip__dot"></span>${u.ad}${a.kalin ? ` <em>${a.kalin}</em>` : ''}</button>` : ''}
-        </li>`;
-      }).join('')}
-    </ol>
-    <figure class="kesit" aria-label="Duvar kesiti">
-      <svg viewBox="0 0 120 200" aria-hidden="true">
-        <rect class="kesit__tugla" x="0" y="0" width="64" height="200"/>
-        <g class="kesit__derz">${Array.from({ length: 9 }, (_, i) => `<line x1="0" x2="64" y1="${i * 24 + 12}" y2="${i * 24 + 12}"/>`).join('')}</g>
-        <rect class="kesit__siva" x="64" y="0" width="0" height="200"/>
-        <rect class="kesit__perdah" x="64" y="0" width="0" height="200"/>
-      </svg>
-      <figcaption><span class="kesit__l kesit__l--t">Tuğla</span><span class="kesit__l kesit__l--s">Sıva</span><span class="kesit__l kesit__l--p">Perdah</span></figcaption>
-    </figure>
-    <div class="wall__bar" aria-hidden="true"><span id="wall-bar"></span></div>
+        </article>
+      </div>`;
+    }).join('')}
   </div>`;
+
+// Masaüstü: durak boyunca sağda sabit duvar kesiti ve cephede gezinen mala (telefonda kesit başlığın içinde)
+document.body.insertAdjacentHTML('beforeend', `
+  <div class="wall__trowel" id="trowel" aria-hidden="true">
+    <svg viewBox="0 0 160 90"><path d="M8 70 L112 70 Q124 70 124 60 L124 56 L8 56 Q2 56 2 63 Q2 70 8 70Z" fill="#c9ced1" stroke="#7b8286" stroke-width="2"/><path d="M60 56 L60 40 L96 22" fill="none" stroke="#7b8286" stroke-width="5" stroke-linecap="round"/><rect x="92" y="6" width="58" height="22" rx="11" transform="rotate(-28 121 17)" fill="#f29d20"/></svg>
+  </div>
+  <figure class="kesit" aria-hidden="true">
+    <svg viewBox="0 0 120 200">
+      <rect class="kesit__tugla" x="0" y="0" width="64" height="200"/>
+      <g class="kesit__derz">${Array.from({ length: 9 }, (_, i) => `<line x1="0" x2="64" y1="${i * 24 + 12}" y2="${i * 24 + 12}"/>`).join('')}</g>
+      <rect class="kesit__siva" x="64" y="0" width="0" height="200"/>
+      <rect class="kesit__perdah" x="64" y="0" width="0" height="200"/>
+    </svg>
+    <figcaption><span class="kesit__l kesit__l--t">Tuğla</span><span class="kesit__l kesit__l--s">Sıva</span><span class="kesit__l kesit__l--p">Perdah</span></figcaption>
+  </figure>`);
 
 const plakaIs = isler.find((x) => x.panel);
 document.getElementById('sec').innerHTML = `
@@ -146,7 +149,7 @@ document.getElementById('urunler').innerHTML = `
     <div class="range__track" id="range-track">
       ${urunler.map((u) => `
         <button type="button" class="bag" data-urun="${u.id}" style="--c:${u.renk}">
-          <span class="bag__img"><img src="${asset(u.torba)}" alt="${esc(u.ad)} torbası" loading="lazy" width="383" height="491"></span>
+          <span class="bag__img"><img src="${asset(u.torba)}" alt="${esc(u.ad)} torbası" loading="lazy" width="600" height="800"></span>
           <span class="bag__ad">${u.ad}</span>
           <span class="bag__kisa">${u.kisa}</span>
         </button>`).join('')}
@@ -243,9 +246,9 @@ document.getElementById('iletisim').innerHTML = `
 
 document.getElementById('foot').innerHTML = `
   <div class="foot__in">
-    <img src="${asset('/img/alcibay/logo-acik.png')}" alt="${esc(is.ad)}" width="144" height="25" loading="lazy">
+    <p class="wm wm--foot">${esc(is.ad)}</p>
     <p>${esc(is.unvan)}</p>
-    <p class="foot__small">Bu sayfa Alçıbay için hazırlanmış bir tasarım önerisidir. Ürün bilgileri alcibay.com'dan alınmıştır; uygulama değerleri şantiye koşullarına göre değişebilir. Fotoğraflar: Pexels ve Alçıbay.</p>
+    <p class="foot__small">Bu sayfa Alçıbay için hazırlanmış bir tasarım önerisidir. Ürün bilgileri, adresler ve kapasiteler alcibay.com'dan alınmıştır; uygulama değerleri şantiye koşullarına göre değişebilir. Fotoğraflar temsilîdir (Pexels). Torba ve plaka görselleri bu öneri için hazırlanmış temsilî 3D çizimlerdir; gerçek ambalaj farklıdır.</p>
   </div>`;
 
 // ---------------------------------------------------------------------------
@@ -260,7 +263,7 @@ function openSheet(id) {
     <div class="sheet__in">
       <button type="button" class="sheet__x" data-close aria-label="Kapat">×</button>
       <div class="sheet__top">
-        <img src="${asset(u.torba)}" alt="" width="383" height="491">
+        <img src="${asset(u.torba)}" alt="" width="600" height="800">
         <div>
           <p class="sheet__k">Teknik föy</p>
           <h2 id="sheet-title">${u.ad}</h2>
@@ -333,7 +336,7 @@ function renderResult(isId, m2 = 50, kal) {
   const k = kal ?? t?.kalinlik;
   out.innerHTML = `
     <div class="res" style="--c:${u.renk}">
-      <div class="res__bag"><img src="${asset(u.torba)}" alt="${esc(u.ad)} torbası" width="383" height="491"></div>
+      <div class="res__bag"><img src="${asset(u.torba)}" alt="${esc(u.ad)} torbası" width="600" height="800"></div>
       <div class="res__body">
         <p class="res__k">${x.not}</p>
         <h3>${u.ad}</h3>
@@ -478,6 +481,7 @@ if (reducedMotion) {
   document.documentElement.classList.add('is-static');
   // Duvar bölümü: sabit, son hali; tuval yalnızca hero için
   ScrollTrigger.create({ trigger: '#katman', start: 'top 60%', end: 'bottom top', onToggle: (s) => gl.setMode(s.isActive ? 'duvar' : 'toz') });
+  document.querySelectorAll('.wcard').forEach((c) => { c.style.opacity = 1; c.style.visibility = 'visible'; });
   ScrollTrigger.create({ trigger: '#katman', start: 'top 60px', endTrigger: 'html', end: 'bottom top', onToggle: (s) => top.classList.toggle('is-light', s.isActive) });
   gl.state.time = 6;
 } else {
@@ -493,6 +497,11 @@ if (reducedMotion) {
 }
 
 function runIntro(split) {
+  if (vitrinModu()) {
+    // Vitrinde perde yok: toz hemen patlar, başlık gelir
+    gsap.to(gl.state, { burst: 1, duration: 1.4, ease: 'power2.out' });
+    return endIntro(split);
+  }
   document.documentElement.classList.add('is-intro');
   window.__lenis?.stop();
   const tl = gsap.timeline({ onComplete: () => endIntro(split) });
@@ -504,6 +513,8 @@ function runIntro(split) {
   const skip = () => tl.progress(1);
   intro.addEventListener('pointerdown', skip, { once: true });
   addEventListener('keydown', skip, { once: true });
+  addEventListener('wheel', skip, { once: true, passive: true });
+  addEventListener('touchmove', skip, { once: true, passive: true });
 }
 
 function endIntro(split) {
@@ -539,43 +550,34 @@ function motion() {
   addEventListener('pointerdown', move, { passive: true });
 
 
-  // --- Katman katman duvar ---
+  // --- Katman katman duvar: kısa duraklar, kart durakta yapışır; sahne arkada sabit tuvalde ---
   const w = gl.wall;
-  const steps = gsap.utils.toArray('.wall__step');
   const trowel = document.getElementById('trowel');
+  const kesitEl = document.querySelector('.kesit');
+  const topKesit = document.querySelector('.top__kesit');
   const kesit = { s: 1, p: 1 };
   const setKesit = () => {
-    document.querySelector('.kesit__siva').setAttribute('width', kesit.s * 30);
-    const p = document.querySelector('.kesit__perdah');
+    kesitEl.querySelector('.kesit__siva').setAttribute('width', kesit.s * 30);
+    const p = kesitEl.querySelector('.kesit__perdah');
     p.setAttribute('x', 64 + kesit.s * 30);
     p.setAttribute('width', kesit.p * 8);
-    document.querySelector('.kesit').style.setProperty('--s', kesit.s);
-    document.querySelector('.kesit').style.setProperty('--p', kesit.p);
+    kesitEl.style.setProperty('--s', kesit.s);
+    kesitEl.style.setProperty('--p', kesit.p);
+    topKesit.style.setProperty('--s', kesit.s);
+    topKesit.style.setProperty('--p', kesit.p);
   };
-  const showStep = (i) => steps.forEach((s, j) => s.classList.toggle('is-on', i === j));
   // Mala, açılan cephenin üstünde gezinir
   const trowelAt = (p) => {
     const x = gsap.utils.clamp(0, 1, p * 1.3 - 0.15);
     const row = Math.min(4, Math.floor(p * 5));
     const dir = row % 2 === 0 ? x : 1 - x;
-    gsap.set(trowel, { x: dir * innerWidth - 60, y: (row + 0.5) / 5 * innerHeight - 40, rotate: row % 2 ? 8 : -8, opacity: p > 0.01 && p < 0.99 ? 1 : 0 });
+    gsap.set(trowel, { x: dir * innerWidth - 60, y: (row + 0.5) / 5 * innerHeight * (mobile ? 0.6 : 1) - 40, rotate: row % 2 ? 8 : -8, autoAlpha: p > 0.01 && p < 0.99 ? 1 : 0 });
   };
-  const wt = gsap.timeline({
-    defaults: { ease: 'none' },
-    scrollTrigger: {
-      trigger: '#katman', start: 'top top', end: () => `+=${innerHeight * (mobile ? 5 : 5.5)}`, scrub: 0.5, pin: '.wall__pin',
-      onUpdate: (s) => {
-        const p = s.progress;
-        const i = p < 0.1 ? 0 : p < 0.26 ? 1 : p < 0.55 ? 2 : p < 0.8 ? 3 : 4;
-        showStep(i);
-        document.getElementById('wall-bar').style.transform = `scaleX(${p})`;
-      },
-    },
-  });
+  const wt = gsap.timeline({ paused: true, defaults: { ease: 'none' } });
   // Geri sarma: bitmiş duvar sökülür, tuğla görünür
   wt.to(w.uP3, { value: 0, duration: 0.6 }, 0.2)
     .to(w.uP2, { value: 0, duration: 0.6 }, 0.35)
-    .to(w.uP1, { value: 0, duration: 0.6, onUpdate: () => trowel.style.opacity = 0 }, 0.5)
+    .to(w.uP1, { value: 0, duration: 0.6, onUpdate: () => gsap.set(trowel, { autoAlpha: 0 }) }, 0.5)
     .to(kesit, { s: 0, p: 0, duration: 0.6, onUpdate: setKesit }, 0.35)
     .set(kesit, { s: 0, p: 0, onUpdate: setKesit }, 1.1)
     // Sıva
@@ -590,7 +592,54 @@ function motion() {
     .to({}, { duration: 0.4 });
   w.uP1.value = w.uP2.value = w.uP3.value = 1;
   setKesit();
-  showStep(0);
+  // Durak başına zaman çizelgesi aralığı (sn): geri sar, tuğla, sıva, perdah, boyaya hazır
+  const WR = [[0, 1.2], [1.2, 1.6], [1.6, 4.7], [4.8, 7.6], [7.6, wt.duration()]];
+  const wstops = gsap.utils.toArray('.wstop');
+  const katman = document.getElementById('katman');
+  let wAnchors = [[0, 0]];
+  const wMeasure = () => {
+    const vh = innerHeight;
+    const top0 = katman.getBoundingClientRect().top + scrollY;
+    const list = [];
+    wstops.forEach((st, i) => {
+      const t0 = top0 + st.offsetTop - vh * 0.55;
+      const t1 = top0 + st.offsetTop + st.offsetHeight - vh * 0.98;
+      const prev = list.length ? list[list.length - 1][0] : -Infinity;
+      list.push([Math.max(prev + 1, t0), WR[i][0]], [Math.max(t0 + 2, t1), WR[i][1]]);
+    });
+    wAnchors = list;
+  };
+  const wTimeAt = (y) => {
+    if (y <= wAnchors[0][0]) return wAnchors[0][1];
+    for (let i = 1; i < wAnchors.length; i++) {
+      if (y <= wAnchors[i][0]) {
+        const [y0, t0] = wAnchors[i - 1];
+        const [y1, t1] = wAnchors[i];
+        return t0 + ((y - y0) / (y1 - y0)) * (t1 - t0);
+      }
+    }
+    return wAnchors[wAnchors.length - 1][1];
+  };
+  ScrollTrigger.create({
+    trigger: katman, start: 'top bottom', end: 'bottom top',
+    onRefresh: wMeasure,
+    onUpdate: () => gsap.to(wt, { time: wTimeAt(scrollY), duration: 0.45, ease: 'power2.out', overwrite: true }),
+    onToggle: (s) => {
+      document.documentElement.classList.toggle('in-wall', s.isActive);
+      if (!s.isActive) gsap.set(trowel, { autoAlpha: 0 });
+    },
+  });
+  // Duraklar boyunca hikâye modu: alt çubuk iner, kart onun boşluğuna oturur
+  ScrollTrigger.create({
+    trigger: wstops[0], endTrigger: wstops[wstops.length - 1], start: 'top 70%', end: () => `bottom ${Math.round(innerHeight * 0.9)}px`,
+    onToggle: (s) => setStoryMode(s.isActive ? true : null),
+  });
+  // Kartlar: durağa girerken belirir, durak biterken söner (görünmezken dokunmayı almaz)
+  gsap.utils.toArray('.wcard').forEach((card) => {
+    const stop = card.parentElement;
+    gsap.fromTo(card, { autoAlpha: 0, y: 36 }, { autoAlpha: 1, y: 0, ease: 'power2.out', scrollTrigger: { trigger: stop, start: 'top 92%', end: 'top 55%', scrub: 0.4 } });
+    gsap.to(card, { autoAlpha: 0, y: -28, ease: 'power1.in', immediateRender: false, scrollTrigger: { trigger: stop, start: 'bottom 98%', end: 'bottom 72%', scrub: 0.4 } });
+  });
 
   // --- Ürün bulucu girişi ---
   gsap.fromTo('.finder__head h2', { clipPath: 'inset(-0.2em 100% -0.3em 0)' }, {

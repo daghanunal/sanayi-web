@@ -4,7 +4,7 @@ import '../../shared/base.css';
 import './style.css';
 import {
   boot, initSmoothScroll, reducedMotion, telHref, waHref, mapsHref, mapsEmbed,
-  openStatus, groupedHours, icons, esc, asset, gsap, ScrollTrigger,
+  openStatus, groupedHours, icons, esc, asset, gsap, ScrollTrigger, setStoryMode, vitrinModu,
 } from '../../shared/core.js';
 import { SplitText } from 'gsap/SplitText';
 import { createScene, W } from './scene.js';
@@ -77,7 +77,7 @@ const FILM = d.film.map((f) => {
   };
 });
 $('[data-rail]').innerHTML = FILM.map((a) => `<li data-rail-i><b>${esc(a.no)}</b><span>${esc(a.durak)}</span></li>`).join('');
-$('[data-cards]').innerHTML = FILM.map((a) => `
+const cardHtml = (a) => `
   <article class="card${a.id === 'acil' ? ' card--acil' : ''}" data-card="${esc(a.id)}">
     <p class="card__no"><b>${esc(a.no)}</b><span>${esc(a.durak)}</span>${a.sure ? `<em>${esc(a.sure)}</em>` : ''}</p>
     <h2 class="card__title">${esc(a.baslik)}</h2>
@@ -85,7 +85,11 @@ $('[data-cards]').innerHTML = FILM.map((a) => `
     ${a.id === 'acil'
       ? `<a class="card__wa card__wa--tel" href="${esc(telHref(d))}">${icons.phone}<span>${esc(d.iletisim.telefon)}</span></a>`
       : `<a class="card__wa" href="${esc(a.wa)}" target="_blank" rel="noopener">${icons.whatsapp}<span>${esc(a.cta)}</span></a>`}
-  </article>`).join('');
+  </article>`;
+// Her bölüm (iki sayfa) önce kısa bir "sayfa çevriliyor" arası, sonra iki durak
+$('[data-stops]').innerHTML = FILM.map((a, i) => `
+  ${i % 2 === 0 ? `<div class="fgap" data-gap="${i / 2}"><p class="flipnote"><small>${i ? 'Sayfa çevriliyor' : 'Kapak açılıyor'}</small><b>${esc(a.no)}–${esc(FILM[i + 1]?.no || '')}</b><span>${esc(a.durak)}${FILM[i + 1] ? ` · ${esc(FILM[i + 1].durak)}` : ''}</span></p></div>` : ''}
+  <div class="stop" data-stop="${i}">${cardHtml(a)}</div>`).join('');
 
 // Hakkımızda + rakamlar
 const aboutText = $('[data-about-text]');
@@ -127,7 +131,7 @@ function pawSvg() {
 // Yorumlar
 $('[data-puan]').textContent = nf(d.puan.ortalama, 1);
 $('[data-stars]').innerHTML = icons.star.repeat(5);
-$('[data-puan-adet]').textContent = `${nf(d.puan.adet)} Google yorumu`;
+$('[data-puan-adet]').innerHTML = '<span class="ornek">Örnek yorumlar</span> Puan ve yorumlar tanıtım içindir.';
 $('[data-reviews]').innerHTML = d.yorumlar.map((y) => `
   <figure class="rev">
     <p class="rev__pet">${esc(y.arac || '')}</p>
@@ -292,15 +296,11 @@ function filmState(p, time) {
 // --- Film UI -------------------------------------------------------------
 
 const film = $('[data-film]');
-const hero = $('[data-hero]');
 const cards = $$('[data-card]');
 const railItems = $$('[data-rail-i]');
 const rail = $('[data-rail]');
-const overview = $('[data-overview]');
 const hint = $('[data-hint]');
 const tag = $('[data-tag]');
-const flipNote = $('[data-flipnote]');
-const flipNo = $('b', flipNote), flipTxt = $('span', flipNote);
 const tagText = $('span', tag);
 let tagLayout = {};
 
@@ -310,50 +310,21 @@ function vis(el, v) {
 }
 
 function filmUI(p) {
-  const heroOut = seg(p, 0.022, 0.05);
-  hero.style.opacity = 1 - heroOut;
-  hero.style.transform = `translate3d(0, ${heroOut * -40}px, 0)`;
-  hero.style.visibility = heroOut >= 1 ? 'hidden' : 'visible';
   hint.style.opacity = 1 - seg(p, 0.0, 0.02);
-
-  let active = -1, activeV = 0;
+  let active = -1, activeV = 1;
   cards.forEach((card, i) => {
     const [a, b] = CARD_R[i];
-    const w = (b - a) * 0.14;
-    const vin = seg(p, a + w * 0.2, a + w * 1.2), vout = seg(p, b - w, b);
-    const v = vin * (1 - vout);
-    card.style.opacity = v;
-    card.style.transform = `translate3d(0, ${(1 - vin) * 34 - vout * 22}px, 0)`;
-    card.style.visibility = v > 0.01 ? 'visible' : 'hidden';
-    if (p >= a && p < b) { active = i; activeV = v; }
+    if (p >= a && p < b) active = i;
   });
-  const railOn = seg(p, 0.06, 0.08) * (1 - seg(p, 0.915, 0.925));
+  // Masaüstü: altta sayfa rayı (telefonda kart zaten "02 Muayene" yazıyor)
+  const railOn = mobile() ? 0 : seg(p, 0.06, 0.08) * (1 - seg(p, 0.915, 0.925));
   vis(rail, railOn);
   railItems.forEach((li, i) => {
     li.classList.toggle('is-active', i === active);
     li.classList.toggle('is-done', p >= CARD_R[i][1]);
   });
-
-  // Sayfa çevrilirken: sıradaki sayfaların başlığı
-  let fv = 0;
-  CH.forEach((id, c) => {
-    const k = kOf(p, id);
-    if (k > 0 && k < 0.3) {
-      fv = bump(k, 0.0, 0.3, 0.3);
-      const a = FILM[c * 2], b = FILM[c * 2 + 1];
-      const t = `${a.no}–${b.no}`;
-      if (flipNo.textContent !== t) { flipNo.textContent = t; flipTxt.textContent = `${a.durak} · ${b.durak}`; }
-    }
-  });
-  vis(flipNote, fv);
-  flipNote.style.transform = `translate3d(0, ${(1 - fv) * 20}px, 0)`;
-
-  const ov = seg(p, 0.93, 0.955) * (1 - seg(p, 0.995, 1));
-  vis(overview, ov);
-  overview.style.transform = `translate3d(0, ${(1 - ov) * 30}px, 0)`;
-
-  // Sayfaya iğnelenen etiket
-  if (ready && active >= 0) {
+  // Sayfaya iğnelenen etiket (yalnız masaüstü; telefonda kartla çakışmasın)
+  if (ready && active >= 0 && !mobile()) {
     const f = FILM[active];
     const at = tagLayout[f.id] || [0.5, 0.5];
     const pt = S.project(active + 1, at[0], at[1]);
@@ -364,6 +335,40 @@ function filmUI(p) {
     vis(tag, tv);
     tag.style.transform = `translate3d(${pt.x.toFixed(1)}px, ${pt.y.toFixed(1)}px, 0)`;
   } else vis(tag, 0);
+}
+
+// Kaydırma konumu → film ilerlemesi (0..1). Kart yapışık kaldıkça kendi aralığında ilerler; aralarda sayfa çevrilir.
+let anchors = [[0, 0], [1, 1]];
+function measureFilm() {
+  const vh = innerHeight;
+  const top0 = film.getBoundingClientRect().top + scrollY;
+  const list = [[0, 0]];
+  const push = (y, v) => { const prev = list[list.length - 1][0]; list.push([Math.max(prev + 1, y), v]); };
+  $$('[data-stop]').forEach((st, i) => {
+    const c = Math.floor(i / 2);
+    if (i % 2 === 0) {
+      const gap = $(`[data-gap="${c}"]`);
+      push(top0 + gap.offsetTop - vh * 0.6, R[CH[c]][0]);
+    }
+    push(top0 + st.offsetTop - vh * 0.55, CARD_R[i][0] + 0.002);
+    push(top0 + st.offsetTop + st.offsetHeight - vh * 0.98, CARD_R[i][1] - 0.002);
+  });
+  const over = $('.stop--over');
+  push(top0 + over.offsetTop - vh * 0.5, 0.935);
+  push(top0 + over.offsetTop + over.offsetHeight - vh * 0.9, 0.995);
+  push(top0 + film.offsetHeight - vh * 0.4, 1);
+  anchors = list;
+}
+function progressAt(y) {
+  if (y <= anchors[0][0]) return anchors[0][1];
+  for (let i = 1; i < anchors.length; i++) {
+    if (y <= anchors[i][0]) {
+      const [y0, v0] = anchors[i - 1];
+      const [y1, v1] = anchors[i];
+      return v0 + ((y - y0) / (y1 - y0)) * (v1 - v0);
+    }
+  }
+  return 1;
 }
 
 // --- Başlangıç -------------------------------------------------------------
@@ -377,8 +382,22 @@ function setupScroll() {
   lenis = initSmoothScroll();
   lenis?.stop();
   ScrollTrigger.create({
-    trigger: film, start: 'top top', end: 'bottom bottom',
-    onUpdate: (self) => (filmTarget = self.progress),
+    trigger: film, start: 'top top', end: 'bottom top',
+    onRefresh: measureFilm,
+    onUpdate: () => (filmTarget = progressAt(scrollY)),
+  });
+  // Duraklar boyunca hikâye modu (telefon): alt çubuk iner, kart onun boşluğuna oturur
+  const stopsEl = $('[data-stops]');
+  ScrollTrigger.create({
+    trigger: stopsEl, start: 'top 70%', end: () => `bottom ${Math.round(innerHeight * 0.9)}px`,
+    onToggle: (st) => setStoryMode(st.isActive ? true : null),
+  });
+  // Kartlar: durağa girerken belirir, durak biterken söner (görünmezken dokunmayı almaz)
+  cards.forEach((card) => {
+    const stop = card.parentElement;
+    if (reducedMotion) return;
+    gsap.fromTo(card, { autoAlpha: 0, y: 34 }, { autoAlpha: 1, y: 0, ease: 'power2.out', scrollTrigger: { trigger: stop, start: 'top 92%', end: 'top 55%', scrub: 0.4 } });
+    gsap.to(card, { autoAlpha: 0, y: -24, ease: 'power1.in', immediateRender: false, scrollTrigger: { trigger: stop, start: 'bottom 98%', end: 'bottom 72%', scrub: 0.4 } });
   });
   ScrollTrigger.create({
     trigger: film, start: 'bottom bottom', end: 'bottom 35%',
@@ -544,14 +563,17 @@ function endIntro() {
   lenis?.start();
   heroIn();
 }
-intro.addEventListener('click', () => { if (ready) endIntro(); });
+intro.addEventListener('pointerdown', () => endIntro());
+addEventListener('wheel', () => endIntro(), { once: true, passive: true });
+addEventListener('touchmove', () => endIntro(), { once: true, passive: true });
 
 setupScroll();
+if (vitrinModu()) endIntro(); // vitrinde perde yok
 gsap.ticker.add((t) => tick(t));
-const minWait = new Promise((r) => setTimeout(r, reducedMotion ? 0 : 1900));
+const minWait = new Promise((r) => setTimeout(r, reducedMotion ? 0 : 1500));
 Promise.all([playIntro(), buildTextures(), minWait]).then(() => {
   pctEl.textContent = '100';
   setTimeout(endIntro, reducedMotion ? 0 : 250);
 });
 // Güvenlik: bir şey takılırsa yine de aç
-setTimeout(() => { if (!introDone) { ready = true; endIntro(); } }, 9000);
+setTimeout(() => { if (!introDone) endIntro(); }, 2400);

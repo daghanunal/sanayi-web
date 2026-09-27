@@ -1,7 +1,7 @@
 import raw from '../../data/eczane.json';
 import {
   boot, initSmoothScroll, reducedMotion, gsap, ScrollTrigger, esc,
-  telHref, waHref, mapsHref, mapsEmbed, openStatus, groupedHours, icons, GUNLER,
+  telHref, waHref, mapsHref, mapsEmbed, openStatus, groupedHours, icons, GUNLER, autoHideHeader,
 } from '../../shared/core.js';
 import { SplitText } from 'gsap/SplitText';
 
@@ -37,7 +37,6 @@ if (ld) {
     openingHoursSpecification: d.saatler
       .map((s, i) => (s ? { '@type': 'OpeningHoursSpecification', dayOfWeek: `https://schema.org/${gunEn[i]}`, opens: s.split('-')[0], closes: s.split('-')[1] } : null))
       .filter(Boolean),
-    aggregateRating: { '@type': 'AggregateRating', ratingValue: d.puan.ortalama, reviewCount: d.puan.adet },
   });
 }
 document.title = `${d.isletme.ad} | Eczane | Etimesgut, Ankara`;
@@ -119,7 +118,7 @@ $('[data-nobet-src]').textContent = `Liste ${d.nobet.kaynak} sitesinde açılır
 
 // Yorumlar
 const stars = (n) => `<span class="stars" aria-label="5 üzerinden ${n}">${icons.star.repeat(n)}</span>`;
-$('[data-score]').innerHTML = `<b>${String(d.puan.ortalama).replace('.', ',')}</b>${stars(5)}<span>${nf.format(d.puan.adet)} değerlendirme</span>`;
+$('[data-score]').innerHTML = `<b>${String(d.puan.ortalama).replace('.', ',')}</b>${stars(5)}<span>Örnek puan · yorumlar tanıtım içindir</span>`;
 $('[data-reviews]').innerHTML = d.yorumlar
   .map((y) => `<li class="rev">${stars(y.puan)}<blockquote>${esc(y.metin)}</blockquote><p class="rev__who">${esc(y.ad)}</p></li>`)
   .join('');
@@ -166,6 +165,8 @@ const top = $('#top');
 const onScroll = () => top.classList.toggle('is-solid', scrollY > 20);
 addEventListener('scroll', onScroll, { passive: true });
 onScroll();
+// Telefonda aşağı kaydırırken başlık saklanır (pinli sahnede tek üst öğe), yukarı kaydırınca döner
+if (matchMedia('(max-width: 899px)').matches) autoHideHeader(top, { offset: 120 });
 
 // --- Hareket --------------------------------------------------------------
 if (reducedMotion) {
@@ -182,12 +183,13 @@ function motion() {
   gsap.set('.sign__e-glow', { opacity: 0 });
   const title = new SplitText('.hero__title', { type: 'lines', mask: 'lines' });
   const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
-  tl.from('.sign__box, .sign__pole', { y: 24, opacity: 0, duration: 0.7, stagger: 0.08 })
+  tl.from('.hero__img', { clipPath: 'inset(8% 8% 8% 8% round 28px)', scale: 1.06, duration: 1.1, ease: 'power3.out' })
+    .from('.sign__box, .sign__pole', { y: 24, opacity: 0, duration: 0.7, stagger: 0.08 }, 0.1)
     .to('.sign__e', { strokeDashoffset: 0, duration: 1.1, ease: 'power2.inOut' }, 0.2)
     .to('.sign__e', { fillOpacity: 1, duration: 0.15, repeat: 3, yoyo: true, ease: 'steps(1)' }, 1.25)
     .to('.sign__e', { fillOpacity: 1, duration: 0.2 }, 1.9)
     .to('.sign__e-glow', { opacity: 1, duration: 0.6 }, 1.9)
-    .from('.sign__cap', { opacity: 0, y: 8, duration: 0.5 }, 2)
+    .from('.hero__cap', { autoAlpha: 0, y: 8, duration: 0.5 }, 1.2)
     .from('.hero__since', { opacity: 0, y: 10, duration: 0.5 }, 0.3)
     .from(title.lines, { yPercent: 105, duration: 0.9, stagger: 0.09 }, 0.4)
     .from('.hero__lead, .hero__cta, .hero__status', { opacity: 0, y: 16, duration: 0.6, stagger: 0.1 }, 0.9);
@@ -211,18 +213,21 @@ function motion() {
       },
     });
     // 1: reçete sahneye girerken gelir (scroll'dan bağımsız), pinde "gönderilir"
-    gsap.fromTo('.rx', { y: 60, rotate: -8, opacity: 0 }, {
-      y: 0, rotate: -3, opacity: 1, duration: 0.9, ease: 'power3.out', immediateRender: true,
+    gsap.fromTo('.rx', { y: 60, rotate: -8 }, {
+      y: 0, rotate: -3, duration: 0.9, ease: 'power3.out', immediateRender: true,
       scrollTrigger: { trigger: '.flow', start: 'top 75%', once: true },
     });
     t.fromTo('.rx__sent', { opacity: 0, scale: 0.8 }, { opacity: 1, scale: 1, duration: 0.5 }, 0.3)
-      // 2: eczacı kontrol eder, kutular hazırlanır
+      // 2: eczacı kontrol eder; reçete kenara çekilip kaybolur, sonra kutular hazırlanır (katmanlar üst üste binmez)
       .fromTo('.rx__lines li', { '--tick': 0 }, { '--tick': 1, duration: 0.4, stagger: 0.35 }, '+=0.3')
-      .fromTo('.box', { y: -40, opacity: 0 }, { y: 0, opacity: 1, duration: 0.6, stagger: 0.25 }, '<0.2')
-      .fromTo('.rx', { x: 0, scale: 1 }, { x: mobile ? -30 : -60, y: -20, rotate: -9, scale: 0.86, opacity: 0.35, duration: 0.8, immediateRender: false }, '+=0.2')
-      // 3: poşete girer, poşet adı ve tarihle kapanır
-      .fromTo('.bag', { y: 120, opacity: 0 }, { y: 0, opacity: 1, duration: 0.8 }, '+=0.1')
-      .to('.box', { y: mobile ? 70 : 90, scale: 0.7, opacity: 0, duration: 0.7, stagger: 0.12 }, '<0.3')
+      .fromTo('.rx', { yPercent: 0, scale: 1, autoAlpha: 1 }, { yPercent: -12, scale: 0.9, autoAlpha: 0, duration: 0.5, immediateRender: false }, '+=0.15')
+      .set('.boxes', { autoAlpha: 1 })
+      .fromTo('.box', { y: -40, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.6, stagger: 0.2 })
+      .to({}, { duration: 0.5 })
+      // 3: kutular iner ve kaybolur, poşet adı ve tarihle gelir
+      .to('.box', { y: mobile ? 50 : 70, scale: 0.8, autoAlpha: 0, duration: 0.5, stagger: 0.08 })
+      .set('.boxes', { autoAlpha: 0 })
+      .fromTo('.bag', { y: 120, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.8 })
       .fromTo('.bag__front > *', { opacity: 0, y: 8 }, { opacity: 1, y: 0, duration: 0.4, stagger: 0.12 })
       .fromTo('.bag__ready', { scale: 1.3 }, { scale: 1, duration: 0.35, ease: 'back.out(2)' }, '<')
       .to({}, { duration: 0.4 });

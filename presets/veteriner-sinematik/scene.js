@@ -4,6 +4,58 @@
 import * as THREE from 'three';
 import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js';
 import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js';
+import { loadEnv } from '../../shared/lib3d.js';
+
+// Gerçekçilik: kapak kumaş cilt (dokuma normal haritası + kumaş parlaklığı), mühür sapı ahşap damarlı,
+// stüdyo HDRI ışığı (yüklenince), ACES ton eşleme.
+function clothNormal(size = 256) {
+  const c = document.createElement('canvas');
+  c.width = c.height = size;
+  const g = c.getContext('2d');
+  const img = g.createImageData(size, size);
+  let seed = 3;
+  const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
+  for (let y = 0; y < size; y++)
+    for (let x = 0; x < size; x++) {
+      // dokuma: iki yönde ince iplik dalgası + rastgele lif
+      const wx = Math.sin((x / size) * Math.PI * 2 * 64) * 0.5;
+      const wy = Math.sin((y / size) * Math.PI * 2 * 64) * 0.5;
+      const over = ((Math.floor(x / 2) + Math.floor(y / 2)) % 2) ? wx : wy;
+      const n = (rnd() - 0.5) * 0.35;
+      const i = (y * size + x) * 4;
+      img.data[i] = 128 + (over + n) * 38;
+      img.data[i + 1] = 128 + ((((Math.floor(x / 2) + Math.floor(y / 2)) % 2) ? wy : wx) + n) * 38;
+      img.data[i + 2] = 245;
+      img.data[i + 3] = 255;
+    }
+  g.putImageData(img, 0, 0);
+  const t = new THREE.CanvasTexture(c);
+  t.wrapS = t.wrapT = THREE.RepeatWrapping;
+  t.repeat.set(4, 5.6);
+  return t;
+}
+function woodTexture() {
+  const c = document.createElement('canvas');
+  c.width = 64; c.height = 512;
+  const g = c.getContext('2d');
+  const grd = g.createLinearGradient(0, 0, 64, 0);
+  grd.addColorStop(0, '#9c5e2e'); grd.addColorStop(0.5, '#c07f47'); grd.addColorStop(1, '#94562a');
+  g.fillStyle = grd; g.fillRect(0, 0, 64, 512);
+  g.globalAlpha = 0.22;
+  for (let i = 0; i < 38; i++) {
+    g.strokeStyle = i % 3 ? '#6b3a17' : '#e0a56b';
+    g.lineWidth = 0.6 + Math.random() * 1.4;
+    g.beginPath();
+    const x0 = Math.random() * 64;
+    g.moveTo(x0, 0);
+    for (let y = 0; y <= 512; y += 32) g.lineTo(x0 + Math.sin(y * 0.02 + i) * 4, y);
+    g.stroke();
+  }
+  const t = new THREE.CanvasTexture(c);
+  t.colorSpace = THREE.SRGBColorSpace;
+  t.wrapS = t.wrapT = THREE.RepeatWrapping;
+  return t;
+}
 
 export const W = 1, H = 1.4;
 const TH = 0.022; // kapak kalınlığı
@@ -146,6 +198,9 @@ export function createScene(canvas, { lite }) {
   const pmrem = new THREE.PMREMGenerator(renderer);
   scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
   scene.environmentIntensity = 0.7;
+  loadEnv('studio', renderer, { quality: lite ? 'lo' : 'hi' })
+    .then((env) => { scene.environment = env; scene.environmentIntensity = 0.62; })
+    .catch(() => {});
   const key = new THREE.DirectionalLight('#fff3e0', 2.2);
   key.position.set(-1.5, 4, 2.5);
   scene.add(key, new THREE.AmbientLight('#8b7cff', 0.35));
@@ -188,7 +243,10 @@ export function createScene(canvas, { lite }) {
   holder.add(book);
   scene.add(holder);
 
-  const coverMat = new THREE.MeshStandardMaterial({ color: '#35c9a2', roughness: 0.55, metalness: 0 });
+  const coverMat = new THREE.MeshPhysicalMaterial({
+    color: '#33c29d', roughness: 0.72, metalness: 0, normalMap: clothNormal(lite ? 128 : 256), normalScale: new THREE.Vector2(0.45, 0.45),
+    sheen: 0.6, sheenRoughness: 0.7, sheenColor: new THREE.Color('#bff5e3'),
+  });
   const back = new THREE.Mesh(new RoundedBoxGeometry(W + 0.03, H + 0.03, TH, 2, 0.008), coverMat);
   back.position.set(W / 2 + 0.005, 0, TH / 2);
   book.add(back);
@@ -255,7 +313,7 @@ export function createScene(canvas, { lite }) {
 
   // Mühür aleti
   const stamp = new THREE.Group();
-  const wood = new THREE.MeshStandardMaterial({ color: '#b8743e', roughness: 0.45 });
+  const wood = new THREE.MeshPhysicalMaterial({ map: woodTexture(), roughness: 0.42, clearcoat: 0.5, clearcoatRoughness: 0.25 });
   const pts = [];
   for (let i = 0; i <= 24; i++) {
     const t = i / 24;
@@ -397,7 +455,7 @@ export function createScene(canvas, { lite }) {
     const lm = leaves[0].material.uniforms;
     stampDefs.slice(0, 4).forEach((_, i) => (lm.uSt.value[i].w = s.stamps[i] ?? 0));
     // Mühür aleti
-    stamp.visible = s.tool > 0.001;
+    stamp.visible = s.tool > 0.001 && stampDefs.length > 0;
     if (stamp.visible) {
       const d = stampDefs[Math.min(stampDefs.length - 1, Math.max(0, Math.floor(s.toolAt)))] || stampDefs[0];
       const d2 = stampDefs[Math.min(stampDefs.length - 1, Math.floor(s.toolAt) + 1)] || d;

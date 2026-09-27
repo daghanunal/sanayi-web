@@ -178,7 +178,7 @@
 .ak__alan input:focus { outline: none; border-color: var(--pv-hardal); box-shadow: 0 0 0 3px rgb(233 162 59 / .22); }
 .ak__ipucu { font-size: 14px; color: var(--k-koyu-soluk); line-height: 1.5; }
 .ak__hizli { display: flex; flex-wrap: wrap; gap: 8px; }
-.ak__hizli button { font: inherit; font-size: 14px; font-weight: 600; color: var(--k-koyu-metin); background: transparent; border: 1.5px solid rgb(255 255 255 / .2); border-radius: 999px; padding: 8px 14px; cursor: pointer; }
+.ak__hizli button { font: inherit; font-size: 14px; font-weight: 600; color: var(--k-koyu-metin); background: transparent; border: 1.5px solid rgb(255 255 255 / .2); border-radius: 999px; padding: 8px 14px; min-height: 44px; cursor: pointer; }
 .ak__hizli button:hover { border-color: var(--pv-hardal); color: var(--pv-hardal); }
 
 .ak__karne {

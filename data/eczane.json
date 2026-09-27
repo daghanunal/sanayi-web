@@ -13,7 +13,15 @@
     "adres": "Şaşmaz Mah. Ankara Bulvarı No: 48/A, Etimesgut/Ankara",
     "mapsQuery": "Şaşmaz Mahallesi Etimesgut Ankara eczane"
   },
-  "saatler": [null, "08:30-19:00", "08:30-19:00", "08:30-19:00", "08:30-19:00", "08:30-19:00", "09:00-18:00"],
+  "saatler": [
+    null,
+    "08:30-19:00",
+    "08:30-19:00",
+    "08:30-19:00",
+    "08:30-19:00",
+    "08:30-19:00",
+    "09:00-18:00"
+  ],
   "nobet": {
     "url": "https://www.aeo.org.tr/nobetci-eczaneler",
     "kaynak": "Ankara Eczacı Odası"
@@ -65,23 +73,72 @@
     }
   ],
   "surec": [
-    { "baslik": "Fotoğrafını gönderin", "aciklama": "Reçetenin ya da e-reçete numaranın fotoğrafını WhatsApp'tan atın." },
-    { "baslik": "Eczacımız hazırlasın", "aciklama": "İlaçlar kontrol edilir, eksik varsa size yazarız." },
-    { "baslik": "Gelip teslim alın", "aciklama": "Hazır olunca haber veririz. Kimliğinizle gelin, sıra beklemeden alın." }
+    {
+      "baslik": "Fotoğrafını gönderin",
+      "aciklama": "Reçetenin ya da e-reçete numaranın fotoğrafını WhatsApp'tan atın."
+    },
+    {
+      "baslik": "Eczacımız hazırlasın",
+      "aciklama": "İlaçlar kontrol edilir, eksik varsa size yazarız."
+    },
+    {
+      "baslik": "Gelip teslim alın",
+      "aciklama": "Hazır olunca haber veririz. Kimliğinizle gelin, sıra beklemeden alın."
+    }
   ],
   "istatistikler": [
-    { "deger": 32, "sonek": "", "etiket": "yıldır aynı mahallede", "kurulustanHesapla": true },
-    { "deger": 2, "sonek": "", "etiket": "eczacı, her saat bir eczacı tezgâhta" },
-    { "deger": 15, "sonek": " dk", "etiket": "reçete hazırlama süresi (ortalama)" },
-    { "deger": 6, "sonek": " gün", "etiket": "haftada açık" }
+    {
+      "deger": 32,
+      "sonek": "",
+      "etiket": "yıldır aynı mahallede",
+      "kurulustanHesapla": true
+    },
+    {
+      "deger": 1,
+      "sonek": " fotoğraf",
+      "etiket": "reçete için yeterli, WhatsApp’tan"
+    },
+    {
+      "deger": 3,
+      "sonek": " adım",
+      "etiket": "gönder, hazırlansın, gel al"
+    },
+    {
+      "deger": 6,
+      "sonek": " gün",
+      "etiket": "haftada açık"
+    }
   ],
-  "puan": { "ortalama": 4.9, "adet": 187 },
+  "puan": {
+    "ortalama": 4.9,
+    "adet": 187
+  },
   "yorumlar": [
-    { "ad": "Ayşe D.", "puan": 5, "metin": "Annemin reçetesini WhatsApp'tan attım, akşam uğradığımda poşette hazırdı. İlaçların saatini kutulara tek tek yazmışlar." },
-    { "ad": "Hakan T.", "puan": 5, "metin": "Sanayideki dükkanımdan çıkıp beş dakikada alıyorum. Hiç sıra beklemedim." },
-    { "ad": "Zeynep K.", "puan": 5, "metin": "Bebeğim için sorduğum her şeyi sabırla anlattılar. Gereksiz ürün önermediler." },
-    { "ad": "Mustafa Y.", "puan": 4, "metin": "Tansiyonumu ölçüp kâğıda yazdılar, doktora götürdüm. Cumartesi de açıklar, bu büyük kolaylık." },
-    { "ad": "Elif S.", "puan": 5, "metin": "Kullandığım ilaçla vitamin birlikte olur mu diye sordum, bilgisayardan kontrol edip açıkladılar." }
+    {
+      "ad": "Ayşe D.",
+      "puan": 5,
+      "metin": "Annemin reçetesini WhatsApp'tan attım, akşam uğradığımda poşette hazırdı. İlaçların saatini kutulara tek tek yazmışlar."
+    },
+    {
+      "ad": "Hakan T.",
+      "puan": 5,
+      "metin": "Sanayideki dükkanımdan çıkıp beş dakikada alıyorum. Hiç sıra beklemedim."
+    },
+    {
+      "ad": "Zeynep K.",
+      "puan": 5,
+      "metin": "Bebeğim için sorduğum her şeyi sabırla anlattılar. Gereksiz ürün önermediler."
+    },
+    {
+      "ad": "Mustafa Y.",
+      "puan": 4,
+      "metin": "Tansiyonumu ölçüp kâğıda yazdılar, doktora götürdüm. Cumartesi de açıklar, bu büyük kolaylık."
+    },
+    {
+      "ad": "Elif S.",
+      "puan": 5,
+      "metin": "Kullandığım ilaçla vitamin birlikte olur mu diye sordum, bilgisayardan kontrol edip açıkladılar."
+    }
   ],
   "garanti": "Eczanemizde her zaman bir eczacı bulunur."
 }

@@ -84,8 +84,9 @@ img { display: block; max-width: 100%; }
 .top__brand {
   display: inline-flex; align-items: center; gap: 10px; text-decoration: none; color: var(--ink);
   font-family: var(--disp); font-weight: 850; font-size: 1.2rem; letter-spacing: -.02em; margin-right: auto;
-  min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  min-width: 0; min-height: 44px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
+.ornek { display: inline-flex; align-items: center; min-height: 24px; padding: 0 10px; margin-right: 8px; border-radius: 999px; background: #ffe7c2; color: #6b3d00; font-size: .72rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; vertical-align: middle; }
 .top__brand .caps { font-size: 1.1rem; }
 .top__nav { display: none; gap: 22px; }
 .top__nav a { color: var(--ink); text-decoration: none; font-weight: 600; font-size: .98rem; }
@@ -244,7 +245,8 @@ img { display: block; max-width: 100%; }
 @media (max-width: 899px) {
   .kutu__pin { align-content: start; padding-top: calc(var(--head) + 26px); }
   .kutu__list li { position: absolute; left: 0; right: 0; top: 0; }
-  .kutu__end { position: absolute; left: 0; right: 0; top: 0; }
+  .kutu__end { position: absolute; left: 0; right: 0; top: 0; visibility: hidden; }
+  .kutu__list li { visibility: hidden; }
   .kutu__cta .btn { width: 100%; }
   .kutu__talk { min-height: 250px; margin-top: 10px; }
   .kutu__day { font-size: clamp(3.4rem, 17vw, 6.5rem); }
@@ -265,7 +267,7 @@ img { display: block; max-width: 100%; }
   .org__grid { gap: 10px; }
   .org__col { gap: 12px; }
 }
-.rm .kutu__list li, .rm .kutu__end { position: static; margin-bottom: 12px; }
+.rm .kutu__list li, .rm .kutu__end { position: static; margin-bottom: 12px; visibility: visible; }
 .rm .lid { transform: rotateX(-118deg); }
 
 /* 4. Reçete ---------------------------------------------------------------- */

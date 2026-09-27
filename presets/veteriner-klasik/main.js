@@ -1,7 +1,7 @@
 // Burun Buruna (klasik aile, veteriner kliniği): stüdyo fonu sisli gri-mavi, derin mürekkep,
 // mandalina vurgu. Young Serif (başlık) + Albert Sans (gövde). WebGL yok, fotoğraf ağırlıklı.
 // İmza anı hero'da: köpek soldan, kedi sağdan yalnızca burnunu uzatır; kaydırdıkça ikisi ortaya
-// yaklaşır, burunları ortadaki çizgide buluşur ve çizgi iki ayrı muayene odasının duvarına dönüşür.
+// yaklaşır, burunları ortadaki çizgide buluşur ve çizgi kedi ve köpeğin ayrı randevu saatlerini ayıran çizgiye dönüşür.
 import sektor from '../../data/sektor-veteriner.json';
 import extra from '../../data/veteriner-klasik.json';
 import '../../shared/base.css';
@@ -108,10 +108,11 @@ function buildHero() {
   });
   tl.fromTo(kay[0], { x: () => -geo.sx, y: () => geo.sy, rotate: -4 }, { x: 0, y: 0, rotate: 0, duration: 0.72, ease: 'power2.inOut' }, 0)
     .fromTo(kay[1], { x: () => geo.sx, y: () => geo.sy, rotate: 4 }, { x: 0, y: 0, rotate: 0, duration: 0.72, ease: 'power2.inOut' }, 0)
-    .to('.hero__copy', { yPercent: -18, opacity: 0, duration: 0.34, ease: 'power1.in' }, 0.02)
-    .to('.hero__ipucu', { opacity: 0, duration: 0.1 }, 0)
+    .to('.hero__copy', { yPercent: -18, autoAlpha: 0, duration: 0.34, ease: 'power1.in' }, 0.02)
+    .to('.hero__ipucu', { autoAlpha: 0, duration: 0.1 }, 0)
     .fromTo('.duvar__cizgi', { scaleY: 0 }, { scaleY: 1, duration: 0.22, ease: 'power2.out' }, 0.68)
     .fromTo('.duvar__etiket', { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.12, stagger: 0.04 }, 0.78)
+    .fromTo('.hero__son', { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.01 }, 0.8)
     .fromTo('.hero__son > *', { opacity: 0, y: 26 }, { opacity: 1, y: 0, duration: 0.14, stagger: 0.05 }, 0.8)
     .to({}, { duration: 0.08 });
 }
@@ -249,7 +250,7 @@ const stars = (n) => Array.from({ length: 5 }, (_, i) => `<span class="${i < n ?
 $('[data-score]').textContent = nf(d.puan.ortalama, 1);
 $('[data-stars]').innerHTML = stars(Math.round(d.puan.ortalama));
 $('[data-stars]').setAttribute('aria-label', `5 üzerinden ${nf(d.puan.ortalama, 1)}`);
-$('[data-review-count]').textContent = `Google'da ${nf(d.puan.adet)} değerlendirme`;
+$('[data-review-count]').innerHTML = '<span class="ornek">Örnek yorumlar</span> Puan ve yorumlar tanıtım içindir';
 $('[data-reviews]').innerHTML = d.yorumlar.map((y) => `
   <li class="rev">
     <p class="rev__stars" aria-label="${Number(y.puan)} yıldız">${stars(y.puan)}</p>

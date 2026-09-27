@@ -48,7 +48,6 @@ function ablative(n) {
     openingHoursSpecification: d.saatler
       .map((s, i) => (s ? { '@type': 'OpeningHoursSpecification', dayOfWeek: `https://schema.org/${GUN[i]}`, opens: s.split('-')[0], closes: s.split('-')[1] } : null))
       .filter(Boolean),
-    ...(d.puan && { aggregateRating: { '@type': 'AggregateRating', ratingValue: d.puan.ortalama, reviewCount: d.puan.adet } }),
   });
   document.title = `${d.isletme.ad} | Eczane | Etimesgut, Ankara`;
 })();
@@ -250,8 +249,8 @@ $('#yorumlar').innerHTML = `
     <p class="yorum__big" aria-hidden="true">${esc(puanStr)}</p>
     <div>
       <p class="stars" aria-label="5 üzerinden ${esc(puanStr)}">${yildiz(Math.round(d.puan.ortalama))}</p>
-      <h2 id="yorum-h" class="h2">${esc(String(d.puan.adet))} değerlendirme</h2>
-      <p class="lead">Google'da mahallemizden yazılanlar.</p>
+      <h2 id="yorum-h" class="h2">Mahalleden yorumlar</h2>
+      <p class="lead"><span class="ornek mono">Örnek yorumlar</span> Puan ve yorumlar tanıtım içindir.</p>
     </div>
   </header>
   <ul class="cards">${d.yorumlar
@@ -305,7 +304,7 @@ $('#foot').innerHTML = `
     <p class="foot__brand">${capsIcon}<span>${ad}</span></p>
     <p>${esc(d.iletisim.adres)}</p>
     <p><a href="${telHref(d)}">${esc(d.iletisim.telefon)}</a> · <a href="${esc(nobet.url)}" target="_blank" rel="noopener">Nöbetçi eczaneler</a></p>
-    <p class="mono foot__s">© ${buYil} ${ad}. Sitede ilaç tanıtımı ve satışı yapılmaz; ilaçlarınız eczanede eczacı tarafından verilir.</p>
+    <p class="mono foot__s">© ${buYil} ${ad}. Sitede ilaç tanıtımı ve satışı yapılmaz; ilaçlarınız eczanede eczacı tarafından verilir. Fotoğraflar temsilîdir (Pexels). Yorumlar örnektir.</p>
   </div>`;
 
 // ============================================================================
@@ -408,11 +407,13 @@ function motion() {
   if (isDesk()) {
     items.forEach((li, i) => ktl.from(li, { opacity: 0, x: 40, duration: 0.5 }, 0.8 + i * 2));
   } else {
+    // Telefonda maddeler aynı yerde sırayla: görünmeyen madde ve kapanış balonu dokunmayı/katmanı yutmasın (autoAlpha)
     items.forEach((li, i) => {
-      ktl.fromTo(li, { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.4 }, 0.4 + i * 2.2);
-      if (i < items.length - 1) ktl.to(li, { opacity: 0, y: -14, duration: 0.4 }, 0.4 + i * 2.2 + 1.8);
+      ktl.fromTo(li, { autoAlpha: 0, y: 30 }, { autoAlpha: 1, y: 0, duration: 0.4 }, 0.4 + i * 2.2);
+      if (i < items.length - 1) ktl.to(li, { autoAlpha: 0, y: -14, duration: 0.4 }, 0.4 + i * 2.2 + 1.8);
     });
-    ktl.to(items.at(-1), { opacity: 0, y: -14, duration: 0.4 }, L - 0.2);
+    ktl.to(items.at(-1), { autoAlpha: 0, y: -14, duration: 0.4 }, L - 0.2);
+    ktl.fromTo('.kutu__end', { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.05 }, L + 0.1);
   }
   ktl.fromTo('.bubble', { opacity: 0, y: 40, scale: 0.9, transformOrigin: '0% 100%' }, { opacity: 1, y: 0, scale: 1, duration: 0.6, ease: 'back.out(1.6)' }, L + 0.1)
     .fromTo('.kutu__cta', { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.4 }, L + 0.3)

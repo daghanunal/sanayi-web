@@ -1,4 +1,5 @@
-/* Perdah: Alçıbay klasik öneri. Beton beyazı, arduvaz lacivert, marka turuncusu (yalnız eylem). */
+/* Perdah: Alçıbay klasik öneri. Beton beyazı, arduvaz lacivert, tuğla kiremidi (yalnız eylem ve vurgu).
+   Kardeş tasarımlardan ayrışsın diye marka turuncusu yerine sıvanın altındaki tuğlanın rengi. */
 :root {
   --beyaz: #fdfdfc;
   --sis: #edefee;
@@ -8,15 +9,15 @@
   --murekkep: #16222d;
   --arduvaz: #1d2f40;
   --arduvaz-2: #27405a;
-  --turuncu: #f29d20;
-  --turuncu-koyu: #9a5a04;
-  --focus: #f29d20;
+  --turuncu: #b24a2f;
+  --turuncu-koyu: #8e3a24;
+  --focus: #b24a2f;
   --r: 14px;
   --kenar: clamp(16px, 4vw, 48px);
   --bar-bg: #16222d;
   --bar-fg: #fdfdfc;
-  --bar-accent: #f29d20;
-  --bar-accent-fg: #16222d;
+  --bar-accent: #b24a2f;
+  --bar-accent-fg: #ffffff;
   --bar-radius: 14px;
   color-scheme: light;
 }
@@ -37,12 +38,12 @@ h1, h2, h3 { font-family: 'Red Hat Display', system-ui, sans-serif; letter-spaci
   transition: transform .15s ease, background-color .2s ease, color .2s ease;
 }
 .btn:active { transform: scale(.97); }
-.btn--turuncu { background: var(--turuncu); color: var(--murekkep); }
-.btn--turuncu:hover { background: #ffad3a; }
+.btn--turuncu { background: var(--turuncu); color: #fff; }
+.btn--turuncu:hover { background: #9b3f27; }
 .btn--koyu { background: var(--murekkep); color: var(--beyaz); }
 .btn--cizgi { background: transparent; color: inherit; box-shadow: inset 0 0 0 1.5px currentColor; }
 .btn--cizgi:hover { background: rgb(22 34 45 / .06); }
-.btn--kucuk { min-height: 42px; padding: 0 16px; font-size: 15px; }
+.btn--kucuk { min-height: 44px; padding: 0 16px; font-size: 15px; }
 .btn--buyuk { min-height: 60px; padding: 0 30px; font-size: 19px; }
 
 /* --- Üst çubuk --- */
@@ -57,13 +58,18 @@ h1, h2, h3 { font-family: 'Red Hat Display', system-ui, sans-serif; letter-spaci
   backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
 }
 .ust.is-dolu { box-shadow: 0 1px 0 var(--cizgi); }
-.ust__logo img { height: 25px; width: auto; }
+.ust__logo { display: inline-flex; align-items: center; min-height: 44px; color: var(--murekkep); text-decoration: none; }
+/* Kelime logo: firmanın logosu kullanılmaz; ad, sitenin başlık yazısıyla */
+.wm { display: inline-flex; align-items: baseline; gap: 6px; font: 800 24px/1 'Red Hat Display', sans-serif; letter-spacing: -.035em; }
+.wm small { font: 600 11px/1 'Red Hat Mono', monospace; letter-spacing: .08em; text-transform: uppercase; color: var(--soluk); }
+.wm--acik { color: #fff; }
+.wm--acik small { color: #a9b7c3; }
 .ust__nav { display: flex; gap: 22px; margin-left: auto; font-weight: 600; font-size: 15px; }
 .ust__nav a { text-decoration: none; color: var(--soluk); }
 .ust__nav a:hover { color: var(--murekkep); }
 .ust__tel {
   display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px; border-radius: 999px;
-  background: var(--turuncu); color: var(--murekkep); font-weight: 800; font-size: 15px; text-decoration: none;
+  background: var(--turuncu); color: #fff; font-weight: 800; font-size: 15px; text-decoration: none; min-height: 44px; min-width: 44px; justify-content: center; box-sizing: border-box;
 }
 @media (max-width: 899px) {
   .ust { height: 58px; }
@@ -101,7 +107,7 @@ h1, h2, h3 { font-family: 'Red Hat Display', system-ui, sans-serif; letter-spaci
 .giris__adim li { flex: 1; padding-top: 8px; border-top: 3px solid var(--cizgi); transition: border-color .3s ease, color .3s ease; }
 .giris__adim li.is-aktif { border-color: var(--turuncu); color: var(--murekkep); }
 @media (max-width: 699px) {
-  .giris__kart { left: 12px; right: 12px; width: auto; bottom: 96px; padding: 18px; }
+  .giris__kart { left: 12px; right: 12px; width: auto; bottom: calc(var(--bar-space, 96px) + 12px); padding: 18px; max-height: 44svh; }
   .giris__baslik { font-size: 34px; }
   .giris__metin { display: none; }
   .giris__butonlar .btn { flex: 1; min-height: 46px; padding: 0 14px; font-size: 15px; }
@@ -150,7 +156,7 @@ h1, h2, h3 { font-family: 'Red Hat Display', system-ui, sans-serif; letter-spaci
   padding: clamp(18px, 3vw, 34px); border-radius: var(--r); background: var(--sis);
   border-top: 6px solid var(--u);
 }
-.oneri__torba { width: 100%; height: auto; filter: drop-shadow(0 18px 20px rgb(0 0 0 / .18)); }
+.oneri__torba { width: 100%; height: auto; }
 .oneri__etiket { font: 600 13px 'Red Hat Mono', monospace; color: var(--soluk); }
 .oneri h3 { font-size: clamp(26px, 3vw, 36px); line-height: 1.1; margin: 4px 0 8px; }
 .oneri p { color: var(--soluk); }
@@ -197,7 +203,7 @@ h1, h2, h3 { font-family: 'Red Hat Display', system-ui, sans-serif; letter-spaci
   background: linear-gradient(to bottom, color-mix(in srgb, var(--u) 16%, var(--sis)), var(--sis));
 }
 .urun__gorsel::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 5px; background: var(--u); }
-.urun__gorsel img { height: 215px; width: auto; filter: drop-shadow(0 16px 16px rgb(0 0 0 / .18)); }
+.urun__gorsel img { height: 230px; width: auto; }
 .urun__metin { padding: 20px; display: flex; flex-direction: column; }
 .urun__metin h3 { font-size: 22px; line-height: 1.15; }
 .urun__metin > p { margin-top: 6px; color: var(--soluk); font-size: 15px; }
@@ -209,7 +215,7 @@ h1, h2, h3 { font-family: 'Red Hat Display', system-ui, sans-serif; letter-spaci
 .urun__arti li { padding: 4px 10px; border-radius: 999px; background: var(--sis); font-size: 13px; font-weight: 600; }
 .urun__foy {
   margin-top: auto; padding-top: 18px; align-self: flex-start; background: none; border: 0; cursor: pointer;
-  font: 700 15px 'Red Hat Text', sans-serif; color: var(--murekkep); text-decoration: underline;
+  font: 700 15px 'Red Hat Text', sans-serif; color: var(--murekkep); text-decoration: underline; min-height: 44px; display: inline-flex; align-items: center;
   text-decoration-color: var(--turuncu); text-decoration-thickness: 3px; text-underline-offset: 5px; padding-left: 0;
 }
 
@@ -227,11 +233,11 @@ h1, h2, h3 { font-family: 'Red Hat Display', system-ui, sans-serif; letter-spaci
   display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%;
   border: 2px solid var(--murekkep); font: 800 18px 'Red Hat Display', sans-serif;
 }
-.sira__liste li.is-aktif .sira__no { background: var(--turuncu); border-color: var(--turuncu); }
+.sira__liste li.is-aktif .sira__no { background: var(--turuncu); border-color: var(--turuncu); color: #fff; }
 .sira__liste h3 { font-size: 22px; }
 .sira__liste p { color: var(--soluk); margin-top: 2px; }
 .sira__urun {
-  margin-top: 10px; padding: 6px 12px 6px 10px; border-radius: 8px; border: 0; cursor: pointer;
+  margin-top: 10px; padding: 6px 12px 6px 10px; min-height: 44px; border-radius: 8px; border: 0; cursor: pointer;
   background: var(--sis); font: 700 14px 'Red Hat Text', sans-serif; color: var(--murekkep);
   box-shadow: inset 4px 0 0 var(--u);
 }
@@ -300,7 +306,7 @@ h1, h2, h3 { font-family: 'Red Hat Display', system-ui, sans-serif; letter-spaci
 .yer > p:not(.yer__kap) { margin-top: 8px; }
 .yer__not { color: var(--soluk); font-size: 15px; }
 .yer__tel { display: flex; flex-wrap: wrap; gap: 4px 16px; font-weight: 700; }
-.yer__tel a { text-decoration: none; }
+.yer__tel a { text-decoration: none; display: inline-flex; align-items: center; min-height: 44px; }
 .yer__tel span { font-weight: 400; color: var(--soluk); }
 .yer__btn { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
 .fab__embed {

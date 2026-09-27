@@ -29,7 +29,7 @@ const ICON_MALA_BUYUK = `<svg viewBox="0 0 220 150" aria-hidden="true">
   <path d="M10 104 L176 104 L208 72 L42 72 Z" fill="url(#bicak)" stroke="#3b4247" stroke-width="2"/>
   <path d="M10 104 L176 104 L208 72" fill="none" stroke="#fff" stroke-opacity=".6" stroke-width="2"/>
   <path d="M112 72 L112 44 Q112 34 122 34 L150 34" fill="none" stroke="#3b4247" stroke-width="7" stroke-linecap="round"/>
-  <rect x="146" y="22" width="64" height="24" rx="12" fill="#f29d20" stroke="#8a520b" stroke-width="2"/>
+  <rect x="146" y="22" width="64" height="24" rx="12" fill="#b24a2f" stroke="#6e2c1b" stroke-width="2"/>
   <path d="M40 96 Q110 84 180 92" fill="none" stroke="#fff" stroke-opacity=".9" stroke-width="5" stroke-linecap="round"/>
 </svg>`;
 
@@ -70,7 +70,7 @@ if (!vitrinModu()) {
 
 $('#ust').innerHTML = `
   <a class="ust__logo" href="#giris" aria-label="${esc(is.ad)} ana sayfa">
-    <img src="${asset('/img/alcibay/logo.png')}" alt="${esc(is.ad)}" width="144" height="25">
+    <span class="wm">${esc(is.ad)}<small>yapı alçısı</small></span>
   </a>
   <nav class="ust__nav" aria-label="Bölümler">
     <a href="#urunler">Alçılar</a><a href="#plaka">Alçı plaka</a><a href="#kurumsal">Kurumsal</a><a href="#fabrikalar">Fabrikalar</a>
@@ -167,7 +167,7 @@ function bulSonuc(id) {
     const u = urun(x.urun);
     el.innerHTML = `
       <article class="oneri" style="--u:${u.renk}">
-        <img class="oneri__torba" src="${u.torba}" alt="${esc(u.ad)} torbası" width="191" height="245" loading="lazy">
+        <img class="oneri__torba" src="${u.torba}" alt="${esc(u.ad)} torbası" width="600" height="800" loading="lazy">
         <div class="oneri__metin">
           <p class="oneri__etiket">Önerimiz</p>
           <h3>${esc(u.ad)}</h3>
@@ -190,7 +190,7 @@ $('#urunler').innerHTML = `
   <ul class="urunler">
     ${urunler.map((u) => `
       <li class="urun" style="--u:${u.renk}">
-        <div class="urun__gorsel"><img src="${u.torba}" alt="${esc(u.ad)} torbası" width="191" height="245" loading="lazy"></div>
+        <div class="urun__gorsel"><img src="${u.torba}" alt="${esc(u.ad)} torbası" width="600" height="800" loading="lazy"></div>
         <div class="urun__metin">
           <h3>${esc(u.ad)}</h3>
           <p>${esc(u.kisa)}</p>
@@ -326,9 +326,9 @@ $('#iletisim').innerHTML = `
 
 $('#alt').innerHTML = `
   <div class="alt__ic">
-    <img src="${asset('/img/alcibay/logo.png')}" alt="${esc(is.ad)}" width="144" height="25" loading="lazy">
+    <p class="wm wm--acik">${esc(is.ad)}<small>yapı alçısı</small></p>
     <p>${esc(is.unvan)}<br>${esc(merkez.adres)}, ${esc(merkez.il)}</p>
-    <p class="alt__not">Bu sayfa Alçıbay için hazırlanmış bir tasarım önerisidir. Ürün bilgileri alcibay.com'dan alınmıştır; uygulama değerleri şantiye koşullarına göre değişebilir. Fotoğraflar: Alçıbay ve Pexels.</p>
+    <p class="alt__not">Bu sayfa Alçıbay için hazırlanmış bir tasarım önerisidir. Ürün bilgileri, adresler ve kapasiteler alcibay.com'dan alınmıştır; uygulama değerleri şantiye koşullarına göre değişebilir. Fotoğraflar temsilîdir (Pexels). Torba ve plaka görselleri temsilî 3D çizimlerdir; gerçek ambalaj farklıdır.</p>
     <p class="alt__telif">© ${new Date().getFullYear()} ${esc(is.ad)}</p>
   </div>`;
 
@@ -342,7 +342,7 @@ function foyAc(id) {
   foy.innerHTML = `
     <div class="foy__ic" data-lenis-prevent>
       <header class="foy__bas">
-        <img src="${u.torba}" alt="" width="96" height="123">
+        <img src="${u.torba}" alt="" width="96" height="128">
         <div><p class="foy__etiket">Teknik föy</p><h2>${esc(u.ad)}</h2><p>${esc(u.kisa)}</p></div>
         <button type="button" class="foy__kapat" data-kapat aria-label="Kapat">×</button>
       </header>

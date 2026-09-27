@@ -3,7 +3,7 @@ import ana from '../../data/sektor-veteriner.json';
 import ek from '../../data/kurumsal-veteriner.json';
 import { kurumsal, derinBirlestir } from '../_kurumsal/engine.js';
 import { telHref, waHref, mapsHref, icons, gsap, reducedMotion } from '../../shared/core.js';
-import { karneHero, asiKarnesi, hizmetler, hizmetOzet, ozet } from './extra.js';
+import { karneHero, asiKarnesi, hizmetler, hizmetOzet, ozet, yorumlar } from './extra.js';
 import './style.css';
 
 // "Pati karnesi" yönü: pudra pembesi zemin, derin petrol yeşili, hardal mühür.
@@ -52,6 +52,7 @@ kurumsal({
     teklifEtiketi: 'Randevu alın',
     hizmetEtiketi: 'Hizmetler',
     metinBoyutu: true,
+    altNot: 'Fotoğraflar temsilîdir (Pexels). Yorumlar ve aşı takvimi örnektir; kesin takvimi hekim muayeneden sonra belirler.',
     css: {
       zemin: '#f7ebe6', yuzey: '#efdcd5', metin: '#10292b', soluk: '#4f6466', cizgi: 'rgb(16 41 43 / .15)',
       vurgu: '#0b6f6a', 'vurgu-metin': '#ffffff', koyu: '#0e3032', 'koyu-metin': '#f7ebe6', 'koyu-soluk': '#9dbcb9',
@@ -69,7 +70,7 @@ kurumsal({
     { id: 'sorular', baslik: 'Sorular', bolumler: ['sss', 'yorumlar', 'cta'] },
     { id: 'iletisim', baslik: 'İletişim', bolumler: ['iletisim'] },
   ],
-  ekstralar: { karneHero, asiKarnesi, hizmetler, hizmetOzet, ozet },
+  ekstralar: { karneHero, asiKarnesi, hizmetler, hizmetOzet, ozet, yorumlar },
   aksiyon: (d) => [
     { href: telHref(d), ikon: icons.phone, etiket: 'Ara' },
     { href: waHref(d, `Merhaba ${d.isletme.ad}, randevu almak istiyorum.`), ikon: icons.whatsapp, etiket: 'WhatsApp', dis: true },
@@ -86,6 +87,5 @@ kurumsal({
     openingHoursSpecification: d.saatler
       .map((s, i) => (s ? { '@type': 'OpeningHoursSpecification', dayOfWeek: `https://schema.org/${GUN[i]}`, opens: s.split('-')[0], closes: s.split('-')[1] } : null))
       .filter(Boolean),
-    ...(d.puan && { aggregateRating: { '@type': 'AggregateRating', ratingValue: d.puan.ortalama, reviewCount: d.puan.adet } }),
   }),
 });

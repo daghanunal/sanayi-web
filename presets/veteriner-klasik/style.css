@@ -67,7 +67,7 @@ body {
   transition: background-color .3s ease, box-shadow .3s ease;
 }
 .top.is-solid { background: rgb(229 236 235 / .9); box-shadow: 0 1px 0 var(--cizgi); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
-.top__brand { display: flex; align-items: center; gap: 11px; margin-right: auto; text-decoration: none; min-width: 0;
+.top__brand { display: flex; align-items: center; gap: 11px; margin-right: auto; text-decoration: none; min-width: 0; min-height: 44px;
   font: 400 20px/1 var(--display); letter-spacing: -0.01em; }
 .top__brand > span:last-child { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-top: .1em; }
 .top__mark { position: relative; width: 28px; height: 22px; flex: none; display: flex; justify-content: space-between; align-items: center; }
@@ -117,7 +117,7 @@ body {
 .hero__durum i, .kon__durum i { width: 9px; height: 9px; border-radius: 50%; background: #8a9aa0; flex: none; }
 .is-open .hero__durum i, .is-open .kon__durum i { background: #1f9d55; box-shadow: 0 0 0 4px rgb(31 157 85 / .2); }
 
-.hero__son { position: absolute; z-index: 3; left: var(--pad); bottom: clamp(28px, 6vh, 64px); max-width: 520px; }
+.hero__son { position: absolute; z-index: 3; left: var(--pad); bottom: clamp(28px, 6vh, 64px); max-width: 520px; visibility: hidden; }
 .hero__son > * { opacity: 0; }
 .hero__sonbaslik { font: 400 clamp(30px, 3.4vw, 50px)/1.05 var(--display); letter-spacing: -0.02em; text-wrap: balance; }
 .hero__sonmetin { margin-top: 12px; color: var(--ink-2); max-width: 44ch; font-size: 16.5px; }
@@ -140,20 +140,21 @@ body {
   .hero__name { margin-top: 14px; }
   .hero__cta { margin-top: 22px; gap: 10px; }
   .hero__cta .btn { min-height: 52px; padding: 0 18px; }
-  .hero__son { right: 16px; bottom: 104px; }
+  .hero__son { right: 16px; bottom: calc(var(--bar-space, 96px) + 12px); }
   .hero__sonmetin { font-size: 15.5px; }
-  .hero__ipucu { bottom: 104px; }
+  .hero__ipucu { display: none; }
   .duvar__cizgi { top: 8%; bottom: 46%; }
   .duvar__etiket { top: calc(var(--nose-y, 50%) - 190px); font-size: 11px; padding: 6px 10px 5px; }
-  .is-vitrin .hero__son, .is-vitrin .hero__ipucu { bottom: 100px; }
 }
-@media (max-width: 899px) and (max-height: 700px) {
+@media (max-width: 899px) and (max-height: 760px) {
   .hero__slogan { display: none; }
+  .hero__durum { display: none; }
 }
 /* Hareket azaltılmış: son hâl */
 @media (prefers-reduced-motion: reduce) {
   .hero__copy { display: none; }
   .hero__son > *, .duvar__etiket { opacity: 1; }
+  .hero__son { visibility: visible; }
   .duvar__cizgi { transform: none; }
   .hero__ipucu { display: none; }
 }
@@ -179,7 +180,7 @@ body {
 .svc__time { display: inline-flex; align-items: center; gap: 7px; padding: 7px 12px 6px; border-radius: 10px; background: var(--beyaz);
   font-weight: 700; font-size: 14px; }
 .svc__time svg { width: 15px; height: 15px; color: var(--tan-ink); }
-.svc__link { display: inline-flex; align-items: center; gap: 7px; min-height: 36px; padding: 0 12px; border-radius: 10px; border: 1.5px solid var(--cizgi);
+.svc__link { display: inline-flex; align-items: center; gap: 7px; min-height: 44px; padding: 0 14px; border-radius: 10px; border: 1.5px solid var(--cizgi);
   font-weight: 700; font-size: 14px; text-decoration: none; }
 .svc__link svg { width: 15px; height: 15px; }
 .svc__link:hover { border-color: var(--ink); }
@@ -381,6 +382,8 @@ body {
 /* --- Footer --- */
 .foot { background: var(--ink); color: var(--muted-d); padding: 48px var(--pad) 40px; display: grid; gap: 6px; font-size: 15px; }
 .foot__name { font: 400 26px/1.1 var(--display); color: var(--beyaz); margin-bottom: 6px; }
-.foot a { color: var(--beyaz); text-decoration: none; }
+.foot a { color: var(--beyaz); text-decoration: none; display: inline-flex; align-items: center; min-height: 44px; }
 .foot__small { margin-top: 18px; font-size: 13px; opacity: .8; }
 @media (max-width: 899px) { .foot { padding-bottom: 120px; } }
+
+.ornek { display: inline-flex; align-items: center; min-height: 24px; padding: 0 10px; margin-right: 8px; border-radius: 999px; background: #f7dcc9; color: #7a3410; font: 700 11.5px/1 var(--body); letter-spacing: .08em; text-transform: uppercase; vertical-align: middle; }

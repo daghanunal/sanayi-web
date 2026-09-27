@@ -3,10 +3,10 @@
   "hero": {
     "ust": "Kedi ve köpek kliniği",
     "ipucu": "Kaydırın, tanışsınlar",
-    "sol": "Köpek odası",
-    "sag": "Kedi odası",
-    "sonBaslik": "Burun buruna. Ama ayrı odalarda.",
-    "sonMetin": "Kedi köpek kokusundan, köpek kedi sesinden gerilmesin diye iki muayene odamız ayrı. Bekleme sırası da ayrı tutulur."
+    "sol": "Köpek saati",
+    "sag": "Kedi saati",
+    "sonBaslik": "Burun buruna. Ama ayrı saatlerde.",
+    "sonMetin": "Kedi köpek kokusundan, köpek kedi sesinden gerilmesin diye randevuları türüne göre ayrı saatlere koyarız; bekleme sırasında karşılaşmazlar."
   },
   "rehber": {
     "kopek": {

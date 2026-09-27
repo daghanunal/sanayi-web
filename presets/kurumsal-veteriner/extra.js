@@ -393,3 +393,12 @@ export const ozet = {
   ...BOLUMLER.ozet,
   render: (d, ctx, sorgu) => BOLUMLER.ozet.render(d, ctx, sorgu).replace('>Kurumsal ', '>Kliniğimiz '),
 };
+
+// --- Yorumlar: örnek olduğu açık -------------------------------------------------------------
+export const yorumlar = {
+  render(d, ctx, sorgu) {
+    return BOLUMLER.yorumlar.render(d, ctx, sorgu)
+      .replace(/<span>\d+ değerlendirme<\/span>/, '<span>örnek puan</span>')
+      .replace('<ul class="k-yorumlar__liste"', '<p class="k-not">Bu yorumlar tasarım örneğidir; kliniğin kendi yorumlarıyla değiştirilir.</p><ul class="k-yorumlar__liste"');
+  },
+};

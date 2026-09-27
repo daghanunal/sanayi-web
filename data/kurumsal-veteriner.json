@@ -10,7 +10,7 @@
     },
     "ozet": {
       "baslik": "Acele etmeden bakarız",
-      "metin": "Elvankent'te bir mahalle kliniğiyiz. Muayeneyi baştan sona yapar, ne bulduğumuzu ve ne önerdiğimizi size tek tek anlatırız. Kedi ve köpek için ayrı muayene odamız var; hayvanınız bekleme salonunda birbirini görmeden sırasını bekler."
+      "metin": "Elvankent’te bir mahalle kliniğiyiz. Muayeneyi baştan sona yapar, ne bulduğumuzu ve ne önerdiğimizi size tek tek anlatırız. Kedi ve köpek randevularını ayrı saatlere koyarız; bekleme sırasında karşılaşmasınlar."
     },
     "hizmetOzetBaslik": "Klinikte neler yapıyoruz",
     "yorumBaslik": "Dostlarının sahipleri anlatıyor",
@@ -18,7 +18,7 @@
       "baslik": "Elvankent'te bir mahalle kliniği",
       "paragraflar": [
         "Elvankent'teki kliniğimizde kedi ve köpeklere, arada da tavşan, muhabbet kuşu ve hamstere bakıyoruz.",
-        "Kliniğimizde iki ayrı muayene odası, kan tahlili için cihazlar ve ultrason var. Hemogram ve biyokimya sonucunu çoğu zaman aynı ziyarette görürsünüz.",
+        "Muayene, aşı, kan tahlili ve ultrason için randevu verilir. Tahlil gerekirse nedenini anlatır, onayınızı aldıktan sonra yaparız; sonucu mümkünse aynı ziyarette konuşuruz.",
         "Her hayvanın bir karnesi var. Aşı, tahlil ve kontrol tarihlerini biz tutar, günü gelince WhatsApp'tan hatırlatırız."
       ],
       "gorsel": "/img/sektor-veteriner/hekim-kopek.jpg",
@@ -46,11 +46,11 @@
       "baslik": "Klinikte nasıl çalışıyoruz",
       "metin": "Her ziyaretin sonunda ne yaptığımızı ve bir sonraki adımı karneye yazarız.",
       "maddeler": [
-        "Kedi ve köpek için ayrı muayene odası",
-        "Hemogram ve biyokimya klinik içinde, sonuç 30-45 dakikada",
+        "Kedi ve köpek randevuları ayrı saatlerde",
+        "Tahlil ve ultrason öncesi nedenini anlatır, onay alırız",
         "Operasyon öncesi kan tahlili ve anestezi görüşmesi",
         "Evde yapılacaklar yazılı olarak verilir",
-        "Aşı ve kontrol günü WhatsApp'tan hatırlatılır"
+        "Aşı ve kontrol günü WhatsApp’tan hatırlatılır"
       ]
     },
     "sss": [
@@ -105,7 +105,7 @@
     "sayfalar": {
       "kurumsal": {
         "baslik": "Kliniğimiz",
-        "metin": "Elvankent'te, kedi ve köpeklere ayrı odada bakan bir mahalle kliniği.",
+        "metin": "Elvankent’te kedi ve köpeklere bakan, aşı karnesini takip eden bir mahalle kliniği.",
         "gorsel": "/img/sektor-veteriner/muayene-masasi.jpg"
       },
       "hizmetler": {
@@ -133,18 +133,18 @@
     {
       "deger": 15,
       "sonek": "",
-      "etiket": "yıldır Etimesgut'ta",
+      "etiket": "yıldır Etimesgut’ta",
       "kurulustanHesapla": true
     },
     {
-      "deger": 45,
-      "sonek": " dk",
-      "etiket": "içinde kan tahlili sonucu"
+      "deger": 1,
+      "sonek": " karne",
+      "etiket": "muayene, aşı, tahlil tek yerde"
     },
     {
-      "deger": 2,
-      "sonek": "",
-      "etiket": "muayene odası, kedi ve köpek ayrı"
+      "deger": 5,
+      "sonek": " adım",
+      "etiket": "bir ziyaret, onayınız olmadan tahlil yok"
     },
     {
       "deger": 6,
