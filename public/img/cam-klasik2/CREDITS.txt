@@ -1,1 +1,2 @@
 Bu tasarım yalnızca public/img/kristal/ görsellerini kullanır (Pexels lisansı; kaynaklar public/img/kristal/CREDITS.txt).
+dis.webp, frit.webp, mask.webp, vantuz.webp: bu site için Blender Cycles ile çizildi (lib3d 'windshield' varlığı + modellenen vantuz; presets/cam-klasik2/render.sh). Temsilî 3D görsel.

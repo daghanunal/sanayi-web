@@ -1,5 +1,5 @@
 // Sektöre özel modül: kasko hasar başvurusu. Dört adım (hasar, poliçe, fotoğraf, onay ve montaj) →
-// özet + WhatsApp başvuru mesajı. Yanda seçilen camı gösteren araç (üstten görünüş) çizimi.
+// özet + WhatsApp başvuru mesajı. Yanda seçilen camı gösteren araç (lib3d sedan, Cycles, üstten; temsilî).
 import { esc, waHref, gsap, reducedMotion } from '../../shared/core.js';
 
 const CAM = [
@@ -50,19 +50,15 @@ function ipucu(cam, hasar) {
 const secim = (ad, liste, varsayilan) =>
   `<div class="kb__secim">${liste.map((x) => `<label><input type="radio" name="${ad}" value="${x.id}"${x.id === varsayilan ? ' checked' : ''}><span>${esc(x.ad)}</span></label>`).join('')}</div>`;
 
-// Üstten araç: gövde, ön cam, tavan, arka cam, yan camlar.
+// Üstten araç: lib3d sedanın Cycles çizimi (render.sh) ve cam başına alfa maskesi; seçilen cam ışır.
+const IMG = `${import.meta.env.BASE_URL}img/kurumsal-cam/`;
 const arac = `
-  <svg class="kb__arac" viewBox="0 0 200 380" aria-hidden="true">
-    <defs><linearGradient id="kb-parlak" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".75"/><stop offset=".45" stop-color="#fff" stop-opacity="0"/></linearGradient></defs>
-    <rect x="22" y="8" width="156" height="364" rx="58" class="kb__govde"/>
-    <path data-cam="on" d="M44 112 Q100 84 156 112 L146 150 Q100 136 54 150 Z"/>
-    <rect data-cam="tavan" x="62" y="170" width="76" height="62" rx="10"/>
-    <path data-cam="arka" d="M56 262 Q100 272 144 262 L152 298 Q100 316 48 298 Z"/>
-    <path data-cam="yan" d="M36 160 L46 156 L46 250 L36 254 Z M164 160 L154 156 L154 250 L164 254 Z"/>
-    <clipPath id="kb-on-kes"><path d="M44 112 Q100 84 156 112 L146 150 Q100 136 54 150 Z"/></clipPath>
-    <g clip-path="url(#kb-on-kes)"><g class="kb__parlak"><rect x="-10" y="80" width="46" height="80" fill="url(#kb-parlak)" transform="skewX(-20)"/></g></g>
-    <circle class="kb__iz" cx="118" cy="126" r="5"/>
-  </svg>`;
+  <div class="kb__arac" aria-hidden="true">
+    <img src="${IMG}arac.webp" width="520" height="1120" alt="" loading="lazy" decoding="async">
+    ${['on', 'yan', 'arka', 'tavan'].map((k) => `<span data-cam="${k}" style="--m:url('${IMG}m-${k}.webp')"></span>`).join('')}
+    <span class="kb__parlak" style="--m:url('${IMG}m-on.webp')"></span>
+    <span class="kb__iz"></span>
+  </div>`;
 
 export const hasarBasvuru = {
   render() {
@@ -151,6 +147,7 @@ export const hasarBasvuru = {
       o('kamera').hidden = v.cam.id !== 'on';
       el.querySelectorAll('[data-cam]').forEach((p) => p.classList.toggle('is-secili', p.dataset.cam === v.cam.id));
       el.querySelector('.kb__iz').style.opacity = v.cam.id === 'on' ? 1 : 0;
+      el.querySelector('.kb__parlak').style.opacity = v.cam.id === 'on' ? 1 : 0;
       o('secilen').textContent = `${v.cam.ad}, ${v.hasar.ad.toLocaleLowerCase('tr')}`;
       const satir = [
         ['Cam', `${v.cam.ad}, ${v.hasar.ad.toLocaleLowerCase('tr')}`],
@@ -204,10 +201,10 @@ export const hasarBasvuru = {
     guncelle();
     git(0);
 
-    // Araç çizimi görünce: seçili cam ışıyarak dolar, parlama camın üstünden geçer.
+    // Araç görününce: parlama ön camın üstünden geçer (seçili cam ön camsa).
     if (!reducedMotion) {
-      const svg = el.querySelector('.kb__arac');
-      gsap.fromTo(svg.querySelector('.kb__parlak'), { x: -60 }, { x: 230, duration: 2.4, ease: 'power2.inOut', repeat: -1, repeatDelay: 2.6, scrollTrigger: { trigger: svg, start: 'top 90%', toggleActions: 'play pause resume pause' } });
+      const parlak = el.querySelector('.kb__parlak');
+      gsap.fromTo(parlak, { backgroundPosition: '-120% 0' }, { backgroundPosition: '220% 0', duration: 2.4, ease: 'power2.inOut', repeat: -1, repeatDelay: 2.6, scrollTrigger: { trigger: parlak, start: 'top 90%', toggleActions: 'play pause resume pause' } });
     }
   },
 };

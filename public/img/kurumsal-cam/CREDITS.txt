@@ -1,0 +1,1 @@
+arac.webp, m-*.webp: bu site için Blender Cycles ile çizildi (lib3d 'car_sedan' varlığı, eklenen tavan camı; presets/kurumsal-cam/render.sh). Temsilî 3D görsel, marka yok.

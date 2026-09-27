@@ -70,7 +70,7 @@
         ]
       }
     },
-    "yorumBaslik": "Camı takılan anlatsın",
+    "yorumBaslik": "Örnek yorumlar: camı takılan anlatsın",
     "surecBaslik": "Dört adımda yeni cam",
     "anlasmaBaslik": "Filo, kiralama, galeri",
     "anlasmaMetin": "Çok araçlı işletmeler için planlı cam işi, araç başına iş kaydı, tek muhatap.",
@@ -118,7 +118,7 @@
         "Her camı takmadan önce kodunu okur, aracın kalıbıyla karşılaştırırız. Kamerası olan araçta kalibrasyonu yapmadan, sızdırmazlığı test etmeden aracı teslim etmeyiz."
       ],
       "gorsel": "/img/kristal/yapistirma.jpg",
-      "gorselAlt": "Ustamız yeni camın yapıştırıcısını çekiyor"
+      "gorselAlt": "Yeni camın yapıştırıcısı çekiliyor"
     },
     "misyon": "Camı ilk seferde doğru takmak; kasko ve fiyat konusunda müşteriye baştan açık konuşmak.",
     "vizyon": "Ankara'da cam işi denince, işini ölçerek ve kayıt tutarak yapan atölye olarak akla gelmek.",

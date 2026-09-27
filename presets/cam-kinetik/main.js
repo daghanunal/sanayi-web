@@ -3,7 +3,7 @@
 import kristal from '../../data/kristal.json';
 import ek from '../../data/cam-kinetik.json';
 import {
-  boot, initSmoothScroll, reducedMotion, gsap, ScrollTrigger, esc,
+  boot, initSmoothScroll, reducedMotion, gsap, ScrollTrigger, esc, setStoryMode,
   telHref, waHref, mapsHref, mapsEmbed, openStatus, groupedHours, icons,
 } from '../../shared/core.js';
 import { SplitText } from 'gsap/SplitText';
@@ -178,6 +178,31 @@ function isinCikis(ix, iy, a, W, H) {
   return [ix + dx * t, iy + dy * t];
 }
 
+// Camın üstündeki dev kelime tek bir görsel olarak çizilir; her parça bu görselin kendi payını taşır
+// (metin 16 kez tekrarlanmaz, okuyucular ve düzen için tek kelime).
+function kelimeYaz(W, H) {
+  const dpr = Math.min(devicePixelRatio || 1, 2);
+  const c = document.createElement('canvas');
+  c.width = Math.round(W * dpr);
+  c.height = Math.round(H * dpr);
+  const x = c.getContext('2d');
+  x.scale(dpr, dpr);
+  const css = getComputedStyle(document.documentElement);
+  const fam = css.getPropertyValue('--disp').trim() || 'sans-serif';
+  const word = upper(K.kelime);
+  let size = 100;
+  x.font = `400 ${size}px ${fam}`;
+  size = Math.min(H * 0.42, (100 * W * 0.86) / (x.measureText(word).width || 1));
+  x.font = `400 ${size}px ${fam}`;
+  x.textAlign = 'center';
+  x.textBaseline = 'middle';
+  x.fillStyle = css.getPropertyValue('--turuncu').trim() || '#ff5b1f';
+  x.fillText(word, W / 2, H / 2 + size * 0.06);
+  const url = `url("${c.toDataURL('image/png')}"), linear-gradient(180deg, rgb(185 226 245 / .38), rgb(21 17 14 / .18)), url("${K.kirikGorsel}")`;
+  $$('.parca__art', kirikEl).forEach((el) => (el.style.backgroundImage = url));
+}
+document.fonts?.ready.then(() => pano.clientWidth && kelimeYaz(pano.clientWidth, pano.clientHeight));
+
 function camKur() {
   const W = pano.clientWidth;
   const H = pano.clientHeight;
@@ -208,22 +233,17 @@ function camKur() {
     sekiller.push({ pts: [halka[i], cikis[i], ...k.map((c) => [c.x, c.y]), cikis[j], halka[j]], ic: false, a: (acilar[i] + acilar[j] + (j === 0 ? Math.PI * 2 : 0)) / 2 });
   }
 
-  const kelime = esc(upper(K.kelime));
   kirikEl.innerHTML = sekiller
     .map((s) => {
       const xs = s.pts.map((p) => p[0]), ys = s.pts.map((p) => p[1]);
       const bx = Math.floor(Math.min(...xs)), by = Math.floor(Math.min(...ys));
       const bw = Math.ceil(Math.max(...xs)) - bx, bh = Math.ceil(Math.max(...ys)) - by;
       const poli = s.pts.map((p) => `${(p[0] - bx).toFixed(1)}px ${(p[1] - by).toFixed(1)}px`).join(',');
-      return `<div class="parca${s.ic ? ' parca--ic' : ''}" style="left:${bx}px;top:${by}px;width:${bw}px;height:${bh}px;clip-path:polygon(${poli})" data-a="${s.a.toFixed(3)}"><div class="parca__art" style="left:${-bx}px;top:${-by}px;width:${W}px;height:${H}px"><span class="parca__kelime">${kelime}</span></div></div>`;
+      return `<div class="parca${s.ic ? ' parca--ic' : ''}" style="left:${bx}px;top:${by}px;width:${bw}px;height:${bh}px;clip-path:polygon(${poli})" data-a="${s.a.toFixed(3)}"><div class="parca__art" style="left:${-bx}px;top:${-by}px;width:${W}px;height:${H}px"></div></div>`;
     })
     .join('');
-  const img = `url("${K.kirikGorsel}")`;
-  parcalar = $$('.parca', kirikEl).map((el) => {
-    $('.parca__art', el).style.backgroundImage = img;
-    return { el, a: Number(el.dataset.a), ic: el.classList.contains('parca--ic') };
-  });
-  $$('.parca__kelime', kirikEl).forEach((k) => sigdir(k, W * 0.86, H * 0.42));
+  parcalar = $$('.parca', kirikEl).map((el) => ({ el, a: Number(el.dataset.a), ic: el.classList.contains('parca--ic') }));
+  kelimeYaz(W, H);
   sigdir($('.pano__yeni-yazi'), W * 0.8, H * 0.45);
 
   // Çatlak çizgileri: ışınlar biraz kırık, halka tırtıklı.
@@ -277,7 +297,8 @@ $('[data-services]').innerHTML = d.hizmetler
 // --- Film -----------------------------------------------------------------------
 
 const filmler = d.filmler || [];
-$('[data-film-makara]').innerHTML = filmler.map((f) => `<span>${esc(f.ad)}</span>`).join('');
+$('[data-film-makara]').innerHTML = `<span>${esc(filmler[0]?.ad || '')}</span>`;
+const makaraSpan = $('[data-film-makara] span');
 const filmPerde = $('[data-film-perde]');
 const filmNot = $('[data-film-not]');
 const barIsik = $('[data-film-bar="isik"]');
@@ -294,9 +315,12 @@ function filmYaz(p) {
   barIsik.style.transform = `scaleX(${g / 100})`;
   barIsi.style.transform = `scaleX(${(a.isi + (b.isi - a.isi) * t) / 5})`;
   const kes = gsap.utils.clamp(0, 1, (t - 0.55) / 0.45);
-  $('[data-film-makara]').style.transform = `translateY(${-(Math.floor(f) + filmEase(kes))}em)`;
   const i = Math.min(filmler.length - 1, Math.floor(f) + (kes > 0.5 ? 1 : 0));
   if (i !== filmSon) {
+    // makara: tek değer, değişince aşağıdan/yukarıdan yuvarlanarak gelir
+    const yon = filmSon < 0 ? 0 : i > filmSon ? 1 : -1;
+    makaraSpan.textContent = filmler[i].ad;
+    if (yon && !reducedMotion) gsap.fromTo(makaraSpan, { yPercent: 70 * yon, autoAlpha: 0 }, { yPercent: 0, autoAlpha: 1, duration: 0.32, ease: 'power3.out', overwrite: true });
     filmSon = i;
     filmNot.textContent = filmler[i].not;
     $('[data-film-uv]').textContent = `%${filmler[i].uv}`;
@@ -334,7 +358,7 @@ const puanStr = d.puan.ortalama.toLocaleString('tr-TR', { minimumFractionDigits:
 $('[data-puan]').textContent = puanStr;
 $('[data-puan]').setAttribute('aria-label', `5 üzerinden ${puanStr}`);
 $('[data-yildiz]').innerHTML = icons.star.repeat(5);
-$('[data-puan-alt]').textContent = `${nf.format(d.puan.adet)} değerlendirme, 5 üzerinden`;
+$('[data-puan-alt]').textContent = `Örnek puan: ${nf.format(d.puan.adet)} değerlendirme, 5 üzerinden`;
 $('[data-reviews]').innerHTML = d.yorumlar
   .map(
     (y) => `
@@ -414,7 +438,8 @@ function hareket() {
 
   // Rakamlar: satırlar kaydırmayla ters yönlere kayar, sayılar sıfırdan sayar.
   $$('.sayi').forEach((el, i) => {
-    gsap.fromTo(el, { xPercent: i % 2 ? -14 : 14 }, { xPercent: i % 2 ? 6 : -6, ease: 'none', scrollTrigger: { trigger: el, start: 'top bottom', end: 'bottom top', scrub: true } });
+    const dr = mobil() ? 0.25 : 1; // telefonda kayma küçük: rakam ekrandan taşmasın
+    gsap.fromTo(el, { xPercent: (i % 2 ? -14 : 14) * dr }, { xPercent: (i % 2 ? 6 : -6) * dr, ease: 'none', scrollTrigger: { trigger: el, start: 'top bottom', end: 'bottom top', scrub: true } });
     const n = $('.sayi__n', el);
     const hedef = Number($('dd', el).dataset.sayi);
     const o = { v: 0 };
@@ -504,10 +529,12 @@ function kirilmaKur() {
     scrollTrigger: {
       trigger: '.kirilma',
       start: 'top top',
-      end: () => `+=${innerHeight * 3.2}`,
+      end: () => `+=${innerHeight * 2.8}`,
       pin: '.kirilma__pin',
       scrub: 0.5,
       invalidateOnRefresh: true,
+      // pin boyunca alt çubuk kapalı: sahnenin alt metni ile aynı anda iki alt öğe olmasın
+      onToggle: (st) => setStoryMode(st.isActive ? true : null),
       onUpdate: (self) => {
         const p = self.progress;
         adimGoster(p < 0.2 ? 0 : p < 0.46 ? 1 : p < 0.78 ? 2 : 3);
@@ -538,7 +565,8 @@ function kirilmaKur() {
     });
   };
   parcaHareket();
-  kt.fromTo('.pano__yeni', { clipPath: 'inset(0 0 100% 0)' }, { clipPath: 'inset(0 0 0% 0)', duration: 0.1, ease: 'power2.out' }, 0.84)
+  kt.fromTo('.pano__yeni', { clipPath: 'inset(0 0 100% 0)', autoAlpha: 0 }, { clipPath: 'inset(0 0 0% 0)', autoAlpha: 1, duration: 0.1, ease: 'power2.out' }, 0.84)
+    .fromTo(kirikEl, { autoAlpha: 1 }, { autoAlpha: 0, duration: 0.02 }, 0.96)
     .fromTo('.pano__yeni-yazi', { yPercent: 60, autoAlpha: 0 }, { yPercent: 0, autoAlpha: 1, duration: 0.05 }, 0.9)
     .fromTo('.pano__parilti', { xPercent: -120 }, { xPercent: 260, duration: 0.07 }, 0.93);
 

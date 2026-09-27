@@ -44,7 +44,7 @@
   ],
   "markalar": ["Renault", "Fiat", "Volkswagen", "Ford", "Toyota", "Hyundai", "Opel", "Peugeot", "Mercedes-Benz", "BMW"],
   "galeri": [
-    { "src": "/img/kristal/yapistirma.jpg", "alt": "Ustamız yeni camın yapıştırıcısını çekiyor" },
+    { "src": "/img/kristal/yapistirma.jpg", "alt": "Yeni camın yapıştırıcısı çekiliyor" },
     { "src": "/img/kristal/montaj.jpg", "alt": "Ön cam yerine oturtuluyor" },
     { "src": "/img/kristal/silikon.jpg", "alt": "Cam kenarına yapıştırıcı sürülüyor" },
     { "src": "/img/kristal/film.jpg", "alt": "Kapı camına film uygulanıyor" }

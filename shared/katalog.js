@@ -104,7 +104,7 @@ export const PRESETS = [
   { id: 'egzoz-sinematik2', grup: 'sinematik', sektor: 'egzoz', ad: 'Duman Dili', icin: 'Egzoz', renk: '#ff3b5c' },
   { id: 'rektifiye-sinematik2', grup: 'sinematik', sektor: 'rektifiye', ad: 'Tav', icin: 'Rektifiye ve torna', renk: '#6b34d4' },
   { id: 'cam-klasik2', grup: 'klasik', sektor: 'cam', ad: 'Vantuz', icin: 'Oto cam', renk: '#e3202c' },
-  { id: 'kurumsal-cam2', grup: 'kurumsal', sektor: 'cam', ad: 'Polarize', icin: 'Oto cam', renk: '#d90f5a' },
+  { id: 'kurumsal-cam2', grup: 'kurumsal', sektor: 'cam', ad: 'Polarize', icin: 'Oto cam', renk: '#5b36f2' },
   { id: 'cam-sinematik2', grup: 'sinematik', sektor: 'cam', ad: 'Prizma', icin: 'Oto cam', renk: '#ff4d8d' },
   { id: 'kurumsal-agirvasita2', grup: 'kurumsal', sektor: 'agirvasita', ad: 'Otoyol', icin: 'Ağır vasıta', renk: '#00704a' },
   { id: 'kurumsal-egzoz2', grup: 'kurumsal', sektor: 'egzoz', ad: 'Ozalit', icin: 'Egzoz, DPF, katalitik (kurumsal)', renk: '#1c3f9e' },

@@ -1,7 +1,7 @@
 /* Kurumsal cam 2 — "Polarize". Lamine cam polarize ışıkta gerilim halkaları gösterir: sitenin imzası bu yanardöner
-   halkalar. Soğuk lavanta-gri zemin, gece indigosu, macenta vurgu; geniş-kalın Mona Sans, kodlar Reddit Mono. Köşeler keskin. */
+   halkalar. Soğuk lavanta-gri zemin, gece indigosu, elektrik moru vurgu; geniş-kalın Mona Sans, kodlar Reddit Mono. Köşeler keskin. */
 :root {
-  --iri: linear-gradient(100deg, #d90f5a 0%, #ff8a3d 18%, #f4e36a 34%, #3ee0b5 52%, #32c6e0 66%, #5a5cff 84%, #d90f5a 100%);
+  --iri: linear-gradient(100deg, #5b36f2 0%, #ff8a3d 18%, #f4e36a 34%, #3ee0b5 52%, #32c6e0 66%, #5a5cff 84%, #5b36f2 100%);
   --mono: 'Reddit Mono', ui-monospace, monospace;
   --gece: #0f1030;
 }
@@ -12,7 +12,7 @@ body { background: var(--k-zemin); }
 .k-logo { display: grid; grid-template-columns: auto 1fr; column-gap: 11px; align-items: center; }
 .k-logo::before {
   content: ''; grid-row: 1 / span 2; width: 30px; height: 30px; border-radius: 50%;
-  background: radial-gradient(circle, var(--k-zemin) 0 5px, transparent 5.5px), conic-gradient(from 20deg, #d90f5a, #ff8a3d, #f4e36a, #3ee0b5, #32c6e0, #5a5cff, #d90f5a);
+  background: radial-gradient(circle, var(--k-zemin) 0 5px, transparent 5.5px), conic-gradient(from 20deg, #5b36f2, #ff8a3d, #f4e36a, #3ee0b5, #32c6e0, #5a5cff, #5b36f2);
   box-shadow: inset 0 0 0 2px rgb(15 16 48 / .15);
 }
 .k-logo__ad { font-size: 20px; font-stretch: 112%; letter-spacing: -0.03em; }
@@ -28,7 +28,7 @@ body { background: var(--k-zemin); }
 
 /* Butonlar: hap biçimli, keskin sayfada tek yuvarlak öğe */
 .k-btn { border-radius: 999px; font-weight: 700; letter-spacing: -0.005em; }
-.k-btn:not(.k-btn--ikincil) { box-shadow: 0 10px 26px -12px rgb(217 15 90 / .7); }
+.k-btn:not(.k-btn--ikincil) { box-shadow: 0 10px 26px -12px rgb(91 54 242 / .7); }
 
 /* Geçiş perdesi: yanardöner bant */
 .k-gecis { background: var(--iri); }
@@ -78,11 +78,11 @@ body { background: var(--k-zemin); }
 }
 .pz__desen {
   position: absolute; inset: -35%; will-change: transform;
-  background: repeating-radial-gradient(circle at 40% 44%, #1a0830 0, #d90f5a 6px, #ff8a3d 10px, #f4e36a 14px, #3ee0b5 19px, #32c6e0 24px, #5a5cff 29px, #1a0830 36px);
+  background: repeating-radial-gradient(circle at 40% 44%, #1a0830 0, #5b36f2 6px, #ff8a3d 10px, #f4e36a 14px, #3ee0b5 19px, #32c6e0 24px, #5a5cff 29px, #1a0830 36px);
 }
 .pz__desen::after {
   content: ''; position: absolute; inset: 0; opacity: .45;
-  background: repeating-radial-gradient(circle at 66% 62%, #1a0830 0, #5a5cff 8px, #32c6e0 14px, #f4e36a 20px, #d90f5a 27px, #1a0830 34px);
+  background: repeating-radial-gradient(circle at 66% 62%, #1a0830 0, #5a5cff 8px, #32c6e0 14px, #f4e36a 20px, #5b36f2 27px, #1a0830 34px);
 }
 .pz__halka { position: absolute; inset: 0; border-radius: 50%; border: 1.5px solid rgb(255 255 255 / .85); }
 .pz__halka::before, .pz__halka::after { content: ''; position: absolute; background: rgb(255 255 255 / .8); }
@@ -107,7 +107,7 @@ body { background: var(--k-zemin); }
   position: relative; overflow: hidden; border-radius: var(--k-radius-buyuk); color: #e9ebff; min-height: 420px;
   background:
     radial-gradient(120% 90% at 85% 10%, rgb(50 198 224 / .22), transparent 55%),
-    radial-gradient(90% 80% at 10% 100%, rgb(217 15 90 / .22), transparent 60%),
+    radial-gradient(90% 80% at 10% 100%, rgb(91 54 242 / .22), transparent 60%),
     linear-gradient(160deg, #1a1d48, #0b0c24 70%);
   display: flex; flex-direction: column; justify-content: flex-end; padding: clamp(22px, 4vw, 44px);
 }
@@ -124,11 +124,12 @@ body { background: var(--k-zemin); }
   content: ''; position: absolute; inset: 0; pointer-events: none;
   background: linear-gradient(115deg, transparent 40%, rgb(255 255 255 / .07) 46%, transparent 52%, transparent 60%, rgb(255 255 255 / .04) 63%, transparent 66%);
 }
-.ck__damga { position: relative; z-index: 1; display: grid; justify-items: start; gap: 6px; font-family: var(--mono); font-weight: 600; text-transform: uppercase; }
-.ck__satir { display: flex; gap: 6px; flex-wrap: wrap; }
+.ck__damga { position: relative; z-index: 1; display: grid; justify-items: start; gap: 8px; font-family: var(--mono); font-weight: 600; text-transform: uppercase; }
+.ck__satir { display: flex; gap: 8px 12px; flex-wrap: wrap; }
+.ck__satir .ck__p + .ck__p { margin-left: 0; }
 .ck__p {
   font: inherit; color: inherit; background: transparent; border: 1.5px solid transparent; cursor: pointer;
-  padding: 4px 10px; margin-left: -10px; display: inline-flex; align-items: center; gap: 10px; letter-spacing: .12em;
+  min-height: 44px; min-width: 44px; padding: 6px 12px; margin-left: -12px; display: inline-flex; align-items: center; gap: 10px; letter-spacing: .12em;
   font-size: clamp(16px, 2vw, 22px); line-height: 1.2; position: relative; transition: border-color .25s, background .25s, color .25s;
 }
 .ck__p:hover { border-color: rgb(255 255 255 / .25); }
@@ -156,12 +157,12 @@ body { background: var(--k-zemin); }
 .ck__sekme { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
 .ck__sekme button {
   width: 100%; text-align: left; font: inherit; font-size: 14.5px; font-weight: 600; color: var(--k-metin); cursor: pointer;
-  background: var(--k-zemin); border: 1.5px solid transparent; padding: 10px 12px; display: flex; gap: 8px; align-items: baseline; line-height: 1.25;
+  background: var(--k-zemin); border: 1.5px solid transparent; min-height: 48px; padding: 12px; display: flex; gap: 8px; align-items: baseline; line-height: 1.25;
   transition: background .25s, color .25s, border-color .25s;
 }
 .ck__sekme button span { font-family: var(--mono); font-size: 12px; color: var(--k-soluk); }
 .ck__sekme button[aria-selected='true'] { background: var(--gece); color: #fff; }
-.ck__sekme button[aria-selected='true'] span { color: #ff5d98; }
+.ck__sekme button[aria-selected='true'] span { color: #a794ff; }
 .ck__acik { border-top: 1.5px solid var(--k-metin); padding-top: 18px; display: grid; gap: 10px; }
 .ck__no {
   font-size: clamp(56px, 7vw, 92px); font-weight: 900; font-stretch: 125%; line-height: .85; letter-spacing: -0.05em;
@@ -204,7 +205,7 @@ body { background: var(--k-zemin); }
 .ck__tarih small { font-family: var(--mono); font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--k-koyu-soluk); }
 .ck__tarih strong { font-size: clamp(30px, 3.6vw, 46px); font-weight: 900; font-stretch: 118%; letter-spacing: -0.035em; line-height: 1.05; display: block; }
 .ck__hukum { padding-left: 14px; border-left: 3px solid #3ee0b5; font-size: 15.5px; line-height: 1.45; max-width: 46ch; }
-.ck__hukum.is-uyari { border-color: #ff5d98; }
+.ck__hukum.is-uyari { border-color: #a794ff; }
 .ck__hukum.is-soru { border-color: #f4e36a; }
 .ck__gonder { justify-self: start; }
 .ck__dipnot { margin-top: 16px; font-size: 13.5px; color: var(--k-soluk); }
@@ -221,7 +222,7 @@ body { background: var(--k-zemin); }
 .k-rakamlar { background: var(--gece); position: relative; overflow: hidden; }
 .k-rakamlar::before {
   content: ''; position: absolute; width: 900px; height: 900px; right: -300px; top: -420px; border-radius: 50%; opacity: .18;
-  background: repeating-radial-gradient(circle, #d90f5a 0 8px, #ff8a3d 16px, #f4e36a 24px, #3ee0b5 32px, #32c6e0 40px, #5a5cff 48px, #d90f5a 56px);
+  background: repeating-radial-gradient(circle, #5b36f2 0 8px, #ff8a3d 16px, #f4e36a 24px, #3ee0b5 32px, #32c6e0 40px, #5a5cff 48px, #5b36f2 56px);
   -webkit-mask: radial-gradient(circle, #000 20%, transparent 70%); mask: radial-gradient(circle, #000 20%, transparent 70%);
 }
 .k-rakamlar .k-kap { position: relative; }
@@ -268,7 +269,7 @@ body { background: var(--k-zemin); }
 .k-cta { background: var(--gece); color: #eceef5; position: relative; overflow: hidden; }
 .k-cta::before {
   content: ''; position: absolute; width: 760px; height: 760px; left: 50%; bottom: -520px; margin-left: -380px; border-radius: 50%; opacity: .55;
-  background: repeating-radial-gradient(circle, #d90f5a 0 7px, #ff8a3d 14px, #f4e36a 21px, #3ee0b5 28px, #32c6e0 35px, #5a5cff 42px, #d90f5a 49px);
+  background: repeating-radial-gradient(circle, #5b36f2 0 7px, #ff8a3d 14px, #f4e36a 21px, #3ee0b5 28px, #32c6e0 35px, #5a5cff 42px, #5b36f2 49px);
   -webkit-mask: radial-gradient(circle, #000 25%, transparent 68%); mask: radial-gradient(circle, #000 25%, transparent 68%);
 }
 .k-cta .k-kap { position: relative; }

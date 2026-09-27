@@ -98,7 +98,7 @@ const star = (n) => Array.from({ length: 5 }, (_, i) => `<span class="${i < n ? 
 $('[data-score]').textContent = d.puan.ortalama.toLocaleString('tr-TR', { minimumFractionDigits: 1 });
 $('[data-stars]').innerHTML = icons.star.repeat(5);
 $('[data-stars]').setAttribute('aria-label', `5 üzerinden ${d.puan.ortalama}`);
-$('[data-score-count]').textContent = `${nf(d.puan.adet)} değerlendirmenin ortalaması.`;
+$('[data-score-count]').textContent = `Örnek puan: ${nf(d.puan.adet)} değerlendirmenin ortalaması.`;
 $('[data-reviews]').innerHTML = d.yorumlar.map((r) => `
   <li class="review">
     <p class="review__stars" aria-label="${Number(r.puan) || 5} yıldız">${star(r.puan)}</p>
@@ -241,17 +241,19 @@ if (reducedMotion) {
     const tl = gsap.timeline({
       defaults: { ease: 'power2.inOut' },
       scrollTrigger: {
-        trigger: '.hero__pin', start: 'top top', end: small ? '+=210%' : '+=240%', pin: true, scrub: 0.6,
+        trigger: '.hero__pin', start: 'top top-=1', end: small ? '+=210%' : '+=240%', pin: true, scrub: 0.6,
         onUpdate: (self) => {
           const p = self.progress;
           setPhase(p < 0.22 ? 0 : p < 0.6 ? 1 : 2);
           stage.classList.toggle('is-tags', p > 0.3 && p < 0.62);
           stage.classList.toggle('is-open', p > 0.04 && p < 0.9);
+          // telefonda son bölümde alt bilgi kalkar: pin biterken alt çubukla aynı anda iki alt öğe olmasın
+          stage.classList.toggle('is-late', small && p > 0.64);
         },
       },
     });
     tl.fromTo('.dims, [data-dim-txt]', { opacity: 1 }, { opacity: 0, duration: 0.08, immediateRender: false }, 0)
-      .to('[data-cup]', { y: -70, scale: 1.25, opacity: 0, duration: 0.12, stagger: 0.03, ease: 'power2.in' }, 0.02)
+      .to('[data-cup]', { y: -70, scale: 1.25, autoAlpha: 0, duration: 0.12, stagger: 0.03, ease: 'power2.in' }, 0.02)
       .to(stackEl, { rotationX: 56, rotationZ: small ? -24 : -30, scale: small ? 0.8 : 0.82, y: small ? -26 : -30, xPercent: small ? 0 : -22, duration: 0.3 }, 0.1)
       .to(layers.out, { z: sep, duration: 0.3 }, 0.14)
       .to(layers.in, { z: -sep, duration: 0.3 }, 0.14)

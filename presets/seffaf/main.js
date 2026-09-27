@@ -81,7 +81,7 @@ $('[data-gallery]').innerHTML = d.galeri.map((g) => `
 const star = (n) => Array.from({ length: 5 }, (_, i) => `<span class="${i < n ? 'on' : ''}">${icons.star}</span>`).join('');
 $('[data-score]').textContent = d.puan.ortalama.toLocaleString('tr-TR', { minimumFractionDigits: 1 });
 $('[data-stars]').innerHTML = star(Math.round(d.puan.ortalama));
-$('[data-score-count]').textContent = `${nf(d.puan.adet)} değerlendirme, 5 üzerinden.`;
+$("[data-score-count]").textContent = `Örnek puan: ${nf(d.puan.adet)} değerlendirme, 5 üzerinden.`;
 $('[data-reviews]').innerHTML = d.yorumlar.map((r) => `
   <li class="review">
     <p class="review__stars" aria-label="${r.puan} yıldız">${star(r.puan)}</p>
@@ -245,7 +245,7 @@ if (reducedMotion) {
   const hero = gsap.timeline({
     defaults: { ease: 'none' },
     scrollTrigger: {
-      trigger: '[data-hero]', start: 'top top', end: '+=170%', pin: true, scrub: 0.6,
+      trigger: '[data-hero]', start: 'top top-=1', end: '+=170%', pin: true, scrub: 0.6,
       onLeave: () => top.classList.add('is-solid'),
       onEnterBack: () => top.classList.remove('is-solid'),
     },

@@ -1,7 +1,9 @@
-// Prizma: oto cam sahnesi. Karanlıkta asılı duran kavisli bir ön cam, içinden geçen beyaz ışık
-// ve camdan çıkan tayf. Cam üç katmana ayrılır, taş çarpar, çatlak yayılır, reçine doldurur,
-// film ışığı keser, ADAS kamerası yola ızgara düşürür. Her şey prosedürel, doku dosyası yok.
+// Prizma: oto cam sahnesi. Karanlıkta asılı duran gerçek ölçülü bir ön cam (lib3d 'windshield':
+// seramik kenar baskısı, fitil, silecek, ayna ve kamera yuvası), içinden geçen beyaz ışık ve camdan
+// çıkan tayf. Cam üç katmana ayrılır, taş çarpar, çatlak yayılır, reçine doldurur, film ışığı keser,
+// ADAS kamerası yola ızgara düşürür. Varlık yüklenemezse prosedürel cama döner.
 import * as THREE from 'three';
+import { loadAsset, loadEnv, pickQuality } from '../../shared/lib3d.js';
 
 export const SPECTRUM = ['#ff3b5c', '#ff8a3d', '#ffd84d', '#6dff8f', '#3dd6ff', '#5b6cff', '#b45cff'];
 
@@ -9,7 +11,7 @@ export const SPECTRUM = ['#ff3b5c', '#ff8a3d', '#ffd84d', '#6dff8f', '#3dd6ff', 
 const HB = 1.6; // alt yarı genişlik
 const HT = 1.26; // üst yarı genişlik
 const HH = 0.8; // yarı yükseklik
-const bendZ = (x, y) => -0.34 * (x / HB) ** 2 - 0.05 * (y / HH) ** 2;
+const trapZ = (x, y) => -0.34 * (x / HB) ** 2 - 0.05 * (y / HH) ** 2;
 
 const GLSL_SD = /* glsl */ `
   float sdTrap(vec2 p) {
@@ -54,15 +56,174 @@ function radialTexture(stops, size = 128, ring = false) {
   return t;
 }
 
-export function createWorld(canvas, { phone, low }) {
+
+// --- Gerçek ön cam: lib3d varlığını camın yerel düzlemine oturt ----------------------------
+// Varlık araç çerçevesinde (ileri +X, 28° yatık). Burada cam +Z'ye (kameraya) bakar, genişlik X,
+// üst kenar +Y. Dış yüzeyin yüksekliği bir ızgaraya taranır; çatlak, ışın ve etiketler buna yapışır.
+const RAKE = (28 * Math.PI) / 180;
+function toFloatGeo(src, m) {
+  const g = new THREE.BufferGeometry();
+  const n = src.attributes.position.count;
+  const pos = new Float32Array(n * 3);
+  const v = new THREE.Vector3();
+  for (let i = 0; i < n; i++) {
+    v.fromBufferAttribute(src.attributes.position, i).applyMatrix4(m);
+    pos.set([v.x, v.y, v.z], i * 3);
+  }
+  g.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+  if (src.index) g.setIndex(Array.from(src.index.array));
+  g.computeVertexNormals();
+  return g;
+}
+function fitWindshield(ws) {
+  const holder = new THREE.Group();
+  const c = Math.cos(RAKE);
+  const sn = Math.sin(RAKE);
+  holder.quaternion.setFromRotationMatrix(new THREE.Matrix4().makeBasis(
+    new THREE.Vector3(0, -c, sn), new THREE.Vector3(0, sn, c), new THREE.Vector3(-1, 0, 0),
+  ));
+  holder.add(ws.scene);
+  const glassNode = ws.nodes.glass;
+  let glassMesh = null;
+  glassNode.traverse((o) => {
+    if (o.isMesh && !glassMesh && [].concat(o.material).some((m) => m.name === 'glass')) glassMesh = o;
+  });
+  if (!glassMesh) return null;
+  holder.updateMatrixWorld(true);
+  let box = new THREE.Box3().setFromObject(glassMesh);
+  const k = 3.0 / (box.max.x - box.min.x);
+  holder.scale.setScalar(k);
+  holder.updateMatrixWorld(true);
+  box = new THREE.Box3().setFromObject(glassMesh);
+  holder.position.set(-(box.min.x + box.max.x) / 2, -(box.min.y + box.max.y) / 2, 0);
+  holder.updateMatrixWorld(true);
+  let geo = toFloatGeo(glassMesh.geometry, glassMesh.matrixWorld);
+
+  // dış yüzey yükseklik ızgarası (üçgenleri tarayarak, her hücrede en büyük z)
+  const GX = 180;
+  const GY = 128;
+  const X0 = -2.1;
+  const X1 = 2.1;
+  const Y0 = -1.5;
+  const Y1 = 1.5;
+  const hz = new Float32Array(GX * GY).fill(NaN);
+  const P = geo.attributes.position.array;
+  const I = geo.index ? geo.index.array : null;
+  const tri = I ? I.length / 3 : P.length / 9;
+  const cx = (x) => ((x - X0) / (X1 - X0)) * (GX - 1);
+  const cy = (y) => ((y - Y0) / (Y1 - Y0)) * (GY - 1);
+  for (let t = 0; t < tri; t++) {
+    const a = I ? I[t * 3] : t * 3;
+    const b = I ? I[t * 3 + 1] : t * 3 + 1;
+    const d = I ? I[t * 3 + 2] : t * 3 + 2;
+    const ax = cx(P[a * 3]), ay = cy(P[a * 3 + 1]), az = P[a * 3 + 2];
+    const bx = cx(P[b * 3]), by = cy(P[b * 3 + 1]), bz = P[b * 3 + 2];
+    const dx = cx(P[d * 3]), dy = cy(P[d * 3 + 1]), dz = P[d * 3 + 2];
+    const den = (by - dy) * (ax - dx) + (dx - bx) * (ay - dy);
+    if (Math.abs(den) < 1e-9) continue;
+    for (let j = Math.max(0, Math.floor(Math.min(ay, by, dy))); j <= Math.min(GY - 1, Math.ceil(Math.max(ay, by, dy))); j++) {
+      for (let i = Math.max(0, Math.floor(Math.min(ax, bx, dx))); i <= Math.min(GX - 1, Math.ceil(Math.max(ax, bx, dx))); i++) {
+        const w1 = ((by - dy) * (i - dx) + (dx - bx) * (j - dy)) / den;
+        const w2 = ((dy - ay) * (i - dx) + (ax - dx) * (j - dy)) / den;
+        const w3 = 1 - w1 - w2;
+        if (w1 < -0.02 || w2 < -0.02 || w3 < -0.02) continue;
+        const z = w1 * az + w2 * bz + w3 * dz;
+        const q = j * GX + i;
+        if (!(hz[q] >= z)) hz[q] = z;
+      }
+    }
+  }
+  const cell = (i, j) => hz[Math.min(GY - 1, Math.max(0, j)) * GX + Math.min(GX - 1, Math.max(0, i))];
+  const inside = (x, y) => !Number.isNaN(cell(Math.round(cx(x)), Math.round(cy(y))));
+  // merkezin yüksekliği 0 olsun (prosedürel camla aynı düzen)
+  const zc = cell(Math.round(cx(0)), Math.round(cy(0))) || 0;
+  holder.position.z -= zc;
+  for (let q = 0; q < hz.length; q++) hz[q] -= zc;
+  geo.translate(0, 0, -zc);
+  function height(x, y) {
+    const fx = cx(x);
+    const fy = cy(y);
+    const i = Math.floor(fx);
+    const j = Math.floor(fy);
+    const u = fx - i;
+    const v = fy - j;
+    const s = [cell(i, j), cell(i + 1, j), cell(i, j + 1), cell(i + 1, j + 1)];
+    const w = [(1 - u) * (1 - v), u * (1 - v), (1 - u) * v, u * v];
+    let sum = 0;
+    let ws2 = 0;
+    for (let n = 0; n < 4; n++) if (!Number.isNaN(s[n])) { sum += s[n] * w[n]; ws2 += w[n]; }
+    if (ws2 > 0) return sum / ws2;
+    // cam dışı: en yakın kenarın eğimini sürdür
+    const r = Math.hypot(x, y) || 1;
+    for (let k2 = 0.98; k2 > 0.1; k2 -= 0.04) if (inside(x * k2, y * k2)) return height(x * k2, y * k2);
+    return 0;
+  }
+  // kenar çizgisi: merkezden dışa taranan yarıçaplar
+  const outline = [];
+  const N = 180;
+  for (let n = 0; n < N; n++) {
+    const a = (n / N) * Math.PI * 2;
+    const ux = Math.cos(a);
+    const uy = Math.sin(a);
+    let lo = 0;
+    let hi = 2.2;
+    for (let it = 0; it < 18; it++) {
+      const m = (lo + hi) / 2;
+      if (inside(ux * m, uy * m)) lo = m;
+      else hi = m;
+    }
+    outline.push([ux, uy, lo - 0.012]);
+  }
+  // yarıçapları yumuşat (ızgara basamaklarını sil)
+  const rs = outline.map((o) => o[2]);
+  for (let pass = 0; pass < 3; pass++) {
+    const cp = rs.slice();
+    for (let n = 0; n < N; n++) rs[n] = (cp[(n + N - 2) % N] + cp[(n + N - 1) % N] * 2 + cp[n] * 3 + cp[(n + 1) % N] * 2 + cp[(n + 2) % N]) / 9;
+  }
+  outline.forEach((o, n) => (outline[n] = new THREE.Vector2(o[0] * rs[n], o[1] * rs[n])));
+  const rightEdge = (y) => {
+    let lo = 0;
+    let hi = 2;
+    for (let it = 0; it < 16; it++) {
+      const m = (lo + hi) / 2;
+      if (inside(m, y)) lo = m;
+      else hi = m;
+    }
+    return lo;
+  };
+  const lens = new THREE.Vector3();
+  const lensNode = ws.scene.getObjectByName('mirror_2') || ws.nodes.mirror;
+  if (lensNode) new THREE.Box3().setFromObject(lensNode).getCenter(lens);
+  else lens.set(0, 0.56, -0.07);
+  return { holder, geo, height, outline, rightEdge, lens };
+}
+
+export async function createWorld(canvas, { phone, low }) {
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: !low, alpha: false, powerPreference: 'high-performance' });
   let dpr = Math.min(devicePixelRatio || 1, low ? 1 : 1.5);
   renderer.setPixelRatio(dpr);
   renderer.setClearColor(0x07060d, 1);
   renderer.outputColorSpace = THREE.SRGBColorSpace;
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.0;
 
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(35, 1, 0.1, 60);
+
+  // Gerçek cam varlığı ve stüdyo HDRI'ı (telefonda 'lo')
+  const q = pickQuality();
+  const [env, ws] = await Promise.all([
+    loadEnv('studio', renderer, { quality: q }).catch(() => null),
+    loadAsset('windshield', { quality: q, renderer, shadows: false }).catch(() => null),
+  ]);
+  if (env) {
+    scene.environment = env;
+    scene.environmentIntensity = 0.55;
+    scene.environmentRotation.set(0, 2.2, 0);
+  }
+  const fit = ws ? fitWindshield(ws) : null;
+  const REAL = !!fit;
+  const bendZ = REAL ? fit.height : trapZ;
 
   scene.add(new THREE.HemisphereLight(0xcfc8ff, 0x1a1020, 1.4));
   const sun = new THREE.DirectionalLight(0xffffff, 2.2);
@@ -72,7 +233,7 @@ export function createWorld(canvas, { phone, low }) {
   const S = {
     beam: 0, spec: 0, specDim: 0, uvCut: 0, split: 0, stone: 0, stoneOut: 0, crack: 0, resin: 0,
     uv: 0, ring: 0, tint: 0, adas: 0, adasErr: 1, gleam: -2, gleamAmt: 0, spin: 0, glow: 1, dust: 1,
-    iri: 1, hue: 0, rake: 0,
+    iri: 1, hue: 0, rake: 0, wipe: 0,
   };
 
   // --- Arka plan: ekranı kaplayan tek üçgen ---------------------------------------------
@@ -113,8 +274,10 @@ export function createWorld(canvas, { phone, low }) {
   scene.add(rig);
   rig.rotation.x = -0.3;
 
-  const geo = new THREE.PlaneGeometry(2 * HB + 0.1, 2 * HH + 0.1, phone || low ? 36 : 56, 16);
-  {
+  let geo;
+  if (REAL) geo = fit.geo;
+  else {
+    geo = new THREE.PlaneGeometry(2 * HB + 0.1, 2 * HH + 0.1, phone || low ? 36 : 56, 16);
     const p = geo.attributes.position;
     for (let i = 0; i < p.count; i++) p.setZ(i, bendZ(p.getX(i), p.getY(i)));
     geo.computeVertexNormals();
@@ -128,7 +291,7 @@ export function createWorld(canvas, { phone, low }) {
       uniforms: {
         uTime: { value: 0 }, uGleam: { value: -2 }, uGleamAmt: { value: 0 }, uTint: { value: 0 },
         uAlpha: { value: 1 }, uHue: { value: 0 }, uIri: { value: iri }, uBase: { value: new THREE.Color(base) },
-        uFrit: { value: 1 }, ...extra,
+        uFrit: { value: 1 }, uReal: { value: REAL ? 1 : 0 }, ...extra,
       },
       vertexShader: /* glsl */ `
         varying vec2 vL; varying vec3 vN; varying vec3 vV;
@@ -141,11 +304,11 @@ export function createWorld(canvas, { phone, low }) {
         }`,
       fragmentShader: /* glsl */ `
         varying vec2 vL; varying vec3 vN; varying vec3 vV;
-        uniform float uTime, uGleam, uGleamAmt, uTint, uAlpha, uHue, uIri, uFrit;
+        uniform float uTime, uGleam, uGleamAmt, uTint, uAlpha, uHue, uIri, uFrit, uReal;
         uniform vec3 uBase;
         ${GLSL_SD}
         void main() {
-          float sd = sdTrap(vL);
+          float sd = uReal > 0.5 ? -1.0 : sdTrap(vL);
           if (sd > 0.0) discard;
           float ndv = abs(dot(normalize(vN), normalize(vV)));
           float fres = pow(1.0 - ndv, 2.2);
@@ -179,9 +342,52 @@ export function createWorld(canvas, { phone, low }) {
   outer.renderOrder = 3;
   pane.add(inner, pvb, outer);
 
+  // Varlığın gerçek parçaları: kenar baskısı ve fitil dış camla, ayna, torpido ızgarası ve silecekler
+  // iç camla birlikte hareket eder (katmanlar ayrılırken).
+  let wipers = [];
+  if (REAL) {
+    fit.holder.updateMatrixWorld(true);
+    const outerSet = new Set(['frit', 'moulding']);
+    const innerSet = new Set(['cowl', 'mirror', 'wiper_L_mount', 'wiper_R_mount']);
+    const place = (root, keep) => {
+      const h = new THREE.Group();
+      h.position.copy(fit.holder.position);
+      h.quaternion.copy(fit.holder.quaternion);
+      h.scale.copy(fit.holder.scale);
+      h.add(root);
+      const top = root.getObjectByName('windshield') || root;
+      top.children.forEach((c) => (c.visible = keep.has(c.name)));
+      return h;
+    };
+    const outerParts = place(ws.scene, outerSet);
+    const innerParts = place(ws.scene.clone(true), innerSet);
+    outer.add(outerParts);
+    inner.add(innerParts);
+    wipers = ['wiper_L', 'wiper_R'].map((n) => innerParts.getObjectByName(n)).filter(Boolean);
+    // koyu stüdyo: fitil ve plastikler ortamı hafifçe yansıtsın
+    const mats = ws.materials;
+    if (mats.rubber) mats.rubber.roughness = 0.45;
+    if (mats.wiper_black) mats.wiper_black.roughness = 0.35;
+    if (mats.frit) {
+      // seramik baskı camın altında: parlak ama kömür siyahı
+      mats.frit.color.set('#0c0b10');
+      mats.frit.roughness = 0.75;
+      mats.frit.metalness = 0;
+      mats.frit.envMapIntensity = 0.12;
+    }
+    if (mats.cowl_plastic) {
+      mats.cowl_plastic.color.set('#77757f');
+      mats.cowl_plastic.envMapIntensity = 0.6;
+    }
+    if (mats.chrome) mats.chrome.color.set('#b9b4c8');
+  }
+
   // Kenar ışığı: camın çevresini dolaşan ince tüp
   const edgePts = [];
-  {
+  if (REAL) {
+    const pts = fit.outline;
+    for (let i = 0; i < pts.length; i++) edgePts.push(new THREE.Vector3(pts[i].x, pts[i].y, bendZ(pts[i].x, pts[i].y) + 0.012));
+  } else {
     const N = 160;
     // yuvarlatılmış yamuk çevresi: köşeleri yaklaşıkla örnekle
     const corners = [
@@ -409,7 +615,7 @@ export function createWorld(canvas, { phone, low }) {
   // --- ADAS: kamera, yol ızgarası, hedef --------------------------------------------------
   const adas = new THREE.Group();
   scene.add(adas);
-  const lensLocal = new THREE.Vector3(0, 0.56, bendZ(0, 0.56) - 0.07);
+  const lensLocal = REAL ? fit.lens.clone() : new THREE.Vector3(0, 0.56, bendZ(0, 0.56) - 0.07);
   const cam = new THREE.Group();
   {
     const box = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.14, 0.14), new THREE.MeshStandardMaterial({ color: 0x15131d, roughness: 0.5, metalness: 0.4 }));
@@ -521,7 +727,7 @@ export function createWorld(canvas, { phone, low }) {
     recine: V([1.25, 0.75, 2.6], [0.4, -0.08, -0.1]),
     film: V([-1.6, 0.8, 5.4], [0.5, -0.35, -1.0]),
     adas: V([3.6, 2.6, 7.2], [0, -0.9, 1.6], -0.3),
-    final: V([-0.4, 0.2, 6.2], [0.1, 0, -0.4]),
+    final: V([-0.75, 0.2, 6.4], [-0.3, 0, -0.4]),
   };
   const cur = { cam: views.hero.cam.clone(), look: views.hero.look.clone(), rake: -0.3 };
   const goal = { cam: views.hero.cam.clone(), look: views.hero.look.clone(), rake: -0.3 };
@@ -680,7 +886,7 @@ export function createWorld(canvas, { phone, low }) {
     // ADAS
     const aOn = S.adas;
     adas.visible = aOn > 0.001;
-    cam.visible = aOn > 0.001;
+    cam.visible = !REAL && aOn > 0.001;
     lensGlow.visible = aOn > 0.001;
     lensGlow.material.opacity = aOn;
     if (adas.visible) {
@@ -714,6 +920,13 @@ export function createWorld(canvas, { phone, low }) {
       frMat.uniforms.uAmt.value = aOn;
     }
 
+    // silecekler: tek süpürüş (0 → 1 → 0)
+    if (wipers.length) {
+      const w = Math.sin(Math.PI * Math.min(1, Math.max(0, S.wipe)));
+      wipers[0].rotation.y = w * 1.45;
+      if (wipers[1]) wipers[1].rotation.y = w * 1.4;
+    }
+
     dustU.uTime.value = t;
     dustU.uAmt.value = S.dust;
     bgU.uAmt.value = S.glow;
@@ -728,7 +941,7 @@ export function createWorld(canvas, { phone, low }) {
   function project(which) {
     const m = which === 'outer' ? outer : which === 'pvb' ? pvb : inner;
     const y = which === 'outer' ? 0.45 : which === 'pvb' ? 0 : -0.45;
-    const x = 1.62 - (y + 0.8) * 0.2;
+    const x = REAL ? fit.rightEdge(y) - 0.03 : 1.62 - (y + 0.8) * 0.2;
     proj.set(x, y, bendZ(x, y));
     m.updateMatrixWorld();
     m.localToWorld(proj);
@@ -736,5 +949,5 @@ export function createWorld(canvas, { phone, low }) {
     return { x: (proj.x * 0.5 + 0.5) * W, y: (-proj.y * 0.5 + 0.5) * Hh, z: proj.z };
   }
 
-  return { S, render, resize, view, snap, project };
+  return { S, render, resize, view, snap, project, _dbg: { outer, pvb, inner, scene } };
 }

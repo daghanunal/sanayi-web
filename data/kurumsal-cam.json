@@ -1,5 +1,6 @@
 {
   "kurumsal": {
+    "yorumBaslik": "Örnek müşteri yorumları",
     "hero": {
       "baslik": "Camınız aynı gün, kaskonuz bizden.",
       "metin": "Ön cam, yan cam, arka cam ve sunroof. Taş izini reçineyle kapatır, değişmesi gereken camı takıp kamerasını ayarlarız. Kasko dosyasını biz açar, onayı biz takip ederiz.",
@@ -63,7 +64,7 @@
         "Kasko ve sigorta işlerini biz yürütürüz; siz yalnızca aracı getirirsiniz. Kamerası olan araçlarda cam değişiminden sonra kalibrasyonu yapar, sızdırmazlığı test eder, öyle teslim ederiz."
       ],
       "gorsel": "/img/kristal/yapistirma.jpg",
-      "gorselAlt": "Ustamız yeni camın yapıştırıcısını çekiyor"
+      "gorselAlt": "Yeni camın yapıştırıcısı çekiliyor"
     },
     "misyon": "Camı ilk seferde doğru takmak, kasko sürecini müşterimiz için zahmetsiz hâle getirmek.",
     "vizyon": "Ankara'da oto cam ve kasko işlerinde güvenle aranan, işini ölçerek ve belgeleyerek yapan bir atölye olmak.",

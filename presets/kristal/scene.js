@@ -3,6 +3,7 @@
 // taş izi → çatlak → reçine → UV, cam değişimi, cam filmi, yağmur + silecek, ADAS kalibrasyonu.
 import * as THREE from 'three';
 import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js';
+import { loadAsset, loadEnv, pickQuality } from '../../shared/lib3d.js';
 
 // Cam ölçüleri (dünya birimi) ve biçimi
 const GW = 3.6;
@@ -90,6 +91,7 @@ export function createWorld(canvas, { name, phone, low }) {
   nameCanvas.width = BW;
   nameCanvas.height = BH;
   function drawName(label) {
+    nameLabel = label;
     const x = nameCanvas.getContext('2d');
     x.clearRect(0, 0, BW, BH);
     const words = label.toLocaleUpperCase('tr-TR').split(/\s+/).filter(Boolean);
@@ -115,14 +117,40 @@ export function createWorld(canvas, { name, phone, low }) {
     x.font = `800 ${size}px Geologica, "Arial Black", sans-serif`;
     x.textAlign = 'center';
     x.textBaseline = 'alphabetic';
-    x.fillStyle = 'rgba(10,30,40,.96)';
+    // fotoğrafta yazı koyu tepelerin önüne düşer: açık renk, hafif gölgeli
+    x.fillStyle = photoReady ? 'rgba(244,250,250,.95)' : 'rgba(10,30,40,.96)';
+    x.shadowColor = photoReady ? 'rgba(4,14,18,.55)' : 'transparent';
+    x.shadowBlur = size * 0.12;
     const block = lines.length * size * 0.98;
     const first = NAME.top * BH + (band - block) / 2 + size * 0.82;
     lines.forEach((l, i) => x.fillText(l, BW * 0.47, first + i * size * 0.98));
     nameTex.needsUpdate = true;
   }
+  // Gerçek manzara: yol fotoğrafı (Pexels). Yüklenene kadar çizilmiş manzara durur.
+  let photoReady = false;
+  const photo = new Image();
+  photo.decoding = 'async';
+  photo.onload = () => {
+    photoReady = true;
+    drawBackdrop();
+    drawName(nameLabel);
+  };
+  photo.src = `${import.meta.env.BASE_URL}img/kristal/yol.jpg`;
+  let nameLabel = name;
   function drawBackdrop() {
     const x = bgCanvas.getContext('2d');
+    if (photoReady) {
+      x.drawImage(photo, 0, 0, BW, BH);
+      // camın ardındaki hava: ufka doğru hafif pus, gökyüzü biraz açılsın
+      const haze = x.createLinearGradient(0, 0, 0, BH);
+      haze.addColorStop(0, 'rgba(214,228,234,.28)');
+      haze.addColorStop(0.55, 'rgba(214,228,234,.1)');
+      haze.addColorStop(1, 'rgba(214,228,234,0)');
+      x.fillStyle = haze;
+      x.fillRect(0, 0, BW, BH);
+      bgTex.needsUpdate = true;
+      return;
+    }
     const sky = x.createLinearGradient(0, 0, 0, BH * 0.62);
     sky.addColorStop(0, '#9fbdd0');
     sky.addColorStop(0.55, '#cddde6');
@@ -517,21 +545,26 @@ export function createWorld(canvas, { name, phone, low }) {
   scene.add(mirrorPivot);
 
   // --- Silecekler (camın dışında) -------------------------------------------------------
+  // Yerleşim lib3d 'windshield' varlığının sileceklerine göre: biri ortada, biri sağda, park
+  // hâlinde sola yatık, yukarı süpürür. Varlık yüklenince gerçek kol ve lastikler bunların yerini alır.
+  const WK = 1.86; // varlık ölçeği (m → dünya birimi)
   const wiperMat = new THREE.MeshStandardMaterial({ color: '#0d1114', roughness: 0.6, metalness: 0.3 });
   const WIPERS = [
-    { pu: 0.16, len: 0.46 },
-    { pu: 0.56, len: 0.42 },
+    { pu: 0.5 + (0.015 * WK) / GW, lenV: (0.751 * WK) / GH, a0: Math.PI - 0.06, sweep: 1.45 },
+    { pu: 0.5 + (0.609 * WK) / GW, lenV: (0.634 * WK) / GH, a0: Math.PI - 0.06, sweep: 1.4 },
   ];
   const wipers = WIPERS.map((w) => {
     const pivot = new THREE.Group();
     const p = glassPoint(w.pu, 0.03);
     pivot.position.set(p.x, p.y, p.z - 0.05);
-    const blade = new THREE.Mesh(new THREE.BoxGeometry(w.len * GW, 0.025, 0.02), wiperMat);
-    blade.position.x = (w.len * GW) / 2;
+    const L = w.lenV * GH;
+    const blade = new THREE.Mesh(new THREE.BoxGeometry(L, 0.025, 0.02), wiperMat);
+    blade.position.x = L / 2;
     pivot.add(blade);
     glassGroup.add(pivot);
     return pivot;
   });
+  let realWipers = null;
 
   // --- Taş, kırıntılar, reçine aparatı, UV lamba ---------------------------------------
   const impactLocal = glassPoint(IMPACT.u, IMPACT.v);
@@ -720,12 +753,11 @@ export function createWorld(canvas, { name, phone, low }) {
   const W0 = 0.36;
   const W1 = 0.47;
   const W2 = 0.58;
-  const A0 = 0.14;
-  const A1 = 2.0;
-  function wiperAngle(p) {
-    if (p <= W0 || p >= W2) return A0;
-    if (p < W1) return A0 + (A1 - A0) * ((p - W0) / (W1 - W0));
-    return A1 - (A1 - A0) * ((p - W1) / (W2 - W1));
+  // 0 = park, 1 = en üst
+  function wiperT(p) {
+    if (p <= W0 || p >= W2) return 0;
+    if (p < W1) return (p - W0) / (W1 - W0);
+    return 1 - (p - W1) / (W2 - W1);
   }
   // Damla açısı ve uzaklığı her silecek için (en-boy düzeltmeli uv uzayında)
   for (const dr of drops) {
@@ -734,11 +766,10 @@ export function createWorld(canvas, { name, phone, low }) {
       const dy = dr.v - 0.03;
       const ang = Math.atan2(dy, dx);
       const dist = Math.hypot(dx, dy);
-      if (dist > w.len * ASPECT || ang < A0 || ang > A1) return null;
-      return {
-        up: W0 + ((ang - A0) / (A1 - A0)) * (W1 - W0),
-        down: W1 + ((A1 - ang) / (A1 - A0)) * (W2 - W1),
-      };
+      const a1 = w.a0 - w.sweep;
+      if (dist > w.lenV || ang > w.a0 || ang < a1) return null;
+      const k = (w.a0 - ang) / w.sweep;
+      return { up: W0 + k * (W1 - W0), down: W1 + (1 - k) * (W2 - W1) };
     }).find(Boolean);
   }
   let rainSig = '';
@@ -869,7 +900,7 @@ export function createWorld(canvas, { name, phone, low }) {
     filmMat.opacity = 0;
     gleamMat.uniforms.uPos.value = S.gleam;
     gleamMat.uniforms.uAmt.value = S.gleamAmt;
-    glare.material.opacity = 0.55 * (1 - S.dim * 0.8);
+    glare.material.opacity = (photoReady ? 0.22 : 0.55) * (1 - S.dim * 0.8);
     bgMat.uniforms.uDim.value = 1 - S.dim * 0.35;
     bgMat.uniforms.uName.value = S.name;
     hemi.intensity = 1.2 - S.dim * 0.5;
@@ -893,8 +924,9 @@ export function createWorld(canvas, { name, phone, low }) {
     // yağmur ve silecek
     glassMat.normalScale.set(S.rain * 0.9, S.rain * 0.9);
     if (S.rain > 0.001) drawRain(S.rainP);
-    const ang = wiperAngle(S.rainP);
-    wipers.forEach((w) => (w.rotation.z = ang));
+    const wt = wiperT(S.rainP);
+    wipers.forEach((w, i) => (w.rotation.z = WIPERS[i].a0 - WIPERS[i].sweep * wt));
+    if (realWipers) realWipers.forEach((w, i) => (w.rotation.y = WIPERS[i].sweep * wt));
 
     // ADAS
     board.position.y = -3 + S.adas * 3.3;
@@ -941,6 +973,51 @@ export function createWorld(canvas, { name, phone, low }) {
     tmp.project(camera);
     return { x: (tmp.x * 0.5 + 0.5) * innerWidth, y: (-tmp.y * 0.5 + 0.5) * innerHeight };
   }
+
+  // --- Gerçekçi katman: HDRI yansımalar, lib3d ön cam varlığından ayna ve silecekler -----
+  const q = pickQuality();
+  loadEnv('dusk', renderer, { quality: q }).then((env) => {
+    scene.environment = env;
+    scene.environmentIntensity = 0.85;
+    scene.environmentRotation.set(0, 1.9, 0);
+  }).catch(() => {});
+  loadAsset('windshield', { quality: q, renderer }).then((ws) => {
+    const c = Math.cos((28 * Math.PI) / 180);
+    const sn = Math.sin((28 * Math.PI) / 180);
+    // varlık çerçevesi (ileri +X, cam 28° yatık) → cam yerel düzlemi (dışa -Z, yukarı +Y, sağ +X)
+    const basis = new THREE.Quaternion().setFromRotationMatrix(new THREE.Matrix4().makeBasis(
+      new THREE.Vector3(0, -c, -sn), new THREE.Vector3(0, sn, -c), new THREE.Vector3(1, 0, 0),
+    ));
+    const top = ws.scene.getObjectByName('windshield') || ws.scene;
+    // ayna (kamera yuvasıyla) kabine sabit
+    const mnode = ws.nodes.mirror;
+    if (mnode) {
+      const mh = new THREE.Group();
+      mh.quaternion.copy(basis);
+      mh.scale.setScalar(narrow ? 1.2 : 1.55);
+      mnode.parent.remove(mnode);
+      mnode.position.set(0, 0, 0);
+      mh.add(mnode);
+      const mp2 = glassPoint(0.5, 0.97);
+      mh.position.set(mp2.x, mp2.y, mp2.z + 0.02);
+      mirrorPivot.add(mh);
+      mirror.visible = false;
+    }
+    // silecekler camla birlikte hareket eder
+    top.children.forEach((ch) => (ch.visible = ch.name === 'wiper_L_mount' || ch.name === 'wiper_R_mount'));
+    const wh = new THREE.Group();
+    wh.quaternion.copy(basis);
+    wh.scale.setScalar(WK);
+    wh.add(ws.scene);
+    wh.updateMatrixWorld(true);
+    const piv = ws.nodes.wiper_L.getWorldPosition(new THREE.Vector3());
+    const at = glassPoint(WIPERS[0].pu, 0.03);
+    at.z -= 0.035;
+    wh.position.copy(at).sub(piv);
+    glassGroup.add(wh);
+    realWipers = [ws.nodes.wiper_L, ws.nodes.wiper_R];
+    wipers.forEach((w) => (w.visible = false));
+  }).catch(() => {});
 
   return {
     S,

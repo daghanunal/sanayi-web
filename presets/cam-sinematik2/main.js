@@ -180,8 +180,8 @@ $('#biz').innerHTML = `
 $('#atolye').innerHTML = `
   <div class="wrap">
     <div class="sec-head">
-      <p class="kick"><span class="kick__n">09</span>Atölye</p>
-      <h2 class="h2" id="shop-title" data-reveal>Tezgâhtan kareler.</h2>
+      <p class="kick"><span class="kick__n">09</span>İşin kendisi</p>
+      <h2 class="h2" id="shop-title" data-reveal>Söküm, yapıştırma, film.</h2>
     </div>
   </div>
   <ul class="gallery" data-lenis-prevent-touch>
@@ -193,10 +193,10 @@ $('#yorumlar').innerHTML = `
   <div class="wrap">
     <div class="reviews__head">
       <div>
-        <p class="kick"><span class="kick__n">10</span>Yorumlar</p>
+        <p class="kick"><span class="kick__n">10</span>Örnek yorumlar</p>
         <h2 class="h2" id="reviews-title" data-reveal>Camı takılan anlatsın.</h2>
       </div>
-      <p class="score"><b data-count="${d.puan.ortalama}" data-decimals="1">0</b><span>${stars(d.puan.ortalama)}<small>${fmt(d.puan.adet)} Google yorumu</small></span></p>
+      <p class="score"><b data-count="${d.puan.ortalama}" data-decimals="1">0</b><span>${stars(d.puan.ortalama)}<small>örnek puan · ${fmt(d.puan.adet)} değerlendirme</small></span></p>
     </div>
     <ul class="review-list">
       ${d.yorumlar.map((y, i) => `
@@ -243,7 +243,7 @@ $('#iletisim').innerHTML = sticky(`
 $('#foot').innerHTML = `
   <div class="wrap foot__grid">
     <p><b>${ad}</b><br>${esc(d.iletisim.adres)}<br><a href="${telHref(d)}">${esc(d.iletisim.telefon)}</a></p>
-    <p class="foot__small">© ${yil} ${ad}. Fotoğraflar: Pexels. Cam ve ışık sahnesi bu site için kodla çizildi.</p>
+    <p class="foot__small">© ${yil} ${ad}. Fotoğraflar: Pexels (temsilî). 3D görseller temsilîdir. Yorumlar örnektir.</p>
   </div>`;
 
 // Katman etiketleri (3B sahnede camın yanına yapışır)
@@ -360,9 +360,11 @@ ScrollTrigger.create({
 // --- 3B sahne ve scroll filmi ----------------------------------------------------------
 
 const canvas = $('#gl');
-const world = createWorld(canvas, { phone, low });
-const { S } = world;
-const DEFAULTS = { ...S };
+// 3B dünya gerçek cam varlığını yükler; yüklenene kadar sayfa ve açılış çalışır.
+const worldP = createWorld(canvas, { phone, low });
+let world = null;
+let S = null;
+let DEFAULTS = null;
 const reset = () => Object.assign(S, DEFAULTS);
 
 const scenes = $$('.scene');
@@ -371,7 +373,7 @@ function measure() {
   layout = scenes.map((el) => ({ el, name: el.dataset.scene, top: el.getBoundingClientRect().top + scrollY, height: el.offsetHeight }));
 }
 addEventListener('resize', () => {
-  world.resize();
+  world?.resize();
   measure();
 });
 
@@ -397,7 +399,8 @@ function steps(list, p, a, b) {
 const labels = $$('.lbl');
 let labelsOn = false;
 function placeLabels(amt) {
-  const on = amt > 0.02;
+  // telefonda katman adları metindeki listede; sahnede ayrıca yüzen etiket açılmaz (tek orta katman)
+  const on = !phone && amt > 0.02;
   if (on !== labelsOn) {
     labelsOn = on;
     labels.forEach((l) => l.classList.toggle('is-on', on));
@@ -505,6 +508,7 @@ const SCENES = {
     S.gleam = -2 + seg(p, 0.3, 0.9) * 4;
     S.gleamAmt = seg(p, 0.3, 0.4) * (1 - seg(p, 0.8, 0.9));
     S.spin = -0.3 + p * 0.3;
+    S.wipe = seg(p, 0.45, 0.8);
   },
 };
 const layoutEl = (name) => layout.find((l) => l.name === name)?.el;
@@ -624,29 +628,39 @@ function intro() {
       if (done) return;
       done = true;
       tl.kill();
-      gsap.to(el, { opacity: 0, duration: 0.5, ease: 'power2.inOut', onComplete: () => {
+      gsap.to(el, { autoAlpha: 0, duration: 0.35, ease: 'power2.inOut', onComplete: () => {
         el.remove();
         document.documentElement.classList.remove('is-intro');
       } });
       resolve();
     };
-    el.addEventListener('pointerdown', finish, { once: true });
+    // perde dokunmayı yutmaz: ilk dokunuş hem perdeyi kaldırır hem alttaki düğmeye ulaşır
+    addEventListener('pointerdown', finish, { once: true, capture: true });
+    addEventListener('wheel', finish, { once: true, passive: true });
     addEventListener('keydown', finish, { once: true });
+    // toplam ~1,6 sn; dokununca hemen kalkar
     const tl = gsap.timeline({ onComplete: finish, defaults: { ease: 'power2.inOut' } });
-    tl.fromTo('.iprism', { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 0.7 }, 0.1)
-      .fromTo('.iin', { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 0.5, ease: 'power1.in' }, 0.55)
-      .fromTo('.iinside', { strokeDashoffset: 1, opacity: 0.2 }, { strokeDashoffset: 0, opacity: 1, duration: 0.18, ease: 'none' }, 1.05)
-      .fromTo('.ir', { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 0.8, stagger: 0.03, ease: 'power2.out' }, 1.2)
-      .fromTo('#intro-name span', { opacity: 0, letterSpacing: '0.4em', '--disp': 12 }, { opacity: 1, letterSpacing: '0em', '--disp': 0, duration: 0.9, ease: 'power3.out' }, 1.35)
-      .fromTo('#intro-name small', { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.5 }, 1.7)
-      .to({}, { duration: 0.3 });
+    tl.fromTo('.iprism', { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 0.45 }, 0.05)
+      .fromTo('.iin', { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 0.32, ease: 'power1.in' }, 0.3)
+      .fromTo('.iinside', { strokeDashoffset: 1, opacity: 0.2 }, { strokeDashoffset: 0, opacity: 1, duration: 0.12, ease: 'none' }, 0.62)
+      .fromTo('.ir', { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 0.5, stagger: 0.02, ease: 'power2.out' }, 0.72)
+      .fromTo('#intro-name span', { opacity: 0, letterSpacing: '0.4em', '--disp': 12 }, { opacity: 1, letterSpacing: '0em', '--disp': 0, duration: 0.6, ease: 'power3.out' }, 0.8)
+      .fromTo('#intro-name small', { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.35 }, 1.0)
+      .to({}, { duration: 0.15 });
   });
 }
 
-world.view('hero');
-world.snap();
-world.render();
 const fontsReady = Promise.race([document.fonts?.ready ?? Promise.resolve(), new Promise((r) => setTimeout(r, 700))]);
 fontsReady.then(intro).then(() => reveal($('#hero-title')));
-start();
+worldP.then((w) => {
+  world = w;
+  if (import.meta.env.DEV) window.__world = w;
+  S = w.S;
+  DEFAULTS = { ...S };
+  world.view('hero');
+  world.snap();
+  world.render();
+  canvas.classList.add('is-ready');
+  start();
+});
 

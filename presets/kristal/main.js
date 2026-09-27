@@ -180,7 +180,7 @@ $('#biz').innerHTML = `
 
 $('#atolye').innerHTML = `
   <div class="wrap">
-    <h2 class="h2 h2--ink" id="shop-gallery-title" data-reveal>Tezgâhtan kareler.</h2>
+    <h2 class="h2 h2--ink" id="shop-gallery-title" data-reveal>Söküm, yapıştırma, film.</h2>
     <ul class="gallery">
       ${d.galeri.map((g) => `<li class="gallery__item"><img src="${g.src}" alt="${esc(g.alt)}" loading="lazy" width="1400" height="1050"><span class="gallery__fog" aria-hidden="true"></span></li>`).join('')}
     </ul>
@@ -195,8 +195,9 @@ const reviewCard = (y) => `
   </li>`;
 $('#yorumlar').innerHTML = `
   <div class="wrap reviews__head">
-    <h2 class="h2 h2--ink" id="reviews-title" data-reveal>Camı takılan anlatsın.</h2>
-    <p class="score"><b data-count="${d.puan.ortalama}" data-decimals="1">0</b><span>${stars(d.puan.ortalama)}<small>${fmt(d.puan.adet)} Google yorumu</small></span></p>
+    <div><p class="eyebrow">Örnek yorumlar</p>
+    <h2 class="h2 h2--ink" id="reviews-title" data-reveal>Camı takılan anlatsın.</h2></div>
+    <p class="score"><b data-count="${d.puan.ortalama}" data-decimals="1">0</b><span>${stars(d.puan.ortalama)}<small>örnek puan · ${fmt(d.puan.adet)} değerlendirme</small></span></p>
   </div>
   <div class="reviews__rail"><ul class="reviews__track">${[...d.yorumlar, ...d.yorumlar].map(reviewCard).join('')}</ul></div>`;
 
@@ -234,7 +235,7 @@ $('#iletisim').innerHTML = sticky(`
 $('#foot').innerHTML = `
   <div class="wrap foot__grid">
     <p><b>${ad}</b><br>${esc(d.iletisim.adres)}<br><a href="${telHref(d)}">${esc(d.iletisim.telefon)}</a></p>
-    <p class="foot__small">© ${yil} ${ad}. Fotoğraflar: Pexels. 3D cam sahnesi bu site için kodla çizildi.</p>
+    <p class="foot__small">© ${yil} ${ad}. Fotoğraflar: Pexels (temsilî). 3D görseller temsilîdir. Yorumlar örnektir.</p>
   </div>`;
 
 // Harita yaklaşınca yüklensin
@@ -294,6 +295,14 @@ if (!reducedMotion) {
   $$('.solid [data-reveal]').forEach((el) => {
     ScrollTrigger.create({ trigger: el, start: 'top 85%', once: true, onEnter: () => reveal(el) });
   });
+}
+
+// Sahne biterken yazı üst çubuğun altına girmeden söner (yapışkan kutu yukarı kayarken)
+if (!reducedMotion) {
+  $$('.film .scene').forEach((sc) => gsap.fromTo($('.copy', sc), { autoAlpha: 1, y: 0 }, {
+    autoAlpha: 0, y: -30, ease: 'none', immediateRender: false,
+    scrollTrigger: { trigger: sc, start: 'bottom bottom', end: 'bottom 45%', scrub: true },
+  }));
 }
 
 // Düz bölümlerde üst çubuk açık zemine geçer
@@ -594,13 +603,15 @@ function intro() {
     const finish = () => {
       if (done) return;
       done = true;
-      gsap.to(el, { opacity: 0, duration: 0.3, onComplete: () => {
+      gsap.to(el, { autoAlpha: 0, duration: 0.3, onComplete: () => {
         el.remove();
         document.documentElement.classList.remove('is-intro');
       } });
       resolve();
     };
-    el.addEventListener('pointerdown', finish, { once: true });
+    // perde dokunmayı yutmaz: ilk dokunuş hem perdeyi kaldırır hem alttaki düğmeye ulaşır
+    addEventListener('pointerdown', finish, { once: true, capture: true });
+    addEventListener('wheel', finish, { once: true, passive: true });
     addEventListener('keydown', finish, { once: true });
     const st = { write: 0, wipe: 0 };
     const draw = () => {
@@ -627,8 +638,8 @@ function intro() {
       x.restore();
     };
     gsap.timeline({ onUpdate: draw, onComplete: finish })
-      .to(st, { write: 1, duration: 0.95, ease: 'power1.inOut' }, 0.25)
-      .to(st, { wipe: 1, duration: 0.75, ease: 'power2.inOut' }, 1.45);
+      .to(st, { write: 1, duration: 0.75, ease: 'power1.inOut' }, 0.15)
+      .to(st, { wipe: 1, duration: 0.6, ease: 'power2.inOut' }, 1.0);
   });
 }
 

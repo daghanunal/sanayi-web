@@ -20,6 +20,7 @@ kurumsal({
     heroAlt: 'Yağmur damlaları ve ön camdan görünen trafik ışıkları',
     logoAlt: 'Oto cam, kasko ve kalibrasyon',
     baslikEki: 'Oto cam ve kasko | Şaşmaz, Ankara',
+    altNot: 'Fotoğraflar temsilîdir (Pexels). Araç çizimi temsilî 3D görseldir. Yorumlar örnektir.',
     teklifEtiketi: 'Kasko başvurusu',
     css: {
       zemin: '#f1f5f6', yuzey: '#e1eaee', metin: '#0a1b23', soluk: '#4a5f69', cizgi: 'rgb(10 27 35 / .13)',
