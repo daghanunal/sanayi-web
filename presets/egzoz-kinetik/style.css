@@ -72,7 +72,7 @@ body {
   transition: background-color .3s ease, color .3s ease;
 }
 .top.is-solid { background: rgb(27 21 48 / .94); color: var(--smoke); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
-.top__brand { display: flex; align-items: center; gap: 10px; font: 800 22px/1 var(--display); text-transform: uppercase; letter-spacing: .02em; text-decoration: none; margin-right: auto; }
+.top__brand { display: flex; align-items: center; gap: 10px; min-height: 44px; font: 800 22px/1 var(--display); text-transform: uppercase; letter-spacing: .02em; text-decoration: none; margin-right: auto; }
 .top__mark { width: 22px; height: 22px; border-radius: 50%; border: 5px solid currentColor; box-shadow: 0 0 0 3px var(--or) inset; }
 .top.is-solid .top__mark { border-color: var(--or); box-shadow: none; }
 .top__nav { display: flex; gap: 22px; }
@@ -210,7 +210,8 @@ body {
 .durak__no { color: #d2410c; padding-top: 8px; }
 .durak__baslik { font: 800 clamp(30px, 3.6vw, 50px)/1.05 var(--display); text-transform: uppercase; }
 .durak__metin { color: #4a4460; max-width: 52ch; }
-.durak__sor { display: inline-flex; align-items: center; gap: 8px; font-weight: 700; text-underline-offset: 4px; color: var(--ink); justify-self: start; }
+.durak__sor { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; font-weight: 700; text-underline-offset: 4px; color: var(--ink); justify-self: start; }
+.yorumlar__etiket { display: inline-block; margin-top: 12px; font-size: 11px; letter-spacing: .06em; text-transform: uppercase; opacity: .75; border: 1px solid currentColor; border-radius: 999px; padding: 5px 10px; }
 .durak__sor svg { width: 18px; height: 18px; color: #16a34a; }
 @media (min-width: 900px) {
   .durak__ic { margin-left: 22vw; margin-top: -.1em; padding-top: 18px; }

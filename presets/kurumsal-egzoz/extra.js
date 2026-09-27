@@ -168,3 +168,35 @@ export const muayeneHazirlik = {
     }
   },
 };
+
+// Sektör imzası: egzoz hattı kesiti. Kütüphanedeki egzoz hattının (lib3d exhaust) patlatılmış Cycles
+// render'ı + motordan uca beş durak. Görsel temsilîdir ve öyle etiketlenir.
+const okSvg = `<svg class="k-ok" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+const ilkCumle = (s) => (String(s || '').match(/^[^.!?]+[.!?]/) || [s])[0];
+
+export const hat = {
+  render(d) {
+    const duraklar = d.yolculuk || [];
+    if (!duraklar.length) return '';
+    const img = `${import.meta.env.BASE_URL}img/kurumsal-egzoz/egzoz-hatti-3d.jpg`;
+    const konu = encodeURIComponent('Egzoz hattı kontrolü');
+    return `
+      <section class="k-bolum eh" aria-labelledby="eh-baslik">
+        <div class="k-kap">
+          <div class="eh__bas">
+            <p class="eh__ust">Motordan uca</p>
+            <h2 class="k-h2" id="eh-baslik" data-bol>Hattın beş durağı, beş ayrı iş.</h2>
+            <p class="k-lead">Egzoz tek parça değildir. Sorun hangi duraktaysa yalnızca onu onarırız; çalışan parçaya dokunmayız.</p>
+          </div>
+          <figure class="eh__gorsel" data-perde>
+            <img src="${img}" alt="Manifolddan egzoz ucuna kadar parçalarına ayrılmış egzoz hattının temsilî 3D çizimi" loading="lazy" width="1300" height="669">
+            <figcaption>Temsilî 3D çizim</figcaption>
+          </figure>
+          <ol class="eh__liste" data-sira>
+            ${duraklar.map((y, i) => `<li><span class="eh__no">${String(i + 1).padStart(2, '0')}</span><h3>${esc(y.durak)}</h3><p>${esc(ilkCumle(y.metin))}</p><span class="eh__is">${esc(y.hizmet)}</span></li>`).join('')}
+          </ol>
+          <a class="k-link eh__link" href="#/iletisim?konu=${konu}" data-rota="iletisim?konu=${konu}">Hattı kontrol ettirmek için yazın ${okSvg}</a>
+        </div>
+      </section>`;
+  },
+};

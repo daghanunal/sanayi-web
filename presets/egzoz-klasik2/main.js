@@ -53,7 +53,7 @@ document.documentElement.classList.toggle('is-open', status.open);
 
 // --- Hero ölçer -------------------------------------------------------------
 const ses = d.muayene.olcumler.find((o) => o.birim === 'dB') || { once: 104, sonra: 78, sinir: 90 };
-$('[data-limit]').textContent = ses.sinir;
+$('[data-limit]').dataset.label = `Sınır ${ses.sinir} dB`;
 const small = matchMedia('(max-width: 699px)').matches;
 const N = small ? 34 : 72;
 // Egzoz sesine benzeyen düzensiz ama tekrarlanabilir bir dalga (her açılışta aynı)
@@ -180,7 +180,7 @@ const stars = (n) => Array.from({ length: 5 }, (_, i) => `<span class="${i < n ?
 $('[data-score]').textContent = nf(d.puan.ortalama, 1);
 $('[data-stars]').innerHTML = stars(Math.round(d.puan.ortalama));
 $('[data-stars]').setAttribute('aria-label', `5 üzerinden ${nf(d.puan.ortalama, 1)}`);
-$('[data-review-count]').textContent = `Google'da ${nf(d.puan.adet)} değerlendirme`;
+$('[data-review-count]').textContent = 'örnek puan';
 $('[data-reviews]').innerHTML = d.yorumlar.map((y) => `
   <li class="rev">
     <p class="rev__stars" aria-label="${Number(y.puan)} yıldız">${stars(y.puan)}</p>

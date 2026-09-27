@@ -1,13 +1,13 @@
-// Duman Dili: çift krom egzoz ucu arkadan, tampon altından bakış. Uçlardan çıkan duman
-// tamamen GPU'da (vertex shader) hesaplanır: renk, yoğunluk, itiş ve yayılma bölüm bölüm değişir.
-// Finalde uçtan bir duman halkası kameraya doğru gelir. Durum dışarıdan `render(state)` ile verilir.
+// Duman Dili: gerçekçi bir sedanın (lib3d car_sedan) arka tamponu, altına lib3d egzoz hattı takılı,
+// çift uç arkadan alçak açıdan. Stop lambaları yanık, gece HDRI yansımaları, zemine yumuşak gölge.
+// Uçlardan çıkan duman tamamen GPU'da (vertex shader) hesaplanır: renk, yoğunluk, itiş ve yayılma bölüm
+// bölüm değişir. Finalde uçtan bir duman halkası kameraya doğru gelir. Durum dışarıdan `render(state)` ile.
+// Sahne birimi: gerçek ölçü × K (eski kadraj ve duman parametreleri bu ölçekte ayarlı).
 import * as THREE from 'three';
-import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js';
-import { RoundedBoxGeometry } from 'three/examples/jsm/geometries/RoundedBoxGeometry.js';
+import { loadAsset, loadEnv, pickQuality } from '../../shared/lib3d.js';
 
 const TIP_Y = -0.42;
-const TIP_X = 0.78;
-const TIP_R = 0.3;
+const TIP_X = 0.55;
 
 function puffTexture() {
   const s = 128;
@@ -125,77 +125,107 @@ const ringFrag = /* glsl */ `
   }
 `;
 
-export function createScene(canvas, { lite = false } = {}) {
-  const renderer = new THREE.WebGLRenderer({ canvas, antialias: !lite, alpha: true, powerPreference: 'high-performance' });
+export function createScene(canvas) {
+  const q = pickQuality();
+  const lite = q === 'lo';
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: 'high-performance' });
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 1.0;
   renderer.setClearColor(0x000000, 0);
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFShadowMap;
   let dpr = Math.min(devicePixelRatio || 1, lite ? 1.25 : 1.5);
   renderer.setPixelRatio(dpr);
 
   const scene = new THREE.Scene();
-  const pmrem = new THREE.PMREMGenerator(renderer);
-  scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.03).texture;
-  scene.environmentIntensity = 1.1;
+  scene.environmentIntensity = 0.75;
+  const camera = new THREE.PerspectiveCamera(34, 1, 0.1, 80);
 
-  const camera = new THREE.PerspectiveCamera(34, 1, 0.1, 60);
-
-  const key = new THREE.DirectionalLight(0xffffff, 2.2);
-  key.position.set(3, 4, 5);
-  scene.add(key);
+  const K = 6; // sahne birimi / metre
+  const key = new THREE.DirectionalLight(0xfff1e2, 2.4);
+  key.position.set(4, 12, 9);
+  key.target.position.set(0, -1.5, -4);
+  key.castShadow = true;
+  key.shadow.mapSize.set(lite ? 1024 : 2048, lite ? 1024 : 2048);
+  Object.assign(key.shadow.camera, { left: -9, right: 9, top: 9, bottom: -9, near: 1, far: 40 });
+  key.shadow.bias = -0.0004;
+  key.shadow.normalBias = 0.04;
+  key.shadow.radius = 5;
+  scene.add(key, key.target);
   const rim = new THREE.PointLight(0xff3b5c, 18, 12, 1.6);
   rim.position.set(-2.5, 1.2, 1.8);
   scene.add(rim);
-  scene.add(new THREE.HemisphereLight(0xffffff, 0x222226, 0.35));
+  scene.add(new THREE.HemisphereLight(0xffffff, 0x222226, 0.3));
 
-  // --- Araç: tampon, difüzör, iki krom uç ---
+  // Zemin: yalnız gölge (arka plan CSS'teki afiş rengi)
+  const GROUND = TIP_Y - 0.225 * K;
+  const floor = new THREE.Mesh(new THREE.PlaneGeometry(120, 120), new THREE.ShadowMaterial({ opacity: 0.26 }));
+  floor.rotation.x = -Math.PI / 2;
+  floor.position.y = GROUND;
+  floor.receiveShadow = true;
+  scene.add(floor);
+
+  // --- Araç: sedan arkası + egzoz hattı; arka +z'ye bakar, uçların ortası (0, TIP_Y, 0) ---
   const car = new THREE.Group();
-  scene.add(car);
-  // arka susturucu: fırçalanmış paslanmaz kutu + giriş borusu
-  const steel = new THREE.MeshStandardMaterial({ color: 0xb9bdc2, metalness: 1, roughness: 0.32 });
-  const muffler = new THREE.Mesh(new RoundedBoxGeometry(2.9, 0.7, 1.5, 6, 0.3), steel);
-  muffler.position.set(0, TIP_Y, -2.0);
-  car.add(muffler);
-  const inlet = new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3([
-    new THREE.Vector3(-0.9, TIP_Y + 0.05, -2.6), new THREE.Vector3(-1.0, TIP_Y + 0.1, -3.6),
-    new THREE.Vector3(-1.6, TIP_Y + 0.35, -5.2), new THREE.Vector3(-1.8, TIP_Y + 0.5, -8),
-  ]), 40, 0.17, 20, false), steel);
-  car.add(inlet);
-  const hanger = new THREE.Mesh(new THREE.TorusGeometry(0.12, 0.035, 10, 24), new THREE.MeshStandardMaterial({ color: 0x111111, roughness: 0.8 }));
-  hanger.position.set(1.0, TIP_Y + 0.45, -2.0);
-  hanger.rotation.y = Math.PI / 2;
-  car.add(hanger);
-
-  const chrome = new THREE.MeshStandardMaterial({ color: 0xe6e8ea, metalness: 1, roughness: 0.14, side: THREE.DoubleSide });
-  const prof = [];
-  const L = 1.35;
-  prof.push(new THREE.Vector2(TIP_R * 0.86, -L + 0.1));
-  prof.push(new THREE.Vector2(TIP_R * 0.86, -0.05));
-  for (let i = 0; i <= 10; i++) {
-    const a = (i / 10) * Math.PI;
-    prof.push(new THREE.Vector2(TIP_R * 0.93 - Math.cos(a) * TIP_R * 0.07, Math.sin(a) * 0.05));
-  }
-  prof.push(new THREE.Vector2(TIP_R, -0.05));
-  prof.push(new THREE.Vector2(TIP_R, -L));
-  const tipGeo = new THREE.LatheGeometry(prof, lite ? 40 : 64);
-  tipGeo.rotateX(Math.PI / 2);
-  const coreMat = new THREE.MeshBasicMaterial({ color: 0x050505 });
+  const bob = new THREE.Group(); // render() sallar; car kendi kaydırmasını korur
+  bob.add(car);
+  scene.add(bob);
+  const rigCar = new THREE.Group();
+  rigCar.scale.setScalar(K);
+  rigCar.rotation.y = Math.PI / 2;
+  car.add(rigCar);
   const glowMat = new THREE.MeshBasicMaterial({ color: 0xff5a2a, transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false });
-  const tips = [];
-  for (const sx of [-1, 1]) {
-    const g = new THREE.Group();
-    g.position.set(sx * TIP_X, TIP_Y, 0);
-    g.add(new THREE.Mesh(tipGeo, chrome));
-    const core = new THREE.Mesh(new THREE.CircleGeometry(TIP_R * 0.86, 32), coreMat);
-    core.position.z = -0.55;
-    g.add(core);
-    const glow = new THREE.Mesh(new THREE.CircleGeometry(TIP_R * 0.84, 32), glowMat);
-    glow.position.z = -0.5;
-    g.add(glow);
-    car.add(g);
-    tips.push(g);
-  }
+  const tipsWorld = [new THREE.Vector3(-0.55, TIP_Y, 0), new THREE.Vector3(0.55, TIP_Y, 0)];
+  let ready = false;
+  const readyP = (async () => {
+    const [env, body, ex] = await Promise.all([
+      loadEnv('studio', renderer, { quality: q }),
+      loadAsset('car_sedan', { quality: q, renderer }),
+      loadAsset('exhaust', { quality: q, renderer }),
+    ]);
+    scene.environment = env;
+    const M = body.materials;
+    if (M.paint) { M.paint.color.set('#3b4048'); M.paint.roughness = 0.26; M.paint.metalness = 0.75; }
+    if (M.light_tail) { M.light_tail.emissive.set('#d0101f'); M.light_tail.emissiveIntensity = 1.1; }
+    rigCar.add(body.scene);
+    // egzoz: ucu tampon çizgisinin hemen içinde, gövdenin altında
+    const exRoot = ex.scene;
+    const tp = ex.nodes.tailpipe;
+    // ikinci uç: susturucunun öbür ucuna aynalı kopya (çift çıkış)
+    if (tp) {
+      const twin = tp.clone(true);
+      twin.position.z -= 0.19;
+      tp.parent.add(twin);
+    }
+    exRoot.position.set(-2.375 + 1.958 + 0.07, 0.17, 0);
+    rigCar.add(exRoot);
+    scene.updateMatrixWorld(true);
+    // uçların gerçek konumu → sahneyi uçların ortası (0, TIP_Y, 0) olacak şekilde kaydır
+    const boxes = [];
+    exRoot.traverse((o) => { if (o.isMesh && o.material && o.material.name === 'chrome') boxes.push(new THREE.Box3().setFromObject(o)); });
+    const cs = boxes.map((b) => b.getCenter(new THREE.Vector3()));
+    const zs = boxes.map((b) => b.max.z);
+    if (cs.length >= 2) {
+      const mid = cs[0].clone().add(cs[1]).multiplyScalar(0.5);
+      car.position.sub(new THREE.Vector3(mid.x, mid.y - TIP_Y, Math.max(...zs)));
+      scene.updateMatrixWorld(true);
+      cs.sort((a, b) => a.x - b.x).forEach((c, i) => tipsWorld[i].copy(c).add(car.position).setZ(0));
+    }
+    floor.position.y = GROUND;
+    const bb = new THREE.Box3().setFromObject(body.scene);
+    floor.position.y = bb.min.y + 0.002;
+    // uçların içinde kor (DPF bölümünde yanar)
+    for (const tw of tipsWorld) {
+      const g = new THREE.Mesh(new THREE.CircleGeometry(0.2, 32), glowMat);
+      g.position.copy(tw).add(new THREE.Vector3(0, 0, -0.35));
+      scene.add(g);
+    }
+    U.uTipL.value.copy(tipsWorld[0]).setZ(0.05);
+    U.uTipR.value.copy(tipsWorld[1]).setZ(0.05);
+    RU.uOrigin.value.copy(tipsWorld[1]).setZ(0.1);
+    ready = true;
+  })();
 
   // --- Duman ---
   const tex = puffTexture();
@@ -267,9 +297,9 @@ export function createScene(canvas, { lite = false } = {}) {
 
   function render(s) {
     const portrait = W / H < 0.85;
-    const dist = s.dist * (portrait ? 1.95 : 1.45);
+    const dist = s.dist * (portrait ? 3.7 : 3.2);
     const az = s.az, el = s.el;
-    target.set(s.lookX * (portrait ? 0.3 : 0.5) + (portrait ? 0 : 0.9), s.lookY + (portrait ? -0.55 : 0.1), 0);
+    target.set(s.lookX * (portrait ? 0.3 : 0.5) + (portrait ? 0 : 1.9), s.lookY + (portrait ? -1.3 : 0.5), 0);
     camera.position.set(
       target.x + Math.sin(az) * Math.cos(el) * dist,
       target.y + Math.sin(el) * dist,
@@ -277,8 +307,8 @@ export function createScene(canvas, { lite = false } = {}) {
     );
     camera.lookAt(target);
     camera.position.y += s.shiftY || 0; // kadrajı kaydır (yazıya yer aç)
-    car.rotation.z = s.roll || 0;
-    car.position.y = s.carY || 0;
+    bob.rotation.z = s.roll || 0;
+    bob.position.y = s.carY || 0;
 
     U.uTime.value = s.time;
     U.uPush.value = s.push;
@@ -311,5 +341,5 @@ export function createScene(canvas, { lite = false } = {}) {
     resize();
   }
 
-  return { render, resize, setQuality };
+  return { render, resize, setQuality, readyP, isReady: () => ready };
 }

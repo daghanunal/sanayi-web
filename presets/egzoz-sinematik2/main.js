@@ -4,7 +4,7 @@ import '../../shared/base.css';
 import './style.css';
 import {
   boot, initSmoothScroll, reducedMotion, telHref, waHref, mapsHref, mapsEmbed,
-  openStatus, groupedHours, icons, esc, gsap, ScrollTrigger,
+  openStatus, groupedHours, icons, esc, gsap, ScrollTrigger, setStoryMode,
 } from '../../shared/core.js';
 import { createScene } from './scene.js';
 
@@ -18,8 +18,6 @@ const seg = (p, a, b) => clamp((p - a) / (b - a));
 const L = (a, b, t) => a + (b - a) * t;
 const smooth = (t) => t * t * (3 - 2 * t);
 const nf = (n, digits = 0) => Number(n).toLocaleString('tr-TR', { minimumFractionDigits: digits, maximumFractionDigits: digits });
-const weak = (navigator.hardwareConcurrency || 8) <= 4 || (navigator.deviceMemory || 8) <= 4;
-const lite = weak || innerWidth < 760;
 const hex = (h) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16) / 255);
 const toHex = (c) => '#' + c.map((v) => Math.round(clamp(v) * 255).toString(16).padStart(2, '0')).join('');
 
@@ -60,14 +58,14 @@ $('[data-status-big]').classList.toggle('is-open', status.open);
 const CH = [...d.dumanlar.map((x) => ({ ...x, clean: false })), { id: 'temiz', ...d.temiz, renk: 'Temiz', clean: true }];
 $('[data-words]').innerHTML = CH.map((c) => `<p class="word word--${esc(c.id)}" data-word>${esc(c.kelime)}</p>`).join('');
 $('[data-chapters]').innerHTML = CH.map((c, i) => `
-  <article class="chap" data-chap>
+  <div class="cstop" data-cstop><article class="chap" data-chap>
     <p class="chap__kicker"><b>${String(i + 1).padStart(2, '0')}</b><span>${esc(c.clean ? 'Ölçüm sonrası' : `${c.renk} duman · ${c.anlam}`)}</span></p>
     <h2 class="chap__title">${esc(c.baslik)}</h2>
     <p class="chap__text">${esc(c.metin)}</p>
     ${c.clean
       ? `<a class="chap__wa" href="${esc(telHref(d))}">${icons.phone}<span>Ölçüm için arayın</span></a>`
       : `<a class="chap__wa" href="${esc(waHref(d, `Merhaba ${d.isletme.ad}, aracımın egzozundan ${c.hizmet.toLocaleLowerCase('tr')} geliyor, videosunu gönderiyorum.`))}" target="_blank" rel="noopener">${icons.whatsapp}<span>Dumanın videosunu gönderin</span></a>`}
-  </article>`).join('');
+  </article></div>`).join('');
 $('[data-dots]').innerHTML = ['Giriş', ...CH.map((c) => c.renk)].map((n) => `<li><span>${esc(n)}</span></li>`).join('');
 
 // Gösterge
@@ -105,7 +103,7 @@ $('[data-services]').innerHTML = d.hizmetler.map((s, i) => `
 
 // Atölye şeridi
 $('[data-reel-track]').innerHTML = d.galeri.map((g, i) => `
-  <figure class="shot${i % 2 ? ' shot--low' : ''}"><img src="${esc(g.src)}" alt="${esc(g.alt)}" loading="lazy" /><figcaption>${esc(g.alt)}</figcaption></figure>`).join('');
+  <figure class="shot${i % 2 ? ' shot--low' : ''}"><img src="${esc(g.src)}" alt="${esc(g.alt)}" loading="lazy" width="800" height="1000" /><figcaption>${esc(g.alt)}</figcaption></figure>`).join('');
 
 // Süreç
 $('[data-steps]').innerHTML = d.surec.map((s, i) => `
@@ -114,7 +112,6 @@ $('[data-steps]').innerHTML = d.surec.map((s, i) => `
 // Yorumlar
 $('[data-puan]').textContent = nf(d.puan.ortalama, 1);
 $('[data-stars]').innerHTML = icons.star.repeat(5);
-$('[data-puan-adet]').textContent = `${nf(d.puan.adet)} Google yorumu`;
 $('[data-reviews]').innerHTML = d.yorumlar.map((y) => `
   <figure class="rev">
     <p class="rev__stars" aria-label="${y.puan} yıldız">${icons.star.repeat(y.puan)}</p>
@@ -129,7 +126,7 @@ $('[data-hours]').innerHTML = groupedHours(d.saatler)
   .map(([g, h]) => `<div class="${h === 'Kapalı' ? 'is-closed' : ''}"><dt>${esc(g)}</dt><dd>${esc(h)}</dd></div>`).join('');
 $('[data-final-title]').textContent = d.finalBaslik;
 $('[data-garanti]').textContent = d.garanti;
-$('[data-year]').textContent = `© ${new Date().getFullYear()} ${d.isletme.ad} · Fotoğraflar: Pexels · 3D egzoz bu site için kodla çizildi`;
+$('[data-year]').textContent = `© ${new Date().getFullYear()} ${d.isletme.ad} · Fotoğraflar: Pexels (temsilî) · 3D görseller temsilîdir`;
 
 const mapBox = $('[data-map]');
 new IntersectionObserver((entries, obs) => {
@@ -152,8 +149,6 @@ const KF = [
 ];
 KF[6] = { ...KF[5], p: 1 };
 const FINALE = { bg: '#101013', fg: '#f3f1ec', call: '#ff3b5c', smoke: [0.9, 0.9, 0.92], smoke2: [0.95, 0.95, 0.96], density: 0.16, push: 1.24, spread: 0.8, size: 1, count: 0.6, rise: 2.10, wind: 0.2, rim: [1, 0.23, 0.36], glow: 0, az: 0.12, el: 0.08, dist: 7, lookX: -2.2, lookY: -1.35, dirt: [0, 0, 0, 0] };
-const CENTERS = KF.slice(0, 6).map((k) => k.p);
-const HOLD = 0.062;
 
 function mixK(a, b, t) {
   const o = {};
@@ -169,18 +164,16 @@ function mixK(a, b, t) {
   o.callRGB = hex(a.call).map((v, i) => L(v, hex(b.call)[i], t));
   return o;
 }
-function filmState(p) {
-  let i = 0;
-  while (i < KF.length - 2 && p > KF[i + 1].p) i++;
-  const a = KF[i], b = KF[i + 1];
-  const t = smooth(seg(p, a.p + (i === 0 ? 0.06 : HOLD), b.p - HOLD));
-  return mixK(a, b, t);
+// t: 0 giriş, 1–5 duman bölümleri (duraklar kaydırıldıkça, durakta bekler)
+function filmState(t) {
+  const i = Math.min(4, Math.floor(t));
+  return mixK(KF[i], KF[i + 1], t - i);
 }
 
 // --- Sahne -------------------------------------------------------------------
 const canvas = $('[data-stage]');
 let S = null;
-try { S = createScene(canvas, { lite }); } catch (e) { canvas.remove(); }
+try { S = createScene(canvas); } catch (e) { canvas.remove(); }
 if (import.meta.env.DEV) window.__ds = S;
 
 const root = document.documentElement;
@@ -197,6 +190,7 @@ const finale = $('[data-finale]');
 const introMeter = $('[data-intro-meter]');
 const introPct = $('[data-intro-pct]');
 const chars = $$('.ch', heroTitle);
+const cstops = $$('[data-cstop]');
 
 let filmP = 0, filmTarget = 0, finaleQ = 0, afterFilm = 0, finaleIn = 0;
 let introK = reducedMotion ? 1 : 0;
@@ -216,20 +210,46 @@ function endIntro() {
 }
 if (!reducedMotion) {
   gsap.set(chars, { yPercent: 110, opacity: 0 });
-  gsap.set(['.hero__kicker', '.hero__slogan', '.hero__cta', '.top', '.dots'], { autoAlpha: 0, y: 14 });
-  const tl = gsap.timeline({ delay: 1.1 });
+  gsap.set(['.hero__kicker', '.hero__slogan', '.hero__cta', '.top'], { autoAlpha: 0, y: 14 });
+  const tl = gsap.timeline({ delay: 0.55 });
   tl.to(chars, { yPercent: 0, opacity: 1, duration: 0.9, ease: 'expo.out', stagger: 0.035 })
     .to(['.hero__kicker', '.hero__slogan', '.hero__cta'], { autoAlpha: 1, y: 0, duration: 0.6, stagger: 0.08, ease: 'power3.out' }, '-=0.5')
-    .to(['.top', '.dots'], { autoAlpha: 1, y: 0, duration: 0.6, ease: 'power3.out', onComplete: endIntro }, '<');
+    .to(['.top'], { autoAlpha: 1, y: 0, duration: 0.6, ease: 'power3.out', onComplete: endIntro }, '<');
+  setTimeout(() => { tl.progress(1); endIntro(); }, 2400); // en geç 2,4 sn
   addEventListener('pointerdown', () => { tl.progress(1); introK = Math.max(introK, 0.999); endIntro(); }, { once: true });
+  addEventListener('wheel', () => { tl.progress(1); endIntro(); }, { once: true, passive: true });
+  addEventListener('touchmove', () => { tl.progress(1); endIntro(); }, { once: true, passive: true });
   addEventListener('keydown', () => { tl.progress(1); endIntro(); }, { once: true });
 }
 
 // Tetikleyiciler
 const trg = {};
+let anchors = [];
+let storyOn = false;
+function measureAnchors() {
+  const mid = (el) => el.getBoundingClientRect().top + scrollY + el.offsetHeight / 2 - innerHeight / 2;
+  anchors = [0, ...cstops.map(mid)];
+}
+function targetT(y) {
+  if (!anchors.length || y <= 0) return 0;
+  for (let i = 0; i < anchors.length - 1; i++) {
+    if (y < anchors[i + 1]) {
+      const f = (y - anchors[i]) / (anchors[i + 1] - anchors[i]);
+      return i + smooth(clamp((f - 0.2) / 0.6));
+    }
+  }
+  return anchors.length - 1;
+}
 function setupTriggers() {
   trg.film = ScrollTrigger.create({ trigger: film, start: 'top top', end: 'bottom bottom' });
   trg.after = ScrollTrigger.create({ trigger: film, start: 'bottom bottom', end: 'bottom 35%' });
+  // Telefonda duman durakları boyunca alt çubuk ve başlık çekilir; ölçüm kutusu tek üst öğe olur
+  ScrollTrigger.create({
+    trigger: '[data-chapters]', start: 'top 45%', end: 'bottom 55%',
+    onToggle: (st) => { storyOn = st.isActive; setStoryMode(st.isActive ? true : null); root.classList.toggle('is-story', st.isActive); },
+  });
+  ScrollTrigger.addEventListener('refresh', measureAnchors);
+  measureAnchors();
   trg.finale = ScrollTrigger.create({ trigger: finale, start: 'top top', end: 'bottom bottom' });
   trg.finaleIn = ScrollTrigger.create({ trigger: finale, start: 'top 90%', end: 'top 20%' });
   trg.finaleOut = ScrollTrigger.create({ trigger: finale, start: 'bottom bottom', end: 'bottom top' });
@@ -271,36 +291,28 @@ let lastBg = '', lastFg = '', lastCall = '', lastLift = 0;
 let active = -1;
 let frames = 0, slow = 0, qualityDropped = false, lastT = performance.now();
 
-function uiFilm(p, s, time) {
-  // kahraman
-  const heroOut = seg(p, 0.05, 0.12);
-  hero.style.opacity = String(1 - heroOut);
-  hero.style.transform = `translate3d(0, ${-heroOut * 60}px, 0)`;
-  hero.style.visibility = heroOut >= 1 ? 'hidden' : 'visible';
-  if (introDone) gauge.style.opacity = String(seg(p, 0.07, 0.12) * (1 - seg(p, 0.975, 1)));
-  hint.style.opacity = String(introDone ? 1 - seg(p, 0.005, 0.04) : 0);
+let onCard = -2;
+function syncCards(t) {
+  const idx = storyOn ? Math.round(t) : -9;
+  if (idx === onCard) return;
+  onCard = idx;
+  cstops.forEach((el, i) => el.classList.toggle('is-on', i === idx - 1));
+  dots.forEach((dd, i) => dd.classList.toggle('is-on', i === idx));
+}
+function uiFilm(t, s, time, gOn = true) {
+  const phoneOk = innerWidth >= 760 || root.classList.contains('is-story'); // telefonda yalnız başlık çekilince
+  const g = introDone && gOn && phoneOk ? seg(t, 0.45, 0.8) * (1 - seg(t, 5.3, 5.6)) : 0;
+  gauge.style.opacity = String(g);
+  gauge.style.visibility = g > 0.01 ? 'visible' : 'hidden';
+  hint.style.opacity = String(introDone ? 1 - seg(t, 0.02, 0.2) : 0);
 
-  // bölümler
-  let idx = 0;
-  CENTERS.forEach((c, i) => {
-    if (i === 0) return;
-    const w = 1 - seg(Math.abs(p - c), 0.062, 0.089);
-    const card = chaps[i - 1];
-    const word = words[i - 1];
-    const dir = p < c ? 1 : -1;
-    card.style.opacity = String(w);
-    card.style.transform = `translate3d(0, ${(1 - w) * 40 * dir}px, 0)`;
-    card.style.visibility = w > 0.01 ? 'visible' : 'hidden';
-    card.classList.toggle('is-live', w > 0.6);
-    const ww = 1 - seg(Math.abs(p - c), 0.05, 0.1);
+  // bölüm kartları: yalnız etkin durağınki görünür; dev kelimeler kayarak geçer
+  words.forEach((word, i) => {
+    const k = t - (i + 1);
+    const ww = 1 - seg(Math.abs(k), 0.22, 0.42);
     word.style.opacity = String(ww);
-    word.style.transform = `translate3d(${(p - c) * -260}vw, 0, 0) scale(${1 + (1 - ww) * 0.06})`;
-    if (Math.abs(p - c) < 0.09) idx = i;
+    word.style.transform = ww > 0 ? `translate3d(${k * -70}vw, 0, 0) scale(${1 + (1 - ww) * 0.06})` : '';
   });
-  if (idx !== active) {
-    active = idx;
-    dots.forEach((dd, i) => dd.classList.toggle('is-on', i === idx));
-  }
 
   // gösterge
   let fail = false;
@@ -328,7 +340,8 @@ function tick() {
   const ik = smooth(introK);
   if (!reducedMotion && introPct) introPct.textContent = String(Math.round(ik * 100));
 
-  filmTarget = trg.film?.progress ?? 0;
+  filmTarget = targetT(scrollY);
+  if (Math.abs(filmTarget - filmP) > 1.5) filmP = filmTarget;
   filmP = reducedMotion ? filmTarget : L(filmP, filmTarget, 0.14);
   afterFilm = trg.after?.progress ?? 0;
   finaleIn = trg.finaleIn?.progress ?? 0;
@@ -365,7 +378,10 @@ function tick() {
   wordsBox.style.opacity = (1 - smooth(afterFilm)) * (finaleIn > 0 ? 0 : 1);
   root.classList.toggle('is-past', past === 1);
 
-  if (afterFilm < 1 || finaleIn > 0) uiFilm(filmP, s, time);
+  syncCards(filmP);
+  const gOn = afterFilm < 0.25 && !(finaleIn > 0);
+  if (afterFilm < 1 || finaleIn > 0) uiFilm(filmP, s, time, gOn);
+  else if (gauge.style.visibility !== 'hidden') { gauge.style.opacity = '0'; gauge.style.visibility = 'hidden'; }
 
   if (S && vis > 0.01 && !document.hidden) {
     S.render(s);

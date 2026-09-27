@@ -94,6 +94,10 @@
         <h2 class="h2" id="duraklar-h">Motordan uca,<br />parça parça.</h2>
         <p>Egzoz tek bir boru değil. Gaz beş duraktan geçer; arıza hangisindeyse orayı onarırız, bütün hattı değiştirmeyiz.</p>
       </div>
+      <figure class="duraklar__img">
+        <img src="/img/susturucu/egzoz-hatti-3d.jpg" alt="Manifolddan egzoz ucuna kadar egzoz hattının temsilî 3D çizimi" loading="lazy" width="1200" height="675" />
+        <figcaption>Temsilî 3D çizim · motor sağda, uç solda</figcaption>
+      </figure>
       <ol class="duraklar__list" data-duraklar></ol>
     </section>
 
@@ -123,14 +127,17 @@
     </section>
 
     <!-- Galeri -->
-    <section class="galeri" aria-label="Atölyeden">
+    <section class="galeri" aria-label="Egzoz işinden kareler">
       <div class="galeri__grid" data-galeri></div>
     </section>
 
     <!-- Yorumlar -->
     <section class="yorumlar" id="yorumlar" aria-labelledby="yorumlar-h">
       <div class="yorumlar__head">
-        <h2 class="h2" id="yorumlar-h">Sanayide ne diyorlar</h2>
+        <div>
+          <p class="yorumlar__tag">Örnek yorumlar</p>
+          <h2 class="h2" id="yorumlar-h">Sanayide ne diyorlar</h2>
+        </div>
         <p class="puan" data-puan></p>
       </div>
       <ul class="yorumlar__list" data-yorumlar></ul>
@@ -170,7 +177,7 @@
   <footer class="foot">
     <p><strong data-name></strong>, <span data-address></span></p>
     <p><a data-tel-plain></a></p>
-    <p class="foot__small">© <span data-year></span> <span data-name></span>. Fotoğraflar: Pexels.</p>
+    <p class="foot__small">© <span data-year></span> <span data-name></span>. Fotoğraflar: Pexels (temsilî). 3D görseller temsilîdir.</p>
   </footer>
 
   <script type="module" src="./main.js"></script>

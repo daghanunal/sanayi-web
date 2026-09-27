@@ -14,6 +14,12 @@
   <div class="backdrop" data-backdrop aria-hidden="true"></div>
   <div class="words" data-words aria-hidden="true"></div>
   <canvas class="stage" data-stage aria-hidden="true"></canvas>
+  <p class="intro-meter" data-intro-meter aria-hidden="true"><span>Gaz ölçülüyor</span><b data-intro-pct>0</b></p>
+  <aside class="gauge" data-gauge aria-hidden="true">
+    <p class="gauge__head"><span>Örnek ölçüm</span><b data-verdict>Kalır</b></p>
+    <div class="gauge__rows" data-gauge-rows></div>
+  </aside>
+  <ol class="dots" data-dots aria-hidden="true"></ol>
 
   <header class="top" data-top>
     <a class="top__brand" href="#" data-brand><i class="top__mark" aria-hidden="true"><b></b><b></b></i><span data-bind="ad"></span></a>
@@ -22,31 +28,19 @@
   </header>
 
   <main>
-    <!-- Film: açılış dumanı → siyah → mavi → beyaz → is → temiz -->
+    <!-- Film: açılış dumanı → siyah → mavi → beyaz → is → temiz (kaydırılan duraklar, sahne sabit) -->
     <section class="film" data-film>
-      <div class="film__sticky">
-        <div class="hero" data-hero>
-          <p class="hero__kicker" data-since></p>
-          <h1 class="hero__title" data-hero-title></h1>
-          <p class="hero__slogan" data-bind="slogan"></p>
-          <div class="hero__cta">
-            <a class="btn btn--hot" data-tel><span data-icon="phone"></span>Hemen ara</a>
-            <a class="btn btn--line" data-wa target="_blank" rel="noopener"><span data-icon="whatsapp"></span>WhatsApp'tan yaz</a>
-          </div>
+      <div class="hero" data-hero>
+        <p class="hero__kicker" data-since></p>
+        <h1 class="hero__title" data-hero-title></h1>
+        <p class="hero__slogan" data-bind="slogan"></p>
+        <div class="hero__cta">
+          <a class="btn btn--hot" data-tel><span data-icon="phone"></span>Hemen ara</a>
+          <a class="btn btn--line" data-wa target="_blank" rel="noopener"><span data-icon="whatsapp"></span>WhatsApp'tan yaz</a>
         </div>
-
-        <p class="intro-meter" data-intro-meter aria-hidden="true"><span>Gaz ölçülüyor</span><b data-intro-pct>0</b></p>
-
-        <div class="chapters" data-chapters></div>
-
-        <aside class="gauge" data-gauge aria-hidden="true">
-          <p class="gauge__head"><span>Örnek ölçüm</span><b data-verdict>Kalır</b></p>
-          <div class="gauge__rows" data-gauge-rows></div>
-        </aside>
-
-        <ol class="dots" data-dots aria-hidden="true"></ol>
         <p class="hint" data-hint aria-hidden="true">Kaydırın, dumanın rengi ne diyor bakalım</p>
       </div>
+      <div class="chapters" data-chapters></div>
     </section>
 
     <!-- Ölçüm ve güven -->
@@ -77,7 +71,7 @@
     <!-- Atölye şeridi -->
     <section class="reel" data-reel>
       <div class="reel__sticky">
-        <p class="reel__label">Atölyeden</p>
+        <p class="reel__label" aria-hidden="true">Egzoz</p>
         <div class="reel__track" data-reel-track></div>
       </div>
     </section>
@@ -94,10 +88,11 @@
     <!-- Yorumlar -->
     <section class="reviews" id="yorumlar">
       <header class="reviews__head">
-        <p class="reviews__score"><b data-puan></b><span><span class="reviews__stars" data-stars></span><span data-puan-adet></span></span></p>
+        <p class="reviews__tag">Örnek yorumlar</p>
+        <p class="reviews__score"><b data-puan></b><span><span class="reviews__stars" data-stars></span><span>örnek puan</span></span></p>
         <h2 class="h2">Sanayide ne diyorlar.</h2>
       </header>
-      <div class="reviews__rail" data-rail tabindex="0" aria-label="Müşteri yorumları">
+      <div class="reviews__rail" data-rail tabindex="0" aria-label="Örnek müşteri yorumları">
         <div class="reviews__track" data-reviews></div>
       </div>
     </section>

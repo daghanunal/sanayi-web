@@ -30,51 +30,63 @@
     <a class="top__call" data-tel data-magnetic><span data-icon="phone"></span><span class="top__num" data-bind="telefon"></span></a>
   </header>
 
+  <!-- Tur göstergesi: telefonda tek üst öğe (tur boyunca başlık saklanır) -->
+  <div class="hud" data-hud aria-hidden="true">
+    <div class="hud__rail">
+      <p class="hud__now"><span data-hud-n>01</span><i>/05</i><b data-hud-name></b></p>
+      <ol class="rail" data-rail></ol>
+    </div>
+    <div class="meter">
+      <p class="meter__row" data-m="soot"><span>Duman</span><b data-m-soot>2,9</b><small>m⁻¹</small></p>
+      <p class="meter__row" data-m="co"><span>CO</span><b data-m-co>3,8</b><small>%</small></p>
+      <p class="meter__row" data-m="db"><span>Ses</span><b data-m-db>104</b><small>dB</small></p>
+      <p class="meter__verdict" data-m-verdict>Kalır</p>
+    </div>
+  </div>
+
   <main>
-    <!-- Film: dışarıdan bakış → manifolddan içeri → katalitik → DPF → susturucu → uç → muayene -->
-    <section class="film" data-film>
-      <div class="film__sticky">
-        <div class="hero" data-hero>
-          <p class="hero__since" data-since></p>
-          <h1 class="hero__title" data-hero-title></h1>
-          <p class="hero__slogan" data-bind="slogan"></p>
-          <div class="hero__cta">
-            <a class="btn btn--heat" data-tel data-magnetic><span data-icon="phone"></span>Hemen ara</a>
-            <a class="btn btn--ghost" data-wa target="_blank" rel="noopener" data-magnetic><span data-icon="whatsapp"></span>WhatsApp'tan yaz</a>
-          </div>
+    <!-- Giriş: stüdyoda asılı egzoz hattı, manifold kızgın -->
+    <section class="hero" data-hero>
+      <div class="hero__inner">
+        <p class="hero__since" data-since></p>
+        <h1 class="hero__title" data-hero-title></h1>
+        <p class="hero__slogan" data-bind="slogan"></p>
+        <div class="hero__cta">
+          <a class="btn btn--heat" data-tel data-magnetic><span data-icon="phone"></span>Hemen ara</a>
+          <a class="btn btn--ghost" data-wa target="_blank" rel="noopener" data-magnetic><span data-icon="whatsapp"></span>WhatsApp'tan yaz</a>
         </div>
+      </div>
+      <p class="hint" aria-hidden="true"><i></i>Kaydırın, egzozu motordan uca gezelim</p>
+    </section>
 
-        <ol class="rail" data-rail aria-label="Egzozun yolu"></ol>
-
-        <div class="cards" data-cards></div>
-
-        <div class="meter" data-meter aria-hidden="true">
-          <p class="meter__row"><span>Duman</span><b data-m-soot>2,9</b><small>k</small></p>
-          <p class="meter__row"><span>CO</span><b data-m-co>3,8</b><small>%</small></p>
-          <p class="meter__row meter__row--db"><span>Ses</span><b data-m-db>104</b><small>dB</small></p>
-          <svg class="meter__wave" viewBox="0 0 200 40" preserveAspectRatio="none"><path data-wave d="M0 20 H200" /></svg>
-          <p class="meter__verdict" data-m-verdict>Muayeneden kalır</p>
+    <!-- Tur: kamera hattın üstünde durak durak ilerler, parça çıkar, kesiti görünür -->
+    <section class="tour" id="yol" data-tour aria-labelledby="tour-h">
+      <div class="tour__intro">
+        <div class="tour__sticky">
+          <p class="kicker">Egzozun yolu</p>
+          <h2 class="sec-title tour__title" id="tour-h">Motordan uca, beş durak.</h2>
+          <p class="tour__lead">Gaz motordan çıkar, beş parçadan geçer, uçtan havaya karışır. Hangi durakta sorun varsa orayı onarırız.</p>
         </div>
-
+      </div>
+      <div class="stops" data-stops></div>
+      <div class="stop stop--report" data-stop="report">
         <div class="report" data-report>
           <div class="report__paper">
-            <p class="report__head"><span data-report-title></span><span data-report-plate></span></p>
+            <p class="report__head"><span data-report-title></span><span class="report__stamp" data-stamp>Geçti</span></p>
             <table class="report__table">
               <thead><tr><th>Ölçüm</th><th>Önce</th><th>Sonra</th><th>Sınır</th></tr></thead>
               <tbody data-report-rows></tbody>
             </table>
-            <p class="report__stamp" data-stamp>Geçti</p>
+            <p class="report__foot">Örnek değerlerdir; sınırlar yakıt tipine ve model yılına göre değişir.</p>
           </div>
           <p class="report__note">Muayeneden önce gelin, ölçümü birlikte yapalım.</p>
         </div>
-
-        <p class="hint" data-hint aria-hidden="true"><i></i>Kaydırın, egzozun içinden geçelim</p>
       </div>
     </section>
 
     <!-- Hakkımızda: lift, okundukça ısınan metin -->
     <section class="about" data-about>
-      <figure class="about__img"><img src="/img/manifold/lift.jpg" alt="Ustamız lifte kaldırılmış aracın altında egzozu kontrol ediyor" loading="lazy" width="933" height="1400" /></figure>
+      <figure class="about__img"><img src="/img/manifold/lift.jpg" alt="Lifte kaldırılmış aracın altında egzoz kontrolü" loading="lazy" width="933" height="1400" /></figure>
       <div class="about__body">
         <h2 class="sec-title" data-heat-title>Aracı kaldırır, egzozu elle kontrol ederiz.</h2>
         <p class="about__text" data-about-text></p>
@@ -137,8 +149,11 @@
     <!-- Yorumlar -->
     <section class="reviews" id="yorumlar">
       <header class="reviews__head">
-        <p class="reviews__score"><b data-puan>4,8</b><span class="reviews__stars" data-stars></span></p>
-        <p class="reviews__count" data-puan-adet></p>
+        <div>
+          <p class="reviews__tag">Örnek yorumlar</p>
+          <h2 class="sec-title reviews__title">Sanayide ne diyorlar</h2>
+        </div>
+        <p class="reviews__score"><b data-puan>4,8</b><span class="reviews__stars" data-stars></span><small>örnek puan</small></p>
       </header>
       <div class="reviews__rail" data-rev-rail>
         <div class="reviews__track" data-rev-track></div>
@@ -181,7 +196,7 @@
   <footer class="foot">
     <p data-year></p>
     <p data-bind="adres"></p>
-    <p class="foot__small">Fotoğraflar: Pexels. 3D egzoz bu site için kodla çizildi.</p>
+    <p class="foot__small">Fotoğraflar: Pexels (temsilî). 3D görseller temsilîdir.</p>
   </footer>
 
   <script type="module" src="./main.js"></script>

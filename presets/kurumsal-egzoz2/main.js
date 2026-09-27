@@ -11,6 +11,7 @@ const v = derinBirlestir(ana, ek);
 v.istatistikler = v.istatistikler.map((s) => (s.deger === 'kurulus' ? { ...s, deger: 0, kurulustanHesapla: true } : s));
 const hek = v.kurumsal.hizmetEk || {};
 v.hizmetler = v.hizmetler.map((h) => ({ ...h, ...(hek[h.baslik] || {}) }));
+v.puan = { ...v.puan, adet: 'örnek' }; // yorumlar örnektir
 
 kurumsal({
   veri: v,

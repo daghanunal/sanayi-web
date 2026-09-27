@@ -202,12 +202,12 @@ button.k-btn { font-family: var(--k-font-baslik); }
 .pz-anahtar button[aria-pressed='true'] { background: var(--k-vurgu); color: var(--k-vurgu-metin); }
 .pz-foy { border: 1.5px solid var(--k-metin); }
 .pz-foy__ust { display: none; }
-.pz-foy__satir { display: grid; grid-template-columns: 1fr auto; grid-template-areas: 'ad damga' 'deger damga' 'cubuk cubuk'; gap: 4px 12px; padding: 16px 16px 18px; border-bottom: 1px solid var(--k-cizgi); position: relative; }
+.pz-foy__satir { display: grid; grid-template-columns: 1fr auto; grid-template-areas: 'ad damga' 'deger damga' 'cubuk cubuk'; gap: 10px 12px; padding: 16px 16px 18px; border-bottom: 1px solid var(--k-cizgi); position: relative; }
 .pz-foy__satir:last-child { border-bottom: 0; }
 .pz-foy__ad { grid-area: ad; font-family: var(--mono); font-size: 12px; letter-spacing: .03em; color: var(--k-soluk); text-transform: uppercase; }
 .pz-foy__ad small { margin-left: 8px; opacity: .8; font-size: 11px; text-transform: none; }
-.pz-foy__deger { grid-area: deger; display: flex; align-items: baseline; gap: 12px; }
-.pz-foy__deger b { font-family: var(--k-font-baslik); font-weight: 800; font-size: 46px; line-height: 1; font-variant-numeric: tabular-nums; }
+.pz-foy__deger { grid-area: deger; display: flex; align-items: center; gap: 12px; padding-top: 4px; }
+.pz-foy__deger b { display: block; font-family: var(--k-font-baslik); font-weight: 800; font-size: 46px; line-height: 1.1; font-variant-numeric: tabular-nums; }
 .pz-foy__sinir { position: absolute; right: 16px; bottom: 30px; font-family: var(--mono); font-size: 11px; color: var(--k-soluk); }
 .pz-foy__damga {
   grid-area: damga; align-self: start; font-family: var(--k-font-baslik); font-weight: 800; font-size: 20px; letter-spacing: .08em;

@@ -3,3 +3,5 @@ lift-ozalit.jpg: https://www.pexels.com/photo/a-serviceman-in-blue-coverall-stan
 duman-ozalit.jpg: https://www.pexels.com/photo/car-exhaust-pipe-5233282/
 kaynak-ozalit.jpg: https://www.pexels.com/photo/crop-welder-welding-steel-pipe-at-work-4305372/
 cift-uc-ozalit.jpg: https://www.pexels.com/photo/close-up-of-luxury-sports-car-exhaust-design-30674492/
+egzoz-hatti-3d.jpg: temsilî 3D çizim — lib3d "exhaust" varlığı (assets3d, prosedürel, marka yok), Blender Cycles stüdyo render'ı
+  (betik: .shots/yukseltme/egzoz-tools/studio_exhaust.py; explode 0.45, az 48, el 26, kobalt fon, sarı kontur ışığı)

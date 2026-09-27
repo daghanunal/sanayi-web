@@ -1,0 +1,3 @@
+egzoz-hatti-3d.jpg: temsilî 3D çizim — lib3d "exhaust" varlığı (assets3d, prosedürel, marka yok), Blender Cycles stüdyo render'ı
+  (betik: .shots/yukseltme/egzoz-tools/studio_exhaust.py; explode 0.45, az 52, el 22, stüdyo HDRI 0.25 + alan ışıkları)
+Diğer fotoğraflar: public/img/manifold/ (Pexels, bkz. oradaki CREDITS.txt)

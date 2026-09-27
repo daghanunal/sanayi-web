@@ -175,7 +175,7 @@ $('[data-galeri]').innerHTML = galeri
   .map((g, i) => `<figure class="g g--${i + 1}"><img src="${esc(g.src)}" alt="${esc(g.alt)}" loading="lazy" /></figure>`)
   .join('');
 
-$('[data-puan]').innerHTML = `<span class="puan__val">${fmt(d.puan.ortalama, 1)}</span><span class="puan__stars" aria-hidden="true">${icons.star.repeat(5)}</span><span class="puan__adet">${nf.format(d.puan.adet)} değerlendirme</span>`;
+$('[data-puan]').innerHTML = `<span class="puan__val">${fmt(d.puan.ortalama, 1)}</span><span class="puan__stars" aria-hidden="true">${icons.star.repeat(5)}</span><span class="puan__adet">örnek puan</span>`;
 $('[data-yorumlar]').innerHTML = d.yorumlar
   .map(
     (y) => `

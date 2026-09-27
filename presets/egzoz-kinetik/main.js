@@ -235,7 +235,7 @@ const puanStr = d.puan.ortalama.toLocaleString('tr-TR', { minimumFractionDigits:
 $('[data-puan]').textContent = puanStr;
 $('[data-puan]').setAttribute('aria-label', `5 üzerinden ${puanStr}`);
 $('[data-yildiz]').innerHTML = icons.star.repeat(5);
-$('[data-puan-alt]').textContent = `${nf.format(d.puan.adet)} değerlendirme`;
+$('[data-puan-alt]').textContent = 'örnek puan';
 $('[data-reviews]').innerHTML = d.yorumlar
   .map(
     (y) => `

@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#0e0e10" />
   <title>Egzoz | Şaşmaz, Ankara</title>
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230e0e10'/%3E%3Cg fill='%23ff2e63'%3E%3Crect x='5' y='12' width='3' height='8'/%3E%3Crect x='10' y='6' width='3' height='20'/%3E%3Crect x='15' y='10' width='3' height='12'/%3E%3Crect x='20' y='14' width='3' height='4'/%3E%3Crect x='25' y='15' width='3' height='2'/%3E%3C/g%3E%3C/svg%3E" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230e0e10'/%3E%3Cg fill='%2319c6e0'%3E%3Crect x='5' y='12' width='3' height='8'/%3E%3Crect x='10' y='6' width='3' height='20'/%3E%3Crect x='15' y='10' width='3' height='12'/%3E%3Crect x='20' y='14' width='3' height='4'/%3E%3Crect x='25' y='15' width='3' height='2'/%3E%3C/g%3E%3C/svg%3E" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=Hanken+Grotesk:wght@400;500;600;700&family=Martian+Mono:wght@400;600;700&display=swap&subset=latin-ext" rel="stylesheet" />
@@ -51,7 +51,7 @@
             </div>
           </div>
           <div class="wave">
-            <div class="wave__limit"><span class="mono">Sınır <b data-limit>90</b> dB</span></div>
+            <div class="wave__limit"><i class="wave__tag mono" data-limit data-label="Sınır 90 dB"></i></div>
             <div class="wave__amp" data-wave></div>
           </div>
         </div>
@@ -101,7 +101,13 @@
 
     <!-- Hakkımızda -->
     <section class="atolye" aria-labelledby="atolye-h">
-      <figure class="atolye__photo"><img src="/img/manifold/lift.jpg" alt="Lifte kaldırılmış aracın altında egzoz kontrolü" loading="lazy" decoding="async" /></figure>
+      <figure class="atolye__photo">
+        <picture>
+          <source media="(min-width: 900px)" srcset="/img/egzoz-klasik2/lift-3d.jpg" />
+          <img src="/img/egzoz-klasik2/lift-3d-genis.jpg" alt="Lifte kaldırılmış aracın altında susturucu ve egzoz ucu, temsilî 3D çizim" loading="lazy" decoding="async" width="1400" height="875" />
+        </picture>
+        <figcaption>Temsilî 3D çizim</figcaption>
+      </figure>
       <div class="atolye__copy">
         <p class="eyebrow mono" data-years></p>
         <h2 class="h2" id="atolye-h">Değişmesi gerekmeyen parçayı değiştirmeyiz.</h2>
@@ -119,7 +125,10 @@
     <!-- Yorumlar -->
     <section class="yorum" id="yorumlar" aria-labelledby="yorum-h">
       <div class="yorum__head">
-        <h2 class="h2" id="yorum-h">Sanayide ne diyorlar</h2>
+        <div>
+          <p class="yorum__tag mono">Örnek yorumlar</p>
+          <h2 class="h2" id="yorum-h">Sanayide ne diyorlar</h2>
+        </div>
         <div class="score">
           <p class="score__num" data-score>4,8</p>
           <div>
@@ -169,7 +178,7 @@
     <p class="foot__name" data-bind="ad"></p>
     <p data-bind="adres"></p>
     <p><a data-tel data-bind="telefon"></a></p>
-    <p class="foot__small">© <span data-year></span> <span data-bind="ad"></span>. Fotoğraflar: Pexels.</p>
+    <p class="foot__small">© <span data-year></span> <span data-bind="ad"></span>. Fotoğraflar: Pexels (temsilî). 3D görseller temsilîdir.</p>
   </footer>
 
   <script type="module" src="./main.js"></script>
