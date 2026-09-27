@@ -363,7 +363,9 @@ export function applyMeta(d) {
       addressRegion: 'Ankara',
       addressCountry: 'TR',
     },
-    ...(d.puan && {
+    // Demo yorumları örnektir; arama motoruna gerçek puan (aggregateRating) olarak yazılmaz.
+    // Müşteriye özel sitede gerçek puan kaynağı eklenince burada `d.puan.gercek` ile açılabilir.
+    ...(d.puan?.gercek && {
       aggregateRating: { '@type': 'AggregateRating', ratingValue: d.puan.ortalama, reviewCount: d.puan.adet },
     }),
   });
