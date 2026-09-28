@@ -78,7 +78,8 @@ html[data-phone-story] { --bar-space: calc(12px + env(safe-area-inset-bottom, 0p
 
 /* Hikâye modu: pinli sahne ekranı kaplarken alt çubuk aşağı kayar; tek alt öğe hikâye kartıdır. */
 .action-bar, .vitrin-bar { transition: transform .35s cubic-bezier(.2, .7, .2, 1), opacity .25s, visibility 0s; }
-html[data-phone-story] .action-bar {
+html[data-phone-story] .action-bar,
+html[data-bar-tucked] .action-bar {
   transform: translateY(calc(100% + 24px + env(safe-area-inset-bottom, 0px)));
   opacity: 0; visibility: hidden; pointer-events: none;
   transition: transform .35s cubic-bezier(.2, .7, .2, 1), opacity .25s, visibility 0s .35s;

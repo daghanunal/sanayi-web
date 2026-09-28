@@ -161,7 +161,37 @@ export function mountActionBar(d) {
     <a href="${mapsHref(d)}" class="action-bar__btn" target="_blank" rel="noopener">${icons.pin}<span>Yol tarifi</span></a>`;
   document.body.append(bar);
   markBar('action');
+  tuckWhenDuplicated(bar);
   return bar;
+}
+
+// Aynı üç düğme (Ara + Yol tarifi) sayfada zaten görünüyorsa (künye, iletişim bölümü) alt çubuk saklanır;
+// o grup ekrandan çıkınca geri gelir. Presetin işaretlemesi gerekmez: tel: ve harita bağlantısı taşıyan
+// ortak kapsayıcı aranır. Kapatmak: <html data-bar-tuck="off">.
+function tuckWhenDuplicated(bar) {
+  if (typeof IntersectionObserver === 'undefined' || root.dataset.barTuck === 'off') return;
+  const visible = new Set();
+  const io = new IntersectionObserver((entries) => {
+    for (const e of entries) e.isIntersecting ? visible.add(e.target) : visible.delete(e.target);
+    root.toggleAttribute('data-bar-tucked', visible.size > 0);
+  }, { threshold: 0.6 });
+  const seen = new WeakSet();
+  const scan = () => {
+    for (const tel of document.querySelectorAll('a[href^="tel:"]')) {
+      if (bar.contains(tel)) continue;
+      let box = tel.parentElement;
+      for (let i = 0; i < 3 && box && box !== document.body; i++, box = box.parentElement) {
+        if (box.querySelector('a[href*="google.com/maps"], a[href*="maps.apple"], a[href*="maps.google"]')) break;
+      }
+      if (!box || box === document.body || seen.has(box)) continue;
+      if (!box.querySelector('a[href*="maps"]')) continue;
+      seen.add(box);
+      io.observe(box);
+    }
+  };
+  requestAnimationFrame(scan);
+  setTimeout(scan, 1200); // geç çizilen bölümler (kurumsal sayfa geçişleri dahil)
+  addEventListener('hashchange', () => setTimeout(scan, 300));
 }
 
 // --- Telefon sözleşmesi --------------------------------------------------
