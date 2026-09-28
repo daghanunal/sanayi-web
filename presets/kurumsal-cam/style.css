@@ -12,13 +12,10 @@
 /* Hero: tam ekran yağmurlu cam */
 .k-hero__baslik { max-width: 12ch; font-size: clamp(50px, 7.4vw, 124px); line-height: .96; }
 @media (max-width: 899px) { .k-hero__baslik { font-size: min(14vw, 64px); } }
-.k-hero__ust { font-weight: 500; letter-spacing: .01em; display: inline-flex; align-items: center; gap: 10px; padding: 7px 14px; border-radius: 999px; background: rgb(255 255 255 / .12); border: 1px solid rgb(255 255 255 / .25); }
 [data-hero='tam'] .k-hero__gorsel::after { background: linear-gradient(180deg, rgb(4 22 30 / .6) 0%, rgb(4 22 30 / .32) 28%, rgb(4 22 30 / .62) 55%, rgb(4 22 30 / .92) 100%); }
 .k-hero__gorsel img { object-position: 50% 40%; }
 [data-hero='tam'] .k-hero .k-btn:not(.k-btn--ikincil) { background: #fff; color: var(--k-koyu); border-color: #fff; }
 [data-hero='tam'] .k-hero .k-btn--ikincil { background: rgb(255 255 255 / .1); }
-.k-hero__bilgi { gap: 0 8px; }
-.k-hero__bilgi div { padding-top: 16px; }
 
 /* Buzlu cam yüzeyler */
 .k-aozet__liste li, .k-yorumlar__liste li, .k-detay div, .k-saatler, .k-form {
@@ -32,8 +29,6 @@ body { background: radial-gradient(1200px 600px at 100% 0%, #dcebf1, transparent
 .k-rakamlar { background: linear-gradient(180deg, var(--k-koyu), #0a3446); }
 .k-rakamlar dd { font-style: italic; font-size: clamp(46px, 6vw, 88px); }
 .k-rakamlar__liste > div { border-color: rgb(191 227 240 / .25); }
-.k-degerler li { border-top-width: 1px; }
-.k-degerler h3 { font-family: var(--k-font-baslik); font-size: 26px; font-weight: 400; }
 .k-surec__no { font-family: var(--k-font-baslik); font-style: italic; font-size: 34px; font-weight: 400; }
 .k-cta { background: linear-gradient(135deg, #0b6e99, #07212c); }
 .k-cta__baslik { font-style: italic; }

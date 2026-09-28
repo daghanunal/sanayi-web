@@ -14,15 +14,15 @@ const HASAR = [
   { id: 'kirik', ad: 'Kırık' },
 ];
 const POLICE = [
-  { id: 'kasko', ad: 'Kaskom var', not: 'Poliçenizde cam teminatı ve muafiyet olup olmadığını biz kontrol ederiz. Onay gelmeden işe başlamayız.' },
-  { id: 'trafik', ad: 'Karşı tarafın trafik sigortası', not: 'Kusurlu taraf belliyse hasar karşı tarafın trafik sigortasından istenebilir. Tutanak ya da kaza bilgisini de gönderin.' },
-  { id: 'yok', ad: 'Sigorta yok, kendim ödeyeceğim', not: 'Fotoğrafa bakıp tamir ya da değişim fiyatını baştan söyleriz.' },
+  { id: 'kasko', ad: 'Kaskom var', not: 'Poliçede cam teminatı ve muafiyet olup olmadığı başvuruda kontrol edilir. Montaja eksper onayından sonra başlanır.' },
+  { id: 'trafik', ad: 'Karşı tarafın trafik sigortası', not: 'Kusurlu taraf belliyse hasar karşı tarafın trafik sigortasından istenebilir. Kaza tespit tutanağının fotoğrafı da mesaja eklenir.' },
+  { id: 'yok', ad: 'Sigorta yok, kendim ödeyeceğim', not: 'Tamir mi değişim mi gerektiği fotoğrafa bakılıp söylenir.' },
 ];
 const FOTO = [
-  'Hasarın yakın planı (yanına bozuk para koyun)',
+  'Hasarın yakından fotoğrafı, yanında bozuk parayla',
   'Camın tamamı, biraz uzaktan',
   'Ruhsatın ön yüzü',
-  'Ön camda: camın üst kısmındaki etiket ve kod',
+  'Ön camın köşesindeki cam kodu',
 ];
 const KAMERA = [
   { id: 'var', ad: 'Var' },
@@ -42,9 +42,9 @@ const ADIMLAR = ['Hasar', 'Poliçe', 'Fotoğraf', 'Onay ve montaj'];
 
 function ipucu(cam, hasar) {
   if (hasar === 'kirik') return 'Kırık cam değişir. Cam stokta ise aynı gün takılır.';
-  if (cam === 'on' && hasar === 'tas') return 'Bozuk para boyunu geçmiyorsa çoğu zaman reçineyle kapanır; cam değişmez.';
-  if (cam === 'on' && hasar === 'catlak') return 'Çatlak kenara ulaştıysa değişim gerekir. Kısa çatlakları fotoğrafına bakıp söyleriz.';
-  return 'Yan, arka ve tavan camlarında tamir çoğu zaman mümkün olmaz; fotoğrafına bakıp söyleriz.';
+  if (cam === 'on' && hasar === 'tas') return 'Bozuk para boyunu geçmeyen iz çoğu zaman reçineyle tamir edilir, cam değişmez.';
+  if (cam === 'on' && hasar === 'catlak') return 'Çatlak camın kenarına ulaştıysa cam değişir. Kısa çatlaklarda karar fotoğrafa bakılarak verilir.';
+  return 'Yan, arka ve tavan camlarında tamir çoğu zaman mümkün olmaz. Karar fotoğrafa bakılarak verilir.';
 }
 
 const secim = (ad, liste, varsayilan) =>
@@ -66,8 +66,8 @@ export const hasarBasvuru = {
       <section class="k-bolum kb" aria-labelledby="kb-baslik">
         <div class="k-kap">
           <div class="kb__bas">
-            <h2 class="k-h2" id="kb-baslik" data-bol>Kasko başvurusu, dört adımda</h2>
-            <p class="k-lead">Camı ve hasarı seçin, poliçenizi belirtin, fotoğrafları hazırlayın. Başvuru mesajınız hazır olsun; dosyayı biz açalım, onayı biz takip edelim.</p>
+            <h2 class="k-h2" id="kb-baslik" data-bol>Kasko başvurusu</h2>
+            <p class="k-lead">Cam, hasar ve poliçe seçilince başvuru mesajı hazırlanır. Mesaj WhatsApp'tan gönderilir, fotoğraflar aynı sohbete eklenir.</p>
           </div>
           <div class="kb__ic">
             <div class="kb__panel">
@@ -77,8 +77,8 @@ export const hasarBasvuru = {
               <div class="kb__ray" aria-hidden="true"><span></span></div>
               <form class="kb__form" onsubmit="return false">
                 <div class="kb__adim" data-adim="0">
-                  <fieldset><legend>Hangi cam?</legend>${secim('cam', CAM, 'on')}</fieldset>
-                  <fieldset><legend>Hasar ne?</legend>${secim('hasar', HASAR, 'tas')}</fieldset>
+                  <fieldset><legend>Cam</legend>${secim('cam', CAM, 'on')}</fieldset>
+                  <fieldset><legend>Hasar</legend>${secim('hasar', HASAR, 'tas')}</fieldset>
                   <p class="kb__not" data-o="ipucu"></p>
                 </div>
                 <div class="kb__adim" data-adim="1" hidden>
@@ -90,15 +90,15 @@ export const hasarBasvuru = {
                   <p class="kb__not" data-o="police"></p>
                 </div>
                 <div class="kb__adim" data-adim="2" hidden>
-                  <fieldset><legend>Hazırlamanız gereken fotoğraflar</legend>
+                  <fieldset><legend>Gerekli fotoğraflar</legend>
                     <ul class="kb__foto">${FOTO.map((f, i) => `<li><label><input type="checkbox" name="foto" value="${i}"><span class="kb__tik" aria-hidden="true"></span><span>${esc(f)}</span></label></li>`).join('')}</ul>
                   </fieldset>
                   <fieldset data-o="kamera"><legend>Dikiz aynasının arkasında kamera var mı?</legend>${secim('kamera', KAMERA, 'bilmiyorum')}
-                    <p class="kb__not">Kamera varsa cam değişiminden sonra ADAS kalibrasyonu yaparız; şerit takip ve acil fren doğru çalışsın.</p>
+                    <p class="kb__not">Kamera varsa cam değişiminden sonra şerit takip ve acil fren kamerası cihazla yeniden ayarlanır.</p>
                   </fieldset>
                 </div>
                 <div class="kb__adim" data-adim="3" hidden>
-                  <fieldset><legend>Ne zaman gelmek istersiniz?</legend>${secim('gun', GUN, 'yarin')}</fieldset>
+                  <fieldset><legend>Gün</legend>${secim('gun', GUN, 'yarin')}</fieldset>
                   <fieldset><legend>Saat</legend>${secim('saat', SAAT, 'sabah')}</fieldset>
                   <dl class="kb__ozet" data-o="ozet"></dl>
                 </div>
@@ -107,7 +107,7 @@ export const hasarBasvuru = {
                   <button type="button" class="k-btn" data-ileri>Devam</button>
                   <a class="k-btn kb__gonder" target="_blank" rel="noopener" hidden>Başvuruyu WhatsApp'tan gönder</a>
                 </div>
-                <p class="kb__son" data-o="son" hidden>Mesajı gönderdikten sonra fotoğrafları aynı sohbete ekleyin.</p>
+                <p class="kb__son" data-o="son" hidden>Fotoğraflar mesajdan sonra aynı sohbete eklenir.</p>
               </form>
             </div>
             <figure class="kb__gorsel">

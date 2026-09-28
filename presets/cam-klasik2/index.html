@@ -20,34 +20,32 @@
       <span class="top__name" data-bind="ad"></span>
     </a>
     <nav class="top__nav" aria-label="Bölümler">
-      <a href="#test">Taş izi testi</a>
       <a href="#hizmetler">Hizmetler</a>
-      <a href="#kasko">Kasko</a>
-      <a href="#konum">Konum</a>
+      <a href="#hakkinda">Hakkında</a>
+      <a href="#konum">Saatler ve konum</a>
+      <a href="#iletisim">İletişim</a>
     </nav>
     <p class="top__status" data-status></p>
     <a class="top__call" data-tel aria-label="Telefonla ara"><span data-icon="phone"></span><span class="top__call-num" data-bind="telefon"></span></a>
   </header>
 
   <main>
-    <!-- İMZA: ön cam katmanlarına ayrılır (dış cam / PVB / iç cam), vantuzlar kalkar, sonra cam yerine oturur. -->
-    <section class="hero" id="bas" data-hero>
+    <!-- Künye. Yanda vantuzla tutulan ön cam (lib3d Cycles çizimi); künye ekrandan çıkarken cam katmanlarına
+         ayrılır (dış cam, PVB film, iç cam). Pin yok. -->
+    <section class="hero" id="bas" data-hero aria-labelledby="hero-title">
       <div class="hero__pin">
         <div class="hero__copy">
-          <p class="hero__kicker" data-since></p>
-          <div class="hero__titles">
-            <h1 class="ttl ttl--0" data-t="0"><span data-hero-name></span></h1>
-            <p class="ttl ttl--1" data-t="1" aria-hidden="true">Tek parça.<br />Üç kat.</p>
-            <p class="ttl ttl--2" data-t="2" aria-hidden="true">Kalıbına<br />oturur.</p>
-          </div>
-          <div class="hero__subs">
-            <p class="sub is-on" data-s="0" data-bind="slogan"></p>
-            <p class="sub" data-s="1" aria-hidden="true">Ön cam iki cam ve arasındaki PVB filmden oluşur. Taş çarpınca dağılmaz; iz büyümeden kapatırsak cam kurtulur.</p>
-            <p class="sub" data-s="2" aria-hidden="true">Aracınızın kalıbına uygun cam, doğru yapıştırıcı, kuruma süresi kadar bekleme. Aynı gün teslim.</p>
-          </div>
+          <h1 class="hero__title" id="hero-title" data-hero-name></h1>
+          <p class="hero__what" data-bind="tanim"></p>
+          <dl class="kunye">
+            <div><dt>Adres</dt><dd data-bind="kisaAdres"></dd></div>
+            <div><dt>Bugün</dt><dd class="kunye__durum" data-kunye></dd></div>
+            <div><dt>Telefon</dt><dd><a data-tel data-bind="telefon"></a></dd></div>
+          </dl>
           <div class="hero__actions">
-            <a class="btn btn--red" data-wa-foto target="_blank" rel="noopener"><span data-icon="whatsapp"></span>Camın fotoğrafını at</a>
-            <a class="btn btn--line" data-tel><span data-icon="phone"></span>Ara</a>
+            <a class="btn btn--red" data-tel><span data-icon="phone"></span>Ara</a>
+            <a class="btn btn--line-dark" data-wa target="_blank" rel="noopener"><span data-icon="whatsapp"></span>WhatsApp</a>
+            <a class="btn btn--line-dark" data-maps target="_blank" rel="noopener"><span data-icon="pin"></span>Yol tarifi</a>
           </div>
         </div>
 
@@ -56,7 +54,6 @@
             <div class="layer layer--in" data-l="in">
               <div class="shape shape--inner"></div>
               <div class="shape shape--frit"></div>
-              <span class="emark"><b>3</b><i>KAT LAMİNE</i></span>
             </div>
             <div class="layer layer--pvb" data-l="pvb">
               <div class="shape shape--pvb"></div>
@@ -68,39 +65,33 @@
               <img class="lifter" data-cup src="/img/cam-klasik2/vantuz.webp" alt="" width="1280" height="790" />
             </div>
           </div>
-          <svg class="dims" data-dims viewBox="0 0 100 62" preserveAspectRatio="none">
-            <path class="dims__line" d="M8 -5 H92 M8 -8 V-2 M92 -8 V-2" />
-            <path class="dims__line" d="M104 0 V62 M101 0 H107 M101 62 H107" />
-          </svg>
-          <p class="dims__txt dims__txt--w" data-dim-txt>1.450 mm</p>
-          <p class="dims__txt dims__txt--h" data-dim-txt>920 mm</p>
-          <div class="hero__foot">
-          <ul class="facts" data-facts></ul>
-          <ol class="tags" data-tags>
-            <li class="tag" data-tag="0"><b>01</b><span>Dış cam</span><em>2,1 mm. Taş ilk buna çarpar.</em></li>
-            <li class="tag" data-tag="1"><b>02</b><span>PVB ara film</span><em>0,76 mm. Kırılınca parçaları tutar.</em></li>
-            <li class="tag" data-tag="2"><b>03</b><span>İç cam</span><em>2,1 mm. Kenarda siyah seramik bant.</em></li>
-          </ol>
-          </div>
         </div>
-
-        <div class="hero__meter" aria-hidden="true"><span data-meter></span></div>
       </div>
     </section>
 
-    <!-- Bozuk para testi -->
-    <section class="test" id="test">
+    <!-- Hizmetler; ardından taş izi boyu, cam filmi koyulukları ve çalışma sırası -->
+    <section class="svcs" id="hizmetler" aria-labelledby="hizmet-baslik">
+      <div class="wrap">
+        <header class="sec-head">
+          <h2 class="h2" id="hizmet-baslik">Hizmetler</h2>
+          <p class="lede">Süreler yaklaşıktır, araca göre değişebilir. Fiyat ve randevu için arayın.</p>
+        </header>
+        <ol class="svc-list" data-services></ol>
+      </div>
+    </section>
+
+    <section class="test" id="test" aria-labelledby="test-baslik">
       <div class="wrap test__grid">
         <div class="test__head">
-          <p class="eyebrow">Taş izi testi</p>
-          <h2 class="h2">Bozuk parayı<br />iz üstüne koyun.</h2>
-          <p class="lede">İz bir liradan küçükse camı değiştirmeden reçineyle kapatırız. Kaydırıcıyla izin boyunu seçin, ne yapılacağını görün.</p>
+          <p class="eyebrow">Taş izi</p>
+          <h2 class="h2" id="test-baslik">Tamir mi, değişim mi?</h2>
+          <p class="lede">Bozuk para boyunu geçmeyen iz çoğu zaman reçineyle tamir edilir. Kaydırıcıyla izin boyu seçilince hangisinin gerektiği görünür.</p>
         </div>
         <div class="test__lab">
           <div class="test__view">
-            <img src="/img/kristal/catlak.jpg" alt="Ön camda taş izi ve yayılan çatlak" loading="lazy" />
+            <img src="/img/kristal/catlak.jpg" alt="Ön camda taş izi ve yayılan çatlak" loading="lazy" decoding="async" />
             <div class="test__scrim"></div>
-            <svg class="test__svg" viewBox="-60 -60 120 120" data-test-svg>
+            <svg class="test__svg" viewBox="-60 -60 120 120" data-test-svg aria-hidden="true">
               <g data-break></g>
               <circle class="test__coin" r="13.07" cx="0" cy="0" />
               <text class="test__coin-t" x="0" y="-16">1 TL</text>
@@ -110,112 +101,98 @@
           <div class="test__ctrl">
             <label class="test__label" for="iz">İzin boyu <output data-iz-out>18 mm</output></label>
             <input class="range" id="iz" type="range" min="4" max="70" step="1" value="18" data-iz />
-            <div class="verdict" data-verdict>
+            <div class="verdict" data-verdict aria-live="polite">
               <p class="verdict__tag" data-v-tag></p>
               <p class="verdict__title" data-v-title></p>
               <p class="verdict__text" data-v-text></p>
             </div>
-            <a class="btn btn--ink" data-wa-test target="_blank" rel="noopener"><span data-icon="whatsapp"></span>Fotoğrafla sor</a>
-            <p class="test__note">Kesin kararı fotoğrafı görünce veririz. İz sürücünün tam görüş alanındaysa değişim önerebiliriz.</p>
+            <a class="btn btn--ink" data-wa-test target="_blank" rel="noopener"><span data-icon="whatsapp"></span>Fotoğrafı WhatsApp'tan gönder</a>
+            <p class="test__note">Kesin karar fotoğrafa bakılarak verilir. İz sürücünün tam görüş alanındaysa tamir yerine değişim gerekebilir.</p>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Hizmetler -->
-    <section class="svcs" id="hizmetler">
-      <div class="wrap">
-        <header class="sec-head">
-          <p class="eyebrow">Hizmetler</p>
-          <h2 class="h2">Aracın bütün camları.</h2>
-          <p class="lede" data-bind="hakkinda"></p>
-        </header>
-        <ol class="svc-list" data-services></ol>
-      </div>
-    </section>
-
-    <!-- Galeri: tam genişlik fotoğraf şeridi -->
-    <section class="gal" aria-label="Cam montajı">
-      <div class="gal__grid" data-gallery></div>
-    </section>
-
-    <!-- Kasko -->
-    <section class="kasko" id="kasko">
-      <div class="wrap">
-        <header class="sec-head sec-head--dark">
-          <p class="eyebrow eyebrow--red">Kasko</p>
-          <h2 class="h2">Kasko dosyasını<br />biz açarız.</h2>
-          <p class="lede">Siz aracı getirin; eksper ve onay süreci bitene kadar takibi biz yaparız. Poliçeniz uygunsa cebinizden para çıkmaz.</p>
-        </header>
-        <ol class="steps" data-steps></ol>
-        <a class="btn btn--red" data-wa-kasko target="_blank" rel="noopener"><span data-icon="whatsapp"></span>Kasko için ruhsat ve fotoğraf gönder</a>
-      </div>
-    </section>
-
-    <!-- Rakamlar -->
-    <section class="stats" aria-label="Rakamlarla">
-      <ul class="wrap stats__list" data-stats></ul>
-    </section>
-
-    <!-- Cam filmi: koyuluk merdiveni -->
-    <section class="film" id="film">
+    <section class="film" id="film" aria-labelledby="film-baslik">
       <div class="wrap">
         <header class="sec-head">
           <p class="eyebrow">Cam filmi</p>
-          <h2 class="h2">Beş koyuluk,<br />yan yana.</h2>
-          <p class="lede">Hepsi UV ışınlarının %99'unu keser. Hangi cama hangisinin yasal olduğunu biz söyleriz.</p>
+          <h2 class="h2" id="film-baslik">Film koyulukları</h2>
+          <p class="lede">Yüzde, filmin geçirdiği ışığı gösterir. Koyuluk camın yerine ve yasal sınıra göre seçilir.</p>
         </header>
       </div>
       <div class="film__ladder">
-        <img src="/img/kristal/sunroof.jpg" alt="Tavan camlı bir aracın gün ışığı alan iç mekânı" loading="lazy" />
+        <img src="/img/kristal/sunroof.jpg" alt="Tavan camlı bir aracın gün ışığı alan iç mekânı" loading="lazy" decoding="async" />
         <ul class="film__strips" data-film></ul>
       </div>
-      <p class="wrap film__note">Temsili görünüm. Ön cam ve ön yan camlar için yasal ışık geçirgenliği sınırına uyarız.</p>
+      <p class="wrap film__note">Temsilî görünüm. Ön cam ve ön yan camlar için yasal ışık geçirgenliği sınırı vardır.</p>
     </section>
 
-    <!-- Yorumlar -->
-    <section class="reviews" aria-labelledby="yorum-baslik">
-      <div class="wrap reviews__head">
-        <p class="reviews__score"><span data-score></span></p>
-        <div>
-          <p class="reviews__stars" data-stars></p>
-          <p class="eyebrow">Örnek yorumlar</p>
-          <h2 class="h2" id="yorum-baslik">Camı takılanlar anlatıyor.</h2>
-          <p class="lede" data-score-count></p>
-        </div>
+    <section class="kasko" aria-labelledby="sira-baslik">
+      <div class="wrap">
+        <header class="sec-head sec-head--dark">
+          <p class="eyebrow eyebrow--red">Kasko ve randevu</p>
+          <h2 class="h2" id="sira-baslik">Çalışma sırası</h2>
+          <p class="lede">Kaskolu araçlarda hasar dosyası buradan açılır. Anlaşmalı sigorta şirketlerinin güncel listesi için arayın.</p>
+        </header>
+        <ol class="steps" data-steps></ol>
       </div>
-      <ul class="reviews__list" data-reviews></ul>
-      <p class="wrap brands" lang="en" data-brands></p>
     </section>
 
-    <!-- Saatler ve konum -->
-    <section class="visit" id="konum">
+    <!-- Hakkında -->
+    <section class="about" id="hakkinda" aria-labelledby="hakkinda-baslik">
+      <div class="wrap">
+        <header class="sec-head">
+          <h2 class="h2" id="hakkinda-baslik">Hakkında</h2>
+        </header>
+        <div class="about__grid">
+          <p class="about__text" data-about></p>
+          <dl class="facts" data-facts></dl>
+        </div>
+        <ul class="stats__list" data-stats></ul>
+      </div>
+      <div class="gal__grid" data-gallery></div>
+    </section>
+
+    <!-- Çalışma saatleri ve konum -->
+    <section class="visit" id="konum" aria-labelledby="konum-baslik">
       <div class="wrap visit__grid">
         <div class="visit__info">
-          <p class="eyebrow">Konum ve saatler</p>
-          <h2 class="h2" data-visit-title>Şaşmaz Oto<br />Sanayi'ndeyiz.</h2>
+          <h2 class="h2" id="konum-baslik">Çalışma saatleri ve konum</h2>
           <p class="visit__status" data-status-big></p>
-          <table class="hours"><tbody data-hours></tbody></table>
+          <table class="hours"><caption class="sr-only">Çalışma saatleri</caption><tbody data-hours></tbody></table>
           <p class="visit__addr" data-bind="adres"></p>
           <div class="visit__actions">
-            <a class="btn btn--ink" data-maps target="_blank" rel="noopener"><span data-icon="pin"></span>Yol tarifi al</a>
-            <a class="btn btn--line-dark" data-tel><span data-icon="phone"></span>Ara</a>
+            <a class="btn btn--ink" data-maps target="_blank" rel="noopener"><span data-icon="pin"></span>Yol tarifi</a>
+            <a class="btn btn--line-dark" data-tel><span data-icon="phone"></span><span data-bind="telefon"></span></a>
           </div>
         </div>
         <div class="visit__map" data-map><span>Harita yükleniyor</span></div>
       </div>
     </section>
 
-    <!-- Final -->
-    <section class="final">
+    <!-- Örnek yorumlar -->
+    <section class="reviews" aria-labelledby="yorum-baslik">
+      <div class="wrap">
+        <header class="sec-head">
+          <h2 class="h2" id="yorum-baslik">Örnek yorumlar</h2>
+          <p class="lede">Buradaki yorumlar örnektir, yerlerine işletmenin gerçek yorumları konur.</p>
+        </header>
+      </div>
+      <ul class="reviews__list" data-reviews tabindex="0" aria-label="Örnek yorumlar, yana kaydırın" data-lenis-prevent-touch></ul>
+    </section>
+
+    <!-- İletişim -->
+    <section class="final" id="iletisim" aria-labelledby="iletisim-baslik">
       <div class="wrap final__inner">
-        <p class="final__big">Fotoğrafı<br />at. Gerisi<br />bizde.</p>
+        <h2 class="final__big" id="iletisim-baslik">İletişim</h2>
         <div class="final__side">
-          <p class="final__text">Tamir mi değişim mi, fotoğrafa bakıp söyleriz. Fiyatı işe başlamadan söyleriz. <span data-bind="garanti"></span></p>
+          <p class="final__text">Fiyat ve randevu için arayın ya da WhatsApp'tan yazın. Camın fotoğrafı WhatsApp'tan gönderilebilir.</p>
           <div class="final__actions">
-            <a class="btn btn--white" data-wa-foto target="_blank" rel="noopener"><span data-icon="whatsapp"></span>WhatsApp'tan yaz</a>
-            <a class="btn btn--line" data-tel><span data-icon="phone"></span><span data-bind="telefon"></span></a>
+            <a class="btn btn--white" data-tel><span data-icon="phone"></span><span data-bind="telefon"></span></a>
+            <a class="btn btn--line" data-wa target="_blank" rel="noopener"><span data-icon="whatsapp"></span>WhatsApp</a>
           </div>
+          <p class="final__addr"><span data-bind="adres"></span><br><span data-status-text></span></p>
         </div>
       </div>
     </section>
@@ -224,8 +201,8 @@
   <footer class="foot">
     <div class="wrap foot__grid">
       <p class="foot__brand" data-bind="ad"></p>
-      <p data-bind="adres"></p>
-      <p class="foot__small">© <span data-year></span> <span data-bind="ad"></span>. Fotoğraflar: Pexels (temsilî). Cam ve vantuz çizimleri temsilî 3D görsellerdir. Yorumlar örnektir.</p>
+      <p><span data-bind="tanim"></span> · <span data-bind="adres"></span></p>
+      <p class="foot__small">© <span data-year></span> <span data-bind="ad"></span>. Fotoğraflar Pexels'ten alınmıştır, temsilîdir. Cam ve vantuz çizimleri temsilî 3D görsellerdir. Yorumlar örnektir.</p>
     </div>
   </footer>
 

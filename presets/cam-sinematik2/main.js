@@ -2,12 +2,15 @@ import '../../shared/base.css';
 import './style.css';
 import raw from '../../data/kristal.json';
 import {
-  boot, initSmoothScroll, reducedMotion, gsap, ScrollTrigger, esc,
-  telHref, waHref, mapsHref, mapsEmbed, openStatus, groupedHours, icons, GUNLER,
+  boot, initSmoothScroll, reducedMotion, gsap, ScrollTrigger, esc, autoHideHeader,
+  telHref, waHref, mapsHref, mapsEmbed, saatListesi, gunDurumu, kisaAdres, acikGunSayisi, yilEki, icons, GUNLER,
 } from '../../shared/core.js';
 import { SplitText } from 'gsap/SplitText';
 import { createWorld, SPECTRUM } from './scene.js';
 
+// Prizma: sinematik aile, 3D yalnız açılışta. Künyenin arkasında camdan geçip tayfa ayrılan ışık; künye
+// ekrandan çıkarken cam katmanlarına ayrılır (dış cam, ara film, iç cam). Künyeden sonra kanvas çizilmez;
+// gerisi düz site: Hizmetler, Çalışma sırası, Hakkında, Saatler ve konum, Örnek yorumlar, İletişim.
 gsap.registerPlugin(SplitText);
 ScrollTrigger.config({ ignoreMobileResize: true });
 
@@ -19,127 +22,56 @@ const phone = matchMedia('(max-width: 899px)').matches;
 const low = (navigator.hardwareConcurrency || 8) <= 4 || (navigator.deviceMemory || 8) <= 3;
 
 const ad = esc(d.isletme.ad);
+const tel = esc(d.iletisim.telefon);
 const yil = new Date().getFullYear();
-const tecrube = yil - d.isletme.kurulus;
+const yas = yil - d.isletme.kurulus;
+const st = gunDurumu(d.saatler);
 const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
 const seg = (p, a, b) => clamp((p - a) / (b - a));
 const ease = (t) => t * t * (3 - 2 * t);
-const fmt = (n) => Math.round(n).toLocaleString('tr-TR');
+const no = (i) => String(i + 1).padStart(2, '0');
 
-// "2006'dan", "1994'ten": yılın okunuşuna göre ek
-function beri(y) {
-  const birler = ["'den", "'den", "'den", "'ten", "'ten", "'ten", "'dan", "'den", "'den", "'dan"];
-  const onlar = [null, "'dan", "'den", "'dan", "'tan", "'den", "'tan", "'ten", "'den", "'dan"];
-  if (y % 10) return y + birler[y % 10];
-  if (y % 100) return y + onlar[(y % 100) / 10];
-  return y + "'den";
-}
+$('meta[name="description"]')?.setAttribute('content', `${d.isletme.ad}: ${d.isletme.tanim}. ${d.iletisim.adres}. Telefon: ${d.iletisim.telefon}`);
 
-const WA_FOTO = waHref(d, `Merhaba ${d.isletme.ad}, camımın fotoğrafını gönderiyorum. Tamir mi değişim mi, bakabilir misiniz?`);
-const WA_KASKO = waHref(d, `Merhaba ${d.isletme.ad}, kaskom var. Ön cam için fotoğraf ve ruhsat gönderiyorum.`);
-const status = openStatus(d.saatler);
-
-// Tayf renkli harfler: metni harf harf renklendirmeden, arka plan geçişiyle
 const logo = `<svg viewBox="0 0 34 24" aria-hidden="true"><path d="M13 3 23 21H3z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M0 12h9" stroke="currentColor" stroke-width="1.6" opacity=".7"/>${SPECTRUM.map((c, i) => `<path d="M17 12 34 ${5 + i * 2.3}" stroke="${c}" stroke-width="1.3"/>`).join('')}</svg>`;
+const hue = (i, n) => SPECTRUM[Math.round((i / Math.max(1, n - 1)) * (SPECTRUM.length - 1))];
 
 // --- Render ----------------------------------------------------------------------------
 
 $('#top').innerHTML = `
   <a class="top__brand" href="#sahne">${logo}<span>${ad}</span></a>
   <nav class="top__nav" aria-label="Bölümler">
-    <a href="#tas">Taş izi</a><a href="#cam-filmi">Cam filmi</a><a href="#hizmetler">Hizmetler</a><a href="#ulasim">Konum</a>
+    <a href="#hizmetler">Hizmetler</a><a href="#hakkinda">Hakkında</a><a href="#saatler">Saatler ve konum</a><a href="#iletisim">İletişim</a>
   </nav>
-  <p class="top__status ${status.open ? 'is-open' : ''}"><i></i><span class="top__long">${esc(status.text)}</span><span class="top__short">${status.open ? 'Açık' : 'Kapalı'}</span></p>
-  <a class="top__call" href="${telHref(d)}" aria-label="Ara: ${esc(d.iletisim.telefon)}">${icons.phone}<span>${esc(d.iletisim.telefon)}</span></a>`;
+  <p class="top__status ${st.open ? 'is-open' : ''}"><i></i><span>${st.open ? 'Açık' : 'Kapalı'}</span></p>
+  <a class="top__call" href="${telHref(d)}" aria-label="Ara: ${tel}">${icons.phone}<span>${tel}</span></a>`;
 
-const sticky = (inner, extra = '') => `<div class="scene__sticky ${extra}"><div class="copy">${inner}</div></div>`;
-const kicker = (n, t) => `<p class="kick"><span class="kick__n">${n}</span>${t}</p>`;
-
-$('#sahne').innerHTML = sticky(`
-  <p class="kick kick--hero">Oto cam · Şaşmaz Oto Sanayi'nde ${beri(d.isletme.kurulus)} beri</p>
-  <h1 class="h1" id="hero-title" data-reveal>${ad}</h1>
-  <p class="lead">${esc(d.isletme.slogan)}</p>
-  <div class="actions">
-    <a class="btn btn--main" href="${WA_FOTO}" target="_blank" rel="noopener">${icons.whatsapp}<span>Camın fotoğrafını gönder</span></a>
-    <a class="btn btn--ghost" href="${telHref(d)}">${icons.phone}<span>Hemen ara</span></a>
-  </div>`, 'is-hero') + `<p class="hint" aria-hidden="true"><span></span>Kaydırın, ışık camdan geçsin</p>`;
-
-$('#katman').innerHTML = sticky(`
-  ${kicker('01', 'Camın içi')}
-  <h2 class="h2" id="katman-title" data-reveal>Ön cam tek parça değildir.</h2>
-  <p class="lead">İki cam, arasında ince bir film. Taş dış camda kalır, film camın dağılmasını önler. Küçük iz bu yüzden tamirle kurtulur.</p>
-  <ul class="layers" aria-label="Ön camın katmanları">
-    <li style="--c:${SPECTRUM[4]}"><b>Dış cam</b><span>Yola bakan yüz, taş buraya değer</span></li>
-    <li style="--c:${SPECTRUM[6]}"><b>Ara film</b><span>Kırılınca parçaları bir arada tutar</span></li>
-    <li style="--c:${SPECTRUM[3]}"><b>İç cam</b><span>Kabine bakan yüz, kamera buna yapışır</span></li>
-  </ul>`);
-
-$('#tas').innerHTML = sticky(`
-  <div class="beat" data-beat="0">
-    ${kicker('02', 'Taş izi')}
-    <h2 class="h2" id="tas-title" data-reveal>Bir çakıl, bir çıt sesi.</h2>
-    <p class="lead">Öndeki aracın lastiğinden fırlayan küçük bir taş, dış camda yıldız şeklinde iz bırakır.</p>
-  </div>
-  <div class="beat" data-beat="1">
-    ${kicker('02', 'Taş izi')}
-    <h2 class="h2" data-reveal>İz bugün küçük. Soğuk onu büyütür.</h2>
-    <p class="lead">Isı farkı ve yol titreşimi çatlağı uzatır. Bozuk para boyundaysa camı değiştirmeden kurtarırız.</p>
-    <div class="meter" aria-hidden="true">
-      <span class="meter__coin"><i id="coin-in"></i></span>
-      <span class="meter__txt"><small>İz çapı</small><b id="iz">0 mm</b><em id="iz-state">Tamir edilir</em></span>
-    </div>
-  </div>`);
-
-$('#recine').innerHTML = sticky(`
-  ${kicker('03', 'Tamir')}
-  <h2 class="h2" id="recine-title" data-reveal>Reçine doldurur, UV ışık sertleştirir.</h2>
-  <p class="clock" aria-hidden="true"><span id="timer">00:00</span><small>/ 30 dk</small></p>
-  <ol class="steps" id="resin-steps">
-    <li><b>İzi temizleriz</b><span>İçindeki hava ve nem vakumla alınır.</span></li>
-    <li><b>Reçineyi basarız</b><span>Şeffaf reçine çatlağın her koluna dolar.</span></li>
-    <li><b>Işıkla sertleştiririz</b><span>UV lamba reçineyi birkaç dakikada dondurur.</span></li>
-    <li><b>Yüzeyi düzleriz</b><span>İz silikleşir, yerini zor bulursunuz.</span></li>
-  </ol>`);
-
-const filmler = d.filmler || [];
-const DEFAULT_FILM = Math.min(2, filmler.length - 1);
-$('#cam-filmi').innerHTML = sticky(`
-  ${kicker('04', 'Cam filmi')}
-  <h2 class="h2" id="film-title" data-reveal>Güneşi camda durdurun.</h2>
-  <p class="lead lead--small">Koyuluğu seçin, ışığın nasıl kesildiğini görün. Hangi cama hangi ton uygun, uygulamadan önce söyleriz.</p>
-  <div class="tint" role="group" aria-label="Film koyuluğu">
-    <div class="tint__opts">
-      ${filmler.map((f, i) => `<button type="button" class="tint__opt" data-film="${i}" aria-pressed="false">${esc(f.ad)}</button>`).join('')}
-    </div>
-    <dl class="tint__read">
-      <div><dt>Geçen ışık</dt><dd id="t-vlt">%100</dd></div>
-      <div><dt>UV engeli</dt><dd id="t-uv">%0</dd></div>
-      <div><dt>Isı kesme</dt><dd class="heat" id="t-heat">${'<i></i>'.repeat(5)}</dd></div>
+$('#sahne').innerHTML = `
+  <div class="hero__inner">
+    <h1 class="h1" id="hero-title" data-reveal>${ad}</h1>
+    <p class="hero__what">${esc(d.isletme.tanim)}</p>
+    <dl class="kunye">
+      <div><dt>Adres</dt><dd>${esc(kisaAdres(d.iletisim.adres))}</dd></div>
+      <div><dt>Bugün</dt><dd class="kunye__durum ${st.open ? 'is-open' : ''}"><i></i>${esc(st.kunye)}</dd></div>
+      <div><dt>Telefon</dt><dd><a href="${telHref(d)}">${tel}</a></dd></div>
     </dl>
-    <p class="tint__note" id="t-note">Filmsiz cam</p>
-  </div>`);
+    <div class="actions">
+      <a class="btn btn--main" href="${telHref(d)}">${icons.phone}<span>Ara</span></a>
+      <a class="btn btn--ghost" href="${waHref(d)}" target="_blank" rel="noopener">${icons.whatsapp}<span>WhatsApp</span></a>
+      <a class="btn btn--ghost" href="${mapsHref(d)}" target="_blank" rel="noopener">${icons.pin}<span>Yol tarifi</span></a>
+    </div>
+  </div>`;
 
-$('#kalibrasyon').innerHTML = sticky(`
-  ${kicker('05', 'Kalibrasyon')}
-  <h2 class="h2" id="adas-title" data-reveal>Cam değişti, kamera yeniden ayarlanır.</h2>
-  <p class="lead">Şerit takip ve acil fren kamerası ön camın arkasındadır. Değişimden sonra hedef levhayla cihazda kalibre ederiz.</p>
-  <div class="gauge" aria-hidden="true">
-    <span class="gauge__lbl">Kamera sapması</span>
-    <span class="gauge__val" id="adas">1,8°</span>
-    <span class="gauge__state" id="adas-state">Ayarlanıyor</span>
-  </div>`);
-
-const hue = (i, n) => SPECTRUM[Math.round((i / Math.max(1, n - 1)) * (SPECTRUM.length - 1))];
 $('#hizmetler').innerHTML = `
   <div class="wrap">
     <div class="sec-head">
-      <p class="kick"><span class="kick__n">06</span>Hizmetler</p>
-      <h2 class="h2" id="services-title" data-reveal>Aracın bütün camları, tek tezgâhta.</h2>
+      <h2 class="h2" id="services-title" data-reveal>Hizmetler</h2>
+      <p class="lead">Süreler yaklaşıktır, araca göre değişebilir. Fiyat ve randevu için arayın.</p>
     </div>
     <ul class="svc">
       ${d.hizmetler.map((h, i, a) => `
         <li class="svc__row" style="--c:${hue(i, a.length)}">
-          <span class="svc__n">${String(i + 1).padStart(2, '0')}</span>
+          <span class="svc__n">${no(i)}</span>
           <h3>${esc(h.baslik)}</h3>
           <p>${esc(h.aciklama)}</p>
           <span class="svc__time">${esc(h.sure)}</span>
@@ -147,13 +79,11 @@ $('#hizmetler').innerHTML = `
     </ul>
   </div>`;
 
-$('#kasko').innerHTML = `
+$('#calisma').innerHTML = `
   <div class="wrap process__grid">
     <div class="sec-head">
-      <p class="kick"><span class="kick__n">07</span>Kasko</p>
-      <h2 class="h2" id="process-title" data-reveal>Kaskonuz varsa dosyayı biz açarız.</h2>
-      <p class="lead">Eksper ve onay işini biz takip ederiz. Poliçeniz uygunsa cebinizden para çıkmaz. Olmazsa fiyatı işe başlamadan söyleriz.</p>
-      <a class="btn btn--main" href="${WA_KASKO}" target="_blank" rel="noopener">${icons.whatsapp}<span>Kasko için fotoğraf gönder</span></a>
+      <h2 class="h2" id="process-title" data-reveal>Çalışma sırası</h2>
+      <p class="lead">Kaskolu araçlarda hasar dosyası buradan açılır. Anlaşmalı sigorta şirketlerinin güncel listesi için arayın.</p>
     </div>
     <ol class="flow" id="flow">
       <span class="flow__beam" aria-hidden="true"><i></i></span>
@@ -161,93 +91,86 @@ $('#kasko').innerHTML = `
     </ol>
   </div>`;
 
-$('#biz').innerHTML = `
+$('#hakkinda').innerHTML = `
   <div class="wrap about__grid">
     <div>
-      <p class="kick"><span class="kick__n">08</span>Biz</p>
-      <h2 class="h2" id="about-title" data-reveal>${tecrube} yıldır Şaşmaz'da cam takıyoruz.</h2>
-      <p class="about__text">${esc(d.isletme.hakkinda)}</p>
-      <p class="about__warranty"><span>${icons.star}</span>${esc(d.garanti)}</p>
+      <h2 class="h2" id="about-title" data-reveal>Hakkında</h2>
+      <p class="about__text">${ad} ${esc(yilEki(d.isletme.kurulus))} beri Şaşmaz Oto Sanayi Sitesi'nde. ${esc(d.isletme.hakkinda)}</p>
+      <ul class="stats">
+        <li style="--c:${SPECTRUM[0]}"><b>${yas} yıl</b><span>Şaşmaz Oto Sanayi Sitesi'nde</span></li>
+        <li style="--c:${SPECTRUM[4]}"><b>${acikGunSayisi(d.saatler)} gün</b><span>haftada açık</span></li>
+      </ul>
     </div>
-    <ul class="stats">
-      ${d.istatistikler.map((s, i) => {
-        const v = s.kurulustanHesapla ? tecrube : s.deger;
-        return `<li style="--c:${SPECTRUM[[0, 2, 4, 6][i % 4]]}"><b data-count="${v}" data-suffix="${esc(s.sonek)}">0</b><span>${esc(s.etiket)}</span></li>`;
-      }).join('')}
-    </ul>
-  </div>`;
-
-$('#atolye').innerHTML = `
-  <div class="wrap">
-    <div class="sec-head">
-      <p class="kick"><span class="kick__n">09</span>İşin kendisi</p>
-      <h2 class="h2" id="shop-title" data-reveal>Söküm, yapıştırma, film.</h2>
-    </div>
+    <dl class="facts">
+      ${(d.bilgiler || []).map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join('')}
+      ${d.markalar?.length ? `<div><dt>Cam takılan markalar</dt><dd>${d.markalar.map(esc).join(', ')}</dd></div>` : ''}
+    </dl>
   </div>
-  <ul class="gallery" data-lenis-prevent-touch>
-    ${d.galeri.map((g, i) => `<li class="gallery__item" style="--c:${SPECTRUM[(i * 2) % 7]}"><img src="${esc(g.src)}" alt="${esc(g.alt)}" loading="lazy" width="1400" height="1050"><span class="gallery__alt">${esc(g.alt)}</span></li>`).join('')}
+  <ul class="gallery" data-lenis-prevent-touch aria-label="Atölyeden fotoğraflar">
+    ${d.galeri.map((g, i) => `<li class="gallery__item" style="--c:${SPECTRUM[(i * 2) % 7]}"><img src="${esc(g.src)}" alt="${esc(g.alt)}" loading="lazy" decoding="async" width="1400" height="1050"><span class="gallery__alt">${esc(g.alt)}</span></li>`).join('')}
   </ul>`;
 
-const stars = (n) => `<span class="stars" aria-label="5 üzerinden ${n}">${Array.from({ length: 5 }, (_, i) => `<i class="${i < Math.round(n) ? 'on' : ''}">${icons.star}</i>`).join('')}</span>`;
-$('#yorumlar').innerHTML = `
-  <div class="wrap">
-    <div class="reviews__head">
-      <div>
-        <p class="kick"><span class="kick__n">10</span>Örnek yorumlar</p>
-        <h2 class="h2" id="reviews-title" data-reveal>Camı takılan anlatsın.</h2>
-      </div>
-      <p class="score"><b data-count="${d.puan.ortalama}" data-decimals="1">0</b><span>${stars(d.puan.ortalama)}<small>örnek puan · ${fmt(d.puan.adet)} değerlendirme</small></span></p>
-    </div>
-    <ul class="review-list">
-      ${d.yorumlar.map((y, i) => `
-        <li class="review" style="--c:${SPECTRUM[(i * 3) % 7]}">
-          ${stars(y.puan)}
-          <p>“${esc(y.metin)}”</p>
-          <span class="review__who"><b>${esc(y.ad)}</b>${esc(y.arac)}</span>
-        </li>`).join('')}
-    </ul>
-  </div>`;
-
-$('#markalar').innerHTML = `
-  <p class="brands__lbl">Camını taktığımız markalar</p>
-  <div class="brands__rail"><div class="brands__track">${[...d.markalar, ...d.markalar].map((m) => `<span>${esc(m)}</span>`).join('<i aria-hidden="true"></i>')}</div></div>`;
-
-const todayName = GUNLER[new Date().getDay()];
-$('#ulasim').innerHTML = `
+const bugun = GUNLER[new Date().getDay()];
+const bugunMu = (g) => {
+  if (g === bugun) return true;
+  if (!g.includes('–')) return false;
+  const [a, b] = g.split('–').map((x) => GUNLER.indexOf(x));
+  const t = new Date().getDay();
+  return a <= b ? t >= a && t <= b : t >= a || t <= b;
+};
+$('#saatler').innerHTML = `
   <div class="wrap visit__grid">
     <div>
-      <p class="kick"><span class="kick__n">11</span>Konum</p>
-      <h2 class="h2" id="visit-title" data-reveal>Şaşmaz'da, sanayinin içinde.</h2>
-      <p class="visit__status ${status.open ? 'is-open' : ''}"><i></i>${esc(status.text)}</p>
+      <h2 class="h2" id="visit-title" data-reveal>Çalışma saatleri ve konum</h2>
+      <p class="visit__status ${st.open ? 'is-open' : ''}"><i></i>${esc(st.metin)}</p>
       <table class="hours">
         <caption class="sr-only">Çalışma saatleri</caption>
-        <tbody>${groupedHours(d.saatler).map(([g, h]) => `<tr class="${g.includes(todayName) ? 'is-today' : ''}"><th scope="row">${esc(g)}</th><td>${esc(h)}</td></tr>`).join('')}</tbody>
+        <tbody>${saatListesi(d.saatler).map(([g, h]) => `<tr class="${bugunMu(g) ? 'is-today' : ''}"><th scope="row">${esc(g)}</th><td>${esc(h)}</td></tr>`).join('')}</tbody>
       </table>
       <p class="visit__addr">${esc(d.iletisim.adres)}</p>
       <div class="actions">
-        <a class="btn btn--main" href="${mapsHref(d)}" target="_blank" rel="noopener">${icons.pin}<span>Yol tarifi al</span></a>
-        <a class="btn btn--ghost" href="${telHref(d)}">${icons.phone}<span>Ara</span></a>
+        <a class="btn btn--main" href="${mapsHref(d)}" target="_blank" rel="noopener">${icons.pin}<span>Yol tarifi</span></a>
+        <a class="btn btn--ghost" href="${telHref(d)}">${icons.phone}<span>${tel}</span></a>
       </div>
     </div>
     <div class="visit__map" id="map"><a href="${mapsHref(d)}" target="_blank" rel="noopener">Haritada aç</a></div>
   </div>`;
 
-$('#iletisim').innerHTML = sticky(`
-  <h2 class="h1 h1--final" id="final-title" data-reveal>Bir fotoğraf atın, gerisini biz söyleyelim.</h2>
-  <p class="lead">Tamir mi değişim mi, fiyatı işe başlamadan söyleriz. ${esc(d.garanti)}</p>
-  <div class="actions">
-    <a class="btn btn--main" href="${WA_FOTO}" target="_blank" rel="noopener">${icons.whatsapp}<span>WhatsApp'tan yaz</span></a>
-    <a class="btn btn--ghost" href="${telHref(d)}">${icons.phone}<span>${esc(d.iletisim.telefon)}</span></a>
-  </div>`, 'is-final');
+const stars = (n) => `<span class="stars" role="img" aria-label="5 üzerinden ${n}">${Array.from({ length: 5 }, (_, i) => `<i class="${i < Math.round(n) ? 'on' : ''}">${icons.star}</i>`).join('')}</span>`;
+$('#yorumlar').innerHTML = `
+  <div class="wrap">
+    <div class="sec-head">
+      <h2 class="h2" id="reviews-title" data-reveal>Örnek yorumlar</h2>
+      <p class="lead">Buradaki yorumlar örnektir, yerlerine işletmenin gerçek yorumları konur.</p>
+    </div>
+    <ul class="review-list" tabindex="0" aria-label="Örnek yorumlar" data-lenis-prevent-touch>
+      ${d.yorumlar.map((y, i) => `
+        <li class="review" style="--c:${SPECTRUM[(i * 3) % 7]}">
+          ${stars(y.puan)}
+          <p>${esc(y.metin)}</p>
+          <span class="review__who"><b>${esc(y.ad)}</b>${esc(y.arac)}</span>
+        </li>`).join('')}
+    </ul>
+  </div>`;
+
+$('#iletisim').innerHTML = `
+  <div class="wrap finale__inner">
+    <h2 class="h1 h1--final" id="final-title" data-reveal>İletişim</h2>
+    <div>
+      <p class="lead">Fiyat ve randevu için arayın ya da WhatsApp'tan yazın. Camın fotoğrafı WhatsApp'tan gönderilebilir.</p>
+      <div class="actions">
+        <a class="btn btn--main" href="${telHref(d)}">${icons.phone}<span>${tel}</span></a>
+        <a class="btn btn--ghost" href="${waHref(d)}" target="_blank" rel="noopener">${icons.whatsapp}<span>WhatsApp</span></a>
+      </div>
+      <p class="finale__note">${esc(d.iletisim.adres)}<br>${esc(st.metin)}</p>
+    </div>
+  </div>`;
 
 $('#foot').innerHTML = `
   <div class="wrap foot__grid">
-    <p><b>${ad}</b><br>${esc(d.iletisim.adres)}<br><a href="${telHref(d)}">${esc(d.iletisim.telefon)}</a></p>
-    <p class="foot__small">© ${yil} ${ad}. Fotoğraflar: Pexels (temsilî). 3D görseller temsilîdir. Yorumlar örnektir.</p>
+    <p><b>${ad}</b><br>${esc(d.isletme.tanim)}<br>${esc(d.iletisim.adres)}<br><a href="${telHref(d)}">${tel}</a></p>
+    <p class="foot__small">© ${yil} ${ad}. Fotoğraflar Pexels'ten alınmıştır, temsilîdir. 3D görseller temsilîdir. Yorumlar örnektir.</p>
   </div>`;
-
-// Katman etiketleri (3B sahnede camın yanına yapışır)
-$('#labels').innerHTML = ['outer', 'pvb', 'inner'].map((k, i) => `<span class="lbl" data-lbl="${k}" style="--c:${[SPECTRUM[4], SPECTRUM[6], SPECTRUM[3]][i]}">${['Dış cam', 'Ara film', 'İç cam'][i]}</span>`).join('');
 
 // Harita yaklaşınca yüklensin
 new IntersectionObserver((entries, io) => {
@@ -255,36 +178,6 @@ new IntersectionObserver((entries, io) => {
   $('#map').innerHTML = `<iframe title="${ad} konumu" src="${mapsEmbed(d)}" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>`;
   io.disconnect();
 }, { rootMargin: '600px 0px' }).observe($('#map'));
-
-// --- Film seçici -----------------------------------------------------------------------
-
-let filmTouched = false;
-let filmVlt = 100;
-const nearestFilm = (vlt) => filmler.reduce((best, f, i) => (Math.abs(f.gecirgenlik - vlt) < Math.abs(filmler[best].gecirgenlik - vlt) ? i : best), 0);
-function setFilmUi(vlt, idx) {
-  $('#t-vlt').textContent = `%${Math.round(vlt)}`;
-  const f = filmler[idx ?? nearestFilm(vlt)];
-  const none = vlt > 98;
-  $('#t-uv').textContent = none ? '%0' : `%${f.uv}`;
-  $$('#t-heat i').forEach((el, i) => el.classList.toggle('on', !none && i < f.isi));
-  $('#t-note').textContent = none ? 'Filmsiz cam' : f.not;
-  $$('.tint__opt').forEach((b, i) => b.setAttribute('aria-pressed', String(i === idx)));
-}
-$('#cam-filmi').addEventListener('click', (e) => {
-  const b = e.target.closest('[data-film]');
-  if (!b) return;
-  filmTouched = true;
-  const i = Number(b.dataset.film);
-  gsap.to({ v: filmVlt }, {
-    v: filmler[i].gecirgenlik,
-    duration: 0.6,
-    ease: 'power2.out',
-    onUpdate() {
-      filmVlt = this.targets()[0].v;
-      setFilmUi(filmVlt, i);
-    },
-  });
-});
 
 // --- Başlıklar: tayf gibi dağılıp toplanır ---------------------------------------------
 
@@ -302,250 +195,67 @@ function reveal(el) {
   });
 }
 
+const bir = (trigger, start = 'top 86%') => ({ trigger, start, toggleActions: 'play none none none' });
+const topEl = $('#top');
+ScrollTrigger.create({
+  trigger: '#solid', start: 'top 60px', end: 'bottom 60px',
+  onToggle: (self) => topEl.classList.toggle('is-solid', self.isActive),
+});
+if (phone) autoHideHeader(topEl, { offset: 120 });
+
 if (!reducedMotion) {
   $$('.solid [data-reveal]').forEach((el) => {
-    ScrollTrigger.create({ trigger: el, start: 'top 86%', once: true, onEnter: () => reveal(el) });
+    ScrollTrigger.create({ trigger: el, start: 'top 86%', toggleActions: 'play none none none', onEnter: (s) => { if (!s.done) { s.done = true; reveal(el); } } });
   });
-}
-
-// Sayaçlar
-$$('[data-count]').forEach((el) => {
-  const to = Number(el.dataset.count);
-  const dec = Number(el.dataset.decimals || 0);
-  const suf = el.dataset.suffix || '';
-  const out = (v) => (el.textContent = (dec ? v.toFixed(dec).replace('.', ',') : fmt(v)) + suf);
-  if (reducedMotion) return out(to);
-  ScrollTrigger.create({
-    trigger: el,
-    start: 'top 92%',
-    once: true,
-    onEnter: () => gsap.to({ v: 0 }, { v: to, duration: 1.6, ease: 'power2.out', onUpdate() { out(this.targets()[0].v); } }),
-  });
-});
-
-// Hizmet satırları: ekranın ortasındaki satırdan ışık geçer
-if (!reducedMotion) {
+  // Hizmet satırları: ekranın ortasındaki satırdan ışık geçer
   $$('.svc__row').forEach((row) => {
-    ScrollTrigger.create({
-      trigger: row, start: 'top 66%', end: 'bottom 34%',
-      onToggle: (self) => row.classList.toggle('is-lit', self.isActive),
-    });
+    ScrollTrigger.create({ trigger: row, start: 'top 66%', end: 'bottom 34%', onToggle: (self) => row.classList.toggle('is-lit', self.isActive) });
   });
-  // Süreç: ışın aşağı iner, adımlar sırayla yanar
+  // Çalışma sırası: ışın aşağı iner, adımlar sırayla yanar
   gsap.fromTo('.flow__beam i', { scaleY: 0 }, {
-    scaleY: 1, ease: 'none',
-    scrollTrigger: { trigger: '#flow', start: 'top 70%', end: 'bottom 60%', scrub: 0.5 },
+    scaleY: 1, ease: 'none', scrollTrigger: { trigger: '#flow', start: 'top 70%', end: 'bottom 60%', scrub: 0.5 },
   });
   $$('#flow li').forEach((li) => ScrollTrigger.create({ trigger: li, start: 'top 68%', onEnter: () => li.classList.add('is-on'), onLeaveBack: () => li.classList.remove('is-on') }));
   // Galeri: kareler tayf gibi üç renge ayrılıp birleşir
-  $$('.gallery__item').forEach((it) => ScrollTrigger.create({ trigger: it, start: 'top 92%', once: true, onEnter: () => it.classList.add('is-in') }));
+  $$('.gallery__item').forEach((it) => ScrollTrigger.create({ ...bir(it, 'top 92%'), onEnter: () => it.classList.add('is-in') }));
+  gsap.from('.stats li', { y: 24, autoAlpha: 0, duration: 0.6, stagger: 0.1, ease: 'power3.out', clearProps: 'all', scrollTrigger: bir('.stats', 'top 90%') });
 } else {
   $$('.svc__row, #flow li, .gallery__item').forEach((r) => r.classList.add('is-lit', 'is-on', 'is-in'));
 }
 
-// Son film sahnesinin yazısı, sahne biterken üst çubuğun altına girmeden söner
-if (!reducedMotion) {
-  $$('.film .scene').forEach((sc) => gsap.fromTo($('.copy', sc), { opacity: 1, y: 0 }, {
-    opacity: 0, y: -30, ease: 'none', immediateRender: false,
-    scrollTrigger: { trigger: sc, start: 'bottom bottom', end: 'bottom 45%', scrub: true },
-  }));
-}
-
-// Üst çubuk düz bölümlerde koyulaşır
-ScrollTrigger.create({
-  trigger: '#solid', start: 'top 60px', end: 'bottom 60px',
-  onToggle: (self) => $('#top').classList.toggle('is-solid', self.isActive),
-});
-
-// --- 3B sahne ve scroll filmi ----------------------------------------------------------
+// --- 3D: yalnız künyede ------------------------------------------------------------------
 
 const canvas = $('#gl');
-// 3B dünya gerçek cam varlığını yükler; yüklenene kadar sayfa ve açılış çalışır.
+const heroEl = $('#sahne');
 const worldP = createWorld(canvas, { phone, low });
 let world = null;
 let S = null;
 let DEFAULTS = null;
 const reset = () => Object.assign(S, DEFAULTS);
+addEventListener('resize', () => world?.resize());
+const intro = { gleam: -2, amt: 0 };
 
-const scenes = $$('.scene');
-let layout = [];
-function measure() {
-  layout = scenes.map((el) => ({ el, name: el.dataset.scene, top: el.getBoundingClientRect().top + scrollY, height: el.offsetHeight }));
-}
-addEventListener('resize', () => {
-  world?.resize();
-  measure();
-});
-
-const beats = new Map();
-function setBeat(sceneEl, idx) {
-  if (beats.get(sceneEl) === idx) return;
-  beats.set(sceneEl, idx);
-  $$('.beat', sceneEl).forEach((b) => {
-    const on = Number(b.dataset.beat) === idx;
-    b.classList.toggle('is-on', on);
-    if (on) reveal($('[data-reveal]', b));
-  });
-}
-function steps(list, p, a, b) {
-  const items = $$('li', list);
-  const k = seg(p, a, b) * items.length;
-  items.forEach((li, i) => {
-    li.classList.toggle('is-on', k > i);
-    li.classList.toggle('is-now', k > i && k <= i + 1.0001);
-  });
-}
-
-const labels = $$('.lbl');
-let labelsOn = false;
-function placeLabels(amt) {
-  // telefonda katman adları metindeki listede; sahnede ayrıca yüzen etiket açılmaz (tek orta katman)
-  const on = !phone && amt > 0.02;
-  if (on !== labelsOn) {
-    labelsOn = on;
-    labels.forEach((l) => l.classList.toggle('is-on', on));
-  }
-  if (!on) return;
-  labels.forEach((l) => {
-    const p = world.project(l.dataset.lbl);
-    const x = Math.min(p.x, innerWidth - (l.offsetWidth || 90) - 26);
-    l.style.transform = `translate3d(${x.toFixed(1)}px, ${p.y.toFixed(1)}px, 0)`;
-    l.style.opacity = amt;
-  });
-}
-
-const PREV = { hero: 'hero', katman: 'hero', tas: 'katman', recine: 'tasYakin', film: 'recine', adas: 'film', final: 'adas' };
-const enterView = (name, p, span = 0.22) => world.view(name, ease(seg(p, 0, span)), PREV[name]);
-
-let lastImpact = false;
-const SCENES = {
-  hero(p) {
-    world.view('hero');
-    S.beam = 1;
-    S.spec = 1;
-    S.gleam = -2 + p * 4;
-    S.gleamAmt = seg(p, 0.15, 0.4) * (1 - seg(p, 0.75, 1));
-    S.spin = p * 0.25;
-  },
-  katman(p) {
-    enterView('katman', p, 0.3);
-    S.beam = 1 - seg(p, 0, 0.25) * 0.8;
-    S.spec = S.beam;
-    S.split = ease(seg(p, 0.18, 0.55)) * (1 - ease(seg(p, 0.86, 1)));
-    S.spin = 0.25 * (1 - seg(p, 0, 0.3));
-    steps($('.layers', layoutEl('katman')), p, 0.3, 0.75);
-    placeLabels(seg(p, 0.35, 0.5) * (1 - seg(p, 0.8, 0.88)));
-  },
-  tas(p, el) {
-    if (p < 0.34) enterView('tas', p, 0.25);
-    else world.view('tasYakin', ease(seg(p, 0.34, 0.72)), 'tas');
-    S.beam = 0.2 * (1 - seg(p, 0, 0.2));
-    S.spec = S.beam;
-    S.stone = seg(p, 0.08, 0.33);
-    S.stoneOut = seg(p, 0.33, 0.5);
-    S.ring = p > 0.33 ? 1 - seg(p, 0.33, 0.45) : 0;
-    S.crack = 0.03 + seg(p, 0.34, 0.9) * 0.97;
-    if (p < 0.33) S.crack = 0;
-    S.glow = 0.7;
-    setBeat(el, p < 0.36 ? 0 : 1);
-    const impact = p >= 0.33;
-    if (impact && !lastImpact) {
-      gsap.fromTo('#flash', { opacity: 0.4 }, { opacity: 0, duration: 0.45, ease: 'power2.out' });
-      try { navigator.vibrate?.(20); } catch {}
-    }
-    lastImpact = impact;
-    const mm = 2 + 16 * seg(p, 0.36, 0.92);
-    $('#iz').textContent = `${Math.round(mm)} mm`;
-    $('#coin-in').style.transform = `scale(${(mm / 24).toFixed(3)})`;
-  },
-  recine(p, el) {
-    enterView('recine', p, 0.25);
-    S.crack = 1;
-    S.glow = 0.6;
-    S.resin = ease(seg(p, 0.25, 0.66));
-    S.uv = seg(p, 0.62, 0.68) * (1 - seg(p, 0.82, 0.88));
-    if (p > 0.9) S.resin = 1;
-    steps($('#resin-steps', el), p, 0.1, 0.94);
-    const min = 30 * seg(p, 0.08, 0.95);
-    $('#timer').textContent = `${String(Math.floor(min)).padStart(2, '0')}:${String(Math.floor((min % 1) * 60)).padStart(2, '0')}`;
-  },
-  film(p) {
-    enterView('film', p, 0.22);
-    S.crack = p < 0.12 ? 1 : 0;
-    S.resin = 1;
-    S.beam = ease(seg(p, 0.05, 0.25));
-    S.spec = S.beam;
-    if (!filmTouched && filmler.length) {
-      const target = filmler[DEFAULT_FILM].gecirgenlik;
-      const v = 100 - (100 - target) * ease(seg(p, 0.28, 0.55));
-      if (Math.abs(v - filmVlt) > 0.2 || (v === 100 && filmVlt !== 100)) {
-        filmVlt = v;
-        setFilmUi(v, v <= target + 0.5 ? DEFAULT_FILM : undefined);
-      }
-    }
-    const tint = 1 - filmVlt / 100;
-    S.tint = tint;
-    S.specDim = tint;
-    S.uvCut = filmVlt < 99 ? 1 : 0;
-  },
-  adas(p) {
-    enterView('adas', p, 0.25);
-    S.beam = 0.35 * (1 - seg(p, 0, 0.2));
-    S.spec = S.beam;
-    S.adas = ease(seg(p, 0.1, 0.3));
-    S.adasErr = 1 - ease(seg(p, 0.35, 0.85));
-    const err = 1.8 * S.adasErr;
-    $('#adas').textContent = `${err.toFixed(1).replace('.', ',')}°`;
-    const done = S.adasErr < 0.02;
-    const st = $('#adas-state');
-    st.textContent = done ? 'Ayarlandı' : 'Ayarlanıyor';
-    st.classList.toggle('is-done', done);
-  },
-  final(p) {
-    enterView('final', p, 0.45);
-    S.beam = ease(seg(p, 0.1, 0.45));
-    S.spec = S.beam;
-    S.gleam = -2 + seg(p, 0.3, 0.9) * 4;
-    S.gleamAmt = seg(p, 0.3, 0.4) * (1 - seg(p, 0.8, 0.9));
-    S.spin = -0.3 + p * 0.3;
-    S.wipe = seg(p, 0.45, 0.8);
-  },
-};
-const layoutEl = (name) => layout.find((l) => l.name === name)?.el;
-
-let active = null;
+// Künye ekrandan çıkarken (p: 0 → 1) kamera yana döner, cam katmanlarına ayrılır, ışık söner.
 function tick() {
-  const y = scrollY;
-  const vh = innerHeight;
-  let cur = layout[0];
-  for (const l of layout) if (l.top <= y + vh * (l.name === 'final' ? 0.95 : 0.5)) cur = l;
-  const p = clamp((y - cur.top) / Math.max(1, cur.height - vh));
+  const r = heroEl.getBoundingClientRect();
+  const p = clamp(-r.top / Math.max(1, r.height));
   reset();
-  if (cur.name !== 'katman') placeLabels(0);
-  SCENES[cur.name](p, cur.el);
-  if (active !== cur.el) {
-    active = cur.el;
-    if (!$('.beat', cur.el)) reveal($('[data-reveal]', cur.el));
-  }
+  world.view('katman', ease(seg(p, 0.05, 0.7)), 'hero');
+  S.beam = 1 - seg(p, 0.1, 0.6) * 0.8;
+  S.spec = S.beam;
+  S.split = ease(seg(p, 0.25, 0.8));
+  S.spin = 0.25 * (1 - seg(p, 0, 0.4));
+  S.gleam = intro.gleam;
+  S.gleamAmt = intro.amt;
 }
 
-// Kanvas sadece film bölümü ya da final görünürken çizilir
 let canvasOn = true;
-const visible = new Set();
-new IntersectionObserver((entries) => {
-  entries.forEach((e) => (e.isIntersecting ? visible.add(e.target) : visible.delete(e.target)));
-  canvasOn = visible.size > 0;
+new IntersectionObserver(([e]) => {
+  canvasOn = e.isIntersecting;
   canvas.classList.toggle('is-off', !canvasOn);
-}).observe($('#film'));
-new IntersectionObserver((entries) => {
-  entries.forEach((e) => (e.isIntersecting ? visible.add(e.target) : visible.delete(e.target)));
-  canvasOn = visible.size > 0;
-  canvas.classList.toggle('is-off', !canvasOn);
-}).observe($('#iletisim'));
+}).observe(heroEl);
 
-let lenis = null;
 function start() {
-  measure();
   if (reducedMotion) {
     document.documentElement.classList.add('is-reduced');
     world.view('hero');
@@ -553,41 +263,22 @@ function start() {
     reset();
     S.beam = S.spec = 1;
     world.render();
-    setFilmUi(filmler[DEFAULT_FILM]?.gecirgenlik ?? 100, DEFAULT_FILM);
-    $$('.beat').forEach((b) => b.classList.add('is-on'));
     return;
   }
-  lenis = initSmoothScroll({ lerp: 0.1 });
-  ScrollTrigger.addEventListener('refresh', measure);
-  ScrollTrigger.refresh();
+  initSmoothScroll({ lerp: 0.1 });
   tick();
   world.snap();
   gsap.ticker.add(() => {
+    if (!canvasOn || document.hidden) return;
     tick();
-    if (canvasOn) world.render();
+    world.render();
   });
-  marquee($('.brands__track'), 40);
+  addEventListener('load', () => ScrollTrigger.refresh());
 }
 
-function marquee(track, speed) {
-  if (!track) return;
-  let x = 0;
-  let w = track.scrollWidth / 2;
-  addEventListener('resize', () => (w = track.scrollWidth / 2));
-  let on = false;
-  new IntersectionObserver(([e]) => (on = e.isIntersecting)).observe(track);
-  gsap.ticker.add((_, dt) => {
-    if (!on) return;
-    const v = lenis ? Math.min(6, Math.abs(lenis.velocity) * 0.25) : 0;
-    x -= (speed * (1 + v) * dt) / 1000;
-    if (-x >= w) x += w;
-    track.style.transform = `translate3d(${x.toFixed(1)}px,0,0)`;
-  });
-}
+// --- Açılış (~1 sn): karanlıkta bir ışık prizmadan geçip tayfa ayrılır; dokununca geçer ---
 
-// --- Açılış: karanlıkta bir ışık, prizmadan geçip tayfa ayrılır -----------------------
-
-function intro() {
+function introScreen() {
   const el = $('#intro');
   if (reducedMotion) {
     el.remove();
@@ -620,7 +311,6 @@ function intro() {
     <g class="irays">${rays}</g>
     <g class="irays irays--glow" filter="url(#gl0)">${rays}</g>
     <path class="iprism" d="M${A} L${B} L${Cc} Z" pathLength="1"/>`;
-  $('#intro-name').innerHTML = `<span>${ad}</span><small>Oto cam · Şaşmaz</small>`;
 
   let done = false;
   return new Promise((resolve) => {
@@ -638,20 +328,27 @@ function intro() {
     addEventListener('pointerdown', finish, { once: true, capture: true });
     addEventListener('wheel', finish, { once: true, passive: true });
     addEventListener('keydown', finish, { once: true });
-    // toplam ~1,6 sn; dokununca hemen kalkar
+    // toplam ~1 sn; dokununca hemen kalkar
     const tl = gsap.timeline({ onComplete: finish, defaults: { ease: 'power2.inOut' } });
-    tl.fromTo('.iprism', { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 0.45 }, 0.05)
-      .fromTo('.iin', { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 0.32, ease: 'power1.in' }, 0.3)
-      .fromTo('.iinside', { strokeDashoffset: 1, opacity: 0.2 }, { strokeDashoffset: 0, opacity: 1, duration: 0.12, ease: 'none' }, 0.62)
-      .fromTo('.ir', { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 0.5, stagger: 0.02, ease: 'power2.out' }, 0.72)
-      .fromTo('#intro-name span', { opacity: 0, letterSpacing: '0.4em', '--disp': 12 }, { opacity: 1, letterSpacing: '0em', '--disp': 0, duration: 0.6, ease: 'power3.out' }, 0.8)
-      .fromTo('#intro-name small', { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.35 }, 1.0)
-      .to({}, { duration: 0.15 });
+    tl.fromTo('.iprism', { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 0.3 }, 0.02)
+      .fromTo('.iin', { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 0.22, ease: 'power1.in' }, 0.2)
+      .fromTo('.iinside', { strokeDashoffset: 1, opacity: 0.2 }, { strokeDashoffset: 0, opacity: 1, duration: 0.08, ease: 'none' }, 0.42)
+      .fromTo('.ir', { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 0.36, stagger: 0.015, ease: 'power2.out' }, 0.5)
+      .to({}, { duration: 0.08 });
   });
 }
 
 const fontsReady = Promise.race([document.fonts?.ready ?? Promise.resolve(), new Promise((r) => setTimeout(r, 700))]);
-fontsReady.then(intro).then(() => reveal($('#hero-title')));
+fontsReady.then(introScreen).then(() => {
+  reveal($('#hero-title'));
+  if (!reducedMotion) {
+    gsap.from('.hero__inner > :not(h1)', { y: 16, autoAlpha: 0, duration: 0.5, stagger: 0.06, ease: 'power3.out', clearProps: 'all' });
+    gsap.timeline({ delay: 0.2 })
+      .to(intro, { amt: 1, duration: 0.3 }, 0)
+      .to(intro, { gleam: 2, duration: 1.8, ease: 'power1.inOut' }, 0)
+      .to(intro, { amt: 0, duration: 0.3 }, 1.5);
+  }
+});
 worldP.then((w) => {
   world = w;
   if (import.meta.env.DEV) window.__world = w;
@@ -663,4 +360,3 @@ worldP.then((w) => {
   canvas.classList.add('is-ready');
   start();
 });
-

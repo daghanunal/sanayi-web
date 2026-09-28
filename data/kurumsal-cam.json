@@ -1,112 +1,89 @@
 {
   "kurumsal": {
-    "yorumBaslik": "Örnek müşteri yorumları",
-    "hero": {
-      "baslik": "Camınız aynı gün, kaskonuz bizden.",
-      "metin": "Ön cam, yan cam, arka cam ve sunroof. Taş izini reçineyle kapatır, değişmesi gereken camı takıp kamerasını ayarlarız. Kasko dosyasını biz açar, onayı biz takip ederiz.",
-      "birincil": "Teklif isteyin",
-      "ikincil": "Kasko başvurusu",
-      "ikincilRota": "kasko"
-    },
+    "hizmetOzetBaslik": "Hizmetler",
     "ozet": {
-      "baslik": "Cam işi titizlik ister",
-      "metin": "Yanlış kalıp rüzgâr sesi, kötü yapıştırma su sızıntısı demektir. Camı aracınıza uygun kalıpla takar, sızdırmazlık testini yapar, kamerası olan araçta kalibrasyonu tamamlamadan teslim etmeyiz."
+      "baslik": "Hakkında",
+      "metin": "Şaşmaz Oto Sanayi Sitesi'nde binek ve hafif ticari araçların camları değiştirilir, taş izleri tamir edilir. Şahıs araçlarının yanı sıra filo, kiralama ve galeri araçları da gelir."
     },
-    "hizmetOzetBaslik": "Aracın bütün camları",
+    "konumBaslik": "Çalışma saatleri ve konum",
+    "yorumBaslik": "Örnek yorumlar",
+    "hizmetLink": "Bu hizmet için bilgi alın",
+    "surecBaslik": "Çalışma sırası",
     "hizmetEk": {
       "Ön cam değişimi": {
-        "kisa": "Orijinal ya da muadil cam, aracınıza uygun kalıpla.",
         "gorsel": "/img/kristal/montaj.jpg",
-        "detay": [["Cam", "Orijinal ya da muadil"], ["Test", "Sızdırmazlık kontrolü"]]
+        "detay": [["Cam", "Orijinal ya da muadil"], ["Sonrası", "Sızdırmazlık kontrolü"]]
       },
       "Taş izi ve çatlak tamiri": {
-        "kisa": "Reçineyle doldurma, UV ışıkla sertleştirme; iz büyümez.",
         "gorsel": "/img/kristal/catlak.jpg",
         "detay": [["Uygun iz", "Bozuk para boyuna kadar"], ["Süre", "Yaklaşık 30 dk"]]
       },
-      "Cam filmi": { "kisa": "Isıyı ve UV ışınlarını keser; yasal sınırlara uygun.", "gorsel": "/img/kristal/film.jpg" },
-      "Kasko anlaşmalı değişim": { "kisa": "Eksper ve kasko onayını biz takip ederiz." },
+      "Cam filmi": { "gorsel": "/img/kristal/film.jpg" },
       "ADAS kamera kalibrasyonu": {
-        "kisa": "Şerit takip ve acil fren kamerasının yeniden ayarı.",
         "detay": [["Ne zaman", "Ön cam değişiminden sonra"], ["Nasıl", "Kalibrasyon cihazıyla"]]
       }
     },
     "anlasmaBaslik": "Kurumsal müşteriler ve sigorta",
-    "anlasmaMetin": "Filolar, kiralama firmaları ve galeriler için planlı cam işleri, kasko dosyalarında tek muhatap.",
+    "anlasmaMetin": "Filo, kiralama ve galeri araçlarında yapılan cam işleri her araç için ayrı kaydedilir. Kasko dosyaları da buradan takip edilir.",
     "anlasmalar": [
       {
-        "baslik": "Kasko anlaşmalı cam değişimi",
-        "kisa": "Dosyayı biz açar, onayı biz takip ederiz.",
-        "metin": "Kaskonuzda cam teminatı varsa hasar dosyasını sizin adınıza açar, eksper ve onay sürecini biz yürütürüz. Anlaşmalı olduğumuz sigorta şirketlerinin güncel listesi için bizi arayın.",
-        "maddeler": ["Fotoğraf ve ruhsatla ön başvuru", "Onay gelmeden işe başlamama", "Muafiyet ve hasarsızlık etkisi hakkında bilgilendirme", "Değişim sonrası kalibrasyon ve sızdırmazlık testi"],
-        "buton": "Kasko başvurusu yapın"
+        "baslik": "Kasko ile cam değişimi",
+        "kisa": "Hasar dosyası açılır, eksper onayı takip edilir.",
+        "metin": "Poliçede cam teminatı varsa hasar dosyası araç sahibi adına açılır, eksper onayı buradan takip edilir. Anlaşmalı sigorta şirketlerinin güncel listesi için arayın.",
+        "maddeler": ["Fotoğraf ve ruhsatla ön başvuru", "Eksper onayından sonra montaj", "Muafiyet ve hasarsızlık indirimi hakkında bilgi", "Montajdan sonra kalibrasyon ve sızdırmazlık kontrolü"],
+        "buton": "Kasko için bilgi alın"
       },
       {
         "baslik": "Filo ve kiralama firmaları",
-        "kisa": "Taş izi ve cam değişiminde öncelikli randevu.",
-        "metin": "Şirket ve kiralama araçlarındaki taş izlerini büyümeden kapatır, değişmesi gereken camları planlı şekilde takarız. Her aracın yapılan işi dosyasında kayıtlı kalır.",
-        "maddeler": ["Araç bazında iş kaydı", "Öncelikli randevu", "Aylık tek fatura ve iş dökümü"],
-        "buton": "Filo görüşmesi talep edin"
+        "kisa": "Taş izi ve cam değişimi için öncelikli randevu.",
+        "metin": "Şirket ve kiralama araçlarındaki taş izleri büyümeden tamir edilir, değişecek camlar plana göre takılır. Her araca yapılan iş plakasıyla kaydedilir.",
+        "maddeler": ["Plakaya göre iş kaydı", "Öncelikli randevu", "Ay sonunda tek fatura ve iş dökümü"],
+        "buton": "Filo için bilgi alın"
       },
       {
         "baslik": "Galeri ve bayiler",
         "kisa": "Satış öncesi taş izi tamiri ve cam filmi.",
-        "metin": "Satışa hazırlanan araçlarda taş izi tamiri, cam değişimi ve cam filmi işlerini toplu olarak planlarız.",
-        "maddeler": ["Toplu araç kabulü", "Aynı gün teslim planı", "Yapılan işin belgeli dökümü"],
-        "buton": "Görüşme talep edin"
+        "metin": "Satışa hazırlanan araçlarda taş izi tamiri, cam değişimi ve cam filmi topluca planlanır.",
+        "maddeler": ["Toplu araç kabulü", "Teslim gününün önceden planlanması", "Yapılan işin yazılı dökümü"],
+        "buton": "Galeri için bilgi alın"
       }
     ],
-    "anlasmaNotu": "Kasko kapsamı ve muafiyet poliçeden poliçeye değişir; başvuru öncesi sizinle birlikte kontrol ederiz.",
+    "anlasmaNotu": "Kasko kapsamı ve muafiyet poliçeden poliçeye değişir. Başvurudan önce poliçe birlikte kontrol edilir.",
     "hakkimizda": {
-      "baslik": "Biz kimiz",
+      "baslik": "Hakkında",
       "paragraflar": [
-        "Şaşmaz Oto Sanayi Sitesi'ndeki atölyemizde aracın bütün camlarıyla uğraşıyoruz: ön cam, yan ve arka cam, sunroof, cam filmi. Bireysel müşterilerimizin yanında filo, kiralama firması ve galerilerle de çalışıyoruz.",
-        "Kasko ve sigorta işlerini biz yürütürüz; siz yalnızca aracı getirirsiniz. Kamerası olan araçlarda cam değişiminden sonra kalibrasyonu yapar, sızdırmazlığı test eder, öyle teslim ederiz."
+        "Atölyede ön cam, yan ve arka cam, sunroof ve cam filmi işleri yapılır. Şahıs araçlarının yanı sıra filo, kiralama ve galeri araçları da gelir.",
+        "Kaskolu araçlarda hasar dosyası buradan açılıp takip edilir. Kameralı araçlarda cam değişiminden sonra kalibrasyon yapılır, sızdırmazlık kontrol edildikten sonra araç teslim edilir."
       ],
       "gorsel": "/img/kristal/yapistirma.jpg",
-      "gorselAlt": "Yeni camın yapıştırıcısı çekiliyor"
+      "gorselAlt": "Yeni camın kenarına yapıştırıcı çekiliyor"
     },
-    "misyon": "Camı ilk seferde doğru takmak, kasko sürecini müşterimiz için zahmetsiz hâle getirmek.",
-    "vizyon": "Ankara'da oto cam ve kasko işlerinde güvenle aranan, işini ölçerek ve belgeleyerek yapan bir atölye olmak.",
-    "degerler": [
-      { "baslik": "Aynı gün", "metin": "Cam stokta ise aynı gün takar, yapıştırıcı kuruyunca teslim ederiz." },
-      { "baslik": "Önce tamir", "metin": "Tamirle kapanan taş izi için cam değiştirmeyiz." },
-      { "baslik": "Kalibrasyon", "metin": "Kamerası olan araçta ayarı yapmadan teslim etmeyiz." },
-      { "baslik": "Açık bilgi", "metin": "Kasko kapsamını ve varsa ödemenizi işe başlamadan söyleriz." }
-    ],
-    "kalite": {
-      "baslik": "Kalite anlayışımız",
-      "metin": "Her cam aynı adımlardan geçer: kabul, kontrol, montaj, kalibrasyon, test ve teslim.",
-      "maddeler": [
-        "Araç kabulünde mevcut hasarlar ve cam kodu kaydedilir.",
-        "Cam, aracın kalıbına uygun orijinal ya da muadil seçenekleriyle sunulur.",
-        "Yapıştırıcının kuruma süresi beklenmeden araç teslim edilmez.",
-        "Kamerası olan araçlarda kalibrasyon yapılır, sızdırmazlık test edilir."
-      ]
-    },
+    "markaBaslik": "Cam takılan markalar",
     "kariyer": {
-      "baslik": "Ekibimize katılın",
-      "metin": "Cam montajı ve film uygulamasında deneyimli usta ve mesleği öğrenmek isteyen çırak arkadaşlarla tanışmak isteriz. Kısa bir tanıtımla bize yazın."
+      "baslik": "Kariyer",
+      "metin": "Cam montajında ve film uygulamasında tecrübeli ustalar ile mesleği öğrenmek isteyen çıraklar başvurabilir. Başvuru için ad, telefon ve kısa bir not yeterli."
     },
+    "sssBaslik": "Sık sorulanlar",
     "sss": [
-      { "soru": "Taş izi tamir edilir mi, yoksa cam değişmeli mi?", "cevap": "Bozuk para boyunu geçmeyen ve görüş alanının tam ortasında olmayan izler çoğu zaman reçineyle kapanır. Çatlak kenara ulaştıysa değişim gerekir. Fotoğrafını gönderin, bakıp söyleyelim." },
-      { "soru": "Kasko ile cam değişiminde ücret öder miyim?", "cevap": "Poliçenize bağlı. Cam teminatı olan ve muafiyeti olmayan poliçelerde çoğu zaman ödeme çıkmaz. Muafiyet ya da hasarsızlık indirimine etkisini başvuruda sizinle birlikte kontrol ederiz." },
-      { "soru": "ADAS kalibrasyonu nedir, neden gerekli?", "cevap": "Şerit takip, trafik işareti okuma ve acil fren sistemleri ön camın arkasındaki kameraya bakar. Cam değişince kameranın açısı biraz bile kaysa sistem yanlış okuyabilir. Cam takıldıktan sonra kamerayı cihazla yeniden ayarlarız." },
-      { "soru": "Cam takıldıktan sonra aracı ne zaman kullanabilirim?", "cevap": "Yapıştırıcı kuruyana kadar aracı bekletiriz. Teslimde aracı ne zaman yıkatabileceğinizi ve nelere dikkat etmeniz gerektiğini söyleriz." },
-      { "soru": "Cam filmi yasal mı?", "cevap": "Ön cam ve ön yan camlarda film için yasal sınırlar vardır. Aracınıza ve camın yerine uygun geçirgenlikte film öneririz." }
+      { "soru": "Taş izi tamir edilir mi, yoksa cam değişmeli mi?", "cevap": "Bozuk para boyunu geçmeyen ve sürücünün tam görüş alanında olmayan izler çoğu zaman reçineyle tamir edilir. Çatlak camın kenarına ulaştıysa cam değişir. Fotoğrafa bakılıp hangisinin gerektiği söylenir." },
+      { "soru": "Kasko ile cam değişiminde ücret ödenir mi?", "cevap": "Poliçeye bağlıdır. Cam teminatı olan ve muafiyeti olmayan poliçelerde çoğu zaman ödeme çıkmaz. Muafiyet ve hasarsızlık indirimine etkisi başvuru sırasında kontrol edilir." },
+      { "soru": "ADAS kalibrasyonu nedir, neden gerekir?", "cevap": "Şerit takip, trafik işareti okuma ve acil fren sistemleri ön camın arkasındaki kameraya bakar. Cam değişince kameranın açısı biraz bile kaysa sistem yanlış okuyabilir. Bu yüzden cam takıldıktan sonra kamera cihazla yeniden ayarlanır." },
+      { "soru": "Cam takıldıktan sonra araç ne zaman kullanılabilir?", "cevap": "Araç, yapıştırıcı kuruyana kadar atölyede bekletilir. Aracın ne zaman yıkatılabileceği teslimde söylenir." },
+      { "soru": "Cam filmi yasal mı?", "cevap": "Ön cam ve ön yan camlar için yasal sınırlar vardır. Filmin koyuluğu camın yerine göre seçilir." }
     ],
     "sayfalar": {
-      "kurumsal": { "baslik": "Kurumsal", "metin": "Kim olduğumuz, nasıl çalıştığımız ve neye önem verdiğimiz.", "gorsel": "/img/kristal/yagmur.jpg" },
-      "hizmetler": { "baslik": "Hizmetlerimiz", "metin": "Taş izinden sunroofa, her iş için ortalama süre ve kapsam." },
-      "kasko": { "baslik": "Kasko başvurusu", "metin": "Dört adımda başvurunuzu hazırlayın, WhatsApp'tan gönderin. Dosyayı biz açar, onayı biz takip ederiz." },
-      "kurumsal-musteriler": { "baslik": "Kurumsal müşteriler", "metin": "Filo, kiralama firması ve galeriler için planlı cam işleri.", "gorsel": "/img/kristal/sunroof.jpg" },
-      "iletisim": { "baslik": "İletişim", "metin": "Camın fotoğrafını gönderin ya da bize yazın; aynı gün dönüş yapalım." }
+      "hakkinda": { "baslik": "Hakkında", "metin": "Şaşmaz Oto Sanayi Sitesi'nde oto cam, taş izi tamiri ve cam filmi", "gorsel": "/img/kristal/yagmur.jpg" },
+      "hizmetler": { "baslik": "Hizmetler", "metin": "Süreler yaklaşıktır, araca göre değişebilir. Fiyat ve randevu için arayın." },
+      "kasko": { "baslik": "Kasko başvurusu", "metin": "Cam, hasar ve poliçe seçilince başvuru mesajı hazırlanır ve WhatsApp'tan gönderilir." },
+      "kurumsal-musteriler": { "baslik": "Kurumsal Müşteriler", "metin": "Filo, kiralama ve galeri araçları için planlı cam işleri", "gorsel": "/img/kristal/sunroof.jpg" },
+      "iletisim": { "baslik": "İletişim", "metin": "Fiyat ve randevu için arayın ya da formdan yazın. Camın fotoğrafı WhatsApp'tan da gönderilebilir." }
     },
-    "konular": ["Kasko ile cam değişimi", "Taş izi tamiri", "Cam filmi", "ADAS kalibrasyonu", "Filo / kurumsal anlaşma", "Genel bilgi"],
+    "konular": ["Kasko ile cam değişimi", "Taş izi tamiri", "Cam filmi", "ADAS kalibrasyonu", "Filo ve kurumsal", "Genel bilgi"],
+    "formBaslik": "Mesaj gönderin",
     "cta": {
-      "baslik": "Camın fotoğrafını gönderin, hemen söyleyelim.",
-      "metin": "Tamir mi değişim mi, kasko karşılar mı; birkaç dakikada dönüş yapalım.",
-      "buton": "Teklif isteyin"
+      "baslik": "İletişim",
+      "metin": "Fiyat ve randevu için arayın ya da formdan yazın.",
+      "buton": "İletişim formu"
     }
   }
 }

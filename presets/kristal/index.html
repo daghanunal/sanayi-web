@@ -12,33 +12,25 @@
   </head>
   <body>
     <canvas class="gl" id="gl" aria-hidden="true"></canvas>
-    <div class="flash" id="flash" aria-hidden="true"></div>
 
     <div class="intro" id="intro" role="presentation">
       <canvas class="intro__fog" id="fog"></canvas>
-      <p class="intro__skip">Geçmek için dokunun</p>
     </div>
 
     <header class="top" id="top"></header>
 
     <main>
-      <div class="film" id="film">
-        <section class="scene" data-scene="hero" id="sahne" aria-labelledby="hero-title"></section>
-        <section class="scene" data-scene="tas" id="tas" aria-labelledby="tas-title"></section>
-        <section class="scene" data-scene="recine" id="recine" aria-labelledby="recine-title"></section>
-        <section class="scene" data-scene="kasko" id="kasko" aria-labelledby="kasko-title"></section>
-        <section class="scene" data-scene="film" id="cam-filmi" aria-labelledby="film-title"></section>
-        <section class="scene" data-scene="yagmur" id="yagmur" aria-labelledby="yagmur-title"></section>
-      </div>
+      <!-- Künye; arkada ön cam (3D), açılışta üstünden bir kez parlama geçer. -->
+      <section class="hero" id="sahne" aria-labelledby="hero-title"></section>
+      <!-- Hizmetler: her hizmete gelince camda ilgili iş gösterilir (taş izi, değişim, yan cam, film, kamera). -->
+      <section class="services" id="hizmetler" aria-labelledby="services-title"></section>
+      <!-- Buradan sonra 3D çizilmez; düz site bölümleri. -->
       <div class="solid">
-        <section class="services" id="hizmetler" aria-labelledby="services-title"></section>
-        <section class="about" id="biz" aria-labelledby="about-title"></section>
-        <section class="shop" id="atolye" aria-labelledby="shop-gallery-title"></section>
+        <section class="about" id="hakkinda" aria-labelledby="about-title"></section>
+        <section class="visit" id="saatler" aria-labelledby="visit-title"></section>
         <section class="reviews" id="yorumlar" aria-labelledby="reviews-title"></section>
-        <section class="brands" id="markalar" aria-label="Camını taktığımız markalar"></section>
-        <section class="visit" id="ulasim" aria-labelledby="visit-title"></section>
+        <section class="finale" id="iletisim" aria-labelledby="final-title"></section>
       </div>
-      <section class="scene scene--final" data-scene="final" id="iletisim" aria-labelledby="final-title"></section>
     </main>
 
     <footer class="foot" id="foot"></footer>

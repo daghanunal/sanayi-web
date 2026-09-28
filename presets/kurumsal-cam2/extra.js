@@ -1,74 +1,20 @@
-// Sektör modülleri ("Polarize" yönü):
-// (1) lens     — hero fotoğrafının üstünde gezen polarize filtre; camdaki gerilim desenini gökkuşağı halkalarıyla gösterir.
-// (2) camKodu  — imza modülü: camın köşesindeki damgayı parça parça okur (üretici, lamine/temperli, E onayı, DOT, AS1,
-//                tarih noktaları) ve tarih kodu çözücü: noktaları ve rakamı seçin, camın üretim ayı çıksın; araç yılıyla kıyas.
-// (3) ziyaret  — çalışma saatleri, canlı açık/kapalı, adres, yol tarifi, yaklaşınca yüklenen harita.
-import { esc, waHref, telHref, mapsHref, mapsEmbed, openStatus, groupedHours, GUNLER, icons, gsap, ScrollTrigger, reducedMotion } from '../../shared/core.js';
+// Sektör modülü ("Polarize" yönü), "Cam kodu" sayfasında: camın köşesindeki damgayı parça parça okur
+// (üretici, lamine/temperli, E onayı, DOT, AS1, tarih noktaları) ve tarih kodu çözücü: noktalar ve rakam seçilince
+// camın üretim ayı çıkar, aracın model yılıyla karşılaştırılır.
+import { esc, waHref, icons, gsap, ScrollTrigger, reducedMotion } from '../../shared/core.js';
 
 const AYLAR = ['Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran', 'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık'];
 const buYil = new Date().getFullYear();
 
-// --- 1. Polarize lens -------------------------------------------------------------------
-
-export const lens = {
-  render() {
-    return '<div class="pz-isaret" aria-hidden="true"></div>';
-  },
-  mount(el) {
-    const fig = document.querySelector('.k-hero__gorsel');
-    if (!fig || fig.querySelector('.pz')) return;
-    fig.insertAdjacentHTML(
-      'beforeend',
-      `<div class="pz" aria-hidden="true">
-        <div class="pz__lens"><div class="pz__desen"></div><div class="pz__halka"></div></div>
-        <p class="pz__etiket"><span>Polarize filtre</span> camdaki gerilim</p>
-      </div>`
-    );
-    const lensEl = fig.querySelector('.pz__lens');
-    const desen = fig.querySelector('.pz__desen');
-    if (reducedMotion) return;
-    const x = gsap.quickTo(lensEl, 'x', { duration: 0.9, ease: 'power3.out' });
-    const y = gsap.quickTo(lensEl, 'y', { duration: 0.9, ease: 'power3.out' });
-    const donus = gsap.to(desen, { rotate: 360, duration: 26, ease: 'none', repeat: -1 });
-    // Dokunmatikte kendiliğinden gezinir; farede imleci izler.
-    const kendi = gsap.timeline({ repeat: -1, yoyo: true, defaults: { ease: 'sine.inOut', duration: 3.2 } });
-    const yerlestir = () => {
-      const r = fig.getBoundingClientRect();
-      const l = lensEl.offsetWidth;
-      kendi.clear()
-        .fromTo(lensEl, { x: r.width * 0.12, y: r.height * 0.18 }, { x: r.width * 0.62 - l / 2, y: r.height * 0.52 - l / 2 })
-        .to(lensEl, { x: r.width * 0.78 - l / 2, y: r.height * 0.1 });
-    };
-    yerlestir();
-    const fare = matchMedia('(hover: hover) and (pointer: fine)').matches;
-    if (fare) {
-      fig.addEventListener('pointerenter', () => kendi.pause());
-      fig.addEventListener('pointermove', (e) => {
-        const r = fig.getBoundingClientRect();
-        const l = lensEl.offsetWidth / 2;
-        x(e.clientX - r.left - l);
-        y(e.clientY - r.top - l);
-      });
-      fig.addEventListener('pointerleave', () => kendi.play());
-    }
-    // Ekran dışında dur.
-    ScrollTrigger.create({
-      trigger: fig, start: 'top bottom', end: 'bottom top',
-      onToggle: (s) => { s.isActive ? (donus.play(), kendi.play()) : (donus.pause(), kendi.pause()); },
-    });
-    addEventListener('resize', yerlestir, { passive: true });
-  },
-};
-
 // --- 2. Cam kodu ------------------------------------------------------------------------
 
 const PARCALAR = [
-  { id: 'uretici', ad: 'Üretici işareti', metin: 'Camı kimin ürettiğini gösterir. Köşede aracın kendi markasının logosu da varsa cam çoğu zaman fabrikadan takılan orijinal camdır; yalnızca cam üreticisinin işareti varsa muadil cam olabilir.', neden: 'Değişimde orijinal mi muadil mi istediğinizi buna göre konuşuruz.' },
+  { id: 'uretici', ad: 'Üretici işareti', metin: 'Camı kimin ürettiğini gösterir. Köşede aracın kendi markasının logosu da varsa cam çoğu zaman fabrikadan takılan orijinal camdır; yalnızca cam üreticisinin işareti varsa muadil cam olabilir.', neden: 'Değişimde orijinal ya da muadil cam seçimi buna göre yapılır.' },
   { id: 'cins', ad: 'Lamine ya da temperli', metin: 'LAMINATED yazıyorsa iki cam arasında ince bir film var demektir; kırılınca dağılmaz, örümcek ağı gibi çatlar. Ön cam her zaman lamine olur. TEMPERED yazan cam kırılınca küçük, küt parçalara ayrılır; yan ve arka camlarda kullanılır.', neden: 'Taş izi tamiri yalnızca lamine camda yapılır.' },
   { id: 'onay', ad: 'E işareti ve onay no', metin: 'Daire içindeki E, camın Avrupa (BM R43) güvenlik onayını aldığını gösterir. Yanındaki sayı onayı veren ülkedir: E1 Almanya, E2 Fransa, E3 İtalya, E4 Hollanda gibi. Altındaki uzun numara o camın onay numarasıdır.', neden: 'Onay işareti olmayan cam muayenede sorun çıkarabilir.' },
-  { id: 'dot', ad: 'DOT kodu', metin: 'ABD için verilen üretici kodudur; camın hangi fabrikadan çıktığını gösterir. Her camda bulunmayabilir.', neden: 'Aynı modelin farklı fabrika camlarını ayırt ederken bakarız.' },
-  { id: 'as', ad: 'AS1, AS2 sınıfı', metin: 'Işık geçirgenliği sınıfıdır. AS1 yazan cam en az yüzde 70 ışık geçirir ve ön cam olarak kullanılabilir. AS2 ve AS3 daha koyu camlardır, arka ve yan camlarda görülür.', neden: 'Cam filmi seçerken camın kendi koyuluğunu da hesaba katarız.' },
-  { id: 'tarih', ad: 'Üretim tarihi noktaları', metin: 'Rakam, üretim yılının son hanesidir. Noktalar ayı gösterir: çoğu üreticide rakamdan önceki noktalar yılın ilk yarısını, sonraki noktalar ikinci yarısını anlatır. Nokta sayısı arttıkça ay başa yaklaşır.', neden: 'Tarih aracın model yılından sonraysa cam değişmiş olabilir. Aşağıda deneyin.' },
+  { id: 'dot', ad: 'DOT kodu', metin: 'ABD için verilen üretici kodudur; camın hangi fabrikadan çıktığını gösterir. Her camda bulunmayabilir.', neden: 'Aynı modelin farklı fabrikalardan çıkan camları bu kodla ayırt edilir.' },
+  { id: 'as', ad: 'AS1, AS2 sınıfı', metin: 'Işık geçirgenliği sınıfıdır. AS1 yazan cam en az yüzde 70 ışık geçirir ve ön cam olarak kullanılabilir. AS2 ve AS3 daha koyu camlardır, arka ve yan camlarda görülür.', neden: 'Cam filmi seçilirken camın kendi koyuluğu da hesaba katılır.' },
+  { id: 'tarih', ad: 'Üretim tarihi noktaları', metin: 'Rakam, üretim yılının son hanesidir. Noktalar ayı gösterir: çoğu üreticide rakamdan önceki noktalar yılın ilk yarısını, sonraki noktalar ikinci yarısını anlatır. Nokta sayısı arttıkça ay başa yaklaşır.', neden: 'Tarih aracın model yılından sonraysa cam değişmiş olabilir.' },
 ];
 
 function ayBul(yer, adet) {
@@ -88,9 +34,9 @@ export const camKodu = {
       <section class="k-bolum ck" aria-labelledby="ck-baslik">
         <div class="k-kap">
           <div class="ck__bas">
-            <p class="ck__etiket"><span>Cam kimliği</span><span>06 alan</span></p>
-            <h2 class="k-h2" id="ck-baslik" data-bol>Camın köşesine bakın. Her şey orada yazar.</h2>
-            <p class="k-lead">Ön camın alt köşesindeki küçük damga; camın cinsini, onayını, üreticisini ve yaşını söyler. Bir satıra dokunun, ne anlama geldiğini okuyun.</p>
+            <p class="ck__etiket"><span>Cam kimliği</span></p>
+            <h2 class="k-h2" id="ck-baslik" data-bol>Cam kodu nasıl okunur</h2>
+            <p class="k-lead">Ön camın alt köşesindeki damga camın cinsini, onayını, üreticisini ve üretim tarihini gösterir. Damgadaki bir satıra dokununca anlamı açılır.</p>
           </div>
           <div class="ck__ic">
             <div class="ck__cam">
@@ -123,8 +69,8 @@ export const camKodu = {
 
           <div class="ck__coz" aria-labelledby="ck-coz-baslik">
             <div class="ck__coz-bas">
-              <h3 class="k-h3" id="ck-coz-baslik">Camınız hangi ay üretilmiş?</h3>
-              <p class="k-soluk">Camınızdaki rakamı ve noktaları seçin. İkinci el araç alırken çok işe yarar.</p>
+              <h3 class="k-h3" id="ck-coz-baslik">Üretim tarihi</h3>
+              <p class="k-soluk">Damgadaki rakam ve noktalar seçilince camın üretim ayı ve yılı görünür. İkinci el araçta camın değişip değişmediği buradan anlaşılabilir.</p>
             </div>
             <div class="ck__coz-ic">
               <fieldset class="ck__alan">
@@ -142,17 +88,17 @@ export const camKodu = {
                 </div>
               </fieldset>
               <fieldset class="ck__alan">
-                <legend>3 · Aracınızın model yılı</legend>
+                <legend>3 · Aracın model yılı</legend>
                 <select name="arac" aria-label="Aracın model yılı">${yillar.map((y, i) => `<option${i === 4 ? ' selected' : ''}>${y}</option>`).join('')}</select>
               </fieldset>
               <output class="ck__sonuc">
                 <span class="ck__onizleme" data-o="onizleme" aria-hidden="true"></span>
                 <span class="ck__tarih"><small>Cam üretimi</small><strong data-o="tarih"></strong></span>
                 <span class="ck__hukum" data-o="hukum"></span>
-                <a class="k-btn ck__gonder" target="_blank" rel="noopener">${icons.whatsapp}<span>Camın fotoğrafını gönderin</span></a>
+                <a class="k-btn ck__gonder" target="_blank" rel="noopener">${icons.whatsapp}<span>Fotoğrafı WhatsApp'tan gönder</span></a>
               </output>
             </div>
-            <p class="ck__dipnot">Çoğu üretici tarihi böyle yazar; bazı markalar farklı işaret kullanır. Emin olmak için fotoğrafı gönderin, biz bakalım.</p>
+            <p class="ck__dipnot">Çoğu üretici tarihi böyle yazar, bazı markalar farklı işaret kullanır. Kesin bilgi için camın fotoğrafı gönderilebilir.</p>
           </div>
         </div>
       </section>`;
@@ -194,8 +140,10 @@ export const camKodu = {
       const damgaSatir = el.querySelectorAll('.ck__damga > *');
       gsap.set(damgaSatir, { clipPath: 'inset(0 100% 0 0)' });
       ScrollTrigger.create({
-        trigger: el.querySelector('.ck__cam'), start: 'top 72%', once: true,
-        onEnter: () => {
+        trigger: el.querySelector('.ck__cam'), start: 'top 72%', toggleActions: 'play none none none',
+        onEnter: (st) => {
+          if (st.basildi) return;
+          st.basildi = true;
           gsap.to(damgaSatir, { clipPath: 'inset(0 0% 0 0)', duration: 0.5, stagger: 0.14, ease: 'steps(14)' });
           let i = 0;
           gezinti = gsap.delayedCall(2.4, function dongu() {
@@ -231,8 +179,8 @@ export const camKodu = {
       dmRakam.textContent = s.rakam;
       o('tarih').textContent = `${AYLAR[ay - 1]} ${yil}`;
       let hukum, sinif;
-      if (yil > s.arac) { hukum = `Cam, aracın model yılından (${s.arac}) sonra üretilmiş. Cam değişmiş olabilir; satıcıya sorun.`; sinif = 'is-uyari'; }
-      else if (yil < s.arac - 1) { hukum = `Cam, model yılından epey önce üretilmiş görünüyor. Rakam 10 yıl önceyi de gösterebilir; fotoğrafla birlikte bakalım.`; sinif = 'is-soru'; }
+      if (yil > s.arac) { hukum = `Cam, aracın model yılından (${s.arac}) sonra üretilmiş. Cam değişmiş olabilir.`; sinif = 'is-uyari'; }
+      else if (yil < s.arac - 1) { hukum = `Cam, model yılından epey önce üretilmiş görünüyor. Rakam on yıl önceki bir yılı da gösterebilir.`; sinif = 'is-soru'; }
       else { hukum = `Tarih, ${s.arac} model araçla uyumlu. Cam büyük ihtimalle fabrika çıkışı.`; sinif = 'is-tamam'; }
       const h = o('hukum');
       h.textContent = hukum;
@@ -243,44 +191,5 @@ export const camKodu = {
     form.addEventListener('input', () => coz(true));
     form.addEventListener('change', () => coz(true));
     coz(false);
-  },
-};
-
-// --- 3. Ziyaret -------------------------------------------------------------------------
-
-export const ziyaret = {
-  render(d) {
-    if (!d.saatler) return '';
-    const st = openStatus(d.saatler);
-    const bugun = new Date().getDay();
-    return `
-      <section class="k-bolum zy" aria-labelledby="zy-baslik">
-        <div class="k-kap zy__ic">
-          <div class="zy__sol">
-            <p class="ck__etiket"><span>Konum</span><span>Etimesgut</span></p>
-            <h2 class="k-h2" id="zy-baslik" data-bol>Aracı getirin, camın başında konuşalım.</h2>
-            <p class="zy__durum ${st.open ? 'is-acik' : ''}"><span></span>${esc(st.text)}</p>
-            <dl class="zy__saat">
-              ${groupedHours(d.saatler).map(([g, s]) => `<div><dt>${esc(g)}</dt><dd>${esc(s)}</dd></div>`).join('')}
-            </dl>
-            <p class="k-soluk zy__bugun">Bugün ${GUNLER[bugun]}</p>
-            <p class="zy__adres">${esc(d.iletisim.adres)}</p>
-            <div class="k-butonlar">
-              <a class="k-btn" href="${mapsHref(d)}" target="_blank" rel="noopener">${icons.pin}<span>Yol tarifi</span></a>
-              <a class="k-btn k-btn--ikincil" href="${telHref(d)}">${icons.phone}<span>${esc(d.iletisim.telefon)}</span></a>
-            </div>
-          </div>
-          <div class="zy__harita" data-q="${esc(mapsEmbed(d))}"><p>Harita yaklaşınca yüklenir</p></div>
-        </div>
-      </section>`;
-  },
-  mount(el) {
-    const h = el.querySelector('.zy__harita');
-    const io = new IntersectionObserver((e) => {
-      if (!e[0].isIntersecting) return;
-      h.innerHTML = `<iframe title="Konum haritası" src="${h.dataset.q}" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>`;
-      io.disconnect();
-    }, { rootMargin: '300px' });
-    io.observe(h);
   },
 };

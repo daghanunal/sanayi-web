@@ -2,7 +2,7 @@ import '../../shared/base.css';
 import ana from '../../data/kristal.json';
 import ek from '../../data/kurumsal-cam2.json';
 import { kurumsal, derinBirlestir } from '../_kurumsal/engine.js';
-import { lens, camKodu, ziyaret } from './extra.js';
+import { camKodu } from './extra.js';
 import './style.css';
 
 // "Polarize" yönü: soğuk lavanta-gri zemin, gece indigosu mürekkep, elektrik moru vurgu ve polarize ışıkta
@@ -19,10 +19,10 @@ kurumsal({
     yer: "Şaşmaz'da",
     heroGorsel: `${import.meta.env.BASE_URL}img/kristal/yapistirma.jpg`,
     heroAlt: 'Yeni ön camın kenarına yapıştırıcı çekiliyor',
-    logoAlt: 'Oto cam · Kod · Kalibrasyon',
+    logoAlt: 'Oto cam, taş izi ve kalibrasyon',
     baslikEki: 'Oto cam, taş izi ve kalibrasyon | Şaşmaz, Ankara',
     altNot: 'Fotoğraflar temsilîdir (Pexels). Yorumlar örnektir.',
-    teklifEtiketi: 'Fotoğraf gönderin',
+    teklifEtiketi: 'İletişim',
     css: {
       zemin: '#eceef5', yuzey: '#dfe2ee', metin: '#0f1030', soluk: '#555a7c', cizgi: 'rgb(15 16 48 / .14)',
       vurgu: '#5b36f2', 'vurgu-metin': '#ffffff', koyu: '#0f1030', 'koyu-metin': '#eceef5', 'koyu-soluk': '#a0a5cc',
@@ -34,12 +34,12 @@ kurumsal({
     },
   },
   sayfalar: [
-    { id: 'anasayfa', baslik: 'Ana Sayfa', bolumler: ['hero', 'lens', 'camKodu', 'hizmetOzet', 'rakamlar', 'ozet', 'surec', 'yorumlar', 'ziyaret', 'cta'] },
-    { id: 'kurumsal', baslik: 'Kurumsal', bolumler: ['hakkimizda', 'vizyon', 'kalite', 'galeri', 'markalar', 'kariyer', 'cta'] },
-    { id: 'hizmetler', baslik: 'Hizmetler', bolumler: ['hizmetler', 'surec', 'sss', 'cta'] },
+    { id: 'anasayfa', baslik: 'Ana Sayfa', bolumler: ['hero', 'hizmetOzet', 'ozet', 'rakamlar', 'konum', 'yorumlar', 'cta'] },
+    { id: 'hizmetler', baslik: 'Hizmetler', bolumler: ['hizmetler', 'surec', 'cta'] },
+    { id: 'hakkinda', baslik: 'Hakkında', bolumler: ['hakkimizda', 'galeri', 'markalar', 'kariyer', 'cta'] },
     { id: 'cam-kodu', baslik: 'Cam Kodu', bolumler: ['camKodu', 'sss', 'cta'] },
     { id: 'kurumsal-musteriler', baslik: 'Filo ve Kurumsal', menu: 'Filo ve Kurumsal', bolumler: ['anlasmalar', 'cta'] },
     { id: 'iletisim', baslik: 'İletişim', bolumler: ['iletisim'] },
   ],
-  ekstralar: { lens, camKodu, ziyaret },
+  ekstralar: { camKodu },
 });
