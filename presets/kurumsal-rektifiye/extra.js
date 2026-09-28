@@ -1,30 +1,23 @@
-// Sektöre özel modül: büyütme ölçüsü seçici + ölçü raporu örneği.
+// Sektöre özel modül: büyütme ölçüsü hesabı.
 // STD çap ve ölçülen en büyük çap → aşınma, işleme payı sonrası inilecek ilk büyütme ölçüsü (STD/+0,25/…), ya da gömlek.
-// Yanında teslimde verilen ölçü raporunun örneği (data: rapor). Sonuç WhatsApp mesajına dönüşür.
+// Sonuç WhatsApp mesajına dönüşür.
 import { esc, waHref, gsap, reducedMotion } from '../../shared/core.js';
 
 const PAY = 0.05; // aşınmanın üstüne bırakılan temiz işleme payı (mm)
 const HON_SINIRI = 0.02; // bu kadar aşınmada STD ölçüde hafif hon yeterli sayılır
 const sayi = (s) => parseFloat(String(s).replace(',', '.'));
-const sapmaStil = (um) => {
-  const v = Math.max(-5, Math.min(5, um)) * 10; // ±5 µm → ±50%
-  return v >= 0 ? `left:50%;width:${Math.max(v, 3)}%;transform-origin:left` : `left:${50 + v}%;width:${-v}%;transform-origin:right`;
-};
 const yaz = (n, h = 2) => n.toLocaleString('tr-TR', { minimumFractionDigits: h, maximumFractionDigits: 3 });
 
 export const olcuSecici = {
   render(d) {
     const ol = d.olculer || [];
     if (!ol.length) return '';
-    const r = d.rapor;
-    const nom = r ? sayi(r.nominal) : 0;
     return `
       <section class="k-bolum os" aria-labelledby="os-baslik">
         <div class="k-kap">
           <div class="os__bas">
-            <p class="os__ust">Büyütme ölçüsü</p>
-            <h2 class="k-h2" id="os-baslik" data-bol>Silindiriniz hangi ölçüye iner?</h2>
-            <p class="k-lead">Standart çapı ve ölçtüğünüz en büyük çapı yazın. Aşınmanın üstüne ${yaz(PAY)} mm temiz işleme payı bırakarak inilecek ilk ölçüyü ve piston sınıfını görün.</p>
+            <h2 class="k-h2" id="os-baslik" data-bol>Ölçü hesabı</h2>
+            <p class="k-lead">Standart çap ile ölçülen en büyük çap yazılınca aşınma, inilecek ilk büyütme ölçüsü ve piston sınıfı görünür. Hesapta aşınmanın üstüne ${yaz(PAY)} mm işleme payı bırakılır. Kesin ölçü atölyede alınır.</p>
           </div>
           <div class="os__ic">
             <div class="os__panel">
@@ -45,31 +38,9 @@ export const olcuSecici = {
                   <div><dt>Piston</dt><dd data-o="piston">+0,25</dd></div>
                 </dl>
                 <p class="os__not" data-o="not"></p>
-                <a class="k-btn os__gonder" target="_blank" rel="noopener">Bu ölçüyle iş gönderin</a>
+                <a class="k-btn os__gonder" target="_blank" rel="noopener">Bu ölçü için bilgi alın</a>
               </div>
             </div>
-            ${r ? `
-            <article class="os__rapor" aria-label="Ölçü raporu örneği">
-              <header class="os__rapor-bas"><span>Ölçü raporu</span><span class="os__damga">Örnek</span></header>
-              <dl class="os__rapor-ust">
-                <div><dt>Motor</dt><dd>${esc(r.is)}</dd></div>
-                <div><dt>Ölçü sınıfı</dt><dd>${esc(r.olcuSinifi)}</dd></div>
-                <div><dt>Nominal</dt><dd>Ø ${esc(r.nominal)} mm</dd></div>
-              </dl>
-              <table class="os__tablo">
-                <thead><tr><th scope="col">Sil.</th><th scope="col">Çap (mm)</th><th scope="col">Sapma</th><th scope="col">Ovalite</th></tr></thead>
-                <tbody>${r.silindirler.map((s) => {
-                  const um = Math.round((sayi(s.olcu) - nom) * 1000);
-                  return `<tr><th scope="row">${esc(s.no)}</th><td>${esc(s.olcu)}</td><td><span class="os__sapma"><i style="${sapmaStil(um)}"></i></span><b>${um > 0 ? '+' : ''}${um} µm</b></td><td>${esc(s.ovalite)}</td></tr>`;
-                }).join('')}</tbody>
-              </table>
-              <p class="os__tol">Tolerans bandı ±5 µm</p>
-              <dl class="os__rapor-alt">
-                <div><dt>Krank</dt><dd>${esc(r.krank)}</dd></div>
-                <div><dt>Planya</dt><dd>${esc(r.planya)}</dd></div>
-              </dl>
-              <footer>Rapor parçayla birlikte elden verilir. Değerler örnektir.</footer>
-            </article>` : ''}
           </div>
         </div>
       </section>`;
@@ -95,15 +66,15 @@ export const olcuSecici = {
       const asinma = gecerli ? +(olcu - std).toFixed(3) : NaN;
       let secim = -1;
       let not = '';
-      if (!gecerli) not = 'Çapları milimetre olarak yazın, ör. 75,00 ve 75,09.';
-      else if (asinma < 0) not = 'Ölçülen çap standarttan küçük görünüyor; ölçüyü ve STD değerini kontrol edin.';
-      else if (asinma <= HON_SINIRI) { secim = 0; not = 'Aşınma çok az. STD ölçüde hafif hon ve yeni segman çoğu zaman yeterli; ovaliteye bakıp karar veririz.'; }
+      if (!gecerli) not = 'Çaplar milimetre olarak yazılır, ör. 75,00 ve 75,09.';
+      else if (asinma < 0) not = 'Ölçülen çap standarttan küçük görünüyor. Ölçü ve STD değeri yeniden kontrol edilmeli.';
+      else if (asinma <= HON_SINIRI) { secim = 0; not = 'Aşınma çok az. Çoğu zaman STD ölçüde hafif hon ve yeni segman yeterli olur, karar ovaliteye bakılarak verilir.'; }
       else {
         secim = ofsetler.findIndex((f, i) => i > 0 && std + f >= olcu + PAY - 1e-9);
-        not = secim > 0 ? `Aşınmanın üstüne ${yaz(PAY)} mm temiz pay kalıyor. Pistonu bu sınıfta sipariş edin, honu pistona göre açarız.` : '';
+        not = secim > 0 ? `Aşınmanın üstünde ${yaz(PAY)} mm işleme payı kalır. Piston bu sınıftan alınır, hon pistonun ölçüsüne göre yapılır.` : '';
       }
       const gomlek = gecerli && asinma > 0 && secim === -1;
-      if (gomlek) not = 'Son büyütme ölçüsü de yetmiyor. Bu blokta gömlek çakıp STD ölçüye dönmek gerekir.';
+      if (gomlek) not = 'Son büyütme ölçüsü de yetmez. Bu durumda bloğa gömlek çakılıp STD ölçüye dönülür.';
       const x = secim >= 0 ? ol[secim] : null;
       o('ad').textContent = x ? (secim === 0 ? 'STD' : x.piston) : gomlek ? 'Gömlek' : '—';
       o('asinma').textContent = gecerli ? `${yaz(Math.max(0, asinma))} mm` : '—';
@@ -121,23 +92,16 @@ export const olcuSecici = {
       payCubuk.style.left = yuzde(a);
       payCubuk.style.width = gecerli && asinma > HON_SINIRI ? yuzde(PAY) : '0%';
       const mesaj = [
-        `Merhaba ${d.isletme.ad}, silindir işi göndermek istiyorum.`,
+        `Merhaba ${d.isletme.ad}, silindir işi için bilgi almak istiyorum.`,
         gecerli ? `STD çap: ${yaz(std)} mm` : '',
         gecerli ? `Ölçülen en büyük çap: ${yaz(olcu)} mm` : '',
         x || gomlek ? `Ön seçim: ${o('ad').textContent} (${o('cap').textContent})` : '',
-        'Ölçüyü atölyede teyit eder misiniz?',
+        'Ölçünün atölyede kontrol edilmesini istiyorum.',
       ].filter(Boolean).join('\n');
       gonder.href = waHref(d, mesaj);
     };
     form.addEventListener('input', () => guncelle(false));
     guncelle(true);
 
-    // Rapor sapma çubukları kaydırınca yerine oturur.
-    if (!reducedMotion) {
-      gsap.from(el.querySelectorAll('.os__sapma i'), {
-        scaleX: 0, duration: 0.8, stagger: 0.1, ease: 'power3.out',
-        scrollTrigger: { trigger: el.querySelector('.os__rapor') || el, start: 'top 80%', once: true },
-      });
-    }
   },
 };

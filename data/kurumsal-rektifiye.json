@@ -1,153 +1,145 @@
 {
-  "iletisim": {},
+  "olculer": [
+    {
+      "ad": "Standart",
+      "cap": 75.0,
+      "piston": "STD"
+    },
+    {
+      "ad": "0,25 büyütme",
+      "cap": 75.25,
+      "piston": "+0,25"
+    },
+    {
+      "ad": "0,50 büyütme",
+      "cap": 75.5,
+      "piston": "+0,50"
+    },
+    {
+      "ad": "0,75 büyütme",
+      "cap": 75.75,
+      "piston": "+0,75"
+    },
+    {
+      "ad": "1,00 büyütme",
+      "cap": 76.0,
+      "piston": "+1,00"
+    }
+  ],
   "kurumsal": {
-    "hero": {
-      "baslik": "Motoru ölçüsüne getiririz.",
-      "metin": "Krank taşlama, silindir honlama, kafa planyası ve torna işleri. Motor ustalarına ve servislere çalışır, her işi ölçü raporuyla teslim ederiz.",
-      "birincil": "İş gönderin",
-      "ikincil": "Servislere hizmet",
-      "ikincilRota": "servisler"
-    },
+    "hizmetOzetBaslik": "Hizmetler",
     "ozet": {
-      "baslik": "Ölçmeden işlemeyiz",
-      "metin": "Motor tezgâha gelmeden ölçülür, işlendikten sonra yine ölçülür. Ustanın motoru toplarken ikinci kez ölçmesine gerek kalmasın diye raporu parçayla birlikte veririz."
+      "baslik": "Hakkında",
+      "metin": "Şaşmaz Oto Sanayi Sitesi'nde benzinli ve dizel motorların krank, blok ve silindir kapağı işleri yapılır. Parçaların çoğu sanayideki motor ustalarından ve servislerden gelir."
     },
-    "hizmetOzetBaslik": "Rektifiye ve torna işleri",
-    "anlasmaBaslik": "Usta ve servislere hizmet",
-    "anlasmaMetin": "Motor ustaları, servisler ve filo atölyeleri için sıra önceliği, cari hesap ve ölçü raporuyla teslim.",
+    "konumBaslik": "Çalışma saatleri ve konum",
+    "yorumBaslik": "Örnek yorumlar",
+    "cta": {
+      "baslik": "İletişim",
+      "metin": "Fiyat ve teslim günü için arayın ya da formdan yazın.",
+      "buton": "İletişim formu"
+    },
+    "hizmetLink": "Bu hizmet için bilgi alın",
+    "surecBaslik": "Çalışma sırası",
+    "anlasmaBaslik": "Usta ve servisler",
+    "anlasmaMetin": "Düzenli parça getiren motor ustaları ve servislerle cari hesapla çalışılır. Her parçanın ölçüleri kaydedilir.",
     "anlasmalar": [
       {
-        "baslik": "Motor ustası ve servis ortaklığı",
-        "kisa": "Sıra önceliği, cari hesap, rapor dosyası.",
-        "metin": "Düzenli iş gönderen ustalara ve servislere sıra önceliği veriyor, cari hesapla çalışıyoruz. Her motorun ölçü raporu dosyanızda saklanır; aynı motor yeniden geldiğinde geçmişi elimizdedir.",
+        "baslik": "Motor ustaları ve servisler",
+        "kisa": "Cari hesap, ay sonunda tek ekstre.",
+        "metin": "Düzenli parça getiren ustalar ve servislerle cari hesapla çalışılır. Her parçanın ölçüleri kaydedilir; aynı motor yeniden gelince önceki ölçülere bakılır.",
         "maddeler": [
-          "Düzenli işte sıra önceliği",
-          "Ay sonu tek ekstre",
-          "Motor bazında ölçü raporu arşivi",
+          "Ay sonunda tek ekstre",
+          "Her motorun ölçü kaydı",
           "İş bitince telefonla haber"
         ],
-        "buton": "Ortaklık görüşmesi isteyin"
+        "buton": "Cari hesap için bilgi alın"
       },
       {
-        "baslik": "Filo ve kurumsal atölyeler",
-        "kisa": "Kendi atölyesi olan filolara parça işleme.",
-        "metin": "Kendi bakım atölyesi olan filo ve kurumların söktüğü krank, blok ve kafaları işler, raporuyla geri teslim ederiz. Toplu işte teslim takvimini baştan yazılı veririz.",
+        "baslik": "Kendi atölyesi olan filolar",
+        "kisa": "Sökülen krank, blok ve kapak işlenip geri verilir.",
+        "metin": "Kendi bakım atölyesi olan filo ve kurumların söktüğü krank, blok ve silindir kapakları işlenip ölçüleriyle geri verilir. Toplu işte teslim günleri baştan yazılı verilir.",
         "maddeler": [
           "Toplu işte yazılı teslim takvimi",
           "Plaka ya da motor numarasıyla kayıt",
           "Faturada iş dökümü"
         ],
-        "buton": "Görüşme talep edin"
+        "buton": "Filo için bilgi alın"
       },
       {
-        "baslik": "Özel parça ve numune işleme",
-        "kisa": "Burç, flanş, mil: numuneyle getirin.",
-        "metin": "Piyasada bulunmayan burç, flanş, mil ve adaptörleri çizim ya da numuneye göre işleriz. Seri iş için adet ve malzemeyi yazın, teklifi iletelim.",
+        "baslik": "Numuneden parça",
+        "kisa": "Burç, flanş, mil ve adaptör numuneye göre işlenir.",
+        "metin": "Piyasada bulunmayan burç, flanş, mil ve adaptörler çizime ya da numuneye göre işlenir. Seri iş için adet ve malzeme yazılınca fiyat bildirilir.",
         "maddeler": [
-          "Çizim ya da numuneyle üretim",
-          "Tek adet ya da küçük seri",
-          "Malzeme seçeneğiyle teklif"
+          "Çizim ya da numuneyle işleme",
+          "Tek parça ya da küçük seri",
+          "Malzemeye göre fiyat"
         ],
-        "buton": "Numune için yazın"
+        "buton": "Numune için bilgi alın"
       }
     ],
-    "anlasmaNotu": "Çalışma koşulları iş hacmine göre belirlenir; teklifimizi yazılı olarak iletiriz.",
+    "anlasmaNotu": "Çalışma koşulları iş hacmine göre konuşulur, fiyat yazılı verilir.",
     "hakkimizda": {
-      "baslik": "Aynı tezgâh, aynı titizlik",
+      "baslik": "Hakkında",
       "paragraflar": [
-        "Şaşmaz Oto Sanayi Sitesi'ndeki atölyemizde motor rektifiye ve torna işleri yapıyoruz. Müşterilerimizin çoğu motor ustaları ve servisler; motoru söker, parçayı bize getirir, işlenmiş ve ölçülmüş olarak geri alırlar.",
-        "Tezgâhlarımız eski, ölçü aletlerimiz düzenli kontrol edilir. Her işin başında ve sonunda ölçü alınır, değerler rapora yazılır. Onayınız olmadan hiçbir parça tezgâha girmez."
+        "Atölyede benzinli ve dizel motorların krank, blok ve silindir kapağı işleri yapılır. Parçaların çoğu sanayideki motor ustalarından ve servislerden gelir; parçasını söktürüp getiren araç sahiplerinin işi de alınır.",
+        "Atölyede krank taşlama, silindir honlama, planya ve supap taşlama tezgâhlarının yanında torna ve freze var. Randevu gerekmez, sökülmüş parça mesai saatinde bırakılır. İşlenen parçanın ölçüleri kâğıda yazılıp parçayla birlikte verilir."
       ],
       "gorsel": "/img/mikron/atolye.jpg",
-      "gorselAlt": "Tezgâh başında işleme"
+      "gorselAlt": "Tezgâh başında çalışan usta"
     },
-    "misyon": "Motoru üreticinin öngördüğü ölçüye getirmek ve bunu ölçü raporuyla belgelemek.",
-    "vizyon": "Ankara'daki motor ustalarının gönül rahatlığıyla iş gönderdiği, ölçüsüyle bilinen bir rektifiye atölyesi olmak.",
-    "degerler": [
-      {
-        "baslik": "Önce ölçü",
-        "metin": "İşe başlamadan ölçer, hangi ölçüye inileceğini söyleriz."
-      },
-      {
-        "baslik": "Yazılı rapor",
-        "metin": "Her iş ölçü raporuyla teslim edilir."
-      },
-      {
-        "baslik": "Onaysız iş yok",
-        "metin": "Fiyat onaylanmadan parça tezgâha girmez."
-      },
-      {
-        "baslik": "Açık söz",
-        "metin": "Kurtulmayacak parçayı işleyip para almayız; baştan söyleriz."
-      }
-    ],
-    "kalite": {
-      "baslik": "Ölçü ve kalite düzenimiz",
-      "metin": "Her parça aynı sırayla ilerler: giriş ölçüsü, onay, işleme, ara ölçü, son ölçü, yıkama ve raporlu teslim.",
-      "maddeler": [
-        "Giriş ölçüsü alınır, aşınma ve ovalite rapora yazılır.",
-        "İşleme sırasında her adımdan sonra ölçü kontrol edilir.",
-        "Son ölçü üretici toleransıyla karşılaştırılır; tolerans dışı parça teslim edilmez.",
-        "Parçalar yıkanır, yağ kanalları temizlenir, tıpalanarak teslim edilir."
-      ]
-    },
+    "markaBaslik": "Sık gelen motorlar",
     "sss": [
       {
-        "soru": "Hangi ölçüye ineceğimi nasıl bilirim?",
-        "cevap": "Silindiri ve krankı ölçer, aşınmanın üstüne temiz işleme payı kalacak ilk büyütme ölçüsünü öneririz. Piston ve yatak siparişinden önce bu ölçüyü size yazarız."
+        "soru": "Hangi büyütme ölçüsüne inileceği nasıl belirlenir?",
+        "cevap": "Silindir ve krank ölçülür, aşınmanın üstünde işleme payı kalan ilk büyütme ölçüsü seçilir. Piston ve yatak alınmadan önce bu ölçü ustaya yazılı verilir."
       },
       {
-        "soru": "Ölçü raporunda ne yazıyor?",
-        "cevap": "Silindir başına işlenmiş çap ve ovalite, krank muylu ölçüleri, planyada alınan miktar ve çarpılma değeri. Rapor parçayla birlikte elden verilir."
+        "soru": "Parçayla birlikte verilen kâğıtta ne yazar?",
+        "cevap": "Her silindirin işlenmiş çapı ve ovalitesi, krank muylularının ölçüsü, planyada alınan miktar ve çarpılma yazar."
       },
       {
         "soru": "İş ne kadar sürer?",
-        "cevap": "Planya ve basınç testi çoğunlukla aynı gün, krank taşlama ve honlama 1-2 gün sürer. Yoğunluğa göre teslim gününü parçayı bırakırken söyleriz."
+        "cevap": "Planya ve basınç testi çoğunlukla aynı gün biter, krank taşlama ve honlama 1–2 gün sürer. Teslim günü parça bırakılırken söylenir."
       },
       {
-        "soru": "Parçayı getirmem mi gerekiyor?",
-        "cevap": "Sanayi içindeki ustalarımızın parçasını yoğunluğa göre alıp geri bırakıyoruz. Arayıp saat ayarlayın."
+        "soru": "Parça atölyeye getirilmek zorunda mı?",
+        "cevap": "Sanayi içindeki ustaların parçası yoğunluğa göre yerinden alınıp geri bırakılır. Saat için aramak yeterli."
       }
     ],
+    "sssBaslik": "Sık sorulanlar",
+    "galeriBaslik": "Galeri",
     "sayfalar": {
-      "kurumsal": {
-        "baslik": "Kurumsal",
-        "metin": "Atölyemiz, çalışma düzenimiz ve ölçüye neden bu kadar önem verdiğimiz.",
+      "hakkinda": {
+        "baslik": "Hakkında",
+        "metin": "Şaşmaz Oto Sanayi Sitesi'nde motor rektifiye, torna ve freze",
         "gorsel": "/img/mikron/torna.jpg"
       },
       "hizmetler": {
-        "baslik": "Hizmetlerimiz",
-        "metin": "Her iş için çalıştığımız tolerans ve ortalama süre."
+        "baslik": "Hizmetler",
+        "metin": "Süreler yaklaşıktır, parçaya göre değişebilir. Fiyat için arayın."
       },
       "servisler": {
-        "baslik": "Usta ve servislere hizmet",
-        "metin": "Düzenli iş gönderen ustalar ve servisler için sıra önceliği, cari hesap ve rapor arşivi.",
+        "baslik": "Usta ve servisler",
+        "metin": "Motor ustaları, servisler ve filo atölyeleri için",
         "gorsel": "/img/tezgah/eksantrik.jpg"
       },
       "olcu": {
-        "baslik": "Ölçü seçici ve rapor örneği",
-        "metin": "Silindirinizin hangi büyütme ölçüsüne ineceğini görün; teslimde verdiğimiz ölçü raporunu inceleyin."
+        "baslik": "Büyütme ölçüsü",
+        "metin": "Silindir büyütme ölçüleri ve piston sınıfları"
       },
       "iletisim": {
         "baslik": "İletişim",
-        "metin": "İş göndermek, ölçü sormak ya da ortaklık görüşmesi için yazın."
+        "metin": "Fiyat ve teslim günü için arayın ya da formdan yazın."
       }
     },
     "konular": [
-      "İş göndermek istiyorum",
-      "Ölçü / fiyat sorusu",
-      "Servis ortaklığı",
-      "Özel parça işleme",
+      "Parça bırakma",
+      "Fiyat bilgisi",
+      "Cari hesap",
+      "Numuneden parça",
       "Genel bilgi"
     ],
-    "markaBaslik": "Sık çalıştığımız motorlar",
-    "surecBaslik": "Motorunuz tezgâhta nasıl ilerler",
-    "cta": {
-      "baslik": "Motoru getirin, önce ölçelim",
-      "metin": "Hangi ölçüye inileceğini ve fiyatı işe başlamadan söyleriz. Raporu parçayla birlikte alırsınız.",
-      "buton": "İş gönderin"
-    },
-    "yorumBaslik": "Örnek müşteri yorumları",
-    "galeriBaslik": "Tezgâhtan iş örnekleri"
+    "formBaslik": "Mesaj gönderin"
   }
 }

@@ -2,46 +2,24 @@ import '../../shared/base.css';
 import ana from '../../data/mikron.json';
 import ek from '../../data/kurumsal-rektifiye.json';
 import { kurumsal, derinBirlestir } from '../_kurumsal/engine.js';
-import { BOLUMLER } from '../_kurumsal/bolumler.js';
-import { esc } from '../../shared/core.js';
 import { olcuSecici } from './extra.js';
 import './style.css';
 
-const v = derinBirlestir(ana, ek);
-// Yorumlar örnektir: uydurma puan ve "N değerlendirme" sayısı gösterilmez.
-delete v.puan;
-// Hizmetlerin tolerans alanı motorun "detay" kutucuklarına.
-v.hizmetler = v.hizmetler.map((h) => ({ ...h, detay: h.tolerans ? [['Tolerans', h.tolerans], ['Süre', h.sure]] : undefined, sure: null, kisa: h.aciklama.split('. ')[0].replace(/\.$/, '') + '.' }));
-
-// Tam ekran hero'ya ölçü göstergesi ekler (motorun hero'su değişmez, yalnızca sonuna bir katman eklenir).
-const r = v.rapor;
-const hero = {
-  render(d, ctx, s) {
-    const html = BOLUMLER.hero.render(d, ctx, s);
-    const okuma = r ? `
-      <div class="rk-okuma" aria-hidden="true">
-        <span class="rk-okuma__e">Silindir 1 · son ölçü</span>
-        <span class="rk-okuma__d"><i>Ø</i>${esc(r.silindirler[0].olcu)}<small>mm</small></span>
-        <span class="rk-okuma__cetvel"></span>
-        <span class="rk-okuma__e">Tolerans ±0,005 mm · ovalite ${esc(r.silindirler[0].ovalite)}</span>
-      </div>` : '';
-    return html.replace(/<\/section>\s*$/, `${okuma}</section>`);
-  },
-};
-
+// Kurumsal Ölçü: koyu grafit atölye, kumpas sarısı, pah kırılmış köşeler, cetvel taksimatlı ayırıcılar.
+// Sektör modülü: büyütme ölçüsü hesabı (standart çap + ölçülen çap → inilecek ilk büyütme ölçüsü ve piston sınıfı).
 const B = import.meta.env.BASE_URL;
 kurumsal({
-  veri: v,
+  veri: derinBirlestir(ana, ek),
   tema: {
     hero: 'tam',
     gecis: 'perde',
     yer: "Şaşmaz'da",
     heroGorsel: `${B}img/kurumsal-rektifiye/krank-3d.jpg`,
     heroAlt: 'Taşlanmış muyluları parlayan krank mili (temsilî 3D görsel)',
-    altNot: 'Fotoğraflar: Pexels. 3D görseller temsilîdir.',
-    logoAlt: 'Motor rektifiye · torna',
+    altNot: "Pexels'ten alınan fotoğraflar ve 3D krank görseli temsilîdir. Yorumlar örnektir.",
+    logoAlt: 'Motor rektifiye ve torna',
     baslikEki: 'Motor rektifiye ve torna | Şaşmaz, Ankara',
-    teklifEtiketi: 'İş gönderin',
+    teklifEtiketi: 'İletişim',
     css: {
       zemin: '#101316', yuzey: '#1a1f24', metin: '#e8ebee', soluk: '#9aa3ab', cizgi: 'rgb(232 235 238 / .13)',
       vurgu: '#f4c542', 'vurgu-metin': '#121417', koyu: '#08090b', 'koyu-metin': '#e8ebee', 'koyu-soluk': '#8b949c',
@@ -52,12 +30,12 @@ kurumsal({
     },
   },
   sayfalar: [
-    { id: 'anasayfa', baslik: 'Ana Sayfa', bolumler: ['hero', 'ozet', 'hizmetOzet', 'rakamlar', 'olcuSecici', 'anlasmaOzet', 'yorumlar', 'cta'] },
-    { id: 'kurumsal', baslik: 'Kurumsal', bolumler: ['hakkimizda', 'vizyon', 'kalite', 'cta'] },
-    { id: 'hizmetler', baslik: 'Hizmetler', bolumler: ['hizmetler', 'surec', 'markalar', 'cta'] },
-    { id: 'servisler', baslik: 'Usta ve Servislere', menu: 'Servislere', bolumler: ['anlasmalar', 'surec', 'sss', 'cta'] },
-    { id: 'olcu', baslik: 'Ölçü ve Rapor', bolumler: ['olcuSecici', 'galeri', 'cta'] },
+    { id: 'anasayfa', baslik: 'Ana Sayfa', bolumler: ['hero', 'hizmetOzet', 'ozet', 'rakamlar', 'konum', 'yorumlar', 'cta'] },
+    { id: 'hizmetler', baslik: 'Hizmetler', bolumler: ['hizmetler', 'surec', 'cta'] },
+    { id: 'hakkinda', baslik: 'Hakkında', bolumler: ['hakkimizda', 'markalar', 'galeri', 'cta'] },
+    { id: 'olcu', baslik: 'Büyütme ölçüsü', bolumler: ['olcuSecici', 'sss', 'cta'] },
+    { id: 'servisler', baslik: 'Usta ve servisler', bolumler: ['anlasmalar', 'cta'] },
     { id: 'iletisim', baslik: 'İletişim', bolumler: ['iletisim'] },
   ],
-  ekstralar: { hero, olcuSecici },
+  ekstralar: { olcuSecici },
 });

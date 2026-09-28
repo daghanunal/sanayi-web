@@ -1,124 +1,129 @@
+import '../../shared/base.css';
+import './style.css';
 import raw from '../../data/mikron.json';
 import {
-  boot, initSmoothScroll, reducedMotion, gsap, ScrollTrigger, esc, asset,
-  telHref, waHref, mapsHref, mapsEmbed, openStatus, groupedHours, icons, GUNLER, setStoryMode,
+  boot, initSmoothScroll, reducedMotion, gsap, ScrollTrigger, esc, asset, autoHideHeader,
+  telHref, waHref, mapsHref, mapsEmbed, saatListesi, gunDurumu, kisaAdres, acikGunSayisi, yilEki, icons,
 } from '../../shared/core.js';
 
-const d = boot(raw);
+// Ayna (klasik aile): WebGL yok. Kimlik: ayna gibi taşlanmış çelik; açık krom zemin, bor yağı turkuazı,
+// geniş Unbounded başlıklar, yuvarlak (kovan) formlar, mikrometre taksimatı.
+// Hareket az: künye bir kez gelir, kovanın taksimatı bir kez döner ve hon izi çizilir; kaydırmaya bağlı sahne yok.
+const d = boot({ ...raw, preset: 'rektifiye-klasik2' });
 const $ = (s, root = document) => root.querySelector(s);
 const $$ = (s, root = document) => [...root.querySelectorAll(s)];
-const NS = 'http://www.w3.org/2000/svg';
-const nf = new Intl.NumberFormat('tr-TR');
-const mm = (v, dec = 3) => v.toLocaleString('tr-TR', { minimumFractionDigits: dec, maximumFractionDigits: dec });
-const years = new Date().getFullYear() - d.isletme.kurulus;
+const root = document.documentElement;
+if (reducedMotion) root.classList.add('rm');
+
+$('meta[name="description"]')?.setAttribute('content', `${d.isletme.ad}: ${d.isletme.tanim}. ${d.iletisim.adres}. Telefon: ${d.iletisim.telefon}`);
+
+const ad = esc(d.isletme.ad);
+const tel = esc(d.iletisim.telefon);
+const yas = new Date().getFullYear() - d.isletme.kurulus;
+const acikGun = acikGunSayisi(d.saatler);
+const st = gunDurumu(d.saatler);
 const IMG = (n) => asset(`/img/rektifiye-klasik2/${n}.jpg`);
+const pad = (n) => String(n).padStart(2, '0');
 
-function ablative(n) {
-  const ones = n % 10, tens = Math.floor(n / 10) % 10;
-  const byOnes = ['', "'den", "'den", "'ten", "'ten", "'ten", "'dan", "'den", "'den", "'dan"];
-  const byTens = ['', "'dan", "'den", "'dan", "'tan", "'den", "'tan", "'ten", "'den", "'dan"];
-  return ones ? byOnes[ones] : tens ? byTens[tens] : "'den";
-}
+// --- Üst çubuk ------------------------------------------------------------------
 
-// ------------------------------------------------------------------ metinler, linkler
-$$('[data-name]').forEach((el) => (el.textContent = d.isletme.ad));
-$('[data-slogan]').textContent = d.isletme.slogan;
-$('[data-since]').textContent = `Şaşmaz Oto Sanayi · ${d.isletme.kurulus}${ablative(d.isletme.kurulus)} beri`;
-$('[data-tags]').innerHTML = d.hizmetler.slice(0, 3).map((h) => `<li>${esc(h.baslik)}</li>`).join('');
-$('[data-garanti]').textContent = d.garanti;
-$('[data-year]').textContent = new Date().getFullYear();
-$$('[data-address]').forEach((el) => (el.textContent = d.iletisim.adres));
+$('#top').innerHTML = `
+  <a href="#kunye" class="top__brand"><span class="top__mark" aria-hidden="true"></span><span>${ad}</span></a>
+  <nav class="top__nav" aria-label="Bölümler">
+    <a href="#hizmetler">Hizmetler</a><a href="#hakkinda">Hakkında</a><a href="#saatler">Saatler ve konum</a><a href="#iletisim">İletişim</a>
+  </nav>
+  <span class="chip ${st.open ? 'is-open' : ''}">${st.open ? 'Açık' : 'Kapalı'}</span>
+  <a class="top__call" href="${telHref(d)}" aria-label="Ara: ${tel}">${icons.phone}<span>${tel}</span></a>`;
 
-$$('[data-tel]').forEach((a) => {
-  a.href = telHref(d);
-  a.innerHTML = `${icons.phone}<span>${esc(d.iletisim.telefon)}</span>`;
-});
-$$('[data-tel-btn]').forEach((a) => { a.href = telHref(d); a.insertAdjacentHTML('afterbegin', icons.phone); });
-const big = $('[data-tel-big]');
-big.href = telHref(d);
-big.textContent = d.iletisim.telefon;
-$$('[data-wa]').forEach((a) => {
-  a.href = waHref(d); a.target = '_blank'; a.rel = 'noopener';
-  a.insertAdjacentHTML('afterbegin', icons.whatsapp);
-});
-$('[data-maps]').href = mapsHref(d);
+// --- Künye ------------------------------------------------------------------------
 
-const st = openStatus(d.saatler);
-const chip = $('[data-status-chip]');
-chip.classList.toggle('is-open', st.open);
-chip.innerHTML = `<span class="chip__l">${esc(st.text)}</span><span class="chip__s">${st.open ? 'Açık' : 'Kapalı'}</span>`;
-const stEl = $('[data-status]');
-stEl.textContent = st.text;
-stEl.classList.toggle('is-open', st.open);
-
-// Saatler, bugün vurgulu
-const order = [1, 2, 3, 4, 5, 6, 0];
-const todayPos = order.indexOf(new Date().getDay());
-$('[data-hours]').innerHTML = groupedHours(d.saatler).map(([days, val]) => {
-  const [a, b = a] = days.split(' – ');
-  const ia = order.indexOf(GUNLER.indexOf(a)), ib = order.indexOf(GUNLER.indexOf(b));
-  const today = todayPos >= ia && todayPos <= ib;
-  return `<div class="${today ? 'is-today' : ''}"><dt>${esc(days)}${today ? ' · bugün' : ''}</dt><dd>${esc(val)}</dd></div>`;
-}).join('');
-
-// ------------------------------------------------------------------ hero verisi
-const R = d.rapor || {};
-const olculer = d.olculer?.length ? d.olculer : [{ ad: 'Standart', cap: 75, piston: 'STD' }];
-const capStart = olculer[0].cap;
-const nominal = R.nominal ? parseFloat(String(R.nominal).replace(',', '.')) : olculer[Math.min(1, olculer.length - 1)].cap;
-const sinif = (v) => {
-  let best = olculer[0];
-  for (const o of olculer) if (v >= o.cap - 0.0005) best = o;
-  return best.ad === 'Standart' ? 'Standart ölçü' : best.ad;
-};
-$('[data-cap]').textContent = mm(capStart);
-$('[data-cls]').textContent = sinif(capStart);
-$('[data-end-k]').textContent = [R.is, R.olcuSinifi].filter(Boolean).join(' · ');
-$('[data-end-list]').innerHTML = (R.silindirler || []).map((c) =>
-  `<li><span>${esc(c.no)}. silindir</span><b>Ø ${esc(c.olcu)}</b><span>ovalite ${esc(c.ovalite)}</span></li>`).join('');
-
-// Kovan ölçü halkası: mikrometre tamburu gibi 100 çizgi
-const ticks = $('.bore__ticks');
-let tickHTML = '';
+// Kovan ölçü halkası: mikrometre tamburu gibi 100 çizgi.
+let ticks = '';
 for (let i = 0; i < 100; i++) {
   const a = (i / 100) * Math.PI * 2 - Math.PI / 2;
-  const major = i % 10 === 0, mid = i % 5 === 0;
-  const r1 = 51.5, r2 = major ? 57 : mid ? 55.5 : 54;
-  if (major) tickHTML += `<text x="${(Math.cos(a) * 60.5).toFixed(2)}" y="${(Math.sin(a) * 60.5).toFixed(2)}" transform="rotate(${(i * 3.6).toFixed(1)} ${(Math.cos(a) * 60.5).toFixed(2)} ${(Math.sin(a) * 60.5).toFixed(2)})">${i / 2}</text>`;
-  tickHTML += `<line x1="${(Math.cos(a) * r1).toFixed(2)}" y1="${(Math.sin(a) * r1).toFixed(2)}" x2="${(Math.cos(a) * r2).toFixed(2)}" y2="${(Math.sin(a) * r2).toFixed(2)}"${major ? ' class="is-major"' : ''}/>`;
+  const major = i % 10 === 0;
+  const mid = i % 5 === 0;
+  const r1 = 51.5;
+  const r2 = major ? 57 : mid ? 55.5 : 54;
+  const c = (r) => [(Math.cos(a) * r).toFixed(2), (Math.sin(a) * r).toFixed(2)];
+  if (major) {
+    const [tx, ty] = c(60.5);
+    ticks += `<text x="${tx}" y="${ty}" transform="rotate(${(i * 3.6).toFixed(1)} ${tx} ${ty})">${i / 2}</text>`;
+  }
+  const [x1, y1] = c(r1);
+  const [x2, y2] = c(r2);
+  ticks += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}"${major ? ' class="is-major"' : ''}/>`;
 }
-ticks.innerHTML = tickHTML;
-
-// 45° hon izi: iki yönde çapraz çizgiler
-const hatchA = $('.hatch--a'), hatchB = $('.hatch--b');
-let ha = '', hb = '';
+// 45° hon izi: iki yönde çapraz çizgiler.
+let ha = '';
+let hb = '';
 for (let x = -96; x <= 96; x += 8) {
-  ha += `<line x1="${x}" y1="0" x2="${x + 100}" y2="100" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1"/>`;
-  hb += `<line x1="${x}" y1="100" x2="${x + 100}" y2="0" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1"/>`;
+  ha += `<line x1="${x}" y1="0" x2="${x + 100}" y2="100" pathLength="1" stroke-dasharray="1"/>`;
+  hb += `<line x1="${x}" y1="100" x2="${x + 100}" y2="0" pathLength="1" stroke-dasharray="1"/>`;
 }
-hatchA.innerHTML = ha;
-hatchB.innerHTML = hb;
 
-// ------------------------------------------------------------------ hakkında
-const aboutEl = $('[data-about]');
-const words = d.isletme.hakkinda.split(/\s+/);
-const pillAt = { 3: 'ayna', [Math.floor(words.length * 0.62)]: 'krank-3d' };
-aboutEl.innerHTML = words.map((w, i) => {
-  const pill = pillAt[i] ? ` <span class="pill-img w" style="background-image:url('${IMG(pillAt[i])}')" aria-hidden="true"></span>` : '';
-  return `<span class="w">${esc(w)}</span>${pill}`;
-}).join(' ');
+$('#kunye').innerHTML = `
+  <div class="wrap hero__grid">
+    <div class="hero__text">
+      <h1 class="hero__title" id="hero-title"><span class="krom">${ad}</span></h1>
+      <p class="hero__what">${esc(d.isletme.tanim)}</p>
+      <dl class="kunye">
+        <div><dt class="mono">Adres</dt><dd>${esc(kisaAdres(d.iletisim.adres))}</dd></div>
+        <div><dt class="mono">Bugün</dt><dd class="state ${st.open ? 'is-open' : ''}">${esc(st.kunye)}</dd></div>
+        <div><dt class="mono">Telefon</dt><dd><a href="${telHref(d)}">${tel}</a></dd></div>
+      </dl>
+      <div class="hero__actions">
+        <a class="btn btn--ink" href="${telHref(d)}">${icons.phone}<span>Ara</span></a>
+        <a class="btn btn--line" href="${waHref(d)}" target="_blank" rel="noopener">${icons.whatsapp}<span>WhatsApp</span></a>
+        <a class="btn btn--line" href="${mapsHref(d)}" target="_blank" rel="noopener">${icons.pin}<span>Yol tarifi</span></a>
+      </div>
+    </div>
+    <div class="bore" aria-hidden="true">
+      <svg class="bore__ring" viewBox="-60 -60 120 120"><g>${ticks}</g></svg>
+      <div class="bore__win">
+        <img src="${IMG('silindir-ic')}" alt="" width="1280" height="960" fetchpriority="high" />
+        <svg class="bore__hatch" viewBox="0 0 100 100" preserveAspectRatio="none"><g class="hatch hatch--a">${ha}</g><g class="hatch hatch--b">${hb}</g></svg>
+        <div class="bore__glint"></div>
+      </div>
+      <div class="bore__pointer"></div>
+    </div>
+  </div>`;
 
-// ------------------------------------------------------------------ hizmetler
-const svcImgs = ['krank-3d', 'kesit-3d', 'blok', 'kafa', 'kafa', 'blok', 'krank-3d', 'ayna'];
-const svcImg = (i) => IMG(svcImgs[i % svcImgs.length]);
-$('[data-services]').innerHTML = d.hizmetler.map((h, i) => `<li data-i="${i}">
-    <span class="svc__no mono">${String(i + 1).padStart(2, '0')} / ${String(d.hizmetler.length).padStart(2, '0')}</span>
-    <h3 class="svc__t">${esc(h.baslik)}</h3>
-    <span class="svc__tol">${esc(h.tolerans || '')}<small>${esc(h.sure || '')}</small></span>
-    <p class="svc__d">${esc(h.aciklama)}</p>
-    ${i < 3 ? `<span class="svc__thumb" style="background-image:url('${svcImg(i)}')" aria-hidden="true"></span>` : ''}
-  </li>`).join('');
-const svcPhoto = $('[data-svc-img]'), svcCap = $('[data-svc-cap]');
+// --- Hizmetler -----------------------------------------------------------------------
+
+const svcImgs = ['krank-3d', 'kesit-3d', 'blok', 'kafa', 'kafa', 'silindir-ic', 'blok', 'ayna'];
+const svcAlt = {
+  'krank-3d': 'Taşlanmış krank mili (temsilî 3D görsel)',
+  'kesit-3d': 'Kesit: çapraz hon izli silindirler (temsilî 3D görsel)',
+  blok: 'Honlanmış dört silindirli motor bloğu',
+  kafa: 'Silindir kapağı ve eksantrik milleri',
+  'silindir-ic': 'Silindirin içi, hon izleri',
+  ayna: 'Torna aynası ve ayna ayakları',
+};
+const svcImg = (i) => svcImgs[i % svcImgs.length];
+$('#hizmetler').innerHTML = `
+  <div class="wrap services__grid">
+    <div class="services__side">
+      <h2 class="h2" id="isler-t">Hizmetler</h2>
+      <p class="lead">Süreler yaklaşıktır, parçaya göre değişebilir. Fiyat için arayın.</p>
+      <figure class="services__photo">
+        <img data-svc-img src="${IMG(svcImg(0))}" alt="${svcAlt[svcImg(0)]}" width="1600" height="1000" loading="lazy" decoding="async" />
+        <figcaption class="mono" data-svc-cap>${esc(d.hizmetler[0]?.baslik || '')}</figcaption>
+      </figure>
+    </div>
+    <ol class="svc">
+      ${d.hizmetler.map((h, i) => `
+        <li data-i="${i}"${i === 0 ? ' class="is-active"' : ''}>
+          <span class="svc__no mono" aria-hidden="true">${pad(i + 1)} / ${pad(d.hizmetler.length)}</span>
+          <h3 class="svc__t">${esc(h.baslik)}</h3>
+          <span class="svc__time mono"><span class="sr-only">Süre: </span>${esc(h.sure || '')}</span>
+          <p class="svc__d">${esc(h.aciklama)}</p>
+        </li>`).join('')}
+    </ol>
+  </div>`;
+
+const svcPhoto = $('[data-svc-img]');
+const svcCap = $('[data-svc-cap]');
 let svcCur = 0;
 function setSvc(i) {
   if (i === svcCur) return;
@@ -126,250 +131,163 @@ function setSvc(i) {
   $$('.svc li').forEach((li, k) => li.classList.toggle('is-active', k === i));
   svcPhoto.style.opacity = 0;
   setTimeout(() => {
-    svcPhoto.src = svcImg(i);
-    svcPhoto.alt = d.hizmetler[i].baslik;
-    svcCap.textContent = d.hizmetler[i].baslik;
+    const n = svcImg(i);
     svcPhoto.onload = () => (svcPhoto.style.opacity = 1);
+    svcPhoto.src = IMG(n);
+    svcPhoto.alt = svcAlt[n];
+    svcCap.textContent = d.hizmetler[i].baslik;
   }, 180);
 }
-$('.svc li')?.classList.add('is-active');
-svcCap.textContent = d.hizmetler[0]?.baslik || '';
 if (matchMedia('(min-width: 900px)').matches) {
   const io = new IntersectionObserver((es) => es.forEach((e) => e.isIntersecting && setSvc(+e.target.dataset.i)), { rootMargin: '-45% 0px -45% 0px' });
-  $$('.svc li').forEach((li) => { io.observe(li); li.addEventListener('mouseenter', () => setSvc(+li.dataset.i)); });
+  $$('.svc li').forEach((li) => io.observe(li));
 }
 
-// ------------------------------------------------------------------ büyütme halkaları
-const ringsG = $('[data-rings]');
-const nR = olculer.length;
-let rg = '';
-olculer.forEach((o, i) => {
-  const r = 46 + (i * 44) / Math.max(1, nR - 1);
-  rg += `<circle r="${r.toFixed(2)}" pathLength="1" stroke-dasharray="1" stroke-dashoffset="0"/>`;
-});
-for (let i = 0; i < 72; i++) {
-  const a = (i / 72) * Math.PI * 2, r1 = 95, r2 = i % 6 === 0 ? 100 : 97.5;
-  rg += `<line class="rings__tick" x1="${(Math.cos(a) * r1).toFixed(2)}" y1="${(Math.sin(a) * r1).toFixed(2)}" x2="${(Math.cos(a) * r2).toFixed(2)}" y2="${(Math.sin(a) * r2).toFixed(2)}"/>`;
-}
-ringsG.innerHTML = rg;
-$('[data-sizes]').innerHTML = olculer.map((o) =>
-  `<li><b>${esc(o.ad)}</b><span>Ø ${esc(mm(o.cap, 2))} mm</span><span>piston ${esc(o.piston)}</span></li>`).join('');
-const ringEls = $$('circle', ringsG), sizeEls = $$('[data-sizes] li');
-let ringCur = -1;
-function setRing(i) {
-  if (i === ringCur) return;
-  ringCur = i;
-  ringEls.forEach((c, k) => { c.classList.toggle('is-on', k === i); c.classList.toggle('is-past', k < i); });
-  sizeEls.forEach((li, k) => li.classList.toggle('is-on', k === i));
-  $('[data-ring-val]').textContent = mm(olculer[i].cap, 2);
-  $('[data-ring-cls]').textContent = olculer[i].piston === 'STD' ? 'Standart piston' : `Piston ${olculer[i].piston}`;
-}
-setRing(0);
+// --- Hakkında ------------------------------------------------------------------------
 
-// ------------------------------------------------------------------ rapor ve istatistik
-$('[data-sheet-no]').textContent = 'ÖRNEK';
-$('[data-rapor-is]').textContent = R.is || '';
-$('[data-rapor-nom]').innerHTML = `Hedef çap <b>Ø ${esc(R.nominal || '')}</b> · ${esc(R.olcuSinifi || '')}`;
-$('[data-rapor-cyl]').innerHTML = (R.silindirler || []).map((c) => {
-  const ov = parseFloat(String(c.ovalite).replace(',', '.')) || 0;
-  return `<li><span class="n">${esc(c.no)}</span><span class="v">${esc(c.olcu)}</span><span class="o">ovalite ${esc(c.ovalite)}</span>
-    <span class="bar" aria-hidden="true"><i style="transform:scaleX(${Math.min(1, ov / 0.005).toFixed(3)})"></i></span></li>`;
-}).join('');
-$('[data-rapor-notes]').innerHTML = [['Krank', R.krank], ['Planya', R.planya]].filter((x) => x[1])
-  .map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join('');
-$('[data-stats]').innerHTML = d.istatistikler.map((s) => {
-  const val = s.kurulustanHesapla ? years : s.deger;
-  return `<div><dd><span data-count="${val}">${nf.format(val)}</span>${esc(s.sonek)}</dd><dt>${esc(s.etiket)}</dt></div>`;
-}).join('');
-
-// ------------------------------------------------------------------ süreç, galeri, motorlar, yorumlar
-$('[data-steps]').innerHTML = d.surec.map((s, i) => `<li>
-  <span class="steps__n">${String(i + 1).padStart(2, '0')}</span>
-  <h3 class="steps__t">${esc(s.baslik)}</h3><p class="steps__d">${esc(s.aciklama)}</p></li>`).join('');
-
-const extra = [
-  { src: IMG('blok'), alt: 'Yeni honlanmış dört silindirli blok' },
-  { src: IMG('kesit-3d'), alt: 'Kesit: honlanmış silindirler (3D görsel)' },
-  { src: IMG('ayna'), alt: 'Torna aynası ve ayna ayakları' },
-  { src: IMG('kafa'), alt: 'Silindir kapağı ve eksantrik milleri' },
+const galeri = [
+  { src: IMG('blok'), alt: 'Honlanmış dört silindirli motor bloğu', w: 1280, h: 960 },
+  { src: asset('/img/mikron/torna.jpg'), alt: 'Torna tezgâhı ve aynası', w: 1800, h: 1199 },
+  { src: IMG('ayna'), alt: 'Torna aynası ve ayna ayakları', w: 1280, h: 1280 },
+  { src: IMG('kafa'), alt: 'Silindir kapağı ve eksantrik milleri', w: 1280, h: 853 },
 ];
-const gal = [];
-(d.galeri || []).forEach((g, i) => { gal.push(g); if (extra[i]) gal.push(extra[i]); });
-extra.slice((d.galeri || []).length).forEach((g) => gal.push(g));
-$('[data-gallery]').innerHTML = gal.map((g) =>
-  `<figure><img class="g__img" src="${esc(g.src)}" alt="${esc(g.alt)}" loading="lazy" /><figcaption>${esc(g.alt)}</figcaption></figure>`).join('');
+$('#hakkinda').innerHTML = `
+  <div class="wrap about__grid">
+    <div>
+      <h2 class="h2" id="about-t">Hakkında</h2>
+      <p class="about__lead">${ad} ${yilEki(d.isletme.kurulus)} beri Şaşmaz Oto Sanayi Sitesi'nde. ${esc(d.isletme.hakkinda)}</p>
+      <dl class="stats">
+        <div><dd><span data-count="${yas}">${yas}</span> yıl</dd><dt>Şaşmaz Oto Sanayi Sitesi'nde</dt></div>
+        <div><dd><span data-count="${acikGun}">${acikGun}</span> gün</dd><dt>haftada açık</dt></div>
+      </dl>
+    </div>
+    <dl class="facts">
+      ${(d.bilgiler || []).map(([k, v]) => `<div><dt class="mono">${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join('')}
+      ${d.markalar?.length ? `<div><dt class="mono">Sık gelen motorlar</dt><dd><ul class="engines">${d.markalar.map((m) => `<li>${esc(m)}</li>`).join('')}</ul></dd></div>` : ''}
+    </dl>
+  </div>
+  <div class="gallery__track" data-lenis-prevent-touch>
+    ${galeri.map((g) => `<figure><img class="g__img" src="${g.src}" alt="${esc(g.alt)}" width="${g.w}" height="${g.h}" loading="lazy" decoding="async" /><figcaption>${esc(g.alt)}</figcaption></figure>`).join('')}
+  </div>`;
 
-$('[data-engines]').innerHTML = (d.markalar || []).map((m) => `<li>${esc(m)}</li>`).join('');
+// --- Çalışma saatleri ve konum ---------------------------------------------------------
 
-const stars = (n) => Array.from({ length: 5 }, (_, i) => `<span class="${i < n ? '' : 'off'}">${icons.star}</span>`).join('');
-$('[data-score]').textContent = d.puan.ortalama.toLocaleString('tr-TR', { minimumFractionDigits: 1 });
-$('[data-stars]').innerHTML = stars(Math.round(d.puan.ortalama));
-$('[data-score-count]').textContent = `${d.puan.adet} değerlendirme`;
-$('[data-reviews]').innerHTML = d.yorumlar.map((r) => `<li>
-  <span class="rv__stars" aria-label="${r.puan} yıldız">${stars(r.puan)}</span>
-  <p class="rv__t">${esc(r.metin)}</p>
-  <span class="rv__who"><span class="rv__av" aria-hidden="true">${esc(r.ad.trim().charAt(0))}</span><span><b>${esc(r.ad)}</b><span>${esc(r.arac)}</span></span></span></li>`).join('');
+$('#saatler').innerHTML = `
+  <div class="wrap visit__grid">
+    <div class="visit__hours">
+      <h2 class="h2 h2--s" id="konum-t">Çalışma saatleri ve konum</h2>
+      <p class="status ${st.open ? 'is-open' : ''}">${esc(st.metin)}</p>
+      <table class="hours mono">
+        <caption class="sr-only">Çalışma saatleri</caption>
+        <tbody>${saatListesi(d.saatler).map(([g, s]) => `<tr><th scope="row">${esc(g)}</th><td${s === 'Kapalı' ? ' class="off"' : ''}>${esc(s)}</td></tr>`).join('')}</tbody>
+      </table>
+      <p class="visit__addr">${esc(d.iletisim.adres)}</p>
+      <div class="visit__actions">
+        <a class="btn btn--ink" href="${mapsHref(d)}" target="_blank" rel="noopener">${icons.pin}<span>Yol tarifi</span></a>
+        <a class="btn btn--line" href="${telHref(d)}">${icons.phone}<span>${tel}</span></a>
+      </div>
+    </div>
+    <div class="visit__map" data-map><span class="mono">Harita</span></div>
+  </div>`;
 
-// Harita: yaklaşınca yüklenir
+// --- Örnek yorumlar ---------------------------------------------------------------------
+
+const stars = (n) => `<span class="rv__stars" role="img" aria-label="5 üzerinden ${n}">${Array.from({ length: 5 }, (_, i) => `<span class="${i < n ? '' : 'off'}">${icons.star}</span>`).join('')}</span>`;
+$('#yorumlar').innerHTML = `
+  <div class="wrap">
+    <div class="reviews__head">
+      <h2 class="h2" id="yorum-t">Örnek yorumlar</h2>
+      <p class="lead">Buradaki yorumlar örnektir, yerlerine işletmenin gerçek yorumları konur.</p>
+    </div>
+    <ul class="reviews__list" data-lenis-prevent-touch>
+      ${d.yorumlar.map((r) => `
+        <li>
+          ${stars(r.puan)}
+          <p class="rv__t">${esc(r.metin)}</p>
+          <span class="rv__who"><span class="rv__av" aria-hidden="true">${esc(r.ad.trim().charAt(0))}</span><span><b>${esc(r.ad)}</b><span>${esc(r.arac)}</span></span></span>
+        </li>`).join('')}
+    </ul>
+  </div>`;
+
+// --- İletişim ----------------------------------------------------------------------------
+
+$('#iletisim').innerHTML = `
+  <div class="final__ring" aria-hidden="true"></div>
+  <div class="wrap final__in">
+    <h2 class="final__t" id="final-t"><span class="krom krom--dark">İletişim</span></h2>
+    <p class="final__p">Fiyat ve teslim günü için arayın ya da WhatsApp'tan yazın.</p>
+    <div class="final__actions">
+      <a class="btn btn--accent btn--big" href="${telHref(d)}">${icons.phone}<span>${tel}</span></a>
+      <a class="btn btn--line-light btn--big" href="${waHref(d)}" target="_blank" rel="noopener">${icons.whatsapp}<span>WhatsApp</span></a>
+    </div>
+    <p class="final__addr mono">${esc(d.iletisim.adres)}<br>${esc(st.metin)}</p>
+  </div>`;
+
+$('#foot').innerHTML = `
+  <div class="wrap foot__in">
+    <div><p class="foot__name">${ad}</p><p>${esc(d.isletme.tanim)}</p></div>
+    <p>${esc(d.iletisim.adres)}<br><a href="${telHref(d)}">${tel}</a></p>
+    <p class="foot__small mono">© ${new Date().getFullYear()} ${ad}. Fotoğraflar ve 3D görseller temsilîdir. Yorumlar örnektir.</p>
+  </div>`;
+
+// Harita yalnızca yaklaşınca yüklenir.
 const mapBox = $('[data-map]');
 new IntersectionObserver((entries, io) => {
-  if (!entries[0].isIntersecting) return;
+  if (!entries.some((e) => e.isIntersecting)) return;
   io.disconnect();
-  mapBox.innerHTML = `<iframe title="${esc(d.isletme.ad)} konumu" src="${esc(mapsEmbed(d))}" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>`;
-}, { rootMargin: '500px 0px' }).observe(mapBox);
+  mapBox.innerHTML = `<iframe title="${ad} konumu" src="${esc(mapsEmbed(d))}" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>`;
+}, { rootMargin: '600px 0px' }).observe(mapBox);
 
-// ------------------------------------------------------------------ header
-const top = $('.top');
-const hero = $('.hero');
-let heroDark = false;
-let heroEndY = 0;
-function headerState() {
-  const y = window.scrollY;
-  const past = y > heroEndY + 10;
-  top.classList.toggle('is-solid', past);
-  top.classList.toggle('is-dark', heroDark && !past);
-}
-addEventListener('scroll', headerState, { passive: true });
+// --- Hareket -------------------------------------------------------------------------------
 
-// ------------------------------------------------------------------ İMZA: kovan
-const stage = $('.hero__stage');
-const bore = $('.bore'), win = $('.bore__win'), boreImg = $('.bore__img');
-const IMG_W = 1280, IMG_H = 960, BORE_FRAC = 0.86; // kovanın fotoğraf yüksekliğine oranı
-const geo = { s1: 3, k0: 0.6 };
-const zoom = { z: 0 };
-function layoutBore() {
-  const D = bore.offsetWidth;
-  const vw = stage.clientWidth, vh = stage.clientHeight;
-  const cx = bore.offsetLeft + D / 2, cy = bore.offsetTop + D / 2;
-  const need = [2 * Math.max(cx, vw - cx), 2 * Math.max(cy, vh - cy)];
-  // Kutu fotoğrafın kendi oranında: kırpılmadan kovan tam ortada kalsın
-  const W = Math.max(need[0], (need[1] * IMG_W) / IMG_H), H = (W * IMG_H) / IMG_W;
-  Object.assign(boreImg.style, { width: `${W}px`, height: `${H}px`, left: `${D / 2 - W / 2}px`, top: `${D / 2 - H / 2}px`, transformOrigin: `${W / 2}px ${H / 2}px` });
-  const sc = Math.max(W / IMG_W, H / IMG_H);
-  geo.k0 = Math.min(1, (D * 1.04) / (BORE_FRAC * IMG_H * sc));
-  geo.s1 = (Math.hypot(Math.max(cx, vw - cx), Math.max(cy, vh - cy)) * 2) / D + 0.04;
-  applyZoom();
-}
-function applyZoom() {
-  const z = zoom.z;
-  const s = 1 + (geo.s1 - 1) * z;
-  const k = geo.k0 + (1 - geo.k0) * z;
-  win.style.transform = `scale(${s.toFixed(4)})`;
-  boreImg.style.transform = `scale(${(k / s).toFixed(5)})`;
-}
-// Uzun işletme adı: hero metni ölçü kartının altına sığsın (mobil) / taşmasın (masaüstü)
-const heroText = $('.hero__text'), heroTitle = $('.hero__title'), readout = $('.readout'), heroTags = $('.hero__tags');
-function fitHero() {
-  heroTitle.style.fontSize = ''; heroTags.style.display = '';
-  const desk = matchMedia('(min-width: 900px)').matches;
-  heroText.style.width = '';
-  if (desk) {
-    const room = $('.bore__ring').getBoundingClientRect().left - heroText.getBoundingClientRect().left - 24;
-    if (room < heroText.offsetWidth) heroText.style.width = `${Math.max(320, room)}px`;
-  }
-  const fits = () => desk
-    ? heroText.offsetHeight <= stage.clientHeight * 0.6 && heroTitle.offsetHeight <= parseFloat(getComputedStyle(heroTitle).fontSize) * 4.2
-    : heroText.getBoundingClientRect().top >= readout.getBoundingClientRect().bottom + 14;
-  if (fits()) return;
-  if (!desk) { heroTags.style.display = 'none'; if (fits()) return; }
-  let fs = parseFloat(getComputedStyle(heroTitle).fontSize);
-  while (!fits() && fs > 24) { fs -= 2; heroTitle.style.fontSize = `${fs}px`; }
-}
-fitHero();
-document.fonts?.ready.then(fitHero);
-layoutBore();
-addEventListener('resize', () => { fitHero(); layoutBore(); });
-
-const capEl = $('[data-cap]'), clsEl = $('[data-cls]');
-const cap = { v: capStart };
-const setCap = () => { capEl.textContent = mm(cap.v); clsEl.textContent = sinif(cap.v); };
-
-initSmoothScroll();
-ScrollTrigger.config({ ignoreMobileResize: true });
+const topEl = $('#top');
+const phoneMq = matchMedia('(max-width: 899px)');
+let unhide = null;
+const syncHeader = () => {
+  if (phoneMq.matches && !unhide) unhide = autoHideHeader(topEl, { offset: 120 });
+  else if (!phoneMq.matches && unhide) { unhide(); unhide = null; root.style.setProperty('--header-h', `${topEl.offsetHeight}px`); }
+};
+syncHeader();
+phoneMq.addEventListener('change', syncHeader);
+const solid = () => topEl.classList.toggle('is-solid', scrollY > 40);
+addEventListener('scroll', solid, { passive: true });
+solid();
 
 if (reducedMotion) {
   $$('.hatch line').forEach((l) => l.setAttribute('stroke-dashoffset', '0'));
-  cap.v = nominal; setCap();
-  $$('.about__lead .w').forEach((w) => (w.style.opacity = 1));
-  ScrollTrigger.create({ start: 0, end: 'max', onUpdate: headerState });
-  heroEndY = 0;
 } else {
-  const mobile = matchMedia('(max-width: 899px)').matches;
-  const tl = gsap.timeline({
-    defaults: { ease: 'none' },
-    scrollTrigger: {
-      trigger: hero, start: 'top top', end: () => `+=${Math.round(innerHeight * (mobile ? 1.7 : 1.9))}`,
-      pin: true, scrub: 0.5, invalidateOnRefresh: true, anticipatePin: 1,
-      onRefresh: (self) => { heroEndY = self.end; layoutBore(); },
-      onUpdate: (self) => { const dk = self.progress > 0.66; if (dk !== heroDark) { heroDark = dk; headerState(); } },
+  initSmoothScroll();
+
+  // Açılış (bir kez, ~1,2 sn): künye satır satır gelir, taksimat çeyrek tur döner, hon izi iki yönde çizilir.
+  gsap.set('.hatch line', { attr: { 'stroke-dashoffset': 1 } });
+  gsap.timeline({ defaults: { ease: 'power3.out' } })
+    .from('.hero__text > *', { autoAlpha: 0, y: 20, duration: 0.6, stagger: 0.06, clearProps: 'all' }, 0)
+    .from('.bore__win', { scale: 0.92, autoAlpha: 0, duration: 0.8 }, 0.05)
+    .fromTo('.bore__ring', { rotation: 60, transformOrigin: '50% 50%' }, { rotation: 0, duration: 1.3, ease: 'power2.out' }, 0.1)
+    .to('.hatch--a line', { attr: { 'stroke-dashoffset': 0 }, duration: 0.5, stagger: 0.015, ease: 'power1.out' }, 0.35)
+    .to('.hatch--b line', { attr: { 'stroke-dashoffset': 0 }, duration: 0.5, stagger: 0.015, ease: 'power1.out' }, 0.7);
+
+  ScrollTrigger.batch('.svc li, .reviews__list li, .facts > div', {
+    start: 'top 92%',
+    onEnter: (els) => {
+      const yeni = els.filter((e) => !e.dataset.in);
+      yeni.forEach((e) => (e.dataset.in = '1'));
+      if (yeni.length) gsap.from(yeni, { autoAlpha: 0, y: 22, stagger: 0.06, duration: 0.55, ease: 'power2.out', clearProps: 'transform' });
     },
   });
-  tl.to('.hero__cue', { autoAlpha: 0, duration: 0.4 }, 0)
-    .to('.bore__ring', { rotation: -324, duration: 5, transformOrigin: '50% 50%' }, 0)
-    .to(cap, { v: nominal, duration: 4.6, ease: 'power1.inOut', onUpdate: setCap }, 0.2)
-    .to('.hatch--a line', { attr: { 'stroke-dashoffset': 0 }, duration: 1.1, stagger: 0.06, ease: 'power1.out' }, 0.3)
-    .to('.hatch--b line', { attr: { 'stroke-dashoffset': 0 }, duration: 1.1, stagger: 0.06, ease: 'power1.out' }, 1.9)
-    .fromTo('.readout__hon', { autoAlpha: 0.3 }, { autoAlpha: 1, duration: 0.6 }, 3.2)
-    .to('.hero__text', { autoAlpha: 0, y: -50, duration: 1, ease: 'power1.in' }, 5.1)
-    .to('.readout', { autoAlpha: 0, y: 30, duration: 0.9, ease: 'power1.in' }, 5.1)
-    .to(['.bore__ring', '.bore__pointer'], { autoAlpha: 0, duration: 0.8 }, 5.2)
-    .set(['.bore__ring', '.readout'], { display: 'none' }, 6.1)
-    .to(['.bore__hatch', '.bore__glint'], { autoAlpha: 0, duration: 0.9 }, 5.5)
-    .to(zoom, { z: 1, duration: 3, ease: 'power1.in', onUpdate: applyZoom }, mobile ? 5.0 : 5.4)
-    .to(bore, { y: () => (mobile ? stage.clientHeight / 2 - (bore.offsetTop + bore.offsetWidth / 2) : 0), duration: 1.8, ease: 'power2.inOut' }, 5.0)
-    .to('.hero__endbg', { autoAlpha: 1, duration: 0.4 }, mobile ? 7.6 : 8.0)
-    .set(bore, { autoAlpha: 0 }, mobile ? 8.05 : 8.45)
-    .to('.hero__shade', { opacity: 1, duration: 1 }, 7.6)
-    .fromTo('.hero__end', { autoAlpha: 0, y: 40 }, { autoAlpha: 1, y: 0, duration: 1, ease: 'power2.out' }, 7.9)
-    .from('.hero__end-list li', { autoAlpha: 0, y: 20, stagger: 0.12, duration: 0.6 }, 8.2)
-    .to({}, { duration: 0.8 });
-
-  // Telefonda kovan sahnesi boyunca alt çubuk çekilir
-  if (mobile) {
-    ScrollTrigger.create({
-      trigger: hero, start: 'top top-=8', end: () => `+=${Math.round(innerHeight * 1.6)}`,
-      onToggle: (s) => setStoryMode(s.isActive ? true : null),
-    });
-  }
-
-  // Hakkında: kelimeler okundukça koyulaşır
-  gsap.to('.about__lead .w', {
-    opacity: 1, stagger: 0.05, ease: 'none',
-    scrollTrigger: { trigger: '.about__lead', start: 'top 82%', end: 'bottom 50%', scrub: true },
-  });
-
-  // Hizmet satırları
-  ScrollTrigger.batch('.svc li', {
-    start: 'top 90%', once: true,
-    onEnter: (els) => gsap.from(els, { autoAlpha: 0, y: 24, stagger: 0.08, duration: 0.6, ease: 'power2.out' }),
-  });
-
-  // Büyütme halkaları: kaydırdıkça bir üst ölçüye
-  gsap.from(ringEls, { attr: { 'stroke-dashoffset': 1 }, duration: 1.2, stagger: 0.12, ease: 'power2.out', scrollTrigger: { trigger: '.rings', start: 'top 80%', once: true } });
-  ScrollTrigger.create({
-    trigger: '.sizes', start: 'top 45%', end: 'bottom 70%',
-    onUpdate: (self) => setRing(Math.min(nR - 1, Math.floor(self.progress * nR))),
-  });
-
-  // Rapor: çubuklar ve mühür
-  gsap.from('.sheet__cyl .bar i', { scaleX: 0, duration: 0.9, stagger: 0.12, ease: 'power2.out', scrollTrigger: { trigger: '.sheet', start: 'top 70%', once: true } });
-  gsap.from('.sheet__stamp', { scale: 1.8, autoAlpha: 0, rotation: 10, duration: 0.5, ease: 'back.out(2)', delay: 0.6, scrollTrigger: { trigger: '.sheet', start: 'top 70%', once: true } });
-  gsap.from('.sheet', { y: 60, rotation: 2, duration: 1, ease: 'power3.out', scrollTrigger: { trigger: '.sheet', start: 'top 92%', once: true } });
 
   $$('[data-count]').forEach((el) => {
-    const end = +el.dataset.count, o = { v: 0 };
-    ScrollTrigger.create({
-      trigger: el, start: 'top 90%', once: true,
-      onEnter: () => gsap.to(o, { v: end, duration: 1.6, ease: 'power2.out', onUpdate: () => (el.textContent = nf.format(Math.round(o.v))) }),
+    const to = Number(el.dataset.count);
+    const o = { v: 0 };
+    el.textContent = '0';
+    gsap.to(o, {
+      v: to, duration: 1.3, ease: 'power2.out',
+      scrollTrigger: { trigger: el, start: 'top 90%', toggleActions: 'play none none none' },
+      onUpdate: () => (el.textContent = Math.round(o.v)),
     });
   });
 
-  ScrollTrigger.batch('.steps__list li, .reviews__list li, .engines__list li', {
-    start: 'top 92%', once: true,
-    onEnter: (els) => gsap.from(els, { autoAlpha: 0, y: 30, stagger: 0.06, duration: 0.6, ease: 'power2.out' }),
-  });
-
-  gsap.to('.final__ring', { rotation: 90, ease: 'none', scrollTrigger: { trigger: '.final', start: 'top bottom', end: 'bottom top', scrub: true } });
-  ScrollTrigger.create({ start: 0, end: 'max', onUpdate: headerState });
+  gsap.to('.final__ring', { rotation: 60, ease: 'none', scrollTrigger: { trigger: '.final', start: 'top bottom', end: 'bottom top', scrub: true } });
+  addEventListener('load', () => ScrollTrigger.refresh());
+  document.fonts?.ready.then(() => ScrollTrigger.refresh());
 }
-headerState();

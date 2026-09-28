@@ -1,8 +1,6 @@
-// Tav: kaydırmayla oynayan torna filmi.
-// A) Ham çubuk aynada döner, kalem ilerler, tav renkli talaş kıvrılır.
-// B) Profil numuneye göre kademelenir (burç, yatak yeri, diş).
-// C) Işıklar söner, taş gelir, kıvılcım saçılır, yüzey aynalaşır.
-// D) Talaş tünelinden geçilir.
+// Tav: torna sahnesi. Sayfada yalnız açılışta kullanılır: ilerleme 0 → 0,55 zamanla bir kez oynar
+// (ham çubuk aynada döner, kalem ilerler, tav renkli talaş kıvrılır, profil kademelenir), sonra parça döner.
+// Aşağıdaki C (taşlama) ve D (talaş tüneli) aşamaları ilerleme 0,58'in üstündedir; sayfa oraya gitmez.
 // Dışarıya: createScene(canvas, opts) → { setProgress(p), setFinal(t|null), start(), stop(), resize(), renderOnce() }
 import * as THREE from 'three';
 import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js';
@@ -39,7 +37,7 @@ function canvasTex(w, h, draw, srgb = false) {
   return t;
 }
 
-export function createScene(canvas, { phone = false, low = false } = {}) {
+export function createScene(canvas, { phone = false, low = false, sabitKamera = false } = {}) {
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: !low, alpha: true, powerPreference: 'high-performance' });
   const DPR = Math.min(window.devicePixelRatio || 1, low ? 1 : 1.5);
   renderer.setPixelRatio(DPR);
@@ -618,9 +616,10 @@ export function createScene(canvas, { phone = false, low = false } = {}) {
       tunLight.intensity = 14;
     } else {
       // kahraman → kalem takibi → profil → taşlama
-      const w1 = smooth(0.1, 0.2, p) * (1 - smooth(0.38, 0.46, p));
-      const w2 = smooth(0.38, 0.46, p);
-      const w3 = smooth(0.55, 0.64, p);
+      // sabitKamera: künyede kamera açılış kadrajında kalır, iş parçası kadrajın içinde işlenir.
+      const w1 = sabitKamera ? 0 : smooth(0.1, 0.2, p) * (1 - smooth(0.38, 0.46, p));
+      const w2 = sabitKamera ? 0 : smooth(0.38, 0.46, p);
+      const w3 = sabitKamera ? 0 : smooth(0.55, 0.64, p);
       const follow = phone
         ? [V(toolX + 1.6, 2.6, 5.4), V(toolX - 0.2, 0.9, 0)]
         : [V(toolX + 1.5, 2.1, 4.0), V(toolX - 0.6, 0.75, 0)];
@@ -640,10 +639,10 @@ export function createScene(canvas, { phone = false, low = false } = {}) {
     // kadraj kaydırma: masaüstünde nesne sağda (yazı solda), telefonda yazının karşı tarafında
     let ox = 0, oy = 0;
     if (!phone) {
-      ox = fin ? 0.16 : inTunnel ? 0.12 * (1 - tun) : lerp(0.36, 0.2, smooth(0.1, 0.2, p));
+      ox = fin ? 0.16 : inTunnel ? 0.12 * (1 - tun) : sabitKamera ? 0.36 : lerp(0.36, 0.2, smooth(0.1, 0.2, p));
     } else {
-      const heroW = 1 - smooth(0.1, 0.18, p);
-      oy = fin ? -0.12 : inTunnel ? 0 : lerp(-0.16, 0.3, heroW);
+      // Telefonda künye ekranın altında: parça üst yarıda durur.
+      oy = fin ? -0.12 : inTunnel ? 0 : -0.24;
     }
     if (Math.abs(ox - lastOx) > 1e-4 || Math.abs(oy - lastOy) > 1e-4) {
       lastOx = ox;

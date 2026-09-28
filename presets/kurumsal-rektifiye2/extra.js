@@ -1,11 +1,9 @@
 // Tav Rengi — sektör modülleri:
 // (1) tavRengi: kaydırdıkça ısınan krank mili. Sarmış yatağın muylularda bıraktığı saman → bronz → mor → mavi izleri
-//     ve her renkte atölyenin ne yaptığı. Skala düğmeleriyle de gezilir.
-// (2) isFisi: getirilecek parçaları işaretleyin → yapılacak işler, tolerans, süre ve "yanınızda getirin" listesi olan iş fişi;
+//     ve her renkte ne yapıldığı. Skala düğmeleriyle de gezilir.
+// (2) isFisi: getirilecek parçalar işaretlenir → yapılacak işler, süre ve "parçayla birlikte getirilecekler" listesi;
 //     WhatsApp'a hazır mesaj.
-// (3) mesai: ana sayfada saatler, canlı açık/kapalı, yol tarifi.
-// (4) serit: hero altındaki tolerans şeridi.
-import { esc, waHref, telHref, mapsHref, openStatus, groupedHours, icons, gsap, ScrollTrigger, reducedMotion } from '../../shared/core.js';
+import { esc, waHref, telHref, icons, gsap, ScrollTrigger, reducedMotion } from '../../shared/core.js';
 
 const CELIK = [200, 204, 210];
 const hex = (h) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16));
@@ -66,15 +64,13 @@ export const tavRengi = {
       <section class="k-bolum tv" aria-labelledby="tv-baslik">
         <div class="k-kap">
           <div class="tv__bas">
-            <p class="tv__ust">Isı izi okuma</p>
-            <h2 class="k-h2" id="tv-baslik" data-bol>Krank renk verdiyse yatak sarmıştır.</h2>
-            <p class="k-lead">Yağ kesilince muylu ısınır, çelik saman sarısından maviye döner. Kaydırın, izin nasıl yayıldığını görün; her rengin tezgâhta ne demek olduğunu yazdık.</p>
+            <h2 class="k-h2" id="tv-baslik" data-bol>Krankta ısı renkleri</h2>
+            <p class="k-lead">Yağ kesilince muylu ısınır, çelik saman sarısından maviye döner. Aşağıda her rengin ne anlama geldiği ve krank için ne yapıldığı yazıyor.</p>
           </div>
         </div>
         <div class="tv__sahne">
           <div class="tv__krank">${krankSvg()}</div>
           <div class="tv__okuma" aria-live="polite">
-            <span class="tv__derece"><b data-o="derece">20</b><small>°C</small></span>
             <span class="tv__ad" data-o="ad">Temiz çelik</span>
           </div>
         </div>
@@ -83,8 +79,8 @@ export const tavRengi = {
             ${s.map((x, i) => `<button type="button" class="tv__dur" data-i="${i}" style="--r:${esc(x.renk)}"><i></i><span>${esc(x.ad)}</span><em>~${esc(x.derece)} °C</em></button>`).join('')}
             <span class="tv__imlec" aria-hidden="true"></span>
           </div>
-          <p class="tv__metin" data-o="metin">Muylu ölçüsünde, iz yok. Standart kontrolden sonra işe devam.</p>
-          <p class="tv__dip">Sıcaklıklar yaklaşıktır; renk yağa, süreye ve malzemeye göre değişir. Karar her zaman ölçü ve çatlak kontrolüyle verilir.</p>
+          <p class="tv__metin" data-o="metin">Muyluda ısı izi yok. Krank ölçülür, gerekirse taşlanır.</p>
+          <p class="tv__dip">Sıcaklıklar yaklaşıktır; renk yağa, süreye ve malzemeye göre değişir. Karar ölçü ve çatlak kontrolüyle verilir.</p>
         </div>
       </section>`;
   },
@@ -137,12 +133,11 @@ export const tavRengi = {
         derece = Math.round(bu + (sonraki - bu) * f);
         konum = (t / s.length) * 100;
       }
-      o('derece').textContent = derece;
       imlec.style.left = `${konum}%`;
       if (asama !== sonAsama) {
         sonAsama = asama;
         o('ad').textContent = asama < 0 ? 'Temiz çelik' : s[asama].ad;
-        o('metin').textContent = asama < 0 ? 'Muylu ölçüsünde, iz yok. Standart kontrolden sonra işe devam.' : s[asama].metin;
+        o('metin').textContent = asama < 0 ? 'Muyluda ısı izi yok. Krank ölçülür, gerekirse taşlanır.' : s[asama].metin;
         el.style.setProperty('--tv-renk', asama < 0 ? '#c8ccd2' : s[asama].renk);
         durlar.forEach((b, i) => b.classList.toggle('is-aktif', i === asama));
       }
@@ -188,9 +183,8 @@ export const isFisi = {
       <section class="k-bolum fs" aria-labelledby="fs-baslik">
         <div class="k-kap">
           <div class="fs__bas">
-            <p class="tv__ust">İş fişi</p>
-            <h2 class="k-h2" id="fs-baslik" data-bol>Ne getiriyorsunuz? Fişi birlikte yazalım.</h2>
-            <p class="k-lead">Parçaları işaretleyin. Yapılacak işler, çalıştığımız tolerans, ortalama süre ve yanınızda getirmeniz gerekenler fişe düşer. Fişi WhatsApp'tan gönderin, sıranızı ayıralım.</p>
+            <h2 class="k-h2" id="fs-baslik" data-bol>Parça listesi</h2>
+            <p class="k-lead">İşaretlenen parçalara göre yapılacak işler, ortalama süreler ve parçayla birlikte getirilecekler fişte görünür. Fiş WhatsApp'tan gönderilebilir.</p>
           </div>
           <div class="fs__ic">
             <form class="fs__form" onsubmit="return false">
@@ -210,11 +204,11 @@ export const isFisi = {
               <p class="fs__fis-baslik">İş fişi <em data-f="adet">1 parça</em></p>
               <p class="fs__fis-motor" data-f="motor" hidden></p>
               <ol class="fs__satirlar" data-f="satirlar"></ol>
-              <div class="fs__getir"><p>Yanınızda getirin</p><ul data-f="getir"></ul></div>
-              <p class="fs__fiyat">Fiyat: parça ölçülünce, işe başlamadan söylenir.</p>
+              <div class="fs__getir"><p>Parçayla birlikte</p><ul data-f="getir"></ul></div>
+              <p class="fs__fiyat">Fiyat parça ölçüldükten sonra, işe başlamadan söylenir.</p>
               <div class="fs__serit" aria-hidden="true"></div>
               <div class="fs__butonlar">
-                <a class="k-btn fs__gonder" target="_blank" rel="noopener">${icons.whatsapp}<span>Fişi WhatsApp'tan gönder</span></a>
+                <a class="k-btn fs__gonder" target="_blank" rel="noopener">${icons.whatsapp}<span>WhatsApp'tan gönder</span></a>
                 <a class="k-btn k-btn--ikincil" href="${telHref(d)}">${icons.phone}<span>Ara</span></a>
               </div>
             </article>
@@ -239,19 +233,19 @@ export const isFisi = {
               (x) => `<li><p class="fs__satir-ad">${esc(x.ad)}</p><ul>${x.isler
                 .map((ad) => {
                   const h = hiz[ad] || {};
-                  return `<li><span>${esc(ad)}</span><b>${esc(h.tolerans || '')}</b><em>${esc(h.sureHam || '')}</em></li>`;
+                  return `<li><span>${esc(ad)}</span><em>${esc(h.sure || '')}</em></li>`;
                 })
                 .join('')}</ul></li>`
             )
             .join('')
-        : '<li class="fs__bos">Soldan en az bir parça işaretleyin.</li>';
+        : '<li class="fs__bos">Parça seçilmedi.</li>';
       const getir = [...new Set(secili.flatMap((x) => x.getir))];
       f('getir').innerHTML = (getir.length ? getir : ['Parçanın kendisi']).map((g) => `<li>${esc(g)}</li>`).join('');
       const mesaj = [
-        `Merhaba ${d.isletme.ad}, iş getirmek istiyorum.`,
+        `Merhaba ${d.isletme.ad}, parça getirmek istiyorum.`,
         motor ? `Motor: ${motor}` : '',
         ...secili.map((x) => `- ${x.ad}: ${x.isler.join(', ')}`),
-        'Ne zaman getirebilirim?',
+        'Hangi gün getirebilirim?',
       ].filter(Boolean).join('\n');
       gonder.href = waHref(d, mesaj);
       if (anim && !reducedMotion) gsap.from(f('satirlar').children, { x: -14, opacity: 0, duration: 0.4, stagger: 0.05, ease: 'power2.out' });
@@ -265,41 +259,5 @@ export const isFisi = {
         scrollTrigger: { trigger: el.querySelector('.fs__fis'), start: 'top 82%', toggleActions: 'play none none none' },
       });
     }
-  },
-};
-
-// --- Mesai --------------------------------------------------------------------------------
-export const mesai = {
-  render(d) {
-    if (!d.saatler) return '';
-    const st = openStatus(d.saatler);
-    return `
-      <section class="k-bolum ms" aria-labelledby="ms-baslik">
-        <div class="k-kap ms__ic">
-          <div>
-            <p class="tv__ust">Atölye saatleri</p>
-            <h2 class="k-h2" id="ms-baslik" data-bol>Tezgâh bu saatlerde döner.</h2>
-            <p class="ms__durum ${st.open ? 'is-acik' : ''}"><span></span>${esc(st.text)}</p>
-            <p class="ms__adres">${esc(d.iletisim.adres)}</p>
-            <div class="k-butonlar">
-              <a class="k-btn" href="${mapsHref(d)}" target="_blank" rel="noopener">${icons.pin}<span>Yol tarifi</span></a>
-              <a class="k-btn k-btn--ikincil" href="#/iletisim" data-rota="iletisim">Harita ve form</a>
-            </div>
-          </div>
-          <dl class="ms__saatler" data-sira>
-            ${groupedHours(d.saatler).map(([g, s]) => `<div><dt>${esc(g)}</dt><dd>${esc(s)}</dd></div>`).join('')}
-          </dl>
-        </div>
-      </section>`;
-  },
-};
-
-// --- Tolerans şeridi ----------------------------------------------------------------------
-export const serit = {
-  render(d) {
-    const h = (d.hizmetler || []).filter((x) => x.tolerans);
-    if (!h.length) return '';
-    const bir = h.map((x) => `<span>${esc(x.baslik)}</span><b>${esc(x.tolerans)}</b>`).join('');
-    return `<div class="sr" aria-hidden="true"><div class="sr__ic"><div class="sr__grup">${bir}</div><div class="sr__grup">${bir}</div></div></div>`;
   },
 };

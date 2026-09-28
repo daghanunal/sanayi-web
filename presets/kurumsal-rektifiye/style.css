@@ -17,7 +17,7 @@
 
 /* Butonlar ve kartlar: pah kırılmış köşe */
 .k-btn, .k-yorumlar__liste li, .k-aozet__liste li, .k-form, .k-saatler, .k-detay div, .k-dialog, .k-cerez,
-.os__panel, .os__rapor, .k-hero__bilgi, .k-harita {
+.os__panel, .k-hero__bilgi, .k-harita {
   clip-path: polygon(var(--pah-kucuk) 0, 100% 0, 100% calc(100% - var(--pah-kucuk)), calc(100% - var(--pah-kucuk)) 100%, 0 100%, 0 var(--pah-kucuk));
 }
 .k-btn { text-transform: uppercase; letter-spacing: .04em; font-family: var(--k-font-baslik); font-weight: 600; font-size: 15px; }
@@ -27,7 +27,7 @@
 /* Cetvel çizgisi ayırıcılar */
 .k-cizgi, .k-sb__cizgi { height: 10px; background: var(--cetvel), linear-gradient(rgb(232 235 238 / .2), rgb(232 235 238 / .2)) 0 100% / 100% 1px no-repeat; background-size: 100% 6px, 100% 1px; background-repeat: repeat-x, no-repeat; background-position: 0 100%, 0 100%; }
 
-/* Tam hero: koyu fotoğraf, alt kısımda bilgi şeridi, sağ altta ölçü göstergesi */
+/* Tam hero: koyu fotoğraf, alt kısımda künye şeridi */
 [data-hero='tam'] .k-hero__gorsel::after { background: linear-gradient(180deg, rgb(8 9 11 / .55) 0%, rgb(8 9 11 / .25) 38%, rgb(8 9 11 / .92) 100%); }
 @media (max-width: 899px) { [data-hero='tam'] .k-hero__gorsel::after { background: linear-gradient(180deg, rgb(8 9 11 / .6) 0%, rgb(8 9 11 / .55) 40%, rgb(8 9 11 / .95) 100%); } .k-hero__gorsel img { object-position: 35% center; } }
 .k-hero__ust { font-family: var(--mono); font-size: 13px; color: var(--k-vurgu) !important; letter-spacing: .02em; }
@@ -36,21 +36,6 @@
 [data-hero='tam'] .k-hero__bilgi { background: rgb(16 19 22 / .72); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); padding: 0 20px 18px; border-top: 2px solid var(--k-vurgu); }
 .k-hero__bilgi dt { font-family: var(--mono); font-size: 12px; text-transform: uppercase; }
 .k-hero { position: relative; }
-.rk-okuma { display: none; }
-@media (min-width: 1100px) {
-  .rk-okuma {
-    display: grid; gap: 6px; position: absolute; right: max(40px, calc((100vw - var(--k-kap)) / 2)); top: calc(var(--k-ust) + 12vh);
-    padding: 18px 22px; background: rgb(8 9 11 / .7); border: 1px solid rgb(244 197 66 / .45); min-width: 280px;
-    backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
-    clip-path: polygon(14px 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%, 0 14px);
-  }
-}
-.rk-okuma__e { font-family: var(--mono); font-size: 12px; color: var(--k-koyu-soluk); }
-.rk-okuma__d { font-family: var(--mono); font-size: 46px; font-weight: 500; color: var(--k-vurgu); line-height: 1; font-variant-numeric: tabular-nums; }
-.rk-okuma__d i { font-style: normal; color: var(--k-koyu-metin); margin-right: 6px; font-size: 30px; }
-.rk-okuma__d small { font-size: 16px; color: var(--k-koyu-soluk); margin-left: 6px; }
-.rk-okuma__cetvel { height: 14px; background: repeating-linear-gradient(90deg, rgb(244 197 66 / .8) 0 1px, transparent 1px 6px), repeating-linear-gradient(90deg, #f4c542 0 2px, transparent 2px 30px); background-size: 100% 7px, 100% 14px; background-repeat: repeat-x; background-position: 0 100%, 0 100%; }
-
 .k-h2, .k-sb__baslik { text-transform: uppercase; }
 .k-kirinti { font-family: var(--mono); font-size: 13px; }
 .k-hozet__liste { border-top-color: var(--k-vurgu); border-top-width: 2px; }
@@ -87,10 +72,10 @@
     var(--k-gecis);
 }
 
-/* --- Ölçü seçici + rapor --- */
+/* --- Büyütme ölçüsü hesabı --- */
 .os__ust { font-family: var(--mono); font-size: 13px; color: var(--k-vurgu); margin-bottom: 14px; }
 .os__ic { display: grid; gap: 20px; margin-top: 40px; }
-@media (min-width: 1000px) { .os__ic { grid-template-columns: 7fr 5fr; gap: 28px; align-items: start; } }
+.os__ic { max-width: 860px; }
 .os__panel { background: var(--k-yuzey); padding: clamp(20px, 3vw, 36px); display: grid; gap: 26px; min-width: 0; }
 .os__form { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 .os__form label { display: grid; gap: 6px; font-weight: 600; font-size: 14px; color: var(--k-soluk); }
@@ -121,24 +106,7 @@
 .os__not { color: var(--k-soluk); font-size: 16px; max-width: 56ch; }
 .os__gonder { justify-self: start; margin-top: 8px; }
 
-.os__rapor { background: #f1efe8; color: #16181b; padding: 22px; display: grid; gap: 14px; font-size: 15px; position: relative; }
-.os__rapor-bas { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #16181b; padding-bottom: 10px; font: 700 18px var(--k-font-baslik); text-transform: uppercase; letter-spacing: .04em; }
-.os__damga { font: 600 12px var(--mono); color: #b3261e; border: 1.5px solid #b3261e; padding: 2px 8px; transform: rotate(-4deg); }
-.os__rapor-ust { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
-.os__rapor dt { font-size: 12px; color: #5d6166; }
-.os__rapor dd { margin: 0; font-weight: 600; font-family: var(--mono); font-size: 13px; }
-.os__tablo { width: 100%; border-collapse: collapse; font-family: var(--mono); font-size: 13px; }
-.os__tablo th, .os__tablo td { text-align: left; padding: 8px 6px 8px 0; border-bottom: 1px solid rgb(22 24 27 / .15); white-space: nowrap; }
-.os__tablo thead th { font-family: var(--k-font-govde); font-size: 12px; color: #5d6166; font-weight: 600; }
-.os__tablo td b { font-weight: 500; margin-left: 8px; }
-.os__sapma { display: inline-block; vertical-align: middle; position: relative; width: 56px; height: 10px; background: rgb(22 24 27 / .08); }
-.os__sapma::before { content: ''; position: absolute; left: 50%; top: -3px; bottom: -3px; width: 1px; background: #16181b; }
-.os__sapma i { position: absolute; top: 2px; bottom: 2px; background: #2f8f4e; }
-.os__tol { font: 12px var(--mono); color: #5d6166; }
-.os__rapor-alt { display: grid; gap: 8px; }
-.os__rapor-alt dd { font-family: var(--k-font-govde); font-size: 14px; font-weight: 500; }
-.os__rapor footer { font-size: 12px; color: #5d6166; border-top: 1px dashed rgb(22 24 27 / .3); padding-top: 10px; }
-@media (max-width: 420px) { .os__rapor-ust { grid-template-columns: 1fr 1fr; } .os__degerler { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 420px) { .os__degerler { grid-template-columns: 1fr 1fr; } }
 .k-btn:focus-visible { outline: 2px solid currentColor; outline-offset: -5px; }
 
 .k-rakamlar dd { font-size: clamp(34px, 4.4vw, 62px); }

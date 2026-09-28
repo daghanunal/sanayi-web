@@ -112,15 +112,3 @@ export function crankSVG() {
 
 // Telefonda çizimin sol yarısını (ön uç + iki kol) büyük gösteririz.
 export const VIEWBOX = { wide: '20 20 800 380', narrow: '36 26 470 360' };
-
-// Süreç bölümü: zincir ölçülendirme (|—1—|—2—|—3—|—4—|)
-export function chainSVG(n) {
-  const w = 1000;
-  const seg = (w - 40) / n;
-  let s = line(20, 20, w - 20, 20, 'dim chain__line');
-  for (let i = 0; i <= n; i++) {
-    const x = 20 + i * seg;
-    s += line(x, 6, x, 34, 'dim chain__tick');
-  }
-  return s;
-}
