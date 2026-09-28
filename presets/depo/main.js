@@ -431,11 +431,11 @@ function setupScroll() {
 
   // hero: başlık yukarı ve dağılarak çıkar
   gsap.to('.hero', {
-    yPercent: -12, opacity: 0, ease: 'none',
+    yPercent: -12, autoAlpha: 0, ease: 'none',
     scrollTrigger: { trigger: '.ch--hero', start: 'top top', end: '55% top', scrub: true },
   });
   gsap.to('.hero__stock, .hint', {
-    opacity: 0, ease: 'none',
+    autoAlpha: 0, ease: 'none',
     scrollTrigger: { trigger: '.ch--hero', start: '10% top', end: '35% top', scrub: true },
   });
 

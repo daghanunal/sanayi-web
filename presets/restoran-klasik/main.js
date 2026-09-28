@@ -112,15 +112,31 @@ function layout() {
     mainD *= k; satD *= k; ry *= k;
     cy = half * 2 >= 2 * need * k ? (top + bot) / 2 : top + need * k;
   }
+  if (!narrow) {
+    // Tablet yatay (1024–1180): sofra soldaki adın/yazının üstüne taşmasın; gerekirse küçülür.
+    const copy = $('.hero__copy');
+    let copyR = 0;
+    $$('.hero__since, .hero__name span, .hero__alt', copy).forEach((el) => {
+      const r = el.getBoundingClientRect();
+      if (r.width) copyR = Math.max(copyR, r.right - pin.getBoundingClientRect().left);
+    });
+    const lim = copyR + 20;
+    if (cx - 1.15 * mainD < lim) {
+      mainD = Math.max(mainD * 0.72, (cx - lim) / 1.15);
+      satD = mainD * 0.54;
+    }
+  }
+  const rx2 = narrow ? rx : mainD * 0.88;
+  const ry2 = narrow ? ry : mainD * 0.76;
   const far = Math.hypot(w, h) * 0.75;
   L = {
     w, h, cx, cy, mainD, satD, far,
     pos: ANG.map((a) => {
       const t = (a * Math.PI) / 180;
-      return { x: cx + Math.cos(t) * rx, y: cy + Math.sin(t) * ry, dx: Math.cos(t), dy: Math.sin(t) };
+      return { x: cx + Math.cos(t) * rx2, y: cy + Math.sin(t) * ry2, dx: Math.cos(t), dy: Math.sin(t) };
     }),
   };
-  const siniD = narrow ? Math.max(w * 1.1, 2 * ry + satD * 0.55) : 2 * rx + satD * 1.25;
+  const siniD = narrow ? Math.max(w * 1.1, 2 * ry + satD * 0.55) : 2 * rx2 + satD * 1.25;
   L.siniD = siniD;
   Object.assign(sini.style, { width: `${siniD}px`, height: `${siniD}px`, left: `${cx - siniD / 2}px`, top: `${cy - siniD / 2}px` });
   Object.assign(mainPlate.style, { width: `${mainD}px`, height: `${mainD}px`, left: `${cx - mainD / 2}px`, top: `${cy - mainD / 2}px` });
@@ -181,18 +197,19 @@ if (reducedMotion) {
   const upd = () => setTable(m.p, m.g);
   tl.to(m, { p: 1, duration: 0.74, onUpdate: upd }, 0)
     .to('.hero__hint', { opacity: 0, duration: 0.05 }, 0)
-    .to('.hero__foot', { opacity: 0, y: 20, duration: 0.08 }, 0.7)
+    .fromTo('.hero__foot', { autoAlpha: 1, y: 0 }, { autoAlpha: 0, y: 20, duration: 0.08, immediateRender: false }, 0.7)
     .to(m, { g: 1, duration: 0.24, onUpdate: upd }, 0.76)
-    .to('.count', { opacity: 0, duration: 0.06 }, 0.76)
-    .to('.hero__copy', { opacity: 0, y: -30, duration: 0.1 }, 0.8)
-    .fromTo('.hero__end', { opacity: 0, y: 34 }, { opacity: 1, y: 0, duration: 0.08 }, 0.92);
+    .fromTo('.count', { autoAlpha: 1 }, { autoAlpha: 0, duration: 0.06, immediateRender: false }, 0.76)
+    .fromTo('.hero__copy', { autoAlpha: 1, y: 0 }, { autoAlpha: 0, y: -30, duration: 0.1, immediateRender: false }, 0.8)
+    .fromTo('.hero__end', { autoAlpha: 0, y: 34 }, { autoAlpha: 1, y: 0, duration: 0.08 }, 0.92);
 
   // Açılış
   gsap.from('.hero__name span', { yPercent: 60, opacity: 0, duration: 0.9, stagger: 0.1, ease: 'power3.out', delay: 0.05 });
-  gsap.from(['.hero__since', '.hero__foot > *', '.hero__hint', '.count'], { y: 16, opacity: 0, duration: 0.7, stagger: 0.07, ease: 'power2.out', delay: 0.25 });
+  gsap.from(['.hero__since', '.hero__foot > *', '.hero__hint', '.count > *'], { y: 16, opacity: 0, duration: 0.7, stagger: 0.07, ease: 'power2.out', delay: 0.25 });
   gsap.from(mainPlate, { scale: 0.6, opacity: 0, rotate: -60, duration: 1.2, ease: 'power3.out', delay: 0.25 });
   gsap.from(sini, { opacity: 0, duration: 1.1, ease: 'power2.out' });
 }
+document.fonts?.ready.then(() => { layout(); setTable(last.p, last.g); });
 let rw = innerWidth;
 addEventListener('resize', () => {
   if (Math.abs(innerWidth - rw) < 2 && innerWidth < 900) return; // mobil adres çubuğu

@@ -84,7 +84,7 @@ body {
 }
 .top__mark::after { content: ''; position: absolute; width: 11px; height: 3px; background: var(--white); border-radius: 2px; right: -9px; bottom: -3px; transform: rotate(45deg); }
 .top__nav { display: none; gap: 26px; margin-left: auto; font-size: 15px; font-weight: 600; }
-.top__nav a { text-decoration: none; opacity: .82; }
+.top__nav a { text-decoration: none; opacity: .82; display: inline-flex; align-items: center; justify-content: center; min-height: 44px; min-width: 44px; }
 .top__nav a:hover { opacity: 1; color: var(--mint-2); }
 .top__call {
   margin-left: auto; display: none; align-items: center; gap: 9px; min-height: 44px; padding: 0 18px;
@@ -92,7 +92,7 @@ body {
 }
 .top__call svg { width: 17px; height: 17px; }
 @media (min-width: 900px) {
-  .top__nav { display: flex; }
+  .top__nav { display: flex; gap: 16px; }
   .top__call { display: inline-flex; margin-left: 0; }
 }
 
@@ -116,10 +116,24 @@ body {
 .hero { --arch: min(calc(100vw - 16px), 38svh, 420px); }
 /* Telefon: hero bir sütun (başlık, kadran, butonlar); üst üste binen sabit katman yok */
 @media (max-width: 899px) {
-  .hero__pin { display: flex; flex-direction: column; padding: calc(var(--header-h, 64px) + 12px) 0 calc(var(--bar-reserve, 96px) + 4px); box-sizing: border-box; }
-  .hero__copy { position: relative; top: auto; left: auto; right: auto; padding: 0 var(--pad); }
-  .hero__dial { position: relative; z-index: 1; left: auto; top: auto; transform: none; margin: auto; flex: none; }
-  .hero__foot { position: relative; left: auto; right: auto; bottom: auto; padding: 0 var(--pad); }
+  /* GSAP pin, pinlenen öğenin iç boşluğunu sıfırlıyor: boşluklar çocukların kenar payında */
+  .hero__pin { display: flex; flex-direction: column; box-sizing: border-box; }
+  .hero__pin > .hero__copy { position: relative; order: -1; top: auto; left: auto; right: auto; padding: 0 var(--pad); margin-top: calc(var(--header-h, 64px) + 12px); }
+  .hero__pin > .hero__dial { position: relative; z-index: 1; left: auto; top: auto; transform: none; margin: auto; flex: none; }
+  .hero__pin > .hero__foot { position: relative; left: auto; right: auto; bottom: auto; padding: 0 var(--pad); margin-bottom: calc(var(--bar-reserve, 96px) + 4px); }
+}
+/* Tablet/masaüstü: yazı + butonlar solda akışta, kadran sağda akışta (grid); sabit katman yığını yok */
+@media (min-width: 900px) {
+  .hero__pin {
+    display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-rows: minmax(var(--header-h, 72px), 1fr) auto auto 1fr;
+    column-gap: clamp(16px, 3vw, 48px); box-sizing: border-box;
+  }
+  .hero__pin > .hero__copy { position: relative; grid-column: 1; grid-row: 2; top: auto; left: auto; right: auto; bottom: auto; max-width: 44vw; margin-left: var(--pad); }
+  .hero__pin > .hero__foot { position: relative; grid-column: 1; grid-row: 3; left: auto; right: auto; bottom: auto; max-width: 44vw; margin: clamp(22px, 4svh, 40px) 0 0 var(--pad); }
+  /* Son söz kadranın yerinde (sağda) belirir; soldaki butonlarla çakışmaz */
+  .hero__pin > .hero__end { left: calc(44vw + var(--pad) + 16px); right: var(--pad); }
+  .hero__pin > .hero__end .hero__end-t { font-size: clamp(36px, 4.8vw, 84px); }
+  .hero__pin > .hero__dial { position: relative; grid-column: 2; grid-row: 1 / -1; align-self: center; left: auto; right: auto; top: auto; transform: none; margin: calc(var(--header-h, 72px) / 2) calc(var(--pad) - 2vw) 0 0; }
 }
 .arch { overflow: visible; }
 .count {
@@ -149,7 +163,7 @@ body {
 
 .hero__end {
   position: absolute; z-index: 3; left: var(--pad); right: var(--pad); top: 50%; transform: translateY(-50%);
-  text-align: center; opacity: 0; pointer-events: none;
+  text-align: center; opacity: 0; visibility: hidden; pointer-events: none;
 }
 .hero__end-k { font-size: 12px; text-transform: uppercase; letter-spacing: .1em; color: var(--mint-2); display: inline-flex; gap: 8px; align-items: center; }
 .hero__end-k::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: var(--mint); }
@@ -172,7 +186,7 @@ body {
 @keyframes hint { 0%, 100% { transform: scaleY(.4); transform-origin: top; } 50% { transform: scaleY(1); transform-origin: top; } }
 .is-static .hero__img--net { clip-path: none !important; }
 .is-static .arch, .is-static .count { opacity: .0; }
-.is-static .hero__end { opacity: 1; }
+.is-static .hero__end { opacity: 1; visibility: visible; }
 
 @media (max-width: 899px) {
   .arch__nums { display: none; }
@@ -184,6 +198,7 @@ body {
 @media (min-width: 900px) {
   .hero { --arch: min(78vh, 46vw, 760px); }
   .hero__dial { left: auto; right: calc(var(--pad) - 2vw); transform: none; top: calc(50% - var(--arch) / 2 + 20px); }
+  .hero { --arch: min(calc(100svh - var(--header-h, 72px) - 40px), 46vw, 760px); }
   .hero__copy { top: auto; bottom: 36%; max-width: 44vw; }
   .hero__name { font-size: clamp(52px, 6.2vw, 104px); max-width: 11ch; }
   .hero__name.is-long { font-size: clamp(48px, 5.4vw, 92px); }

@@ -23,6 +23,8 @@ const bump = (p, a, b, e = 0.2) => { const w = (b - a) * e; return seg(p, a, a +
 const nf = (n, digits = 0) => n.toLocaleString('tr-TR', { minimumFractionDigits: digits, maximumFractionDigits: digits });
 const weak = (navigator.hardwareConcurrency || 8) <= 4 || (navigator.deviceMemory || 8) <= 4;
 const mobile = () => innerWidth < 760;
+// Dikey tablet: diş biraz yukarıda ve küçük dursun, alttaki durak kartına binmesin
+const tall = () => innerWidth >= 760 && innerHeight > innerWidth * 1.1;
 const lite = weak || innerWidth < 760;
 
 function ablative(n) {
@@ -84,7 +86,7 @@ const TAGS = [
   { id: 'screw', text: F[4].etiket },
   { id: 'bone', text: 'Çene kemiği' },
 ];
-$('[data-tags]').innerHTML = TAGS.map((t) => `<p class="tag ${t.cls || ''}" data-tag="${t.id}"><i></i><span>${esc(t.text)}</span></p>`).join('');
+$('[data-tags]').innerHTML = TAGS.map((t) => `<p class="tag ${t.cls || ''}" data-tag="${t.id}" data-left="${/is-left/.test(t.cls || '') ? 1 : 0}"><i></i><span>${esc(t.text)}</span></p>`).join('');
 const tagEls = Object.fromEntries(TAGS.map((t) => [t.id, $(`[data-tag="${t.id}"]`)]));
 
 // Hakkımızda + rakamlar
@@ -252,6 +254,7 @@ function camPose(p) {
   const m = mobile();
   const out = prev.map((v, j) => L(v, cur[j], t));
   if (m) { out[2] *= 1.62; out[4] = 40; }
+  else if (tall()) out[2] *= 1.14;
   return out;
 }
 
@@ -284,8 +287,8 @@ function filmState(p, time) {
   const tooth = (p >= R.implant[0] ? 1 - out : 1) * (p >= R.ortodonti[0] ? 0 : 1) * toothBack;
   const implant = p >= R.implant[0] && p < R.ortodonti[0] ? seg(kI, 0.04, 0.12) * (1 - seg(kI, 0.93, 1)) : 0;
   const arch = p >= R.ortodonti[0] ? seg(kO, 0, 0.14) : 0;
-  const shiftX = m ? 0 : 0.2;
-  const shiftY = m ? -0.17 : 0;
+  const shiftX = m ? 0 : tall() ? 0.14 : 0.2;
+  const shiftY = m ? -0.17 : tall() ? -0.1 : 0;
   return {
     camAz, camEl, camDist, camY, fov, shiftX: p < R.muayene[0] ? shiftX : shiftX, shiftY,
     tooth, toothY: out * 2.6 + idle * 0.5, rotX: 0.08 + idle * 0.4, rotY,
@@ -326,7 +329,15 @@ const tagsBox = $('[data-tags]');
 function place(el, v, pt) {
   el.style.opacity = v;
   el.style.visibility = v > 0.01 ? 'visible' : 'hidden';
-  if (v > 0.01 && pt) el.style.transform = `translate3d(${pt.x.toFixed(1)}px, ${pt.y.toFixed(1)}px, 0)`;
+  if (v > 0.01 && pt) {
+    el.style.transform = `translate3d(${pt.x.toFixed(1)}px, ${pt.y.toFixed(1)}px, 0)`;
+    // Etiket ekranın kenarından taşmasın (dikey tablette sağ kenar): gerekirse öbür yana dön
+    const sw = el.lastElementChild.offsetWidth;
+    let left = el.dataset.left === '1';
+    if (!left && pt.x + 26 + sw > innerWidth - 8) left = true;
+    else if (left && pt.x - 26 - sw < 8) left = false;
+    el.classList.toggle('is-left', left);
+  }
 }
 
 const topEl = $('[data-top]');

@@ -217,10 +217,12 @@ if (reducedMotion) {
   tl.to(m, { p: 1, duration: 0.78, onUpdate: upd }, 0)
     .to('.hero__hint', { opacity: 0, duration: 0.06 }, 0)
     .to(m, { g: 1, duration: 0.22, onUpdate: upd }, 0.78)
-    .to(['.arch', '.count'], { opacity: 0, scale: 1.08, duration: 0.14 }, 0.8)
+    .fromTo(['.arch', '.count'], { scale: 1 }, { scale: 1.08, duration: 0.14, immediateRender: false }, 0.8)
+    // Kadran ve ad tamamen kaybolduktan sonra son söz gelir (iki yazı üst üste binmesin; görünmez katman dokunma yutmasın)
+    .fromTo('.hero__dial', { autoAlpha: 1 }, { autoAlpha: 0, duration: 0.1, immediateRender: false }, 0.8)
     .to('.hero__veil', { opacity: 1, duration: 0.12 }, 0.88)
-    .fromTo('.hero__end', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.1 }, 0.9)
-    .to('.hero__copy', { opacity: 0, y: -20, duration: 0.1 }, 0.84);
+    .fromTo('.hero__copy', { autoAlpha: 1, y: 0 }, { autoAlpha: 0, y: -20, duration: 0.08, immediateRender: false }, 0.82)
+    .fromTo('.hero__end', { autoAlpha: 0, y: 30 }, { autoAlpha: 1, y: 0, duration: 0.08 }, 0.91);
 
   // Açılış
   gsap.from('.hero__name', { y: 40, opacity: 0, duration: 0.9, ease: 'power3.out', delay: 0.05 });

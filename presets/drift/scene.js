@@ -645,13 +645,29 @@ export async function createStage(canvas, { ad, olcu, since }) {
 
     // Parça etiketleri: parçanın noktası ekrana izdüşürülür
     if (p.labels && labelEls) {
+      const placed = [];
       for (const [id, el] of labelEls) {
         if (!wheel.anchor(id, tmpV)) continue;
         let [x, y] = project(tmpV);
         x = Math.min(width - 14, Math.max(14, x));
-        el.classList.toggle('is-left', x > width * 0.6);
+        const left = x > width * 0.6;
+        el.classList.toggle('is-left', left);
         el.style.transform = `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, 0)`;
+        const box = el.lastElementChild;
+        const w = box.offsetWidth, h = box.offsetHeight;
+        if (w && h) placed.push({ box, y, l: left ? x - 20 - w : x + 20, r: left ? x - 20 : x + 20 + w, h });
       }
+      // Kutular birbirinin üstüne binmesin (iPad yatayda jant/bijon): alttakini aşağı it
+      placed.sort((a, b) => a.y - b.y);
+      placed.forEach((a, i) => {
+        let top = a.y - 16;
+        for (let j = 0; j < i; j++) {
+          const b = placed[j];
+          if (a.l < b.r && a.r > b.l && top < b.top + b.h + 6) top = b.top + b.h + 6;
+        }
+        a.top = top;
+        a.box.style.top = `${(top - a.y).toFixed(1)}px`;
+      });
     }
   }
 

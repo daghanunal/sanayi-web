@@ -73,13 +73,13 @@ body {
 .top__mark i { width: 3px; background: currentColor; border-radius: 2px; }
 .top__mark i:last-child { background: var(--green); }
 .top__nav { display: none; gap: 26px; font-size: 14px; font-weight: 500; }
-.top__nav a { text-decoration: none; opacity: .85; }
+.top__nav a { text-decoration: none; opacity: .85; display: inline-flex; align-items: center; justify-content: center; min-height: 44px; min-width: 44px; }
 .top__nav a:hover { opacity: 1; color: var(--green); }
 .top__call { display: none; }
 @media (min-width: 900px) {
-  .top__nav { display: flex; }
+  .top__nav { display: flex; gap: 16px; }
   .top__call {
-    display: inline-flex; align-items: center; gap: 8px; min-height: 42px; padding: 0 18px;
+    display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 18px;
     border-radius: 999px; background: var(--green-2); color: var(--petrol); text-decoration: none; font-weight: 700; font-size: 15px;
   }
   .top__call svg { width: 17px; height: 17px; }
@@ -113,14 +113,14 @@ body {
 .hero__b { bottom: 168px; opacity: 0; visibility: hidden; }
 .hero__eyebrow { font-size: 12px; text-transform: uppercase; letter-spacing: .16em; color: rgb(255 255 255 / .85); }
 .hero__name {
-  margin-top: 14px; font: 900 clamp(76px, 25vw, 250px)/.8 var(--display); text-transform: uppercase;
+  margin-top: 14px; font: 900 clamp(76px, 25vw, 250px)/.92 var(--display); text-transform: uppercase;
   letter-spacing: -.01em; display: flex; flex-wrap: wrap; column-gap: .18em;
   clip-path: inset(-.2em -.1em 0 -.1em);
 }
 .hero__name span { display: inline-block; padding-top: .1em; }
 .hero__name span:last-child { color: var(--green-2); }
 .hero__name.is-long { font-size: clamp(56px, 17vw, 190px); }
-.hero__q { margin-top: 18px; max-width: 30ch; font-size: 18px; line-height: 1.4; font-weight: 500; text-shadow: 0 1px 12px rgb(0 0 0 / .45); }
+.hero__q { margin-top: clamp(18px, 3.5vw, 32px); max-width: 30ch; font-size: 18px; line-height: 1.4; font-weight: 500; text-shadow: 0 1px 12px rgb(0 0 0 / .45); }
 .hero__answer { margin-top: 14px; font: 800 clamp(40px, 11.5vw, 108px)/.9 var(--display); text-transform: uppercase; max-width: 15ch; text-wrap: balance; text-shadow: 0 2px 24px rgb(0 0 0 / .35); }
 .hero__facts { display: flex; gap: 10px; margin-top: 20px; flex-wrap: wrap; }
 .hero__facts li { display: flex; flex-direction: column; padding: 10px 14px; border-radius: 10px; background: rgb(12 42 46 / .6); box-shadow: inset 0 0 0 1px rgb(255 255 255 / .18); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
@@ -143,15 +143,23 @@ body {
   .hero__cta { display: flex; }
   .hero__q { font-size: 21px; }
 }
+/* Kısa yatay ekran (iPad yatay): dev ad ekran yüksekliğine göre; soru ve butonlar ada binmez */
+@media (min-width: 900px) and (max-height: 860px) {
+  .hero__a { margin-top: calc(var(--header-h, 72px) + 24px); }
+  .hero__name { font-size: clamp(76px, 18svh, 250px); }
+  .hero__name.is-long { font-size: clamp(56px, 13.5svh, 190px); }
+  .hero__answer { font-size: clamp(40px, 10svh, 96px); }
+  .hero__b { bottom: 116px; }
+}
 
 /* --- Rakamlar ------------------------------------------------------------------ */
 .stats { background: var(--petrol); color: var(--alu); padding: 8px 0 0; }
 .stats__list { display: grid; grid-template-columns: 1fr 1fr; max-width: var(--max); margin: 0 auto; }
 .stat { padding: 26px var(--gut) 28px; border-top: 1px solid rgb(255 255 255 / .12); }
 .stat:nth-child(odd) { border-right: 1px solid rgb(255 255 255 / .12); }
-.stat__num { font: 800 clamp(54px, 15vw, 110px)/.85 var(--display); display: flex; align-items: baseline; padding-top: .08em; }
+.stat__num { font: 800 clamp(54px, 15vw, 110px)/1.12 var(--display); display: flex; align-items: baseline; }
 .stat__num span { color: var(--green-2); font-size: .55em; margin-left: 2px; }
-.stat__lbl { margin-top: 8px; font-size: 14px; color: rgb(226 230 228 / .75); }
+.stat__lbl { margin-top: 10px; font-size: 14px; color: rgb(226 230 228 / .75); }
 @media (min-width: 900px) {
   .stats__list { grid-template-columns: repeat(4, 1fr); }
   .stat { border-right: 1px solid rgb(255 255 255 / .12); padding: 44px 32px; }
