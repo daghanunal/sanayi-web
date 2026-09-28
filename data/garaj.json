@@ -3,10 +3,15 @@
   "isletme": {
     "ad": "Demirhan Motor",
     "sektor": "Motor, Mekanik ve Şanzıman",
-    "slogan": "Motor sesinden anlarız.",
+    "tanim": "Motor, şanzıman ve mekanik onarım",
     "kurulus": 1996,
-    "hakkinda": "1996'da tek kanallı küçük bir dükkânda başladık. Bugün aynı işi, aynı titizlikle, daha geniş bir atölyede yapıyoruz: motoru açmadan önce dinliyor, ölçüyor, ne olduğunu size gösteriyoruz. Parça değiştirmeden önce mutlaka haber veririz."
+    "hakkinda": "Benzinli ve dizel binek araçlarla hafif ticari araçların motor ve mekanik arızalarına bakılır. Motor revizyonunun yanı sıra silindir kapağı, triger, şanzıman, debriyaj, yürüyen aksam ve periyodik bakım işleri de yapılır."
   },
+  "bilgiler": [
+    ["Araçlar", "Benzinli, dizel ve LPG'li binek araçlar, hafif ticari araçlar"],
+    ["Atölye", "Lift, motor tezgâhı, kompresyon test cihazı, arıza tespit cihazı"],
+    ["Randevu", "Arıza tespiti ve periyodik bakım için randevu gerekmez. Motor revizyonu ve şanzıman işleri randevuyla yapılır."]
+  ],
   "iletisim": {
     "telefon": "0532 555 12 34",
     "whatsapp": "905325551234",
@@ -15,26 +20,64 @@
   },
   "saatler": [null, "08:30-19:00", "08:30-19:00", "08:30-19:00", "08:30-19:00", "08:30-19:00", "09:00-16:00"],
   "hizmetler": [
-    { "baslik": "Motor revizyonu", "aciklama": "Silindir honlama, piston-segman, kol ve ana yatak değişimi. Motor tezgâhta ölçülerek toplanır.", "sure": "3-5 gün" },
-    { "baslik": "Silindir kapak işleri", "aciklama": "Conta yakma, kapak planya, supap alıştırma ve kılavuz değişimi.", "sure": "1-2 gün" },
-    { "baslik": "Triger ve zincir seti", "aciklama": "Kayış, zincir, gergi ve devirdaim değişimi; ayarlar üretici değerlerine göre yapılır.", "sure": "Aynı gün" },
-    { "baslik": "Şanzıman ve debriyaj", "aciklama": "Manuel ve otomatik şanzıman tamiri, debriyaj seti ve volan değişimi.", "sure": "1-3 gün" },
-    { "baslik": "Yağ ve periyodik bakım", "aciklama": "Yağ, filtreler, buji ve sıvılar. Bakım kaydınız dosyanızda tutulur.", "sure": "1 saat" },
-    { "baslik": "Yürüyen aksam", "aciklama": "Amortisör, rotil, salıncak, aks ve fren sistemi kontrolü ve değişimi.", "sure": "Aynı gün" },
-    { "baslik": "Enjektör ve yakıt sistemi", "aciklama": "Enjektör test ve temizliği, yakıt pompası, dizel ve benzinli sistemler.", "sure": "Aynı gün" },
-    { "baslik": "Hararet ve soğutma", "aciklama": "Radyatör, termostat, fan ve sızıntı testi. Hararetin sebebini bulmadan parça değiştirmeyiz.", "sure": "Aynı gün" }
+    {
+      "baslik": "Motor revizyonu",
+      "kisa": "Piston, segman ve yatak değişimi",
+      "aciklama": "Motor sökülür, bütün parçaları tek tek ölçülür. Silindirler honlanır; piston, segman ve yataklar değiştirilip motor tezgâhta toplanır.",
+      "sure": "3–5 gün"
+    },
+    {
+      "baslik": "Silindir kapağı",
+      "kisa": "Kapak contası, planya ve supap işleri",
+      "aciklama": "Yanan silindir kapak contası değiştirilir, eğilen kapak planyaya verilir. Supaplar alıştırılır, gerekirse supap lastikleri de yenilenir.",
+      "sure": "1–2 gün"
+    },
+    {
+      "baslik": "Triger ve zincir seti",
+      "kisa": "Kayış, zincir, gergi ve devirdaim",
+      "aciklama": "Triger kayışı ya da zinciri gergi ve rulmanlarıyla birlikte değiştirilir, devirdaim de aynı anda yenilenir. Zamanlama üretici değerine göre ayarlanır.",
+      "sure": "Aynı gün"
+    },
+    {
+      "baslik": "Şanzıman ve debriyaj",
+      "kisa": "Manuel ve otomatik şanzıman, debriyaj seti",
+      "aciklama": "Manuel ve otomatik şanzımanlar sökülüp onarılır. Debriyaj seti ve çift kütleli volan da değiştirilir.",
+      "sure": "1–3 gün"
+    },
+    {
+      "baslik": "Periyodik bakım",
+      "kisa": "Yağ, filtreler, buji ve sıvılar",
+      "aciklama": "Motor yağı ve filtreler değiştirilir, bujiler ve sıvılar kontrol edilir. Yapılan bakım aracın kaydına işlenir.",
+      "sure": "1 saat"
+    },
+    {
+      "baslik": "Yürüyen aksam ve fren",
+      "kisa": "Amortisör, rotil, salıncak ve fren",
+      "aciklama": "Amortisör, rotil, salıncak burcu ve aks körükleri kontrol edilir, aşınanlar değiştirilir. Fren balatası ve diskleri de ölçülür.",
+      "sure": "Aynı gün"
+    },
+    {
+      "baslik": "Enjektör ve yakıt sistemi",
+      "kisa": "Enjektör testi ve yakıt pompası",
+      "aciklama": "Benzinli ve dizel araçlarda enjektörler test edilip temizlenir. Yakıt pompası ve yakıt basıncı da kontrol edilir.",
+      "sure": "Aynı gün"
+    },
+    {
+      "baslik": "Hararet ve soğutma",
+      "kisa": "Radyatör, termostat, fan ve devirdaim",
+      "aciklama": "Soğutma sistemi basınç testiyle kontrol edilir, su kaçağının yeri bulunur. Radyatör, termostat, fan ve devirdaim arızaları giderilir.",
+      "sure": "Aynı gün"
+    }
   ],
   "surec": [
-    { "baslik": "Dinliyoruz", "aciklama": "Aracı çalıştırır, sesi dinler, arıza tespit cihazıyla hata kayıtlarını okuruz." },
-    { "baslik": "Fiyatı konuşuruz", "aciklama": "Ne yapılacağını, parça ve işçilik fiyatını baştan söyleriz. Onayınız olmadan başlamayız." },
-    { "baslik": "Onarırız", "aciklama": "Çıkan eski parçaları saklarız; isterseniz size gösteririz." },
-    { "baslik": "Yolda deneriz", "aciklama": "Teslimden önce test sürüşü yapar, son kontrolü birlikte yaparız." }
+    { "baslik": "Arıza tespiti", "aciklama": "Motor çalışırken dinlenir, arıza tespit cihazıyla hata kayıtları okunur." },
+    { "baslik": "Bilgi", "aciklama": "Yapılacak iş ve teslim zamanı araç sahibine söylenir." },
+    { "baslik": "Onarım", "aciklama": "Araç sahibi onay verince iş yapılır, sökülen parçalar kendisine geri verilir." },
+    { "baslik": "Yol testi ve teslim", "aciklama": "Araç yol testinden sonra teslim edilir." }
   ],
   "istatistikler": [
-    { "deger": 30, "sonek": "", "etiket": "yıldır Şaşmaz'da" },
-    { "deger": 18500, "sonek": "+", "etiket": "araç teslim edildi" },
-    { "deger": 1200, "sonek": "+", "etiket": "motor revizyonu" },
-    { "deger": 1, "sonek": " yıl", "etiket": "işçilik garantisi" }
+    { "deger": 30, "etiket": "Şaşmaz Oto Sanayi Sitesi'nde", "birim": "YIL", "sonek": " yıl", "kurulustanHesapla": true },
+    { "deger": 6, "etiket": "haftada açık", "birim": "GÜN", "sonek": " gün", "saatlerdenHesapla": true }
   ],
   "markalar": ["Renault", "Fiat", "Volkswagen", "Ford", "Toyota", "Hyundai", "Opel", "Peugeot", "Dacia", "Skoda"],
   "galeri": [
@@ -44,13 +87,11 @@
     { "src": "/img/garaj/yag.jpg", "alt": "Motora yeni yağ dolduruluyor" },
     { "src": "/img/garaj/aletler.jpg", "alt": "Tezgâh üzerindeki anahtar takımı" }
   ],
-  "puan": { "ortalama": 4.9, "adet": 214 },
   "yorumlar": [
-    { "ad": "Mehmet K.", "puan": 5, "metin": "Başka yerde motor gitti dediler. Burada conta yaktığını bulup iki günde teslim ettiler. Çıkan parçaları da gösterdiler.", "arac": "2014 Megane" },
-    { "ad": "Serkan A.", "puan": 5, "metin": "Fiyatı baştan söylediler, sonunda bir kuruş fazla çıkmadı. Triger setini aynı gün yaptılar.", "arac": "2017 Egea" },
-    { "ad": "Ayşe D.", "puan": 5, "metin": "Arabadan anlamadığım belli, yine de her şeyi sabırla anlattılar. Kandırılmadığımı bilmek güzel.", "arac": "2019 Corolla" },
-    { "ad": "Hakan T.", "puan": 4, "metin": "Şanzıman işi bir gün uzadı ama arayıp haber verdiler. İşçilik temiz, araç ilk günkü gibi.", "arac": "2012 Passat" },
-    { "ad": "Emre Y.", "puan": 5, "metin": "Ticari araçla ekmek parası kazanıyorum; beni bekletmeden araya aldılar. Yıllardır buraya geliyorum.", "arac": "2016 Transit" }
-  ],
-  "garanti": "Yapılan işçiliğe 1 yıl garanti."
+    { "ad": "Mehmet K.", "puan": 5, "metin": "Başka bir yerde motor gitti demişlerdi. Burada silindir kapak contasının yandığını buldular, iki gün sonra aracı teslim aldım.", "arac": "2014 Renault Megane" },
+    { "ad": "Serkan A.", "puan": 5, "metin": "Triger setini devirdaimle birlikte aynı gün değiştirdiler. Sabah bıraktım, akşam aldım.", "arac": "2017 Fiat Egea" },
+    { "ad": "Ayşe D.", "puan": 5, "metin": "Periyodik bakıma götürdüm. Değişen filtreleri gösterip bir sonraki bakımın kaçıncı kilometrede olduğunu yazdılar.", "arac": "2019 Toyota Corolla" },
+    { "ad": "Hakan T.", "puan": 4, "metin": "Şanzıman işi bir gün uzadı ama arayıp haber verdiler. Vitesler artık rahat geçiyor.", "arac": "2012 Volkswagen Passat" },
+    { "ad": "Emre Y.", "puan": 5, "metin": "Ticari araçla çalışıyorum. Debriyaj setini aynı gün değiştirdiler, ertesi sabah işe çıkabildim.", "arac": "2016 Ford Transit" }
+  ]
 }

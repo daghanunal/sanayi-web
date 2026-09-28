@@ -169,7 +169,7 @@ export function createScene(canvas, { reduced = false } = {}) {
     const aspect = innerWidth / innerHeight;
     return {
       hero: mobile
-        ? { t: new THREE.Vector3(HB.x, HB.y - 0.95, HB.z), d: 6.6, az: 0, el: 4 }
+        ? { t: new THREE.Vector3(HB.x, HB.y - 1.85, HB.z), d: 9, az: 0, el: 4 } // künye uzun: saplama üst bantta, altı kırmızı perdeyle örtülür
         : { t: new THREE.Vector3(HB.x - 1.85, HB.y - 0.05, HB.z), d: 6.4, az: 0, el: 4 },
       serv: mobile
         ? { t: new THREE.Vector3(0.2, -2.4, 0), d: 27, az: 52, el: 24 }

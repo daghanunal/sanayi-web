@@ -1,292 +1,218 @@
 import raw from '../../data/garaj.json';
 import {
-  boot, initSmoothScroll, reducedMotion, gsap, ScrollTrigger, asset,
-  telHref, waHref, mapsHref, mapsEmbed, openStatus, groupedHours, icons,
+  boot, initSmoothScroll, reducedMotion, gsap, ScrollTrigger, asset, autoHideHeader, esc,
+  telHref, waHref, mapsHref, mapsEmbed, saatListesi, gunDurumu, kisaAdres, acikGunSayisi, yilEki, icons,
 } from '../../shared/core.js';
-import { SplitText } from 'gsap/SplitText';
-import { createEngine } from './engine.js';
 
-gsap.registerPlugin(SplitText);
-
+// Garaj (klasik aile): WebGL yok. Kimlik: yağlı atölye karanlığı, kızgın metal sarısı, Big Shoulders.
+// Hareket az: künye bir kez gelir, hizmet satırlarının üst çizgisi kor gibi yanar, fotoğraf pencere gibi açılır.
 const d = boot(raw);
 const $ = (s, root = document) => root.querySelector(s);
 const $$ = (s, root = document) => [...root.querySelectorAll(s)];
-const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
-const nf = new Intl.NumberFormat('tr-TR');
-const years = new Date().getFullYear() - d.isletme.kurulus;
+const root = document.documentElement;
+if (reducedMotion) root.classList.add('no-motion');
 
-// --- Metin ve linkler ----------------------------------------------------
+const ad = esc(d.isletme.ad);
+const tel = esc(d.iletisim.telefon);
+const yas = new Date().getFullYear() - d.isletme.kurulus;
+const acikGun = acikGunSayisi(d.saatler);
+const st = gunDurumu(d.saatler);
+const img = (p) => asset(p);
 
-$$('[data-name]').forEach((el) => (el.textContent = d.isletme.ad));
-$('[data-slogan]').textContent = d.isletme.slogan;
-$('[data-since]').textContent = `${d.isletme.kurulus}'dan beri Şaşmaz Oto Sanayi'de`;
-$('[data-years]').textContent = years;
-$('[data-hakkinda]').textContent = d.isletme.hakkinda;
-$('[data-garanti]').textContent = `Onayınız olmadan tek parça değişmez. ${d.garanti}`;
-$('[data-year]').textContent = new Date().getFullYear();
-$$('[data-address]').forEach((el) => (el.textContent = d.iletisim.adres));
+// --- Üst çubuk ------------------------------------------------------------------
 
-$$('[data-tel]').forEach((a) => {
-  a.href = telHref(d);
-  a.innerHTML = `${icons.phone}<span>${esc(d.iletisim.telefon)}</span>`;
-});
-$$('[data-tel-btn]').forEach((a) => {
-  a.href = telHref(d);
-  if (!a.textContent.trim()) a.textContent = d.iletisim.telefon;
-  a.insertAdjacentHTML('afterbegin', icons.phone);
-});
-$$('[data-wa]').forEach((a) => {
-  a.href = waHref(d);
-  a.target = '_blank';
-  a.rel = 'noopener';
-  a.insertAdjacentHTML('afterbegin', icons.whatsapp);
-});
-$('[data-maps]').href = mapsHref(d);
+$('#top').innerHTML = `
+  <a href="#kunye" class="top__brand">${ad}</a>
+  <nav class="top__nav" aria-label="Bölümler">
+    <a href="#hizmetler">Hizmetler</a><a href="#hakkinda">Hakkında</a><a href="#saatler">Saatler ve konum</a><a href="#iletisim">İletişim</a>
+  </nav>
+  <p class="status status--top ${st.open ? 'is-open' : ''}"><span class="status__l">${esc(st.metin)}</span><span class="status__s">${st.open ? 'Açık' : 'Kapalı'}</span></p>
+  <a class="top__call" href="${telHref(d)}" aria-label="Ara: ${tel}">${icons.phone}<span>${tel}</span></a>`;
 
-// Açık / kapalı
-const st = openStatus(d.saatler);
-$$('[data-status]').forEach((el) => {
-  el.textContent = st.text;
-  el.classList.toggle('is-open', st.open);
-});
+// --- Künye ------------------------------------------------------------------------
 
-// İstatistikler (kuruluş yılı URL ile değişebilir, o yüzden ilk kalemi hesaplarız)
-$('[data-stats]').innerHTML = d.istatistikler
-  .map((s, i) => {
-    const val = i === 0 && /yıl/.test(s.etiket) ? years : s.deger;
-    return `<div class="stat"><dt>${esc(s.etiket)}</dt><dd><span data-count="${val}">${nf.format(val)}</span>${esc(s.sonek)}</dd></div>`;
-  })
-  .join('');
+$('#kunye').innerHTML = `
+  <figure class="hero__photo">
+    <img src="${img('/img/garaj/lift.jpg')}" alt="Loş atölyede lifte kaldırılmış aracın altında çalışan usta" width="933" height="1400" fetchpriority="high" />
+  </figure>
+  <div class="hero__glow" aria-hidden="true"></div>
+  <div class="hero__copy">
+    <h1 class="hero__title" id="hero-title">${ad}</h1>
+    <p class="hero__what">${esc(d.isletme.tanim)}</p>
+    <dl class="kunye">
+      <div><dt>Adres</dt><dd>${esc(kisaAdres(d.iletisim.adres))}</dd></div>
+      <div><dt>Bugün</dt><dd class="status ${st.open ? 'is-open' : ''}">${esc(st.kunye)}</dd></div>
+      <div><dt>Telefon</dt><dd><a href="${telHref(d)}">${tel}</a></dd></div>
+    </dl>
+    <div class="hero__actions">
+      <a class="btn btn--molten" href="${telHref(d)}">${icons.phone}<span>Ara</span></a>
+      <a class="btn btn--ghost" href="${waHref(d)}" target="_blank" rel="noopener">${icons.whatsapp}<span>WhatsApp</span></a>
+      <a class="btn btn--ghost" href="${mapsHref(d)}" target="_blank" rel="noopener">${icons.pin}<span>Yol tarifi</span></a>
+    </div>
+  </div>`;
 
-$('[data-services]').innerHTML = d.hizmetler
-  .map(
-    (h) => `<li class="svc">
-      <h3 class="svc__t">${esc(h.baslik)}</h3>
-      <p class="svc__d">${esc(h.aciklama)}</p>
-      <p class="svc__time"><span class="sr-only">Süre: </span>${esc(h.sure)}</p>
-    </li>`
-  )
-  .join('');
+// --- Hizmetler ----------------------------------------------------------------------
 
-$('[data-process]').innerHTML = d.surec
-  .map(
-    (s, i) => `<li class="step">
-      <span class="step__n" aria-hidden="true">${i + 1}</span>
-      <h3 class="step__t">${esc(s.baslik)}</h3>
-      <p class="step__d">${esc(s.aciklama)}</p>
-    </li>`
-  )
-  .join('');
+$('#hizmetler').innerHTML = `
+  <div class="wrap services__grid">
+    <div class="services__side">
+      <h2 id="services-h" class="h2">Hizmetler</h2>
+      <p class="services__note">Süreler yaklaşıktır, araca göre değişebilir. Fiyat ve randevu için arayın.</p>
+      <figure class="services__photo">
+        <img src="${img('/img/garaj/kapak-montaj.jpg')}" alt="Eldivenli usta silindir kapağındaki supap mekanizması üzerinde çalışıyor" width="866" height="1300" loading="lazy" decoding="async" />
+      </figure>
+    </div>
+    <ul class="services__list">
+      ${d.hizmetler.map((h) => `
+        <li class="svc">
+          <h3 class="svc__t">${esc(h.baslik)}</h3>
+          <p class="svc__d">${esc(h.aciklama)}</p>
+          <p class="svc__time"><span class="sr-only">Süre: </span>${esc(h.sure)}</p>
+        </li>`).join('')}
+    </ul>
+  </div>`;
 
-// Tam ekran bant ve galeri: net, konuya özel fotoğraflar (işletme galerisinin genel kareleri yerine)
-const galeri = [
-  { src: asset('/img/garaj/krank-montaj.jpg'), alt: 'Krank mili motor bloğuna yerleştiriliyor' },
-  ...d.galeri.filter((g) => /lift|eller|yag/.test(g.src)),
-  { src: asset('/img/garaj/kapak-montaj.jpg'), alt: 'Silindir kapağında supap ve külbütör montajı' },
-];
-const [hero, ...rest] = galeri;
-const revealImg = $('[data-reveal-img]');
-revealImg.src = hero.src;
-revealImg.alt = hero.alt;
-$('[data-gallery]').innerHTML = rest
-  .map(
-    (g, i) => `<figure class="shot shot--${i + 1}"><div class="shot__in"><img src="${g.src}" alt="${esc(g.alt)}" loading="lazy" decoding="async" /></div></figure>`
-  )
-  .join('');
+// --- Hakkında ------------------------------------------------------------------------
 
-const stars = (n) => `<span class="stars" aria-label="5 üzerinden ${n}">${icons.star.repeat(Math.round(n))}</span>`;
-$('[data-rating]').innerHTML = `
-  <p class="rating__n">${String(d.puan.ortalama).replace('.', ',')}</p>
-  <div>${stars(5)}<p class="rating__c">${nf.format(d.puan.adet)} Google yorumu</p></div>`;
-$('[data-reviews]').innerHTML = d.yorumlar
-  .map(
-    (y) => `<li class="rev">
-      ${stars(y.puan)}
-      <blockquote class="rev__q">${esc(y.metin)}</blockquote>
-      <p class="rev__who"><b>${esc(y.ad)}</b> <span>${esc(y.arac)}</span></p>
-    </li>`
-  )
-  .join('');
+$('#hakkinda').innerHTML = `
+  <div class="wrap about__grid">
+    <div class="about__text">
+      <h2 id="about-h" class="h2">Hakkında</h2>
+      <p class="about__lead">${ad} ${yilEki(d.isletme.kurulus)} beri Şaşmaz Oto Sanayi Sitesi'nde. ${esc(d.isletme.hakkinda)}</p>
+    </div>
+    <dl class="facts">
+      ${(d.bilgiler || []).map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join('')}
+      ${d.markalar?.length ? `<div><dt>Bakım yapılan markalar</dt><dd>${d.markalar.map(esc).join(', ')}</dd></div>` : ''}
+    </dl>
+  </div>
+  <dl class="wrap stats">
+    <div class="stat"><dt>Şaşmaz Oto Sanayi Sitesi'nde</dt><dd><span data-count="${yas}">${yas}</span> yıl</dd></div>
+    <div class="stat"><dt>haftada açık</dt><dd><span data-count="${acikGun}">${acikGun}</span> gün</dd></div>
+  </dl>
+  <figure class="reveal">
+    <img class="reveal__img" src="${img('/img/garaj/revizyon.jpg')}" alt="Revizyon için sökülmüş motor, sehpada" width="1400" height="787" loading="lazy" decoding="async" />
+  </figure>`;
 
-const brandRun = d.markalar.map((m) => `<span>${esc(m)}</span>`).join('');
-$('[data-brands]').innerHTML = `<div class="brands__track">${brandRun}${brandRun}</div>`;
+// --- Çalışma saatleri ve konum ---------------------------------------------------------
 
-$('[data-hours]').innerHTML = `<caption class="sr-only">Çalışma saatleri</caption><tbody>${groupedHours(d.saatler)
-  .map(([g, s]) => `<tr><th scope="row">${g}</th><td${s === 'Kapalı' ? ' class="off"' : ''}>${s}</td></tr>`)
-  .join('')}</tbody>`;
+$('#saatler').innerHTML = `
+  <div class="wrap visit__grid">
+    <div class="visit__info">
+      <h2 id="visit-h" class="h2">Çalışma saatleri ve konum</h2>
+      <p class="status status--big ${st.open ? 'is-open' : ''}">${esc(st.metin)}</p>
+      <table class="hours">
+        <caption class="sr-only">Çalışma saatleri</caption>
+        <tbody>${saatListesi(d.saatler).map(([g, s]) => `<tr><th scope="row">${esc(g)}</th><td${s === 'Kapalı' ? ' class="off"' : ''}>${esc(s)}</td></tr>`).join('')}</tbody>
+      </table>
+      <p class="visit__addr">${esc(d.iletisim.adres)}</p>
+      <div class="visit__actions">
+        <a class="btn btn--molten" href="${mapsHref(d)}" target="_blank" rel="noopener">${icons.pin}<span>Yol tarifi</span></a>
+        <a class="btn btn--ghost" href="${telHref(d)}">${icons.phone}<span>${tel}</span></a>
+      </div>
+    </div>
+    <div class="visit__map" data-map><p>Harita</p></div>
+  </div>`;
 
-// Harita: yalnızca görünür olunca yüklenir
+// --- Örnek yorumlar ---------------------------------------------------------------------
+
+const stars = (n) => `<span class="stars" role="img" aria-label="5 üzerinden ${n}">${Array.from({ length: 5 }, (_, i) => `<i class="${i < n ? 'on' : ''}">${icons.star}</i>`).join('')}</span>`;
+$('#yorumlar').innerHTML = `
+  <div class="wrap reviews__head">
+    <h2 id="reviews-h" class="h2">Örnek yorumlar</h2>
+    <p class="reviews__note">Buradaki yorumlar örnektir, yerlerine işletmenin gerçek yorumları konur.</p>
+  </div>
+  <ul class="reviews__row" data-lenis-prevent-touch>
+    ${d.yorumlar.map((y) => `
+      <li class="rev">
+        ${stars(y.puan)}
+        <blockquote class="rev__q">${esc(y.metin)}</blockquote>
+        <p class="rev__who"><b>${esc(y.ad)}</b> <span>${esc(y.arac)}</span></p>
+      </li>`).join('')}
+  </ul>`;
+
+// --- İletişim ----------------------------------------------------------------------------
+
+$('#iletisim').innerHTML = `
+  <div class="wrap">
+    <h2 id="cta-h" class="cta__h">İletişim</h2>
+    <p class="cta__p">Fiyat ve randevu için arayın ya da WhatsApp'tan yazın.</p>
+    <div class="cta__actions">
+      <a class="btn btn--molten btn--xl" href="${telHref(d)}">${icons.phone}<span>${tel}</span></a>
+      <a class="btn btn--ghost btn--xl" href="${waHref(d)}" target="_blank" rel="noopener">${icons.whatsapp}<span>WhatsApp</span></a>
+    </div>
+    <p class="cta__addr">${esc(d.iletisim.adres)}<br>${esc(st.metin)}</p>
+  </div>`;
+
+$('#foot').innerHTML = `
+  <div class="wrap foot__grid">
+    <div><p class="foot__name">${ad}</p><p>${esc(d.isletme.tanim)}</p></div>
+    <p>${esc(d.iletisim.adres)}</p>
+    <p><a href="${telHref(d)}">${icons.phone}<span>${tel}</span></a></p>
+    <p class="foot__small">© ${new Date().getFullYear()} ${ad}. Pexels'ten alınan fotoğraflar temsilîdir. Yorumlar örnektir.</p>
+  </div>`;
+
+// Harita yalnızca yaklaşınca yüklenir.
 const mapBox = $('[data-map]');
 new IntersectionObserver((entries, io) => {
   if (!entries[0].isIntersecting) return;
-  mapBox.innerHTML = `<iframe title="${esc(d.isletme.ad)} konumu" src="${mapsEmbed(d)}" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>`;
+  mapBox.innerHTML = `<iframe title="${ad} konumu" src="${mapsEmbed(d)}" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>`;
   io.disconnect();
-}, { rootMargin: '400px' }).observe(mapBox);
+}, { rootMargin: '600px 0px' }).observe(mapBox);
 
-// --- Takometre -----------------------------------------------------------
+// --- Hareket ----------------------------------------------------------------------------
 
-const ticks = $('.tach__ticks');
-for (let i = 0; i <= 7; i++) {
-  const a = Math.PI + (i / 7) * Math.PI;
-  const x1 = 100 + Math.cos(a) * 80, y1 = 110 + Math.sin(a) * 80;
-  const x2 = 100 + Math.cos(a) * 68, y2 = 110 + Math.sin(a) * 68;
-  const tx = 100 + Math.cos(a) * 56, ty = 110 + Math.sin(a) * 56 + 4;
-  ticks.insertAdjacentHTML('beforeend',
-    `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" /><text x="${tx}" y="${ty}">${i}</text>`);
-}
-const needle = $('.tach__needle');
-const rpmOut = $('[data-rpm]');
-const setTach = (rpm) => {
-  const deg = -90 + (Math.min(rpm, 7000) / 7000) * 180;
-  needle.setAttribute('transform', `rotate(${deg} 100 110)`);
-  rpmOut.textContent = nf.format(Math.round(rpm / 10) * 10);
+const topEl = $('#top');
+const phoneMq = matchMedia('(max-width: 899px)');
+let unhide = null;
+const syncHeader = () => {
+  if (phoneMq.matches && !unhide) unhide = autoHideHeader(topEl, { offset: 120 });
+  else if (!phoneMq.matches && unhide) { unhide(); unhide = null; root.style.setProperty('--header-h', `${topEl.offsetHeight}px`); }
 };
+syncHeader();
+phoneMq.addEventListener('change', syncHeader);
 
-// --- Hareket -------------------------------------------------------------
+// Üst çubuk künyeden sonra koyulaşır.
+const solid = () => topEl.classList.toggle('is-solid', scrollY > 60);
+addEventListener('scroll', solid, { passive: true });
+solid();
 
-const lenis = initSmoothScroll();
-const heroEl = $('.hero');
-const canvasEl = $('.hero__canvas');
-const engine = createEngine(canvasEl, { reducedMotion });
-// Motor (GLB + HDRI) hazır olunca karanlıktan belirir; o zamana kadar hero'nun kendi zemini görünür
-engine.ready.then((ok) => {
-  if (!ok) return;
-  heroEl.classList.add('is-ready');
-  if (reducedMotion) gsap.set(canvasEl, { opacity: 1 });
-  else gsap.fromTo(canvasEl, { opacity: 0, scale: 1.06 }, { opacity: 1, scale: 1, duration: 1.4, ease: 'power3.out' });
-});
+if (!reducedMotion) {
+  initSmoothScroll();
 
-const topEl = $('.top');
-topEl.classList.add('in-hero');
+  // Açılış: fotoğraf karanlıktan belirir, künye satır satır gelir (bir kez, ~1 sn, kaydırmayı kilitlemez).
+  gsap.timeline({ defaults: { ease: 'power3.out' } })
+    .from('.hero__photo img', { autoAlpha: 0, scale: 1.06, duration: 1.2 }, 0)
+    .from('.hero__copy > *', { autoAlpha: 0, y: 22, duration: 0.6, stagger: 0.06, clearProps: 'all' }, 0.1);
 
-if (reducedMotion) {
-  engine.renderOnce();
-  setTach(850);
-  document.documentElement.classList.add('no-motion');
-} else {
-  // Giriş: isim harf harf yükselir (≤ 1,6 sn, kaydırmayı kilitlemez)
-  const split = new SplitText('.hero__title', { type: 'words,chars', wordsClass: 'w', charsClass: 'ch', mask: 'words' });
-  gsap.timeline({ defaults: { ease: 'power4.out' } })
-    .from(split.chars, { yPercent: 110, duration: 1.0, stagger: 0.03 }, 0.15)
-    .from(['.hero__since', '.hero__slogan', '.hero__actions', '.hero__hint'], { opacity: 0, y: 24, duration: 0.8, stagger: 0.07 }, 0.5);
-
-  // Devir: scroll hızına göre yükselir, bırakınca rölantiye iner
-  let target = 850;
-  let rpm = 850;
-  gsap.ticker.add(() => {
-    rpm += (target - rpm) * 0.08;
-    target += (850 - target) * 0.04;
-    engine.setRpm(rpm);
-    setTach(rpm);
+  // Hizmet satırlarının üst çizgisi ekrana girince kor gibi soldan yanar.
+  ScrollTrigger.batch('.svc', {
+    start: 'top 88%',
+    onEnter: (els) => els.forEach((e, i) => setTimeout(() => e.classList.add('is-lit'), i * 90)),
   });
 
-  const mm = gsap.matchMedia();
-  mm.add({ small: '(max-width: 899px)', large: '(min-width: 900px)' }, (ctx) => {
-    const { small } = ctx.conditions;
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: heroEl,
-        start: 'top top',
-        end: small ? '+=220%' : '+=260%',
-        pin: true,
-        scrub: 0.6,
-        onUpdate: (self) => {
-          engine.setProgress(self.progress);
-          const v = Math.abs(self.getVelocity());
-          target = Math.max(target, Math.min(6900, 850 + v * 2.4));
-        },
-        onToggle: (self) => (self.isActive ? engine.start() : null),
+  // Rakamlar bir kez sayar.
+  $$('[data-count]').forEach((el) => {
+    const to = Number(el.dataset.count);
+    el.textContent = '0';
+    ScrollTrigger.create({
+      trigger: el, start: 'top 90%', once: true,
+      onEnter: () => {
+        const o = { v: 0 };
+        gsap.to(o, { v: to, duration: 1.3, ease: 'power2.out', onUpdate: () => (el.textContent = Math.round(o.v)) });
       },
     });
-    // autoAlpha: görünmez bölümler visibility:hidden olur, alttaki butonlara dokunmayı yutmaz
-    tl.to('.hero__chapter--1', { autoAlpha: 0, y: -60, duration: 1, ease: 'power2.in' }, 0.6)
-      .to('.hero__hint', { autoAlpha: 0, duration: 0.4 }, 0)
-      .fromTo('.hero__chapter--2', { autoAlpha: 0, y: 60 }, { autoAlpha: 1, y: 0, duration: 1 }, 1.65)
-      .to('.hero__chapter--2', { autoAlpha: 0, y: -60, duration: 1, ease: 'power2.in' }, 3)
-      .fromTo('.hero__chapter--3', { autoAlpha: 0, y: 60 }, { autoAlpha: 1, y: 0, duration: 1 }, 4.05)
-      .to('.hero__glow', { opacity: 1, scale: 1.25, duration: 5 }, 0)
-      .to({}, { duration: 0.8 });
   });
 
-  // Hero görünürken render döner, ekrandan çıkınca durur; hero ekranın üçte birinden fazlasını
-  // kaplarken devir göstergesi başlıkta (telefonda durum yazısının yerinde) durur.
-  // (IntersectionObserver: pin sırasında hero sabit kalır, pin bitince akışla çıkar.)
-  new IntersectionObserver((entries) => {
-    const en = entries[entries.length - 1];
-    if (en.isIntersecting) engine.start();
-    else engine.stop();
-    topEl.classList.toggle('in-hero', en.intersectionRatio >= 0.5);
-  }, { threshold: [0, 0.5] }).observe(heroEl);
-  engine.start();
-
-  // Hakkında başlığı: satır satır
-  const aboutSplit = new SplitText('.about__h', { type: 'lines', linesClass: 'line', mask: 'lines' });
-  gsap.from(aboutSplit.lines, {
-    yPercent: 100, duration: 1, ease: 'power3.out', stagger: 0.1,
-    scrollTrigger: { trigger: '.about', start: 'top 70%' },
+  // Fotoğraf pencere açılır gibi büyür.
+  gsap.fromTo('.reveal',
+    { clipPath: 'inset(14% 18% 14% 18% round 18px)' },
+    { clipPath: 'inset(0% 0% 0% 0% round 0px)', ease: 'none', scrollTrigger: { trigger: '.reveal', start: 'top 90%', end: 'top 25%', scrub: true } });
+  gsap.fromTo('.reveal__img', { scale: 1.2 }, {
+    scale: 1, ease: 'none', scrollTrigger: { trigger: '.reveal', start: 'top bottom', end: 'bottom top', scrub: true },
   });
 
-  // Sayılar
-  $$('[data-count]').forEach((el) => {
-    const end = Number(el.dataset.count);
-    const obj = { v: 0 };
-    el.textContent = '0';
-    gsap.to(obj, {
-      v: end, duration: 1.8, ease: 'power2.out',
-      scrollTrigger: { trigger: el, start: 'top 85%', once: true },
-      onUpdate: () => (el.textContent = nf.format(Math.round(obj.v))),
-    });
-  });
-
-  // Tam ekran fotoğraf: pencere açılır gibi büyür
-  gsap.fromTo('.reveal__frame',
-    { clipPath: 'inset(18% 22% 18% 22% round 28px)' },
-    {
-      clipPath: 'inset(0% 0% 0% 0% round 0px)', ease: 'none',
-      scrollTrigger: { trigger: '.reveal', start: 'top 85%', end: 'top 10%', scrub: true },
-    });
-  gsap.fromTo('.reveal__img', { scale: 1.3 }, {
-    scale: 1, ease: 'none',
-    scrollTrigger: { trigger: '.reveal', start: 'top bottom', end: 'bottom top', scrub: true },
-  });
-
-  // Süreç: kızgın çizgi adımlar boyunca ilerler
-  gsap.fromTo('.process__line span', { scaleX: 0, scaleY: 0 }, {
-    scaleX: 1, scaleY: 1, ease: 'none',
-    scrollTrigger: { trigger: '.process__track', start: 'top 75%', end: 'bottom 60%', scrub: true },
-  });
-  $$('.step').forEach((s) =>
-    ScrollTrigger.create({ trigger: s, start: 'top 70%', onEnter: () => s.classList.add('is-lit') })
-  );
-
-  // Galeri paralaks
-  $$('.shot').forEach((s, i) => {
-    gsap.fromTo($('img', s), { yPercent: -10 }, {
-      yPercent: 10, ease: 'none',
-      scrollTrigger: { trigger: s, start: 'top bottom', end: 'bottom top', scrub: true },
-    });
-    gsap.from(s, {
-      y: 80 + i * 30, ease: 'none',
-      scrollTrigger: { trigger: '.gallery', start: 'top bottom', end: 'center center', scrub: true },
-    });
-  });
-
-  // Son çağrı başlığı
-  const ctaSplit = new SplitText('.cta__h', { type: 'chars,words', charsClass: 'ch' });
-  gsap.from(ctaSplit.chars, {
-    yPercent: 100, opacity: 0, duration: 0.8, ease: 'power3.out', stagger: 0.015,
-    scrollTrigger: { trigger: '.cta', start: 'top 70%' },
-  });
+  addEventListener('load', () => ScrollTrigger.refresh());
+  document.fonts?.ready.then(() => ScrollTrigger.refresh());
+} else {
+  $$('.svc').forEach((e) => e.classList.add('is-lit'));
 }
-
-// Üst çubuk: hero bitince koyu zemine geçer
-ScrollTrigger.create({
-  trigger: '.about', start: 'top 80px', end: 'max',
-  onEnter: () => topEl.classList.add('is-solid'),
-  onLeaveBack: () => topEl.classList.remove('is-solid'),
-});
-
-// Görseller yüklendikçe ölçüleri güncelle
-window.addEventListener('load', () => ScrollTrigger.refresh());
-document.fonts?.ready.then(() => ScrollTrigger.refresh());
-void lenis;

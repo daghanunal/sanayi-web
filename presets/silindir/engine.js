@@ -35,6 +35,8 @@ export const STOPS = {
   clutch: { node: 'flywheel', dir: [-1, 0.32, 0.12], dist: 1.0, label: 'Volan ve krank arkası' },
   oilpan: { node: 'oil_filter', dir: [0.25, 0.55, 1], dist: 0.95, label: 'Karter ve yağ filtresi' },
   overview: { node: 'block', dir: [0.6, 0.4, 1], dist: 2.1, label: 'Motor ve aktarma organları' },
+  // Yürüyen aksam motorda yok: genel görünüm, parça etiketi gösterilmez.
+  aksam: { node: 'block', dir: [0.6, 0.4, 1], dist: 2.1, label: '' },
   injectors: { node: 'fuel_rail', dir: [0.3, 0.7, -1], dist: 0.95, label: 'Enjektörler, yakıt rampası' },
   pump: { node: 'coolant_hose', dir: [-0.9, 0.5, 0.8], dist: 0.95, label: 'Su hortumu ve soğutma devresi' },
 };
@@ -42,12 +44,13 @@ export const STOPS = {
 export function stopForService(baslik) {
   const t = baslik.toLocaleLowerCase('tr');
   if (/revizyon|piston|segman|krank/.test(t)) return 'rotating';
-  if (/kapak|supap|conta/.test(t)) return 'head';
+  if (/kapak|kapağ|supap|conta/.test(t)) return 'head';
   if (/triger|zincir|kayış/.test(t)) return 'belt';
   if (/şanzıman|debriyaj|volan/.test(t)) return 'clutch';
   if (/yağ|bakım|filtre/.test(t)) return 'oilpan';
   if (/enjekt|yakıt/.test(t)) return 'injectors';
   if (/hararet|soğutma|radyatör|devirdaim/.test(t)) return 'pump';
+  if (/aksam|fren|amortisör|rotil/.test(t)) return 'aksam';
   return 'overview';
 }
 

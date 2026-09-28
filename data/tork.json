@@ -1,17 +1,6 @@
 {
   "preset": "tork",
-  "olcum": {
-    "baslik": "Bakımdan önce, bakımdan sonra.",
-    "aciklama": "Tıkalı hava filtresi, yorgun buji, kirli enjektör. Motor bozulmadan önce sessizce güç kaybeder. Bakımla geri gelen farkı böyle görürsünüz.",
-    "not": "Temsili ölçüm eğrisi. Her aracın değeri farklıdır.",
-    "once": { "hp": 142, "nm": 231 },
-    "sonra": { "hp": 168, "nm": 262 }
-  },
-  "surecDevir": [1500, 3000, 4500, 6000],
-  "kelime": "MOTOR",
-  "kelimeGorsel": "/img/garaj/motor-bw.jpg",
-  "finalBaslik": "Getirin, bir ölçelim.",
-  "hizGorsel": "/img/tork/lift-wide.webp",
-  "hizGorselDar": "/img/tork/lift-tall.webp",
-  "vitesGorsel": "/img/tork/vites.jpg"
+  "hakkindaGorsel": { "src": "/img/tork/eksantrik.jpg", "alt": "Silindir kapağında eksantrik mili ve supap yayları", "w": 1500, "h": 999 },
+  "iletisimGorsel": "/img/tork/lift-wide.webp",
+  "iletisimGorselDar": "/img/tork/lift-tall.webp"
 }
