@@ -1,7 +1,7 @@
-// Duman Dili: gerçekçi bir sedanın (lib3d car_sedan) arka tamponu, altına lib3d egzoz hattı takılı,
+// Duman Dili (yalnız künye): gerçekçi bir sedanın (lib3d car_sedan) arka tamponu, altına lib3d egzoz hattı takılı,
 // çift uç arkadan alçak açıdan. Stop lambaları yanık, gece HDRI yansımaları, zemine yumuşak gölge.
-// Uçlardan çıkan duman tamamen GPU'da (vertex shader) hesaplanır: renk, yoğunluk, itiş ve yayılma bölüm
-// bölüm değişir. Finalde uçtan bir duman halkası kameraya doğru gelir. Durum dışarıdan `render(state)` ile.
+// Uçlardan çıkan duman tamamen GPU'da (vertex shader) hesaplanır: açılışta kısa bir patlama, sonra rölanti.
+// Durum dışarıdan `render(state)` ile.
 // Sahne birimi: gerçek ölçü × K (eski kadraj ve duman parametreleri bu ölçekte ayarlı).
 import * as THREE from 'three';
 import { loadAsset, loadEnv, pickQuality } from '../../shared/lib3d.js';
@@ -229,7 +229,7 @@ export function createScene(canvas) {
 
   // --- Duman ---
   const tex = puffTexture();
-  const N = lite ? 1100 : 2400;
+  const N = lite ? 700 : 1600;
   const seeds = new Float32Array(N * 4);
   for (let i = 0; i < N; i++) {
     seeds[i * 4] = Math.random();
@@ -257,7 +257,7 @@ export function createScene(canvas) {
   scene.add(smoke);
 
   // --- Duman halkası ---
-  const RN = lite ? 380 : 700;
+  const RN = 1; // halka kullanılmıyor (final sahnesi kaldırıldı); gölge yapı olarak kalır
   const rs = new Float32Array(RN * 3);
   for (let i = 0; i < RN; i++) {
     rs[i * 3] = i / RN + Math.random() * 0.004;

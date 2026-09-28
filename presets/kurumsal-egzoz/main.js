@@ -2,29 +2,28 @@ import '../../shared/base.css';
 import ana from '../../data/manifold.json';
 import ek from '../../data/kurumsal-egzoz.json';
 import { kurumsal, derinBirlestir } from '../_kurumsal/engine.js';
-import { muayeneHazirlik, hat } from './extra.js';
+import { belirtiler, hat } from './extra.js';
 import './style.css';
 
-// Ana veriyi motorun şemasına uydur: "kurulus" değerli istatistik kuruluştan hesaplansın,
-// hizmetlere kurumsal ekler (kısa metin, görsel, detay) başlığa göre eklensin.
-// Yorumlar örnektir: puan kutusunda uydurma sayı yerine "örnek" yazar.
+// Hizmetlere kurumsal ekler (görsel, detay) başlığa göre eklenir.
 const v = derinBirlestir(ana, ek);
-v.istatistikler = v.istatistikler.map((s) => (s.deger === 'kurulus' ? { ...s, deger: 0, kurulustanHesapla: true } : s));
 const hek = v.kurumsal.hizmetEk || {};
 v.hizmetler = v.hizmetler.map((h) => ({ ...h, ...(hek[h.baslik] || {}) }));
-v.puan = { ...v.puan, adet: 'örnek' };
 
+const B = import.meta.env.BASE_URL;
 kurumsal({
   veri: v,
   tema: {
     hero: 'yazi',
+    kunye: true,
     gecis: 'yan',
     yer: "Şaşmaz'da",
-    heroGorsel: `${import.meta.env.BASE_URL}img/manifold/cift-uc.jpg`,
+    heroGorsel: `${B}img/manifold/cift-uc.jpg`,
     heroAlt: 'Paslanmaz çift egzoz ucu yakın plan',
-    logoAlt: 'Egzoz, DPF ve emisyon',
-    baslikEki: 'Egzoz, DPF ve emisyon | Şaşmaz, Ankara',
-    teklifEtiketi: 'Ölçüm randevusu',
+    logoAlt: 'Egzoz, DPF ve katalitik',
+    baslikEki: 'Egzoz, DPF ve katalitik konvertör | Şaşmaz, Ankara',
+    teklifEtiketi: 'İletişim',
+    altNot: "Pexels'ten alınan fotoğraflar ve 3D egzoz hattı çizimi temsilîdir. Yorumlar örnektir.",
     css: {
       zemin: '#efebe6', yuzey: '#e3ddd5', metin: '#1a1512', soluk: '#5f554c', cizgi: 'rgb(26 21 18 / .14)',
       vurgu: '#7a2b5c', 'vurgu-metin': '#fff4fa', koyu: '#1c1419', 'koyu-metin': '#f3e9ee', 'koyu-soluk': '#b3a2ac',
@@ -35,12 +34,12 @@ kurumsal({
     },
   },
   sayfalar: [
-    { id: 'anasayfa', baslik: 'Ana Sayfa', bolumler: ['hero', 'ozet', 'hat', 'hizmetOzet', 'rakamlar', 'muayeneHazirlik', 'anlasmaOzet', 'yorumlar', 'cta'] },
-    { id: 'kurumsal', baslik: 'Kurumsal', bolumler: ['hakkimizda', 'vizyon', 'kalite', 'galeri', 'markalar', 'kariyer', 'cta'] },
+    { id: 'anasayfa', baslik: 'Ana Sayfa', bolumler: ['hero', 'hizmetOzet', 'ozet', 'rakamlar', 'konum', 'yorumlar', 'cta'] },
     { id: 'hizmetler', baslik: 'Hizmetler', bolumler: ['hizmetler', 'hat', 'surec', 'cta'] },
-    { id: 'muayene', baslik: 'Muayene Hazırlığı', menu: 'Muayene', bolumler: ['muayeneHazirlik', 'sss', 'cta'] },
-    { id: 'kurumsal-musteriler', baslik: 'Filo ve Kurumsal', menu: 'Filo ve Kurumsal', bolumler: ['anlasmalar', 'cta'] },
+    { id: 'hakkinda', baslik: 'Hakkında', bolumler: ['hakkimizda', 'bilgiler', 'galeri', 'markalar', 'kariyer', 'cta'] },
+    { id: 'belirtiler', baslik: 'Arıza belirtileri', menu: 'Belirtiler', bolumler: ['belirtiler', 'sss', 'cta'] },
+    { id: 'kurumsal-musteriler', baslik: 'Filo ve kurumsal araçlar', menu: 'Filo ve Kurumsal', bolumler: ['anlasmalar', 'cta'] },
     { id: 'iletisim', baslik: 'İletişim', bolumler: ['iletisim'] },
   ],
-  ekstralar: { muayeneHazirlik, hat },
+  ekstralar: { belirtiler, hat },
 });

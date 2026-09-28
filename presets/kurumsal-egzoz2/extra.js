@@ -1,12 +1,11 @@
 // Ozalit: egzoz hattının mavi baskı teknik resmi. Modüller:
-//  pafta   — ana sayfa girişi: yan görünüş çizimi (açılışta çizilir, gaz akar, mobilde kamera hat boyunca gezer) + antet
-//  parcalar— parça listesi: her parçanın detay çizimi, belirtisi, işi ve süresi
+//  pafta   — künye (ad, iş, adres, bugün, telefon, Ara / WhatsApp / Yol tarifi) + yan görünüş çizimi
+//            (açılışta ~1,3 sn çizilir, gaz akar, mobilde çizim hat boyunca gezer); balonlarda parça adları
+//  parcalar— egzoz hattının parçaları (d.parcalar): detay çizimi, ne işe yaradığı, ilgili hizmet ve süresi
 //  duman   — duman rengi seçici: uçtan çıkan dumanın rengine göre ne anlama geldiği
-//  olcu    — ölçüm föyü: önce/sonra anahtarı, değerler sayarak iner, KALDI damgası GEÇTİ olur
-//  mesai   — açık mı, saatler, adres ve yaklaşınca yüklenen harita
-import { esc, waHref, telHref, mapsHref, mapsEmbed, openStatus, groupedHours, icons, gsap, reducedMotion } from '../../shared/core.js';
+//  galeri  — "şekil" levhaları
+import { esc, waHref, telHref, mapsHref, gunDurumu, kisaAdres, icons, gsap, reducedMotion } from '../../shared/core.js';
 import { DrawSVGPlugin } from 'gsap/DrawSVGPlugin';
-import { yilEki } from '../_kurumsal/bolumler.js';
 
 gsap.registerPlugin(DrawSVGPlugin);
 
@@ -19,11 +18,9 @@ function gorunurken(hedef, fn) {
 }
 
 const buyuk = (s) => String(s ?? '').toLocaleUpperCase('tr-TR');
-const nf = new Intl.NumberFormat('tr-TR', { maximumFractionDigits: 2 });
-const ok = `<svg class="k-ok" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 
 // --- Çizim ------------------------------------------------------------------------------
-// viewBox 0 0 1240 400; boru ekseni y=240. Parça grupları data-p ile yolculuk id'lerine bağlanır.
+// viewBox 0 0 1240 400; boru ekseni y=240. Parça grupları data-p ile d.parcalar id'lerine bağlanır.
 const PARCA = {
   manifold: { kutu: '168 128 132 150', balon: [236, 186], kisa: 'Manifold' },
   katalitik: { kutu: '326 190 148 100', balon: [400, 212], kisa: 'Katalitik' },
@@ -119,120 +116,96 @@ function cizim(pfx, { balonlar = true, olcu = true, gaz = true, duman = true } =
 const svg = (pfx, kutu, secenek, sinif = 'pz-cizim') =>
   `<svg class="${sinif}" viewBox="${kutu}" preserveAspectRatio="xMidYMid meet" aria-hidden="true">${cizim(pfx, secenek)}</svg>`;
 
-const kaydir = (lenis, hedef) => {
-  if (lenis) lenis.scrollTo(hedef, { offset: -70 });
-  else hedef.scrollIntoView({ behavior: 'smooth' });
-};
-
-// --- pafta: giriş --------------------------------------------------------------------------
+// --- pafta: künye ------------------------------------------------------------------------
 export const pafta = {
   render(d, ctx) {
-    const h = d.kurumsal?.hero || {};
-    const st = d.saatler ? openStatus(d.saatler) : null;
-    const antet = [
-      ['Firma', d.isletme.ad],
-      ['İş', d.isletme.sektor],
-      ['Telefon', d.iletisim.telefon, telHref(d)],
-      ['Bugün', st?.text],
-      ['Kuruluş', d.isletme.kurulus ? `${yilEki(d.isletme.kurulus)} beri` : ''],
-      ['Pafta', 'EGZ-01 · Rev. ' + new Date().getFullYear()],
-    ].filter(([, v]) => v);
+    const b = d.saatler ? gunDurumu(d.saatler) : null;
     return `
-      <section class="k-hero pz-hero" aria-label="Giriş">
+      <section class="k-hero k-hero--kunye pz-hero" aria-label="Künye">
         <div class="k-kap pz-hero__ic">
-          <p class="pz-ust"><span class="pz-ust__kod">EGZ-01</span><span>${esc(d.isletme.sektor)}</span><span>Şaşmaz'da ${esc(d.isletme.kurulus ? yilEki(d.isletme.kurulus) : '')} beri</span></p>
-          <h1 class="k-h1 pz-baslik" data-bol>${esc(h.baslik || d.isletme.slogan)}</h1>
+          <div class="k-hero__metin pz-hero__metin">
+            <h1 class="k-h1 k-hero__baslik pz-baslik" data-bol>${esc(d.isletme.ad)}</h1>
+            <p class="k-lead k-hero__tanim">${esc(d.isletme.tanim || d.isletme.sektor)}</p>
+            <dl class="k-kunye pz-antet">
+              <div><dt>Adres</dt><dd>${esc(kisaAdres(d.iletisim.adres))}</dd></div>
+              ${b ? `<div><dt>Bugün</dt><dd><span class="k-durum ${b.open ? 'is-acik' : ''}"><span></span>${esc(b.kunye)}</span></dd></div>` : ''}
+              <div><dt>Telefon</dt><dd><a href="${telHref(d)}">${esc(d.iletisim.telefon)}</a></dd></div>
+            </dl>
+            <div class="k-butonlar">
+              <a class="k-btn" href="${telHref(d)}">${icons.phone}<span>Ara</span></a>
+              ${d.iletisim.whatsapp ? `<a class="k-btn k-btn--ikincil" href="${waHref(d)}" target="_blank" rel="noopener">${icons.whatsapp}<span>WhatsApp</span></a>` : ''}
+              <a class="k-btn k-btn--ikincil" href="${mapsHref(d)}" target="_blank" rel="noopener">${icons.pin}<span>Yol tarifi</span></a>
+            </div>
+          </div>
+          <figure class="pz-foto" data-perde><img src="${ctx.tema.heroGorsel}" alt="${esc(ctx.tema.heroAlt || '')}" fetchpriority="high"><figcaption>Şekil 1 · Lift kontrolü</figcaption></figure>
           <figure class="pz-sahne">
             <div class="pz-kaydir">${svg('ph', '0 0 1240 400', {})}</div>
             <figcaption><span>Egzoz hattı, yan görünüş</span><span class="pz-sahne__ipucu" aria-hidden="true">Hat boyunca kayıyor</span></figcaption>
           </figure>
-          <div class="pz-hero__metin">
-            <p class="k-lead">${esc(h.metin || d.isletme.hakkinda)}</p>
-            <div class="k-butonlar">
-              <a class="k-btn" href="#/iletisim" data-rota="iletisim">${esc(h.birincil || 'Randevu')} ${ok}</a>
-              <button type="button" class="k-btn k-btn--ikincil" data-git=".pz-parcalar">${esc(h.ikincil || 'Parça listesi')}</button>
-            </div>
-          </div>
-          <figure class="pz-foto" data-perde><img src="${ctx.tema.heroGorsel}" alt="${esc(ctx.tema.heroAlt || '')}" fetchpriority="high"><figcaption>Şekil 1 · Lift kontrolü</figcaption></figure>
-        </div>
-        <div class="k-kap">
-          <dl class="pz-antet">${antet
-            .map(([e, v, href]) => `<div><dt>${esc(e)}</dt><dd>${href ? `<a href="${href}">${esc(v)}</a>` : esc(v)}</dd></div>`)
-            .join('')}</dl>
         </div>
       </section>`;
   },
-  mount(el, d, ctx) {
-    // Başka sayfanın dibinden dönülürken sayfa hâlâ aşağıda kalıyor; motorun "once" tetikleyicileri
-    // bu konumda kurulurken hemen tetiklenip ScrollTrigger yenilemesini bozuyordu. Perde kapalıyken
-    // başa almak görünmez; motor zaten hemen ardından başa kaydırıyor.
-    if (ctx?.lenis) ctx.lenis.scrollTo(0, { immediate: true, force: true });
-    else scrollTo(0, 0);
-    el.querySelector('[data-git]')?.addEventListener('click', (e) => {
-      const hedef = document.querySelector(e.currentTarget.dataset.git);
-      if (hedef) kaydir(ctx.lenis, hedef);
-    });
+  mount(el) {
     if (reducedMotion) return;
     const sahne = el.querySelector('.pz-sahne');
     const ciz = sahne.querySelectorAll('.pz-c');
     const gaz = sahne.querySelector('.pz-gaz');
     const duman = sahne.querySelectorAll('.pz-duman circle');
     const balon = sahne.querySelectorAll('.pz-balon');
-    const tl = gsap.timeline({ delay: 0.35 });
-    tl.from(ciz, { drawSVG: 0, duration: 1.3, stagger: 0.012, ease: 'power2.inOut' })
-      .from(balon, { opacity: 0, y: 10, duration: 0.4, stagger: 0.08 }, '-=0.5')
-      .from(el.querySelectorAll('.pz-antet > div'), { opacity: 0, y: 12, duration: 0.4, stagger: 0.05 }, '-=0.6');
+    const tl = gsap.timeline({ delay: 0.2 });
+    tl.from(ciz, { drawSVG: 0, duration: 1.1, stagger: 0.008, ease: 'power2.inOut' })
+      .from(balon, { opacity: 0, y: 10, duration: 0.35, stagger: 0.06 }, '-=0.5');
 
-    // Döngüler: gaz akışı, duman, mobilde kamera. Ekran dışında durur.
+    // Döngüler: gaz akışı, duman, mobilde çizim hat boyunca gezer. Ekran dışında durur.
     const donguler = [];
     if (gaz) donguler.push(gsap.fromTo(gaz, { strokeDashoffset: 0 }, { strokeDashoffset: -80, duration: 1.1, ease: 'none', repeat: -1 }));
     duman.forEach((c, i) =>
       donguler.push(
-        gsap.fromTo(c, { opacity: 0, x: -10, scale: 0.5, svgOrigin: '1178 236' }, { opacity: 0.9, x: 20 + i * 6, scale: 1.25, duration: 1.8, ease: 'sine.out', repeat: -1, delay: i * 0.6, yoyo: false })
+        gsap.fromTo(c, { opacity: 0, x: -10, scale: 0.5, svgOrigin: '1178 236' }, { opacity: 0.9, x: 20 + i * 6, scale: 1.25, duration: 1.8, ease: 'sine.out', repeat: -1, delay: i * 0.6 })
       )
     );
     if (innerWidth < 900) {
       const k = sahne.querySelector('.pz-kaydir');
-      donguler.push(gsap.fromTo(k, { xPercent: 0 }, { xPercent: -(1 - 100 / 230) * 100, duration: 9, ease: 'sine.inOut', repeat: -1, yoyo: true, delay: 1.6, repeatDelay: 0.8 }));
+      donguler.push(gsap.fromTo(k, { xPercent: 0 }, { xPercent: -(1 - 100 / 230) * 100, duration: 9, ease: 'sine.inOut', repeat: -1, yoyo: true, delay: 1.4, repeatDelay: 0.8 }));
     }
     gorunurken(sahne, (acik) => donguler.forEach((t) => (acik ? t.resume() : t.pause())));
   },
 };
 
-// --- parcalar: parça listesi ------------------------------------------------------------
+// --- parcalar: egzoz hattının parçaları ------------------------------------------------------
 export const parcalar = {
   render(d) {
-    const y = d.yolculuk || [];
+    const y = d.parcalar || [];
     if (!y.length) return '';
+    const k = d.kurumsal || {};
     const sure = (b) => d.hizmetler?.find((h) => h.baslik === b)?.sure;
     return `
       <section class="k-bolum pz-parcalar" aria-labelledby="pz-parca-bas">
         <div class="k-kap">
           <div class="pz-bas">
             <p class="pz-etiket-ust">Parça listesi · ${y.length} kalem</p>
-            <h2 class="k-h2" id="pz-parca-bas" data-bol>Hattın her parçasına tek tek bakarız.</h2>
-            <p class="k-lead">Sorun hangi parçadaysa yalnızca onu onarırız. Belirtiyi okuyun, parçayı bulun, fotoğrafını ya da sesini WhatsApp'tan gönderin.</p>
+            <h2 class="k-h2" id="pz-parca-bas" data-bol>${esc(k.parcaBaslik || 'Egzoz hattının parçaları')}</h2>
+            ${k.parcaMetin ? `<p class="k-lead">${esc(k.parcaMetin)}</p>` : ''}
           </div>
           <ol class="pz-liste">
             ${y
               .map((p, i) => {
                 const part = PARCA[p.id];
-                const mesaj = `Merhaba ${d.isletme.ad}, aracımın ${p.durak.toLocaleLowerCase('tr-TR')} tarafına baktırmak istiyorum.`;
+                const mesaj = `Merhaba ${d.isletme.ad}, aracımın egzozundaki ${p.ad.toLocaleLowerCase('tr-TR')} için bilgi almak istiyorum.`;
                 return `<li class="pz-kalem" data-k="${esc(p.id)}">
                   <div class="pz-kalem__cizim">
                     ${part ? svg(`pk${i}`, part.kutu, { balonlar: false, olcu: false, gaz: false, duman: p.id === 'uc' }, 'pz-cizim pz-cizim--detay') : ''}
                     <span class="pz-kalem__no" aria-hidden="true">${i + 1}</span>
-                    <span class="pz-kalem__detay">Detay ${String.fromCharCode(65 + i)}</span>
+                    <span class="pz-kalem__detay" aria-hidden="true">Detay ${String.fromCharCode(65 + i)}</span>
                   </div>
                   <div class="pz-kalem__metin">
-                    <p class="pz-kalem__ad">${esc(p.durak)}</p>
-                    <h3 class="k-h3">${esc(p.baslik)}</h3>
+                    <h3 class="k-h3">${esc(p.ad)}</h3>
                     <p>${esc(p.metin)}</p>
                   </div>
                   <dl class="pz-kalem__meta">
-                    ${p.hizmet ? `<div><dt>İş</dt><dd>${esc(p.hizmet)}</dd></div>` : ''}
+                    ${p.hizmet ? `<div><dt>Hizmet</dt><dd>${esc(p.hizmet)}</dd></div>` : ''}
                     ${sure(p.hizmet) ? `<div><dt>Süre</dt><dd>${esc(sure(p.hizmet))}</dd></div>` : ''}
-                    <div class="pz-kalem__git"><a href="${waHref(d, mesaj)}" target="_blank" rel="noopener">${icons.whatsapp}<span>Bu parça için yazın</span></a></div>
+                    <div class="pz-kalem__git"><a href="${waHref(d, mesaj)}" target="_blank" rel="noopener">${icons.whatsapp}<span>WhatsApp'tan bilgi alın</span></a></div>
                   </dl>
                 </li>`;
               })
@@ -244,7 +217,7 @@ export const parcalar = {
   mount(el) {
     if (reducedMotion) return;
     el.querySelectorAll('.pz-kalem').forEach((li) => {
-      const tl = gsap.timeline({ scrollTrigger: { trigger: li, start: 'top 82%', once: true } });
+      const tl = gsap.timeline({ scrollTrigger: { trigger: li, start: 'top 82%', toggleActions: 'play none none none' } });
       tl.from(li.querySelectorAll('.pz-c'), { drawSVG: 0, duration: 0.9, stagger: 0.02, ease: 'power2.inOut' })
         .from(li.querySelector('.pz-kalem__no'), { scale: 0, duration: 0.45, ease: 'back.out(2)' }, 0.2)
         .from(li.querySelectorAll('.pz-kalem__metin > *, .pz-kalem__meta > div'), { y: 14, opacity: 0, duration: 0.5, stagger: 0.05, ease: 'power2.out' }, 0.1);
@@ -254,21 +227,22 @@ export const parcalar = {
 
 // --- duman: duman rengi seçici ----------------------------------------------------------
 const DUMAN = [
-  { id: 'siyah', ad: 'Siyah', renk: '#11141c', baslik: 'Fazla yakıt yanıyor.', metin: 'Tıkanan hava filtresi, enjektör ya da dolan DPF ve katalitik siyah duman yaptırır. Dizelde muayenedeki duman değeri çoğu zaman buradan kalır. Önce ölçeriz; sorun egzoz tarafındaysa aynı gün çözeriz, motor tarafındaysa açıkça söyleriz.', is: 'DPF temizleme' },
-  { id: 'mavi', ad: 'Mavi-gri', renk: '#8fa9e8', baslik: 'Motor yağ yakıyor.', metin: 'Mavi-gri duman çoğu zaman segman, subap lastiği ya da turbodan gelir; egzozdan değil motordan kaynaklanır. Ölçümle teyit eder, doğru ustaya yönlendiririz. Yağ yakan araç zamanla katalitiği de tıkar, onu da kontrol ederiz.', is: 'Katalitik konvertör' },
-  { id: 'beyaz', ad: 'Beyaz', renk: '#ffffff', baslik: 'Su buharı ya da antifriz.', metin: 'Soğuk sabahlarda çıkan ince beyaz buhar normaldir, motor ısınınca kaybolur. Motor ısındıktan sonra da yoğun, tatlı kokulu beyaz duman sürüyorsa conta arızası olabilir. Kontrol eder, sebebini söyleriz.', is: 'Egzoz emisyon hazırlığı' },
-  { id: 'yok', ad: 'Görünmüyor', renk: 'transparent', baslik: 'Görünürde sorun yok.', metin: 'Duman görünmemesi değerlerin sınırın altında olduğu anlamına gelmez. Muayeneden önce kısa bir gaz ölçümüyle emin olun; sonucu önünüzde okuruz.', is: 'Egzoz emisyon hazırlığı' },
+  { id: 'siyah', ad: 'Siyah', renk: '#11141c', baslik: 'Fazla yakıt', metin: 'Motor yakıtın bir kısmını yakamadan dışarı atıyordur. Sebep tıkalı hava filtresi, kaçıran enjektör ya da dolmuş bir DPF olabilir; egzoz gazı ölçülünce hangisi olduğu anlaşılır.', is: 'DPF temizliği' },
+  { id: 'mavi', ad: 'Mavi-gri', renk: '#8fa9e8', baslik: 'Yağ yakma', metin: 'Mavi-gri duman motorun yağ yaktığını gösterir; sebep çoğu zaman segman, subap lastiği ya da turbodur. Yağ yakan motor zamanla katalitik konvertörü de tıkar, bu yüzden katalitik de kontrol edilir.', is: 'Katalitik konvertör' },
+  { id: 'beyaz', ad: 'Beyaz', renk: '#ffffff', baslik: 'Su buharı ya da antifriz', metin: 'Soğuk sabahta çıkan ince beyaz buhar normaldir, motor ısınınca kaybolur. Sıcak motorda da yoğun ve tatlı kokulu beyaz duman sürüyorsa silindir kapak contası kontrol edilmelidir.', is: 'Egzoz gazı ölçümü' },
+  { id: 'yok', ad: 'Görünmüyor', renk: 'transparent', baslik: 'Görünür duman yok', metin: 'Duman görünmemesi egzoz gazı değerlerinin düşük olduğunu göstermez. CO, HC ve duman yoğunluğu ancak gaz analiz cihazıyla ölçülür.', is: 'Egzoz gazı ölçümü' },
 ];
 
 export const duman = {
-  render() {
+  render(d) {
+    const k = d.kurumsal || {};
     return `
       <section class="k-bolum pz-dm" aria-labelledby="pz-dm-bas">
         <div class="k-kap pz-dm__ic">
           <div class="pz-dm__sol">
-            <p class="pz-etiket-ust">Kontrol 1 · Gözle</p>
-            <h2 class="k-h2" id="pz-dm-bas" data-bol>Uçtan çıkan duman ne diyor?</h2>
-            <p class="k-lead">Aracı çalıştırın, egzoz ucuna bakın. Gördüğünüz rengi seçin.</p>
+            <p class="pz-etiket-ust">Egzoz ucu</p>
+            <h2 class="k-h2" id="pz-dm-bas" data-bol>${esc(k.dumanBaslik || 'Duman rengi')}</h2>
+            ${k.dumanMetin ? `<p class="k-lead">${esc(k.dumanMetin)}</p>` : ''}
             <div class="pz-dm__secim" role="radiogroup" aria-label="Duman rengi">
               ${DUMAN.map((x, i) => `<button type="button" role="radio" aria-checked="${i === 0}" data-dm="${x.id}" style="--dm:${x.renk}"><span class="pz-dm__ornek" aria-hidden="true"></span>${esc(x.ad)}</button>`).join('')}
             </div>
@@ -286,7 +260,8 @@ export const duman = {
             <div class="pz-dm__sonuc" aria-live="polite">
               <p class="pz-dm__baslik"></p>
               <p class="pz-dm__metin"></p>
-              <a class="k-btn pz-dm__wa" target="_blank" rel="noopener">${icons.whatsapp}<span>Bu dumanı bize sorun</span></a>
+              <p class="pz-dm__is"></p>
+              <a class="k-btn pz-dm__wa" target="_blank" rel="noopener">${icons.whatsapp}<span>WhatsApp'tan bilgi alın</span></a>
             </div>
           </div>
         </div>
@@ -298,6 +273,8 @@ export const duman = {
     const b = el.querySelector('.pz-dm__baslik');
     const m = el.querySelector('.pz-dm__metin');
     const wa = el.querySelector('.pz-dm__wa');
+    const is = el.querySelector('.pz-dm__is');
+    const sure = (baslik) => d.hizmetler?.find((h) => h.baslik === baslik)?.sure;
     const sahne = el.querySelector('.pz-dm__sahne');
 
     // Duman döngüsü: her halka uçtan çıkar, büyür, sağa ve yukarı savrulur. Ekran dışında durur.
@@ -321,13 +298,14 @@ export const duman = {
       sahne.dataset.dm = id;
       b.textContent = x.baslik;
       m.textContent = x.metin;
+      is.textContent = `İlgili hizmet: ${x.is}${sure(x.is) ? ` · ${sure(x.is)}` : ''}`;
       wa.href = waHref(
         d,
         id === 'yok'
-          ? `Merhaba ${d.isletme.ad}, muayeneden önce egzoz gaz ölçümü yaptırmak istiyorum.`
-          : `Merhaba ${d.isletme.ad}, aracımın egzozundan ${x.ad.toLocaleLowerCase('tr-TR')} duman çıkıyor. Bakabilir misiniz?`
+          ? `Merhaba ${d.isletme.ad}, egzoz gazı ölçümü için bilgi almak istiyorum.`
+          : `Merhaba ${d.isletme.ad}, aracımın egzozundan ${x.ad.toLocaleLowerCase('tr-TR')} duman çıkıyor. Bilgi almak istiyorum.`
       );
-      if (!ilk && !reducedMotion) gsap.fromTo([b, m], { y: 10, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, stagger: 0.06, ease: 'power2.out' });
+      if (!ilk && !reducedMotion) gsap.fromTo([b, m, is], { y: 10, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, stagger: 0.06, ease: 'power2.out' });
     };
     dugmeler.forEach((btn) => btn.addEventListener('click', () => sec(btn.dataset.dm)));
     el.querySelector('.pz-dm__secim').addEventListener('keydown', (e) => {
@@ -343,130 +321,6 @@ export const duman = {
   },
 };
 
-// --- olcu: ölçüm föyü --------------------------------------------------------------------
-export const olcu = {
-  render(d) {
-    const o = d.muayene?.olcumler || [];
-    if (!o.length) return '';
-    return `
-      <section class="k-bolum pz-olcu-b" aria-labelledby="pz-olcu-bas">
-        <div class="k-kap">
-          <div class="pz-olcu-b__bas">
-            <div>
-              <p class="pz-etiket-ust">Kontrol 2 · Cihazla</p>
-              <h2 class="k-h2" id="pz-olcu-bas" data-bol>Önce ve sonra, aynı cihazla.</h2>
-            </div>
-            <div class="pz-anahtar" role="group" aria-label="Ölçüm zamanı">
-              <button type="button" data-z="once" aria-pressed="true">İşten önce</button>
-              <button type="button" data-z="sonra" aria-pressed="false">İşten sonra</button>
-            </div>
-          </div>
-          <div class="pz-foy">
-            <div class="pz-foy__ust" aria-hidden="true"><span>Değer</span><span>Okunan</span><span>Sınır</span><span>Sonuç</span></div>
-            <ul>
-              ${o
-                .map((x) => {
-                  const tavan = Math.max(x.once, x.sinir) * 1.1;
-                  return `<li class="pz-foy__satir" data-once="${x.once}" data-sonra="${x.sonra}" data-sinir="${x.sinir}">
-                    <span class="pz-foy__ad">${esc(x.ad)}<small>${esc(x.birim)}</small></span>
-                    <span class="pz-foy__deger"><b>${nf.format(x.once)}</b></span>
-                    <span class="pz-foy__sinir">≤ ${nf.format(x.sinir)}</span>
-                    <span class="pz-foy__damga" data-durum="kaldi">KALDI</span>
-                    <span class="pz-foy__cubuk" style="--s:${(x.sinir / tavan).toFixed(3)}"><i style="--o:${(x.once / tavan).toFixed(3)}"></i></span>
-                  </li>`;
-                })
-                .join('')}
-            </ul>
-            <p class="pz-foy__not">Temsili ölçüm. Sınır değerler aracın yaşına ve yakıt tipine göre değişir; sizin aracınızın değerlerini önünüzde okuruz.</p>
-          </div>
-        </div>
-      </section>`;
-  },
-  mount(el) {
-    const satirlar = [...el.querySelectorAll('.pz-foy__satir')];
-    const dugmeler = el.querySelectorAll('[data-z]');
-    let z = 'once';
-    const uygula = (hedef, anlik) => {
-      z = hedef;
-      dugmeler.forEach((b) => b.setAttribute('aria-pressed', b.dataset.z === hedef));
-      satirlar.forEach((li, i) => {
-        const deger = Number(li.dataset[hedef]);
-        const sinir = Number(li.dataset.sinir);
-        const tavan = Math.max(Number(li.dataset.once), sinir) * 1.1;
-        const b = li.querySelector('b');
-        const damga = li.querySelector('.pz-foy__damga');
-        const cubuk = li.querySelector('i');
-        const gecti = deger <= sinir;
-        const bitir = () => {
-          damga.textContent = gecti ? 'GEÇTİ' : 'KALDI';
-          damga.dataset.durum = gecti ? 'gecti' : 'kaldi';
-          li.dataset.durum = damga.dataset.durum;
-        };
-        if (anlik || reducedMotion) {
-          b.textContent = nf.format(deger);
-          cubuk.style.setProperty('--o', (deger / tavan).toFixed(3));
-          bitir();
-          return;
-        }
-        const s = { v: Number(b.textContent.replace(/\./g, '').replace(',', '.')) };
-        gsap.to(s, { v: deger, duration: 1.2, delay: i * 0.12, ease: 'power2.out', onUpdate: () => (b.textContent = nf.format(Math.round(s.v * 10) / 10)) });
-        gsap.to(cubuk, { '--o': (deger / tavan).toFixed(3), duration: 1.2, delay: i * 0.12, ease: 'power2.out' });
-        gsap.timeline({ delay: 1 + i * 0.12 })
-          .to(damga, { scale: 1.6, opacity: 0, rotation: -14, duration: 0.18, ease: 'power2.in' })
-          .add(bitir)
-          .fromTo(damga, { scale: 1.8, opacity: 0, rotation: -12 }, { scale: 1, opacity: 1, rotation: -6, duration: 0.35, ease: 'back.out(2.5)' });
-      });
-    };
-    dugmeler.forEach((b) => b.addEventListener('click', () => b.dataset.z !== z && uygula(b.dataset.z)));
-    uygula('once', true);
-    // Görünce kendiliğinden "sonra"ya geçer.
-    const foy = el.querySelector('.pz-foy');
-    if (!('IntersectionObserver' in window)) return;
-    const io = new IntersectionObserver(
-      (es) => es.some((e) => e.isIntersecting) && (io.disconnect(), z === 'once' && uygula('sonra', false)),
-      { rootMargin: '0px 0px -30% 0px' }
-    );
-    io.observe(foy);
-  },
-};
-
-// --- mesai: açık mı, saatler, konum ------------------------------------------------------
-export const mesai = {
-  render(d) {
-    if (!d.saatler) return '';
-    const st = openStatus(d.saatler);
-    return `
-      <section class="k-bolum pz-mesai" aria-labelledby="pz-mesai-bas">
-        <div class="k-kap pz-mesai__ic">
-          <div>
-            <p class="pz-etiket-ust">Konum ve saatler</p>
-            <h2 class="k-h2" id="pz-mesai-bas" data-bol>Atölye şu an açık mı?</h2>
-            <p class="pz-durum ${st.open ? 'is-acik' : ''}"><span></span>${esc(st.text)}</p>
-            <dl class="pz-saat">${groupedHours(d.saatler).map(([g, s]) => `<div><dt>${g}</dt><dd>${s}</dd></div>`).join('')}</dl>
-            <p class="pz-adres">${esc(d.iletisim.adres)}</p>
-            <div class="k-butonlar">
-              <a class="k-btn" href="${mapsHref(d)}" target="_blank" rel="noopener">${icons.pin}<span>Yol tarifi</span></a>
-              <a class="k-btn k-btn--ikincil" href="${telHref(d)}">${icons.phone}<span>${esc(d.iletisim.telefon)}</span></a>
-            </div>
-          </div>
-          <div class="pz-harita" data-q="1"><span>Harita yaklaşınca yüklenir</span></div>
-        </div>
-      </section>`;
-  },
-  mount(el, d) {
-    const kutu = el.querySelector('.pz-harita');
-    const io = new IntersectionObserver(
-      (e) => {
-        if (!e[0].isIntersecting) return;
-        kutu.innerHTML = `<iframe title="Konum haritası" src="${mapsEmbed(d)}" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>`;
-        io.disconnect();
-      },
-      { rootMargin: '300px' }
-    );
-    io.observe(kutu);
-  },
-};
-
 // --- galeri: motorun galerisi yerine "şekil" levhaları ------------------------------------
 // Motor sürümündeki perde zaman çizelgeleri, sayfanın altından başka sayfaya geçerken ScrollTrigger
 // yenilemesinde hata veriyordu; burada görünürlük IntersectionObserver + CSS geçişiyle.
@@ -478,11 +332,11 @@ export const galeri = {
       <section class="k-bolum pz-galeri">
         <div class="k-kap">
           <p class="pz-etiket-ust">Şekiller · ${g.length} levha</p>
-          <h2 class="k-h2" data-bol>${esc(d.kurumsal?.galeriBaslik || 'Atölyeden')}</h2>
+          <h2 class="k-h2" data-bol>${esc(d.kurumsal?.galeriBaslik || 'Galeri')}</h2>
           <ul class="pz-galeri__liste">
             ${g
               .map(
-                (x, i) => `<li class="pz-levha"><figure><div class="pz-levha__foto"><img src="${x.src}" alt="${esc(x.alt)}" loading="lazy"></div>
+                (x, i) => `<li class="pz-levha"><figure><div class="pz-levha__foto"><img src="${x.src}" alt="${esc(x.alt)}" loading="lazy" decoding="async"></div>
                   <figcaption><span>Şekil ${i + 1}</span>${esc(x.alt)}</figcaption></figure></li>`
               )
               .join('')}

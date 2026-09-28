@@ -1,38 +1,12 @@
 {
   "kurumsal": {
-    "hero": {
-      "baslik": "Egzozunuz muayeneye hazır çıksın.",
-      "metin": "Binek, hafif ticari ve dizel filolar için egzoz, DPF, katalitik konvertör ve paslanmaz imalat. Gaz ölçümünü önünüzde yapar, değişmesi gerekmeyen parçayı değiştirmeyiz.",
-      "birincil": "Ölçüm randevusu",
-      "ikincil": "Muayene hazırlığı",
-      "ikincilRota": "muayene"
-    },
-    "ozet": {
-      "baslik": "Ölçmeden parça değiştirmeyiz",
-      "metin": "Aracı lifte kaldırır, egzozu motordan uca kadar kontrol ederiz. Temizlenebilen parçayı temizler, kaynakla kurtulanı kaynakla kurtarırız. İşten önce ve sonra ölçüm yapar, çıktısını size veririz."
-    },
-    "hizmetOzetBaslik": "Egzoz hattının her parçası",
+    "hizmetOzetBaslik": "Hizmetler",
     "hizmetEk": {
-      "Egzoz emisyon hazırlığı": {
-        "kisa": "Muayeneden önce gaz ve duman ölçümü, kalacak değerin sebebi.",
-        "gorsel": "/img/manifold/duman.jpg",
+      "DPF temizliği": {
         "detay": [
           [
-            "Ölçülen",
-            "CO, HC, duman, ses"
-          ],
-          [
-            "Çıktı",
-            "İşten önce ve sonra"
-          ]
-        ]
-      },
-      "DPF temizleme": {
-        "kisa": "Söküp makinede yıkama, fırınlama ve basınç ölçümü.",
-        "detay": [
-          [
-            "Uygun araç",
-            "Dizel binek ve ticari"
+            "Araçlar",
+            "Dizel binek ve hafif ticari"
           ],
           [
             "Kontrol",
@@ -40,11 +14,20 @@
           ]
         ]
       },
-      "Katalitik konvertör": {
-        "kisa": "Tıkanıklık testi, temizlik ya da muadil değişim."
+      "Egzoz gazı ölçümü": {
+        "gorsel": "/img/manifold/duman.jpg",
+        "detay": [
+          [
+            "Ölçülen",
+            "CO, HC, duman yoğunluğu"
+          ],
+          [
+            "Sonuç",
+            "İşten önce ve sonra"
+          ]
+        ]
       },
       "Paslanmaz egzoz imalatı": {
-        "kisa": "Ölçüye göre bükülen paslanmaz boru, argon kaynağı.",
         "gorsel": "/img/manifold/kaynak.jpg",
         "detay": [
           [
@@ -52,157 +35,154 @@
             "Argon (TIG)"
           ],
           [
-            "Garanti",
-            "2 yıl imalat"
+            "Malzeme",
+            "Paslanmaz boru, esnek bağlantı"
           ]
         ]
       },
-      "Sportif egzoz ve uç": {
+      "Sportif susturucu ve egzoz ucu": {
         "gorsel": "/img/manifold/cift-uc.jpg"
       }
     },
-    "anlasmaBaslik": "Filo ve kurumsal müşteriler",
-    "anlasmaMetin": "Dizel filolar, servis araçları ve kiralama firmaları için planlı DPF bakımı, toplu muayene hazırlığı ve aylık fatura.",
+    "ozet": {
+      "baslik": "Hakkında",
+      "metin": "Şaşmaz Oto Sanayi Sitesi'nde binek ve hafif ticari araçların egzoz, DPF ve katalitik konvertör işleri yapılır. Şahıs araçlarının yanı sıra dizel filo, servis ve kiralama araçları da gelir."
+    },
+    "konumBaslik": "Çalışma saatleri ve konum",
+    "yorumBaslik": "Örnek yorumlar",
+    "cta": {
+      "baslik": "İletişim",
+      "metin": "Fiyat ve randevu için arayın ya da formdan yazın.",
+      "buton": "İletişim formu"
+    },
+    "hizmetLink": "Bu hizmet için bilgi alın",
+    "surecBaslik": "Çalışma sırası",
+    "hat": {
+      "baslik": "Egzoz hattı",
+      "metin": "Egzoz hattı motordan uca beş bölümden oluşur. Arıza hangi bölümdeyse onarım o bölümde yapılır."
+    },
+    "anlasmaBaslik": "Filo ve kurumsal araçlar",
+    "anlasmaMetin": "Dizel filo, servis ve kiralama araçlarında yapılan işler her araç için ayrı kaydedilir. Fatura dönem sonunda toplu kesilir.",
     "anlasmalar": [
       {
-        "baslik": "Ticari araç ve filo DPF programı",
-        "kisa": "Dizel filolar için planlı DPF ölçümü ve temizliği.",
-        "metin": "Şehir içinde kısa mesafe çalışan dizel araçlarda DPF çabuk dolar. Filonuzdaki araçların basınç ölçümünü düzenli yapar, temizliği araç yolda kalmadan, sefer aralarında planlarız.",
+        "baslik": "Filo DPF bakımı",
+        "kisa": "Dizel araçların DPF basıncı düzenli ölçülür.",
+        "metin": "Şehir içinde kısa mesafe çalışan dizel araçlarda DPF çabuk dolar. Araçların basınç farkı düzenli ölçülür, temizlik sefer aralarına göre planlanır.",
         "maddeler": [
-          "Araç bazında DPF basınç kaydı",
-          "Temizlik için sefer arası randevu",
+          "Her araç için DPF basınç kaydı",
+          "Sefer aralarına göre temizlik randevusu",
           "Acil moda geçen araca öncelik",
-          "Aylık tek fatura ve iş dökümü"
+          "Dönem sonunda tek fatura ve iş dökümü"
         ],
-        "buton": "DPF programı için görüşelim"
+        "buton": "Filo için bilgi alın"
       },
       {
-        "baslik": "Toplu muayene hazırlığı",
-        "kisa": "Muayenesi yaklaşan araçları sırayla ölçer, hazırlarız.",
-        "metin": "Muayene tarihi yaklaşan araçlarınızın listesini gönderin. Her aracın gaz ve duman ölçümünü yapar, kalacak bir değer varsa sebebini ve fiyatını baştan yazılı bildiririz.",
+        "baslik": "Toplu egzoz kontrolü",
+        "kisa": "Muayene tarihi yaklaşan araçların egzozu sırayla kontrol edilir.",
+        "metin": "Muayene tarihi yaklaşan araçların listesine göre randevu verilir. Her aracın egzoz hattı kontrol edilip gaz ve duman değerleri ölçülür, yapılacak iş araç araç yazılı bildirilir.",
         "maddeler": [
           "Muayene tarihine göre sıralı randevu",
-          "Araç başına ölçüm çıktısı",
-          "Onayınız olmadan parça değişmez"
+          "Her araç için ölçüm sonucu",
+          "Parça değişimi onayla yapılır"
         ],
-        "buton": "Araç listesini gönderin"
+        "buton": "Bilgi alın"
       },
       {
         "baslik": "Sigorta ve kasko işleri",
-        "kisa": "Egzoz hasarlarında eksper sürecini takip ederiz.",
-        "metin": "Alttan vurma ya da kaza sonucu oluşan egzoz hasarlarında eksper randevusunu ve evrak takibini biz yürütürüz. Çalıştığımız sigorta şirketlerinin güncel listesi için bizi arayın.",
+        "kisa": "Alttan vurma ve kaza hasarlarında eksper süreci takip edilir.",
+        "metin": "Alttan vurma ya da kaza sonucu oluşan egzoz hasarlarında eksper randevusu ve evrak işleri takip edilir. Anlaşmalı sigorta şirketlerinin güncel listesi için arayın.",
         "maddeler": [
           "Fotoğraflı hasar tespiti",
-          "Parça onayı gelmeden işe başlamama",
-          "Sürecin her adımında bilgilendirme"
+          "Parça onayı gelince onarım",
+          "Her adımda araç sahibine bilgi"
         ],
-        "buton": "Hasar dosyası için yazın"
+        "buton": "Bilgi alın"
       }
     ],
-    "anlasmaNotu": "Anlaşma koşulları araç sayısına ve çalışma şekline göre belirlenir; teklifimizi yazılı olarak iletiriz.",
+    "anlasmaNotu": "Koşullar araç sayısına ve çalışma şekline göre konuşulur, teklif yazılı verilir.",
     "hakkimizda": {
-      "baslik": "Biz kimiz",
+      "baslik": "Hakkında",
       "paragraflar": [
-        "Şaşmaz Oto Sanayi Sitesi'ndeki atölyemizde egzoz, DPF, katalitik konvertör ve paslanmaz imalat işleri yapıyoruz. Bireysel müşterilerimizin yanında dizel filoların, servis araçlarının ve kiralama firmalarının araçlarına da bakıyoruz.",
-        "Çalışma biçimimiz basit: önce ölçer, sonra konuşuruz. Değişim mi, temizlik mi, kaynak mı; seçenekleri ve fiyatını işe başlamadan söyleriz. İşten sonra ölçümü tekrarlar, çıktısını size veririz."
+        "Atölyede binek ve hafif ticari araçların egzoz hattına bakılır. Manifolddan egzoz ucuna kadar kaçak, delik ve tıkanıklıklar giderilir; DPF ve katalitik konvertör temizliği, susturucu değişimi ve paslanmaz egzoz imalatı da yapılır.",
+        "Şahıs araçlarının yanı sıra dizel filo, servis ve kiralama araçları da gelir. Egzoz gazı işten önce ve sonra ölçülür, sonuç araç sahibine verilir."
       ],
       "gorsel": "/img/manifold/lift.jpg",
       "gorselAlt": "Lifte kaldırılmış aracın altında egzoz kontrolü"
     },
-    "misyon": "Aracı ölçerek teşhis etmek, gereken en küçük işle muayeneye hazır ve sessiz teslim etmek.",
-    "vizyon": "Ankara'da egzoz ve emisyon denince ilk akla gelen, ölçümünü açıkça gösteren servis olmak.",
-    "degerler": [
-      {
-        "baslik": "Önce ölçüm",
-        "metin": "Gaz ve duman değerlerini sizin önünüzde okuruz."
-      },
-      {
-        "baslik": "Gereksiz parça yok",
-        "metin": "Temizlenen parçayı değiştirmeyiz, kaynakla kurtulanı atmayız."
-      },
-      {
-        "baslik": "Yasal iş",
-        "metin": "Katalitik ve DPF iptali yapmayız; sistemi çalışır hâle getiririz."
-      },
-      {
-        "baslik": "Yazılı fiyat",
-        "metin": "Fiyatı işe başlamadan söyler, onayınızı alırız."
-      }
-    ],
-    "kalite": {
-      "baslik": "Çalışma düzenimiz",
-      "metin": "Her iş ölçümle başlar, ölçümle biter.",
-      "maddeler": [
-        "Araç kabulünde egzoz hattı lifte kontrol edilir, kaçak dumanla test edilir.",
-        "Emisyon ölçümü işten önce ve sonra yapılır, çıktısı size verilir.",
-        "Katalitik konvertör ve DPF iptali yapılmaz; temizlik ya da uygun muadil önerilir.",
-        "Paslanmaz imalatta argon kaynağı ve esnek bağlantı kullanılır."
-      ]
-    },
+    "bilgiBaslik": "Genel bilgiler",
+    "markaBaslik": "Sık gelen markalar",
     "kariyer": {
-      "baslik": "Ekibimize katılın",
-      "metin": "Egzoz ve kaynak işlerinde deneyimli usta ve mesleği öğrenmek isteyen çırak arkadaşlarla tanışmak isteriz. Kısa bir tanıtımla bize yazın."
+      "baslik": "Kariyer",
+      "metin": "Egzoz ve kaynak işlerinde tecrübeli ustalar ile mesleği öğrenmek isteyen çıraklar başvurabilir. Başvuru için ad, telefon ve kısa bir not yeterli."
     },
-    "galeriBaslik": "Egzoz işinden kareler",
+    "galeriBaslik": "Galeri",
+    "sssBaslik": "Sık sorulanlar",
     "sss": [
       {
-        "soru": "Muayeneden egzozdan kaldım, ne yapmalıyım?",
-        "cevap": "Muayene raporunu getirin. Hangi değerden kaldığınıza bakar, ölçümü önünüzde tekrarlar, sebebini bulup çoğu zaman aynı gün düzeltiriz."
+        "soru": "DPF lambası yanıyor, araçla gelinebilir mi?",
+        "cevap": "Araç normal çekiyorsa sakin sürüşle gelinebilir. Motor acil moda geçmişse araç zorlanmamalı, uzun yola çıkılmamalı."
       },
       {
-        "soru": "DPF temizlenir mi, yoksa değişmeli mi?",
-        "cevap": "Filtre çatlamamış ya da erimemişse çoğu zaman temizlik yeterlidir. Önce basıncını ölçer, söküp bakar, öyle söyleriz."
+        "soru": "DPF temizlenir mi, değişmesi mi gerekir?",
+        "cevap": "Filtre çatlamamış ve erimemişse çoğu zaman temizlik yeterli olur. Karar, basınç farkı ölçülüp filtre söküldükten sonra verilir."
       },
       {
-        "soru": "Katalitik ya da DPF iptali yapıyor musunuz?",
-        "cevap": "Hayır. İptal yasal değildir ve muayeneden geçmez. Sistemi temizler, gerekirse uygun muadille değiştiririz."
+        "soru": "Katalitik konvertör neden tıkanır?",
+        "cevap": "Motor yağ yakıyorsa ya da araç uzun süre tekleyerek kullanılmışsa petek tıkanır veya erir. Bu durumda önce motordaki sebep giderilmelidir."
       },
       {
-        "soru": "Ölçüm için randevu gerekir mi?",
-        "cevap": "Gerekmez ama muayene tarihinizden birkaç gün önce gelmeniz iyi olur; parça gerekirse zaman kalır."
+        "soru": "Egzoz gazı ölçümü için randevu gerekir mi?",
+        "cevap": "Gerekmez. Muayene tarihinden birkaç gün önce gelinirse parça gerekse bile zaman kalır."
       },
       {
-        "soru": "Ticari araç ve minibüse bakıyor musunuz?",
-        "cevap": "Evet. Hafif ticari, minibüs ve kamyonetlerin egzoz, DPF ve paslanmaz imalat işlerini de yapıyoruz."
+        "soru": "Minibüs ve kamyonetlere bakılıyor mu?",
+        "cevap": "Evet. Hafif ticari araç, minibüs ve kamyonetlerin egzoz, DPF ve paslanmaz imalat işleri de yapılır."
       }
     ],
     "sayfalar": {
-      "kurumsal": {
-        "baslik": "Kurumsal",
-        "metin": "Kim olduğumuz, nasıl çalıştığımız ve neye önem verdiğimiz.",
-        "gorsel": "/img/manifold/kaynak.jpg"
+      "hakkinda": {
+        "baslik": "Hakkında",
+        "metin": "Şaşmaz Oto Sanayi Sitesi'nde egzoz, DPF ve katalitik konvertör işleri"
       },
       "hizmetler": {
-        "baslik": "Hizmetlerimiz",
-        "metin": "Manifolddan egzoz ucuna, her iş için ortalama süre ve kapsam."
+        "baslik": "Hizmetler",
+        "metin": "Süreler yaklaşıktır, araca göre değişebilir. Fiyat ve randevu için arayın."
       },
-      "muayene": {
-        "baslik": "Muayene hazırlığı",
-        "metin": "Aracınızda gördüklerinizi işaretleyin, muayeneden önce neye bakılması gerektiğini görün."
+      "belirtiler": {
+        "baslik": "Arıza belirtileri",
+        "metin": "Araçta görülen belirtiler seçilince hangi parçaya bakılacağı görünür."
       },
       "kurumsal-musteriler": {
-        "baslik": "Filo ve kurumsal müşteriler",
-        "metin": "Dizel filolar için DPF programı, toplu muayene hazırlığı ve aylık fatura.",
+        "baslik": "Filo ve kurumsal araçlar",
+        "metin": "Dizel filo, servis ve kiralama araçlarının egzoz ve DPF işleri araç araç kaydedilir.",
         "gorsel": "/img/manifold/cift-uc.jpg"
       },
       "iletisim": {
         "baslik": "İletişim",
-        "metin": "Ölçüm randevusu, filo teklifi ya da bir sorunuz için yazın; aynı gün dönüş yapalım."
+        "metin": "Fiyat ve randevu için arayın ya da formdan yazın."
       }
     },
     "konular": [
-      "Muayene öncesi ölçüm",
-      "DPF temizleme",
-      "Filo / DPF programı",
-      "Paslanmaz imalat",
-      "Sigorta / hasar dosyası",
+      "Randevu",
+      "Fiyat bilgisi",
+      "DPF temizliği",
+      "Filo ve kurumsal",
       "Genel bilgi"
     ],
-    "cta": {
-      "baslik": "Temiz çıksın, sessiz çıksın.",
-      "metin": "Muayeneden önce kısa bir ölçümle içiniz rahat etsin. Randevu için yazın ya da arayın.",
-      "buton": "Ölçüm randevusu"
+    "formBaslik": "Mesaj gönderin"
+  },
+  "galeri": [
+    {
+      "src": "/img/manifold/kaynak.jpg",
+      "alt": "Egzoz borusunun argon kaynağı, kıvılcımlar"
     },
-    "yorumBaslik": "Örnek müşteri yorumları"
-  }
+    {
+      "src": "/img/manifold/cift-uc.jpg",
+      "alt": "Paslanmaz çift egzoz ucu yakın plan"
+    },
+    {
+      "src": "/img/manifold/duman.jpg",
+      "alt": "Egzoz ucundan çıkan duman"
+    }
+  ]
 }

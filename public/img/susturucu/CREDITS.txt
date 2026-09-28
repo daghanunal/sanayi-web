@@ -1,5 +1,3 @@
-Tüm görseller Pexels lisansıyla (ücretsiz, ticari kullanım serbest):
-egzoz-bw.jpg: https://www.pexels.com/photo/black-and-white-abstract-photo-of-a-vehicle-with-exhaust-pipe-10508827/
 Diğer görseller public/img/manifold/ klasöründen (bkz. oradaki CREDITS.txt).
 egzoz-hatti-3d.jpg: temsilî 3D çizim — lib3d "exhaust" varlığı (assets3d, prosedürel, marka yok), Blender Cycles stüdyo render'ı
   (betik: .shots/yukseltme/egzoz-tools/studio_exhaust.py; az 64, el 18, koyu fon, yeşil kontur ışığı)

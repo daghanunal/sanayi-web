@@ -1,4 +1,4 @@
-// Manifold sahnesi: lib3d gerçekçi egzoz hattı (manifold → katalitik → DPF → susturucu → uç),
+// Manifold sahnesi (künye + Hizmetler): lib3d gerçekçi egzoz hattı (manifold → katalitik → DPF → susturucu → uç),
 // karanlık stüdyoda havada asılı; garaj HDRI yansımaları, sıcak üst spot + soğuk kontur, yumuşak gölge.
 // Durak yakın planlarında parça hattan hafifçe çıkar, yanında kesit dilimi belirir (katalitik peteği,
 // DPF'nin temizlenen hücreleri, susturucu bölmesi). Uçtan çıkan duman kirliden temize döner.
@@ -150,7 +150,7 @@ export function createScene(canvas) {
 
   // --- Uç dumanı ------------------------------------------------------------
   const puff = radialTex([[0, 'rgba(255,255,255,1)'], [0.4, 'rgba(255,255,255,.45)'], [1, 'rgba(255,255,255,0)']], 64);
-  const PN = lo ? 90 : 170;
+  const PN = lo ? 70 : 140;
   const plumeGeo = new THREE.BufferGeometry();
   const plumePos = new Float32Array(PN * 3);
   const plumeAge = new Float32Array(PN);
@@ -186,7 +186,7 @@ export function createScene(canvas) {
   scene.add(plume);
 
   // --- Spot ışığında süzülen toz -------------------------------------------
-  const DN = lo ? 70 : 150;
+  const DN = lo ? 40 : 90;
   const dustPos = new Float32Array(DN * 3);
   const dustSeed = new Float32Array(DN);
   for (let i = 0; i < DN; i++) {
