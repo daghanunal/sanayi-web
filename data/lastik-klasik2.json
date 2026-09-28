@@ -1,119 +1,12 @@
 {
   "hizmetGorselleri": [
-    "/img/lastik-klasik2/bijon.webp",
-    "/img/lastik-klasik2/rot-ekran.webp",
     "/img/lastik-klasik2/sokum.webp",
+    "/img/lastik-klasik2/rot-ekran.webp",
+    "/img/lastik-klasik2/lift.webp",
     "/img/lastik-klasik2/otel-yigin.webp",
     "/img/lastik-klasik2/jant-kaliper.webp",
-    "/img/lastik-klasik2/lift.webp",
-    "/img/lastik-klasik2/yuvarla.webp"
+    "/img/lastik-klasik2/yuvarla.webp",
+    "/img/lastik-klasik2/olcum.webp"
   ],
-  "derinlik": {
-    "baslik": "Lastiğinde kaç milim kaldı?",
-    "metin": "Yeni bir binek lastiğinin dişi 7-8 mm olur. Kaydırıcıyı çek, lastiğin nerede duruyor gör.",
-    "esikler": [
-      {
-        "min": 6,
-        "etiket": "Yeni gibi",
-        "metin": "Rahat kullan. Basıncı ayda bir kontrol et, rot-balansı yılda bir yaptır.",
-        "ton": "iyi"
-      },
-      {
-        "min": 4,
-        "etiket": "Yarı ömür",
-        "metin": "Yazın sorun yok. Kışlık lastikte 4 mm'nin altı yasal olarak kış lastiği sayılmaz, sezon başı bir baktır.",
-        "ton": "iyi"
-      },
-      {
-        "min": 3,
-        "etiket": "Islakta dikkat",
-        "metin": "Kışın tutuş gitti. Yağmurda fren mesafesi uzamaya başladı; bu sezonu planla.",
-        "ton": "orta"
-      },
-      {
-        "min": 1.6,
-        "etiket": "Değişim zamanı",
-        "metin": "Islak zeminde kızaklama riski ciddi. Ebadını WhatsApp'tan at, stokta var mı hemen söyleyelim.",
-        "ton": "kotu"
-      },
-      {
-        "min": 0,
-        "etiket": "Yasal sınırın altında",
-        "metin": "1,6 mm'nin altı trafikte cezalı ve tehlikeli. Aracı böyle kullanma, bugün gel.",
-        "ton": "kotu"
-      }
-    ]
-  },
-  "mevsimEsik": "7°C",
-  "surec": [
-    {
-      "baslik": "Aracı karşılıyoruz",
-      "aciklama": "Lastiklerin diş derinliğine, yaşına ve basıncına bakıp ne gerektiğini söylüyoruz.",
-      "sure": "2 dk"
-    },
-    {
-      "baslik": "Kaldırıp söküyoruz",
-      "aciklama": "Araç lifte çıkıyor, tekerler sırayla iniyor.",
-      "sure": "4 dk"
-    },
-    {
-      "baslik": "Lastiği değiştiriyoruz",
-      "aciklama": "Jantı çizmeyen makinede söküm-takım, yeni sibop.",
-      "sure": "6 dk"
-    },
-    {
-      "baslik": "Balans yapıyoruz",
-      "aciklama": "Her teker makinede dönüyor, ağırlıklar gram hassasiyetinde.",
-      "sure": "5 dk"
-    },
-    {
-      "baslik": "Torkla sıkıyoruz",
-      "aciklama": "Bijonlar tork anahtarıyla, fabrika değerinde. Basınç son kez kontrol.",
-      "sure": "2 dk"
-    },
-    {
-      "baslik": "Teslim ediyoruz",
-      "aciklama": "Eski lastiklerini istersen otele alıyoruz, istersen geri veriyoruz.",
-      "sure": "1 dk"
-    }
-  ],
-  "mevsimGorsel": {
-    "yaz": "/img/lastik-klasik2/yaz.webp",
-    "kis": "/img/lastik-klasik2/kis.webp"
-  },
-  "otelGorsel": "/img/lastik-klasik2/jant-yigin.webp",
-  "derinlikGorsel": {
-    "src": "/img/lastik-klasik2/olcum.webp",
-    "alt": "Diş derinliği ölçer lastiğin oluğuna dayanmış"
-  },
-  "surecGorsel": {
-    "src": "/img/lastik-klasik2/lift.webp",
-    "alt": "Lifte kaldırılmış aracın tekerine bakılıyor"
-  },
-  "galeri": [
-    {
-      "src": "/img/lastik-klasik2/yuvarla.webp",
-      "alt": "Sökülen teker lifte doğru yuvarlanıyor"
-    },
-    {
-      "src": "/img/lastik-klasik2/rot-usta.webp",
-      "alt": "Rot ayarı öncesi sensörler tekere takılıyor"
-    },
-    {
-      "src": "/img/lastik-klasik2/jant-yol.webp",
-      "alt": "Alaşım jant ve alçak profil lastik"
-    },
-    {
-      "src": "/img/lastik-klasik2/lift-suv.webp",
-      "alt": "Lifteki aracın tekeri sökülüyor"
-    },
-    {
-      "src": "/img/lastik-klasik2/sokum.webp",
-      "alt": "Lastik söküm-takım makinesine yerleştiriliyor"
-    },
-    {
-      "src": "/img/lastik-klasik2/otel-yigin.webp",
-      "alt": "Jantlı lastik takımı üst üste"
-    }
-  ]
+  "hakkindaGorsel": { "src": "/img/lastik-klasik2/rot-usta.webp", "alt": "Rot ayarı öncesi sensörler tekere takılıyor", "w": 1400, "h": 2100 }
 }

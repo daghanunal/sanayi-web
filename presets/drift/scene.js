@@ -1,5 +1,5 @@
 // Kalıcı WebGL sahnesi: gece pisti. lib3d teker (+ gece HDRI'si), ıslak asfalt ve eski patinaj izleri,
-// uzakta sodyum lambaları, lastik dumanı, kar, lastik oteli rafları, hız tüneli, fren izi.
+// uzakta sodyum lambaları, lastik dumanı ve kar.
 // main.js her karede bir "poz" verir; sahne ona göre kamerayı ve efektleri ayarlar.
 import * as THREE from 'three';
 import { HDRLoader } from 'three/examples/jsm/loaders/HDRLoader.js';
@@ -114,31 +114,6 @@ function donutMarks(size) {
   }, false);
 }
 
-function skidTexture() {
-  const r = rng(3);
-  return canvasTex(512, 64, (g) => {
-    for (let x = 0; x < 512; x++) {
-      const fade = Math.min(1, x / 60) * (0.55 + r() * 0.25);
-      g.fillStyle = `rgba(5,5,6,${fade})`;
-      g.fillRect(x, 8 + r() * 2, 1, 48 - r() * 4);
-    }
-    g.globalCompositeOperation = 'destination-out';
-    for (let y = 14; y < 56; y += 7) {
-      g.fillStyle = 'rgba(0,0,0,.35)';
-      g.fillRect(0, y, 512, 1.5);
-    }
-  });
-}
-
-// Otel rafları için gerçek oranlı lastik kesiti (225/45: geniş sırt, alçak yanak)
-function stackTyreGeometry(seg) {
-  const pts = [
-    [0.27, 0.12], [0.27, -0.12], [0.3, -0.148], [0.37, -0.156], [0.43, -0.15], [0.455, -0.128],
-    [0.463, -0.075], [0.466, 0], [0.463, 0.075], [0.455, 0.128], [0.43, 0.15], [0.37, 0.156], [0.3, 0.148], [0.27, 0.12],
-  ].map(([x, y]) => new THREE.Vector2(x, y));
-  return new THREE.LatheGeometry(pts, seg);
-}
-
 // Gece HDRI'si (lib3d 'night', sodyum lambalı sokak), drift'e göre soğutulur: renk doygunluğu
 // düşürülür, maviye çekilir. Böylece siyah jant bronz, lastik kahverengi görünmez; sarı yalnız vurgu kalır.
 async function nightEnv(renderer, quality) {
@@ -228,15 +203,6 @@ export async function createStage(canvas, { ad, olcu, since }) {
   contact.position.y = -0.997;
   scene.add(contact);
 
-  const skid = new THREE.Mesh(
-    new THREE.PlaneGeometry(1, 0.62),
-    new THREE.MeshBasicMaterial({ map: skidTexture(), transparent: true, depthWrite: false, opacity: 0.9 })
-  );
-  skid.rotation.x = -Math.PI / 2;
-  skid.position.y = -0.995;
-  skid.visible = false;
-  scene.add(skid);
-
   // --- Uzakta sodyum lambaları ve bokeh ---
   const bokeh = new THREE.Group();
   {
@@ -325,111 +291,6 @@ export async function createStage(canvas, { ad, olcu, since }) {
   snow.frustumCulled = false;
   scene.add(snow);
 
-  // --- Lastik oteli: iki yanda raf koridoru ---
-  const otel = new THREE.Group();
-  otel.visible = false;
-  scene.add(otel);
-  const STEP = lo ? 2.2 : 1.5;
-  const COUNT = Math.floor(38 / STEP);
-  const stacks = [];
-  for (const side of [-1, 1]) {
-    for (let i = 0; i < COUNT; i++) {
-      for (const shelfY of [-0.95, 0.75]) {
-        stacks.push({ x: side * 2.1, z: -4 - i * STEP, y: shelfY, h: 3 + ((i * 7 + (side > 0 ? 3 : 0)) % 3) });
-      }
-    }
-  }
-  const tiresTotal = stacks.reduce((a, s) => a + s.h, 0);
-  const stackTire = new THREE.InstancedMesh(
-    stackTyreGeometry(lo ? 22 : 32),
-    new THREE.MeshStandardMaterial({ color: '#16171a', roughness: 0.78, metalness: 0 }),
-    tiresTotal
-  );
-  {
-    const r = rng(9);
-    let k = 0;
-    const m = new THREE.Matrix4();
-    for (const s of stacks) {
-      for (let j = 0; j < s.h; j++) {
-        m.makeRotationY(r() * TAU);
-        m.setPosition(s.x + (r() - 0.5) * 0.04, s.y + 0.18 + j * 0.315, s.z);
-        stackTire.setMatrixAt(k++, m);
-      }
-    }
-  }
-  otel.add(stackTire);
-  const frameMat = new THREE.MeshStandardMaterial({ color: '#ffc400', roughness: 0.5, metalness: 0.3 });
-  const postCount = Math.ceil(COUNT / 2) + 1;
-  const posts = new THREE.InstancedMesh(new THREE.BoxGeometry(0.07, 3.6, 0.07), frameMat, postCount * 4);
-  {
-    let k = 0;
-    const m = new THREE.Matrix4();
-    for (const side of [-1, 1]) {
-      for (let i = 0; i < postCount; i++) {
-        const z = -4 + STEP * 0.5 - i * STEP * 2;
-        for (const dx of [-0.45, 0.45]) posts.setMatrixAt(k++, m.makeTranslation(side * 2.1 + dx, 0.6, z));
-      }
-    }
-  }
-  otel.add(posts);
-  const boards = new THREE.InstancedMesh(new THREE.BoxGeometry(1, 0.05, 40), new THREE.MeshStandardMaterial({ color: '#2a2c30', roughness: 0.7 }), 4);
-  {
-    let k = 0;
-    const m = new THREE.Matrix4();
-    for (const side of [-1, 1]) for (const y of [-0.97, 0.73]) boards.setMatrixAt(k++, m.makeTranslation(side * 2.1, y, -22));
-  }
-  otel.add(boards);
-  const tags = new THREE.InstancedMesh(new THREE.PlaneGeometry(0.22, 0.08), new THREE.MeshBasicMaterial({ color: '#ffe46b' }), stacks.length);
-  {
-    const m = new THREE.Matrix4();
-    stacks.forEach((s, i) => {
-      m.makeRotationY(s.x > 0 ? -Math.PI / 2 : Math.PI / 2);
-      m.setPosition(s.x - Math.sign(s.x) * 0.5, s.y + 0.2, s.z);
-      tags.setMatrixAt(i, m);
-    });
-  }
-  otel.add(tags);
-  const strips = new THREE.InstancedMesh(new THREE.PlaneGeometry(0.16, 2.2), new THREE.MeshBasicMaterial({ color: '#fff4d6' }), COUNT);
-  {
-    const m = new THREE.Matrix4();
-    for (let i = 0; i < COUNT; i++) {
-      m.makeRotationX(Math.PI / 2);
-      m.setPosition(0, 2.6, -4 - i * STEP * 1.2);
-      strips.setMatrixAt(i, m);
-    }
-  }
-  otel.add(strips);
-  const otelFloor = new THREE.Mesh(new THREE.PlaneGeometry(6, 50), new THREE.MeshStandardMaterial({ color: '#202126', roughness: 0.35, metalness: 0.2 }));
-  otelFloor.rotation.x = -Math.PI / 2;
-  otelFloor.position.set(0, -1, -22);
-  otel.add(otelFloor);
-  const laneLine = new THREE.Mesh(new THREE.PlaneGeometry(0.08, 50), new THREE.MeshBasicMaterial({ color: '#ffc400' }));
-  laneLine.rotation.x = -Math.PI / 2;
-  laneLine.position.set(0, -0.99, -22);
-  otel.add(laneLine);
-
-  // --- Hız tüneli ---
-  const TUN = lo ? 140 : 260;
-  const tunnel = new THREE.InstancedMesh(
-    new THREE.BoxGeometry(0.018, 0.018, 1),
-    new THREE.MeshBasicMaterial({ color: '#ffffff', transparent: true, opacity: 0.9, blending: THREE.AdditiveBlending, depthWrite: false, fog: false }),
-    TUN
-  );
-  const tunData = [];
-  {
-    const r = rng(13);
-    const yellowC = new THREE.Color('#ffc400');
-    const whiteC = new THREE.Color('#dfe8ff');
-    const hotC = new THREE.Color('#ff5a1f');
-    for (let i = 0; i < TUN; i++) {
-      tunData.push({ a: r() * TAU, r: 1.2 + r() * 2.6, z: -r() * 60, len: 0.6 + r() * 2.4 });
-      tunnel.setColorAt(i, i % 5 === 0 ? yellowC : i % 11 === 0 ? hotC : whiteC);
-    }
-  }
-  tunnel.visible = false;
-  tunnel.frustumCulled = false;
-  scene.add(tunnel);
-
   // --- Varlıklar: gece HDRI'si + teker ---
   const [env, wheel] = await Promise.all([
     nightEnv(renderer, quality),
@@ -448,7 +309,6 @@ export async function createStage(canvas, { ad, olcu, since }) {
   let width = 1, height = 1;
   let spinAngle = 0;
   let viewOffset = [0, 0];
-  let tunnelZ = 0;
 
   function resize() {
     width = canvas.clientWidth || innerWidth;
@@ -542,28 +402,12 @@ export async function createStage(canvas, { ad, olcu, since }) {
     snowGeo.attributes.position.needsUpdate = true;
   }
 
-  function updateTunnel(amount, speed, dt) {
-    tunnel.visible = amount > 0.01;
-    if (!tunnel.visible) return;
-    tunnelZ += dt * speed;
-    tunnel.material.opacity = amount;
-    for (let i = 0; i < TUN; i++) {
-      const t = tunData[i];
-      const z = ((((t.z + tunnelZ) % 60) + 60) % 60) - 55;
-      m4.makeScale(1, 1, t.len * (1 + speed * 0.12));
-      m4.setPosition(Math.cos(t.a) * t.r, Math.sin(t.a) * t.r, z);
-      tunnel.setMatrixAt(i, m4);
-    }
-    tunnel.instanceMatrix.needsUpdate = true;
-  }
-
   let labelEls = null;
   const project = (v) => {
     tmpV.copy(v).project(camera);
     return [(tmpV.x * 0.5 + 0.5) * width, (-tmpV.y * 0.5 + 0.5) * height, tmpV.z];
   };
   // Sis rengi ton eşlemeden geçer: bu değerler ekranda sayfa zeminine (#121316) oturur
-  const FOG = { wheel: ['#232428', 7, 17], otel: ['#1f2024', 6, 26], tunnel: ['#232428', 200, 400] };
   const fog = new THREE.Fog('#232428', 7, 17);
   scene.fog = fog;
 
@@ -583,15 +427,7 @@ export async function createStage(canvas, { ad, olcu, since }) {
       applyViewOffset();
     }
 
-    const showWheel = p.mode !== 'otel' && p.mode !== 'tunnel';
-    wheel.root.visible = showWheel;
-    ground.visible = marks.visible = contact.visible = bokeh.visible = showWheel;
-    otel.visible = p.mode === 'otel';
-    // Tek sis nesnesi (sis açılıp kapanınca gölgelendiriciler yeniden derlenmesin)
-    const fs = p.mode === 'otel' ? FOG.otel : p.mode === 'tunnel' ? FOG.tunnel : FOG.wheel;
-    fog.color.set(fs[0]);
-    fog.near = fs[1];
-    fog.far = fs[2];
+    const showWheel = true;
 
     const tread = p.tread ?? 0;
     wheel.root.position.set(p.wheelX ?? 0, (p.wheelY ?? 0) + tread * 0.02, 0);
@@ -630,16 +466,6 @@ export async function createStage(canvas, { ad, olcu, since }) {
     }
     updateSmoke(dt);
     updateSnow(p.snow ?? 0, dt);
-    updateTunnel(p.tunnel ?? 0, p.tunnelSpeed ?? 8, dt);
-
-    const sk = p.skid ?? 0;
-    skid.visible = sk > 0.001 && showWheel;
-    if (skid.visible) {
-      const len = sk * (p.skidLen ?? 6);
-      skid.scale.x = Math.max(0.01, len);
-      skid.position.x = (p.skidFrom ?? 0) - len / 2;
-      skid.material.opacity = Math.min(1, sk * 3) * 0.9;
-    }
 
     renderer.render(scene, camera);
 
@@ -675,6 +501,8 @@ export async function createStage(canvas, { ad, olcu, since }) {
   return {
     renderer, scene, camera, wheel, render, resize, quality,
     setLabels: (map) => (labelEls = map),
+    // Parçanın etiket noktasının ekran konumu (px): [x, y] ya da null
+    anchorScreen: (id) => (wheel.anchor(id, tmpV) ? project(tmpV) : null),
     get dpr() { return dpr; },
   };
 }

@@ -1,188 +1,135 @@
 {
   "kurumsal": {
-    "hero": {
-      "baslik": "Filonuzun lastiği bizde.",
-      "metin": "Binek ve hafif ticari filolar için lastik tedariki, mevsim değişimi, rot-balans ve lastik oteli. Her aracın lastik kaydını tutar, değişim zamanını biz hatırlatırız.",
-      "birincil": "Filo teklifi isteyin",
-      "ikincil": "Ebat rehberi",
-      "ikincilRota": "ebat-rehberi"
-    },
+    "hizmetOzetBaslik": "Hizmetler",
     "ozet": {
-      "baslik": "Aynı gün, aynı titizlik",
-      "metin": "Tek araçla gelen müşterimize de otuz araçlık filoya da aynı düzenle bakıyoruz: diş derinliği ölçülür, bijonlar torkla sıkılır, yapılan iş araç kaydına yazılır."
+      "baslik": "Hakkında",
+      "metin": "Şaşmaz Oto Sanayi Sitesi'nde binek ve hafif ticari araçların lastik, jant ve rot-balans işlerine bakılır. Şahıs araçlarının yanı sıra şirket, servis ve kiralama araçlarının lastikleri de değiştirilir, mevsimlik takımları lastik otelinde saklanır."
     },
-    "hizmetOzetBaslik": "Lastik, jant, rot-balans",
-    "anlasmaBaslik": "Filolar ve şirketler için",
-    "anlasmaMetin": "Şirket araçlarınızın lastiklerini tek muhatapla yönetin: toplu değişim, depolama ve dönemlik fatura.",
+    "konumBaslik": "Çalışma saatleri ve konum",
+    "yorumBaslik": "Örnek yorumlar",
+    "hizmetLink": "Bu hizmet için bilgi alın",
+    "surecBaslik": "Çalışma sırası",
+    "cta": {
+      "baslik": "İletişim",
+      "metin": "Fiyat ve randevu için arayın ya da formdan yazın. Lastik ebadı yanağın fotoğrafından da okunur.",
+      "buton": "İletişim formu"
+    },
+    "anlasmaBaslik": "Filo ve lastik oteli",
+    "anlasmaMetin": "Şirket, servis ve kiralama araçlarının lastik işleri araç araç kaydedilir. Fatura dönem sonunda toplu kesilir.",
     "anlasmalar": [
       {
-        "baslik": "Filo lastik yönetimi",
-        "kisa": "Araç bazında lastik kaydı, diş derinliği takibi, toplu değişim.",
-        "metin": "Filonuzdaki her aracın lastik ebadını, yaşını ve diş derinliğini kayda alırız. Değişim zamanı yaklaşan aracı size bildirir, toplu değişimi araçlarınızın boş olduğu saatlere planlarız.",
+        "baslik": "Filo lastik takibi",
+        "kisa": "Her aracın lastik ebadı, yaşı ve diş derinliği kayıtta durur.",
+        "metin": "Filodaki her aracın lastik ebadı, lastik yaşı ve diş derinliği kaydedilir. Değişim zamanı gelen araçlar firmaya bildirilir, toplu değişim araçların boş olduğu saatlere göre ayarlanır.",
         "maddeler": [
-          "Araç bazında lastik ve diş derinliği kaydı",
-          "Mevsim değişimi için toplu randevu planı",
-          "Rot-balans ve basınç kontrolü her değişimde",
-          "Dönemlik tek fatura ve iş dökümü"
+          "Araç araç lastik ve diş derinliği kaydı",
+          "Mevsim değişimi için toplu randevu",
+          "Her değişimde rot-balans ve basınç kontrolü",
+          "Dönem sonunda tek fatura ve iş dökümü"
         ],
-        "buton": "Filo görüşmesi talep edin"
+        "buton": "Filo için bilgi alın"
       },
       {
         "baslik": "Kurumsal lastik oteli",
-        "kisa": "Mevsimlik lastikler plakaya etiketli, rafta hazır.",
-        "metin": "Şirket araçlarının yazlık ya da kışlık takımlarını yıkayıp kontrol eder, plakaya etiketleyerek depoda saklarız. Mevsim dönünce takımlar hazır olur, değişim sırası beklemez.",
+        "kisa": "Mevsimlik takımlar plakaya göre etiketlenip rafta saklanır.",
+        "metin": "Şirket araçlarının yazlık ya da kışlık takımları yıkanıp kontrol edilir, plakaya göre etiketlenip depoda saklanır. Mevsim dönünce takımlar hazır bekler.",
         "maddeler": [
-          "Yıkama, kontrol ve plakaya özel etiket",
+          "Yıkama, kontrol ve plakaya göre etiket",
           "Diş derinliği ölçümü ve kayıt",
-          "Mevsim dönüşünde hatırlatma"
+          "Mevsim dönünce haber verilir"
         ],
-        "buton": "Otel için teklif isteyin"
+        "buton": "Lastik oteli için bilgi alın"
       },
       {
         "baslik": "Kiralama ve servis araçları",
-        "kisa": "İade öncesi kontrol, patlak ve jant işleri için öncelikli giriş.",
-        "metin": "Kiralama, servis ve dağıtım araçlarında lastik patlağı ya da jant hasarı işi durdurur. Bu araçları öncelikli alır, yapılan işi araç bazında raporlarız.",
+        "kisa": "Patlak ve jant hasarında araç sıraya alınmadan içeri girer.",
+        "metin": "Kiralama, servis ve dağıtım araçlarında patlak ya da jant hasarı işi durdurur. Bu araçlar sıra beklemeden alınır, yapılan iş araç araç yazılır.",
         "maddeler": [
-          "Patlak ve jant hasarında öncelikli giriş",
-          "İade öncesi lastik kontrol listesi",
-          "Araç bazında iş raporu"
+          "Patlak ve jant hasarında sırasız giriş",
+          "İade öncesi lastik kontrolü",
+          "Araç araç iş dökümü"
         ],
-        "buton": "Görüşme talep edin"
+        "buton": "Bilgi alın"
       }
     ],
-    "anlasmaNotu": "Anlaşma koşulları araç sayısına, ebatlara ve depolama ihtiyacına göre belirlenir; teklifimizi yazılı olarak iletiriz.",
+    "anlasmaNotu": "Koşullar araç sayısına, ebatlara ve depolama ihtiyacına göre konuşulur, teklif yazılı verilir.",
     "hakkimizda": {
-      "baslik": "Biz kimiz",
+      "baslik": "Hakkında",
       "paragraflar": [
-        "Şaşmaz Oto Sanayi Sitesi'nde lastik, jant ve rot-balans işini bireysel araçlar kadar şirket, servis ve kiralama filolarına da yapıyoruz. Filodaki her aracın ebadını, lastik yaşını ve diş derinliğini kayıtta tutuyoruz.",
-        "Bir filonun lastiği tek tek değil plana göre değişir: mevsim geçişini araçların boş olduğu saatlere böler, yapılan işi araç bazında yazar, dönem sonunda tek fatura keseriz. Atölyedeki sıra ise her araçta aynıdır: ölç, fiyatı baştan söyle, jantı çizmeden sök-tak, torkla sık."
+        "Atölyede binek ve hafif ticari araçların lastik, jant ve rot-balans işlerine bakılır. Şahıs araçlarının yanı sıra şirket, servis ve kiralama araçları da gelir.",
+        "Filodaki araçların lastik ebadı, yaşı ve diş derinliği kayıtta tutulur. Mevsimlik takımlar yıkanıp plakaya göre etiketlenir, lastik otelinde saklanır."
       ],
       "gorsel": "/img/kurumsal-lastik/kontrol.jpg",
       "gorselAlt": "Usta, söküm makinesinin yanında lastiği kontrol ediyor"
     },
-    "misyon": "Aracı güvenle yola çıkaracak lastiği doğru ebatta, doğru fiyatla ve aynı gün takmak.",
-    "vizyon": "Ankara'da filo sahiplerinin lastik işini gönül rahatlığıyla bıraktığı, kayıtlı ve düzenli çalışan bir lastik merkezi olmak.",
-    "degerler": [
-      {
-        "baslik": "Ölçerek öneri",
-        "metin": "Diş derinliğini ve lastik yaşını ölçmeden değişim önermeyiz."
-      },
-      {
-        "baslik": "Torkla sıkma",
-        "metin": "Bijonlar tork anahtarıyla, üretici değerinde sıkılır."
-      },
-      {
-        "baslik": "Kayıtlı iş",
-        "metin": "Her aracın lastik geçmişini kayıtta tutarız."
-      },
-      {
-        "baslik": "Açık fiyat",
-        "metin": "Söküm, takım ve sibop dahil fiyatı baştan söyleriz."
-      }
-    ],
-    "kalite": {
-      "baslik": "Kalite anlayışımız",
-      "metin": "Her araçta aynı iş akışı: kabulde ölçüm, açık fiyat, jantı çizmeyen söküm-takım, balans, torkla sıkma ve son basınç kontrolü.",
-      "maddeler": [
-        "Kabulde diş derinliği, lastik yaşı ve basınç kontrol edilir.",
-        "Söküm ve takım jantı çizmeyen makinede yapılır.",
-        "Her teker balans makinesinde dengelenir.",
-        "Bijonlar tork anahtarıyla sıkılır, basınç son kez ölçülür."
-      ]
-    },
+    "markaBaslik": "Satılan lastik markaları",
     "kariyer": {
-      "baslik": "Ekibimize katılın",
-      "metin": "Lastik, rot-balans ve jant işlerinde deneyimli usta ve mesleği öğrenmek isteyen çırak arkadaşlarla tanışmak isteriz. Kısa bir tanıtımla bize yazın."
+      "baslik": "Kariyer",
+      "metin": "Lastik, rot-balans ve jant işlerinde tecrübeli ustalar ile mesleği öğrenmek isteyen çıraklar başvurabilir. Başvuru için ad, telefon ve kısa bir not yeterli."
     },
     "sss": [
       {
-        "soru": "Lastiğin ebadını nereden öğrenirim?",
+        "soru": "Lastiğin ebadı nereden öğrenilir?",
         "cevap": "Lastiğin yanağında yazar, örneğin 205/55 R16 91V. Aynı bilgi çoğu araçta sürücü kapısının iç kenarındaki ya da yakıt kapağının içindeki etikette de bulunur."
       },
       {
-        "soru": "Lastiğin yaşını nasıl anlarım?",
-        "cevap": "Yanaktaki DOT yazısının son dört hanesine bakın. 2322, 2022'nin 23. haftası demektir. Diş derinliği yeterli olsa da yaşlı lastiğin hamuru sertleşir."
+        "soru": "Lastiğin yaşı nasıl anlaşılır?",
+        "cevap": "Yanaktaki DOT yazısının son dört hanesi üretim haftası ve yılıdır. 2322, 2022'nin 23. haftası demektir. Diş derinliği yeterli olsa da yaşlı lastiğin hamuru sertleşir."
       },
       {
-        "soru": "Diş derinliği kaç milimetre olunca değiştirmeliyim?",
-        "cevap": "Yasal alt sınır yaz lastiğinde 1,6 mm, kış lastiğinde 4 mm'dir. Güvenli fren için yaz lastiğini 3 mm civarında değiştirmenizi öneririz."
+        "soru": "Diş derinliği kaç milimetreye inince lastik değişir?",
+        "cevap": "Yasal alt sınır yaz lastiğinde 1,6 mm, kış lastiğinde 4 mm'dir. Islak yolda fren mesafesi 3 mm'nin altında belirgin uzar."
       },
       {
-        "soru": "Farklı ebatta lastik takabilir miyim?",
-        "cevap": "Ruhsatta ya da üreticinin onay listesinde yer alan ebatlar takılabilir. Toplam teker çapı değişirse hız göstergesi ve güvenlik sistemleri etkilenir; takmadan önce birlikte bakalım."
+        "soru": "Farklı ebatta lastik takılabilir mi?",
+        "cevap": "Ruhsatta ya da üreticinin onay listesinde yer alan ebatlar takılabilir. Toplam teker çapı değişirse hız göstergesi ve güvenlik sistemleri etkilenir."
       },
       {
-        "soru": "Filo için toplu değişim ne kadar sürer?",
-        "cevap": "Araç başına ortalama 20-30 dakika. Toplu değişimi araçlarınızın boş olduğu saatlere, gerekirse birkaç güne bölerek planlarız."
+        "soru": "Filoda toplu değişim ne kadar sürer?",
+        "cevap": "Araç başına ortalama 30 dakika sürer. Toplu değişim araçların boş olduğu saatlere, gerekirse birkaç güne bölünür."
       }
     ],
-    "sssBaslik": "Lastik hakkında sık sorulanlar",
-    "galeriBaslik": "Lastik değişiminden kareler",
-    "markaBaslik": "Stokta tuttuğumuz markalar",
+    "sssBaslik": "Lastik ebadı ve yaşı",
+    "galeriBaslik": "Lastik ve jant işleri",
     "sayfalar": {
-      "kurumsal": {
-        "baslik": "Kurumsal",
-        "metin": "Kim olduğumuz, nasıl çalıştığımız ve neye önem verdiğimiz.",
+      "hakkinda": {
+        "baslik": "Hakkında",
+        "metin": "Şaşmaz Oto Sanayi Sitesi'nde lastik, jant ve rot-balans",
         "gorsel": "/img/kurumsal-lastik/lastik-tasima.jpg"
       },
       "hizmetler": {
-        "baslik": "Hizmetlerimiz",
-        "metin": "Lastik değişiminden jant boyasına, her iş için ortalama süre.",
+        "baslik": "Hizmetler",
+        "metin": "Süreler yaklaşıktır, araca göre değişebilir. Fiyat ve randevu için arayın.",
         "gorsel": "/img/kurumsal-lastik/bijon.jpg"
       },
       "kurumsal-musteriler": {
         "baslik": "Filo ve lastik oteli",
-        "metin": "Şirket araçlarınız için lastik kaydı, toplu değişim ve depolama.",
+        "metin": "Şirket araçlarının lastik işleri araç araç kaydedilir, mevsimlik takımlar otelde saklanır.",
         "gorsel": "/img/kurumsal-lastik/filo.jpg"
       },
       "ebat-rehberi": {
         "baslik": "Ebat rehberi",
-        "metin": "Lastiğin yanağındaki yazı ne anlatıyor? Ebadı girin, tek tek açıklayalım."
+        "metin": "Lastik ebadındaki harf ve rakamların anlamı"
       },
       "iletisim": {
         "baslik": "İletişim",
-        "metin": "Filo teklifi, randevu ya da ebat sorusu için yazın; aynı gün dönüş yapalım."
+        "metin": "Fiyat ve randevu için arayın ya da formdan yazın."
       }
     },
     "konular": [
-      "Filo lastik yönetimi",
-      "Lastik oteli",
-      "Fiyat teklifi",
       "Randevu",
+      "Lastik fiyatı",
+      "Filo ve lastik oteli",
       "Genel bilgi"
     ],
-    "cta": {
-      "baslik": "Filonuzun lastik planını çıkaralım",
-      "metin": "Araç sayınızı ve ebatlarınızı yazın; değişim, depolama ve fiyat teklifini birlikte hazırlayalım.",
-      "buton": "Filo teklifi isteyin"
-    },
-    "yorumBaslik": "Örnek yorumlar",
+    "formBaslik": "Mesaj gönderin",
     "galeri": [
-      {
-        "src": "/img/kurumsal-lastik/bijon.jpg",
-        "alt": "Havalı tabancayla bijon sökümü"
-      },
-      {
-        "src": "/img/kurumsal-lastik/kislik.jpg",
-        "alt": "Kış lastiği takılmak üzere tekere getiriliyor"
-      },
-      {
-        "src": "/img/kurumsal-lastik/somun.jpg",
-        "alt": "Lifteki araçta teker takılıyor"
-      },
-      {
-        "src": "/img/kurumsal-lastik/lastik-tasima.jpg",
-        "alt": "Sökülen teker atölyede taşınıyor"
-      },
-      {
-        "src": "/img/kurumsal-lastik/kontrol.jpg",
-        "alt": "Lastik söküm makinesinin yanında kontrol"
-      },
-      {
-        "src": "/img/kurumsal-lastik/filo.jpg",
-        "alt": "Sıra sıra park etmiş hafif ticari araçlar"
-      }
+      { "src": "/img/kurumsal-lastik/bijon.jpg", "alt": "Havalı tabancayla bijon sökülüyor" },
+      { "src": "/img/kurumsal-lastik/kislik.jpg", "alt": "Kış lastiği tekere getiriliyor" },
+      { "src": "/img/kurumsal-lastik/somun.jpg", "alt": "Lifteki araçta teker takılıyor" },
+      { "src": "/img/kurumsal-lastik/lastik-tasima.jpg", "alt": "Sökülen teker atölyede taşınıyor" },
+      { "src": "/img/kurumsal-lastik/kontrol.jpg", "alt": "Lastik söküm makinesinin yanında kontrol" },
+      { "src": "/img/kurumsal-lastik/filo.jpg", "alt": "Sıra sıra park etmiş hafif ticari araçlar" }
     ]
-  },
-  "puan": null
+  }
 }

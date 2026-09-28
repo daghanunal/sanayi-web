@@ -1,11 +1,11 @@
 // Halka: yuvarlak geometri üzerine kurulu lastik modülleri.
-// tekerHero  → daire içinde jant fotoğrafı; kaydırdıkça teker yuvarlanır, çevresindeki yazı halkası döner.
-// halkalar   → istatistikler dolan halka göstergeler.
+// tekerHero  → künye (ad, iş, adres, bugün, telefon, Ara / WhatsApp / Yol tarifi) + daire içinde jant fotoğrafı;
+//              çevresindeki hizmet adları halkası kaydırdıkça döner.
+// halkalar   → yalnız olgular (kuruluştan geçen yıl, haftada açık gün) dolan halka göstergelerde.
 // disOlcer   → imza modülü: mevsim seç, diş derinliğini kaydır; kadran, diş kesiti ve karar birlikte değişir.
 // otelBolum  → lastik oteli; fotoğraf küçük bir daireden tüm ekrana açılır.
-import { esc, waHref, telHref, openStatus, icons, gsap, ScrollTrigger, reducedMotion } from '../../shared/core.js';
+import { esc, waHref, telHref, mapsHref, gunDurumu, kisaAdres, acikGunSayisi, icons, gsap, ScrollTrigger, reducedMotion } from '../../shared/core.js';
 import { rota, ok } from '../_kurumsal/bolumler.js';
-import { yilEki } from '../_kurumsal/bolumler.js';
 
 const buYil = new Date().getFullYear();
 const mm = (x) => x.toFixed(1).replace('.', ',');
@@ -14,25 +14,28 @@ const mm = (x) => x.toFixed(1).replace('.', ',');
 
 export const tekerHero = {
   render(d, { tema }) {
-    const h = d.kurumsal?.hero || {};
-    const st = d.saatler ? openStatus(d.saatler) : null;
-    const halkaYazi = 'LASTİK · JANT · ROT · BALANS · LASTİK OTELİ · NİTROJEN · PATLAK · ';
-    const cipler = (d.hizmetler || []).filter((x) => x.sure).slice(0, 3);
+    const b = d.saatler ? gunDurumu(d.saatler) : null;
+    const halkaYazi = 'Lastik · Jant · Rot ayarı · Balans · Lastik oteli · Nitrojen · Patlak tamiri · ';
     const tikler = Array.from({ length: 72 }, (_, i) => {
       const a = (i / 72) * Math.PI * 2;
       const r1 = i % 6 ? 283 : 276;
       return `<line x1="${(300 + Math.cos(a) * r1).toFixed(1)}" y1="${(300 + Math.sin(a) * r1).toFixed(1)}" x2="${(300 + Math.cos(a) * 292).toFixed(1)}" y2="${(300 + Math.sin(a) * 292).toFixed(1)}"/>`;
     }).join('');
     return `
-      <section class="k-hero hl-hero" aria-label="Giriş">
+      <section class="k-hero k-hero--kunye hl-hero" aria-label="Künye">
         <div class="k-kap hl-hero__ic">
           <div class="hl-hero__metin">
-            <p class="hl-durum${st?.open ? ' is-acik' : ''}"><span class="hl-nokta" aria-hidden="true"></span>${esc(st ? st.text : d.isletme.sektor)}</p>
-            <h1 class="k-h1 hl-hero__baslik" data-bol>${esc(h.baslik || d.isletme.slogan)}</h1>
-            <p class="k-lead">${esc(h.metin || d.isletme.hakkinda)}</p>
+            <h1 class="k-h1 hl-hero__baslik" data-bol>${esc(d.isletme.ad)}</h1>
+            <p class="k-lead hl-hero__tanim">${esc(d.isletme.tanim || d.isletme.sektor)}</p>
+            <dl class="k-kunye hl-kunye">
+              <div><dt>Adres</dt><dd>${esc(kisaAdres(d.iletisim.adres))}</dd></div>
+              ${b ? `<div><dt>Bugün</dt><dd><span class="k-durum ${b.open ? 'is-acik' : ''}"><span></span>${esc(b.kunye)}</span></dd></div>` : ''}
+              <div><dt>Telefon</dt><dd><a href="${telHref(d)}">${esc(d.iletisim.telefon)}</a></dd></div>
+            </dl>
             <div class="k-butonlar">
-              ${rota('iletisim', `${esc(h.birincil || 'Randevu isteyin')} ${ok}`)}
-              ${rota(h.ikincilRota || 'hizmetler', esc(h.ikincil || 'Hizmetler'), 'k-btn k-btn--ikincil')}
+              <a class="k-btn" href="${telHref(d)}">${icons.phone}<span>Ara</span></a>
+              ${d.iletisim.whatsapp ? `<a class="k-btn k-btn--ikincil" href="${waHref(d)}" target="_blank" rel="noopener">${icons.whatsapp}<span>WhatsApp</span></a>` : ''}
+              <a class="k-btn k-btn--ikincil" href="${mapsHref(d)}" target="_blank" rel="noopener">${icons.pin}<span>Yol tarifi</span></a>
             </div>
           </div>
           <div class="hl-teker">
@@ -44,15 +47,7 @@ export const tekerHero = {
               </svg>
             </div>
             <figure class="hl-teker__foto"><img src="${tema.heroGorsel}" alt="${esc(tema.heroAlt || '')}" fetchpriority="high"></figure>
-            ${cipler.map((c, i) => `<span class="hl-cip hl-cip--${i}"><strong>${esc(c.sure)}</strong>${esc(c.baslik.split(' ')[0])}</span>`).join('')}
           </div>
-        </div>
-        <div class="k-kap">
-          <dl class="hl-bilgi">
-            <div><dt>Şaşmaz'da</dt><dd>${esc(yilEki(d.isletme.kurulus))} beri</dd></div>
-            ${d.hizmetler?.[0]?.sure ? `<div><dt>${esc(d.hizmetler[0].baslik.split(' ')[0])} değişimi</dt><dd>ortalama ${esc(d.hizmetler[0].sure)}</dd></div>` : ''}
-            <div><dt>Telefon</dt><dd><a href="${telHref(d)}">${esc(d.iletisim.telefon)}</a></dd></div>
-          </dl>
         </div>
       </section>`;
   },
@@ -63,7 +58,6 @@ export const tekerHero = {
     // Açılış (~1,4 sn): fotoğraf büyüyerek gelir, yazı halkası dönerek oturur. Fotoğraf dönmez (gerçek fotoğraf).
     gsap.fromTo(foto, { scale: 0.7, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 1.1, ease: 'power3.out', delay: 0.1 });
     gsap.fromTo(don, { rotation: 90, autoAlpha: 0 }, { rotation: 0, autoAlpha: 1, duration: 1.4, ease: 'power3.out', delay: 0.15 });
-    gsap.from(el.querySelectorAll('.hl-cip'), { scale: 0, autoAlpha: 0, duration: 0.6, stagger: 0.1, delay: 0.6, ease: 'back.out(2)' });
     // Kaydırdıkça yazı halkası döner, fotoğraf hafifçe yaklaşır.
     const tl = gsap.timeline({ scrollTrigger: { trigger: el, start: 'top top', end: 'bottom top', scrub: 0.6 } });
     tl.to(don, { rotation: -140, ease: 'none' }, 0).to(foto.querySelector('img'), { scale: 1.08, ease: 'none' }, 0);
@@ -74,23 +68,22 @@ export const tekerHero = {
 
 export const halkalar = {
   render(d) {
-    const s = (d.istatistikler || []).map((x) => {
-      const yil = x.deger === 'kurulus' || x.kurulustanHesapla || /yıldır/.test(x.etiket);
-      const deger = yil ? buYil - d.isletme.kurulus : Number(x.deger) || 0;
-      return { ...x, deger, oran: Math.min(1, deger / (x.max || deger || 1)) };
-    });
-    if (!s.length) return '';
+    // Yalnız veriden türeyen olgular: kuruluştan geçen yıl (halka dolu) ve haftada açık gün (7 üzerinden).
+    const s = [
+      { deger: buYil - d.isletme.kurulus, sonek: ' yıl', etiket: "Şaşmaz Oto Sanayi Sitesi'nde", oran: 1 },
+      ...(d.saatler ? [{ deger: acikGunSayisi(d.saatler), sonek: ' gün', etiket: 'haftada açık', oran: acikGunSayisi(d.saatler) / 7 }] : []),
+    ];
     const C = 2 * Math.PI * 52;
     return `
-      <section class="k-bolum hl-halkalar">
+      <section class="k-bolum hl-halkalar" aria-labelledby="hl-halka-baslik">
         <div class="k-kap">
-          <h2 class="k-h2" data-bol>${esc(d.kurumsal?.halkaBaslik || 'Rakamlarla biz')}</h2>
+          <h2 class="sr-only" id="hl-halka-baslik">${esc(d.kurumsal?.halkaBaslik || 'Rakamlar')}</h2>
           <ul class="hl-halkalar__liste">
             ${s
               .map(
                 (x) => `<li>
                   <svg viewBox="0 0 120 120" aria-hidden="true"><circle cx="60" cy="60" r="52" class="hl-iz"/><circle cx="60" cy="60" r="52" class="hl-dolu" style="stroke-dasharray:${C.toFixed(1)};stroke-dashoffset:${(C * (1 - x.oran)).toFixed(1)}" data-oran="${x.oran}"/></svg>
-                  <p class="hl-halka__sayi"><span><span data-sayac="${x.deger}">${x.deger.toLocaleString('tr-TR')}</span>${esc(x.sonek || '')}</span></p>
+                  <p class="hl-halka__sayi"><span><span data-sayac="${x.deger}">${x.deger.toLocaleString('tr-TR')}</span>${esc(x.sonek)}</span></p>
                   <p class="hl-halka__etiket">${esc(x.etiket)}</p>
                 </li>`
               )
@@ -111,25 +104,24 @@ export const halkalar = {
 // --- Diş ölçer (imza modülü) --------------------------------------------------------------------
 
 const MEVSIM = {
-  yaz: { ad: 'Yaz', sinir: 1.6, degis: 3, izle: 4 },
-  kis: { ad: 'Kış', sinir: 4, degis: 4.5, izle: 5.5 },
-  dort: { ad: 'Dört mevsim', sinir: 4, degis: 4.5, izle: 5.5 },
+  yaz: { ad: 'Yaz', sinir: 1.6, degis: 3, izle: 4, not: "Yaz lastiği hava 7°C'nin üstündeyken takılır. Yasal alt sınır 1,6 mm'dir." },
+  kis: { ad: 'Kış', sinir: 4, degis: 4.5, izle: 5.5, not: "Kış lastiği hava 7°C'nin altına düşünce takılır, Ankara'da bu genellikle Kasım başıdır. Diş en az 4 mm olmalıdır." },
+  dort: { ad: 'Dört mevsim', sinir: 4, degis: 4.5, izle: 5.5, not: 'Üzerinde M+S ya da kar tanesi işareti olan dört mevsim lastiği kışın kış lastiği sayılır. Dişi en az 4 mm olmalıdır.' },
 };
 
 function karar(v, m) {
   const M = MEVSIM[m];
-  if (v < 1.6) return { sinif: 'kirmizi', baslik: 'Yasal sınırın altında', metin: 'Bu lastikle yola çıkmayın. Islak zeminde fren mesafesi çok uzar, trafikte ceza sebebidir. Aynı gün değiştirelim.' };
-  if (v < M.sinir) return { sinif: 'kirmizi', baslik: 'Kış için yetersiz', metin: `Kış lastiğinde diş en az 4 mm olmalı. ${mm(v)} mm ile karda ve buzda lastik tutmaz; kış gelmeden yenileyelim.` };
-  if (v < M.degis) return { sinif: 'turuncu', baslik: 'Değişim zamanı', metin: 'Yasal sınırın üstünde ama ıslak yolda tutuş belirgin düşmüş durumda. Yeni takım için ebadınızı yazın, fiyatı baştan söyleyelim.' };
-  if (v < M.izle) return { sinif: 'sari', baslik: 'Takipte kalın', metin: 'Lastik iş görüyor. Bir sonraki mevsim değişiminde tekrar ölçelim; tek taraftan yiyorsa rot ayarına bakalım.' };
-  return { sinif: 'yesil', baslik: 'Lastik iyi durumda', metin: 'Diş derinliği yerinde. Basıncı ayda bir kontrol edin, lastiklerin eşit aşınması için 10.000 km\'de bir yer değiştirin.' };
+  if (v < 1.6) return { sinif: 'kirmizi', baslik: 'Yasal sınırın altında', metin: 'Islak zeminde fren mesafesi çok uzar, bu lastikle trafiğe çıkmak cezalıdır. Lastiğin aynı gün değişmesi gerekir.' };
+  if (v < M.sinir) return { sinif: 'kirmizi', baslik: 'Kış için yetersiz', metin: `Kış lastiğinde diş en az 4 mm olmalıdır. ${mm(v)} mm dişle lastik karda ve buzda tutmaz.` };
+  if (v < M.degis) return { sinif: 'turuncu', baslik: 'Değişim zamanı', metin: 'Diş yasal sınırın üstünde ama ıslak yolda tutuş belirgin düşer. Lastiğin bu mevsim değişmesi gerekir.' };
+  if (v < M.izle) return { sinif: 'sari', baslik: 'Takip gerekir', metin: 'Lastik iş görür. Bir sonraki mevsim değişiminde yeniden ölçülür; tek taraftan yiyorsa rot ayarına bakılır.' };
+  return { sinif: 'yesil', baslik: 'Lastik iyi durumda', metin: "Diş derinliği yeterli. Basınç ayda bir kontrol edilir, lastiklerin yeri 10.000 km'de bir değiştirilirse aşınma eşit olur." };
 }
 
 const RENK = { kirmizi: '#ff4d5e', turuncu: '#ff8a3d', sari: '#ffc53d', yesil: '#1fc79b' };
 
 export const disOlcer = {
   render(d) {
-    const m = d.mevsim || {};
     // Kadran: 0-8 mm, 270 derece yay.
     const A0 = 135, A1 = 405;
     const nokta = (deg, r) => {
@@ -152,9 +144,8 @@ export const disOlcer = {
       <section class="k-bolum hl-olcer" aria-labelledby="hl-olcer-baslik">
         <div class="k-kap">
           <div class="hl-olcer__bas">
-            <p class="hl-etiket">Diş ölçer</p>
-            <h2 class="k-h2" id="hl-olcer-baslik" data-bol>Lastiğin kaç milimetre kaldı?</h2>
-            <p class="k-lead">Mevsimi seçin, diş derinliğini kaydırın. Ölçeriniz yoksa uğrayın; ölçümü ücretsiz yaparız.</p>
+            <h2 class="k-h2" id="hl-olcer-baslik" data-bol>Diş derinliği ölçer</h2>
+            <p class="k-lead">Lastik türü seçilip diş derinliği kaydırılınca lastiğin durumu görünür. Diş derinliği dükkânda da ölçülür.</p>
           </div>
           <div class="hl-olcer__ic">
             <div class="hl-olcer__gorsel">
@@ -189,14 +180,13 @@ export const disOlcer = {
                 <p class="hl-karar__metin"></p>
               </div>
               <p class="hl-mevsim__not"></p>
-              <a class="k-btn hl-olcer__wa" href="#" target="_blank" rel="noopener">${icons.whatsapp}<span>Ölçümü WhatsApp'tan yaz</span></a>
+              <a class="k-btn hl-olcer__wa" href="#" target="_blank" rel="noopener">${icons.whatsapp}<span>WhatsApp'tan bilgi alın</span></a>
             </div>
           </div>
         </div>
       </section>`;
   },
   mount(el, d) {
-    const m = d.mevsim || {};
     const inp = el.querySelector('input[type=range]');
     const ibre = el.querySelector('.hl-kadran__ibre');
     const okuma = el.querySelector('.hl-okuma__deger');
@@ -257,9 +247,7 @@ export const disOlcer = {
       sinir.setAttribute('y2', y);
       sinirY.setAttribute('y', y - 8);
       sinirY.textContent = `yasal sınır ${mm(M.sinir)} mm`;
-      const mv = mevsim === 'yaz' ? m.yaz : m.kis;
-      not.textContent = mv ? `${mv.baslik}: ${mv.metin}${mv.zaman ? ` Takma zamanı: ${mv.zaman}.` : ''}` : '';
-      if (mevsim === 'dort') not.textContent = 'Dört mevsim lastiği kışın kış lastiği sayılır; üzerinde kar tanesi ya da M+S işareti olmalı ve dişi en az 4 mm olmalı.';
+      not.textContent = MEVSIM[mevsim].not;
     };
 
     const ciz = () => {
@@ -333,11 +321,10 @@ export const otelBolum = {
         <div class="hl-otel__sahne">
           <figure class="hl-otel__foto"><img src="${o.gorsel}" alt="Lastik deposunda raflar ve üst üste dizili lastikler" loading="lazy"></figure>
           <div class="k-kap hl-otel__metin">
-            <p class="hl-etiket hl-etiket--acik">Lastik oteli</p>
-            <h2 class="k-h2" id="hl-otel-baslik">Balkon boşalsın, lastik rafta beklesin.</h2>
+            <h2 class="k-h2" id="hl-otel-baslik">Lastik oteli</h2>
             <p class="hl-otel__p">${esc(o.metin)}</p>
             ${o.maddeler ? `<ul class="hl-otel__cip">${o.maddeler.map((x) => `<li>${esc(x)}</li>`).join('')}</ul>` : ''}
-            ${rota(`iletisim?konu=${encodeURIComponent('Lastik oteli')}`, `Yer ayırtın ${ok}`, 'k-btn hl-otel__btn')}
+            ${rota(`iletisim?konu=${encodeURIComponent('Lastik oteli')}`, `Lastik oteli için bilgi alın ${ok}`, 'k-btn hl-otel__btn')}
           </div>
         </div>
       </section>`;

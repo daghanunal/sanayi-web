@@ -3,10 +3,16 @@
   "isletme": {
     "ad": "Hızlı Lastik & Jant",
     "sektor": "Lastik, Jant ve Rot-Balans",
-    "slogan": "Lastiğin indiyse 20 dakikada yeniden yoldasın.",
+    "tanim": "Lastik, jant ve rot-balans",
     "kurulus": 2004,
-    "hakkinda": "Binek araçtan hafif ticariye her aracın lastiğini, jantını ve rot-balansını aynı gün yapıyoruz. Stokta 3.000'den fazla lastik var; aradığın ebat yoksa ertesi sabah burada."
+    "hakkinda": "Binek ve hafif ticari araçların lastik, jant ve rot-balans işlerine bakılır. Lastik satışı ve mevsim değişiminin yanı sıra jant düzeltme ve patlak tamiri de yapılır, mevsimlik lastikler lastik otelinde saklanır."
   },
+  "bilgiler": [
+    ["Araçlar", "Binek araçlar, SUV'lar ve hafif ticari araçlar"],
+    ["Donanım", "Lift, lastik söküm takım makinesi, balans makinesi, bilgisayarlı rot ayar cihazı, jant düzeltme presi"],
+    ["Randevu", "Lastik değişimi ve patlak tamiri için randevu gerekmez. Mevsim geçişlerinde ve cumartesi günleri randevuyla çalışılır."],
+    ["Lastik ebadı", "Lastiğin yanağında yazar, örneğin 205/55 R16. Yanağın fotoğrafı WhatsApp'tan gönderilebilir."]
+  ],
   "iletisim": {
     "telefon": "0532 555 12 34",
     "whatsapp": "905325551234",
@@ -15,54 +21,71 @@
   },
   "saatler": [null, "08:00-19:30", "08:00-19:30", "08:00-19:30", "08:00-19:30", "08:00-19:30", "08:30-17:00"],
   "hizmetler": [
-    { "baslik": "Lastik satışı ve değişimi", "aciklama": "Yazlık, kışlık ve dört mevsim. Söküm, takım ve sibop değişimi fiyata dahil.", "sure": "20 dk" },
-    { "baslik": "Rot ayarı", "aciklama": "3D bilgisayarlı rot ölçümü. Direksiyon düz durmuyorsa ya da lastik tek taraftan yiyorsa önce buraya.", "sure": "30 dk" },
-    { "baslik": "Balans", "aciklama": "Yüksek hızda direksiyonda titreme varsa dört tekeri dengeliyoruz.", "sure": "15 dk" },
-    { "baslik": "Lastik oteli", "aciklama": "Mevsimlik lastiklerin yıkanıp etiketlenip rafta bekliyor. Mevsim gelince haber veriyoruz.", "sure": "6 ay" },
-    { "baslik": "Jant düzeltme ve boya", "aciklama": "Çukura girip eğilen jantı düzeltiyor, çizilen jantı fırın boyayla sıfır gibi yapıyoruz.", "sure": "1 gün" },
-    { "baslik": "Nitrojen dolumu", "aciklama": "Basınç daha geç düşer, lastik daha eşit aşınır. Uzun yola çıkmadan önce öneririz.", "sure": "10 dk" },
-    { "baslik": "Patlak tamiri", "aciklama": "Çivi, vida, yan kesik. Tamir edilebiliyorsa tamir ederiz, edilemiyorsa açıkça söyleriz.", "sure": "15 dk" }
+    {
+      "baslik": "Lastik satışı ve değişimi",
+      "kisa": "Yazlık, kışlık ve dört mevsim lastik",
+      "aciklama": "Yazlık, kışlık ve dört mevsim lastik satılır. Söküm ve takım jantı çizmeyen makinede yapılır, sibop da yenilenir.",
+      "sure": "30 dk"
+    },
+    {
+      "baslik": "Rot ayarı",
+      "kisa": "Bilgisayarlı rot ölçümü",
+      "aciklama": "Araç bir tarafa çekiyor ya da lastik tek taraftan yiyorsa rot ayarı yapılır. Dört teker bilgisayarlı cihazla ölçülüp üretici değerine getirilir.",
+      "sure": "30 dk"
+    },
+    {
+      "baslik": "Balans",
+      "kisa": "Dört teker balans",
+      "aciklama": "Yüksek hızda direksiyon titriyorsa tekerler balans makinesinde döndürülüp dengelenir. Balans ağırlıkları jantın iç tarafına yapıştırılır.",
+      "sure": "20 dk"
+    },
+    {
+      "baslik": "Lastik oteli",
+      "kisa": "Mevsimlik lastik saklama",
+      "aciklama": "Sökülen mevsimlik lastikler yıkanıp plakaya göre etiketlenir, ışık almayan rafta saklanır. Mevsim dönünce WhatsApp'tan haber verilir.",
+      "sure": "Mevsim boyu"
+    },
+    {
+      "baslik": "Jant düzeltme ve boya",
+      "kisa": "Eğilen ve çizilen jant",
+      "aciklama": "Çukura girip eğilen jant preste düzeltilir. Kaldırıma sürtülüp çizilen jant zımparalanıp fırın boyayla boyanır.",
+      "sure": "1 gün"
+    },
+    {
+      "baslik": "Patlak tamiri",
+      "kisa": "Çivi, vida ve kesik",
+      "aciklama": "Çivi ya da vida batan lastik sökülüp içten yamayla tamir edilir. Yanaktan kesilen lastik tamir edilmez, değiştirilmesi gerekir.",
+      "sure": "20 dk"
+    },
+    {
+      "baslik": "Basınç ve nitrojen",
+      "kisa": "Basınç kontrolü, nitrojen, TPMS sensörü",
+      "aciklama": "Dört tekerin ve stepnenin basıncı ölçülür, istenirse lastikler nitrojenle doldurulur. Arızalı basınç sensörü (TPMS) değiştirilip araca tanıtılır.",
+      "sure": "15 dk"
+    }
   ],
   "surec": [
-    { "baslik": "Aracı karşılıyoruz", "aciklama": "Lastiklerin diş derinliğine, yaşına ve basıncına bakıp ne gerektiğini söylüyoruz.", "sure": "3 dk" },
-    { "baslik": "Kaldırıp söküyoruz", "aciklama": "Araç lifte çıkıyor, tekerler sırayla iniyor.", "sure": "4 dk" },
-    { "baslik": "Lastiği değiştiriyoruz", "aciklama": "Jantı çizmeyen makinede söküm-takım, yeni sibop.", "sure": "6 dk" },
-    { "baslik": "Balans yapıyoruz", "aciklama": "Her teker makinede dönüyor, ağırlıklar gram hassasiyetinde.", "sure": "5 dk" },
-    { "baslik": "Torkla sıkıyoruz", "aciklama": "Bijonlar tork anahtarıyla, fabrika değerinde. Basınç son kez kontrol.", "sure": "2 dk" },
-    { "baslik": "Teslim ediyoruz", "aciklama": "Eski lastiklerini istersen otele alıyoruz, istersen geri veriyoruz.", "sure": "1 dk" }
+    { "baslik": "Kontrol", "aciklama": "Diş derinliği, lastiğin yaşı ve basıncı kontrol edilir." },
+    { "baslik": "Bilgi", "aciklama": "Yapılacak iş ve lastik seçenekleri araç sahibine söylenir." },
+    { "baslik": "Değişim ve balans", "aciklama": "Lastik jantı çizmeyen makinede sökülüp takılır, teker balans makinesinde dengelenir." },
+    { "baslik": "Tork ve teslim", "aciklama": "Bijonlar tork anahtarıyla sıkılır, basınç son kez ölçülüp araç teslim edilir." }
   ],
   "istatistikler": [
-    { "deger": "kurulus", "sonek": "", "etiket": "yıldır Şaşmaz'da", "max": 40 },
-    { "deger": 48000, "sonek": "+", "etiket": "lastik değişimi", "max": 60000 },
-    { "deger": 3200, "sonek": "", "etiket": "lastik stokta hazır", "max": 4000 },
-    { "deger": 1200, "sonek": "", "etiket": "takım lastik otelde", "max": 1500 }
+    { "deger": 22, "etiket": "Şaşmaz Oto Sanayi Sitesi'nde", "birim": "YIL", "sonek": " yıl", "kurulustanHesapla": true },
+    { "deger": 6, "etiket": "haftada açık", "birim": "GÜN", "sonek": " gün", "saatlerdenHesapla": true }
   ],
-  "markalar": ["Michelin", "Continental", "Bridgestone", "Pirelli", "Goodyear", "Lassa", "Petlas", "Hankook", "Falken", "Kumho"],
+  "markalar": ["Michelin", "Continental", "Bridgestone", "Pirelli", "Goodyear", "Lassa", "Petlas", "Hankook"],
   "galeri": [
-    { "src": "/img/pist/degisim.jpg", "alt": "Usta, lifte kaldırılmış aracın lastiğini değiştiriyor" },
+    { "src": "/img/pist/degisim.jpg", "alt": "Lifte kaldırılmış aracın lastiği değiştiriliyor" },
     { "src": "/img/pist/rot.jpg", "alt": "Rot ayarı cihazının sensörü tekere takılıyor" },
-    { "src": "/img/pist/jant-sari.jpg", "alt": "Siyah jant ve sarı fren kaliperi" },
-    { "src": "/img/pist/basinc.jpg", "alt": "Lastik basıncı kontrol ediliyor" },
-    { "src": "/img/pist/usta.jpg", "alt": "İki usta atölyede teker başında çalışıyor" },
-    { "src": "/img/pist/jant-siyah.jpg", "alt": "Yakından koyu renk alaşım jant" }
+    { "src": "/img/pist/basinc.jpg", "alt": "Lastik basıncı ölçülüyor" },
+    { "src": "/img/pist/jant-siyah.jpg", "alt": "Koyu renk alaşım jant, yakından" }
   ],
-  "mevsim": {
-    "yaz": { "baslik": "Yaz lastiği", "metin": "Hava 7°C'nin üstündeyken yolu en iyi tutan lastik. Sıcak asfaltta daha kısa fren mesafesi, daha az yakıt.", "gorsel": "/img/pist/lastik-yakin.jpg", "zaman": "Nisan ortası" },
-    "kis": { "baslik": "Kış lastiği", "metin": "7°C'nin altında hamur yumuşak kalır, dişler karda ve buzda tutar. Ankara kışında şart.", "gorsel": "/img/pist/kis-iz.jpg", "zaman": "Kasım başı" }
-  },
-  "otel": {
-    "baslik": "Lastik oteli",
-    "metin": "Mevsimlik lastiklerini apartman boşluğunda, balkonda saklama. Yıkıyoruz, diş derinliğini ölçüyoruz, plakana etiketleyip ışık almayan rafa kaldırıyoruz. Mevsim dönünce WhatsApp'tan haber veriyoruz, randevu saatinde takılı oluyor.",
-    "gorsel": "/img/pist/raf.jpg",
-    "maddeler": ["Yıkama ve kontrol dahil", "Plakaya özel etiket", "Mevsim hatırlatması WhatsApp'tan", "Sigortalı depo"]
-  },
-  "puan": { "ortalama": 4.9, "adet": 386 },
   "yorumlar": [
-    { "ad": "Serkan A.", "puan": 5, "metin": "Sabah 8'de lastik patladı, 8.40'ta yoldaydım. Fiyatı da telefonda ne dediyse o.", "arac": "2019 Corolla" },
-    { "ad": "Elif T.", "puan": 5, "metin": "Kışlıklarımı iki senedir otelde tutuyorlar. Kasım'da mesaj atıyorlar, gidiyorum, takılı. Balkonum da kurtuldu.", "arac": "2017 Egea" },
-    { "ad": "Murat Ç.", "puan": 5, "metin": "Direksiyon sağa çekiyordu, iki yerde rot yaptırdım düzelmedi. Burada ölçümü ekranda gösterdi, yarım saatte bitti.", "arac": "2015 Passat" },
-    { "ad": "Hakan Y.", "puan": 4, "metin": "Cumartesi biraz sıra oluyor, randevu alıp gidin. İşçilik temiz, jantta tek çizik yok.", "arac": "2021 Tucson" },
-    { "ad": "Zeynep K.", "puan": 5, "metin": "Kaldırıma sürttüğüm jantı boyadılar, hangisi olduğunu ben bile bulamıyorum.", "arac": "2020 Clio" }
-  ],
-  "garanti": "Takılan lastiğe montaj garantisi, yapılan rot-balansa 1 ay ücretsiz kontrol."
+    { "ad": "Serkan A.", "puan": 5, "metin": "Sabah lastiğe çivi batmış. Lastiği söküp içten yama yaptılar, yarım saatte yola çıktım.", "arac": "2019 Toyota Corolla" },
+    { "ad": "Elif T.", "puan": 5, "metin": "Kışlıklarım iki yıldır otelde duruyor. Kasım başında mesaj attılar, randevu saatinde gittim, yarım saatte taktılar.", "arac": "2017 Fiat Egea" },
+    { "ad": "Murat Ç.", "puan": 5, "metin": "Direksiyon sağa çekiyordu. Ölçüm sonuçlarını ekranda gösterip rotu ayarladılar, araç artık düz gidiyor.", "arac": "2015 Volkswagen Passat" },
+    { "ad": "Hakan Y.", "puan": 4, "metin": "Cumartesi sıra vardı, bir saat kadar bekledim. Lastikleri değiştirip balansını yaptılar, jantlarda tek çizik yok.", "arac": "2021 Hyundai Tucson" },
+    { "ad": "Zeynep K.", "puan": 5, "metin": "Kaldırıma sürttüğüm jantı düzeltip boyadılar. Hangi jantın boyandığını artık ben de ayırt edemiyorum.", "arac": "2020 Renault Clio" }
+  ]
 }

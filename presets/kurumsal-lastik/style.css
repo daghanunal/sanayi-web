@@ -2,23 +2,22 @@
    beyaz üstünde AA 6,9:1); koyu yüzeylerde açık su yeşili (#5cc8c2) yalnızca vurgu. Geniş büyük harf Archivo başlıklar,
    dev yazı hero + fotoğraf bandı, ince çizgili petrol geçiş perdesi. */
 :root { --pt-su: #5cc8c2; --pt-su-koyu: #0b4f5a; --focus: var(--k-vurgu); }
-.k-h1, .k-h2, .k-hozet__ad, .k-cta__baslik, .k-menu a, .k-sb__baslik { text-transform: uppercase; }
 .k-h2 { max-width: 16ch; }
 .k-h3 { font-stretch: 110%; font-weight: 700; }
-.k-logo__ad { font-stretch: 118%; font-weight: 900; font-size: 19px; text-transform: uppercase; letter-spacing: -0.01em; }
+.k-logo__ad { font-stretch: 118%; font-weight: 900; font-size: 19px; letter-spacing: -0.01em; }
 .k-logo__alt { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 11px; letter-spacing: .02em; }
 .k-logo { padding-left: 14px; border-left: 6px solid var(--k-vurgu); }
 .k-logo__ad { color: var(--k-metin); }
 .k-nav a { font-weight: 600; }
 .k-nav a::after { height: 4px; bottom: 0; }
-.k-btn { font-weight: 700; text-transform: uppercase; font-stretch: 112%; letter-spacing: .01em; font-size: 15px; }
+.k-btn { font-weight: 700; font-stretch: 112%; letter-spacing: .01em; font-size: 16px; }
 .k-btn--ikincil { border-color: var(--k-metin); }
-.k-link { text-transform: uppercase; font-stretch: 112%; font-size: 15px; }
+.k-link { font-stretch: 112%; font-size: 16px; font-weight: 700; }
 .k-lead { color: var(--k-soluk); }
 
 /* Hero: dev yazı + diş deseni bandı */
 .k-hero__ust { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 13px; color: var(--k-vurgu-metin); display: inline-flex; gap: 10px; align-items: center; background: var(--k-vurgu); padding: 6px 10px; border-radius: 3px; }
-[data-hero='yazi'] .k-hero__baslik { font-size: clamp(50px, 10.2vw, 168px); max-width: 12ch; line-height: .88; }
+[data-hero='yazi'] .k-hero__baslik { font-size: clamp(48px, 8.4vw, 136px); max-width: 14ch; line-height: .9; }
 @media (max-width: 899px) { [data-hero='yazi'] .k-hero__baslik { font-size: min(11.6vw, 60px); } }
 [data-hero='yazi'] .k-hero__gorsel { aspect-ratio: 21 / 7; border-radius: 0; position: relative; }
 @media (max-width: 899px) { [data-hero='yazi'] .k-hero__gorsel { aspect-ratio: 16 / 9; } }
@@ -74,7 +73,7 @@
 .k-degerler li { border-top-width: 6px; }
 .k-yildiz { color: #c98a00; }
 .k-yorumlar__liste li { background: #fff; border-top: 6px solid var(--k-vurgu); }
-.k-markalar__liste li { text-transform: uppercase; font-stretch: 118%; }
+.k-markalar__liste li { font-stretch: 118%; }
 .k-konumlar li { border-top-width: 4px; }
 .k-not { border-left-width: 6px; }
 .k-sss__liste summary span::before, .k-sss__liste summary span::after { background: var(--k-metin); }
@@ -162,10 +161,15 @@
 .tk__liste { list-style: none; margin: 32px 0 0; padding: 0; border-top: 2px solid var(--k-metin); }
 .tk__liste li { display: grid; grid-template-columns: 44px 1fr; gap: 12px; padding: 16px 0; border-bottom: 1px solid var(--k-cizgi); }
 .tk__no { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 13px; font-weight: 700; color: var(--k-vurgu); padding-top: 3px; }
-.tk__liste h3 { font-stretch: 112%; font-weight: 800; font-size: 18px; text-transform: uppercase; letter-spacing: -.005em; }
+.tk__liste h3 { font-stretch: 112%; font-weight: 800; font-size: 19px; letter-spacing: -.005em; }
 .tk__liste p { color: var(--k-soluk); margin-top: 4px; font-size: 16px; line-height: 1.5; }
 .tk__link { margin-top: 24px; }
 .tk__gorsel { position: relative; margin: 0; border-radius: var(--k-radius-buyuk); overflow: hidden; background: radial-gradient(120% 90% at 60% 45%, #14414a, var(--k-koyu) 70%); aspect-ratio: 1200 / 760; display: grid; place-items: center; }
 .tk__gorsel img { width: 96%; height: auto; }
 .tk__gorsel figcaption { position: absolute; left: 14px; bottom: 12px; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 12px; color: var(--k-koyu-soluk); text-transform: uppercase; letter-spacing: .04em; }
 @media (min-width: 1000px) { .tk__gorsel { order: 0; } }
+
+/* Künye */
+.k-kunye { border-top: 2px solid var(--k-metin); }
+.k-kunye dt { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 12px; color: var(--k-vurgu); }
+.k-kunye dd { font-stretch: 108%; }
