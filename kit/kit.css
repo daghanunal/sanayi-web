@@ -145,4 +145,7 @@ button, input, select { font: inherit; color: inherit; }
 }
 .sunum__btn[data-sunum-qr] { font-size: 15px; }
 .sunum__btn--ileri { min-width: 124px; border: 0; background: var(--sari); color: #17181a; font-size: 18px; }
-@media (min-width: 900px) { .sunum iframe { max-width: 430px; margin: 0 auto; border-inline: 1px solid #222; } }
+/* Geniş ekranda (tablet, bilgisayar) iki görünüm: telefon çerçevesi ya da tam genişlik. Telefonda düğme gizli. */
+.sunum__btn--gorunum { font-size: 15px; }
+@media (max-width: 699px) { .sunum__btn--gorunum { display: none; } }
+@media (min-width: 700px) { .sunum--telefon iframe { max-width: 430px; margin: 0 auto; border-inline: 1px solid #222; } }

@@ -105,7 +105,7 @@ function aileleriCiz() {
 
 function render() {
   const v = values();
-  save({ ...v, aile });
+  save({ ...load(), ...v, aile });
   aileleriCiz();
   const liste = suzulmus();
   const kart = (p) => `
@@ -188,6 +188,17 @@ let sunumListe = [];
 let sunumI = 0;
 const iframe = sunum.querySelector('iframe');
 
+// Görünüm: telefon çerçevesi ("müşterileriniz telefonda böyle görür") ya da tabletin tam genişliği.
+const gorunumBtn = sunum.querySelector('[data-sunum-gorunum]');
+function gorunumAyarla(telefon) {
+  sunum.classList.toggle('sunum--telefon', telefon);
+  gorunumBtn.setAttribute('aria-pressed', telefon);
+  gorunumBtn.textContent = telefon ? 'Telefon' : 'Tam ekran';
+  gorunumBtn.setAttribute('aria-label', telefon ? 'Telefon görünümü; tam ekrana geç' : 'Tam ekran görünümü; telefon görünümüne geç');
+  save({ ...load(), telefon });
+}
+gorunumAyarla(load().telefon ?? true);
+
 function sunumGoster() {
   const p = sunumListe[sunumI];
   iframe.src = presetUrl(p.id, values());
@@ -217,6 +228,7 @@ sunum.addEventListener('click', (e) => {
   const git = e.target.closest('[data-sunum-git]');
   if (git) return sunumGit(Number(git.dataset.sunumGit));
   if (e.target.closest('[data-sunum-kapat]')) return sunumKapat();
+  if (e.target.closest('[data-sunum-gorunum]')) return gorunumAyarla(!sunum.classList.contains('sunum--telefon'));
   if (e.target.closest('[data-sunum-qr]')) tasarimQr(sunumListe[sunumI]);
 });
 addEventListener('keydown', (e) => {
