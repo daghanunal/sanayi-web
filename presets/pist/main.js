@@ -3,15 +3,33 @@ import '../../shared/base.css';
 import './style.css';
 import {
   boot, initSmoothScroll, reducedMotion, telHref, waHref, mapsHref, mapsEmbed,
-  openStatus, groupedHours, icons, esc, gsap, ScrollTrigger,
+  openStatus, groupedHours, icons, esc, asset, gsap, ScrollTrigger,
 } from '../../shared/core.js';
 import { SplitText } from 'gsap/SplitText';
-import { createWheel } from './tire.js';
+import { createWheel } from './wheel.js';
 
 gsap.registerPlugin(SplitText);
 ScrollTrigger.config({ ignoreMobileResize: true });
 
 const d = boot(raw);
+
+// Görseller: bu tasarım ortak lastik fotoğraflarının kendi renk düzenine (gece pisti) göre
+// işlenmiş kopyalarını kullanır; seçki kardeş tasarımlardan farklı. İçerik (metin) veriden gelir.
+const img = (n) => asset(`/img/pist/${n}`);
+d.galeri = [
+  { src: img('g-degisim.webp'), alt: 'Lifte kaldırılmış aracın lastiği değiştiriliyor' },
+  { src: img('g-rot.webp'), alt: 'Rot ayarı sensörü tekere takılıyor' },
+  { src: img('g-dis-desen.webp'), alt: 'Üst üste dizilmiş yeni lastiklerin diş deseni' },
+  { src: img('g-jant-siyah.webp'), alt: 'Koyu renk alaşım jant, yakından' },
+  { src: img('g-yaris-duvar.webp'), alt: 'Sıra sıra dizilmiş lastik yığınları' },
+  { src: img('g-yanak.webp'), alt: 'Lastik yanağındaki ebat yazısı' },
+  { src: img('g-basinc.webp'), alt: 'Lastik basıncı kontrol ediliyor' },
+  { src: img('g-yigin.webp'), alt: 'Yan yana dizilmiş lastiklerin diş desenleri' },
+  { src: img('g-asinma.webp'), alt: 'Kullanılmış bir lastiğin aşınmış dişleri' },
+];
+d.mevsim.yaz.gorsel = img('g-lastik-yakin.webp');
+d.mevsim.kis.gorsel = img('g-kis-iz.webp');
+d.otel.gorsel = img('g-raf.webp');
 const $ = (s, root = document) => root.querySelector(s);
 const $$ = (s, root = document) => [...root.querySelectorAll(s)];
 const nf = (n) => Math.round(n).toLocaleString('tr-TR');
@@ -89,12 +107,12 @@ function buildGaugeSvg(svg) {
     const major = i % 5 === 0;
     const [x1, y1] = pt(deg, R - (major ? 34 : 16));
     const [x2, y2] = pt(deg, R - 4);
-    ticks += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke-width="${major ? 5 : 2}" ${i >= 43 ? 'stroke="var(--kirmizi)"' : ''}/>`;
+    ticks += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke-width="${major ? 5 : 2}" ${i >= 43 ? 'stroke="var(--kirmizi)"' : major ? '' : 'stroke-opacity=".45"'}/>`;
   }
   svg.innerHTML = `
-    <path d="${arc(start, start + sweep, R)}" fill="none" stroke="#141416" stroke-width="6"/>
+    <path d="${arc(start, start + sweep, R)}" fill="none" stroke="var(--asfalt-3)" stroke-width="6"/>
     <path d="${arc(start + sweep * 0.86, start + sweep, R - 14)}" fill="none" stroke="var(--kirmizi)" stroke-width="22"/>
-    <g stroke="#141416">${ticks}</g>`;
+    <g stroke="var(--cizgi)">${ticks}</g>`;
 }
 
 // Pit stop adımları
@@ -102,8 +120,7 @@ const mins = d.surec.map((s) => parseInt(s.sure, 10) || 1);
 const totalMin = mins.reduce((a, b) => a + b, 0);
 $('[data-pit-track]').innerHTML = d.surec.map((s, i) => `
   <article class="step">
-    <p class="step__no" aria-hidden="true">${i + 1}</p>
-    <p class="step__time">${esc(s.sure)}</p>
+    <div class="step__top"><p class="step__no" aria-hidden="true">${i + 1}</p><p class="step__time">${esc(s.sure)}</p></div>
     <h3 class="step__title">${esc(s.baslik)}</h3>
     <p class="step__desc">${esc(s.aciklama)}</p>
   </article>`).join('');
@@ -166,7 +183,7 @@ function fillMarquee(track, items) {
 const stars = (n) => Array.from({ length: 5 }, (_, i) => `<span class="${i < n ? '' : 'off'}">${icons.star}</span>`).join('');
 $('[data-score]').textContent = d.puan.ortalama.toLocaleString('tr-TR', { minimumFractionDigits: 1 });
 $('[data-stars]').innerHTML = stars(Math.round(d.puan.ortalama));
-$('[data-review-count]').textContent = `Google'da ${nf(d.puan.adet)} değerlendirme`;
+$('[data-review-count]').textContent = `${nf(d.puan.adet)} örnek değerlendirme · ortalama ${d.puan.ortalama.toLocaleString('tr-TR')}`;
 $('[data-reviews]').innerHTML = d.yorumlar.map((y) => `
   <li class="review">
     <p class="review__stars" aria-label="${y.puan} yıldız">${stars(y.puan)}</p>
@@ -197,8 +214,7 @@ $('[data-copy]').textContent = `© ${new Date().getFullYear()} ${d.isletme.ad}`;
 
 // Tekerler: yanak yazısı işletme adı
 const sidewall = `${d.isletme.ad}  ◆  Şaşmaz  ◆  ${d.isletme.kurulus}`.toLocaleUpperCase('tr');
-const heroWheel = createWheel($('[data-hero-wheel]'), { sidewall });
-const finalWheel = createWheel($('[data-final-wheel]'), { sidewall });
+const heroWheel = createWheel($('[data-hero-wheel]'), { sidewall, eager: true });
 
 // Işıklar: açıksa yeşil, kapalıysa kırmızı
 const lights = $('[data-lights]');
@@ -230,7 +246,6 @@ addEventListener('scroll', () => onScrollTop(scrollY), { passive: true });
 if (reducedMotion) {
   $('[data-hint]').hidden = true;
   heroWheel.set(-12);
-  finalWheel.set(20);
   showGauge(0, 1);
   new IntersectionObserver((e, io) => e[0].isIntersecting && (runLights(), io.disconnect())).observe(lights);
 } else {
@@ -301,7 +316,6 @@ function motion() {
     track: $('.marquee__track', m), dir: Number(m.dataset.marquee), x: 0, skew: 0,
   }));
   let lastY = scrollY;
-  let finalAngle = 0;
   let idle = 0;
 
   gsap.ticker.add((time, dtMs) => {
@@ -327,10 +341,6 @@ function motion() {
       });
       road.style.backgroundPosition = `${(x * 1.4).toFixed(1)}px 0`;
     }
-
-    // Final tekeri
-    finalAngle += (state.vel * 0.6 + 8 * dt * 60 * 0.05);
-    finalWheel.set(finalAngle, speed);
 
     // Kayan yazılar: hızla birlikte hızlanır ve eğilir
     for (const m of marquees) {
@@ -402,7 +412,7 @@ function motion() {
     scrollTrigger: { trigger: '.hotel', start: 'top bottom', end: 'bottom top', scrub: true },
   });
   document.fonts.ready.then(() => {
-    const split = SplitText.create('.hotel__title', { type: 'chars', mask: 'chars' });
+    const split = SplitText.create('.hotel__title', { type: 'words,chars', mask: 'chars' });
     gsap.from(split.chars, {
       yPercent: 110, duration: 0.9, ease: 'power4.out', stagger: 0.035,
       scrollTrigger: { trigger: '.hotel__title', start: 'top 85%', once: true },

@@ -1,0 +1,10 @@
+Tüm görseller Pexels lisansıyla (ücretsiz ticari kullanım, atıf gerekmez); kaynakların çoğu CREDITS.txt'de.
+Yükseltmede eklenenler (yalnız pist tasarımı kullanır):
+g-*.webp            CREDITS.txt'deki fotoğrafların pist renk düzenine göre işlenmiş kopyaları
+                    (.shots/yukseltme/pist/tools/grade.py pist <kaynak> <hedef.webp>)
+g-yaris-duvar.webp  https://www.pexels.com/photo/15392185/
+g-yanak.webp        https://www.pexels.com/photo/16685597/
+g-dis-desen.webp    https://www.pexels.com/photo/37244886/
+r-wheel-*.webp      3D render (Blender Cycles, lib3d "wheel" varlığı; presets/pist/render.sh). Temsilîdir.
+g-yigin.webp        https://www.pexels.com/photo/9576099/
+g-asinma.webp       https://www.pexels.com/photo/116676/

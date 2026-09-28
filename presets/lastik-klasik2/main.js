@@ -149,7 +149,7 @@ $('[data-season]').innerHTML = ['yaz', 'kis'].map((k) => {
   const m = d.mevsim[k];
   return `
   <article class="season__card season__card--${k}">
-    <figure><img src="${esc(m.gorsel)}" alt="${esc(m.baslik)}" loading="lazy" decoding="async" /></figure>
+    <figure><img src="${esc((d.mevsimGorsel || {})[k] || m.gorsel)}" alt="${esc(m.baslik)}" loading="lazy" decoding="async" /></figure>
     <div class="season__body">
       <p class="season__when">${k === 'yaz' ? 'Üstünde' : 'Altında'} · değişim ${esc(m.zaman)}</p>
       <h3 class="season__name">${esc(m.baslik)}</h3>
@@ -159,14 +159,17 @@ $('[data-season]').innerHTML = ['yaz', 'kis'].map((k) => {
 }).join('');
 
 // Otel
-$('[data-hotel-img]').src = d.otel.gorsel;
+$('[data-hotel-img]').src = d.otelGorsel || d.otel.gorsel;
+for (const [sel, g] of [['[data-depth-img]', d.derinlikGorsel], ['[data-steps-img]', d.surecGorsel]]) {
+  const im = $(sel);
+  if (g) { im.src = g.src; im.alt = g.alt; } else im.closest('figure').remove();
+}
 $('[data-hotel-title]').textContent = d.otel.baslik;
 $('[data-hotel-text]').textContent = d.otel.metin;
 $('[data-hotel-list]').innerHTML = d.otel.maddeler.map((m) => `<li>${esc(m)}</li>`).join('');
 
-// Galeri
-const galeri = d.galeri.filter((g) => !/\/jant-sari\.jpg$/.test(g.src));
-$('[data-gallery]').innerHTML = (galeri.length ? galeri : d.galeri).map((g, i) => `
+// Galeri (bu tasarımın kendi seçkisi: data/lastik-klasik2.json)
+$('[data-gallery]').innerHTML = d.galeri.map((g, i) => `
   <li class="shot shot--${i % 3}">
     <figure><img src="${esc(g.src)}" alt="${esc(g.alt)}" loading="lazy" decoding="async" /></figure>
     <p class="shot__cap"><span>${String(i + 1).padStart(2, '0')}</span>${esc(g.alt)}</p>
@@ -178,7 +181,7 @@ const stars = (n) => Array.from({ length: 5 }, (_, i) => `<span class="${i < n ?
 const scoreTxt = d.puan.ortalama.toLocaleString('tr-TR', { minimumFractionDigits: 1 });
 $('[data-score]').textContent = reducedMotion ? scoreTxt : '0,0';
 $('[data-stars]').innerHTML = stars(Math.round(d.puan.ortalama));
-$('[data-review-count]').textContent = `Google'da ${nf(d.puan.adet)} değerlendirme`;
+$('[data-review-count]').textContent = `${nf(d.puan.adet)} örnek değerlendirme`;
 $('[data-reviews]').innerHTML = d.yorumlar.map((y) => `
   <li class="review">
     <p class="review__stars" aria-label="${y.puan} yıldız">${stars(y.puan)}</p>
@@ -344,7 +347,7 @@ function motion() {
       const on = z < 0.999 && !setZoom(z);
       if (on !== svgOn) { heroSvg.style.visibility = on ? '' : 'hidden'; svgOn = on; }
       gsap.set(photo, { scale: 1.3 - 0.3 * gsap.parseEase('power2.out')(z) });
-      labels.style.opacity = String(Math.max(0, 1 - p * 6));
+      gsap.set(labels, { autoAlpha: Math.max(0, 1 - p * 6) });
       const c = gsap.utils.clamp(0, 1, (p - 0.66) / 0.3);
       shade.style.opacity = String(c);
       gsap.set(copy, { autoAlpha: c, y: 40 * (1 - c) });

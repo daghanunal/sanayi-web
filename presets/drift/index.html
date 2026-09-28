@@ -5,19 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#121316" />
   <title>Lastik ve Jant | Şaşmaz</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23121316'/%3E%3Ccircle cx='16' cy='16' r='10' fill='none' stroke='%23ffd000' stroke-width='4' stroke-dasharray='3 2'/%3E%3Ccircle cx='16' cy='16' r='3.5' fill='%23ffd000'/%3E%3C/svg%3E" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Anybody:wdth,wght@50..150,300..900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet" />
 </head>
 <body class="is-loading">
-  <!-- Açılış: marka harfleri, diş şeridi yükleme çubuğu, dokununca geç -->
+  <!-- Açılış: marka harfleri, diş şeridi çubuğu; dokununca ya da kaydırınca hemen geçer -->
   <div class="intro" data-intro role="presentation">
     <div class="intro__half intro__half--top"></div>
     <div class="intro__half intro__half--bottom"></div>
     <div class="intro__center">
       <p class="intro__name" data-intro-name></p>
       <div class="intro__bar"><i data-intro-bar></i></div>
-      <p class="intro__meta"><span data-intro-pct>0</span><span>Geçmek için dokun</span></p>
+      <p class="intro__meta"><span data-intro-pct>%0</span><span>Geçmek için dokun</span></p>
     </div>
     <i class="intro__streak" data-intro-streak></i>
   </div>
@@ -42,8 +43,12 @@
     <!-- 1. Patinaj: teker yerinde döner, duman, kızgın disk -->
     <section class="ch ch--hero" data-ch="hero">
       <div class="ch__pin">
-        <div class="hero">
-          <p class="hero__since" data-since></p>
+        <div class="loader" aria-hidden="true"><i></i></div>
+        <div class="hero" data-hero>
+          <div class="hero__top">
+            <p class="hero__since" data-since></p>
+            <p class="hero__hud" aria-hidden="true"><span>Disk <b data-heat>640</b>°C</span><span><b data-rpm>6.800</b> d/d</span></p>
+          </div>
           <h1 class="hero__title" data-hero-title></h1>
           <p class="hero__slogan" data-bind="slogan"></p>
           <div class="hero__cta">
@@ -59,11 +64,17 @@
       </div>
     </section>
 
-    <!-- 2. Patlatılmış görünüm: her parça bir hizmet -->
+    <!-- 2. Parça parça: her parça bir hizmet -->
     <section class="ch ch--parca" data-ch="parca">
       <div class="ch__pin">
         <h2 class="ch__title ch__title--parca" data-parca-title>Tekerin her parçası bizden geçer.</h2>
-        <div class="labels" data-labels></div>
+        <div class="labels" data-labels aria-hidden="true"></div>
+        <div class="partcard" data-partcard aria-live="polite">
+          <p class="partcard__n"><b data-pc-n>1</b> / <span data-pc-total>5</span></p>
+          <h3 class="partcard__t" data-pc-t></h3>
+          <p class="partcard__d" data-pc-d></p>
+          <div class="partcard__rail" data-pc-rail aria-hidden="true"></div>
+        </div>
       </div>
     </section>
 
@@ -72,6 +83,7 @@
       <div class="ch__pin">
         <div class="season">
           <p class="season__temp"><b data-temp>24</b><span>°C</span></p>
+          <div class="season__meter" aria-hidden="true"><i data-season-bar></i></div>
           <div class="season__swap">
             <div class="season__txt season__txt--yaz" data-yaz>
               <h2 data-yaz-t></h2>
@@ -84,7 +96,6 @@
           </div>
           <a class="btn btn--ghost btn--sm" data-wa-mevsim target="_blank" rel="noopener" data-magnetic><span data-icon="whatsapp"></span>Mevsim değişimi için yaz</a>
         </div>
-        <div class="season__meter" aria-hidden="true"><i data-season-bar></i><span>Yaz</span><span>Kış</span></div>
       </div>
     </section>
 
@@ -110,9 +121,16 @@
         <div class="otel">
           <p class="otel__count"><b data-otel-count>0</b><span data-otel-label></span></p>
           <h2 class="ch__title" data-bind="otelBaslik"></h2>
-          <p class="otel__txt" data-bind="otelMetin"></p>
-          <ul class="otel__list" data-otel-list></ul>
-          <a class="btn btn--yellow" data-wa-otel target="_blank" rel="noopener" data-magnetic><span data-icon="whatsapp"></span>Otelde yer ayırt</a>
+          <div class="otel__swap">
+            <div class="otel__a">
+              <p class="otel__txt otel__txt--full" data-bind="otelMetin"></p>
+              <p class="otel__txt otel__txt--short" data-bind="otelKisa"></p>
+            </div>
+            <div class="otel__b">
+              <ul class="otel__list" data-otel-list></ul>
+              <a class="btn btn--yellow" data-wa-otel target="_blank" rel="noopener" data-magnetic><span data-icon="whatsapp"></span>Otelde yer ayırt</a>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -120,7 +138,8 @@
     <!-- 6. Jant seçici -->
     <section class="config" data-ch="config" data-wipe-in="Jantını seç" id="jant">
       <div class="config__panel">
-        <h2 class="ch__title">Jant ve kaliper rengini seç, üstünde gör.</h2>
+        <p class="kicker">Jant ve kaliper</p>
+        <h2 class="ch__title">Rengini seç, tekerin üstünde gör.</h2>
         <fieldset class="opts">
           <legend>Jant</legend>
           <div class="opts__row" data-rim-opts></div>
@@ -129,7 +148,7 @@
           <legend>Kaliper</legend>
           <div class="opts__row" data-cal-opts></div>
         </fieldset>
-        <p class="config__sum" data-config-sum></p>
+        <p class="config__sum" data-config-sum aria-live="polite"></p>
         <a class="btn btn--yellow" data-wa-config target="_blank" rel="noopener" data-magnetic><span data-icon="whatsapp"></span>Bu kombinasyonu sor</a>
       </div>
     </section>
@@ -143,15 +162,19 @@
 
     <!-- İçerik: hizmetler, yorumlar, markalar, konum -->
     <section class="svc" id="hizmetler">
+      <p class="kicker">Hizmetler</p>
       <h2 class="svc__title" data-skew>Her işin süresi belli.</h2>
       <ul class="svc__list" data-services></ul>
       <p class="svc__garanti" data-bind="garanti"></p>
     </section>
 
-    <section class="rev" id="yorumlar">
+    <section class="rev" id="yorumlar" aria-labelledby="rev-h">
       <div class="rev__head">
-        <p class="rev__score"><b data-puan>4,9</b><span class="rev__stars" data-stars></span></p>
-        <p class="rev__count" data-puan-adet></p>
+        <p class="kicker kicker--dark" id="rev-h">Örnek yorumlar</p>
+        <div class="rev__row">
+          <p class="rev__score"><b data-puan>4,9</b><span class="rev__stars" data-stars></span></p>
+          <p class="rev__count" data-puan-adet></p>
+        </div>
       </div>
       <div class="rev__track" data-rev-track></div>
     </section>
@@ -198,8 +221,8 @@
   <footer class="foot">
     <p class="foot__name" data-bind="ad"></p>
     <p data-bind="adres"></p>
-    <p><a data-tel data-bind="telefon"></a></p>
-    <p class="foot__small" data-year></p>
+    <p><a class="foot__tel" data-tel data-bind="telefon"></a></p>
+    <p class="foot__small"><span data-year></span> · Yorumlar örnektir, 3D görseller temsilîdir.</p>
   </footer>
 
   <script type="module" src="./main.js"></script>

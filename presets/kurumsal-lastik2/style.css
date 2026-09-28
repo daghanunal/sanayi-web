@@ -53,8 +53,8 @@ body { background: var(--k-zemin); }
   .hl-durum { order: 1; justify-self: start; }
   .hl-hero__baslik { order: 2; }
   .hl-teker { order: 3; margin: 18px 0 6px; }
-  .hl-hero .k-lead { order: 4; }
-  .hl-hero .k-butonlar { order: 5; margin-top: 22px; }
+  .hl-hero .k-butonlar { order: 4; margin-top: 14px; }
+  .hl-hero .k-lead { order: 5; margin-top: 22px; }
 }
 .hl-hero__baslik { font-size: clamp(46px, 5.6vw, 96px); line-height: .98; max-width: 11ch; }
 @media (max-width: 899px) { .hl-hero__baslik { font-size: min(12.4vw, 64px); } }
@@ -67,7 +67,7 @@ body { background: var(--k-zemin); }
 @keyframes hl-nabiz { 50% { box-shadow: 0 0 0 8px rgb(31 199 155 / 0); } }
 
 .hl-teker { position: relative; width: min(100%, 600px); aspect-ratio: 1; justify-self: center; margin-top: 8px; }
-@media (max-width: 899px) { .hl-teker { width: min(88vw, 440px); } }
+@media (max-width: 899px) { .hl-teker { width: min(80vw, 360px); justify-self: center; } }
 .hl-teker::before { content: ''; position: absolute; inset: -40%; border-radius: 50%; z-index: -1; pointer-events: none;
   background: radial-gradient(circle, rgb(90 60 240 / .16) 0 30%, transparent 62%), repeating-radial-gradient(circle, rgb(90 60 240 / .10) 0 1.5px, transparent 1.5px 34px);
   -webkit-mask: radial-gradient(circle, #000 35%, transparent 70%); mask: radial-gradient(circle, #000 35%, transparent 70%); }
@@ -81,7 +81,7 @@ body { background: var(--k-zemin); }
   position: absolute; inset: 15%; border-radius: 50%; overflow: hidden; background: #0d0c22;
   box-shadow: 0 30px 60px -20px rgb(20 18 56 / .55), 0 0 0 10px var(--k-zemin), 0 0 0 12px var(--hl-mor);
 }
-.hl-teker__foto img { position: absolute; left: 50%; top: 50%; width: 122%; max-width: none; height: auto; translate: -50% -52%; transform-origin: 50% 52%; will-change: transform; }
+.hl-teker__foto img { position: absolute; inset: -1%; width: 102%; height: 102%; max-width: none; object-fit: cover; transform-origin: 50% 50%; will-change: transform; }
 .hl-cip {
   position: absolute; display: grid; place-items: center; text-align: center; width: 92px; height: 92px; border-radius: 50%;
   background: var(--hl-mor); color: #fff; font-size: 12px; font-weight: 700; line-height: 1.1; padding: 10px;
@@ -201,7 +201,9 @@ body { background: var(--k-zemin); }
 
 /* --- Lastik oteli: daireden açılan fotoğraf --- */
 .hl-otel { padding-block: calc(var(--k-bosluk) / 3); }
-.hl-otel__sahne { position: relative; min-height: min(118svh, 980px); display: grid; align-items: end; color: #fff; isolation: isolate; }
+.hl-otel__sahne { position: relative; min-height: min(118svh, 980px); display: grid; align-items: end; color: #fff; isolation: isolate;
+  background: var(--k-koyu); overflow: hidden; margin-inline: clamp(0px, 1.25vw, 18px); border-radius: clamp(0px, 3vw, 32px); }
+/* Açılan dairenin dışı da koyu: yazı dairenin hangi evresinde olursa olsun koyu zemin üstünde kalır (AA). */
 .hl-otel__foto { position: absolute; inset: 0; overflow: hidden; z-index: -1; background: var(--k-koyu); clip-path: circle(80% at 50% 40%); }
 .hl-otel__foto img { width: 100%; height: 100%; object-fit: cover; will-change: transform; }
 .hl-otel__foto::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, rgb(20 18 56 / .1) 20%, rgb(20 18 56 / .92) 78%); }

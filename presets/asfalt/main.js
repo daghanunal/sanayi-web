@@ -6,7 +6,7 @@ import '../../shared/base.css';
 import './style.css';
 import {
   boot, initSmoothScroll, reducedMotion, telHref, waHref, mapsHref, mapsEmbed,
-  openStatus, groupedHours, icons, esc, gsap, ScrollTrigger,
+  openStatus, groupedHours, icons, esc, gsap, ScrollTrigger, autoHideHeader,
 } from '../../shared/core.js';
 import { SplitText } from 'gsap/SplitText';
 import { DrawSVGPlugin } from 'gsap/DrawSVGPlugin';
@@ -15,7 +15,9 @@ import { car, treadDefs, track, arrow, speedSign, steering, asphaltTexture, worn
 gsap.registerPlugin(SplitText, DrawSVGPlugin);
 ScrollTrigger.config({ ignoreMobileResize: true });
 
-const d = boot({ ...pist, ...extra, preset: 'asfalt' });
+// puan yalnızca "örnek puan" olarak sayfada gösterilir; JSON-LD'ye gerçek bir değerlendirme gibi girmesin.
+const puan = extra.puan ?? pist.puan;
+const d = boot({ ...pist, ...extra, otel: { ...pist.otel, ...extra.otel }, puan: null, preset: 'asfalt' });
 const $ = (s, root = document) => root.querySelector(s);
 const $$ = (s, root = document) => [...root.querySelectorAll(s)];
 const nf = (n, digits = 0) =>
@@ -55,7 +57,7 @@ $$('[data-maps]').forEach((a) => (a.href = mapsHref(d)));
 $('[data-wa-otel]').href = waHref(d, `Merhaba ${d.isletme.ad}, lastik oteli için yer ayırtmak istiyorum.`);
 $$('[data-icon]').forEach((el) => (el.innerHTML = icons[el.dataset.icon]));
 $('[data-since]').textContent = `Şaşmaz Oto Sanayi'de ${ablative(d.isletme.kurulus)} beri`;
-$('[data-copy]').textContent = `© ${yil} ${d.isletme.ad}. Fotoğraflar: Pexels.`;
+$('[data-copy]').textContent = `© ${yil} ${d.isletme.ad}. Fotoğraflar: Pexels. 3D görseller temsilîdir.`;
 
 // Hero: dükkân adı yola boyanmış satırlar halinde. Kısa kelimeler ("&") sonrakine bağlanır;
 // satır sayısı ekran oranına göre (fitHero) en büyük harfi verecek şekilde seçilir.
@@ -142,7 +144,7 @@ for (const key of ['yeni', 'asinmis']) {
       <p class="fren__v"><b data-v>${F.hiz}</b> km/s</p>
     </div>
     <i class="fren__skid" data-skid></i>
-    <div class="fren__car" data-fcar>${car({ id: `f-${key}`, body: key === 'yeni' ? '#e9e7e1' : '#c9c6bd' })}</div>`;
+    <div class="fren__car" data-fcar>${car({ id: `f-${key}`, tone: key === 'yeni' ? '' : 'gri', brake: true })}</div>`;
 }
 $('[data-fark]').textContent = `+${F.asinmis.mesafe - F.yeni.mesafe} m`;
 
@@ -157,7 +159,7 @@ $('[data-rot-deger]').textContent = d.rot.once.deger;
 $('[data-otel-title]').textContent = d.otel.baslik;
 $('[data-otel-text]').textContent = d.otel.metin;
 $('[data-bays]').innerHTML = `
-  <li class="bay bay--photo"><img src="${esc(d.otel.gorsel)}" alt="Etiketli lastikler rafta" loading="lazy"></li>
+  <li class="bay bay--photo"><img src="${esc(d.otel.gorsel)}" alt="Üst üste dizili mevsimlik lastikler" loading="lazy"></li>
   ${d.otel.maddeler.map((m, i) => `<li class="bay"><span class="bay__no">B-${String(i + 11)}</span><p>${esc(m)}</p></li>`).join('')}`;
 
 // Galeri
@@ -177,8 +179,8 @@ $('[data-marquee-track]').innerHTML = `<div>${brandHtml}</div><div aria-hidden="
 // Yorumlar
 const stars = (n) => '★'.repeat(n) + '☆'.repeat(5 - n);
 $('[data-puan]').innerHTML = `
-  ${speedSign(nf(d.puan.ortalama, 1))}
-  <p><span class="yorum__stars" aria-label="5 üzerinden ${nf(d.puan.ortalama, 1)}">★★★★★</span>${nf(d.puan.adet)} değerlendirme</p>`;
+  ${speedSign(nf(puan.ortalama, 1))}
+  <p><span class="yorum__stars" aria-label="5 üzerinden ${nf(puan.ortalama, 1)}">★★★★★</span>5 üzerinden, örnek puan</p>`;
 $('[data-yorumlar]').innerHTML = d.yorumlar
   .map(
     (y) => `
@@ -224,11 +226,14 @@ new IntersectionObserver(
   { rootMargin: '600px 0px' }
 ).observe(mapBox);
 
-$('[data-final-car]').innerHTML = car({ id: 'final' });
+$('[data-final-car]').innerHTML = car({ id: 'final', brake: true });
 
 // --- Hareket -----------------------------------------------------------------
 
 const lenis = initSmoothScroll();
+
+// Telefonda tek üst öğe: aşağı kaydırırken başlık saklanır, yukarı kaydırınca döner.
+if (isMobile()) autoHideHeader($('[data-top]'), { offset: 80 });
 
 // Header: hero geçince zemin alır
 ScrollTrigger.create({
@@ -239,11 +244,16 @@ ScrollTrigger.create({
 // Kaydırma hızı: işaretler hızlandıkça uzar (hareket bulanıklığı hissi)
 let vel = 0;
 if (!reducedMotion && lenis) {
-  const setVel = gsap.quickSetter(root, '--vel');
+  // --vel yalnızca onu kullanan kutulara yazılır (kökte her yazım bütün ağacın stilini yeniletiyordu);
+  // belirgin değişimde yaz, durunca bırak.
+  let shown = 0;
+  const velEls = $$('[data-mark], .hero__marks, .tread__word');
   gsap.ticker.add(() => {
     const target = Math.min(1, Math.abs(lenis.velocity) / 60);
     vel += (target - vel) * 0.12;
-    setVel(vel.toFixed(3));
+    if (vel < 0.004) vel = 0;
+    const q = Math.round(vel * 50) / 50;
+    if (q !== shown) { shown = q; for (const el of velEls) el.style.setProperty('--vel', q); }
   });
 }
 
@@ -256,7 +266,11 @@ const widthOf = (text) => ((measurer.textContent = text), measurer.getBoundingCl
 function fitHero() {
   const w = heroMarks.clientWidth;
   const sy = parseFloat(getComputedStyle(heroMarks).getPropertyValue('--sy')) || 1.9;
-  const hMax = innerHeight * (isMobile() ? 0.5 : 0.52);
+  // Başlık, altındaki metin ve butonlara değmesin: yığının kalan yüksekliği sınır.
+  const stack = heroMarks.parentElement;
+  const copy = stack.querySelector('.hero__copy');
+  const free = stack.clientHeight - copy.offsetHeight - (isMobile() ? 20 : 32);
+  const hMax = Math.max(120, Math.min(innerHeight * 0.52, free));
   measurer.style.fontSize = '100px';
   let best = { fs: 0, lines: words };
   const n = words.length;
@@ -302,14 +316,24 @@ document.fonts.ready.then(() => {
 addEventListener('resize', () => {
   fitHero();
 });
+// --bar-space / font / çubuk ölçümü sonradan değişirse yığın boyu değişir: başlığı yeniden sığdır.
+if (typeof ResizeObserver !== 'undefined') {
+  let raf = 0;
+  new ResizeObserver(() => { cancelAnimationFrame(raf); raf = requestAnimationFrame(fitHero); }).observe(heroMarks.parentElement);
+}
 
 // Açılış: dükkân adı yola boyanır, araç aşağıdan girer
+// Toplam ~1,6 sn; butonlar 0,3 sn'de dokunulabilir. Dokununca/kaydırınca hemen biter.
 function intro() {
   const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
-  tl.fromTo('.hm', { clipPath: 'inset(100% 0 -40% 0)' }, { clipPath: 'inset(-40% 0 -40% 0)', duration: 0.9, stagger: 0.16, ease: 'power2.inOut' })
-    .fromTo('[data-hero-car]', { yPercent: 160 }, { yPercent: 0, duration: 1.2 }, 0.2)
-    .from(['.hero__since', '.hero__slogan', '.hero__cta', '.hero__speed'], { y: 20, opacity: 0, duration: 0.7, stagger: 0.07 }, 0.7)
-    .from('.hero__hint', { opacity: 0, duration: 0.6 }, 1.3);
+  tl.fromTo('.hm', { clipPath: 'inset(100% 0 -40% 0)' }, { clipPath: 'inset(-40% 0 -40% 0)', duration: 0.75, stagger: 0.12, ease: 'power2.inOut' })
+    .fromTo('[data-hero-car]', { yPercent: 160 }, { yPercent: 0, duration: 1.1 }, 0.15)
+    .from(['.hero__since', '.hero__slogan', '.hero__cta', '.hero__speed'], { y: 16, autoAlpha: 0, duration: 0.5, stagger: 0.05 }, 0.3)
+    .from('.hero__hint', { autoAlpha: 0, duration: 0.5 }, 1.1);
+  const skip = () => { if (tl.progress() < 1) tl.progress(1); off(); };
+  const off = () => ['pointerdown', 'wheel', 'touchstart', 'keydown'].forEach((e) => removeEventListener(e, skip));
+  ['pointerdown', 'wheel', 'touchstart', 'keydown'].forEach((e) => addEventListener(e, skip, { passive: true, once: true }));
+  tl.eventCallback('onComplete', off);
 }
 
 // Hero: pinli; araç yukarı çıkar, arkasında iz kalır, işaretler altından kayar
@@ -324,11 +348,11 @@ function heroScroll() {
     },
   });
   tl.to('[data-hero-car]', { y: () => -innerHeight * 1.25, ease: 'power2.in', duration: 1 }, 0)
-    .fromTo('[data-hero-tracks]', { clipPath: 'inset(100% 0 0 0)' }, { clipPath: 'inset(0% 0 0 0)', ease: 'power2.in', duration: 1 }, 0)
+    .fromTo('.hero__track', { yPercent: 100 }, { yPercent: 0, ease: 'power2.in', duration: 1 }, 0)
     .to('[data-hero-marks]', { y: () => -innerHeight * 0.14, duration: 1 }, 0)
-    .to('.hero__copy', { y: -60, opacity: 0, duration: 0.35 }, 0.62)
-    .to('.hero__hint', { opacity: 0, duration: 0.1 }, 0)
-    .to('.hero__speed', { opacity: 0, duration: 0.2 }, 0.8);
+    .to('.hero__copy', { y: -60, autoAlpha: 0, duration: 0.35 }, 0.62)
+    .to('.hero__hint', { autoAlpha: 0, duration: 0.1 }, 0)
+    .to('.hero__speed', { autoAlpha: 0, duration: 0.2 }, 0.8);
 }
 
 // Bölüm işaretleri: yola boyanır (alttan üste), geçerken hafif paralaks
@@ -475,11 +499,11 @@ function rot() {
     const p = path.getPointAtLength(len * t);
     const q = path.getPointAtLength(Math.min(len, len * t + 4));
     const ang = (Math.atan2((q.y - p.y) * h, (q.x - p.x) * w) * 180) / Math.PI + 90;
-    carEl.style.transform = `translate3d(${(p.x * w).toFixed(1)}px, ${(p.y * h).toFixed(1)}px, 0) translate(-50%, -30%) rotate(${ang.toFixed(1)}deg)`;
+    carEl.style.transform = `translate3d(${(p.x * w).toFixed(1)}px, ${(p.y * h).toFixed(1)}px, 0) translate(-50%, -78%) rotate(${ang.toFixed(1)}deg)`;
   }
 
   ScrollTrigger.create({
-    trigger: '[data-rot]', start: isMobile() ? 'top top+=60' : 'top top', end: () => `+=${innerHeight * 1.6}`,
+    trigger: '[data-rot]', start: 'top top', end: () => `+=${innerHeight * 1.6}`,
     pin: true, scrub: 0.5,
     onUpdate: (s) => {
       const p = s.progress;
@@ -535,8 +559,10 @@ function galeri() {
 
 function marquee() {
   const trackEl = $('[data-marquee-track]');
-  let x = 0;
+  let x = 0, gorunur = false;
+  new IntersectionObserver((e) => (gorunur = e[0].isIntersecting)).observe(trackEl);
   gsap.ticker.add((t, dt) => {
+    if (!gorunur) return;
     const half = trackEl.scrollWidth / 2;
     x -= (dt / 1000) * (60 + vel * 900);
     if (x <= -half) x += half;

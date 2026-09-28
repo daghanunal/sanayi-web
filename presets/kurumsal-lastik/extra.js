@@ -163,3 +163,40 @@ export const ebatOkuyucu = {
     }
   },
 };
+
+// Sektör imzası: tekerin katmanları. Kütüphanedeki tekerin (lib3d wheel) parçalarına ayrılmış Cycles render'ı +
+// her katmanda neye baktığımızın listesi. Görsel temsilîdir ve öyle etiketlenir.
+const KATMAN = [
+  ['Lastik', 'Diş derinliği ve yanaktaki üretim tarihi (DOT) okunur; tek taraftan yeme, kesik ya da şişlik varsa açıkça söylenir.'],
+  ['Jant', 'Eğiklik ve çatlak kontrol edilir; söküm ve takım jantı çizmeyen makinede yapılır.'],
+  ['Sibop ve basınç', 'Değişimde sibop yenilenir, basınç aracın kapı etiketindeki değere ayarlanır.'],
+  ['Balans', 'Teker makinede döndürülür, ağırlıklar gram hassasiyetinde takılır.'],
+  ['Disk ve kaliper', 'Teker sökülmüşken disk yüzeyine ve balataya bakılır; gördüğümüzü size gösteririz.'],
+  ['Bijonlar', 'Tork anahtarıyla, üretici değerinde ve çapraz sırayla sıkılır.'],
+];
+const okSvg = `<svg class="k-ok" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+
+export const tekerKatman = {
+  render() {
+    const img = `${import.meta.env.BASE_URL}img/kurumsal-lastik/teker-3d.webp`;
+    const konu = encodeURIComponent('Randevu');
+    return `
+      <section class="k-bolum tk" aria-labelledby="tk-baslik">
+        <div class="k-kap tk__ic">
+          <div class="tk__metin">
+            <p class="tk__ust">Her tekerde aynı kontrol</p>
+            <h2 class="k-h2" id="tk-baslik" data-bol>Tekeri söktüğümüzde neye bakıyoruz?</h2>
+            <p class="k-lead">Lastik değişimi yalnızca lastik değildir. Teker araçtan inmişken altı noktaya bakar, bulduğumuzu işe başlamadan söyleriz.</p>
+            <ol class="tk__liste" data-sira>
+              ${KATMAN.map(([a, b], i) => `<li><span class="tk__no">${String(i + 1).padStart(2, '0')}</span><div><h3>${esc(a)}</h3><p>${esc(b)}</p></div></li>`).join('')}
+            </ol>
+            <a class="k-link tk__link" href="#/iletisim?konu=${konu}" data-rota="iletisim?konu=${konu}">Kontrol için randevu isteyin ${okSvg}</a>
+          </div>
+          <figure class="tk__gorsel" data-perde>
+            <img src="${img}" alt="Lastik, jant, bijonlar, fren diski ve kaliperi eksen boyunca ayrılmış tekerin temsilî 3D çizimi" loading="lazy" width="1200" height="727">
+            <figcaption>Temsilî 3D çizim</figcaption>
+          </figure>
+        </div>
+      </section>`;
+  },
+};

@@ -22,6 +22,10 @@
   color-scheme: dark;
 }
 @media (min-width: 900px) { :root { --gut: 40px; } }
+/* Pinli sahneler alt çubuk payını sabit --bar-reserve ile bırakır (hikâye modunda düzen oynamaz). --bar-space'in
+   kökteki geçişi her hikâye modu değişiminde bütün ağacın stilini 350 ms boyunca her karede yeniden hesaplatıyordu
+   (6x CPU'da takılma); bu sayfada --bar-space kullanılmadığından geçiş kapalı. Çubuk kendi transform'uyla kayar. */
+:root { transition: none; }
 
 body {
   background: var(--asfalt) var(--asfalt-img) repeat;
@@ -98,10 +102,10 @@ img { display: block; }
 .top {
   position: fixed; z-index: 60; top: 0; left: 0; right: 0;
   display: flex; align-items: center; gap: 14px; padding: 10px var(--gut);
-  transition: background-color .3s ease, box-shadow .3s ease;
+  transition: background-color .3s ease, box-shadow .3s ease, transform .3s cubic-bezier(.2, .7, .2, 1);
 }
 .top.is-solid { background: rgb(27 28 31 / .94); box-shadow: 0 2px 0 var(--paint-3); backdrop-filter: blur(8px); }
-.top__brand { font: 800 18px/1 var(--f); text-decoration: none; margin-right: auto; }
+.top__brand { display: inline-flex; align-items: center; min-height: 44px; font: 800 18px/1 var(--f); text-decoration: none; margin-right: auto; }
 .top__status { display: flex; align-items: center; gap: 8px; font-size: 14px; color: var(--paint-2); }
 .top__status i { width: 9px; height: 9px; border-radius: 50%; background: var(--sinyal); }
 .top__status i.on { background: #5bd07a; box-shadow: 0 0 10px #5bd07a; }
@@ -129,12 +133,18 @@ img { display: block; }
 /* --- Hero ------------------------------------------------------------------- */
 .hero { position: relative; height: 100svh; min-height: 620px; overflow: hidden; }
 .hero .road { position: absolute; inset: 0; }
+.hero__stack {
+  position: absolute; z-index: 3; left: var(--gut); right: var(--gut); top: 80px; bottom: calc(var(--bar-reserve) + 12px);
+  display: flex; flex-direction: column; justify-content: space-between; gap: 20px; pointer-events: none;
+}
+.hero__stack > * { pointer-events: auto; }
+@media (min-width: 900px) { .hero__stack { top: 92px; bottom: 64px; } }
 .hero__marks {
   --sy: 1.5;
-  position: absolute; left: var(--gut); right: var(--gut); top: 84px; margin: 0;
-  font-size: inherit; font-weight: inherit; z-index: 2;
+  position: relative; margin: 0; flex: none;
+  font-size: inherit; font-weight: inherit;
 }
-@media (min-width: 900px) { .hero__marks { --sy: 1.9; top: 92px; } }
+@media (min-width: 900px) { .hero__marks { --sy: 1.9; } }
 .hm__measure { position: absolute; visibility: hidden; left: 0; top: 0; transform: none; }
 .hm { display: block; height: calc(var(--fs, 100px) * .8 * var(--sy)); }
 .hm__t { font-size: var(--fs, 100px); transform: scaleY(calc(var(--sy) + var(--vel) * .4)); transform-origin: 0 0; }
@@ -143,20 +153,32 @@ img { display: block; }
   position: absolute; z-index: 4; right: calc(var(--gut) + 6vw); bottom: 20svh;
   width: clamp(58px, 15vw, 96px); will-change: transform;
 }
-.car { width: 100%; height: auto; overflow: visible; filter: drop-shadow(0 10px 14px rgb(0 0 0 / .55)); }
+.car { position: relative; width: 100%; aspect-ratio: 320 / 600; }
+.car::after { content: ''; position: absolute; z-index: 0; inset: 4% 6% 0; border-radius: 30%; background: radial-gradient(closest-side, rgb(0 0 0 / .55), transparent); transform: translateY(5%); }
+.car__img { position: relative; z-index: 1; display: block; width: 100%; height: 100%; user-select: none; -webkit-user-drag: none; }
+.car__beam { position: absolute; z-index: 0; left: -32%; width: 164%; bottom: 94%; height: 76%; pointer-events: none; }
+.car__stop {
+  position: absolute; z-index: 2; top: 88.5%; width: 26%; height: 6%; border-radius: 50%; opacity: 0;
+  background: radial-gradient(closest-side, rgb(255 70 50 / .95), rgb(255 40 30 / .45) 45%, transparent);
+  transition: opacity .25s ease;
+}
+.car__stop--l { left: 14%; }
+.car__stop--r { right: 14%; }
+.car--fren .car__stop { opacity: 1; }
+.car--gri .car__img { filter: brightness(.84) sepia(.12); }
 .hero__tracks {
   position: absolute; z-index: 1; top: 0; bottom: 20svh; right: calc(var(--gut) + 6vw);
   width: clamp(58px, 15vw, 96px);
 }
-.hero__track { position: absolute; top: 0; height: 100%; width: 16%; }
+.hero__tracks { overflow: hidden; }
+.hero__track { position: absolute; top: 0; height: 100%; width: 16%; will-change: transform; }
+.hero__marks, .hero__copy { will-change: transform; }
+.fren__skid { will-change: transform; }
 .hero__track:first-child { left: 2%; }
 .hero__track:last-child { right: 2%; }
 
-.hero__copy {
-  position: absolute; z-index: 3; left: var(--gut); bottom: calc(96px + env(safe-area-inset-bottom));
-  width: min(64%, 520px);
-}
-@media (min-width: 900px) { .hero__copy { bottom: 64px; } }
+.hero__copy { position: relative; width: min(72%, 520px); }
+.hero__since { text-wrap: balance; }
 .hero__since { font-weight: 700; color: var(--paint); font-size: 15px; }
 .hero__slogan { color: var(--paint-2); font-size: 18px; margin: 6px 0 18px; max-width: 34ch; }
 .hero__cta { display: flex; flex-wrap: wrap; gap: 10px; }
@@ -230,7 +252,7 @@ img { display: block; }
 /* --- Fren mesafesi -------------------------------------------------------- */
 .fren {
   position: relative; height: 100svh; min-height: 640px; overflow: hidden;
-  display: grid; grid-template-rows: auto 1fr auto; padding: 72px var(--gut) calc(96px + env(safe-area-inset-bottom));
+  display: grid; grid-template-rows: auto minmax(0, 1fr) auto; padding: 72px var(--gut) calc(var(--bar-reserve) + 12px);
   max-width: var(--max); margin: 0 auto;
 }
 @media (min-width: 900px) { .fren { padding-bottom: 28px; grid-template-columns: 1fr 1.1fr; grid-template-rows: 1fr auto; column-gap: 56px; } }
@@ -258,7 +280,6 @@ img { display: block; }
 .fren__lane[data-lane="asinmis"].is-stopped .fren__m b { color: var(--sinyal); }
 .fren__car { position: absolute; z-index: 2; left: 50%; top: 0; width: clamp(40px, 11vw, 62px); will-change: transform; }
 .fren__car .car__beam { opacity: .7; }
-.fren__car .car__stop { fill: #ff3b30; }
 .fren__skid {
   position: absolute; z-index: 1; left: 50%; width: clamp(40px, 11vw, 62px); transform-origin: 50% 100%;
   translate: -50% 0; transform: scaleY(0);
@@ -286,9 +307,9 @@ img { display: block; }
 @media (min-width: 900px) { .rot { padding-top: 96px; padding-bottom: 48px; } .rot__road { height: 72svh; } }
 .rot .mark { --fs: clamp(96px, 16vw, 220px); margin-bottom: 4px; }
 @media (max-width: 899px) {
-  .rot { padding-top: 76px; padding-bottom: 96px; }
+  .rot { padding-top: 24px; padding-bottom: calc(var(--bar-reserve) + 12px); }
   .rot .mark { display: none; }
-  .rot__road { height: 30svh; min-height: 200px; }
+  .rot__road { height: 36svh; min-height: 200px; }
   .rot__grid { gap: 14px; }
   .rot__deger b { font-size: 44px; }
   .rot__state .h2 { font-size: 24px; }
@@ -298,7 +319,7 @@ img { display: block; }
 .rot__grid { display: grid; gap: 22px; }
 @media (min-width: 900px) { .rot__grid { grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; } }
 .rot__road {
-  position: relative; height: 38svh; min-height: 250px; border-radius: 2px;
+  position: relative; height: 38svh; min-height: 250px; border-radius: 2px; overflow: hidden;
   background: rgb(0 0 0 / .16);
 }
 @media (min-width: 900px) { .rot__road { height: 62svh; } }
@@ -405,6 +426,7 @@ img { display: block; }
 .review blockquote { margin: 0; font-weight: 600; font-size: 17px; line-height: 1.4; }
 .review__who { font-weight: 800; display: grid; }
 .review__who small { font-weight: 600; color: #55575b; }
+.yorum__etiket { display: inline-block; margin-bottom: 10px; padding: 4px 10px; border: 2px solid var(--paint-3); border-radius: 3px; font-size: 13px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--paint-2); }
 
 /* --- Konum ---------------------------------------------------------------- */
 .konum__grid { display: grid; gap: 36px; }
@@ -430,14 +452,13 @@ img { display: block; }
 @media (min-width: 900px) { .map { min-height: 460px; } }
 
 /* --- Final ---------------------------------------------------------------- */
-.final { position: relative; min-height: 100svh; overflow: hidden; display: grid; grid-template-rows: auto auto 1fr; padding: 96px var(--gut) calc(110px + env(safe-area-inset-bottom)); }
+.final { position: relative; min-height: 100svh; overflow: hidden; display: grid; grid-template-rows: auto auto 1fr; padding: 96px var(--gut) 56px; }
 .final__road { position: absolute; inset: 0; pointer-events: none; }
 .final__line {
   position: absolute; left: var(--gut); right: var(--gut); top: calc(100% - 44svh); height: 18px; background: var(--paint);
   -webkit-mask-image: var(--worn); mask-image: var(--worn); -webkit-mask-size: 200px; mask-size: 200px;
 }
 .final__car { position: absolute; z-index: 3; right: calc(var(--gut) + 8vw); top: calc(100% - 44svh + 26px); width: clamp(58px, 14vw, 92px); will-change: transform; }
-.final__car .car__stop { fill: #ff3b30; }
 .final__copy { position: relative; z-index: 4; max-width: 620px; }
 .final__title { font: 800 clamp(34px, 9vw, 72px)/1 var(--f); letter-spacing: -.02em; text-wrap: balance; }
 .final__cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 26px; }
@@ -448,12 +469,13 @@ img { display: block; }
 .foot { padding: 40px var(--gut) 60px; max-width: var(--max); margin: 0 auto; color: var(--paint-2); font-size: 15px; display: grid; gap: 4px; border-top: 3px dashed var(--paint-3); }
 .foot strong { color: var(--paint); }
 .foot a { text-decoration: none; }
+.foot__tel { display: inline-flex; align-items: center; min-height: 44px; font-weight: 700; color: var(--paint); }
 .foot__small { font-size: 13px; margin-top: 10px; }
 
 /* --- Hareket azaltılmış ---------------------------------------------------- */
 .is-static .fren { height: auto; min-height: 0; }
 .is-static .fren__road { height: 70svh; }
-.is-static .hero__tracks { clip-path: none; }
+.is-static .hero__track { transform: none; }
 @media (prefers-reduced-motion: reduce) {
   .steer { animation: none; }
   .btn, .top { transition: none; }

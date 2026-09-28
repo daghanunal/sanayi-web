@@ -1,5 +1,20 @@
-Tüm görseller Pexels lisansıyla (ücretsiz ticari kullanım).
-jant-hero.jpg https://www.pexels.com/photo/31646380/
-dis.jpg       https://www.pexels.com/photo/441103/
-lift.jpg      https://www.pexels.com/photo/6870302/ (Gustavo Fring)
-Ayrıca public/img/pist/ görselleri kullanılır (kaynakları orada).
+Tüm görseller Pexels lisansıyla (ücretsiz ticari kullanım, atıf gerekmez).
+Hepsi bu tasarımın renk düzenine göre işlendi (soğuk beyaz ayarı, yumuşak kontrast):
+.shots/yukseltme/lastik-klasik2/tools/grade.py profil <kaynak> <hedef.webp>
+
+jant-hero.jpg     https://www.pexels.com/photo/31646380/
+lift.jpg / .webp  https://www.pexels.com/photo/6870302/ (Gustavo Fring)
+bijon.webp        https://www.pexels.com/photo/6870330/ (Gustavo Fring)
+yuvarla.webp      https://www.pexels.com/photo/6870316/ (Gustavo Fring)
+sokum.webp        https://www.pexels.com/photo/6870311/ (Gustavo Fring)
+lift-suv.webp     https://www.pexels.com/photo/6870331/ (Gustavo Fring)
+rot-ekran.webp    https://www.pexels.com/photo/38324578/
+rot-usta.webp     https://www.pexels.com/photo/31097241/
+olcum.webp        https://www.pexels.com/photo/37091334/
+otel-yigin.webp   https://www.pexels.com/photo/34357281/
+jant-yigin.webp   https://www.pexels.com/photo/34357287/
+jant-kaliper.webp https://www.pexels.com/photo/30782474/
+jant-yol.webp     https://www.pexels.com/photo/30782468/
+yaz.webp          https://www.pexels.com/photo/20303832/
+kis.webp          https://www.pexels.com/photo/6603959/ (kırpıldı)
+dis.jpg           https://www.pexels.com/photo/441103/ (artık kullanılmıyor)

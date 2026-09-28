@@ -1,30 +1,24 @@
 // Asfalt: yol çizgisi, lastik izi ve tabela SVG'leri. Hepsi saf SVG/canvas, WebGL yok.
+import { asset } from '../../shared/core.js';
 
-// Üstten görünen araç. Burun yukarı bakar. viewBox 44×92.
-export function car({ body = '#e9e7e1', glass = '#1b1d20', id = 'car' } = {}) {
+// Üstten görünen araç: lib3d hatchback'ının tepeden Cycles render'ı (render.sh; temsilî 3D çizim, marka yok).
+// Burun yukarı bakar. Far huzmesi ve fren lambası parıltısı ayrı katman (fren anında yanar).
+const ARAC = asset('/img/asfalt/arac-ust.webp');
+export function car({ id = 'car', tone = '', brake = false } = {}) {
   return `
-  <svg class="car" viewBox="0 0 44 92" aria-hidden="true" data-car="${id}">
-    <defs>
-      <radialGradient id="${id}-beam" cx="50%" cy="100%" r="100%">
-        <stop offset="0" stop-color="#fff6d8" stop-opacity=".55"/>
-        <stop offset="1" stop-color="#fff6d8" stop-opacity="0"/>
-      </radialGradient>
-    </defs>
-    <path class="car__beam" d="M6 6 L-14 -70 L58 -70 L38 6 Z" fill="url(#${id}-beam)"/>
-    <rect x="1" y="13" width="7" height="15" rx="2" fill="#0d0e10"/>
-    <rect x="36" y="13" width="7" height="15" rx="2" fill="#0d0e10"/>
-    <rect x="1" y="62" width="7" height="15" rx="2" fill="#0d0e10"/>
-    <rect x="36" y="62" width="7" height="15" rx="2" fill="#0d0e10"/>
-    <path d="M9 4 Q22 0 35 4 Q40 6 40 14 L40 80 Q40 89 32 90 L12 90 Q4 89 4 80 L4 14 Q4 6 9 4 Z" fill="${body}"/>
-    <path d="M9 26 Q22 21 35 26 L33 38 Q22 35 11 38 Z" fill="${glass}"/>
-    <path d="M11 66 Q22 69 33 66 L34 75 Q22 78 10 75 Z" fill="${glass}"/>
-    <rect x="11" y="40" width="22" height="24" rx="3" fill="${body}" opacity=".92"/>
-    <path d="M9 40 L10 64 M35 40 L34 64" stroke="${glass}" stroke-width="1.6" opacity=".7"/>
-    <rect x="8" y="3" width="7" height="3" rx="1.5" fill="#fff6d8"/>
-    <rect x="29" y="3" width="7" height="3" rx="1.5" fill="#fff6d8"/>
-    <rect class="car__stop" x="7" y="87" width="8" height="3" rx="1.5" fill="#7a1310"/>
-    <rect class="car__stop" x="29" y="87" width="8" height="3" rx="1.5" fill="#7a1310"/>
-  </svg>`;
+  <div class="car${brake ? ' car--fren' : ''}${tone ? ` car--${tone}` : ''}" data-car="${id}" aria-hidden="true">
+    <svg class="car__beam" viewBox="0 0 72 76" preserveAspectRatio="none">
+      <defs>
+        <radialGradient id="${id}-beam" cx="50%" cy="100%" r="100%">
+          <stop offset="0" stop-color="#fff6d8" stop-opacity=".55"/>
+          <stop offset="1" stop-color="#fff6d8" stop-opacity="0"/>
+        </radialGradient>
+      </defs>
+      <path d="M20 76 L0 0 L72 0 L52 76 Z" fill="url(#${id}-beam)"/>
+    </svg>
+    <img class="car__img" src="${ARAC}" alt="" width="320" height="600" decoding="async" draggable="false">
+    <i class="car__stop car__stop--l"></i><i class="car__stop car__stop--r"></i>
+  </div>`;
 }
 
 // Lastik diş desenleri: <pattern> tanımları. Genişlik 60 birim, dikey tekrar.

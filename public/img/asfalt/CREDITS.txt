@@ -1,0 +1,10 @@
+Tüm fotoğraflar Pexels lisansıyla (ücretsiz ticari kullanım, atıf gerekmez).
+dis-asfalt.jpg   https://www.pexels.com/photo/20303832/
+depo.jpg         https://www.pexels.com/photo/13746781/
+yigin.jpg        https://www.pexels.com/photo/9576099/
+dis-yakin.jpg    https://www.pexels.com/photo/7019611/
+servis-arac.jpg  https://www.pexels.com/photo/8660855/
+dis-ust.jpg      https://www.pexels.com/photo/116676/
+raf.jpg          https://www.pexels.com/photo/37002235/
+arac-ust.webp    Temsilî 3D çizim: lib3d "car" varlığı (assets3d, prosedürel, marka yok), Blender Cycles tepeden
+                 ortografik render (presets/asfalt/render.sh + render_cycles.py). İşletmenin gerçek fotoğrafı değildir.

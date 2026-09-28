@@ -27,14 +27,16 @@
         <i class="road__center" data-hero-center></i>
       </div>
       <div class="hero__tracks" aria-hidden="true" data-hero-tracks></div>
-      <h1 class="hero__marks" data-hero-marks></h1>
       <div class="hero__car" data-hero-car></div>
-      <div class="hero__copy">
-        <p class="hero__since" data-since></p>
-        <p class="hero__slogan" data-bind="slogan"></p>
-        <div class="hero__cta">
-          <a class="btn btn--paint" data-wa target="_blank" rel="noopener"><span class="ico" data-icon="whatsapp"></span>WhatsApp'tan yaz</a>
-          <a class="btn btn--line" data-tel><span class="ico" data-icon="phone"></span>Hemen ara</a>
+      <div class="hero__stack">
+        <h1 class="hero__marks" data-hero-marks></h1>
+        <div class="hero__copy">
+          <p class="hero__since" data-since></p>
+          <p class="hero__slogan" data-bind="slogan"></p>
+          <div class="hero__cta">
+            <a class="btn btn--paint" data-wa target="_blank" rel="noopener"><span class="ico" data-icon="whatsapp"></span>WhatsApp'tan yaz</a>
+            <a class="btn btn--line" data-tel><span class="ico" data-icon="phone"></span>Hemen ara</a>
+          </div>
         </div>
       </div>
       <p class="hero__speed" aria-hidden="true"><b data-speed>0</b><small>km/s</small></p>
@@ -115,8 +117,9 @@
     </section>
 
     <!-- Galeri: rögar kapakları ve tabela çerçeveleri -->
-    <section class="section galeri" aria-label="Atölyeden">
-      <h2 class="h2">Atölyeden</h2>
+    <section class="section galeri" aria-labelledby="galeri-baslik">
+      <h2 class="h2" id="galeri-baslik">Lastik, jant, diş</h2>
+      <p class="lead">İşin kendisinden kareler: diş deseni, jant ve depo.</p>
       <ul class="plates" data-galeri></ul>
     </section>
 
@@ -129,7 +132,10 @@
     <section class="section yorum" id="yorumlar">
       <div class="yorum__head">
         <div class="yorum__puan" data-puan></div>
-        <h2 class="h2">Yoldan dönenler anlatıyor</h2>
+        <div>
+          <p class="yorum__etiket">Örnek yorumlar</p>
+          <h2 class="h2">Yoldan dönenler anlatıyor</h2>
+        </div>
       </div>
       <div class="yorum__row" data-yorum-row><ul class="yorum__track" data-yorumlar></ul></div>
     </section>
@@ -173,7 +179,7 @@
   <footer class="foot">
     <p><strong data-bind="ad"></strong></p>
     <p data-bind="adres"></p>
-    <p><a data-tel data-bind="telefon"></a></p>
+    <p><a class="foot__tel" data-tel data-bind="telefon"></a></p>
     <p class="foot__small" data-copy></p>
   </footer>
 

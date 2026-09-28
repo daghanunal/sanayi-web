@@ -3,17 +3,19 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#232427" />
+  <meta name="theme-color" content="#1a1b1e" />
+  <link rel="icon" href="data:," />
   <title>Lastik ve Jant | Şaşmaz</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders:opsz,wght@10..72,700..900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="preload" as="image" href="/img/pist/r-wheel-front.webp" fetchpriority="high" />
+  <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders:opsz,wght@10..72,700..900&family=Chivo:wght@400;500;700&family=Chivo+Mono:wght@500&display=swap" rel="stylesheet" />
 </head>
 <body>
   <header class="top" data-top>
     <a class="top__brand" href="#" data-bind="ad"></a>
     <p class="top__status" data-status></p>
-    <a class="top__call" data-tel><span class="top__call-icon" data-icon="phone"></span><span data-bind="telefon"></span></a>
+    <a class="top__call" data-tel aria-label="Telefonla ara"><span class="top__call-icon" data-icon="phone"></span><span data-bind="telefon"></span></a>
   </header>
 
   <main>
@@ -35,8 +37,9 @@
         <div class="hero__skid" data-skid></div>
         <div class="hero__road" data-road></div>
       </div>
-      <div class="hero__wheel" data-hero-wheel></div>
+      <div class="hero__wheel" data-hero-wheel aria-hidden="true"></div>
       <p class="hero__hint" aria-hidden="true" data-hint>Kaydır, teker dönsün</p>
+      <p class="hero__render" aria-hidden="true">3D görsel</p>
     </section>
 
     <div class="marquee marquee--outline" data-marquee="1" aria-hidden="true">
@@ -56,7 +59,7 @@
     <!-- Hız göstergesi: pinlenir, ibre rakamdan rakama gider -->
     <section class="gauge" aria-labelledby="rakam-baslik" data-gauge>
       <div class="gauge__inner">
-        <h2 id="rakam-baslik" class="gauge__title">Rakamlarla</h2>
+        <h2 id="rakam-baslik" class="gauge__title"><small>Zaman ekranı</small>Rakamlarla</h2>
         <div class="gauge__dial">
           <svg class="gauge__svg" viewBox="-220 -220 440 300" aria-hidden="true" data-gauge-svg></svg>
           <div class="gauge__needle" data-needle aria-hidden="true"></div>
@@ -108,7 +111,7 @@
       </div>
     </section>
 
-    <section class="gallery" aria-label="Atölyeden kareler">
+    <section class="gallery" aria-label="Lastik ve jant işinden kareler">
       <div class="gallery__cols" data-gallery></div>
     </section>
 
@@ -120,7 +123,10 @@
       <div class="wrap">
         <div class="reviews__head">
           <p class="reviews__score"><span data-score></span><span class="reviews__stars" data-stars></span></p>
-          <h2 id="yorum-baslik" class="h2">Müşterilerimiz<br />ne diyor</h2>
+          <div>
+            <p class="eyebrow">Örnek yorumlar</p>
+            <h2 id="yorum-baslik" class="h2">Müşteri<br />ne diyor</h2>
+          </div>
           <p class="reviews__count" data-review-count></p>
         </div>
         <ul class="reviews__list" data-reviews></ul>
@@ -141,7 +147,7 @@
     </section>
 
     <section class="final" aria-labelledby="final-baslik">
-      <div class="final__wheel" data-final-wheel></div>
+      <figure class="final__media"><img src="/img/pist/r-wheel-beauty.webp" alt="Jant ve lastiğin 3D görseli" loading="lazy" decoding="async" /><figcaption>3D görsel</figcaption></figure>
       <div class="wrap final__copy">
         <h2 id="final-baslik" class="final__title">Lastiğin mi indi?</h2>
         <p class="final__text">Ara ya da fotoğrafını WhatsApp'tan at, ebadına bakıp fiyatı hemen söyleyelim.</p>
@@ -160,6 +166,7 @@
       <p data-bind="adres"></p>
       <p><a data-tel><span data-bind="telefon"></span></a></p>
       <p class="foot__copy" data-copy></p>
+      <p class="foot__note">Fotoğraflar temsilîdir. 3D görseller temsilîdir.</p>
     </div>
   </footer>
 

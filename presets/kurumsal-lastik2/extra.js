@@ -23,7 +23,6 @@ export const tekerHero = {
       const r1 = i % 6 ? 283 : 276;
       return `<line x1="${(300 + Math.cos(a) * r1).toFixed(1)}" y1="${(300 + Math.sin(a) * r1).toFixed(1)}" x2="${(300 + Math.cos(a) * 292).toFixed(1)}" y2="${(300 + Math.sin(a) * 292).toFixed(1)}"/>`;
     }).join('');
-    const p = d.puan;
     return `
       <section class="k-hero hl-hero" aria-label="Giriş">
         <div class="k-kap hl-hero__ic">
@@ -51,7 +50,7 @@ export const tekerHero = {
         <div class="k-kap">
           <dl class="hl-bilgi">
             <div><dt>Şaşmaz'da</dt><dd>${esc(yilEki(d.isletme.kurulus))} beri</dd></div>
-            ${p ? `<div><dt>${esc(String(p.adet))} değerlendirme</dt><dd><span class="hl-yildiz">${icons.star}</span>${esc(String(p.ortalama).replace('.', ','))} / 5</dd></div>` : ''}
+            ${d.hizmetler?.[0]?.sure ? `<div><dt>${esc(d.hizmetler[0].baslik.split(' ')[0])} değişimi</dt><dd>ortalama ${esc(d.hizmetler[0].sure)}</dd></div>` : ''}
             <div><dt>Telefon</dt><dd><a href="${telHref(d)}">${esc(d.iletisim.telefon)}</a></dd></div>
           </dl>
         </div>
@@ -59,17 +58,15 @@ export const tekerHero = {
   },
   mount(el) {
     if (reducedMotion) return;
-    const img = el.querySelector('.hl-teker__foto img');
     const don = el.querySelector('.hl-teker__don');
     const foto = el.querySelector('.hl-teker__foto');
-        // Açılış: teker yuvarlanarak gelir.
-    gsap.fromTo(foto, { scale: 0.55, opacity: 0 }, { scale: 1, opacity: 1, duration: 1.3, ease: 'power3.out', delay: 0.15 });
-    gsap.fromTo(img, { rotation: -140 }, { rotation: 0, duration: 1.6, ease: 'power3.out', delay: 0.15 });
-    gsap.fromTo(don, { rotation: 90, opacity: 0 }, { rotation: 0, opacity: 1, duration: 1.6, ease: 'power3.out', delay: 0.25 });
-    gsap.from(el.querySelectorAll('.hl-cip'), { scale: 0, opacity: 0, duration: 0.7, stagger: 0.12, delay: 0.9, ease: 'back.out(2)' });
-    // Kaydırdıkça teker yuvarlanır, halka ters yöne döner.
+    // Açılış (~1,4 sn): fotoğraf büyüyerek gelir, yazı halkası dönerek oturur. Fotoğraf dönmez (gerçek fotoğraf).
+    gsap.fromTo(foto, { scale: 0.7, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 1.1, ease: 'power3.out', delay: 0.1 });
+    gsap.fromTo(don, { rotation: 90, autoAlpha: 0 }, { rotation: 0, autoAlpha: 1, duration: 1.4, ease: 'power3.out', delay: 0.15 });
+    gsap.from(el.querySelectorAll('.hl-cip'), { scale: 0, autoAlpha: 0, duration: 0.6, stagger: 0.1, delay: 0.6, ease: 'back.out(2)' });
+    // Kaydırdıkça yazı halkası döner, fotoğraf hafifçe yaklaşır.
     const tl = gsap.timeline({ scrollTrigger: { trigger: el, start: 'top top', end: 'bottom top', scrub: 0.6 } });
-    tl.to(img, { rotation: 220, ease: 'none' }, 0).to(don, { rotation: -120, ease: 'none' }, 0);
+    tl.to(don, { rotation: -140, ease: 'none' }, 0).to(foto.querySelector('img'), { scale: 1.08, ease: 'none' }, 0);
   },
 };
 

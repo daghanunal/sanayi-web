@@ -8,3 +8,6 @@ lastik-yakin.jpg https://www.pexels.com/photo/441103/
 raf.jpg          https://www.pexels.com/photo/3807167/
 rot.jpg          https://www.pexels.com/photo/3806288/
 usta.jpg         https://www.pexels.com/photo/12555010/
+
+Görsel temizliği (2026-09-27, plaka/logo/firma adı; kadraj ve boyut aynı):
+degisim.jpg: kemerdeki giyim markası yazısı bulanıklaştırıldı

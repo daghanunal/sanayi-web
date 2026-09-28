@@ -1,4 +1,11 @@
-Tüm görseller Pexels lisansıyla (ücretsiz ticari kullanım, atıf gerekmez).
-depo.jpg https://www.pexels.com/photo/3806252/
-hava.jpg https://www.pexels.com/photo/3807386/
-Ayrıca public/img/pist/ görselleri kullanılır.
+Tüm fotoğraflar Pexels lisansıyla (ücretsiz ticari kullanım, atıf gerekmez).
+depo.jpg        https://www.pexels.com/photo/3806252/
+hava.jpg        https://www.pexels.com/photo/3807386/
+jant-yuz.jpg    https://www.pexels.com/photo/36556346/  (kare kırpım; jant göbeğindeki marka bulanıklaştırıldı)
+dis-olcer.jpg   https://www.pexels.com/photo/37091334/
+sokme.jpg       https://www.pexels.com/photo/5260115/
+jant-takim.jpg  https://www.pexels.com/photo/34357287/
+kaliper.jpg     https://www.pexels.com/photo/13350036/
+jant-duvar.jpg  https://www.pexels.com/photo/36202185/
+degisim.jpg     https://www.pexels.com/photo/17600886/
+rot.jpg         https://www.pexels.com/photo/31097241/

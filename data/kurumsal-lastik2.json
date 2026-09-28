@@ -28,7 +28,7 @@
     "hizmetEk": {
       "Lastik satışı ve değişimi": {
         "kisa": "Yazlık, kışlık, dört mevsim. Söküm, takım ve sibop dahil.",
-        "gorsel": "/img/pist/degisim.jpg",
+        "gorsel": "/img/kurumsal-lastik2/sokme.jpg",
         "detay": [
           [
             "Stok",
@@ -42,7 +42,7 @@
       },
       "Rot ayarı": {
         "kisa": "3D ölçüm; direksiyon çekiyorsa ya da lastik tek taraftan yiyorsa.",
-        "gorsel": "/img/pist/rot.jpg",
+        "gorsel": "/img/kurumsal-lastik2/rot.jpg",
         "detay": [
           [
             "Ölçüm",
@@ -56,7 +56,7 @@
       },
       "Balans": {
         "kisa": "Yüksek hızda titreyen direksiyon için dört teker dengeleme.",
-        "gorsel": "/img/pist/usta.jpg"
+        "gorsel": "/img/kurumsal-lastik2/kaliper.jpg"
       },
       "Lastik oteli": {
         "kisa": "Mevsimlik takımınız yıkanır, etiketlenir, rafta bekler.",
@@ -74,15 +74,15 @@
       },
       "Jant düzeltme ve boya": {
         "kisa": "Eğilen jant düzeltilir, çizilen jant fırın boyayla yenilenir.",
-        "gorsel": "/img/pist/jant-siyah.jpg"
+        "gorsel": "/img/kurumsal-lastik2/jant-duvar.jpg"
       },
       "Nitrojen dolumu": {
         "kisa": "Basınç daha geç düşer; uzun yol öncesi öneririz.",
-        "gorsel": "/img/pist/basinc.jpg"
+        "gorsel": "/img/kurumsal-lastik2/hava.jpg"
       },
       "Patlak tamiri": {
         "kisa": "Tamir edilebiliyorsa tamir, edilemiyorsa açık söz.",
-        "gorsel": "/img/kurumsal-lastik2/hava.jpg"
+        "gorsel": "/img/kurumsal-lastik2/degisim.jpg"
       }
     },
     "halkaBaslik": "Rakamlarla atölyemiz",
@@ -131,8 +131,8 @@
         "Şaşmaz Oto Sanayi Sitesi'ndeki atölyemizde lastik satışı ve değişimi, rot-balans, jant düzeltme ve lastik oteli hizmeti veriyoruz. Bireysel müşterilerimizin yanında şirket, servis ve kiralama araçlarına da bakıyoruz.",
         "Çalışma biçimimiz değişmedi: lastiği ölçer, ne gerektiğini açıkça söyler, fiyatı baştan veririz. Jantı çizmeyen makinede söker, bijonları torkla sıkar, aracı basıncı kontrol edilmiş olarak teslim ederiz."
       ],
-      "gorsel": "/img/pist/usta.jpg",
-      "gorselAlt": "İki usta atölyede teker başında çalışıyor"
+      "gorsel": "/img/kurumsal-lastik2/degisim.jpg",
+      "gorselAlt": "Usta, aracın tekerini havalı tabancayla söküyor"
     },
     "misyon": "Aracı güvenle yola çıkaracak lastiği doğru ebatta, açık fiyatla ve aynı gün takmak.",
     "vizyon": "Ankara'da lastik işini gönül rahatlığıyla bırakılan, kayıtlı ve düzenli çalışan bir teker atölyesi olmak.",
@@ -191,31 +191,31 @@
       }
     ],
     "sssBaslik": "Sık sorulanlar",
-    "galeriBaslik": "Atölyeden kareler",
+    "galeriBaslik": "Lastik, jant, ölçüm",
     "galeri": [
       {
         "src": "/img/kurumsal-lastik2/depo.jpg",
         "alt": "Lastik deposunda raflar ve üst üste dizili lastikler"
       },
       {
-        "src": "/img/pist/degisim.jpg",
-        "alt": "Usta, lifte kaldırılmış aracın lastiğini değiştiriyor"
+        "src": "/img/kurumsal-lastik2/sokme.jpg",
+        "alt": "Lastik söküm-takım makinesinde jant"
       },
       {
-        "src": "/img/pist/rot.jpg",
-        "alt": "Rot ayarı cihazının sensörü tekere takılıyor"
+        "src": "/img/kurumsal-lastik2/dis-olcer.jpg",
+        "alt": "Diş derinliği ölçer lastiğin dişine yerleştirilmiş"
+      },
+      {
+        "src": "/img/kurumsal-lastik2/jant-takim.jpg",
+        "alt": "Alaşım jantlı lastik takımı"
+      },
+      {
+        "src": "/img/kurumsal-lastik2/rot.jpg",
+        "alt": "Rot ayarı sırasında teker başında usta"
       },
       {
         "src": "/img/kurumsal-lastik2/hava.jpg",
         "alt": "Lastiğe hava basılıyor"
-      },
-      {
-        "src": "/img/pist/usta.jpg",
-        "alt": "İki usta atölyede teker başında çalışıyor"
-      },
-      {
-        "src": "/img/pist/jant-siyah.jpg",
-        "alt": "Yakından koyu renk alaşım jant"
       }
     ],
     "markaBaslik": "Stokta tuttuğumuz markalar",
@@ -223,7 +223,7 @@
       "kurumsal": {
         "baslik": "Biz kimiz",
         "metin": "Nasıl çalıştığımız ve neye önem verdiğimiz.",
-        "gorsel": "/img/pist/degisim.jpg"
+        "gorsel": "/img/kurumsal-lastik2/sokme.jpg"
       },
       "hizmetler": {
         "baslik": "Hizmetlerimiz",
@@ -236,7 +236,8 @@
       },
       "dis-olcer": {
         "baslik": "Diş ölçer",
-        "metin": "Lastiğinizin dişi ne durumda? Mevsimi seçin, milimetreyi kaydırın."
+        "metin": "Lastiğinizin dişi ne durumda? Mevsimi seçin, milimetreyi kaydırın.",
+        "gorsel": "/img/kurumsal-lastik2/dis-olcer.jpg"
       },
       "iletisim": {
         "baslik": "İletişim",
@@ -254,6 +255,8 @@
       "baslik": "Tekerleri bize bırakın",
       "metin": "Aracınızı ve lastik ebadınızı yazın; saatini ayarlayalım, fiyatı işe başlamadan söyleyelim.",
       "buton": "Randevu isteyin"
-    }
-  }
+    },
+    "yorumBaslik": "Örnek yorumlar"
+  },
+  "puan": null
 }

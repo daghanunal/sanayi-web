@@ -1,12 +1,12 @@
 {
   "hizmetGorselleri": [
-    "/img/pist/degisim.jpg",
-    "/img/pist/rot.jpg",
-    "/img/pist/usta.jpg",
-    "/img/pist/raf.jpg",
-    "/img/pist/jant-siyah.jpg",
-    "/img/pist/basinc.jpg",
-    "/img/lastik-klasik2/lift.jpg"
+    "/img/lastik-klasik2/bijon.webp",
+    "/img/lastik-klasik2/rot-ekran.webp",
+    "/img/lastik-klasik2/sokum.webp",
+    "/img/lastik-klasik2/otel-yigin.webp",
+    "/img/lastik-klasik2/jant-kaliper.webp",
+    "/img/lastik-klasik2/lift.webp",
+    "/img/lastik-klasik2/yuvarla.webp"
   ],
   "derinlik": {
     "baslik": "Lastiğinde kaç milim kaldı?",
@@ -75,6 +75,45 @@
       "baslik": "Teslim ediyoruz",
       "aciklama": "Eski lastiklerini istersen otele alıyoruz, istersen geri veriyoruz.",
       "sure": "1 dk"
+    }
+  ],
+  "mevsimGorsel": {
+    "yaz": "/img/lastik-klasik2/yaz.webp",
+    "kis": "/img/lastik-klasik2/kis.webp"
+  },
+  "otelGorsel": "/img/lastik-klasik2/jant-yigin.webp",
+  "derinlikGorsel": {
+    "src": "/img/lastik-klasik2/olcum.webp",
+    "alt": "Diş derinliği ölçer lastiğin oluğuna dayanmış"
+  },
+  "surecGorsel": {
+    "src": "/img/lastik-klasik2/lift.webp",
+    "alt": "Lifte kaldırılmış aracın tekerine bakılıyor"
+  },
+  "galeri": [
+    {
+      "src": "/img/lastik-klasik2/yuvarla.webp",
+      "alt": "Sökülen teker lifte doğru yuvarlanıyor"
+    },
+    {
+      "src": "/img/lastik-klasik2/rot-usta.webp",
+      "alt": "Rot ayarı öncesi sensörler tekere takılıyor"
+    },
+    {
+      "src": "/img/lastik-klasik2/jant-yol.webp",
+      "alt": "Alaşım jant ve alçak profil lastik"
+    },
+    {
+      "src": "/img/lastik-klasik2/lift-suv.webp",
+      "alt": "Lifteki aracın tekeri sökülüyor"
+    },
+    {
+      "src": "/img/lastik-klasik2/sokum.webp",
+      "alt": "Lastik söküm-takım makinesine yerleştiriliyor"
+    },
+    {
+      "src": "/img/lastik-klasik2/otel-yigin.webp",
+      "alt": "Jantlı lastik takımı üst üste"
     }
   ]
 }

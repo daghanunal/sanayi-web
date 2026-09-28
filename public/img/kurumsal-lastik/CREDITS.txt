@@ -1,0 +1,10 @@
+Tüm fotoğraflar Pexels lisansıyla (ücretsiz ticari kullanım, atıf gerekmez).
+hero-lift.jpg      https://www.pexels.com/photo/6870331/
+lastik-tasima.jpg  https://www.pexels.com/photo/6870316/
+bijon.jpg          https://www.pexels.com/photo/6870318/
+kislik.jpg         https://www.pexels.com/photo/6870322/
+somun.jpg          https://www.pexels.com/photo/6870330/
+kontrol.jpg        https://www.pexels.com/photo/6870311/
+filo.jpg           https://www.pexels.com/photo/31573459/
+teker-3d.webp      Temsilî 3D çizim: lib3d "wheel" varlığı (assets3d, prosedürel, marka yok), parçalarına ayrılmış
+                   Blender Cycles render'ı (presets/kurumsal-lastik/render.sh + render_cycles.py).
