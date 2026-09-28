@@ -1,15 +1,10 @@
-// Sektör modülleri — "Diş kodu" yönü.
-// silindir:   hero; pimli kilit silindirinin kesiti. Anahtar girer, pimler dişlere göre yükselip alçalır,
-//             bütün pimler kesme hattına oturunca kilit döner ve çip tanınır. Anahtar parmakla sürüklenir.
-// serit:      hero altı kayan diş kodu şeridi (yalnızca CSS transform).
-// anahtarBul: "anahtarınız hangisi?" seçici → yapılan iş, süre, yanınıza alın, WhatsApp'a hazır mesaj.
-// kapida:     kapıda kalan araç + ruhsat/kimlik kontrolü (tikler sırayla çizilir).
-// saat:       çalışma saatleri anahtar etiketleri gibi askıda; canlı açık/kapalı, yol tarifi, yaklaşınca harita.
-import { esc, asset, telHref, waHref, mapsHref, mapsEmbed, openStatus, GUNLER, icons, gsap, reducedMotion } from '../../shared/core.js';
-import { yilEki } from '../_kurumsal/bolumler.js';
+// Sektör modülleri: "Diş kodu" yönü.
+// silindir:   künye (k-hero--kunye); yanında pimli kilit silindirinin kesiti. Açılışta anahtar bir kez girer,
+//             pimler dişlere göre yükselip kesme hattına oturur, göbek döner. Anahtar parmakla da sürüklenir.
+// anahtarBul: anahtar tipi seçici → yapılan iş, süre, yanında getirilecekler, WhatsApp'a hazır mesaj.
+import { esc, telHref, waHref, mapsHref, gunDurumu, kisaAdres, icons, gsap, reducedMotion } from '../../shared/core.js';
 
 const ok = `<svg class="k-ok" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
-const rota = (id, metin, cls = 'k-btn') => `<a class="${cls}" href="#/${id}" data-rota="${id}">${metin}</a>`;
 
 // --- Silindir geometrisi (SVG birimleri) -----------------------------------------------------
 const PIM_X = [330, 394, 458, 522, 586];
@@ -104,45 +99,36 @@ function silindirSvg() {
 }
 
 export const silindir = {
-  render(d, { tema }) {
-    const h = d.kurumsal?.hero || {};
-    const ust = `${h.ust || d.isletme.sektor}. ${tema.yer} ${yilEki(d.isletme.kurulus)} beri.`;
-    const st = d.saatler ? openStatus(d.saatler) : null;
-    const acma = d.hizmetler?.[5]?.sure;
-    const bilgi = [['Kuruluş', String(d.isletme.kurulus)], st ? ['Bugün', st.text] : null, acma ? ['Kapı açma', acma] : null, ['Telefon', d.iletisim.telefon]]
-      .filter(Boolean)
-      .map(([e, v]) => `<div><dt>${esc(e)}</dt><dd>${esc(v)}</dd></div>`)
-      .join('');
+  render(d) {
+    const b = d.saatler ? gunDurumu(d.saatler) : null;
     return `
-      <section class="k-hero sl" aria-label="Giriş">
+      <section class="k-hero k-hero--kunye sl" aria-label="Künye">
         <div class="k-kap k-hero__ic sl__ic">
           <div class="k-hero__metin">
-            <p class="k-hero__ust sl__ust"><span class="sl__led" aria-hidden="true"></span>${esc(ust)}</p>
-            <h1 class="k-h1 k-hero__baslik" data-bol>${esc(h.baslik || d.isletme.slogan)}</h1>
-            <p class="k-lead">${esc(h.metin || d.isletme.hakkinda)}</p>
+            <h1 class="k-h1 k-hero__baslik" data-bol>${esc(d.isletme.ad)}</h1>
+            <p class="k-lead k-hero__tanim">${esc(d.isletme.tanim || d.isletme.sektor)}</p>
+            <dl class="k-kunye">
+              <div><dt>Adres</dt><dd>${esc(kisaAdres(d.iletisim.adres))}</dd></div>
+              ${b ? `<div><dt>Bugün</dt><dd><span class="k-durum ${b.open ? 'is-acik' : ''}"><span></span>${esc(b.kunye)}</span></dd></div>` : ''}
+              <div><dt>Telefon</dt><dd><a href="${telHref(d)}">${esc(d.iletisim.telefon)}</a></dd></div>
+            </dl>
             <div class="k-butonlar">
-              ${rota('iletisim', `${esc(h.birincil || 'Bize yazın')} ${ok}`)}
-              <a class="k-btn k-btn--ikincil" href="${telHref(d)}">${icons.phone}<span>${esc(d.iletisim.telefon)}</span></a>
+              <a class="k-btn" href="${telHref(d)}">${icons.phone}<span>Ara</span></a>
+              ${d.iletisim.whatsapp ? `<a class="k-btn k-btn--ikincil" href="${waHref(d)}" target="_blank" rel="noopener">${icons.whatsapp}<span>WhatsApp</span></a>` : ''}
+              <a class="k-btn k-btn--ikincil" href="${mapsHref(d)}" target="_blank" rel="noopener">${icons.pin}<span>Yol tarifi</span></a>
             </div>
           </div>
           <figure class="sl__sahne">
-            <div class="sl__durum" aria-live="polite"><span class="sl__isik"></span><b data-durum>Anahtar bekleniyor</b><em data-kod>DİŞ KODU ${KOD.join(' · ')}</em></div>
             ${silindirSvg()}
-            <div class="sl__kontrol">
-              <label class="sl__ray"><span class="sl__ray-yazi">Anahtarı itin</span><input type="range" min="0" max="1000" value="0" data-ray aria-label="Anahtarı kilide itin ya da çekin"></label>
-              <button type="button" class="sl__tekrar" data-tekrar>Tekrar tak</button>
-            </div>
+            <figcaption class="sl__not">Pimli kilit silindirinin kesiti. Doğru anahtar girince pimler kesme hattına oturur ve göbek döner.</figcaption>
           </figure>
         </div>
-        <div class="k-kap"><dl class="k-hero__bilgi sl__bilgi">${bilgi}</dl></div>
       </section>`;
   },
   mount(el) {
     const svg = el.querySelector('.sl-svg');
     const anahtar = el.querySelector('[data-anahtar]');
     const pimler = [...el.querySelectorAll('.sl-pim')];
-    const durum = el.querySelector('[data-durum]');
-    const ray = el.querySelector('[data-ray]');
     const gobek = el.querySelector('.sl-on-gobek');
     const sahne = el.querySelector('.sl__sahne');
     const parca = pimler.map((g) => ({ yay: g.querySelector('.sl-yay'), sur: g.querySelector('.sl-surucu'), alt: g.querySelector('.sl-alt'), g }));
@@ -164,16 +150,12 @@ export const silindir = {
         parca[i].g.classList.toggle('is-hiza', h && s.x > TAM - 30);
         if (h) hizali++;
       });
-      ray.value = Math.round(((s.x - BAS) / (TAM - BAS)) * 1000);
       const yeni = hizali === PIM_X.length && s.x >= TAM - 0.5;
       if (yeni !== acik) {
         acik = yeni;
         sahne.classList.toggle('is-acik', acik);
-        durum.textContent = acik ? 'Pimler hizada · kilit döndü' : s.x > BAS + 20 ? 'Pimler dişleri okuyor' : 'Anahtar bekleniyor';
         donus?.kill();
         donus = gsap.to(gobek, { rotation: acik ? 90 : 0, svgOrigin: '0 0', duration: reducedMotion ? 0 : 0.7, ease: acik ? 'back.out(1.8)' : 'power2.out' });
-      } else if (!acik) {
-        durum.textContent = s.x > BAS + 20 ? 'Pimler dişleri okuyor' : 'Anahtar bekleniyor';
       }
     };
 
@@ -192,12 +174,6 @@ export const silindir = {
     ciz();
     tak(0.9);
 
-    ray.addEventListener('input', () => {
-      tw?.kill();
-      s.x = BAS + (ray.value / 1000) * (TAM - BAS);
-      ciz();
-    });
-    el.querySelector('[data-tekrar]').addEventListener('click', () => tak(0));
 
     // Anahtarı parmakla sürükle.
     let bas = null;
@@ -219,19 +195,6 @@ export const silindir = {
   },
 };
 
-// --- Şerit -----------------------------------------------------------------------------------
-export const serit = {
-  render(d) {
-    const parcalar = (d.hizmetler || []).map((h) => h.baslik);
-    const kod = KOD.join('-');
-    const bir = parcalar.map((p, i) => `<span>${esc(p)}</span><i aria-hidden="true">${i % 2 ? kod : '◆'}</i>`).join('');
-    return `
-      <section class="sr" aria-label="Yaptığımız işler">
-        <div class="sr__bant"><div class="sr__ic">${bir}</div><div class="sr__ic" aria-hidden="true">${bir}</div></div>
-      </section>`;
-  },
-};
-
 // --- Anahtar bulucu ----------------------------------------------------------------------------
 const IKON = {
   duz: `<circle cx="22" cy="24" r="15"/><circle cx="16" cy="24" r="4" class="i-bos"/><path d="M37 20h70l6 4-6 4H98l-4 5-4-5h-6l-4 6-4-6h-6l-3 4-3-4H37z"/>`,
@@ -250,8 +213,8 @@ export const anahtarBul = {
         <div class="k-kap">
           <div class="ab__bas">
             <p class="ab__etiket">Anahtar tipi</p>
-            <h2 class="k-h2" id="ab-baslik" data-bol>Anahtarınız hangisi?</h2>
-            <p class="k-lead">Seçin; ne yaptığımızı, ne kadar sürdüğünü ve yanınıza ne almanız gerektiğini görün.</p>
+            <h2 class="k-h2" id="ab-baslik" data-bol>Anahtar tipine göre yapılan işler</h2>
+            <p class="k-lead">Her anahtar tipi için yapılan iş, süre ve yanında getirilecekler.</p>
           </div>
           <div class="ab__sekmeler" role="tablist" aria-label="Anahtar tipleri">
             ${tipler
@@ -325,7 +288,7 @@ function abPanel(d, i) {
       <p class="ab__no">${String(i + 1).padStart(2, '0')} / ${String(d.kurumsal.anahtarTipleri.length).padStart(2, '0')}</p>
       <h3 class="k-h3 ab__p-baslik">${esc(t.baslik)}</h3>
       <p class="ab__p-metin">${esc(t.metin)}</p>
-      ${t.getirin?.length ? `<p class="ab__alt">Yanınıza alın</p><ul class="ab__getir">${t.getirin.map((g) => `<li>${esc(g)}</li>`).join('')}</ul>` : ''}
+      ${t.getirin?.length ? `<p class="ab__alt">Yanında getirilecekler</p><ul class="ab__getir">${t.getirin.map((g) => `<li>${esc(g)}</li>`).join('')}</ul>` : ''}
     </div>
     <div class="ab__p-sag">
       <ul class="ab__is">
@@ -339,125 +302,15 @@ function abPanel(d, i) {
       ${
         d.iletisim.whatsapp
           ? `<form class="ab__form">
-              <p class="ab__alt">Aracınızı yazın, WhatsApp'tan soralım</p>
+              <p class="ab__alt">Araç bilgisi</p>
               <div class="ab__alanlar">
-                <label><span>Marka</span><select name="marka"><option value="">Seçin</option>${markalar.map((m) => `<option>${esc(m)}</option>`).join('')}<option>Diğer</option></select></label>
+                <label><span>Marka</span><select name="marka"><option value="">Marka</option>${markalar.map((m) => `<option>${esc(m)}</option>`).join('')}<option>Diğer</option></select></label>
                 <label><span>Model</span><input name="model" autocomplete="off" placeholder="Clio"></label>
                 <label><span>Yıl</span><input name="yil" inputmode="numeric" maxlength="4" placeholder="2015"></label>
               </div>
-              <button type="submit" class="k-btn">${icons.whatsapp}<span>WhatsApp'tan sorun</span></button>
+              <button type="submit" class="k-btn">${icons.whatsapp}<span>WhatsApp'tan bilgi alın</span></button>
             </form>`
           : `<a class="k-btn" href="${telHref(d)}">${icons.phone}<span>${esc(d.iletisim.telefon)}</span></a>`
       }
     </div>`;
 }
-
-// --- Kapıda kaldınız mı? ----------------------------------------------------------------------
-export const kapida = {
-  render(d) {
-    const h = d.hizmetler?.[5];
-    const tik = `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" pathLength="1"/></svg>`;
-    return `
-      <section class="k-bolum kp" aria-labelledby="kp-baslik">
-        <div class="k-kap kp__ic">
-          <div class="kp__metin">
-            <p class="ab__etiket">Kapıda kaldıysanız</p>
-            <h2 class="k-h2" id="kp-baslik" data-bol>Anahtar içeride, kapı kilitli mi?</h2>
-            <p class="k-lead">${esc(h?.aciklama || 'Kapıyı ve camı zorlamadan, özel açma aletleriyle açarız.')}</p>
-            ${h?.sure ? `<p class="kp__sure"><span>Açma süresi</span><b>${esc(h.sure)}</b></p>` : ''}
-            <div class="k-butonlar">
-              <a class="k-btn" href="${telHref(d)}">${icons.phone}<span>Hemen arayın</span></a>
-              ${d.iletisim.whatsapp ? `<a class="k-btn k-btn--ikincil" href="${waHref(d, `Merhaba ${d.isletme.ad}, aracımın anahtarı içeride kaldı. Konumum:`)}" target="_blank" rel="noopener">${icons.whatsapp}<span>Konum gönderin</span></a>` : ''}
-            </div>
-          </div>
-          <div class="kp__gorsel">
-            <figure data-perde><img src="${asset('/img/kurumsal-kilit/kapi-acma.jpg')}" alt="Araç kapı kilidine takılmış açma aleti" loading="lazy"></figure>
-            <div class="kp__kart" role="group" aria-label="Kapıyı açmadan önce yapılan kontrol">
-              <p class="kp__kart-bas">Açmadan önce</p>
-              <ol>
-                <li><span class="kp__tik">${tik}</span><div><b>Ruhsat</b><span>Araç sahibinin adı</span></div></li>
-                <li><span class="kp__tik">${tik}</span><div><b>Kimlik</b><span>Ruhsattaki isimle aynı mı</span></div></li>
-                <li><span class="kp__tik">${tik}</span><div><b>Eşleşti</b><span>Kapı zorlamadan açılır</span></div></li>
-              </ol>
-            </div>
-          </div>
-        </div>
-      </section>`;
-  },
-  mount(el) {
-    if (reducedMotion) return;
-    const yollar = el.querySelectorAll('.kp__tik path');
-    const satirlar = el.querySelectorAll('.kp__kart li');
-    gsap.set(yollar, { strokeDasharray: 1, strokeDashoffset: 1 });
-    gsap.set(satirlar, { opacity: 0.35 });
-    const tl = gsap.timeline({ scrollTrigger: { trigger: el.querySelector('.kp__kart'), start: 'top 80%', once: true } });
-    satirlar.forEach((s, i) => {
-      tl.to(s, { opacity: 1, duration: 0.25 }, i * 0.55).to(yollar[i], { strokeDashoffset: 0, duration: 0.4, ease: 'power2.out' }, i * 0.55 + 0.1);
-    });
-    tl.add(() => el.querySelector('.kp__kart').classList.add('is-tamam'));
-  },
-};
-
-// --- Çalışma saatleri: askıdaki anahtar etiketleri -------------------------------------------
-const KISA_GUN = ['Paz', 'Pzt', 'Sal', 'Çar', 'Per', 'Cum', 'Cmt'];
-export const saat = {
-  render(d) {
-    if (!d.saatler) return '';
-    const st = openStatus(d.saatler);
-    const bugun = new Date().getDay();
-    return `
-      <section class="k-bolum st" aria-labelledby="st-baslik">
-        <div class="k-kap">
-          <div class="st__bas">
-            <div>
-              <p class="ab__etiket">Çalışma saatleri</p>
-              <h2 class="k-h2" id="st-baslik" data-bol>Şaşmaz Oto Sanayi'deyiz.</h2>
-            </div>
-            <p class="st__durum ${st.open ? 'is-acik' : ''}"><span></span>${esc(st.text)}</p>
-          </div>
-          <div class="st__ray" aria-hidden="true"></div>
-          <ol class="st__etiketler">
-            ${[1, 2, 3, 4, 5, 6, 0]
-              .map((g, j) => {
-                const s = d.saatler[g];
-                const [a, k] = s ? s.split('-') : [];
-                return `<li class="${g === bugun ? 'is-bugun' : ''}${s ? '' : ' is-kapali'}" style="--r:${[-3, 2, -1, 3, -2, 1, -3][j]}deg">
-                  <span class="st__halka" aria-hidden="true"></span>
-                  <span class="st__gun"><abbr title="${GUNLER[g]}">${KISA_GUN[g]}</abbr></span>
-                  ${s ? `<b>${esc(a)}</b><b>${esc(k)}</b>` : '<b class="st__kapali">Kapalı</b>'}
-                  ${g === bugun ? '<em>Bugün</em>' : ''}
-                </li>`;
-              })
-              .join('')}
-          </ol>
-          <div class="st__alt">
-            <div class="st__adres">
-              <p>${esc(d.iletisim.adres)}</p>
-              <div class="k-butonlar">
-                <a class="k-btn" href="${mapsHref(d)}" target="_blank" rel="noopener">${icons.pin}<span>Yol tarifi</span></a>
-                <a class="k-btn k-btn--ikincil" href="${telHref(d)}">${icons.phone}<span>${esc(d.iletisim.telefon)}</span></a>
-              </div>
-            </div>
-            <div class="st__harita" data-q="${esc(mapsEmbed(d))}"><p>Harita yükleniyor</p></div>
-          </div>
-        </div>
-      </section>`;
-  },
-  mount(el) {
-    const h = el.querySelector('.st__harita');
-    const io = new IntersectionObserver((e) => {
-      if (!e[0].isIntersecting) return;
-      h.innerHTML = `<iframe title="Konum haritası" src="${h.dataset.q}" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>`;
-      io.disconnect();
-    }, { rootMargin: '300px' });
-    io.observe(h);
-    if (!reducedMotion) {
-      gsap.from(el.querySelectorAll('.st__etiketler li'), {
-        yPercent: -40, rotation: (i) => (i % 2 ? 18 : -18), opacity: 0, transformOrigin: '50% 0%',
-        duration: 1.1, stagger: 0.07, ease: 'elastic.out(1, .45)',
-        scrollTrigger: { trigger: el.querySelector('.st__etiketler'), start: 'top 85%', once: true },
-      });
-    }
-    return () => io.disconnect();
-  },
-};

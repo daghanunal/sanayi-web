@@ -1,579 +1,317 @@
+// Gece Kesiti (sinematik aile, oto kilit): gece moru zemin, pirinç anahtar, leylak çizgiler; Tilt Warp + Onest.
+// 3D iki yerde kalır. (1) Künye: arkada kesitli pim tamburlu kilit; açılışta anahtar bir kez girer, pimler
+// kesme hattına oturur ve göbek döner. (2) Hizmetler: her hizmete gelince kamera ilgili parçaya gider (kesim
+// tezgâhı, kilit silindiri, transponder çipi, sustalı kumanda); kartın üst satırı parçanın adıdır.
+// Hizmetlerden sonra çizim durur; gerisi düz site bölümleri.
 import taban from '../../data/sektor-kilit.json';
 import ek from '../../data/kilit-sinematik.json';
 import '../../shared/base.css';
 import './style.css';
 import {
-  boot, initSmoothScroll, reducedMotion, telHref, waHref, mapsHref, mapsEmbed,
-  openStatus, groupedHours, icons, esc, gsap, ScrollTrigger, setStoryMode,
+  boot, initSmoothScroll, reducedMotion, gsap, ScrollTrigger, esc, autoHideHeader, setStoryMode,
+  telHref, waHref, mapsHref, mapsEmbed, saatListesi, gunDurumu, kisaAdres, acikGunSayisi, yilEki, icons, GUNLER,
 } from '../../shared/core.js';
-import { SplitText } from 'gsap/SplitText';
-import { DrawSVGPlugin } from 'gsap/DrawSVGPlugin';
 import * as THREE from 'three';
-import { createScene, PINS, CUTS, TIP_IN, TIP_OUT, topAt } from './scene.js';
-
-gsap.registerPlugin(SplitText, DrawSVGPlugin);
-ScrollTrigger.config({ ignoreMobileResize: true });
+import { createScene, TIP_IN, TIP_OUT } from './scene.js';
 
 const d = boot({ ...taban, ...ek });
-const $ = (s, root = document) => root.querySelector(s);
-const $$ = (s, root = document) => [...root.querySelectorAll(s)];
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
 const seg = (p, a, b) => clamp((p - a) / (b - a));
 const L = (a, b, t) => a + (b - a) * t;
 const smooth = (t) => t * t * (3 - 2 * t);
-const nf = (n, digits = 0) => n.toLocaleString('tr-TR', { minimumFractionDigits: digits, maximumFractionDigits: digits });
+
+const phone = matchMedia('(max-width: 899px)').matches;
 const weak = (navigator.hardwareConcurrency || 8) <= 4 || (navigator.deviceMemory || 8) <= 4;
-const mobile = () => innerWidth < 760;
-const lite = weak || innerWidth < 760;
-const up = (s) => s.toLocaleUpperCase('tr');
+const lite = weak || phone;
 
-// "1999'dan", "2004'ten"
-function ablative(n) {
-  const units = ['', 'den', 'den', 'ten', 'ten', 'ten', 'dan', 'den', 'den', 'dan'];
-  const tens = ['', 'dan', 'den', 'dan', 'tan', 'den', 'tan', 'ten', 'den', 'dan'];
-  const u = n % 10, t = Math.floor(n / 10) % 10;
-  return `${n}'${u ? units[u] : t ? tens[t] : 'den'}`;
-}
+const ad = esc(d.isletme.ad);
+const tel = esc(d.iletisim.telefon);
+const yil = new Date().getFullYear();
+const yas = yil - d.isletme.kurulus;
+const st = gunDurumu(d.saatler);
 
-// --- İçerik ------------------------------------------------------------------
+// Hizmet → sahne ve kartın üst satırı (parça adı)
+const SERVICE_MAP = [
+  { re: /yedek/i, key: 'cut', yer: 'Anahtar kesim tezgâhı' },
+  { re: /kayıp/i, key: 'chip', yer: 'Transponder çipi' },
+  { re: /immobilizer|çip/i, key: 'chip', yer: 'Transponder çipi' },
+  { re: /kumanda ve akıllı/i, key: 'fob', yer: 'Sustalı kumanda' },
+  { re: /kab|pil/i, key: 'fobOpen', yer: 'Kumanda kartı ve pil' },
+  { re: /araçta kalan/i, key: 'over', yer: 'Kapı kilidi' },
+  { re: /kontak/i, key: 'turn', yer: 'Kontak silindiri ve pimler' },
+  { re: /kapı ve bagaj/i, key: 'lock', yer: 'Kilit göbeği' },
+  { re: /kırık/i, key: 'lockOut', yer: 'Kilit silindiri' },
+];
+const services = d.hizmetler.map((h) => ({ ...h, map: SERVICE_MAP.find((m) => m.re.test(h.baslik)) ?? SERVICE_MAP[5] }));
 
-const binds = { ad: d.isletme.ad, slogan: d.isletme.slogan, telefon: d.iletisim.telefon, adres: d.iletisim.adres };
-$$('[data-bind]').forEach((el) => (el.textContent = binds[el.dataset.bind] ?? ''));
-$$('[data-tel]').forEach((a) => (a.href = telHref(d)));
-$$('[data-wa]').forEach((a) => (a.href = waHref(d)));
-$$('[data-maps]').forEach((a) => (a.href = mapsHref(d)));
-$$('[data-icon]').forEach((el) => (el.innerHTML = icons[el.dataset.icon]));
-$('[data-wa-final]').href = waHref(d, `Merhaba ${d.isletme.ad}, anahtar işim var. Araç (marka, model, yıl): `);
-$('[data-brand]').setAttribute('aria-label', `${d.isletme.ad}, sayfa başı`);
+// --- Render ------------------------------------------------------------------------------
 
-const yil = new Date().getFullYear() - d.isletme.kurulus;
-$('[data-since]').textContent = `Şaşmaz Oto Sanayi · ${ablative(d.isletme.kurulus)} beri`;
-$('[data-since-2]').textContent = `${ablative(d.isletme.kurulus)} beri aynı tezgâhta`;
-const heroTitle = $('[data-hero-title]');
-heroTitle.textContent = d.isletme.ad;
-$('[data-intro-name]').textContent = d.isletme.ad;
+const logo = `<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4.5" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M10 12h4l1.2 9h-6.4z" fill="currentColor"/></svg>`;
+$('#top').innerHTML = `
+  <a class="top__brand" href="#kunye"><span class="top__mark">${logo}</span><span>${ad}</span></a>
+  <nav class="top__nav" aria-label="Bölümler"><a href="#hizmetler">Hizmetler</a><a href="#hakkinda">Hakkında</a><a href="#saatler">Saatler ve konum</a><a href="#iletisim">İletişim</a></nav>
+  <p class="top__status ${st.open ? 'is-open' : ''}"><i></i><span>${st.open ? 'Açık' : 'Kapalı'}</span></p>
+  <a class="top__call" href="${telHref(d)}" aria-label="Ara: ${tel}">${icons.phone}<span>${tel}</span></a>`;
 
-const status = openStatus(d.saatler);
-$$('[data-status]').forEach((el) => {
-  el.textContent = status.open ? 'Açık' : 'Kapalı';
-  el.title = status.text;
-  el.classList.toggle('is-open', status.open);
-});
-$('[data-status-big]').textContent = status.text;
-$('[data-status-big]').classList.toggle('is-open', status.open);
+$('#kunye').innerHTML = `
+  <div class="hero__inner">
+    <h1 class="hero__title" id="hero-title">${ad}</h1>
+    <p class="hero__what">${esc(d.isletme.tanim)}</p>
+    <dl class="kunye">
+      <div><dt>Adres</dt><dd>${esc(kisaAdres(d.iletisim.adres))}</dd></div>
+      <div><dt>Bugün</dt><dd class="live ${st.open ? 'is-open' : ''}"><i></i>${esc(st.kunye)}</dd></div>
+      <div><dt>Telefon</dt><dd><a href="${telHref(d)}">${tel}</a></dd></div>
+    </dl>
+    <div class="hero__cta">
+      <a class="btn btn--brass" href="${telHref(d)}">${icons.phone}<span>Ara</span></a>
+      <a class="btn btn--ghost" href="${waHref(d)}" target="_blank" rel="noopener">${icons.whatsapp}<span>WhatsApp</span></a>
+      <a class="btn btn--ghost" href="${mapsHref(d)}" target="_blank" rel="noopener">${icons.pin}<span>Yol tarifi</span></a>
+    </div>
+  </div>`;
 
-// Film kartları
-const FILM = d.film;
-$('[data-rail]').innerHTML = FILM.map((f, i) => `<li data-rail-i><b>0${i + 1}</b><span>${esc(f.etiket.split('·')[1]?.trim() ?? '')}</span></li>`).join('');
-$('[data-cards]').innerHTML = FILM.map((f) => `
-  <div class="stop" data-stop>
-  <article class="card" data-card="${esc(f.id)}">
-    <p class="card__tag">${esc(f.etiket)}</p>
-    <h2 class="card__title">${esc(f.baslik)}</h2>
-    <p class="card__text">${esc(f.metin)}</p>
-    <p class="card__foot"><span class="card__time">${esc(f.sure)}</span><a class="card__wa" href="${esc(waHref(d, `Merhaba ${d.isletme.ad}, ${f.hizmet.toLocaleLowerCase('tr')} için bilgi almak istiyorum. Araç: `))}" target="_blank" rel="noopener">${icons.whatsapp}<span>Sorun</span></a></p>
-  </article>
-  </div>`).join('');
+$('#hizmetler').innerHTML = `
+  <div class="services__head">
+    <h2 class="h2" id="services-title">Hizmetler</h2>
+    <p class="services__sub">Süreler yaklaşıktır, araca göre değişebilir. Fiyat ve randevu için arayın.</p>
+  </div>
+  ${services.map((s, i) => `
+    <article class="svc" data-i="${i}">
+      <div class="svc__card">
+        <p class="svc__tag"><span>${String(i + 1).padStart(2, '0')}</span>${esc(s.map.yer)}</p>
+        <h3 class="svc__title">${esc(s.baslik)}</h3>
+        <p class="svc__text">${esc(s.aciklama)}</p>
+        <p class="svc__time">Süre: <b>${esc(s.sure)}</b></p>
+      </div>
+    </article>`).join('')}
+  <p class="services__note">3D kilit kesiti temsilîdir.</p>`;
 
-// Kesim kodu: diş derinliği 1-9
-const CODE = CUTS.map((c) => Math.round((0.32 - c) / 0.04));
-$('[data-code-digits]').innerHTML = CODE.map(() => '<span>·</span>').join('');
-$('[data-pinmeter]').innerHTML = PINS.map(() => '<i><b></b></i>').join('') + '<s></s>';
+const foto = d.hakkindaGorsel;
+$('#hakkinda').innerHTML = `
+  <div class="wrap about__grid">
+    <figure class="about__img"><img src="${esc(foto.src)}" alt="${esc(foto.alt)}" width="1200" height="1500" loading="lazy" decoding="async" /></figure>
+    <div class="about__body">
+      <h2 class="h2" id="about-title">Hakkında</h2>
+      <p class="about__text">${ad} ${esc(yilEki(d.isletme.kurulus))} beri Şaşmaz Oto Sanayi Sitesi'nde. ${esc(d.isletme.hakkinda)}</p>
+      <ul class="stats">
+        <li><b>${yas}<small> yıl</small></b><span>Şaşmaz Oto Sanayi Sitesi'nde</span></li>
+        <li><b>${acikGunSayisi(d.saatler)}<small> gün</small></b><span>haftada açık</span></li>
+      </ul>
+      <dl class="facts">
+        ${(d.bilgiler || []).map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join('')}
+        ${d.markalar?.length ? `<div><dt>Anahtarı yapılan markalar</dt><dd>${d.markalar.map(esc).join(', ')}</dd></div>` : ''}
+      </dl>
+    </div>
+  </div>`;
 
-// Hakkımızda + rakamlar
-const aboutText = $('[data-about-text]');
-aboutText.innerHTML = d.isletme.hakkinda.replace(/\b(19|20)\d\d'(dan|den|tan|ten)\b/, ablative(d.isletme.kurulus)).split(' ').map((w) => `<span>${esc(w)} </span>`).join('');
-const stats = d.istatistikler.map((s) => ({ ...s, deger: s.kurulustanHesapla ? yil : s.deger }));
-$('[data-stats]').innerHTML = stats.map((s) => `
-  <li class="stat"><p class="stat__num"><b data-count="${Number(s.deger)}">0</b>${esc(s.sonek)}</p><p class="stat__lbl">${esc(s.etiket)}</p></li>`).join('');
-
-// Hizmetler
-$('[data-services]').innerHTML = d.hizmetler.map((s, i) => `
-  <li class="svc__item">
-    <p class="svc__n">${String(i + 1).padStart(2, '0')}</p>
-    <h3 class="svc__name">${esc(s.baslik)}</h3>
-    <p class="svc__desc">${esc(s.aciklama)}</p>
-    <p class="svc__time">${esc(s.sure)}</p>
-  </li>`).join('');
-
-// Anahtar tipleri
-const ART = {
-  duz: `<svg viewBox="0 0 400 200"><g class="a-key"><circle class="a-line" cx="80" cy="100" r="46"/><circle class="a-line" cx="80" cy="100" r="16"/><path class="a-line" d="M126 88 H352 l14 12 -14 12 H336 l-8 14 -8 -14 -10 0 -8 18 -8 -18 -12 0 -8 10 -8 -10 -14 0 -8 16 -8 -16 H126"/></g></svg>`,
-  cipli: `<svg viewBox="0 0 400 200"><g class="a-key"><rect class="a-line a-fill" x="24" y="50" width="120" height="100" rx="30"/><rect class="a-chip" x="60" y="90" width="44" height="20" rx="10"/><path class="a-wave" d="M50 60 a60 60 0 0 1 64 0"/><path class="a-line" d="M144 88 H352 l14 12 -14 12 H336 l-8 14 -8 -14 -10 0 -8 18 -8 -18 -12 0 -8 10 -8 -10 -14 0 -8 16 -8 -16 H144"/></g></svg>`,
-  sustali: `<svg viewBox="0 0 400 200"><g class="a-key"><rect class="a-line a-fill" x="30" y="46" width="150" height="108" rx="34"/><circle class="a-btn" cx="74" cy="100" r="13"/><circle class="a-btn" cx="112" cy="100" r="13"/><circle class="a-btn" cx="150" cy="100" r="9"/><g class="a-flip"><path class="a-line" d="M180 90 H352 l14 10 -14 10 H336 l-8 12 -8 -12 -10 0 -8 16 -8 -16 -12 0 -8 9 -8 -9 -14 0 -8 14 -8 -14 H180"/></g></g></svg>`,
-  akilli: `<svg viewBox="0 0 400 200"><g class="a-key"><rect class="a-line a-fill" x="120" y="30" width="110" height="150" rx="40"/><circle class="a-btn" cx="175" cy="80" r="14"/><circle class="a-btn" cx="175" cy="120" r="14"/><path class="a-wave" d="M250 70 a40 40 0 0 1 0 60"/><path class="a-wave a-wave--2" d="M272 50 a66 66 0 0 1 0 100"/><path class="a-wave a-wave--3" d="M294 32 a92 92 0 0 1 0 136"/></g></svg>`,
+const bugun = GUNLER[new Date().getDay()];
+const bugunMu = (g) => {
+  if (g === bugun) return true;
+  if (!g.includes('–')) return false;
+  const [a, b] = g.split('–').map((x) => GUNLER.indexOf(x));
+  const t = new Date().getDay();
+  return a <= b ? t >= a && t <= b : t >= a || t <= b;
 };
-const tipler = d.anahtarTipleri;
-$('[data-type-tabs]').innerHTML = tipler.map((t, i) => `
-  <button class="types__tab" role="tab" data-type-tab="${i}" aria-selected="${i === 0}"><b>${esc(t.ad)}</b><span>${esc(t.yillar)}</span></button>`).join('');
-function showType(i, animate = true) {
-  const t = tipler[i];
-  $$('[data-type-tab]').forEach((b, j) => b.setAttribute('aria-selected', String(i === j)));
-  const art = $('[data-type-art]');
-  art.innerHTML = ART[t.id] || ART.duz;
-  art.dataset.type = t.id;
-  $('[data-type-info]').innerHTML = `
-    <h3>${esc(t.ad)}</h3>
-    <p class="types__how">${esc(t.nasil)}</p>
-    <ul>${t.yapilan.map((y) => `<li>${esc(y)}</li>`).join('')}</ul>
-    <p class="types__foot"><span>Ortalama süre</span><b>${esc(t.sure)}</b></p>
-    <a class="btn btn--brass" href="${esc(waHref(d, `Merhaba ${d.isletme.ad}, ${t.ad.toLocaleLowerCase('tr')} anahtarım için bilgi almak istiyorum. Araç: `))}" target="_blank" rel="noopener">${icons.whatsapp}<span>Bu anahtar için sorun</span></a>`;
-  if (!animate || reducedMotion) return;
-  const lines = $$('.a-line', art), fills = $$('.a-fill, .a-chip, .a-btn', art);
-  if (lines.length) gsap.fromTo(lines, { drawSVG: '0%' }, { drawSVG: '100%', duration: 1.1, ease: 'power2.inOut', stagger: 0.1 });
-  if (fills.length) gsap.fromTo(fills, { opacity: 0 }, { opacity: 1, duration: 0.5, delay: 0.5, stagger: 0.06 });
-  gsap.fromTo('[data-type-info] > *', { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.5, stagger: 0.05, ease: 'power3.out' });
-}
-$$('[data-type-tab]').forEach((b) => b.addEventListener('click', () => showType(Number(b.dataset.typeTab))));
-showType(0, false);
+$('#saatler').innerHTML = `
+  <div class="wrap shop__grid">
+    <div class="shop__info">
+      <h2 class="h2" id="shop-title">Çalışma saatleri ve konum</h2>
+      <p class="shop__status ${st.open ? 'is-open' : ''}"><i></i>${esc(st.metin)}</p>
+      <table class="hours">
+        <caption class="sr-only">Çalışma saatleri</caption>
+        <tbody>${saatListesi(d.saatler).map(([g, h]) => `<tr class="${bugunMu(g) ? 'is-today' : ''}"><th scope="row">${g}</th><td>${h}</td></tr>`).join('')}</tbody>
+      </table>
+      <p class="shop__addr">${esc(d.iletisim.adres)}</p>
+      <div class="shop__cta">
+        <a class="btn btn--brass" href="${mapsHref(d)}" target="_blank" rel="noopener">${icons.pin}<span>Yol tarifi</span></a>
+        <a class="btn btn--ghost" href="${telHref(d)}">${icons.phone}<span>${tel}</span></a>
+      </div>
+    </div>
+    <div class="shop__map" id="map"><a href="${mapsHref(d)}" target="_blank" rel="noopener">Haritada aç</a></div>
+  </div>`;
 
-// Güven + süreç
-$('[data-guven-title]').textContent = d.guven.baslik;
-$('[data-guven-text]').textContent = d.guven.metin;
-$('[data-steps]').innerHTML = d.surec.map((s, i) => `
-  <li class="step"><span class="step__n">${i + 1}</span><h3>${esc(s.baslik)}</h3><p>${esc(s.aciklama)}</p></li>`).join('');
+const stars = (n) => Array.from({ length: 5 }, (_, i) => `<i class="${i < n ? 'on' : ''}">${icons.star}</i>`).join('');
+$('#yorumlar').innerHTML = `
+  <div class="wrap">
+    <h2 class="h2" id="reviews-title">Örnek yorumlar</h2>
+    <p class="reviews__sub">Buradaki yorumlar örnektir, yerlerine işletmenin gerçek yorumları konur.</p>
+    <ul class="reviews__grid">
+      ${d.yorumlar.map((r) => `
+        <li class="review">
+          <p class="review__stars" role="img" aria-label="5 üzerinden ${Number(r.puan)}">${stars(r.puan)}</p>
+          <p class="review__text">${esc(r.metin)}</p>
+          <p class="review__who"><b>${esc(r.ad)}</b><span>${esc(r.arac || '')}</span></p>
+        </li>`).join('')}
+    </ul>
+  </div>`;
 
-// Galeri
-const GAL = ['atolye', 'kilit-silindiri', 'kodlama', 'anahtar-duvari', 'akilli-anahtar', 'kapi-acma', 'silindir-parcalari', 'start-stop'];
-const galeri = GAL.map((id) => {
-  const g = d.galeri.find((x) => x.src.endsWith(`/${id}.jpg`));
-  return { src: `${import.meta.env.BASE_URL}img/kilit-sinematik/${id}.jpg`, alt: g?.alt ?? '' };
-});
-$('[data-gallery]').innerHTML = galeri.map((g) => `<figure class="gallery__item"><img src="${esc(g.src)}" alt="${esc(g.alt)}" loading="lazy" /></figure>`).join('');
+$('#iletisim').innerHTML = `
+  <div class="wrap finale__inner">
+    <h2 class="finale__title" id="finale-title">İletişim</h2>
+    <p class="finale__sub">Fiyat ve randevu için arayın ya da WhatsApp'tan yazın. Aracın marka, model ve yılı yazılırsa anahtar tipi söylenir.</p>
+    <div class="finale__cta">
+      <a class="btn btn--brass btn--xl" href="${telHref(d)}">${icons.phone}<span>${tel}</span></a>
+      <a class="btn btn--ghost btn--xl" href="${waHref(d)}" target="_blank" rel="noopener">${icons.whatsapp}<span>WhatsApp</span></a>
+    </div>
+    <p class="finale__note">${esc(d.iletisim.adres)}<br>${esc(st.metin)}</p>
+  </div>`;
 
-// Yorumlar
-$('[data-puan]').textContent = nf(d.puan.ortalama, 1);
-$('[data-stars]').innerHTML = icons.star.repeat(5);
-$('[data-puan-adet]').textContent = `örnek puan · ${nf(d.puan.adet)} değerlendirme`;
-$('[data-reviews]').innerHTML = d.yorumlar.map((y) => `
-  <figure class="rev">
-    <p class="rev__stars" aria-label="${y.puan} yıldız">${icons.star.repeat(y.puan)}</p>
-    <blockquote>${esc(y.metin)}</blockquote>
-    <figcaption><b>${esc(y.ad)}</b><span>${esc(y.arac)}</span></figcaption>
-  </figure>`).join('');
-$('[data-brands]').innerHTML = `<span>Çalıştığımız markalardan bazıları</span>${d.markalar.map((m) => `<b>${esc(m)}</b>`).join('')}`;
+$('#foot').innerHTML = `
+  <div class="wrap foot__grid">
+    <p><b>${ad}</b><br>${esc(d.isletme.tanim)}<br>${esc(d.iletisim.adres)}<br><a href="${telHref(d)}">${tel}</a></p>
+    <p class="foot__small">© ${yil} ${ad}. Pexels'ten alınan fotoğraflar temsilîdir. 3D görseller temsilîdir. Yorumlar örnektir.</p>
+  </div>`;
 
-// Saatler, final, footer
-$('[data-hours]').innerHTML = groupedHours(d.saatler)
-  .map(([g, h]) => `<div class="${h === 'Kapalı' ? 'is-closed' : ''}"><dt>${esc(g)}</dt><dd>${esc(h)}</dd></div>`).join('');
-$('[data-padlock]').classList.toggle('is-open', status.open);
-$('[data-final-title]').textContent = d.finalBaslik;
-$('[data-garanti]').textContent = d.garanti;
-$('[data-year]').textContent = `© ${new Date().getFullYear()} ${d.isletme.ad}`;
+new IntersectionObserver((entries, io) => {
+  if (!entries.some((e) => e.isIntersecting)) return;
+  $('#map').innerHTML = `<iframe title="${ad} konumu" src="${esc(mapsEmbed(d))}" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>`;
+  io.disconnect();
+}, { rootMargin: '600px 0px' }).observe($('#map'));
 
-// Harita: yaklaşınca yüklenir
-const mapBox = $('[data-map]');
-new IntersectionObserver((entries, obs) => {
-  if (!entries[0].isIntersecting) return;
-  mapBox.innerHTML = `<iframe title="${esc(d.isletme.ad)} konumu" src="${esc(mapsEmbed(d))}" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>`;
-  obs.disconnect();
-}, { rootMargin: '600px' }).observe(mapBox);
+// --- Üst çubuk ---------------------------------------------------------------------------
 
-// --- Sahne ---------------------------------------------------------------
+const topEl = $('#top');
+const solid = () => topEl.classList.toggle('is-solid', scrollY > 40);
+addEventListener('scroll', solid, { passive: true });
+solid();
+if (phone) autoHideHeader(topEl, { offset: 120 });
 
-const canvas = $('[data-stage]');
+// --- 3D sahne ----------------------------------------------------------------------------
+
+const canvas = $('#gl');
 const S = createScene(canvas, { lite, aa: !weak });
 const V = (x, y, z) => new THREE.Vector3(x, y, z);
-
-const POSES = () => {
-  const m = mobile();
-  return m ? {
-    hero: { pos: V(12.5, 5.4, 12.5), look: V(2.0, 0.2, 0), fov: 44, shift: -0.1 },
-    cut: { pos: V(TIP_OUT + 3.6, 2.2, 6.2), look: V(TIP_OUT + 1.5, 0.1, 0), fov: 48, shift: 0.08 },
-    lock: { pos: V(2.8, 1.9, 10.4), look: V(0.2, 0.6, 0), fov: 50, shift: 0.05 },
-    turn: { pos: V(5.2, 3.6, 9.2), look: V(0.5, 0.4, 0), fov: 50, shift: 0.05 },
-    chip: { pos: V(4.9, 5.6, 3.4), look: V(2.0, 0.0, 0), fov: 50, shift: 0.1 },
-    fob: { pos: V(-4.2, 1.6, 8.6), look: V(-5.6, 0.4, 0.2), fov: 50, shift: 0.1 },
-    over: { pos: V(-13.5, 6.5, 13), look: V(-2.2, 0.2, 0), fov: 46, shift: 0.1 },
-  } : {
-    hero: { pos: V(2.8, 3.6, 11.4), look: V(-3.0, 0.3, 0), fov: 38 },
-    cut: { pos: V(TIP_OUT + 0.6, 1.9, 6.4), look: V(TIP_OUT + 0.4, 0.1, 0), fov: 40 },
-    lock: { pos: V(-1.3, 1.5, 6.4), look: V(-1.6, 0.6, 0), fov: 44 },
-    turn: { pos: V(0.9, 2.6, 6.0), look: V(-1.1, 0.4, 0), fov: 44 },
-    chip: { pos: V(2.2, 4.8, 4.3), look: V(1.0, 0.0, 0), fov: 38 },
-    fob: { pos: V(-4.9, 1.2, 6.2), look: V(-6.2, 0.4, 0.2), fov: 42 },
-    over: { pos: V(0.2, 3.8, 10.5), look: V(-1.6, 0.2, 0), fov: 40 },
-  };
+const POSES = () => phone ? {
+  hero: { pos: V(12.5, 5.4, 12.5), look: V(2.0, 0.2, 0), fov: 44, shift: 0.22 },
+  cut: { pos: V(TIP_OUT + 3.6, 2.2, 6.2), look: V(TIP_OUT + 1.5, 0.1, 0), fov: 48, shift: 0.2 },
+  lock: { pos: V(2.8, 1.9, 10.4), look: V(0.2, 0.6, 0), fov: 50, shift: 0.2 },
+  turn: { pos: V(5.2, 3.6, 9.2), look: V(0.5, 0.4, 0), fov: 50, shift: 0.2 },
+  chip: { pos: V(4.9, 5.6, 3.4), look: V(2.0, 0.0, 0), fov: 50, shift: 0.22 },
+  fob: { pos: V(-4.2, 1.6, 8.6), look: V(-5.6, 0.4, 0.2), fov: 50, shift: 0.22 },
+  over: { pos: V(-13.5, 6.5, 13), look: V(-2.2, 0.2, 0), fov: 46, shift: 0.2 },
+} : {
+  hero: { pos: V(2.8, 3.6, 11.4), look: V(-3.0, 0.3, 0), fov: 38, shift: 0 },
+  cut: { pos: V(TIP_OUT + 0.6, 1.9, 6.4), look: V(TIP_OUT + 0.4, 0.1, 0), fov: 40, shift: 0 },
+  lock: { pos: V(-1.3, 1.5, 6.4), look: V(-1.6, 0.6, 0), fov: 44, shift: 0 },
+  turn: { pos: V(0.9, 2.6, 6.0), look: V(-1.1, 0.4, 0), fov: 44, shift: 0 },
+  chip: { pos: V(2.2, 4.8, 4.3), look: V(1.0, 0.0, 0), fov: 38, shift: 0 },
+  fob: { pos: V(-4.9, 1.2, 6.2), look: V(-6.2, 0.4, 0.2), fov: 42, shift: 0 },
+  over: { pos: V(0.2, 3.8, 10.5), look: V(-1.6, 0.2, 0), fov: 40, shift: 0 },
 };
-// Durak aralıkları DOM'dan ölçülür (film ilerlemesi 0..1): kart yapışınca başlar, bırakınca biter
-const filmEl = $('[data-film]');
-const stopEls = $$('[data-stop]');
-const overEl = $('[data-over]');
-let R = FILM.map((_, i) => [0.12 + i * 0.2, 0.28 + i * 0.2]);
-let OVER = 0.92, HERO_END = 0.08;
-function measure() {
+let P = POSES();
+
+const base = () => ({ cut: 1, cutting: false, bench: 0, tipX: TIP_IN, shear: 0, turn: 0, xray: 0, rf: 0, fob: 0, flip: 0, explode: 0, press: 0, env: 0.85 });
+const intro = { k: reducedMotion ? 1 : 0 };
+const UP = V(0, 1, 0);
+const tmp = new THREE.Vector3();
+// Masaüstünde hizmet sahnesi sağa kayar (kart solda): bakış noktası kameranın soluna alınır.
+function sideShift(pose, amount) {
+  if (phone || amount <= 0) return pose;
+  const dir = tmp.copy(pose.look).sub(pose.pos);
+  const dist = dir.length();
+  const right = dir.normalize().cross(UP).normalize();
+  return { ...pose, look: pose.look.clone().addScaledVector(right, -dist * 0.2 * amount) };
+}
+
+function serviceTarget(s, p) {
+  const k = s.map.key;
+  const t = { ...base() };
+  if (k === 'cut') return { ...t, ...P.cut, cut: smooth(seg(p, 0.1, 0.85)), cutting: p > 0.08 && p < 0.9, bench: 1, tipX: TIP_OUT };
+  if (k === 'chip') return { ...t, ...P.chip, xray: 1, rf: seg(p, 0.2, 0.4) };
+  if (k === 'fob') return { ...t, ...P.fob, fob: 1, flip: smooth(seg(p, 0.1, 0.4)) };
+  if (k === 'fobOpen') return { ...t, ...P.fob, fob: 1, flip: 1, explode: smooth(seg(p, 0.15, 0.5)) };
+  if (k === 'turn') return { ...t, ...P.turn, shear: 1, turn: -Math.PI / 2 * smooth(seg(p, 0.25, 0.6)) };
+  if (k === 'lock') return { ...t, ...P.lock, tipX: L(TIP_OUT, TIP_IN, smooth(seg(p, 0.05, 0.5))), shear: seg(p, 0.45, 0.55) };
+  if (k === 'lockOut') return { ...t, ...P.lock, tipX: L(TIP_IN, TIP_OUT, smooth(seg(p, 0.2, 0.7))) };
+  return { ...t, ...P.over };
+}
+
+const svcEls = $$('.svc');
+let active = -1;
+function target() {
   const vh = innerHeight;
-  const total = Math.max(1, filmEl.offsetHeight - vh);
-  const m = mobile();
-  R = stopEls.map((el) => {
-    const card = el.firstElementChild;
-    const padTop = parseFloat(getComputedStyle(el).paddingTop) || 0;
-    const padBot = parseFloat(getComputedStyle(el).paddingBottom) || 0;
-    const stick = m ? el.offsetTop + padTop + card.offsetHeight + 100 - vh : el.offsetTop + padTop - vh * 0.5 + card.offsetHeight / 2;
-    const release = m ? el.offsetTop + el.offsetHeight - vh : el.offsetTop + el.offsetHeight - padBot - card.offsetHeight / 2 - vh * 0.5;
-    return [clamp((stick - vh * 0.1) / total), clamp(release / total)];
+  active = -1;
+  let p = 0;
+  svcEls.forEach((el, i) => {
+    const r = el.getBoundingClientRect();
+    let on;
+    if (phone) {
+      const c = el.firstElementChild.getBoundingClientRect();
+      on = c.top > r.top + 2 && c.bottom < r.bottom - 2 && r.top < vh * 0.4;
+      if (on) p = clamp(-r.top / Math.max(1, r.height - vh));
+    } else {
+      on = r.top < vh * 0.55 && r.bottom > vh * 0.45;
+      if (on) p = clamp((vh * 0.55 - r.top) / Math.max(1, r.height - vh * 0.1));
+    }
+    el.classList.toggle('is-active', on);
+    if (on) active = i;
   });
-  OVER = clamp((overEl.offsetTop - vh * 0.5) / total);
-  HERO_END = clamp((stopEls[0].offsetTop - vh * 0.9) / total);
-}
-const at = (i, u) => L(R[i][0], R[i][1], u);
-const sp = (p, i, u0, j, u1) => seg(p, at(i, u0), at(j, u1));
-const keyframes = () => [
-  [0, 'hero'], [HERO_END * 0.5, 'hero'], [R[0][0], 'cut'], [R[0][1], 'cut'], [R[1][0], 'lock'], [at(1, 0.6), 'lock'],
-  [at(1, 0.87), 'turn'], [R[1][1], 'turn'], [R[2][0], 'chip'], [R[2][1], 'chip'], [R[3][0], 'fob'], [R[3][1], 'fob'],
-  [OVER, 'over'], [1, 'over'],
-];
-let KF = keyframes();
-function remeasure() { measure(); KF = keyframes(); }
-
-function filmPose(p) {
-  const P = POSES();
-  let i = 0;
-  while (i < KF.length - 2 && p > KF[i + 1][0]) i++;
-  const a = KF[i], b = KF[i + 1];
-  const t = smooth(seg(p, a[0], b[0]));
-  const A = P[a[1]], B = P[b[1]];
-  return {
-    pos: A.pos.clone().lerp(B.pos, t), look: A.look.clone().lerp(B.look, t),
-    fov: L(A.fov, B.fov, t), shift: L(A.shift || 0, B.shift || 0, t),
-  };
+  if (active >= 0) return { ...serviceTarget(services[active], p), side: 1 };
+  const head = $('.services__head').getBoundingClientRect();
+  if (head.top < vh * 0.6) return { ...base(), ...P.over, side: 1 };
+  // Künye: anahtar girer, pimler hizalanır, göbek döner (açılışta bir kez).
+  const k = intro.k;
+  return { ...base(), ...P.hero, side: 0, tipX: L(TIP_OUT, TIP_IN, smooth(seg(k, 0, 0.6))), shear: seg(k, 0.55, 0.7), turn: -Math.PI / 2 * smooth(seg(k, 0.7, 1)) };
 }
 
-function filmState(p, time) {
-  const pose = filmPose(p);
-  const idle = 1 - seg(p, HERO_END * 0.5, R[0][0]) + seg(p, R[3][1], OVER);
-  pose.pos.x += Math.sin(time * 0.35) * 0.25 * idle;
-  pose.pos.y += Math.sin(time * 0.5) * 0.12 * idle;
-  const cut = smooth(sp(p, 0, 0.11, 0, 0.89));
-  const slide = smooth(sp(p, 1, 0, 1, 0.49));
-  return {
-    ...pose,
-    cut,
-    cutting: p > at(0, 0.08) && p < at(0, 0.92),
-    bench: seg(p, R[0][0] - 0.03, R[0][0]) * (1 - sp(p, 0, 1.0, 0, 1.17)),
-    tipX: L(TIP_OUT, TIP_IN, slide),
-    shear: sp(p, 1, 0.47, 1, 0.56) * (1 - sp(p, 1, 1.0, 1, 1.18)) * (1 + Math.sin(time * 6) * 0.15),
-    turn: -Math.PI / 2 * smooth(sp(p, 1, 0.62, 1, 0.87)),
-    xray: smooth(sp(p, 2, 0.07, 2, 0.3)) * (1 - seg(p, R[3][1], OVER) * 0.6),
-    rf: sp(p, 2, 0.23, 2, 0.43) * (1 - sp(p, 2, 0.97, 2, 1.13)),
-    fob: smooth(sp(p, 2, 0.83, 3, 0.04)),
-    flip: smooth(sp(p, 3, 0.14, 3, 0.39)),
-    explode: smooth(sp(p, 3, 0.39, 3, 0.75)) * (1 - 0.5 * seg(p, R[3][1], OVER)),
-    press: sp(p, 3, 0.71, 3, 0.82) * (1 - sp(p, 3, 0.96, 3, 1.1)),
-    env: 0.85,
-  };
+const cur = { ...base(), ...P.hero, pos: P.hero.pos.clone(), look: P.hero.look.clone(), tipX: TIP_OUT, side: 0 };
+const NUM = ['cut', 'bench', 'tipX', 'shear', 'turn', 'xray', 'rf', 'fob', 'flip', 'explode', 'press', 'env', 'fov', 'shift', 'side'];
+let running = false, prevT = performance.now();
+function frame(now) {
+  const dt = Math.min(0.05, (now - prevT) / 1000);
+  prevT = now;
+  const tg = target();
+  const k = reducedMotion ? 1 : 1 - Math.exp(-dt * 4.5);
+  cur.pos.lerp(tg.pos, k);
+  cur.look.lerp(tg.look, k);
+  for (const key of NUM) cur[key] = L(cur[key], tg[key], key === 'tipX' || key === 'turn' || key === 'cut' ? Math.min(1, k * 1.6) : k);
+  cur.cutting = tg.cutting;
+  const shot = sideShift({ pos: cur.pos, look: cur.look }, cur.side);
+  S.update({ ...cur, pos: shot.pos, look: shot.look }, now);
+  if (running) requestAnimationFrame(frame);
 }
 
-// --- Film UI -------------------------------------------------------------
-
-const film = filmEl;
-const cards = $$('[data-card]');
-const railItems = $$('[data-rail-i]');
-const rail = $('[data-rail]');
-const hint = $('[data-hint]');
-const hudCode = $('[data-hud-code]'), hudPins = $('[data-hud-pins]'), hudChip = $('[data-hud-chip]');
-const huds = $('[data-huds]');
-const filmui = $('[data-filmui]');
-const inst = $('[data-inst]');
-const topEl = $('[data-top]');
-const codeDigits = $$('[data-code-digits] span');
-const codeSub = $('[data-code-sub]');
-const pinBars = $$('[data-pinmeter] i b');
-const pinState = $('[data-pin-state]');
-const hexEl = $('[data-hex]'), chipState = $('[data-chip-state]');
-const HEX = ['7A', '3F', '91', 'C2'];
-
-// Telefonda ray + göstergeler başlığın ikinci satırında (tek üst öğe); masaüstünde sahnenin üstünde
-const mobileQ = matchMedia('(max-width: 759px)');
-function placeInst() {
-  if (mobileQ.matches) inst.append(rail, huds);
-  else filmui.append(rail, huds);
+const film = $('#film');
+function setRunning(on) {
+  if (on === running) return;
+  running = on;
+  canvas.classList.toggle('is-off', !on);
+  if (on) { prevT = performance.now(); requestAnimationFrame(frame); }
 }
-placeInst();
-mobileQ.addEventListener('change', () => { placeInst(); ScrollTrigger.refresh(); });
+new IntersectionObserver(([e]) => setRunning(e.isIntersecting && !document.hidden), { rootMargin: '0px 0px -20% 0px' }).observe(film);
+document.addEventListener('visibilitychange', () => setRunning(!document.hidden && film.getBoundingClientRect().bottom > innerHeight * 0.2));
 
-function vis(el, v, dy = 0) {
-  el.style.opacity = v;
-  el.style.visibility = v > 0.01 ? 'visible' : 'hidden';
-  el.classList.toggle('is-off', v <= 0.01);
-  if (dy) el.style.transform = `translate3d(0, ${(1 - v) * dy}px, 0)`;
+function resize() {
+  P = POSES();
+  S.resize();
+  if (phone) $$('.svc__card').forEach((c) => c.style.setProperty('--card-h', `${c.offsetHeight}px`));
 }
+addEventListener('resize', resize);
+resize();
 
-let last = {};
-function setText(el, key, txt) {
-  if (last[key] !== txt) { el.textContent = txt; last[key] = txt; }
-}
-
-let lastInst = null;
-function filmUI(p, time, inFilm = true) {
-  hint.style.opacity = 1 - seg(p, 0, 0.03);
-
-  const active = R.findIndex(([a, b]) => p >= a && p < b);
-  const railOn = inFilm ? seg(p, R[0][0] - 0.03, R[0][0]) * (1 - seg(p, R[3][1], R[3][1] + 0.02)) : 0;
-  vis(rail, railOn);
-  const instOn = railOn > 0.01;
-  if (instOn !== lastInst) { topEl.classList.toggle('has-inst', instOn); lastInst = instOn; }
-  railItems.forEach((li, i) => {
-    li.classList.toggle('is-active', i === active);
-    li.classList.toggle('is-done', p > R[i][1]);
-  });
-
-  // Kesim kodu
-  const cv = inFilm ? sp(p, 0, 0.06, 0, 0.17) * (1 - sp(p, 0, 0.94, 0, 1.06)) : 0;
-  vis(hudCode, cv, 16);
-  if (cv > 0.01) {
-    const c = smooth(sp(p, 0, 0.11, 0, 0.89));
-    codeDigits.forEach((sp2, i) => {
-      const u = PINS[i] - TIP_IN;
-      const done = c * 3.25 > u + 0.06;
-      const txt = done ? String(CODE[i]) : String(Math.floor(time * 20 + i * 3) % 10);
-      if (sp2.textContent !== txt) sp2.textContent = txt;
-      sp2.classList.toggle('is-set', done);
-    });
-    setText(codeSub, 'cs', c >= 0.999 ? 'Kesim tamam' : 'Freze ilerliyor');
-  }
-
-  // Pim ölçer
-  const pv = inFilm ? sp(p, 1, 0.02, 1, 0.11) * (1 - sp(p, 1, 0.93, 1, 1.02)) : 0;
-  vis(hudPins, pv, 16);
-  if (pv > 0.01) {
-    const slide = smooth(sp(p, 1, 0, 1, 0.49));
-    const tipX = L(TIP_OUT, TIP_IN, slide);
-    let ok = true;
-    PINS.forEach((x, i) => {
-      const u = x - tipX;
-      const b = tipX < 1.9 && u >= 0 && u <= 3.15 ? Math.max(-0.06, topAt(u, 1)) : -0.06;
-      const off = b + (0.5 - CUTS[i]) - 0.5; // kesme hattına uzaklık
-      if (Math.abs(off) > 0.012) ok = false;
-      pinBars[i].style.transform = `translate3d(0, ${clamp(-off / 0.6, -1, 1) * 100}%, 0)`;
-      pinBars[i].parentElement.classList.toggle('is-ok', Math.abs(off) <= 0.012);
-    });
-    const turned = p > at(1, 0.73);
-    setText(pinState, 'ps', turned ? 'Açık · kontak döndü' : ok ? 'Hizalandı' : 'Kilitli');
-    hudPins.classList.toggle('is-ok', ok);
-  }
-
-  // Çip
-  const chv = inFilm ? sp(p, 2, 0.17, 2, 0.3) * (1 - sp(p, 2, 0.93, 2, 1.07)) : 0;
-  vis(hudChip, chv, 16);
-  if (chv > 0.01) {
-    const r = sp(p, 2, 0.3, 2, 0.7);
-    const n = Math.floor(r * 4.99);
-    const hex = HEX.map((h, i) => (i < n ? h : ((Math.floor(time * 18) * (i + 3)) % 256).toString(16).toUpperCase().padStart(2, '0'))).join(' ');
-    setText(hexEl, 'hx', hex);
-    setText(chipState, 'cs2', r >= 1 ? 'Tanındı · motor çalışır' : 'Okunuyor');
-    hudChip.classList.toggle('is-ok', r >= 1);
-  }
-}
-
-// --- Kaydırma ve içerik hareketi ---------------------------------------------------
-
-const split = new SplitText(heroTitle, { type: 'words,chars', wordsClass: 'word', charsClass: 'ch' });
-let lenis = null;
-let filmP = 0, filmTarget = 0, filmST = null;
-
-function setupScroll() {
-  lenis = initSmoothScroll();
-  lenis?.stop();
-  ScrollTrigger.addEventListener('refresh', remeasure);
-  remeasure();
-  // Duraklar boyunca hikâye modu: alt çubuk iner (hero ve sonrası çubuklu)
-  ScrollTrigger.create({
-    trigger: '[data-cards]', start: 'top 70%', end: () => `bottom ${Math.round(innerHeight * 0.9)}px`,
-    onToggle: (st) => setStoryMode(st.isActive ? true : null),
-  });
-  // Kart durakta belirir, çekilirken kaybolur (görünmezken dokunmayı almaz)
-  cards.forEach((card) => {
-    const stop = card.parentElement;
-    gsap.fromTo(card, { autoAlpha: 0, y: 36 }, {
-      autoAlpha: 1, y: 0, ease: 'power2.out', immediateRender: true,
-      scrollTrigger: { trigger: stop, start: () => (mobile() ? `top+=${Math.round(innerHeight * 0.3)} bottom` : 'top 70%'), end: () => (mobile() ? `top+=${Math.round(innerHeight * 0.38)} 78%` : 'top 35%'), scrub: 0.4 },
-    });
-    gsap.fromTo(card, { autoAlpha: 1, y: 0 }, {
-      autoAlpha: 0, y: -30, ease: 'power1.in', immediateRender: false,
-      scrollTrigger: { trigger: stop, start: () => (mobile() ? 'bottom bottom' : 'bottom 80%'), end: () => (mobile() ? 'bottom 72%' : 'bottom 50%'), scrub: 0.4 },
-    });
-  });
-  gsap.fromTo('.overview > *', { autoAlpha: 0, y: 30 }, {
-    autoAlpha: 1, y: 0, duration: 0.9, stagger: 0.1, ease: 'power3.out',
-    scrollTrigger: { trigger: '[data-over]', start: 'top 45%', toggleActions: 'play none none reverse' },
-  });
-  filmST = ScrollTrigger.create({
-    trigger: film, start: 'top top', end: 'bottom bottom',
-    onUpdate: (self) => (filmTarget = self.progress),
-  });
-  ScrollTrigger.create({
-    trigger: film, start: 'bottom bottom', end: 'bottom 30%',
-    onUpdate: (self) => (canvas.style.opacity = String(1 - self.progress)),
-  });
-  ScrollTrigger.create({
-    trigger: '[data-about]', start: 'top 70px',
-    onEnter: () => $('[data-top]').classList.add('is-solid'),
-    onLeaveBack: () => $('[data-top]').classList.remove('is-solid'),
-  });
-  contentMotion();
-}
-
-function contentMotion() {
-  $$('[data-rise]').forEach((el) => {
-    const s = new SplitText(el, { type: 'lines,words', linesClass: 'ln', wordsClass: 'rw' });
-    gsap.fromTo(s.words, { yPercent: 110, rotate: 4 }, {
-      yPercent: 0, rotate: 0, duration: 0.9, stagger: 0.04, ease: 'expo.out',
-      scrollTrigger: { trigger: el, start: 'top 88%', once: true },
-    });
-  });
-  gsap.fromTo($$('span', aboutText), { opacity: 0.15 }, {
-    opacity: 1, stagger: 0.05, ease: 'none',
-    scrollTrigger: { trigger: aboutText, start: 'top 85%', end: 'bottom 50%', scrub: true },
-  });
-  gsap.fromTo('.about__img img', { scale: 1.25 }, {
-    scale: 1, ease: 'none',
-    scrollTrigger: { trigger: '.about__img', start: 'top bottom', end: 'bottom top', scrub: true },
-  });
-  gsap.fromTo('.about__img', { clipPath: 'inset(12% 12% 12% 12% round 200px)' }, {
-    clipPath: 'inset(0% 0% 0% 0% round 28px)', ease: 'none',
-    scrollTrigger: { trigger: '.about__img', start: 'top 95%', end: 'top 35%', scrub: true },
-  });
-  $$('[data-count]').forEach((el) => {
-    const target = Number(el.dataset.count);
-    const o = { v: 0 };
-    gsap.to(o, {
-      v: target, duration: 1.6, ease: 'power3.out',
-      onUpdate: () => (el.textContent = nf(o.v)),
-      scrollTrigger: { trigger: el, start: 'top 90%', once: true },
-    });
-  });
-  // Hizmetler: satır geçerken dişli kenar çizilir
-  $$('.svc__item').forEach((row) => {
-    gsap.fromTo(row, { '--cut': 0 }, {
-      '--cut': 1, ease: 'none',
-      scrollTrigger: { trigger: row, start: 'top 88%', end: 'top 55%', scrub: true },
-    });
-  });
-  ScrollTrigger.create({ trigger: '[data-types]', start: 'top 65%', once: true, onEnter: () => showType(0) });
-  // Mühür dönerek basılır
-  gsap.timeline({ scrollTrigger: { trigger: '[data-trust]', start: 'top 70%', once: true } })
-    .fromTo('.trust__stamp', { scale: 2.2, rotate: -40, opacity: 0 }, { scale: 1, rotate: -12, opacity: 1, duration: 0.55, ease: 'power4.in' })
-    .fromTo('.trust__stamp', { y: 0 }, { y: 4, duration: 0.06, yoyo: true, repeat: 1 })
-    .fromTo('.trust__check', { drawSVG: '0%' }, { drawSVG: '100%', duration: 0.5, ease: 'power2.out' });
-  gsap.to('.trust__stamp text', { rotate: 360, transformOrigin: '100px 100px', duration: 30, repeat: -1, ease: 'none' });
-  gsap.fromTo('.steps', { '--fill': 0 }, {
-    '--fill': 1, ease: 'none',
-    scrollTrigger: { trigger: '.steps', start: 'top 75%', end: 'bottom 60%', scrub: true },
-  });
-  $$('.step').forEach((s) => ScrollTrigger.create({ trigger: s, start: 'top 70%', onEnter: () => s.classList.add('is-lit') }));
-  // Galeri yatay kayar
-  const track = $('[data-gallery]');
-  gsap.to(track, {
-    x: () => -Math.max(0, track.scrollWidth - innerWidth),
-    ease: 'none',
-    scrollTrigger: { trigger: '.gallery', start: 'top bottom', end: 'bottom top', scrub: true, invalidateOnRefresh: true },
-  });
-  gsap.fromTo('.rev', { y: 50, opacity: 0 }, {
-    y: 0, opacity: 1, stagger: 0.08, duration: 0.8, ease: 'power3.out',
-    scrollTrigger: { trigger: '[data-reviews]', start: 'top 82%', once: true },
-  });
-  const puanEl = $('[data-puan]');
-  const po = { v: 0 };
-  gsap.to(po, {
-    v: d.puan.ortalama, duration: 1.4, ease: 'power2.out',
-    onUpdate: () => (puanEl.textContent = nf(po.v, 1)),
-    scrollTrigger: { trigger: '.reviews', start: 'top 80%', once: true },
-  });
-  // Asma kilit: açıksa kanca kalkar
-  ScrollTrigger.create({ trigger: '[data-padlock]', start: 'top 85%', once: true, onEnter: () => $('[data-padlock]').classList.add('is-in') });
-  // Final: anahtar deliği büyür
-  gsap.fromTo('[data-final-hole]', { '--s': 0.16 }, {
-    '--s': 1, ease: 'none',
-    scrollTrigger: { trigger: '[data-finale]', start: 'top top', end: 'bottom bottom', scrub: true },
-  });
-  gsap.fromTo('.finale__copy', { opacity: 0, y: 40 }, {
-    opacity: 1, y: 0, ease: 'none',
-    scrollTrigger: { trigger: '[data-finale]', start: '15% bottom', end: '48% bottom', scrub: true },
-  });
-}
-
-let lastT = performance.now();
-let sceneOn = true;
-function tick(now) {
-  const dt = Math.min(0.05, (now - lastT) / 1000);
-  lastT = now;
-  const time = now / 1000;
-  filmP += (filmTarget - filmP) * (1 - Math.exp(-dt * 7));
-  const active = !filmST || filmST.progress < 1 || canvas.style.opacity !== '0';
-  if (active) {
-    filmUI(filmP, time, !filmST || filmST.progress < 1);
-    S.update(filmState(filmP, time), now);
-  } else if (lastInst) filmUI(filmP, time, false);
-  if (active !== sceneOn) {
-    sceneOn = active;
-    canvas.style.visibility = active ? 'visible' : 'hidden';
-  }
-  requestAnimationFrame(tick);
-}
-addEventListener('resize', () => S.resize());
-
-// --- Açılış: kod okunur, anahtar deliği büyür ---------------------------------------
-
-function heroIn() {
-  gsap.timeline()
-    .fromTo(split.chars, { yPercent: 115, rotate: 8, opacity: 0 }, { yPercent: 0, rotate: 0, opacity: 1, duration: 1.1, stagger: 0.025, ease: 'expo.out' }, 0)
-    .fromTo(['.hero__since', '.hero__slogan', '.hero__cta', '.top'], { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.8, stagger: 0.07, ease: 'power3.out' }, 0.3);
-}
-
-function runIntro() {
-  const intro = $('[data-intro]');
-  const codeEl = $('[data-intro-code]');
-  let done = false;
-  const o = { v: 0 };
-  const tl = gsap.timeline();
-  tl.fromTo('[data-kh-line]', { drawSVG: '0%' }, { drawSVG: '100%', duration: 1, ease: 'power2.inOut' }, 0);
-  tl.fromTo('[data-intro-name]', { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: 0.6 }, 0.1);
-  tl.to(o, {
-    v: 1, duration: 0.95, ease: 'none',
-    onUpdate: () => {
-      const n = Math.floor(o.v * 5.99);
-      codeEl.textContent = CODE.map((c, i) => (i < n ? c : Math.floor(Math.random() * 10))).join(' ');
-    },
-  }, 0.2);
-  tl.call(() => {
-    S.compile();
-    S.update(filmState(0, performance.now() / 1000));
-  }, [], 0.3);
-  tl.add(finish, 1.2);
-  function finish() {
-    if (done) return;
-    done = true;
-    tl.kill();
-    intro.style.pointerEvents = 'none';
-    codeEl.textContent = CODE.join(' ');
-    document.body.classList.remove('is-loading');
-    gsap.timeline({ onComplete: () => { intro.remove(); lenis?.start(); } })
-      .to('[data-intro-center]', { opacity: 0, y: -10, duration: 0.3, ease: 'power2.in' }, 0)
-      .to('[data-kh], [data-kh-rim]', { attr: { transform: 'translate(50 50) scale(22)' }, duration: 0.9, ease: 'expo.in' }, 0.1)
-      .to('[data-kh-rim]', { opacity: 0, duration: 0.25 }, 0.65)
-      .call(heroIn, [], 0.75);
-  }
-  intro.addEventListener('pointerdown', finish, { once: true });
-  addEventListener('keydown', finish, { once: true });
-}
-
-if (import.meta.env.DEV) window.__film = (p) => { filmTarget = p; filmP = p; };
+// --- Başlatma ----------------------------------------------------------------------------
 
 if (reducedMotion) {
   document.documentElement.classList.add('is-static');
-  $('[data-intro]').remove();
-  document.body.classList.remove('is-loading');
   S.compile();
-  const still = () => S.update(filmState(0.46, 0));
-  still();
-  addEventListener('resize', still);
-  $$('[data-count]').forEach((el) => (el.textContent = nf(Number(el.dataset.count))));
-  $$('.step').forEach((s) => s.classList.add('is-lit'));
-  $('[data-padlock]').classList.add('is-in');
-  $('[data-final-hole]').style.setProperty('--s', 1);
+  frame(performance.now());
 } else {
-  setupScroll();
-  runIntro();
-  requestAnimationFrame(tick);
+  initSmoothScroll({ lerp: 0.1 });
+  if (phone) {
+    ScrollTrigger.create({
+      trigger: svcEls[0], start: 'top 60%', endTrigger: svcEls.at(-1), end: 'bottom 40%',
+      onToggle: (t) => setStoryMode(t.isActive ? true : null),
+    });
+  }
+  S.compile();
+  gsap.to(canvas, { opacity: 1, duration: 0.8, delay: 0.1 });
+  gsap.from('.hero__inner > *', { y: 18, autoAlpha: 0, duration: 0.6, stagger: 0.06, ease: 'power3.out', clearProps: 'all' });
+  gsap.to(intro, { k: 1, duration: 2.2, ease: 'power1.inOut', delay: 0.5 });
+  const rise = (targets, trigger, extra = {}) =>
+    gsap.from(targets, { y: 26, autoAlpha: 0, duration: 0.7, ease: 'power3.out', ...extra, scrollTrigger: { trigger, start: 'top 86%', toggleActions: 'play none none none' } });
+  ['#about-title', '#shop-title', '#reviews-title', '#finale-title'].forEach((s) => rise(s, s));
+  rise('.stats li', '.stats', { stagger: 0.1 });
+  rise('.review', '.reviews__grid', { stagger: 0.06, y: 18 });
+  addEventListener('load', () => ScrollTrigger.refresh());
 }

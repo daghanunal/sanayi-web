@@ -2,11 +2,17 @@
   "preset": "sektor-lpg",
   "isletme": {
     "ad": "Mavi Alev LPG",
-    "sektor": "LPG Dönüşüm, Bakım ve Muayene",
-    "slogan": "Yakıtı değiştirin, aracınızın huyunu değil.",
+    "sektor": "LPG Dönüşüm ve Bakım",
+    "tanim": "LPG dönüşümü, bakım ve ayar",
     "kurulus": 2002,
-    "hakkinda": "2002'den beri Şaşmaz'da yalnızca LPG işi yapıyoruz. Aracınızın motoruna uygun sistemi seçer, tankı ve hatları kurallara uygun döşer, ayarı yol testiyle bitiririz. Proje, montaj belgesi ve ruhsata işleme adımlarını da biz takip ederiz; siz aracınızı teslim alırken evraklarınız hazır olur."
+    "hakkinda": "Benzinli binek ve hafif ticari araçlara LPG dönüşümü yapılır. Sıralı enjeksiyonlu ve direkt enjeksiyonlu motorlara uygun sistemlerin montajının yanı sıra LPG bakımı, ayar, tank değişimi ve eski sistemlerin yenilenmesi de yapılır."
   },
+  "bilgiler": [
+    ["Araçlar", "Benzinli binek araçlar ve hafif ticari araçlar. Dizel araçlara LPG dönüşümü yapılmaz."],
+    ["Sistemler", "Sıralı enjeksiyonlu ve direkt enjeksiyonlu motorlara uygun LPG sistemleri; simit ve silindir tanklar"],
+    ["Evrak", "Dönüşümden sonra LPG'nin araç ruhsatına işlenmesi gerekir. Gereken belgeler ve başvuru sırası araç sahibine anlatılır."],
+    ["Randevu", "Dönüşüm randevuyla yapılır. LPG bakımı ve ayar için randevu gerekmez."]
+  ],
   "iletisim": {
     "telefon": "0532 555 27 02",
     "whatsapp": "905325552702",
@@ -15,27 +21,64 @@
   },
   "saatler": [null, "08:30-19:00", "08:30-19:00", "08:30-19:00", "08:30-19:00", "08:30-19:00", "09:00-16:00"],
   "hizmetler": [
-    { "baslik": "Sıralı enjeksiyon LPG dönüşümü", "aciklama": "Her silindire ayrı gaz enjektörü, motorun beyniyle uyumlu çalışan elektronik ünite. Araç benzinle çalışır gibi çeker, geçişi siz hissetmezsiniz.", "sure": "1-2 gün" },
-    { "baslik": "Direkt enjeksiyonlu araçlar", "aciklama": "TSI, TFSI, GDI gibi direkt enjeksiyonlu motorlara uygun sistemler. Benzin enjektörlerini koruyan yapıyla kurulur, motora göre ayrı ayarlanır.", "sure": "2-3 gün" },
-    { "baslik": "LPG bakım ve filtre değişimi", "aciklama": "Gaz ve buhar filtreleri, regülatör kontrolü, hortum ve bağlantılarda kaçak testi. Her 15.000-20.000 km'de bir önerilir.", "sure": "1 saat" },
-    { "baslik": "Ayar ve arıza tespiti", "aciklama": "Tekleme, rölantide düşme, gazda geçişte takılma. Bilgisayarla okuma yapar, enjektör sürelerini motorun değerlerine göre yeniden ayarlarız.", "sure": "Aynı gün" },
-    { "baslik": "Tank periyodik muayenesi", "aciklama": "Tankın, çok valfin ve bağlantıların kontrolü. Muayeneye girmeden önce eksikleri görür, aracınızın bir kez gidip geçmesini sağlarız.", "sure": "Aynı gün" },
-    { "baslik": "Proje ve ruhsat işlemleri", "aciklama": "Tadilat projesi, montaj belgesi ve ruhsata LPG'nin işlenmesi için gereken evrak. Hangi belgenin nereye gideceğini baştan anlatırız.", "sure": "Birkaç iş günü" },
-    { "baslik": "Tank değişimi ve yerleşim", "aciklama": "Bagaj hacmini koruyan stepne yuvası tipi (simit) ya da silindir tank. Ömrünü dolduran tankı yenisiyle değiştiririz.", "sure": "Aynı gün" },
-    { "baslik": "Sistem yenileme", "aciklama": "Eski tip karbüratörlü ya da ilk nesil sistemleri sıralı enjeksiyona çeviririz. Sağlam kalan tank ve hatlar mümkünse yeniden kullanılır.", "sure": "1 gün" }
+    {
+      "baslik": "Sıralı enjeksiyon LPG dönüşümü",
+      "kisa": "Çok noktalı enjeksiyonlu benzinli motorlar",
+      "aciklama": "Her silindire ayrı gaz enjektörü takılır, elektronik ünite gazı benzin enjektörlerinin sinyaline göre verir. Montajdan sonra ayar bilgisayarla yapılıp yolda denenir.",
+      "sure": "1–2 gün"
+    },
+    {
+      "baslik": "Direkt enjeksiyonlu motorlar",
+      "kisa": "TSI, TFSI, GDI motorlar",
+      "aciklama": "Direkt enjeksiyonlu motorlar için yapılmış sistemler kurulur, ayar motorun değerlerine göre ayrıca yapılır. Motor bu dönüşüme uygun değilse araç sahibine baştan söylenir.",
+      "sure": "2–3 gün"
+    },
+    {
+      "baslik": "LPG bakımı ve filtre değişimi",
+      "kisa": "Gaz ve buhar filtreleri",
+      "aciklama": "Gaz ve buhar filtreleri değiştirilir, regülatör kontrol edilir. Hortum ve bağlantılarda kaçak testi yapılır.",
+      "sure": "1 saat"
+    },
+    {
+      "baslik": "Ayar ve arıza tespiti",
+      "kisa": "Tekleme, rölantide düşme",
+      "aciklama": "Gazda tekleme, rölantide düşme ya da geçişte takılma varsa elektronik ünite bilgisayarla okunur. Enjektör süreleri motorun değerlerine göre yeniden ayarlanır.",
+      "sure": "Aynı gün"
+    },
+    {
+      "baslik": "Muayene öncesi kontrol",
+      "kisa": "Tank, çok valf ve bağlantılar",
+      "aciklama": "Araç muayenesinden önce tank, çok valf ve gaz hattındaki bağlantılar kontrol edilir. Değişmesi gereken parça varsa araç sahibine söylenir.",
+      "sure": "Aynı gün"
+    },
+    {
+      "baslik": "Proje ve ruhsat işlemleri",
+      "kisa": "Gereken evrak ve başvuru sırası",
+      "aciklama": "Dönüşümden sonra LPG'nin ruhsata işlenmesi gerekir. Tadilat projesi ve montaj belgesi gibi gereken evrak ile başvuru sırası araç sahibine anlatılır.",
+      "sure": "Birkaç iş günü"
+    },
+    {
+      "baslik": "Tank değişimi",
+      "kisa": "Simit ya da silindir tank",
+      "aciklama": "Stepne yuvasına oturan simit tank ya da silindir tank takılır. Kullanım süresi dolan tank yenisiyle değiştirilir.",
+      "sure": "Aynı gün"
+    },
+    {
+      "baslik": "Sistem yenileme",
+      "kisa": "Eski sistemden sıralı enjeksiyona",
+      "aciklama": "Karbüratörlü ya da ilk nesil LPG sistemleri sıralı enjeksiyona çevrilir. Tank ve hatlar sağlamsa ve kullanım süresi dolmamışsa yeniden kullanılır.",
+      "sure": "1 gün"
+    }
   ],
   "surec": [
-    { "baslik": "Aracı inceleriz", "aciklama": "Motor tipine, kilometresine ve bagaj yapısına bakar, hangi sistemin ve tankın uygun olduğunu söyleriz. Uygun değilse de açıkça söyleriz." },
-    { "baslik": "Proje hazırlanır", "aciklama": "Dönüşüm için gereken tadilat projesi hazırlanır. Montaja ancak bu adım tamamlandıktan sonra başlarız." },
-    { "baslik": "Montaj yapılır", "aciklama": "Tank, çok valf, regülatör, enjektörler ve elektronik ünite takılır; bütün bağlantılar kaçak testinden geçer." },
-    { "baslik": "Ayar ve yol testi", "aciklama": "Bilgisayarla ilk ayar yapılır, ardından yolda farklı devirlerde deneyip son ayarı veririz." },
-    { "baslik": "Evrak ve teslim", "aciklama": "Montaj belgesi verilir, ruhsat işlemi için yol gösterilir. Kullanımı ve bakım aralıklarını anlatıp aracı teslim ederiz." }
+    { "baslik": "İnceleme", "aciklama": "Motor tipine, kilometreye ve bagaj yapısına bakılır, uygun sistem ve tank araç sahibine söylenir." },
+    { "baslik": "Evrak", "aciklama": "Dönüşüm için gereken proje ve belgeler araç sahibine anlatılır." },
+    { "baslik": "Montaj", "aciklama": "Tank, çok valf, regülatör, enjektörler ve elektronik ünite takılır, bağlantılar kaçak testinden geçirilir." },
+    { "baslik": "Ayar ve teslim", "aciklama": "İlk ayar bilgisayarla yapılır. Araç yolda farklı devirlerde denendikten sonra teslim edilir." }
   ],
   "istatistikler": [
-    { "deger": 24, "sonek": "", "etiket": "yıldır Şaşmaz'da", "kurulustanHesapla": true },
-    { "deger": 9500, "sonek": "+", "etiket": "LPG dönüşümü" },
-    { "deger": 30000, "sonek": "+", "etiket": "bakım ve ayar" },
-    { "deger": 2, "sonek": " yıl", "etiket": "montaj garantisi" }
+    { "deger": 24, "etiket": "Şaşmaz Oto Sanayi Sitesi'nde", "birim": "YIL", "sonek": " yıl", "kurulustanHesapla": true },
+    { "deger": 6, "etiket": "haftada açık", "birim": "GÜN", "sonek": " gün", "saatlerdenHesapla": true }
   ],
   "markalar": ["Renault", "Fiat", "Volkswagen", "Hyundai", "Toyota", "Dacia", "Opel", "Skoda", "Peugeot", "Ford"],
   "galeri": [
@@ -54,13 +97,11 @@
     { "src": "/img/sektor-lpg/lift.jpg", "alt": "Bakım alanında bekleyen araç" },
     { "src": "/img/sektor-lpg/atolye.jpg", "alt": "Atölye duvarında düzenli asılmış el aletleri" }
   ],
-  "puan": { "ortalama": 4.8, "adet": 187 },
   "yorumlar": [
-    { "ad": "Murat S.", "puan": 5, "metin": "Taksici olarak günde 300 km yapıyorum. Dönüşümden sonra yakıt masrafım gözle görülür düştü, araç da eskisi gibi çekiyor.", "arac": "2019 Egea" },
-    { "ad": "Gökhan E.", "puan": 5, "metin": "Direkt enjeksiyonlu olduğu için çoğu yer yapmam dedi. Burada hangi sistemin uygun olduğunu anlattılar, bir yıldır sorunsuz.", "arac": "2018 Golf 1.4 TSI" },
-    { "ad": "Zeynep A.", "puan": 5, "metin": "Ruhsat işini nasıl yapacağımı hiç bilmiyordum. Evrakları hazırladılar, nereye gideceğimi tek tek yazıp verdiler.", "arac": "2016 Clio" },
-    { "ad": "Ali R.", "puan": 4, "metin": "Rölantide tekliyordu, ayarını yapıp filtreleri değiştirdiler. İş bir saat sürdü, beklerken çay bile geldi.", "arac": "2014 Accent Blue" },
-    { "ad": "Burak Ç.", "puan": 5, "metin": "Tank muayenesinden önce kontrol ettirdim, bir bağlantı değişti ve muayeneden ilk seferde geçtim.", "arac": "2012 Corolla" }
-  ],
-  "garanti": "Montaj ve işçiliğe 2 yıl garanti; parçalarda üretici garantisi geçerlidir."
+    { "ad": "Murat S.", "puan": 5, "metin": "Taksiyle çalışıyorum, araç günde epey yol yapıyor. Dönüşümden sonra ayarını yolda da denediler, gazda da benzindeki gibi çekiyor.", "arac": "2019 Fiat Egea" },
+    { "ad": "Gökhan E.", "puan": 5, "metin": "Motor direkt enjeksiyonlu olduğu için birkaç yer yapmam dedi. Burada hangi sistemin uyduğunu anlattılar, bir yıldır kullanıyorum.", "arac": "2018 Volkswagen Golf 1.4 TSI" },
+    { "ad": "Zeynep A.", "puan": 5, "metin": "Ruhsat işini nasıl yapacağımı bilmiyordum. Hangi belgeyle nereye gideceğimi tek tek yazıp verdiler.", "arac": "2016 Renault Clio" },
+    { "ad": "Ali R.", "puan": 4, "metin": "Gazda rölantide tekliyordu. Filtreleri değiştirip ayarını yaptılar, iş bir saat sürdü.", "arac": "2014 Hyundai Accent Blue" },
+    { "ad": "Burak Ç.", "puan": 5, "metin": "Muayeneden önce tankı ve bağlantıları kontrol ettirdim. Çok valfin bir bağlantısını değiştirdiler.", "arac": "2012 Toyota Corolla" }
+  ]
 }
