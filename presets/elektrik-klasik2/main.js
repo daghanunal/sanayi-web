@@ -2,8 +2,8 @@ import '../../shared/base.css';
 import './style.css';
 import raw from '../../data/devre.json';
 import {
-  boot, initSmoothScroll, reducedMotion, gsap, ScrollTrigger, asset, GUNLER,
-  telHref, waHref, mapsHref, mapsEmbed, groupedHours, icons, esc,
+  boot, initSmoothScroll, reducedMotion, gsap, ScrollTrigger, asset,
+  telHref, waHref, mapsHref, mapsEmbed, saatListesi, gunDurumu, kisaAdres, acikGunSayisi, yilEki, icons, esc,
 } from '../../shared/core.js';
 
 // Klasik aile: WebGL yok. Kimlik: sigorta renk kodlu kablo demeti; her hizmet bir hat.
@@ -14,51 +14,15 @@ const $$ = (s, root = document) => [...root.querySelectorAll(s)];
 const root = document.documentElement;
 if (reducedMotion) root.classList.add('rm');
 
-// --- Künye yardımcıları --------------------------------------------------------
-const EK = { b: ['', 'de', 'de', 'te', 'te', 'te', 'da', 'de', 'de', 'da'], o: ['', 'da', 'de', 'da', 'ta', 'de'] };
-const saatEki = (t) => {
-  const [h, m] = t.split(':').map(Number);
-  const n = m || h;
-  return (n % 10 ? EK.b[n % 10] : EK.o[Math.floor(n / 10) % 10]) || 'da';
-};
-const saat = (s) => s.replace(/:/g, '.').replace(/\s*[-–]\s*/, '–');
-const dk = (t) => { const [h, m] = t.split(':').map(Number); return h * 60 + m; };
-function durum(saatler, now = new Date()) {
-  const g = now.getDay();
-  const bugun = saatler[g];
-  const simdi = now.getHours() * 60 + now.getMinutes();
-  if (bugun) {
-    const [ac, kapa] = bugun.split('-');
-    if (simdi >= dk(ac) && simdi < dk(kapa)) return { open: true, durum: 'Şu an açık', saat: `Bugün ${saat(bugun)}` };
-    if (simdi < dk(ac)) return { open: false, durum: 'Şu an kapalı', saat: `Bugün ${saat(bugun)}` };
-  }
-  for (let i = 1; i <= 7; i++) {
-    const s = saatler[(g + i) % 7];
-    if (!s) continue;
-    const ac = s.split('-')[0];
-    return { open: false, durum: bugun ? 'Şu an kapalı' : 'Bugün kapalı', saat: `${i === 1 ? 'Yarın' : GUNLER[(g + i) % 7]} ${saat(ac)}'${saatEki(ac)} açılır` };
-  }
-  return { open: false, durum: 'Kapalı', saat: '' };
-}
-const saatListesi = (s) => groupedHours(s).map(([g, h]) => [g.replace(' – ', '–'), h === 'Kapalı' ? h : saat(h)]);
-const kisaAdres = (a) => a.replace(/,\s*Etimesgut\s*\/\s*Ankara\s*$/i, '');
-function denEki(n) {
-  const s = String(n);
-  const son = { 1: "'den", 2: "'den", 3: "'ten", 4: "'ten", 5: "'ten", 6: "'dan", 7: "'den", 8: "'den", 9: "'dan" };
-  const onlar = { 1: "'dan", 2: "'den", 3: "'dan", 4: "'tan", 5: "'den", 6: "'tan", 7: "'ten", 8: "'den", 9: "'dan" };
-  if (s.at(-1) !== '0') return s + son[s.at(-1)];
-  if (s.at(-2) !== '0') return s + onlar[s.at(-2)];
-  return s + "'den";
-}
 $('meta[name="description"]')?.setAttribute('content', `${d.isletme.ad}: ${d.isletme.tanim}. ${d.iletisim.adres}. Telefon: ${d.iletisim.telefon}`);
 
 const ad = esc(d.isletme.ad);
 const tel = esc(d.iletisim.telefon);
 const yas = new Date().getFullYear() - d.isletme.kurulus;
-const acikGun = d.saatler.filter(Boolean).length;
+const acikGun = acikGunSayisi(d.saatler);
 const img = (p) => asset(p);
-const st = durum(d.saatler);
-const durumMetni = `${st.durum} · ${st.saat}`;
+const st = gunDurumu(d.saatler);
+const durumMetni = st.metin;
 
 // Bıçak sigorta renk kodu: amper → renk. Kablolar da bu renkleri taşır.
 const AMPER = {
@@ -101,7 +65,7 @@ $('#hero').innerHTML = `
       <p class="hero__what">${esc(d.isletme.tanim)}</p>
       <dl class="kunye">
         <div><dt>Adres</dt><dd>${esc(kisaAdres(d.iletisim.adres))}</dd></div>
-        <div><dt>Bugün</dt><dd class="state-line ${st.open ? 'is-open' : ''}"><i></i>${esc(st.durum)} · ${esc(st.saat.replace(/^Bugün /, ''))}</dd></div>
+        <div><dt>Bugün</dt><dd class="state-line ${st.open ? 'is-open' : ''}"><i></i>${esc(st.kunye)}</dd></div>
         <div><dt>Telefon</dt><dd><a href="${telHref(d)}">${tel}</a></dd></div>
       </dl>
       <div class="hero__cta">
@@ -120,7 +84,7 @@ $('#hizmetler').innerHTML = `
     <header class="head">
       <p class="kicker rv" aria-hidden="true"><i style="background:#e2261c"></i></p>
       <h2 class="h2 rv">Hizmetler</h2>
-      <p class="head__p rv">Süreler ortalamadır. Fiyat ve randevu için arayın.</p>
+      <p class="head__p rv">Süreler yaklaşıktır, araca göre değişebilir. Fiyat ve randevu için arayın.</p>
     </header>
     <ol class="lines">
       ${d.hizmetler.map((h, i) => `
@@ -144,7 +108,7 @@ $('#hakkinda').innerHTML = `
     <div class="olcu__text">
       <p class="kicker rv" aria-hidden="true"><i style="background:#1f5fd8"></i></p>
       <h2 class="h2 rv">Hakkında</h2>
-      <p class="olcu__lead rv">${denEki(d.isletme.kurulus)} beri Şaşmaz Oto Sanayi Sitesi'nde. ${esc(d.isletme.hakkinda)}</p>
+      <p class="olcu__lead rv">${ad} ${yilEki(d.isletme.kurulus)} beri Şaşmaz Oto Sanayi Sitesi'nde. ${esc(d.isletme.hakkinda)}</p>
       <dl class="facts rv">
         ${(d.bilgiler || []).map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join('')}
         ${d.markalar?.length ? `<div><dt>Sık gelen markalar</dt><dd>${d.markalar.map(esc).join(', ')}</dd></div>` : ''}
@@ -198,7 +162,7 @@ $('#yorumlar').innerHTML = `
   <div class="wrap yorum__head">
     <p class="kicker rv" aria-hidden="true"><i style="background:#d9a441"></i></p>
     <h2 class="h2 rv">Örnek yorumlar</h2>
-    <p class="head__p rv">Tasarım örneğidir; işletmenin gerçek yorumları buraya gelir.</p>
+    <p class="head__p rv">Buradaki yorumlar örnektir, yerlerine işletmenin gerçek yorumları konur.</p>
   </div>
   <div class="yorum__track" data-lenis-prevent-touch>
     <ul class="yorum__list">
@@ -231,7 +195,7 @@ $('#foot').innerHTML = `
   <div class="wrap foot__in">
     <div><p class="foot__brand">${ad}</p><p class="foot__what">${esc(d.isletme.tanim)}</p></div>
     <p>${esc(d.iletisim.adres)}<br><a href="${telHref(d)}">${tel}</a></p>
-    <p class="foot__small">© ${new Date().getFullYear()} ${ad}. Fotoğraflar: Pexels, temsilîdir. Yorumlar örnektir.</p>
+    <p class="foot__small">© ${new Date().getFullYear()} ${ad}. Pexels'ten alınan fotoğraflar temsilîdir. Yorumlar örnektir.</p>
   </div>`;
 
 // --- Harita: yaklaşınca yükle --------------------------------------------------------------

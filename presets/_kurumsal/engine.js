@@ -366,9 +366,9 @@ function kvkkMetni(d) {
   if (k?.paragraflar) return k.paragraflar.map((p) => `<p>${esc(p)}</p>`).join('');
   const ad = esc(d.isletme.unvan || d.isletme.ad);
   return `
-    <p>${ad} olarak, iletişim formu ya da WhatsApp üzerinden bize ilettiğiniz ad, telefon, e-posta ve mesaj bilgilerini yalnızca talebinize yanıt vermek ve size hizmet sunmak için işliyoruz.</p>
-    <p>Bu bilgiler 6698 sayılı Kişisel Verilerin Korunması Kanunu'na uygun olarak saklanır, yasal zorunluluklar dışında üçüncü kişilerle paylaşılmaz. Kanunun 11. maddesindeki haklarınızı kullanmak için bize ${esc(d.iletisim.telefon)} numarasından ya da adresimizden ulaşabilirsiniz.</p>
-    <p>Bu site reklam veya takip çerezi kullanmaz. Tarayıcınızda yalnızca çerez bildirimi ve yazı boyutu tercihinizi hatırlamak için küçük bir kayıt tutulur. Harita bölümü açıldığında Google Haritalar kendi çerezlerini kullanabilir.</p>`;
+    <p>${ad}, iletişim formu ya da WhatsApp üzerinden gönderdiğiniz ad, telefon, e-posta ve mesaj bilgilerini yalnızca talebinizi yanıtlamak için kullanır.</p>
+    <p>Bu bilgiler 6698 sayılı Kişisel Verilerin Korunması Kanunu'na uygun olarak saklanır ve yasal zorunluluk olmadıkça üçüncü kişilerle paylaşılmaz. Kanunun 11. maddesindeki haklarınız için ${esc(d.iletisim.telefon)} numarasından ya da işletmenin adresinden başvurabilirsiniz.</p>
+    <p>Bu sitede reklam ya da takip çerezi yoktur. Tarayıcınızda yalnızca çerez bildirimini ve yazı boyutu tercihinizi hatırlamak için küçük bir kayıt tutulur. Harita açılınca Google Haritalar kendi çerezlerini kullanabilir.</p>`;
 }
 
 // Çerez notu. Telefon sözleşmesi: alt çubukla üst üste binmez. Telefonda footer'ın başında akışta
@@ -380,7 +380,7 @@ function cerezBandi() {
   b.className = 'k-cerez';
   b.setAttribute('role', 'region');
   b.setAttribute('aria-label', 'Çerez bildirimi');
-  b.innerHTML = `<p>Bu site takip çerezi kullanmaz. Harita açıldığında Google çerez kullanabilir. <a href="#" data-kvkk>Ayrıntılar</a></p><button type="button" class="k-btn k-btn--kucuk">Tamam</button>`;
+  b.innerHTML = `<p>Bu sitede takip çerezi yoktur. Harita açılınca Google kendi çerezlerini kullanabilir. <a href="#" data-kvkk>Ayrıntılar</a></p><button type="button" class="k-btn k-btn--kucuk">Tamam</button>`;
   b.querySelector('button').addEventListener('click', () => {
     depo.koy('k-cerez', 'tamam');
     b.remove();

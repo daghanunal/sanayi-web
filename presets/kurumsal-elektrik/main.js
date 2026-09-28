@@ -15,7 +15,7 @@ kurumsal({
     yer: "Şaşmaz'da",
     heroGorsel: `${B}img/kurumsal-elektrik/hero.jpg`,
     heroAlt: 'Mavi tulumlu usta elinde arıza tespit tabletiyle kaputu açık aracın motoruna bakıyor',
-    altNot: 'Fotoğraflar temsilîdir (Pexels). 3D akü çizimi temsilîdir.',
+    altNot: "Pexels'ten alınan fotoğraflar ve 3D akü çizimi temsilîdir. Yorumlar örnektir.",
     logoAlt: 'Oto elektrik ve arıza tespiti',
     baslikEki: 'Oto elektrik ve arıza tespiti | Şaşmaz, Ankara',
     teklifEtiketi: 'İletişim',

@@ -1,53 +1,22 @@
 // Bölüm kataloğu. Her bölüm: { render(d, ctx, sorgu) → HTML | '', mount?(el, d, ctx, sorgu) }.
 // Veri yoksa bölüm boş döner ve sayfada görünmez; böylece aynı sayfa listesi her sektörde çalışır.
-import { esc, telHref, waHref, mapsHref, mapsEmbed, openStatus, groupedHours, icons, GUNLER } from '../../shared/core.js';
+import {
+  esc, telHref, waHref, mapsHref, mapsEmbed, openStatus, groupedHours, icons, GUNLER,
+  yilEki, saatListesi, gunDurumu, kisaAdres,
+} from '../../shared/core.js';
 
 const buYil = new Date().getFullYear();
 
-// 1996 → "1996'dan" (Türkçe ünlü uyumu, sayının okunuşundaki son kelimeye göre).
-export function yilEki(n) {
-  const birler = ['', "'den", "'den", "'ten", "'ten", "'ten", "'dan", "'den", "'den", "'dan"];
-  const onlar = ['', "'dan", "'den", "'dan", "'tan", "'den", "'tan", "'ten", "'den", "'dan"];
-  const s = n % 10 ? birler[n % 10] : n % 100 ? onlar[Math.floor(n / 10) % 10] : "'den";
-  return `${n}${s}`;
-}
+// yilEki çekirdeğe taşındı; varyantlar ('../_kurumsal/bolumler.js') buradan almaya devam eder.
+export { yilEki };
 
-// --- Künye yardımcıları (tema.kunye) ------------------------------------------------------
-// Saat biçimi "08.30–19.00"; ek, saatin okunuşuna göre: 08.30'da, 17.00'de, 19.00'da.
-const SAAT_EK = { b: ['', 'de', 'de', 'te', 'te', 'te', 'da', 'de', 'de', 'da'], o: ['', 'da', 'de', 'da', 'ta', 'de'] };
-const saatEki = (t) => {
-  const [h, m] = t.split(':').map(Number);
-  const n = m || h;
-  return (n % 10 ? SAAT_EK.b[n % 10] : SAAT_EK.o[Math.floor(n / 10) % 10]) || 'da';
-};
-export const saatBicim = (s) => String(s).replace(/:/g, '.').replace(/\s*[-–]\s*/, '–');
-const dakika = (t) => { const [h, m] = t.split(':').map(Number); return h * 60 + m; };
-// { acik, durum: 'Şu an açık' | 'Şu an kapalı' | 'Bugün kapalı', saat: 'Bugün 08.30–19.00' | 'Yarın 08.30'da açılır' }
-export function durumBilgisi(saatler, now = new Date()) {
-  const g = now.getDay();
-  const bugun = saatler[g];
-  const simdi = now.getHours() * 60 + now.getMinutes();
-  if (bugun) {
-    const [ac, kapa] = bugun.split('-');
-    if (simdi >= dakika(ac) && simdi < dakika(kapa)) return { acik: true, durum: 'Şu an açık', saat: `Bugün ${saatBicim(bugun)}` };
-    if (simdi < dakika(ac)) return { acik: false, durum: 'Şu an kapalı', saat: `Bugün ${saatBicim(bugun)}` };
-  }
-  for (let i = 1; i <= 7; i++) {
-    const s = saatler[(g + i) % 7];
-    if (!s) continue;
-    const ac = s.split('-')[0];
-    return { acik: false, durum: bugun ? 'Şu an kapalı' : 'Bugün kapalı', saat: `${i === 1 ? 'Yarın' : GUNLER[(g + i) % 7]} ${saatBicim(ac)}'${saatEki(ac)} açılır` };
-  }
-  return { acik: false, durum: 'Kapalı', saat: '' };
-}
-const kunyeSaatleri = (saatler) => groupedHours(saatler).map(([g, s]) => [g.replace(' – ', '–'), s === 'Kapalı' ? s : saatBicim(s)]);
-const kisaAdres = (a) => String(a || '').replace(/,\s*[^,]+\/\s*[^,]+$/, '');
+// --- Künye yardımcıları (tema.kunye): shared/core.js → saatListesi, gunDurumu, kisaAdres ---------
 // Künye modunda saatler yeni biçimde, değilse eski (varyant verisine dokunmadan geriye uyumlu).
-const saatSatirlari = (d, tema) => (tema?.kunye ? kunyeSaatleri(d.saatler) : groupedHours(d.saatler));
+const saatSatirlari = (d, tema) => (tema?.kunye ? saatListesi(d.saatler) : groupedHours(d.saatler));
 const durumSatiri = (d, tema) => {
   if (!tema?.kunye) { const st = openStatus(d.saatler); return { acik: st.open, metin: st.text }; }
-  const b = durumBilgisi(d.saatler);
-  return { acik: b.acik, metin: `${b.durum} · ${b.saat}` };
+  const b = gunDurumu(d.saatler);
+  return { acik: b.open, metin: b.metin };
 };
 
 const rota = (id, metin, cls = 'k-btn') => `<a class="${cls}" href="#/${id}" data-rota="${id}">${metin}</a>`;
@@ -89,7 +58,7 @@ export const BOLUMLER = {
       const h = k(d).hero || {};
       // Künye: işletmenin adı, işi (tek olgu), adresi, bugünkü saatleri; Ara / WhatsApp / Yol tarifi. Slogan yok.
       if (tema.kunye) {
-        const b = d.saatler ? durumBilgisi(d.saatler) : null;
+        const b = d.saatler ? gunDurumu(d.saatler) : null;
         return `
         <section class="k-hero k-hero--kunye" aria-label="Künye">
           <div class="k-kap k-hero__ic">
@@ -98,7 +67,7 @@ export const BOLUMLER = {
               <p class="k-lead k-hero__tanim">${esc(d.isletme.tanim || d.isletme.sektor)}</p>
               <dl class="k-kunye">
                 <div><dt>Adres</dt><dd>${esc(kisaAdres(d.iletisim.adres))}</dd></div>
-                ${b ? `<div><dt>Bugün</dt><dd><span class="k-durum ${b.acik ? 'is-acik' : ''}"><span></span>${esc(b.durum)} · ${esc(b.saat.replace(/^Bugün /, ''))}</span></dd></div>` : ''}
+                ${b ? `<div><dt>Bugün</dt><dd><span class="k-durum ${b.open ? 'is-acik' : ''}"><span></span>${esc(b.kunye)}</span></dd></div>` : ''}
                 <div><dt>Telefon</dt><dd><a href="${telHref(d)}">${esc(d.iletisim.telefon)}</a></dd></div>
               </dl>
               <div class="k-butonlar">
@@ -594,7 +563,7 @@ export const BOLUMLER = {
         if (eksik.length || !f.get('kvkk')) {
           hata.hidden = false;
           hata.textContent = eksik.length
-            ? `Göndermek için ${eksik.join(', ')} ${eksik.length > 1 ? 'alanlarını' : 'alanını'} doldurun${!f.get('kvkk') ? ' ve KVKK onayını işaretleyin' : ''}.`
+            ? `Göndermek için ${eksik.length > 1 ? `${eksik.slice(0, -1).join(', ')} ve ${eksik.at(-1)} alanlarını` : `${eksik[0]} alanını`} doldurun${!f.get('kvkk') ? ', KVKK onayını da işaretleyin' : ''}.`
             : 'Göndermek için KVKK onayını işaretleyin.';
           return;
         }
@@ -611,16 +580,16 @@ export const BOLUMLER = {
         ].filter((x, i, a) => x !== '' || a[i - 1] !== '').join('\n');
         if (kanal === 'wa') {
           window.open(waHref(d, metin), '_blank', 'noopener');
-          sonuc.textContent = 'WhatsApp açıldı. Mesajı gönderdiğinizde size dönüş yapacağız.';
+          sonuc.textContent = 'WhatsApp açıldı. Mesajınızı oradan gönderebilirsiniz.';
         } else if (kanal === 'eposta') {
           location.href = `mailto:${d.iletisim.eposta}?subject=${encodeURIComponent(`${f.get('konu')}: ${f.get('ad').trim()}`)}&body=${encodeURIComponent(metin)}`;
           sonuc.textContent = 'E-posta uygulamanız açıldı.';
         } else {
           try {
             await navigator.clipboard.writeText(metin);
-            sonuc.textContent = `Mesajınız kopyalandı. ${d.iletisim.telefon} numarasından bize ulaşabilirsiniz.`;
+            sonuc.textContent = `Mesajınız kopyalandı. ${d.iletisim.telefon} numarasını arayarak da ulaşabilirsiniz.`;
           } catch {
-            sonuc.textContent = `Mesajınız hazır. ${d.iletisim.telefon} numarasından bize ulaşabilirsiniz.`;
+            sonuc.textContent = `Mesajınız hazır. ${d.iletisim.telefon} numarasını arayarak da ulaşabilirsiniz.`;
           }
         }
         sonuc.hidden = false;

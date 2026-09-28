@@ -3,7 +3,7 @@ import './style.css';
 import raw from '../../data/devre.json';
 import {
   boot, initSmoothScroll, reducedMotion, gsap, ScrollTrigger, autoHideHeader,
-  telHref, waHref, mapsHref, mapsEmbed, groupedHours, icons, esc, GUNLER,
+  telHref, waHref, mapsHref, mapsEmbed, saatListesi, gunDurumu, kisaAdres, acikGunSayisi, yilEki, icons, esc,
 } from '../../shared/core.js';
 import {
   LAMBALAR, lambaHTML, kadranHTML, KADRAN_BASLANGIC, KADRAN_SUPURME,
@@ -14,44 +14,6 @@ const d = boot(raw);
 const $ = (s, root = document) => root.querySelector(s);
 const $$ = (s, root = document) => [...root.querySelectorAll(s)];
 
-// --- Künye yardımcıları --------------------------------------------------------
-// Saat biçimi "08.30–19.00"; ek, saatin okunuşuna göre: 08.30'da, 17.00'de, 19.00'da.
-const EK = { b: ['', 'de', 'de', 'te', 'te', 'te', 'da', 'de', 'de', 'da'], o: ['', 'da', 'de', 'da', 'ta', 'de'] };
-const saatEki = (t) => {
-  const [h, m] = t.split(':').map(Number);
-  const n = m || h;
-  return (n % 10 ? EK.b[n % 10] : EK.o[Math.floor(n / 10) % 10]) || 'da';
-};
-const saat = (s) => s.replace(/:/g, '.').replace(/\s*[-–]\s*/, '–');
-const dk = (t) => { const [h, m] = t.split(':').map(Number); return h * 60 + m; };
-function durum(saatler, now = new Date()) {
-  const g = now.getDay();
-  const bugun = saatler[g];
-  const simdi = now.getHours() * 60 + now.getMinutes();
-  if (bugun) {
-    const [ac, kapa] = bugun.split('-');
-    if (simdi >= dk(ac) && simdi < dk(kapa)) return { open: true, durum: 'Şu an açık', saat: `Bugün ${saat(bugun)}` };
-    if (simdi < dk(ac)) return { open: false, durum: 'Şu an kapalı', saat: `Bugün ${saat(bugun)}` };
-  }
-  for (let i = 1; i <= 7; i++) {
-    const s = saatler[(g + i) % 7];
-    if (!s) continue;
-    const ac = s.split('-')[0];
-    return { open: false, durum: bugun ? 'Şu an kapalı' : 'Bugün kapalı', saat: `${i === 1 ? 'Yarın' : GUNLER[(g + i) % 7]} ${saat(ac)}'${saatEki(ac)} açılır` };
-  }
-  return { open: false, durum: 'Kapalı', saat: '' };
-}
-const saatListesi = (s) => groupedHours(s).map(([g, h]) => [g.replace(' – ', '–'), h === 'Kapalı' ? h : saat(h)]);
-const kisaAdres = (a) => a.replace(/,\s*Etimesgut\s*\/\s*Ankara\s*$/i, '');
-// "2001'den", "1994'ten", "1990'dan": yılın okunuşuna göre ayrılma eki.
-function denEki(n) {
-  const s = String(n);
-  const son = { 1: "'den", 2: "'den", 3: "'ten", 4: "'ten", 5: "'ten", 6: "'dan", 7: "'den", 8: "'den", 9: "'dan" };
-  const onlar = { 1: "'dan", 2: "'den", 3: "'dan", 4: "'tan", 5: "'den", 6: "'tan", 7: "'ten", 8: "'den", 9: "'dan" };
-  if (s.at(-1) !== '0') return s + son[s.at(-1)];
-  if (s.at(-2) !== '0') return s + onlar[s.at(-2)];
-  return s + "'den";
-}
 
 // Meta açıklama sloganı değil künyeyi anlatsın.
 $('meta[name="description"]')?.setAttribute('content', `${d.isletme.ad}: ${d.isletme.tanim}. ${d.iletisim.adres}. Telefon: ${d.iletisim.telefon}`);
@@ -59,9 +21,9 @@ $('meta[name="description"]')?.setAttribute('content', `${d.isletme.ad}: ${d.isl
 const ad = esc(d.isletme.ad);
 const tel = esc(d.iletisim.telefon);
 const bolt = `<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M13.5 2 4 13.5h6.5L9 22l10-12.5h-6.6z"/></svg>`;
-const st = durum(d.saatler);
+const st = gunDurumu(d.saatler);
 const yas = new Date().getFullYear() - d.isletme.kurulus;
-const acikGun = d.saatler.filter(Boolean).length;
+const acikGun = acikGunSayisi(d.saatler);
 
 // --- Üst bar ---------------------------------------------------------------
 
@@ -107,7 +69,7 @@ $('#hizmetler').innerHTML = `
   <div class="wrap">
     <header class="sec__head">
       <h2 class="h2" data-power>Hizmetler</h2>
-      <p class="lead">Süreler ortalamadır. Fiyat ve randevu için arayın.</p>
+      <p class="lead">Süreler yaklaşıktır, araca göre değişebilir. Fiyat ve randevu için arayın.</p>
     </header>
     <div class="fusebox">
       <ol class="fusebox__grid">
@@ -124,8 +86,8 @@ $('#hizmetler').innerHTML = `
           <div class="slot__fuse" aria-hidden="true"><svg class="puller" viewBox="0 0 60 84"><path d="M18 4h24v10l-4 4v58a4 4 0 0 1-4 4h-8a4 4 0 0 1-4-4V18l-4-4z"/><path d="M24 30h12M24 38h12M24 46h12" /></svg></div>
           <div class="slot__text">
             <h3>Diğer elektrik işleri</h3>
-            <p>Cam motoru, merkezi kilit, park sensörü, geri görüş kamerası ve korna arızaları.</p>
-            <a class="slot__link" href="${waHref(d, `Merhaba ${d.isletme.ad}, aracımın elektriğiyle ilgili bilgi almak istiyorum.`)}" target="_blank" rel="noopener">${icons.whatsapp}<span>WhatsApp ile bilgi</span></a>
+            <p>Cam motoru, merkezi kilit, park sensörü, geri görüş kamerası ve korna arızalarına da bakılır.</p>
+            <a class="slot__link" href="${waHref(d, `Merhaba ${d.isletme.ad}, aracımdaki elektrik arızası için bilgi almak istiyorum.`)}" target="_blank" rel="noopener">${icons.whatsapp}<span>WhatsApp'tan bilgi alın</span></a>
           </div>
         </li>
       </ol>
@@ -136,15 +98,15 @@ $('#hizmetler').innerHTML = `
 
 const METRE_HANE = 3;
 const olcumler = [
-  { deger: yas, birim: 'YIL', etiket: "Şaşmaz Oto Sanayi Sitesi'nde" },
-  { deger: acikGun, birim: 'GÜN', etiket: 'haftada açık' },
+  { deger: yas, birim: 'YIL', etiket: "Şaşmaz Oto Sanayi Sitesi'nde", aria: `${yas} yıldır Şaşmaz Oto Sanayi Sitesi'nde` },
+  { deger: acikGun, birim: 'GÜN', etiket: 'haftada açık', aria: `Haftada ${acikGun} gün açık` },
 ];
 $('#hakkinda').innerHTML = `
   <div class="wrap">
     <div class="about__grid">
       <div class="about__text">
         <h2 class="h2" data-power>Hakkında</h2>
-        <p class="lead lead--ink">${denEki(d.isletme.kurulus)} beri Şaşmaz Oto Sanayi Sitesi'nde. ${esc(d.isletme.hakkinda)}</p>
+        <p class="lead lead--ink">${ad} ${yilEki(d.isletme.kurulus)} beri Şaşmaz Oto Sanayi Sitesi'nde. ${esc(d.isletme.hakkinda)}</p>
         <dl class="facts">
           ${(d.bilgiler || []).map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join('')}
           ${d.markalar?.length ? `<div><dt>Sık gelen markalar</dt><dd>${d.markalar.map(esc).join(', ')}</dd></div>` : ''}
@@ -159,7 +121,7 @@ $('#hakkinda').innerHTML = `
         <li class="meter">
           <div class="meter__body">
             <div class="meter__lcd">
-              <div class="meter__digits" data-seg="${s.deger}" role="img" aria-label="${s.deger} ${s.birim === 'YIL' ? 'yıldır' : 'gün'} ${esc(s.etiket)}">${segHTML(METRE_HANE)}</div>
+              <div class="meter__digits" data-seg="${s.deger}" role="img" aria-label="${esc(s.aria)}">${segHTML(METRE_HANE)}</div>
               <span class="meter__unit">${s.birim}</span>
             </div>
             <div class="meter__knob" aria-hidden="true"><i></i></div>
@@ -196,7 +158,7 @@ $('#yorumlar').innerHTML = `
   <div class="wrap">
     <header class="sec__head">
       <h2 class="h2" data-power>Örnek yorumlar</h2>
-      <p class="lead">Tasarım örneğidir; işletmenin gerçek yorumları buraya gelir.</p>
+      <p class="lead">Buradaki yorumlar örnektir, yerlerine işletmenin gerçek yorumları konur.</p>
     </header>
     <ul class="cards" data-lenis-prevent-touch>
       ${d.yorumlar.map((y) => `
@@ -227,7 +189,7 @@ $('#footer').innerHTML = `
     <p>${esc(d.isletme.tanim)}</p>
     <p>${esc(d.iletisim.adres)}</p>
     <p><a href="${telHref(d)}">${tel}</a></p>
-    <p class="footer__small">© ${new Date().getFullYear()} ${ad}. Fotoğraflar: Pexels, temsilîdir. Yorumlar örnektir.</p>
+    <p class="footer__small">© ${new Date().getFullYear()} ${ad}. Pexels'ten alınan fotoğraflar temsilîdir. Yorumlar örnektir.</p>
   </div>`;
 
 // Harita yaklaşınca yüklenir.
@@ -241,11 +203,11 @@ new IntersectionObserver((entries, io) => {
 // --- Açık/kapalı durumu ----------------------------------------------------
 
 function refreshStatus() {
-  const s = durum(d.saatler);
+  const s = gunDurumu(d.saatler);
   $$('[data-status]').forEach((el) => {
     el.classList.toggle('is-open', s.open);
     const long = el.querySelector('[data-long]');
-    if (long) long.textContent = `${s.durum} · ${'kunye' in el.dataset ? s.saat.replace(/^Bugün /, '') : s.saat}`;
+    if (long) long.textContent = 'kunye' in el.dataset ? s.kunye : s.metin;
     const short = el.querySelector('[data-short]');
     if (short) short.textContent = s.open ? 'Açık' : 'Kapalı';
   });

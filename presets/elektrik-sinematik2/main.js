@@ -2,8 +2,8 @@ import '../../shared/base.css';
 import './style.css';
 import raw from '../../data/devre.json';
 import {
-  boot, initSmoothScroll, reducedMotion, gsap, ScrollTrigger, esc, GUNLER,
-  telHref, waHref, mapsHref, mapsEmbed, groupedHours, icons, autoHideHeader,
+  boot, initSmoothScroll, reducedMotion, gsap, ScrollTrigger, esc,
+  telHref, waHref, mapsHref, mapsEmbed, saatListesi, gunDurumu, kisaAdres, acikGunSayisi, yilEki, icons, autoHideHeader,
 } from '../../shared/core.js';
 import { createCoil } from './scene.js';
 
@@ -18,50 +18,15 @@ const phone = mq.matches;
 const low = phone || (navigator.hardwareConcurrency || 8) <= 4;
 mq.addEventListener('change', () => location.reload());
 
-// --- Künye yardımcıları --------------------------------------------------------
-const EK = { b: ['', 'de', 'de', 'te', 'te', 'te', 'da', 'de', 'de', 'da'], o: ['', 'da', 'de', 'da', 'ta', 'de'] };
-const saatEki = (t) => {
-  const [h, m] = t.split(':').map(Number);
-  const n = m || h;
-  return (n % 10 ? EK.b[n % 10] : EK.o[Math.floor(n / 10) % 10]) || 'da';
-};
-const saat = (s) => s.replace(/:/g, '.').replace(/\s*[-–]\s*/, '–');
-const dk = (t) => { const [h, m] = t.split(':').map(Number); return h * 60 + m; };
-function durum(saatler, now = new Date()) {
-  const g = now.getDay();
-  const bugun = saatler[g];
-  const simdi = now.getHours() * 60 + now.getMinutes();
-  if (bugun) {
-    const [ac, kapa] = bugun.split('-');
-    if (simdi >= dk(ac) && simdi < dk(kapa)) return { open: true, durum: 'Şu an açık', saat: `Bugün ${saat(bugun)}` };
-    if (simdi < dk(ac)) return { open: false, durum: 'Şu an kapalı', saat: `Bugün ${saat(bugun)}` };
-  }
-  for (let i = 1; i <= 7; i++) {
-    const s = saatler[(g + i) % 7];
-    if (!s) continue;
-    const ac = s.split('-')[0];
-    return { open: false, durum: bugun ? 'Şu an kapalı' : 'Bugün kapalı', saat: `${i === 1 ? 'Yarın' : GUNLER[(g + i) % 7]} ${saat(ac)}'${saatEki(ac)} açılır` };
-  }
-  return { open: false, durum: 'Kapalı', saat: '' };
-}
-const saatListesi = (s) => groupedHours(s).map(([g, h]) => [g.replace(' – ', '–'), h === 'Kapalı' ? h : saat(h)]);
-const kisaAdres = (a) => a.replace(/,\s*Etimesgut\s*\/\s*Ankara\s*$/i, '');
-function beri(y) {
-  const birler = ["'den", "'den", "'den", "'ten", "'ten", "'ten", "'dan", "'den", "'den", "'dan"];
-  const onlar = [null, "'dan", "'den", "'dan", "'tan", "'den", "'tan", "'ten", "'den", "'dan"];
-  if (y % 10) return y + birler[y % 10];
-  if (y % 100) return y + onlar[(y % 100) / 10];
-  return y + "'den";
-}
 $('meta[name="description"]')?.setAttribute('content', `${d.isletme.ad}: ${d.isletme.tanim}. ${d.iletisim.adres}. Telefon: ${d.iletisim.telefon}`);
 
 const ad = esc(d.isletme.ad);
 const tel = esc(d.iletisim.telefon);
 const yil = new Date().getFullYear();
 const yas = yil - d.isletme.kurulus;
-const acikGun = d.saatler.filter(Boolean).length;
-const st = durum(d.saatler);
-const durumMetni = `${st.durum} · ${st.saat}`;
+const acikGun = acikGunSayisi(d.saatler);
+const st = gunDurumu(d.saatler);
+const durumMetni = st.metin;
 const pad = (n) => String(n).padStart(2, '0');
 
 // Sarım işareti (logo): yatay tel sıraları
@@ -80,7 +45,7 @@ $('#basla-copy').innerHTML = `
   <p class="hero__what">${esc(d.isletme.tanim)}</p>
   <dl class="kunye">
     <div><dt>Adres</dt><dd>${esc(kisaAdres(d.iletisim.adres))}</dd></div>
-    <div><dt>Bugün</dt><dd class="live ${st.open ? 'is-open' : ''}"><i></i>${esc(st.durum)} · ${esc(st.saat.replace(/^Bugün /, ''))}</dd></div>
+    <div><dt>Bugün</dt><dd class="live ${st.open ? 'is-open' : ''}"><i></i>${esc(st.kunye)}</dd></div>
     <div><dt>Telefon</dt><dd><a href="${telHref(d)}">${tel}</a></dd></div>
   </dl>
   <div class="hero__cta">
@@ -93,7 +58,7 @@ $('#hizmetler').innerHTML = `
   <div class="wrap services__wrap">
     <div class="services__head">
       <h2 class="h2" id="services-title">Hizmetler</h2>
-      <p class="muted">Süreler ortalamadır. Fiyat ve randevu için arayın.</p>
+      <p class="muted">Süreler yaklaşıktır, araca göre değişebilir. Fiyat ve randevu için arayın.</p>
     </div>
     <ol class="svc">
       ${d.hizmetler.map((h, i) => `
@@ -114,7 +79,7 @@ $('#hakkinda').innerHTML = `
   <div class="wrap about__grid">
     <div class="about__text">
       <h2 class="h2" id="about-title">Hakkında</h2>
-      <p class="lead">${esc(beri(d.isletme.kurulus))} beri Şaşmaz Oto Sanayi Sitesi'nde. ${esc(d.isletme.hakkinda)}</p>
+      <p class="lead">${ad} ${esc(yilEki(d.isletme.kurulus))} beri Şaşmaz Oto Sanayi Sitesi'nde. ${esc(d.isletme.hakkinda)}</p>
       <dl class="facts">
         ${(d.bilgiler || []).map(([k, v]) => `<div><dt class="mono">${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join('')}
         ${d.markalar?.length ? `<div><dt class="mono">Sık gelen markalar</dt><dd>${d.markalar.map(esc).join(', ')}</dd></div>` : ''}
@@ -151,7 +116,7 @@ const stars = (n) => Array.from({ length: 5 }, (_, i) => `<span class="${i < Mat
 $('#yorumlar').innerHTML = `
   <div class="wrap reviews__head">
     <h2 class="h2" id="reviews-title">Örnek yorumlar</h2>
-    <p class="muted">Tasarım örneğidir; işletmenin gerçek yorumları buraya gelir.</p>
+    <p class="muted">Buradaki yorumlar örnektir, yerlerine işletmenin gerçek yorumları konur.</p>
   </div>
   <div class="rv" data-lenis-prevent-wheel tabindex="0" aria-label="Örnek yorumlar, yana kaydırın">
     ${d.yorumlar.map((y) => `
@@ -179,7 +144,7 @@ $('#foot').innerHTML = `
     <p>${esc(d.isletme.tanim)}</p>
     <p>${esc(d.iletisim.adres)}</p>
     <p><a href="${telHref(d)}">${tel}</a></p>
-    <p class="mono foot__small">© ${yil} ${ad} · Fotoğraflar: Pexels, temsilîdir · 3D görsel temsilîdir · Yorumlar örnektir</p>
+    <p class="mono foot__small">© ${yil} ${ad} · Pexels'ten alınan fotoğraflar ve 3D görsel temsilîdir · Yorumlar örnektir</p>
   </div>`;
 
 // --- Harita: yaklaşınca yüklenir ------------------------------------------------------------

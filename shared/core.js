@@ -1,5 +1,16 @@
 // Ortak çekirdek: veri yükleme, akıcı scroll, iletişim linkleri, açık/kapalı durumu,
 // mobil aksiyon çubuğu ve SEO meta. Her preset bunu kullanır; görünümü preset belirler.
+//
+// Künye yardımcıları (içerik brief'i; presetler kendi kopyasını yazmaz):
+//   saatBicim("08:30-19:00")  → "08.30–19.00"
+//   saatListesi(d.saatler)    → [["Pazartesi–Cuma", "08.30–19.00"], …, ["Pazar", "Kapalı"]]
+//   gunDurumu(d.saatler)      → { open, durum, saat, metin, kunye }
+//                               metin: "Şu an açık · Bugün 08.30–19.00" / "Bugün kapalı · Yarın 08.30'da açılır"
+//                               kunye: aynısı "Bugün " öneki olmadan (künyede "Bugün" etiketi zaten var)
+//   kisaAdres(d.iletisim.adres) → sondaki "İlçe/İl" atılır: "Şaşmaz Oto Sanayi Sitesi, 4. Cadde No: 38"
+//   acikGunSayisi(d.saatler)  → 6
+//   yilEki(2001)              → "2001'den"   (`${yilEki(kurulus)} beri`)
+//   saatEki("17:00")          → "'de"        (openStatus da bunu kullanır)
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Lenis from 'lenis';
@@ -88,20 +99,28 @@ const toMin = (hhmm) => {
   return h * 60 + m;
 };
 
-// Saate bulunma eki: okunuşun son sözcüğüne göre ünlü uyumu ve sertleşme ("17:00'de", "08:30'da", "15:45'te").
+// Sayıya ek: okunuşun son sözcüğüne göre ünlü uyumu ve sertleşme.
+// bulunma: "17:00'de", "08:30'da", "15:45'te"; ayrılma: "2001'den", "1996'dan", "1994'ten".
 const SAYI_SON = ['sıfır', 'bir', 'iki', 'üç', 'dört', 'beş', 'altı', 'yedi', 'sekiz', 'dokuz'];
-const ONLUK = ['', 'on', 'yirmi', 'otuz', 'kırk', 'elli'];
+const ONLUK = ['', 'on', 'yirmi', 'otuz', 'kırk', 'elli', 'altmış', 'yetmiş', 'seksen', 'doksan'];
 function sonSozcuk(n) {
-  return n % 10 ? SAYI_SON[n % 10] : n ? ONLUK[Math.floor(n / 10)] : 'sıfır';
+  if (n % 10) return SAYI_SON[n % 10];
+  if (n % 100) return ONLUK[Math.floor(n / 10) % 10];
+  if (n % 1000) return 'yüz';
+  return n ? 'bin' : 'sıfır';
 }
-export function saatEki(hhmm) {
-  const [h, m] = hhmm.split(':').map(Number);
-  const w = m ? sonSozcuk(m) : sonSozcuk(h === 0 ? 0 : h);
+function sayiEki(w, ayrilma) {
   const unlu = [...w].reverse().find((c) => 'aeıioöuü'.includes(c));
   const ince = 'eiöü'.includes(unlu);
   const sert = /[çfhkpsşt]$/.test(w);
-  return `'${sert ? 't' : 'd'}${ince ? 'e' : 'a'}`;
+  return `'${sert ? 't' : 'd'}${ince ? 'e' : 'a'}${ayrilma ? 'n' : ''}`;
 }
+export function saatEki(hhmm) {
+  const [h, m] = hhmm.split(':').map(Number);
+  return sayiEki(sonSozcuk(m || h), false);
+}
+// 2001 → "2001'den" (sayıyla birlikte döner: `${yilEki(d.isletme.kurulus)} beri`).
+export const yilEki = (n) => `${n}${sayiEki(sonSozcuk(Number(n)), true)}`;
 
 // saatler: 7 elemanlı dizi, 0 = Pazar. Her eleman "08:30-19:00" ya da null (kapalı).
 export function openStatus(saatler, now = new Date()) {
@@ -138,6 +157,51 @@ export function groupedHours(saatler) {
     value ? value.replace('-', ' – ') : 'Kapalı',
   ]);
 }
+
+// --- Künye (içerik brief'i: .shots/ICERIK-BRIEF.md) ---------------------------------------
+// Saat biçimi "08.30–19.00", ek okunuşa göre (08.30'da, 17.00'de). openStatus/groupedHours eski
+// biçimi (08:30 – 19:00) kullanan presetler için aynen kalır.
+
+// "08:30-19:00" → "08.30–19.00"; tek saat de olur: "08:30" → "08.30".
+export const saatBicim = (s) => String(s).replace(/:/g, '.').replace(/\s*[-–]\s*/, '–');
+
+// groupedHours'un künye biçimi: [["Pazartesi–Cuma", "08.30–19.00"], ["Pazar", "Kapalı"]]
+export const saatListesi = (saatler) =>
+  groupedHours(saatler).map(([g, s]) => [g.replace(' – ', '–'), s === 'Kapalı' ? s : saatBicim(s)]);
+
+// Bugünkü durum, künye satırı için iki parça:
+//   { open, durum: 'Şu an açık' | 'Şu an kapalı' | 'Bugün kapalı' | 'Kapalı',
+//     saat: 'Bugün 08.30–19.00' | "Yarın 08.30'da açılır" | "Pazartesi 08.30'da açılır" | '',
+//     metin: 'Şu an açık · Bugün 08.30–19.00'   (saatler ve iletişim bölümü),
+//     kunye: 'Şu an açık · 08.30–19.00' }        (künyede "Bugün" etiketinin yanı)
+export function gunDurumu(saatler, now = new Date()) {
+  const g = now.getDay();
+  const bugun = saatler[g];
+  const simdi = now.getHours() * 60 + now.getMinutes();
+  const sonuc = (open, durum, saat) => ({
+    open, durum, saat,
+    metin: saat ? `${durum} · ${saat}` : durum,
+    kunye: saat ? `${durum} · ${saat.replace(/^Bugün /, '')}` : durum,
+  });
+  if (bugun) {
+    const [ac, kapa] = bugun.split('-');
+    if (simdi >= toMin(ac) && simdi < toMin(kapa)) return sonuc(true, 'Şu an açık', `Bugün ${saatBicim(bugun)}`);
+    if (simdi < toMin(ac)) return sonuc(false, 'Şu an kapalı', `Bugün ${saatBicim(bugun)}`);
+  }
+  for (let i = 1; i <= 7; i++) {
+    const s = saatler[(g + i) % 7];
+    if (!s) continue;
+    const ac = s.split('-')[0];
+    return sonuc(false, bugun ? 'Şu an kapalı' : 'Bugün kapalı', `${i === 1 ? 'Yarın' : GUNLER[(g + i) % 7]} ${saatBicim(ac)}${saatEki(ac)} açılır`);
+  }
+  return sonuc(false, 'Kapalı', '');
+}
+
+// "Şaşmaz Oto Sanayi Sitesi, 4. Cadde No: 38, Etimesgut/Ankara" → "Şaşmaz Oto Sanayi Sitesi, 4. Cadde No: 38"
+export const kisaAdres = (a) => String(a || '').replace(/,\s*[^,]+\/\s*[^,]+$/, '');
+
+// Haftada açık gün sayısı (rakam blokları yalnız veriden türeyen olguları gösterir).
+export const acikGunSayisi = (saatler) => (saatler || []).filter(Boolean).length;
 
 // --- İkonlar -------------------------------------------------------------
 

@@ -1,8 +1,7 @@
 // Sektör modülü: far ayar perdesi. Kısa farın kesme çizgisi 10 metredeki perdeye düşer; eğim kaydırılınca
 // çizginin perdedeki yüksekliği, ışığın yere değdiği mesafe ve karşıdan gelen sürücünün gözü canlı hesaplanır.
 // Ayrıca ana sayfada çalışma saatleri ve konum şeridi.
-import { esc, waHref, telHref, mapsHref, groupedHours, icons, gsap, ScrollTrigger, reducedMotion } from '../../shared/core.js';
-import { durumBilgisi, saatBicim } from '../_kurumsal/bolumler.js';
+import { esc, waHref, telHref, mapsHref, saatListesi, gunDurumu, icons, gsap, ScrollTrigger, reducedMotion } from '../../shared/core.js';
 
 const FAR_YUKSEKLIK = 0.65; // m, binek araçta far merkezinin yerden yüksekliği (yaklaşık)
 const OLCEK = 30; // perdede 30 px = 10 cm
@@ -15,9 +14,9 @@ const LAMBALAR = {
 };
 
 function durum(e) {
-  if (e < 0.5) return { k: 'kirmizi', baslik: 'Göz alıyor', metin: 'Kesme çizgisi karşıdan gelen sürücünün göz hizasına çıkar; selektör yapılmasının sebebi budur.' };
+  if (e < 0.5) return { k: 'kirmizi', baslik: 'Göz alıyor', metin: 'Kesme çizgisi karşıdan gelen sürücünün göz hizasına çıkar. Karşıdan gelenlerin selektör yapması bundandır.' };
   if (e < 1) return { k: 'sari', baslik: 'Biraz yüksek', metin: 'Yol iyi aydınlanır ama araç yüklüyken ya da tümsekte ışık karşıdan gelenin gözüne girer.' };
-  if (e <= 1.5) return { k: 'yesil', baslik: 'Doğru ayar', metin: 'Çoğu binek araçta kesme çizgisi 10 metrede 10 ile 15 cm aşağı düşer. Yol aydınlanır, karşıdan gelen sürücünün gözü alınmaz.' };
+  if (e <= 1.5) return { k: 'yesil', baslik: 'Doğru ayar', metin: 'Çoğu binek araçta kesme çizgisi 10 metrede 10 ile 15 cm aşağı düşer. Yol aydınlanır, karşıdan gelen sürücünün gözünü almaz.' };
   if (e <= 2.2) return { k: 'sari', baslik: 'Biraz düşük', metin: 'Kimsenin gözünü almaz ama yol kısa aydınlanır; gece virajlar geç görünür.' };
   return { k: 'kirmizi', baslik: 'Çok düşük', metin: 'Işık tamponun önüne düşer. Sebep çoğunlukla ayar motoru ya da kırık ayar vidasıdır.' };
 }
@@ -41,7 +40,7 @@ export const farPerdesi = {
           <div class="fp__bas">
             <p class="fp__etiket"><span></span>Far ayar perdesi · 10 metre</p>
             <h2 class="k-h2" id="fp-baslik" data-bol>Far ayarı</h2>
-            <p class="k-lead">Kısa farın üst sınırı düz bir çizgidir, sağ tarafta 15 derece yukarı kıvrılır. Çizginin perdedeki yüksekliği, yolun ve karşıdan gelen sürücünün ne kadar aydınlandığını belirler.</p>
+            <p class="k-lead">Kısa farın ışığı üstte düz bir çizgiyle kesilir, bu çizgi sağ tarafta 15 derece yukarı kalkar. Çizgi perdede ne kadar yüksekse yol o kadar uzun aydınlanır, karşıdan gelen sürücü de o kadar çok ışık alır.</p>
           </div>
           <div class="fp__ic">
             <figure class="fp__perde" aria-hidden="true">
@@ -96,7 +95,7 @@ export const farPerdesi = {
                 <button type="button" class="k-btn fp__ayarla">Doğru ayarı göster</button>
                 <a class="k-btn k-btn--ikincil" href="${waHref(d, `Merhaba ${d.isletme.ad}, far ayarı için ne zaman gelebilirim?\nAraç: `)}" target="_blank" rel="noopener">${icons.whatsapp}<span>Far randevusu</span></a>
               </div>
-              <p class="fp__not">Hesap ${virgul(FAR_YUKSEKLIK, 2)} m far yüksekliğine göre yaklaşıktır. Kesin ayar atölyede perdeyle yapılır.</p>
+              <p class="fp__not">Hesap yaklaşıktır, far yüksekliği ${virgul(FAR_YUKSEKLIK, 2)} m alınmıştır. Asıl ayar atölyede perdeyle yapılır.</p>
             </div>
           </div>
         </div>
@@ -199,13 +198,13 @@ export const farPerdesi = {
 export const bugun = {
   render(d) {
     if (!d.saatler) return '';
-    const st = durumBilgisi(d.saatler);
+    const st = gunDurumu(d.saatler);
     return `
       <section class="k-bolum bg" aria-labelledby="bg-baslik">
         <div class="k-kap bg__ic">
           <div class="bg__sol">
             <h2 class="k-h2" id="bg-baslik" data-bol>Çalışma saatleri ve konum</h2>
-            <p class="bg__durum ${st.acik ? 'is-acik' : ''}"><span></span>${esc(st.durum)} · ${esc(st.saat)}</p>
+            <p class="bg__durum ${st.open ? 'is-acik' : ''}"><span></span>${esc(st.metin)}</p>
             <p class="bg__adres">${esc(d.iletisim.adres)}</p>
             <div class="k-butonlar">
               <a class="k-btn" href="${mapsHref(d)}" target="_blank" rel="noopener">${icons.pin}<span>Yol tarifi</span></a>
@@ -213,7 +212,7 @@ export const bugun = {
             </div>
           </div>
           <dl class="bg__saat" data-sira>
-            ${groupedHours(d.saatler).map(([g, s]) => `<div><dt>${esc(g.replace(' – ', '–'))}</dt><dd>${esc(s === 'Kapalı' ? s : saatBicim(s))}</dd></div>`).join('')}
+            ${saatListesi(d.saatler).map(([g, s]) => `<div><dt>${esc(g)}</dt><dd>${esc(s)}</dd></div>`).join('')}
           </dl>
         </div>
       </section>`;
