@@ -2,11 +2,17 @@
   "preset": "sektor-sanziman",
   "isletme": {
     "ad": "Vites Otomatik Şanzıman",
-    "sektor": "Otomatik Şanzıman Tamiri",
-    "slogan": "Vites vuruyorsa, sebebini buluruz.",
+    "sektor": "Şanzıman Tamiri",
+    "tanim": "Otomatik, DSG, CVT ve manuel şanzıman tamiri",
     "kurulus": 2007,
-    "hakkinda": "2007'den beri Şaşmaz'da yalnızca otomatik şanzımanla uğraşıyoruz: klasik tork konvertörlü şanzımanlar, DSG ve çift kavramalı kutular, CVT'ler. Şanzımanı indirmeden önce arıza kayıtlarını okur, yağı kontrol eder, aracı sizinle birlikte yolda deneriz. Her şanzımanın değiştirilmesi gerekmez; çoğu zaman bir valf gövdesi, bir solenoid ya da doğru yapılmış bir yağ değişimi yeter."
+    "hakkinda": "Tork konvertörlü otomatik, DSG ve çift kavramalı, CVT ve manuel şanzımanların arızalarına bakılır. Revizyonun yanı sıra mekatronik onarımı, şanzıman yağı değişimi ve beyin adaptasyonu da yapılır. Şanzıman indirilmeden önce arıza kayıtları okunur ve araç yolda denenir."
   },
+  "bilgiler": [
+    ["Şanzıman tipleri", "Tork konvertörlü otomatik, DSG ve çift kavramalı (Powershift, EDC), CVT, manuel"],
+    ["Araçlar", "Benzinli, dizel ve hibrit binek araçlar, hafif ticari araçlar"],
+    ["Cihazlar", "Arıza tespit cihazı, basınç ölçüm seti, şanzıman yağı değişim cihazı, şanzıman krikosu"],
+    ["Randevu", "Arıza tespiti ve yağ değişimi için randevu gerekmez. Revizyon ve mekatronik onarımı randevuyla yapılır."]
+  ],
   "iletisim": {
     "telefon": "0532 555 27 07",
     "whatsapp": "905325552707",
@@ -15,32 +21,75 @@
   },
   "saatler": [null, "08:30-18:30", "08:30-18:30", "08:30-18:30", "08:30-18:30", "08:30-18:30", "09:00-15:00"],
   "hizmetler": [
-    { "baslik": "Otomatik şanzıman revizyonu", "aciklama": "Şanzıman indirilir, tezgâhta sökülür; balata, keçe, conta ve aşınan parçalar yenilenir. Toplanan kutu araç üzerinde adaptasyonu yapılarak teslim edilir.", "sure": "3-5 gün" },
-    { "baslik": "DSG ve çift kavrama", "aciklama": "Kuru ve ıslak tip DSG'lerde kavrama seti, çatal ve rulman değişimi; kalkışta titreme ve vites geçişinde vuruntu sorunları.", "sure": "1-3 gün" },
-    { "baslik": "CVT şanzıman tamiri", "aciklama": "Kayış ve kasnak kontrolü, basınç ölçümü, uğultu ve çekiş kaybı arızaları. CVT'ye kendi özel yağı kullanılır.", "sure": "2-4 gün" },
-    { "baslik": "Şanzıman yağı değişimi", "aciklama": "Üreticinin öngördüğü yağla, doğru sıcaklıkta seviye ayarı yapılarak değişim. Gerekirse filtre ve karter contası da yenilenir.", "sure": "1-2 saat" },
-    { "baslik": "Mekatronik tamiri", "aciklama": "Mekatronik ünitede basınç sensörü, solenoid ve valf gövdesi arızaları. Ünite değiştirilmeden önce onarılabilir mi diye bakılır.", "sure": "1-2 gün" },
-    { "baslik": "Beyin programlama ve adaptasyon", "aciklama": "Şanzıman beyni yazılım güncelleme, öğrenme değerlerinin sıfırlanması ve parça değişiminden sonra adaptasyon sürüşü.", "sure": "Aynı gün" },
-    { "baslik": "Tork konvertörü", "aciklama": "Kilitleme kavraması, titreşim ve hararet şikâyetlerinde tork konvertörü kontrolü, onarımı ya da değişimi.", "sure": "2-3 gün" },
-    { "baslik": "Arıza tespiti ve test sürüşü", "aciklama": "Arıza kayıtları okunur, canlı veriler izlenir, yağın rengi ve kokusu kontrol edilir. Ne bulduğumuzu size gösteririz.", "sure": "30-60 dk" }
+    {
+      "baslik": "Arıza tespiti ve yol testi",
+      "kisa": "Hata kaydı, canlı veri ve yol testi",
+      "aciklama": "Arıza kayıtları ve canlı veriler cihazla okunur, yağın rengine ve kokusuna bakılır. Araç, sahibiyle birlikte yolda denenir.",
+      "sure": "30–60 dk"
+    },
+    {
+      "baslik": "Otomatik şanzıman revizyonu",
+      "kisa": "Balata, keçe ve conta yenileme",
+      "aciklama": "Şanzıman indirilip tezgâhta sökülür; balata, keçe, conta ve aşınan parçalar yenilenir. Toplanan şanzımanın adaptasyonu araç üzerinde yapılır.",
+      "sure": "3–5 gün"
+    },
+    {
+      "baslik": "DSG ve çift kavrama",
+      "kisa": "Kavrama seti, çatal ve rulman",
+      "aciklama": "Kuru ve ıslak tip DSG'lerde kavrama seti, çatal ve baskı rulmanı değiştirilir. Kalkışta titreme ve vites geçişinde vuruntu şikâyetlerine bakılır.",
+      "sure": "1–3 gün"
+    },
+    {
+      "baslik": "CVT şanzıman tamiri",
+      "kisa": "Kayış, kasnak ve basınç ölçümü",
+      "aciklama": "Kayış ve kasnaklar kontrol edilip yağ basıncı ölçülür. Uğultu ve çekiş kaybı arızaları giderilir, CVT'ye yalnız kendi yağı konur.",
+      "sure": "2–4 gün"
+    },
+    {
+      "baslik": "Manuel şanzıman ve debriyaj",
+      "kisa": "Debriyaj seti, senkromeç ve rulman",
+      "aciklama": "Debriyaj seti ve çift kütleli volan değiştirilir. Vitese zor geçme ve ses şikâyetlerinde şanzıman açılıp senkromeçler ve rulmanlar yenilenir.",
+      "sure": "1–2 gün"
+    },
+    {
+      "baslik": "Mekatronik onarımı",
+      "kisa": "Solenoid, sensör ve valf gövdesi",
+      "aciklama": "Mekatronik ünitedeki basınç sensörü, solenoid ve valf gövdesi arızaları onarılır. Ünite ancak onarılamıyorsa değiştirilir.",
+      "sure": "1–2 gün"
+    },
+    {
+      "baslik": "Tork konvertörü",
+      "kisa": "Kilitleme kavraması ve titreşim",
+      "aciklama": "Yolda titreme ve hararet şikâyetlerinde tork konvertörünün kilitleme kavraması kontrol edilir. Konvertör gerekirse onarılır ya da değiştirilir.",
+      "sure": "2–3 gün"
+    },
+    {
+      "baslik": "Şanzıman yağı değişimi",
+      "kisa": "Üretici yağı, sıcakken seviye ayarı",
+      "aciklama": "Üreticinin öngördüğü yağ konur, seviye şanzıman ısınınca ayarlanır. Gerekirse filtre ve karter contası da yenilenir.",
+      "sure": "1–2 saat"
+    },
+    {
+      "baslik": "Beyin yazılımı ve adaptasyon",
+      "kisa": "Yazılım güncelleme, öğrenme değerleri",
+      "aciklama": "Şanzıman beyninin yazılımı güncellenir, öğrenme değerleri sıfırlanır. Parça değişiminden sonra adaptasyon sürüşü yapılır.",
+      "sure": "Aynı gün"
+    }
   ],
   "surec": [
-    { "baslik": "Arıza kaydını okuruz", "aciklama": "Aracı teşhis cihazına bağlar, şanzıman beynindeki hata kodlarını ve canlı verileri okuruz." },
-    { "baslik": "Birlikte yolda deneriz", "aciklama": "Şikâyetin hangi viteste, hangi sıcaklıkta çıktığını sizinle aynı arabada görürüz." },
-    { "baslik": "Ne yapılacağını söyleriz", "aciklama": "Yağ mı, mekatronik mi, revizyon mu; işi ve fiyatı baştan konuşuruz. Onayınız olmadan şanzıman indirilmez." },
-    { "baslik": "Onarır, adapte ederiz", "aciklama": "Onarımdan sonra beyin adaptasyonu yapılır; çıkan eski parçaları isterseniz size gösteririz." },
-    { "baslik": "Son sürüşle teslim", "aciklama": "Soğuk ve sıcak şanzımanla test sürüşü yapar, hata kaydı kalmadığını kontrol edip teslim ederiz." }
+    { "baslik": "Arıza tespiti", "aciklama": "Hata kayıtları okunur, araç yolda denenir." },
+    { "baslik": "Bilgi", "aciklama": "Yapılacak iş ve teslim zamanı araç sahibine söylenir." },
+    { "baslik": "Onarım", "aciklama": "Araç sahibi onay verince iş yapılır, sökülen parçalar kendisine geri verilir." },
+    { "baslik": "Adaptasyon ve teslim", "aciklama": "Beyin adaptasyonu yapılır. Araç, şanzıman soğukken ve ısındıktan sonra yolda denenip teslim edilir." }
   ],
   "istatistikler": [
-    { "deger": 19, "sonek": "", "etiket": "yıldır yalnızca şanzıman", "kurulustanHesapla": true },
-    { "deger": 6400, "sonek": "+", "etiket": "şanzıman onarıldı" },
-    { "deger": 3, "sonek": "", "etiket": "şanzıman tipi: klasik, DSG, CVT" },
-    { "deger": 1, "sonek": " yıl", "etiket": "revizyonda işçilik garantisi" }
+    { "deger": 19, "etiket": "Şaşmaz Oto Sanayi Sitesi'nde", "birim": "YIL", "sonek": " yıl", "kurulustanHesapla": true },
+    { "deger": 6, "etiket": "haftada açık", "birim": "GÜN", "sonek": " gün", "saatlerdenHesapla": true }
   ],
   "markalar": ["Volkswagen", "Audi", "Skoda", "Seat", "Ford", "Renault", "Toyota", "Nissan", "Honda", "Hyundai"],
   "galeri": [
     { "src": "/img/sektor-sanziman/vites-kolu.jpg", "alt": "Otomatik vites kolu yakın plan" },
-    { "src": "/img/sektor-sanziman/teshis.jpg", "alt": "Teşhis tableti ile şanzıman arıza kaydı okunuyor" },
+    { "src": "/img/sektor-sanziman/teshis.jpg", "alt": "Teşhis tabletiyle şanzıman arıza kaydı okunuyor" },
     { "src": "/img/sektor-sanziman/lift.jpg", "alt": "Atölyede lift üzerindeki araç" },
     { "src": "/img/sektor-sanziman/dislilar.jpg", "alt": "Birbirine geçen metal dişliler" },
     { "src": "/img/sektor-sanziman/mekatronik.jpg", "alt": "Elektronik kontrol kartı yakın plan" },
@@ -54,13 +103,11 @@
     { "src": "/img/sektor-sanziman/devre-karti.jpg", "alt": "Kontrol ünitesine ait devre kartı" },
     { "src": "/img/sektor-sanziman/gece-vites.jpg", "alt": "Karanlık kabinde otomatik vites kolu" }
   ],
-  "puan": { "ortalama": 4.8, "adet": 167 },
   "yorumlar": [
-    { "ad": "Murat S.", "puan": 5, "metin": "Başka yerde şanzıman değişecek dediler. Burada mekatronikte bir sensör çıktı, iki günde yaptılar. Koca şanzıman masrafından kurtuldum.", "arac": "2015 Golf DSG" },
-    { "ad": "Elif K.", "puan": 5, "metin": "Kalkışta titreme vardı. Önce benimle yolda denediler, sonra ne yapacaklarını tek tek anlattılar. Fiyat da baştan söylendiği gibi çıktı.", "arac": "2018 Octavia" },
-    { "ad": "Burak T.", "puan": 5, "metin": "CVT'de uğultu vardı, yağ değişimiyle geçmedi. Revizyon yaptılar, bir yıldır sorunsuz gidiyor.", "arac": "2016 Qashqai" },
-    { "ad": "Kemal A.", "puan": 4, "metin": "Parça bekleyince iş bir gün uzadı ama arayıp haber verdiler. Vites geçişleri şimdi yağ gibi.", "arac": "2013 Focus Powershift" },
-    { "ad": "Selin Y.", "puan": 5, "metin": "Sadece şanzıman yağı değişimi için gittim. Seviyeyi sıcakken ayarladılar, eski yağı da gösterdiler. İşini bilen yer.", "arac": "2019 Corolla" }
-  ],
-  "garanti": "Şanzıman revizyonunda işçiliğe 1 yıl garanti."
+    { "ad": "Murat S.", "puan": 5, "metin": "Başka bir yerde şanzıman değişecek demişlerdi. Burada mekatronikteki basınç sensörünü değiştirdiler, iki gün sonra aracı teslim aldım.", "arac": "2015 Volkswagen Golf DSG" },
+    { "ad": "Elif K.", "puan": 5, "metin": "Kalkışta titreme vardı. Önce benimle birlikte yolda denediler, sonra kavrama adaptasyonunu yaptılar. Titreme geçti.", "arac": "2018 Skoda Octavia" },
+    { "ad": "Burak T.", "puan": 5, "metin": "CVT'de uğultu vardı, yağ değişimiyle geçmedi. Kayışı ve kasnakları değiştirdiler, bir yıldır sorun çıkmadı.", "arac": "2016 Nissan Qashqai" },
+    { "ad": "Hakan D.", "puan": 4, "metin": "Vitese zor giriyordu. Şanzımanı açıp senkromeçleri ve debriyaj setini değiştirdiler. Parça beklendiği için iş bir gün uzadı, arayıp haber verdiler.", "arac": "2014 Fiat Doblo" },
+    { "ad": "Selin Y.", "puan": 5, "metin": "Şanzıman yağını değiştirmeye gittim. Seviyeyi şanzıman ısınınca ayarladılar, çıkan eski yağı da gösterdiler.", "arac": "2019 Toyota Corolla" }
+  ]
 }

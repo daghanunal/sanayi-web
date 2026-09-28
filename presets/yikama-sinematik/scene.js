@@ -440,7 +440,7 @@ export function createWorld(canvas, { name, phone, low, onReady }) {
   scene.add(wall);
   const neonTex = neonTexture(name);
   const neon = new THREE.Mesh(new THREE.PlaneGeometry(8, 2), new THREE.MeshBasicMaterial({ map: neonTex, transparent: true, toneMapped: false, depthWrite: false }));
-  neon.position.set(0, 3.25, -6.45);
+  neon.position.set(-5.2, 3.1, -6.45); // araçla aynı kadraja girsin (iPad yatayda sağdan taşıyordu)
   scene.add(neon);
   // duvar LED'leri
   const ledMat = (c, k = 2) => new THREE.MeshBasicMaterial({ color: new THREE.Color(c).multiplyScalar(k), toneMapped: false });
@@ -576,7 +576,7 @@ export function createWorld(canvas, { name, phone, low, onReady }) {
   const deg = Math.PI / 180;
   const V = (t, az, el, dist, fov, sx = 0, sy = 0) => ({ t: new THREE.Vector3(...t), az: az * deg, el: el * deg, dist, fov, sx, sy });
   const DESK = {
-    hero: V([0, 0.75, 0], 36, 9, 10.5, 30, -0.16, 0),
+    hero: V([0, 1.05, 0], 32, 8, 12.6, 30, -0.15, 0),
     kir: V([-0.2, 0.6, 0], 74, 5, 7.2, 30, -0.17, 0.02),
     kopuk: V([0, 0.9, 0], 128, 16, 10, 30, -0.16, 0),
     durulama: V([0, 0.8, 0], 52, 20, 9.6, 30, -0.16, 0),
@@ -614,6 +614,7 @@ export function createWorld(canvas, { name, phone, low, onReady }) {
     const a = from ? VIEWS[from] : b;
     goal.t.lerpVectors(a.t, b.t, t);
     for (const k of ['az', 'el', 'dist', 'fov', 'sx', 'sy']) goal[k] = lerp(a[k], b[k], t);
+    goal.dist *= fitK;
   }
   function orbit(daz = 0, del = 0, ddist = 0) {
     goal.az += daz * deg;
@@ -627,9 +628,13 @@ export function createWorld(canvas, { name, phone, low, onReady }) {
 
   let W = 1;
   let H = 1;
+  // Masaüstü görünümleri 16:10 için kurulu; daha dar ekranda (iPad yatay 1180×820) kamera geri çekilir,
+  // neon tabela ve araç kadrajdan taşmaz.
+  let fitK = 1;
   function resize() {
     W = innerWidth;
     H = innerHeight;
+    fitK = W >= 900 ? Math.min(1.35, Math.max(1, 1.6 / (W / H))) : 1;
     renderer.setSize(W, H, false);
     camera.aspect = W / H;
     U.uPR.value = dpr * H * 0.5;

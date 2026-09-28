@@ -1,16 +1,14 @@
 // Sektör modülleri — "Karnauba" yönü.
-// parlat: hero; kontrol lambası altında siyah kaput. Lamba gezdikçe kılcal çizikler halka halka parlar,
-//         pasta pedi geçince ayna gibi kalır.
-// kopuk:  hero altı kayan şerit (yalnızca CSS transform).
-// planla: imza bölümü; aracın kuşbakışı çiziminde yerlere dokunarak yıkama planı → süre ve WhatsApp'a hazır mesaj.
+// parlat: künye; yanında kontrol lambası altında siyah kaput. Lamba gezdikçe kılcal çizikler halka halka parlar,
+//         bir süre sonra pasta pedi bir kez geçer ve kaput ayna gibi kalır. Göstergesi ve düğmesi yok.
+// planla: aracın kuşbakışı çiziminde yerler seçilince işlerin yaklaşık süresi ve WhatsApp'a hazır mesaj.
 // filo:   filo yıkama planlayıcı; araç sayısı, sıklık, gün ve saat → bu ayın takvimi.
-// saat:   çalışma saatleri, canlı açık/kapalı, yol tarifi, yaklaşınca yüklenen harita.
-import { esc, telHref, waHref, mapsHref, mapsEmbed, openStatus, GUNLER, icons, gsap, reducedMotion } from '../../shared/core.js';
-import { yilEki } from '../_kurumsal/bolumler.js';
+// saat:   çalışma saatleri ve konum; bugünkü durum, yol tarifi, yaklaşınca yüklenen harita.
+import { esc, telHref, waHref, mapsHref, mapsEmbed, gunDurumu, kisaAdres, saatBicim, GUNLER, icons, gsap, reducedMotion } from '../../shared/core.js';
 
-const ok = `<svg class="k-ok" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
-const rota = (id, metin, cls = 'k-btn') => `<a class="${cls}" href="#/${id}" data-rota="${id}">${metin}</a>`;
 const etiket = (metin) => `<p class="sd-etiket"><span aria-hidden="true"><i></i><i></i><i></i></span>${esc(metin)}</p>`;
+// Hizmet başlığına göre bul (veri sırası değişse de doğru hizmet)
+const hizmetBul = (d, re) => (d.hizmetler || []).find((h) => re.test(h.baslik));
 
 // Sabit tohumlu rastgele: kir her açılışta aynı görünsün.
 function tohum(a) {
@@ -38,53 +36,35 @@ function gorununce(el, fn, esik = 0.25) {
 // pedin geçtiği yerde çizikler ve mat tül kalkar, geriye tek bir keskin lamba yansıması kalır.
 
 export const parlat = {
-  render(d, { tema }) {
-    const h = d.kurumsal?.hero || {};
-    const ust = `${d.isletme.sektor}. ${tema.yer} ${yilEki(d.isletme.kurulus)} beri.`;
-    const st = d.saatler ? openStatus(d.saatler) : null;
-    const bilgi = [['Kuruluş', String(d.isletme.kurulus)], st ? ['Bugün', st.text] : null, ['Hızlı dış yıkama', 'Yaklaşık 20 dk'], ['Telefon', d.iletisim.telefon]]
-      .filter(Boolean)
-      .map(([e, v]) => `<div><dt>${esc(e)}</dt><dd>${esc(v)}</dd></div>`)
-      .join('');
+  render(d) {
+    const b = d.saatler ? gunDurumu(d.saatler) : null;
     return `
-      <section class="lh" aria-label="Giriş">
+      <section class="k-hero k-hero--kunye lh" aria-label="Künye">
         <div class="k-kap lh__ic">
-          <div class="lh__metin">
-            <p class="lh__ust">${esc(ust)}</p>
-            <h1 class="k-h1 lh__baslik" data-bol>${esc(h.baslik || d.isletme.slogan)}</h1>
-            <p class="k-lead lh__lead">${esc(h.metin || d.isletme.hakkinda)}</p>
-            <div class="k-butonlar lh__btn">
-              ${rota('iletisim', `${esc(h.birincil || 'Bize yazın')} ${ok}`)}
-              ${rota(h.ikincilRota || 'hizmetler', esc(h.ikincil || 'Hizmetlerimiz'), 'k-btn k-btn--ikincil')}
+          <div class="k-hero__metin lh__metin">
+            <h1 class="k-h1 k-hero__baslik lh__baslik" data-bol>${esc(d.isletme.ad)}</h1>
+            <p class="k-lead k-hero__tanim lh__lead">${esc(d.isletme.tanim || d.isletme.sektor)}</p>
+            <dl class="k-kunye">
+              <div><dt>Adres</dt><dd>${esc(kisaAdres(d.iletisim.adres))}</dd></div>
+              ${b ? `<div><dt>Bugün</dt><dd><span class="k-durum ${b.open ? 'is-acik' : ''}"><span></span>${esc(b.kunye)}</span></dd></div>` : ''}
+              <div><dt>Telefon</dt><dd><a href="${telHref(d)}">${esc(d.iletisim.telefon)}</a></dd></div>
+            </dl>
+            <div class="k-butonlar">
+              <a class="k-btn" href="${telHref(d)}">${icons.phone}<span>Ara</span></a>
+              ${d.iletisim.whatsapp ? `<a class="k-btn k-btn--ikincil" href="${waHref(d)}" target="_blank" rel="noopener">${icons.whatsapp}<span>WhatsApp</span></a>` : ''}
+              <a class="k-btn k-btn--ikincil" href="${mapsHref(d)}" target="_blank" rel="noopener">${icons.pin}<span>Yol tarifi</span></a>
             </div>
           </div>
-          <figure class="lh__panel" aria-label="Kontrol lambası altında siyah kaput: pasta öncesi hareler, sonrası ayna yüzey">
+          <figure class="lh__panel" aria-label="Kontrol lambası altında siyah kaput: pasta öncesi kılcal çizikler, sonrası ayna yüzey">
             <canvas class="lh__cv" aria-hidden="true"></canvas>
-            <div class="lh__hud" aria-hidden="true">
-              <span class="lh__led"></span>
-              <span>Kontrol lambası</span>
-              <b data-durum>Hare, kılcal çizik</b>
-            </div>
-            <div class="lh__alt">
-              <div class="lh__olcer" aria-hidden="true">
-                <span>Mat</span><i><em data-dolu></em></i><span>Ayna</span>
-              </div>
-              <button type="button" class="lh__dugme" data-dugme>Pasta-cila at</button>
-            </div>
-            <figcaption class="lh__not" data-not>Lambayı parmağınızla gezdirin</figcaption>
           </figure>
         </div>
-        <div class="k-kap"><dl class="lh__bilgi">${bilgi}</dl></div>
       </section>`;
   },
   mount(el) {
     const panel = el.querySelector('.lh__panel');
     const cv = panel.querySelector('canvas');
     const c = cv.getContext('2d');
-    const durumEl = panel.querySelector('[data-durum]');
-    const doluEl = panel.querySelector('[data-dolu]');
-    const dugme = panel.querySelector('[data-dugme]');
-    const notEl = panel.querySelector('[data-not]');
     const zayif = (navigator.hardwareConcurrency || 8) <= 4;
     const N = zayif ? 2600 : 4200;
     const sx = new Float32Array(N), sy = new Float32Array(N), dx = new Float32Array(N), dy = new Float32Array(N), sl = new Float32Array(N);
@@ -223,20 +203,15 @@ export const parlat = {
     }
 
     function durum() {
-      const p = 1 - kalan / N;
-      doluEl.style.transform = `scaleX(${0.06 + p * 0.94})`;
-      durumEl.textContent = p > 0.97 ? 'Ayna gibi' : p > 0.05 ? 'Pasta atılıyor' : 'Hare, kılcal çizik';
-      panel.classList.toggle('is-ayna', p > 0.97);
+      panel.classList.toggle('is-ayna', 1 - kalan / N > 0.97);
     }
 
+    // Pasta pedi paneli bir kez tarar (düğme yok; bakan dokunmasa da görünür)
     function pastaAt() {
-      if (pasta) return;
-      if (kalan < N * 0.03) { cizikler(); durum(); dugme.textContent = 'Pasta-cila at'; notEl.textContent = 'Lambayı parmağınızla gezdirin'; if (reducedMotion) ciz(0); return; }
-      if (reducedMotion) { canli.fill(0); kalan = 0; durum(); ciz(0); dugme.textContent = 'Çizikleri geri getir'; return; }
+      if (pasta || kalan < N * 0.03) return;
       clearTimeout(otomatik);
       const yol = { s: 0 };
       pasta = { x: -W * 0.2, y: H * 0.2 };
-      dugme.disabled = true;
       const SIRA = 4;
       gsap.to(yol, {
         s: 1, duration: 2.6, ease: 'none',
@@ -250,13 +225,10 @@ export const parlat = {
         },
         onComplete() {
           canli.fill(0); kalan = 0; durum();
-          pasta = null; dugme.disabled = false;
-          dugme.textContent = 'Çizikleri geri getir';
-          notEl.textContent = 'Teslimde kaputa lambayla birlikte bakarız';
+          pasta = null;
         },
       });
     }
-    dugme.addEventListener('click', pastaAt);
 
     // Parmak / fare: lambayı taşır. Dikey kaydırma sayfaya kalır (touch-action: pan-y).
     const konum = (e) => { const r = cv.getBoundingClientRect(); hx = e.clientX - r.left; hy = e.clientY - r.top; };
@@ -295,8 +267,8 @@ export const parlat = {
     io.observe(panel);
     const gor = () => baslat();
     document.addEventListener('visibilitychange', gor);
-    // Bakan hiç dokunmasa da bir kez görsün: birkaç saniye hare, sonra ped geçer.
-    otomatik = setTimeout(() => { if (el.isConnected && !panel.classList.contains('is-dokundu')) pastaAt(); }, 4200);
+    // Birkaç saniye hare, sonra ped bir kez geçer.
+    otomatik = setTimeout(() => { if (el.isConnected) pastaAt(); }, 3200);
     const ro = new ResizeObserver(() => {
       const w = panel.getBoundingClientRect().width;
       if (Math.abs(w - sonGenislik) > 2 && olc()) ciz(0);
@@ -306,30 +278,17 @@ export const parlat = {
   },
 };
 
-// --- Kayan şerit ----------------------------------------------------------------------------
-
-const SERIT = ['Köpüklü yıkama', 'Koltuk yıkama', 'Tavan', 'Motor yıkama', 'Pasta', 'Cila', 'Jant', 'Bagaj', 'Torpido', 'Filo yıkama'];
-export const kopuk = {
-  render() {
-    const grup = SERIT.map((a) => `<span>${esc(a)}</span>`).join('');
-    return `
-      <div class="kp" aria-label="Yaptığımız işler: ${esc(SERIT.join(', '))}">
-        <div class="kp__akis" aria-hidden="true">${grup}${grup}</div>
-      </div>`;
-  },
-};
-
 // --- İmza: aracın üstünden yıkama planı ------------------------------------------------------
 
-// hizmet: d.hizmetler sırası; dk: süre hesabı için; bolge: çizimde yanan yerler.
+// hizmet: hizmet başlığını bulan desen; dk: süre hesabı için; bolge: çizimde yanan yerler.
 const ISLER = [
-  { id: 'dis', ad: 'Dış kir, çamur', hizmet: 6, dk: 20, bolge: ['kaporta', 'cam'] },
-  { id: 'jant', ad: 'Jantta fren tozu', hizmet: 5, dk: 30, bolge: ['jant'] },
-  { id: 'ic', ad: 'Torpido, konsol', hizmet: 0, dk: 210, bolge: ['konsol', 'kaporta', 'cam'] },
-  { id: 'koltuk', ad: 'Koltukta leke, koku', hizmet: 1, gun: true, bolge: ['koltuk'] },
-  { id: 'tavan', ad: 'Tavan, halı, bagaj', hizmet: 2, gun: true, bolge: ['taban', 'bagaj'] },
-  { id: 'motor', ad: 'Motor bölmesi', hizmet: 3, dk: 45, bolge: ['motor'] },
-  { id: 'pasta', ad: 'Matlık, kılcal çizik', hizmet: 4, birGun: true, bolge: ['cila'] },
+  { id: 'dis', ad: 'Dış kir, çamur', hizmet: /iç-dış|dış yıkama/i, dk: 45, bolge: ['kaporta', 'cam'] },
+  { id: 'jant', ad: 'Jantta fren tozu', hizmet: /jant/i, dk: 30, bolge: ['jant'] },
+  { id: 'ic', ad: 'Torpido, konsol, bagaj', hizmet: /detaylı/i, dk: 210, bolge: ['konsol', 'kaporta', 'cam'] },
+  { id: 'koltuk', ad: 'Koltukta leke, koku', hizmet: /koltuk/i, gun: true, bolge: ['koltuk'] },
+  { id: 'tavan', ad: 'Tavan, halı, paspas', hizmet: /tavan|halı/i, gun: true, bolge: ['taban', 'bagaj'] },
+  { id: 'motor', ad: 'Motor bölmesi', hizmet: /motor/i, dk: 45, bolge: ['motor'] },
+  { id: 'pasta', ad: 'Matlık, kılcal çizik', hizmet: /pasta|cila/i, birGun: true, bolge: ['cila'] },
 ];
 const BOLGE_IS = { kaporta: 'dis', cam: 'dis', jant: 'jant', konsol: 'ic', koltuk: 'koltuk', taban: 'tavan', bagaj: 'tavan', motor: 'motor', cila: 'pasta' };
 const ARACLAR = ['Otomobil', 'SUV', 'Hafif ticari'];
@@ -372,14 +331,14 @@ const aracSvg = `
   </svg>`;
 
 function sureMetni(secili) {
-  if (!secili.length) return ['—', 'Bir yer seçin'];
-  if (secili.some((x) => x.birGun)) return ['1 gün', 'Pasta-cila bir gün sürer; aracı sabah bırakın.'];
-  if (secili.some((x) => x.gun)) return ['Aynı gün', 'Koltuk ve halılar kurumaya bırakılır, akşam teslim.'];
+  if (!secili.length) return ['—', 'Seçilen iş yok'];
+  if (secili.some((x) => x.birGun)) return ['1 gün', 'Pasta-cila bir gün sürer, araç sabah bırakılır.'];
+  if (secili.some((x) => x.gun)) return ['Aynı gün', 'Koltuk ve halılar kurumaya bırakılır, araç akşam teslim edilir.'];
   const ic = secili.some((x) => x.id === 'ic');
   const dk = secili.reduce((t, x) => t + (ic && x.id === 'dis' ? 0 : x.dk || 0), 0);
-  if (dk < 60) return [`${dk} dk`, 'Beklerken çayınızı için.'];
+  if (dk < 60) return [`${dk} dk`, 'Araç beklerken yıkanır.'];
   const s = Math.round(dk / 30) / 2;
-  return [`${String(s).replace('.', ',')} saat`, 'Aracı bırakıp işinize bakabilirsiniz.'];
+  return [`${String(s).replace('.', ',')} saat`, 'Araç bırakılıp işin bitiminde alınır.'];
 }
 
 export const planla = {
@@ -389,27 +348,27 @@ export const planla = {
       <section class="k-bolum pl" aria-labelledby="pl-baslik">
         <div class="k-kap">
           <div class="pl__bas">
-            ${etiket('Yıkama planı')}
-            <h2 class="k-h2" id="pl-baslik" data-bol>Aracın nereye ihtiyacı var? İşaretleyin.</h2>
-            <p class="k-lead">Kaporta, jant, koltuk, tavan, motor… Temizlenmesini istediğiniz yerleri seçin; ne kadar süreceğini söyleyelim, planı tek dokunuşla bize yazın.</p>
+            ${etiket('Tahmini süre')}
+            <h2 class="k-h2" id="pl-baslik" data-bol>Yıkama planı</h2>
+            <p class="k-lead">Temizlenecek yerler çizimden ya da listeden seçilince işlerin yaklaşık süresi görünür. Plan WhatsApp'tan tek mesajla gönderilebilir.</p>
           </div>
           <div class="pl__ic">
             <div class="pl__sahne">
               <div class="pl__arac-tip" role="radiogroup" aria-label="Araç tipi">
                 ${ARACLAR.map((a, i) => `<button type="button" role="radio" aria-checked="${i === 0}" data-tip="${esc(a)}">${esc(a)}</button>`).join('')}
               </div>
-              <div class="pl__cizim">${aracSvg}<p class="pl__ipucu" aria-hidden="true">Çizimde bir yere dokunun</p></div>
+              <div class="pl__cizim">${aracSvg}<p class="pl__ipucu" aria-hidden="true">Çizimdeki yerler seçilebilir</p></div>
               <fieldset class="pl__isler">
                 <legend class="k-gizli">Ne var?</legend>
                 ${ISLER.map((x) => `<label data-is="${x.id}"><input type="checkbox" value="${x.id}"><span>${esc(x.ad)}</span></label>`).join('')}
               </fieldset>
             </div>
             <aside class="pl__kart" aria-live="polite">
-              <p class="pl__kart-ust">Planınız</p>
+              <p class="pl__kart-ust">Seçilen işler</p>
               <div class="pl__sure"><b data-o="sure">—</b><span data-o="sure-not"></span></div>
               <ol class="pl__liste" data-o="liste"></ol>
-              <a class="k-btn pl__gonder" target="_blank" rel="noopener">${icons.whatsapp}<span>Bu planla yazın</span></a>
-              <p class="pl__not">Fiyatı aracı gördükten sonra, işe başlamadan söyleriz. ${esc(d.garanti || '')}</p>
+              <a class="k-btn pl__gonder" target="_blank" rel="noopener">${icons.whatsapp}<span>WhatsApp'tan gönderin</span></a>
+              <p class="pl__not">Süreler yaklaşıktır. Fiyat, araç görüldükten sonra işe başlamadan söylenir.</p>
             </aside>
           </div>
         </div>
@@ -436,15 +395,15 @@ export const planla = {
       const ic = secili.some((x) => x.id === 'ic');
       o('liste').innerHTML = secili
         .map((x) => {
-          const h = d.hizmetler[x.hizmet];
+          const h = hizmetBul(d, x.hizmet);
           const dahil = ic && x.id === 'dis';
           return `<li class="${dahil ? 'is-dahil' : ''}${yeni === x.id ? ' is-yeni' : ''}"><span>${esc(h?.baslik || x.ad)}</span><em>${dahil ? 'detaylıya dahil' : esc(h?.sure || '')}</em></li>`;
         })
-        .join('') || '<li class="is-bos"><span>Henüz bir şey seçmediniz</span></li>';
+        .join('') || '<li class="is-bos"><span>Seçilen iş yok</span></li>';
       const mesaj = [
         `Merhaba ${d.isletme.ad}, aracım için yıkama planı:`,
         `Araç: ${tip}`,
-        ...secili.map((x) => `- ${d.hizmetler[x.hizmet]?.baslik || x.ad}`),
+        ...secili.map((x) => `- ${hizmetBul(d, x.hizmet)?.baslik || x.ad}`),
         `Tahmini süre: ${sure}`,
         'Ne zaman getirebilirim?',
       ].join('\n');
@@ -472,7 +431,7 @@ export const planla = {
       zonlar.forEach((z) => { z.removeAttribute('tabindex'); z.removeAttribute('role'); });
       svg.classList.add('is-gosterim');
       const ip = el.querySelector('.pl__ipucu');
-      if (ip) ip.textContent = 'Aşağıdan seçin, çizimde yanar';
+      if (ip) ip.textContent = 'Seçilen yer çizimde yanar';
     }
     zonlar.forEach((z) => {
       const tik = () => { degistir(BOLGE_IS[z.dataset.zon]); el.classList.add('is-dokundu'); };
@@ -511,9 +470,9 @@ export const filo = {
       <section class="k-bolum fl" aria-labelledby="fl-baslik">
         <div class="k-kap">
           <div class="fl__bas">
-            ${etiket('Filo planı')}
-            <h2 class="k-h2" id="fl-baslik" data-bol>Araçlarınız sıraya girmesin. Günü birlikte koyalım.</h2>
-            <p class="k-lead">Kaç aracınız var, ne sıklıkla yıkansın, hangi gün ve saatte? Seçin, bu ayın planını görün; beğenirseniz planı bize gönderin, teklifimizi yazılı verelim.</p>
+            ${etiket('Aylık takvim')}
+            <h2 class="k-h2" id="fl-baslik" data-bol>Filo yıkama planı</h2>
+            <p class="k-lead">Araç sayısı, sıklık, gün ve saat seçilince bu ayın yıkama takvimi görünür. Plan WhatsApp'tan gönderilebilir; teklif yazılı verilir.</p>
           </div>
           <div class="fl__ic">
             <form class="fl__ayar" onsubmit="return false">
@@ -545,10 +504,10 @@ export const filo = {
                 <div><dt>Bu ay araç yıkaması</dt><dd data-o="toplam">0</dd></div>
               </dl>
               <div class="k-butonlar">
-                <a class="k-btn fl__gonder" target="_blank" rel="noopener">${icons.whatsapp}<span>Planı gönderin</span></a>
-                <a class="k-btn k-btn--ikincil" href="#/iletisim?konu=Filo%20y%C4%B1kama" data-rota="iletisim?konu=Filo%20y%C4%B1kama">Formla yazın</a>
+                <a class="k-btn fl__gonder" target="_blank" rel="noopener">${icons.whatsapp}<span>WhatsApp'tan gönderin</span></a>
+                <a class="k-btn k-btn--ikincil" href="#/iletisim?konu=Filo%20y%C4%B1kama" data-rota="iletisim?konu=Filo%20y%C4%B1kama">İletişim formu</a>
               </div>
-              <p class="fl__not">Hızlı dış yıkama araç başı yaklaşık 20 dakika. Kesin saat ve teklifimizi araç tipine göre yazılı veririz.</p>
+              <p class="fl__not">İç-dış yıkama araç başına yaklaşık 45 dakika sürer. Kesin saat ve teklif araç tipine göre yazılı verilir.</p>
             </div>
           </div>
         </div>
@@ -628,17 +587,18 @@ export const filo = {
 // --- Saatler ve konum ----------------------------------------------------------------------
 
 export const saat = {
+  konumYerine: true,
   render(d) {
     if (!d.saatler) return '';
-    const st = openStatus(d.saatler);
+    const st = gunDurumu(d.saatler);
     const bugun = new Date().getDay();
     return `
       <section class="k-bolum st" aria-labelledby="st-baslik">
         <div class="k-kap st__ic">
           <div class="st__sol">
-            ${etiket('Çalışma saatleri')}
-            <h2 class="k-h2" id="st-baslik" data-bol>Haftanın yedi günü açığız.</h2>
-            <p class="st__durum ${st.open ? 'is-acik' : ''}"><span></span>${esc(st.text)}</p>
+            ${etiket(kisaAdres(d.iletisim.adres))}
+            <h2 class="k-h2" id="st-baslik" data-bol>Çalışma saatleri ve konum</h2>
+            <p class="st__durum ${st.open ? 'is-acik' : ''}"><span></span>${esc(st.metin)}</p>
             <p class="st__adres">${esc(d.iletisim.adres)}</p>
             <div class="k-butonlar">
               <a class="k-btn" href="${mapsHref(d)}" target="_blank" rel="noopener">${icons.pin}<span>Yol tarifi</span></a>
@@ -650,11 +610,11 @@ export const saat = {
               ${[1, 2, 3, 4, 5, 6, 0]
                 .map((g) => {
                   const s = d.saatler[g];
-                  return `<li class="${g === bugun ? 'is-bugun' : ''}${s ? '' : ' is-kapali'}"><span>${GUNLER[g]}</span><b>${s ? esc(s.replace('-', ' – ')) : 'Kapalı'}</b></li>`;
+                  return `<li class="${g === bugun ? 'is-bugun' : ''}${s ? '' : ' is-kapali'}"><span>${GUNLER[g]}</span><b>${s ? esc(saatBicim(s)) : 'Kapalı'}</b></li>`;
                 })
                 .join('')}
             </ol>
-            <div class="st__harita" data-q="${esc(mapsEmbed(d))}"><p>Harita yükleniyor</p></div>
+            <div class="st__harita" data-q="${esc(mapsEmbed(d))}"><p>Harita</p></div>
           </div>
         </div>
       </section>`;

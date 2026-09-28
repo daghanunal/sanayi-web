@@ -3,10 +3,15 @@
   "isletme": {
     "ad": "Işıltı Oto Yıkama",
     "sektor": "Oto Yıkama ve Detaylı Temizlik",
-    "slogan": "Aracınızı ilk aldığınız günkü gibi teslim ederiz.",
+    "tanim": "Oto yıkama, detaylı temizlik ve pasta-cila",
     "kurulus": 2015,
-    "hakkinda": "2015'ten beri Şaşmaz'da araç yıkıyoruz. Dışını köpükle, içini parça parça temizliyoruz; koltuk, tavan ve bagaj dahil. Aracı teslim etmeden önce birlikte etrafında dolaşır, gözünüze takılan bir yer varsa orada tamamlarız."
+    "hakkinda": "Binek ve hafif ticari araçlar içten ve dıştan yıkanır. Detaylı iç temizliğin yanı sıra koltuk, tavan ve motor yıkama ile pasta-cila işleri de yapılır."
   },
+  "bilgiler": [
+    ["Araçlar", "Binek araçlar, SUV'lar ve hafif ticari araçlar"],
+    ["Ekipman", "Köpük tabancası, basınçlı yıkama makinesi, vakumlu koltuk yıkama makinesi, buharlı temizlik makinesi, pasta makinesi"],
+    ["Randevu", "Dış yıkama için randevu gerekmez. Detaylı temizlik, koltuk yıkama ve pasta-cila randevuyla yapılır."]
+  ],
   "iletisim": {
     "telefon": "0532 555 41 27",
     "whatsapp": "905325554127",
@@ -15,28 +20,72 @@
   },
   "saatler": ["09:00-17:00", "08:00-19:30", "08:00-19:30", "08:00-19:30", "08:00-19:30", "08:00-19:30", "08:00-19:30"],
   "hizmetler": [
-    { "baslik": "İç-dış detaylı temizlik", "aciklama": "Köpüklü dış yıkama, kapı içleri, torpido, konsol ve camlar. Havalandırma ızgaraları fırçayla tek tek temizlenir.", "sure": "3-4 saat", "gorsel": "/img/sektor-yikama/kopuk.jpg" },
-    { "baslik": "Koltuk yıkama", "aciklama": "Kumaş koltuklar vakumlu makineyle yıkanıp çekilir; deri koltuklar temizlenip bakım kremiyle beslenir.", "sure": "Aynı gün", "gorsel": "/img/sektor-yikama/koltuk.jpg" },
-    { "baslik": "Tavan ve taban yıkama", "aciklama": "Tavan döşemesi sarkıtmadan, az nemle temizlenir. Halı ve paspaslar yıkanır, bagaj dahil kurutularak teslim edilir.", "sure": "Aynı gün", "gorsel": "/img/sektor-yikama/supurge.jpg" },
-    { "baslik": "Motor yıkama", "aciklama": "Elektrik aksamı ve sigorta kutusu kapatılır, motor soğukken düşük basınçla yıkanır. Plastik aksama koruyucu sürülür.", "sure": "45 dk" },
-    { "baslik": "Pasta ve cila", "aciklama": "Kılcal çizik ve matlaşma makineyle giderilir, ardından cila atılır. Plastik ve lastik kısımlar bantlanarak korunur.", "sure": "1 gün", "gorsel": "/img/sektor-yikama/pasta.jpg" },
-    { "baslik": "Jant ve lastik temizliği", "aciklama": "Fren tozu jant temizleyiciyle çözülür, jant içleri fırçalanır. Lastiklere parlatıcı sürülür.", "sure": "30 dk", "gorsel": "/img/sektor-yikama/jant.jpg" },
-    { "baslik": "Hızlı dış yıkama", "aciklama": "Ön yıkama, köpük, durulama ve mikrofiber bezle kurulama. Beklerken çayınızı için.", "sure": "20 dk", "gorsel": "/img/sektor-yikama/kopuk-jant.jpg" },
-    { "baslik": "Abonelikli filo yıkama", "aciklama": "Şirket ve ticari araçlarınız için haftalık ya da aylık düzenli yıkama. Gün ve saati birlikte belirler, araçları sıraya almadan yıkarız.", "sure": "Haftalık / aylık", "gorsel": "/img/sektor-yikama/yikama-garaj.jpg" }
+    {
+      "baslik": "İç-dış yıkama",
+      "kisa": "Köpüklü dış yıkama, süpürge ve cam",
+      "aciklama": "Araç köpükle yıkanıp mikrofiber bezle kurulanır. İçi süpürülür, torpido, konsol ve camlar silinir.",
+      "sure": "45 dk",
+      "gorsel": "/img/sektor-yikama/kopuk.jpg"
+    },
+    {
+      "baslik": "Detaylı iç temizlik",
+      "kisa": "Kapı içleri, torpido, bagaj ve ızgaralar",
+      "aciklama": "Kapı içleri, torpido, konsol ve bagaj parça parça temizlenir. Havalandırma ızgaraları fırçayla, dar yerler buharla temizlenir.",
+      "sure": "3–4 saat",
+      "gorsel": "/img/sektor-yikama/ic-mekan.jpg"
+    },
+    {
+      "baslik": "Koltuk yıkama",
+      "kisa": "Kumaş ve deri koltuk",
+      "aciklama": "Kumaş koltuklar vakumlu makineyle yıkanıp suyu çekilir. Deri koltuklar temizlenip bakım kremi sürülür.",
+      "sure": "Aynı gün",
+      "gorsel": "/img/sektor-yikama/koltuk.jpg"
+    },
+    {
+      "baslik": "Tavan ve halı yıkama",
+      "kisa": "Tavan döşemesi, halı ve paspas",
+      "aciklama": "Tavan döşemesi sarkmaması için az nemle temizlenir. Halı ve paspaslar yıkanıp kurutulur.",
+      "sure": "Aynı gün",
+      "gorsel": "/img/sektor-yikama/supurge.jpg"
+    },
+    {
+      "baslik": "Motor yıkama",
+      "kisa": "Motor soğukken, düşük basınçla",
+      "aciklama": "Elektrik aksamı ve sigorta kutusu kapatılır, motor soğukken düşük basınçla yıkanır. Plastik aksama koruyucu sürülür.",
+      "sure": "45 dk"
+    },
+    {
+      "baslik": "Pasta-cila",
+      "kisa": "Kılcal çizik ve matlaşma",
+      "aciklama": "Kılcal çizikler ve matlaşma pasta makinesiyle giderilip cila atılır. Plastik ve lastik kısımlar önceden bantlanır.",
+      "sure": "1 gün",
+      "gorsel": "/img/sektor-yikama/pasta.jpg"
+    },
+    {
+      "baslik": "Jant ve lastik temizliği",
+      "kisa": "Fren tozu ve lastik parlatıcı",
+      "aciklama": "Fren tozu jant temizleyiciyle çözülür, jant içleri fırçalanır. Lastiklere parlatıcı sürülür.",
+      "sure": "30 dk",
+      "gorsel": "/img/sektor-yikama/jant.jpg"
+    },
+    {
+      "baslik": "Filo yıkama",
+      "kisa": "Şirket ve ticari araçlar",
+      "aciklama": "Şirket ve ticari araçlar haftalık ya da aylık düzenle yıkanır. Gün ve saat işletmeyle birlikte belirlenir.",
+      "sure": "Haftalık / aylık",
+      "gorsel": "/img/sektor-yikama/yikama-garaj.jpg"
+    }
   ],
   "surec": [
-    { "baslik": "Aracı birlikte inceleriz", "aciklama": "Geldiğinizde lekeleri, çizikleri ve özellikle istediğiniz yerleri beraber not alırız." },
-    { "baslik": "Süreyi söyleriz", "aciklama": "Hangi işlemlerin yapılacağını ve aracın ne zaman hazır olacağını baştan söyleriz." },
-    { "baslik": "Önce dış, sonra iç", "aciklama": "Dış yıkama ve kurulamanın ardından iç temizliğe geçilir; koltuk ve halılar kurumaya bırakılır." },
-    { "baslik": "Teslimde son bakış", "aciklama": "Aracın etrafında birlikte dolaşırız. Gözünüze takılan bir yer varsa orada tamamlarız." }
+    { "baslik": "Ön kontrol", "aciklama": "Leke, çizik ve özellikle istenen yerler araç sahibiyle birlikte not alınır." },
+    { "baslik": "Bilgi", "aciklama": "Yapılacak işlemler ve aracın hazır olacağı saat söylenir." },
+    { "baslik": "Temizlik", "aciklama": "Dış yıkama ve kurulamanın ardından iç temizliğe geçilir; koltuk ve halılar kurumaya bırakılır." },
+    { "baslik": "Teslim", "aciklama": "Araç, teslimden önce sahibiyle birlikte kontrol edilir." }
   ],
   "istatistikler": [
-    { "deger": 11, "sonek": "", "etiket": "yıldır Şaşmaz'da", "kurulustanHesapla": true },
-    { "deger": 42000, "sonek": "+", "etiket": "araç yıkandı" },
-    { "deger": 35, "sonek": "", "etiket": "filo müşterisi" },
-    { "deger": 7, "sonek": " gün", "etiket": "haftada açık" }
+    { "deger": 11, "etiket": "Şaşmaz Oto Sanayi Sitesi'nde", "birim": "YIL", "sonek": " yıl", "kurulustanHesapla": true },
+    { "deger": 7, "etiket": "haftada açık", "birim": "GÜN", "sonek": " gün", "saatlerdenHesapla": true }
   ],
-  "markalar": ["Renault", "Fiat", "Volkswagen", "Ford", "Toyota", "Hyundai", "Opel", "Peugeot", "Mercedes-Benz", "BMW"],
   "galeri": [
     { "src": "/img/sektor-yikama/kopuk.jpg", "alt": "Yıkama bölmesinde köpüklenen araca basınçlı su tutuluyor" },
     { "src": "/img/sektor-yikama/yikama-garaj.jpg", "alt": "Köpükle kaplı aracın ızgarası elle temizleniyor" },
@@ -51,13 +100,11 @@
     { "src": "/img/sektor-yikama/cila-2.jpg", "alt": "Bantlanmış kapı yüzeyi makineyle cilalanıyor" },
     { "src": "/img/sektor-yikama/ic-mekan.jpg", "alt": "Detaylı temizlikten çıkmış araç içi" }
   ],
-  "puan": { "ortalama": 4.8, "adet": 263 },
   "yorumlar": [
-    { "ad": "Burak S.", "puan": 5, "metin": "Köpekle yolculuktan sonra arka koltuk tüy içindeydi. Koltukları yıkayıp kuruttular, akşam aldığımda ne tüy kalmıştı ne koku.", "arac": "2018 Octavia" },
-    { "ad": "Zeynep A.", "puan": 5, "metin": "Tavandaki kahve lekesi çıkmaz sanıyordum, çıktı. Tavan da sarkmadı. Teslimde her yeri tek tek gösterdiler.", "arac": "2020 Clio" },
-    { "ad": "Murat E.", "puan": 5, "metin": "Şirketin altı ticari aracını her salı yıkatıyoruz. Saatinde hazır oluyor, araçlar işten geri kalmıyor.", "arac": "2019 Doblo" },
-    { "ad": "Selin K.", "puan": 4, "metin": "Pasta cila bir gün sürdü, söyledikleri gibi. Kılcal çizikler büyük ölçüde gitti, araba yeni gibi parlıyor.", "arac": "2016 Corolla" },
-    { "ad": "Onur T.", "puan": 5, "metin": "Motor yıkatmaya çekiniyordum. Elektrik aksamını kapatıp yıkadılar, araç ilk marşta çalıştı. Motor bölmesi tertemiz oldu.", "arac": "2013 Passat" }
-  ],
-  "garanti": "Teslimde beğenmediğiniz bir nokta olursa aynı gün ücretsiz yeniden temizleriz."
+    { "ad": "Burak S.", "puan": 5, "metin": "Köpekle yolculuktan sonra arka koltuk tüy içindeydi. Koltukları yıkayıp kuruttular, akşam aldığımda ne tüy kalmıştı ne koku.", "arac": "2018 Skoda Octavia" },
+    { "ad": "Zeynep A.", "puan": 5, "metin": "Tavandaki kahve lekesinin çıkmayacağını sanıyordum, çıktı. Tavan da sarkmadı, teslimde her yeri tek tek gösterdiler.", "arac": "2020 Renault Clio" },
+    { "ad": "Murat E.", "puan": 5, "metin": "Şirketin altı ticari aracını her salı yıkatıyoruz. Araçlar saatinde hazır oluyor, işe geç kalmıyoruz.", "arac": "2019 Fiat Doblo" },
+    { "ad": "Selin K.", "puan": 4, "metin": "Pasta-cila söyledikleri gibi bir gün sürdü. Kılcal çiziklerin çoğu gitti.", "arac": "2016 Toyota Corolla" },
+    { "ad": "Onur T.", "puan": 5, "metin": "Motor yıkatmaya çekiniyordum. Elektrik aksamını kapatıp yıkadılar, araç ilk marşta çalıştı.", "arac": "2013 Volkswagen Passat" }
+  ]
 }

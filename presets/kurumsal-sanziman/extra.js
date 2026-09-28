@@ -1,52 +1,49 @@
 // Sektör modülleri:
-// (1) hero: patlıcan-siyahı giriş, kesiti açılmış şanzıman fotoğrafında parça notları, P-R-N-D göstergesi
-//     (açılışta P'den D'ye geçer, kaydırdıkça vites numarası 1'den 6'ya çıkar).
-// (2) kayit: "vites kaydı" ekranı. Şanzıman tipini ve şikâyeti seçin → devir eğrisi o arızanın izine dönüşür,
-//     arızanın çıktığı yer işaretlenir; yanında sebep, önce bakılanlar ve ilgili hizmet. Oynatma çizgisi
+// (1) hero: künye (ad, tanım, adres / bugün / telefon, Ara / WhatsApp / Yol tarifi); yanında kesiti açılmış
+//     şanzıman fotoğrafı ve parça adları. Açılışta parça notları bir kez belirir; kaydırmaya bağlı hareket yok.
+// (2) kayit: "vites kaydı" ekranı. Şanzıman tipi ve şikâyet seçilince devir eğrisi o arızanın izine dönüşür,
+//     arızanın çıktığı yer işaretlenir; yanında olası sebep, önce bakılanlar ve ilgili hizmet. Oynatma çizgisi
 //     yalnızca ekran görünürken döner.
-// (3) tipler: klasik / DSG / CVT, her biri için küçük çalışan şema (yalnızca görünürken).
-// (4) atolye: bugün açık mı, saatler, adres, yaklaşınca yüklenen harita.
-import { esc, telHref, mapsHref, mapsEmbed, openStatus, groupedHours, GUNLER, icons, gsap, reducedMotion } from '../../shared/core.js';
-import { yilEki, ok } from '../_kurumsal/bolumler.js';
+// (3) tipler: tork konvertörlü, DSG, CVT ve manuel; her biri için küçük çalışan şema (yalnızca görünürken).
+import { esc, telHref, waHref, mapsHref, gunDurumu, kisaAdres, icons, gsap, reducedMotion } from '../../shared/core.js';
+import { ok } from '../_kurumsal/bolumler.js';
 import { DrawSVGPlugin } from 'gsap/DrawSVGPlugin';
 
 gsap.registerPlugin(DrawSVGPlugin);
 
-const k = (d) => d.kurumsal || {};
-const rotaLink = (id, metin, cls = 'k-btn') => `<a class="${cls}" href="#/${id}" data-rota="${id}">${metin}</a>`;
 const gorunurken = (el, fn, margin = '60px') => {
   const io = new IntersectionObserver(([e]) => fn(e.isIntersecting), { rootMargin: margin });
   io.observe(el);
   return io;
 };
+// Hizmet başlığına göre bul (veri sırası değişse de bağlantı doğru kalır)
+const hizmetBul = (d, anahtar) => (d.hizmetler || []).find((h) => h.baslik.toLocaleLowerCase('tr').includes(anahtar));
 
-// --- (1) Hero ---------------------------------------------------------------------------------
+// --- (1) Künye ---------------------------------------------------------------------------------
 const NOTLAR = [
   { x: 17, y: 47, ad: 'Tork konvertörü' },
   { x: 56, y: 33, ad: 'Kavramalar ve planet dişliler' },
   { x: 55, y: 73, ad: 'Valf gövdesi' },
 ];
-const VITES = ['P', 'R', 'N', 'D'];
 
 export const hero = {
   render(d, { tema }) {
-    const h = k(d).hero || {};
-    const st = d.saatler ? openStatus(d.saatler) : null;
-    const bilgi = [
-      ['Kuruluş', String(d.isletme.kurulus || '')],
-      st ? ['Bugün', st.text] : null,
-      ['Telefon', d.iletisim.telefon],
-    ].filter((x) => x && x[1]);
+    const b = d.saatler ? gunDurumu(d.saatler) : null;
     return `
-      <section class="sz-hero" aria-label="Giriş">
+      <section class="k-hero k-hero--kunye sz-hero" aria-label="Künye">
         <div class="k-kap sz-hero__ic">
-          <div class="sz-hero__metin">
-            <p class="sz-etiket sz-etiket--acik"><span class="sz-led" aria-hidden="true"></span>${esc(d.isletme.sektor)} · ${tema.yer ? `${esc(tema.yer)} ` : ''}${d.isletme.kurulus ? `${yilEki(d.isletme.kurulus)} beri` : ''}</p>
-            <h1 class="k-h1 sz-hero__baslik" data-bol>${esc(h.baslik || d.isletme.slogan)}</h1>
-            <p class="k-lead sz-hero__lead">${esc(h.metin || d.isletme.hakkinda)}</p>
+          <div class="k-hero__metin sz-hero__metin">
+            <h1 class="k-h1 k-hero__baslik sz-hero__baslik" data-bol>${esc(d.isletme.ad)}</h1>
+            <p class="k-lead k-hero__tanim sz-hero__lead">${esc(d.isletme.tanim || d.isletme.sektor)}</p>
+            <dl class="k-kunye">
+              <div><dt>Adres</dt><dd>${esc(kisaAdres(d.iletisim.adres))}</dd></div>
+              ${b ? `<div><dt>Bugün</dt><dd><span class="k-durum ${b.open ? 'is-acik' : ''}"><span></span>${esc(b.kunye)}</span></dd></div>` : ''}
+              <div><dt>Telefon</dt><dd><a href="${telHref(d)}">${esc(d.iletisim.telefon)}</a></dd></div>
+            </dl>
             <div class="k-butonlar">
-              ${rotaLink('iletisim', `${esc(h.birincil || 'Teklif isteyin')} ${ok}`)}
-              <a class="k-btn k-btn--ikincil" href="${telHref(d)}">${icons.phone}<span>${esc(d.iletisim.telefon)}</span></a>
+              <a class="k-btn" href="${telHref(d)}">${icons.phone}<span>Ara</span></a>
+              ${d.iletisim.whatsapp ? `<a class="k-btn k-btn--ikincil" href="${waHref(d)}" target="_blank" rel="noopener">${icons.whatsapp}<span>WhatsApp</span></a>` : ''}
+              <a class="k-btn k-btn--ikincil" href="${mapsHref(d)}" target="_blank" rel="noopener">${icons.pin}<span>Yol tarifi</span></a>
             </div>
           </div>
           <div class="sz-hero__sahne">
@@ -56,42 +53,13 @@ export const hero = {
                 ${NOTLAR.map((n, i) => `<li style="--x:${n.x}%;--y:${n.y}%" class="${n.x > 50 ? 'is-sag' : ''}"><i></i><span><b>0${i + 1}</b>${esc(n.ad)}</span></li>`).join('')}
               </ul>
             </figure>
-            <div class="sz-prnd" aria-hidden="true">
-              <ol>${VITES.map((v) => `<li data-v="${v}">${v}</li>`).join('')}</ol>
-              <p class="sz-prnd__ekran"><span data-vites>P</span><small data-vites-alt>vites</small></p>
-            </div>
           </div>
         </div>
-        ${bilgi.length ? `<div class="k-kap"><dl class="sz-hero__bilgi">${bilgi.map(([e, v]) => `<div><dt>${esc(e)}</dt><dd>${esc(v)}</dd></div>`).join('')}</dl></div>` : ''}
       </section>`;
   },
   mount(el) {
-    const harfler = [...el.querySelectorAll('.sz-prnd li')];
-    const ekran = el.querySelector('[data-vites]');
-    const alt = el.querySelector('[data-vites-alt]');
-    const sec = (v) => harfler.forEach((h) => h.classList.toggle('is-aktif', h.dataset.v === v));
-    const notlar = el.querySelectorAll('.sz-kesit__notlar li');
-    if (reducedMotion) {
-      sec('D');
-      ekran.textContent = 'D1';
-      return;
-    }
-    sec('P');
-    const tl = gsap.timeline({ delay: 1.2 });
-    ['R', 'N', 'D'].forEach((v, i) => tl.add(() => { sec(v); ekran.textContent = v; }, i * 0.38));
-    tl.add(() => { ekran.textContent = 'D1'; alt.textContent = 'sürüş'; }, 1.3);
-    gsap.from(notlar, { opacity: 0, scale: 0.6, duration: 0.5, stagger: 0.15, delay: 1.5, ease: 'back.out(2)' });
-    // Kaydırdıkça vites numarası yükselir: D1 → D6.
-    let son = 1;
-    gsap.to({}, {
-      scrollTrigger: {
-        trigger: el, start: 'top top', end: 'bottom top', scrub: true,
-        onUpdate: (st) => {
-          const g = Math.min(6, 1 + Math.floor(st.progress * 6));
-          if (g !== son && tl.progress() === 1) { son = g; ekran.textContent = `D${g}`; }
-        },
-      },
-    });
+    if (reducedMotion) return;
+    gsap.from(el.querySelectorAll('.sz-kesit__notlar li'), { opacity: 0, scale: 0.6, duration: 0.5, stagger: 0.12, delay: 0.6, ease: 'back.out(2)' });
   },
 };
 
@@ -111,7 +79,7 @@ const SIKAYETLER = [
       cvt: 'Yağ basıncındaki dalgalanma ya da kasnakta tutunamayan kayış. Hızlanırken ani bir vurma olarak hissedilir.',
     },
     bakilan: ['Arıza kaydı ve adaptasyon değerleri', 'Yağın rengi, kokusu ve seviyesi', 'Solenoid ve basınç değerleri'],
-    hizmet: { klasik: 4, dsg: 4, cvt: 2 },
+    hizmet: { klasik: 'mekatronik', dsg: 'mekatronik', cvt: 'cvt' },
   },
   {
     id: 'kayma', ad: 'Devir fırlıyor', iz: 'Vites geçerken devir düşeceğine yükseliyor; araç o anda çekmiyor.',
@@ -121,7 +89,7 @@ const SIKAYETLER = [
       cvt: 'Kayış ya da kasnak aşınması, basınç kaybı. Gaz verince devir çıkıyor ama hız gelmiyor.',
     },
     bakilan: ['Yağ seviyesi ve yağda balata tozu', 'Canlı veride giriş ve çıkış devri farkı', 'Hat basıncı ölçümü'],
-    hizmet: { klasik: 0, dsg: 1, cvt: 2 },
+    hizmet: { klasik: 'revizyon', dsg: 'dsg', cvt: 'cvt' },
   },
   {
     id: 'titreme', ad: 'Kalkışta titriyor', iz: 'İlk metrelerde devir dalgalanıyor; araç sarsılarak kalkıyor.',
@@ -131,7 +99,7 @@ const SIKAYETLER = [
       cvt: 'Kalkış kavraması ya da yorulmuş yağ. Yağ değişimiyle geçmiyorsa içeriye bakmak gerekir.',
     },
     bakilan: ['Kalkış adaptasyon değerleri', 'Motor ve şanzıman takozları', 'Kavrama ya da tork konvertörü'],
-    hizmet: { klasik: 6, dsg: 1, cvt: 2 },
+    hizmet: { klasik: 'tork', dsg: 'dsg', cvt: 'cvt' },
   },
   {
     id: 'gecikme', ad: 'Geç vites atıyor', iz: 'D’ye alınca bir an bekliyor, vitesi olması gerekenden yüksek devirde atıyor.',
@@ -141,7 +109,7 @@ const SIKAYETLER = [
       cvt: 'Yağ basıncı, hız sensörü ya da yazılım. Çoğu zaman önce yağa ve sensörlere bakılır.',
     },
     bakilan: ['Yağ seviyesi, sıcakken ölçülür', 'Filtre ve karter', 'Yazılım sürümü ve öğrenme değerleri'],
-    hizmet: { klasik: 3, dsg: 5, cvt: 3 },
+    hizmet: { klasik: 'yağ', dsg: 'beyin', cvt: 'yağ' },
   },
   {
     id: 'ugultu', ad: 'Uğultu var', iz: 'Devir normal ama hızlandıkça artan bir vınlama, uğultu geliyor.',
@@ -151,7 +119,7 @@ const SIKAYETLER = [
       cvt: 'Kayış ve kasnak aşınması; CVT’de en sık gelen şikâyet.',
     },
     bakilan: ['Sesin hangi hızda çıktığı, yolda', 'Yağda metal talaşı', 'Rulman ve yataklar'],
-    hizmet: { klasik: 0, dsg: 1, cvt: 2 },
+    hizmet: { klasik: 'revizyon', dsg: 'dsg', cvt: 'cvt' },
   },
   {
     id: 'emniyet', ad: 'Tek viteste kaldı', iz: 'Arıza lambası yandı, şanzıman bir viteste kilitlendi; devir yükseliyor, vites değişmiyor.',
@@ -161,7 +129,7 @@ const SIKAYETLER = [
       cvt: 'Hararet, hız sensörü ya da basınç arızası; beyin koruma moduna geçiyor.',
     },
     bakilan: ['Arıza kodları ve donmuş veriler', 'Soket ve kablo tesisatı', 'Mekatronik ya da valf gövdesi'],
-    hizmet: { klasik: 4, dsg: 4, cvt: 5 },
+    hizmet: { klasik: 'mekatronik', dsg: 'mekatronik', cvt: 'beyin' },
   },
 ];
 
@@ -259,8 +227,8 @@ export const kayit = {
         <div class="k-kap">
           <div class="sz-kayit__bas">
             <p class="sz-etiket"><span class="sz-led" aria-hidden="true"></span>Vites kaydı</p>
-            <h2 class="k-h2" id="sz-kayit-baslik" data-bol>Şikâyetinizi seçin, kayıtta nerede bozulduğunu görün.</h2>
-            <p class="k-lead">Teşhis cihazını bağladığımızda ilk baktığımız şey devir ve vites kaydıdır. Her arıza bu çizgide kendine özgü bir iz bırakır.</p>
+            <h2 class="k-h2" id="sz-kayit-baslik" data-bol>Devir ve vites kaydı</h2>
+            <p class="k-lead">Teşhis cihazı bağlanınca önce devir ve vites kaydına bakılır. Her arıza bu çizgide kendine özgü bir iz bırakır; şanzıman tipi ve şikâyet seçilince kayıt ona göre değişir.</p>
           </div>
           <div class="sz-kayit__ic">
             <div class="sz-ekran">
@@ -320,18 +288,18 @@ export const kayit = {
 
     const yazSonuc = () => {
       const s = SIKAYETLER.find((x) => x.id === sik);
-      const h = d.hizmetler?.[s.hizmet[tip]];
+      const h = hizmetBul(d, s.hizmet[tip]);
       const tipAd = TIPLER.find((x) => x.id === tip).ad;
       const konu = `${s.ad} (${tipAd})`;
       sonuc.innerHTML = `
         <p class="sz-sonuc__iz">${esc(s.iz)}</p>
         <h3 class="k-h3">Genelde sebebi</h3>
         <p>${esc(s.sebep[tip])}</p>
-        <h3 class="k-h3">Önce baktıklarımız</h3>
+        <h3 class="k-h3">Önce bakılanlar</h3>
         <ol class="sz-sonuc__liste">${s.bakilan.map((b) => `<li>${esc(b)}</li>`).join('')}</ol>
         ${h ? `<p class="sz-sonuc__hizmet"><span>İlgili iş</span><b>${esc(h.baslik)}</b>${h.sure ? `<small>Ortalama ${esc(h.sure)}</small>` : ''}</p>` : ''}
-        <a class="k-link" href="#/iletisim?konu=${encodeURIComponent(konu)}" data-rota="iletisim?konu=${encodeURIComponent(konu)}">Bu şikâyetle yazın ${ok}</a>
-        <p class="sz-sonuc__not">Kesin sebebi arıza kaydını okuyup aracı denedikten sonra söyleriz. Fiyatı işe başlamadan konuşuruz.</p>`;
+        <a class="k-link" href="#/iletisim?konu=${encodeURIComponent(konu)}" data-rota="iletisim?konu=${encodeURIComponent(konu)}">Bu şikâyet için bilgi alın ${ok}</a>
+        <p class="sz-sonuc__not">Kesin sebep, arıza kaydı okunup araç yolda denendikten sonra belli olur.</p>`;
       if (!reducedMotion) gsap.from(sonuc.children, { y: 12, opacity: 0, duration: 0.45, stagger: 0.04, ease: 'power2.out' });
     };
 
@@ -392,8 +360,8 @@ export const kayit = {
     } else {
       const dongu = gsap.to(o, { t: 1, duration: 6.5, ease: 'none', repeat: -1, paused: true, onUpdate: guncelle });
       gorunurken(svg, (v) => (v ? dongu.play() : dongu.pause()));
-      gsap.from(cizgi, { drawSVG: 0, duration: 1.6, ease: 'power2.inOut', clearProps: 'strokeDasharray,strokeDashoffset', scrollTrigger: { trigger: svg, start: 'top 80%', once: true } });
-      gsap.from([dolgu, saglam], { opacity: 0, duration: 1, delay: 0.9, scrollTrigger: { trigger: svg, start: 'top 80%', once: true } });
+      gsap.from(cizgi, { drawSVG: 0, duration: 1.6, ease: 'power2.inOut', clearProps: 'strokeDasharray,strokeDashoffset', scrollTrigger: { trigger: svg, start: 'top 80%', toggleActions: 'play none none none' } });
+      gsap.from([dolgu, saglam], { opacity: 0, duration: 1, delay: 0.9, scrollTrigger: { trigger: svg, start: 'top 80%', toggleActions: 'play none none none' } });
     }
   },
 };
@@ -423,6 +391,15 @@ const SEMALAR = {
       <text x="80" y="21.5" class="kav-y kav-y--a">1·3·5·7</text>
       <text x="80" y="45.5" class="kav-y kav-y--b">2·4·6·R</text>
     </svg>`,
+  manuel: () => `
+    <svg viewBox="0 0 160 160" aria-hidden="true">
+      <line class="saft" x1="12" y1="50" x2="148" y2="50"/>
+      <line class="saft" x1="12" y1="106" x2="148" y2="106"/>
+      <g class="cift cift--1"><rect class="dis-d" x="38" y="32" width="12" height="36" rx="2"/><rect class="dis-d" x="38" y="68" width="12" height="76" rx="2"/></g>
+      <g class="cift cift--2"><rect class="dis-d" x="78" y="24" width="12" height="52" rx="2"/><rect class="dis-d" x="78" y="76" width="12" height="60" rx="2"/></g>
+      <g class="cift cift--3"><rect class="dis-d" x="118" y="18" width="12" height="64" rx="2"/><rect class="dis-d" x="118" y="82" width="12" height="48" rx="2"/></g>
+      <rect class="kovan" x="57" y="96" width="14" height="20" rx="3"/>
+    </svg>`,
   cvt: () => `
     <svg viewBox="0 0 160 160" aria-hidden="true">
       <path class="kayis" d=""/>
@@ -433,9 +410,10 @@ const SEMALAR = {
     </svg>`,
 };
 const TIP_METIN = [
-  { id: 'klasik', ad: 'Tork konvertörlü', alt: 'Klasik otomatik', nasil: 'Motorla şanzıman arasında yağla güç aktaran tork konvertörü, içeride planet dişli setleri ve kavrama paketleri.', sik: 'Geç ya da sert vites, devir kaçırma, hararet.', hizmet: 0 },
-  { id: 'dsg', ad: 'DSG / çift kavrama', alt: 'DSG, Powershift, EDC', nasil: 'Biri tek, biri çift vitesleri taşıyan iki kavrama. Mekatronik ünite hangisinin kapanacağına karar verir.', sik: 'Kalkışta titreme, vites geçerken vuruntu, arıza lambası.', hizmet: 1 },
-  { id: 'cvt', ad: 'CVT', alt: 'Kademesiz şanzıman', nasil: 'Vites yok; çapı değişen iki kasnak ve aralarındaki çelik kayış oranı sürekli ayarlar.', sik: 'Uğultu, çekiş kaybı, gaz verince devir çıkıp hız gelmemesi.', hizmet: 2 },
+  { id: 'klasik', ad: 'Tork konvertörlü', alt: 'Klasik otomatik', nasil: 'Motorun gücü şanzımana tork konvertörüyle, yağ üzerinden aktarılır. Vitesleri planet dişli setleri ve kavrama paketleri değiştirir.', sik: 'Geç ya da sert vites, devir kaçırma, hararet', hizmet: 'revizyon' },
+  { id: 'dsg', ad: 'DSG / çift kavrama', alt: 'DSG, Powershift, EDC', nasil: 'Tek ve çift vitesleri iki ayrı kavrama taşır. Hangisinin kapanacağına mekatronik ünite karar verir.', sik: 'Kalkışta titreme, vites geçerken vuruntu, arıza lambası', hizmet: 'dsg' },
+  { id: 'cvt', ad: 'CVT', alt: 'Kademesiz şanzıman', nasil: 'Sabit vites yoktur; çapı değişen iki kasnak ve aralarındaki çelik kayış oranı sürekli ayarlar.', sik: 'Uğultu, çekiş kaybı, gaz verince devir çıkıp hızın gelmemesi', hizmet: 'cvt' },
+  { id: 'manuel', ad: 'Manuel', alt: 'Düz vites', nasil: 'Kavrama debriyaj pedalıyla ayrılır, vites kolu dişli çiftlerini doğrudan seçer. Geçişi senkromeçler yumuşatır.', sik: 'Vitese zor geçme, vitesten atma, debriyaj kaçırma', hizmet: 'manuel' },
 ];
 
 export const tipler = {
@@ -444,12 +422,12 @@ export const tipler = {
       <section class="k-bolum sz-tipler" aria-labelledby="sz-tipler-baslik">
         <div class="k-kap">
           <div class="k-bolum__bas">
-            <h2 class="k-h2" id="sz-tipler-baslik" data-bol>Üç ayrı şanzıman, üç ayrı dert.</h2>
-            <p class="sz-tipler__not">Hepsiyle her gün uğraşıyoruz. Hangisi olduğunu bilmiyorsanız ruhsattaki modelden ya da vites kolundan biz bakarız.</p>
+            <h2 class="k-h2" id="sz-tipler-baslik" data-bol>Şanzıman tipleri</h2>
+            <p class="sz-tipler__not">Aracın hangi şanzımanla geldiği ruhsattaki modelden ya da vites kolundan anlaşılır.</p>
           </div>
           <ul class="sz-tipler__liste" data-sira>
             ${TIP_METIN.map((t, i) => {
-              const h = d.hizmetler?.[t.hizmet];
+              const h = hizmetBul(d, t.hizmet);
               return `<li class="sz-tip sz-tip--${t.id}">
                 <div class="sz-tip__sema">${SEMALAR[t.id]()}<span class="sz-tip__no">0${i + 1}</span></div>
                 <div class="sz-tip__govde">
@@ -457,7 +435,7 @@ export const tipler = {
                   <h3 class="k-h3">${esc(t.ad)}</h3>
                   <p>${esc(t.nasil)}</p>
                   <p class="sz-tip__sik"><span>Sık şikâyet</span>${esc(t.sik)}</p>
-                  ${h ? `<a class="k-link" href="#/hizmetler" data-rota="hizmetler">${esc(h.baslik)} ${ok}</a>` : ''}
+                  ${h ? `<a class="k-link" href="#/iletisim?konu=${encodeURIComponent(h.baslik)}" data-rota="iletisim?konu=${encodeURIComponent(h.baslik)}" aria-label="${esc(h.baslik)} için bilgi alın">Bilgi alın ${ok}</a>` : ''}
                 </div>
               </li>`;
             }).join('')}
@@ -490,45 +468,12 @@ export const tipler = {
     };
     kayisCiz();
     tl.to(c, { a: 30, b: 16, duration: 2, ease: 'sine.inOut', yoyo: true, repeat: 1, onUpdate: kayisCiz }, 0);
+    // Manuel: kovan 1. vitesten 2. vitese kayar, seçilen dişli çifti yanar
+    const kovan = el.querySelector('.kovan');
+    const c1 = el.querySelector('.cift--1'), c2 = el.querySelector('.cift--2');
+    const vites = (n) => { c1.classList.toggle('is-on', n === 1); c2.classList.toggle('is-on', n === 2); };
+    tl.call(vites, [1], 0.3).to(kovan, { x: -5, duration: 0.3, ease: 'power2.inOut' }, 0);
+    tl.call(vites, [2], 2.3).to(kovan, { x: 9, duration: 0.3, ease: 'power2.inOut' }, 2);
     gorunurken(liste, (v) => (v ? tl.play() : tl.pause()));
-  },
-};
-
-// --- (4) Atölye: saatler + konum -----------------------------------------------------------------
-export const atolye = {
-  render(d) {
-    if (!d.saatler) return '';
-    const st = openStatus(d.saatler);
-    const bugun = new Date().getDay();
-    const bugunSaat = d.saatler[bugun];
-    return `
-      <section class="k-bolum sz-atolye" aria-labelledby="sz-atolye-baslik">
-        <div class="k-kap sz-atolye__ic">
-          <div>
-            <p class="sz-etiket"><span class="sz-led ${st.open ? 'is-acik' : 'is-kapali'}" aria-hidden="true"></span>Atölye</p>
-            <h2 class="k-h2" id="sz-atolye-baslik" data-bol>Aracı getirin, beklerken okuyalım.</h2>
-            <div class="sz-durum ${st.open ? 'is-acik' : ''}">
-              <b>${esc(st.text)}</b>
-              <small>Bugün ${GUNLER[bugun]}${bugunSaat ? `, ${esc(bugunSaat.replace('-', ' – '))}` : ', kapalı'}</small>
-            </div>
-            <dl class="sz-saatler">${groupedHours(d.saatler).map(([g, s]) => `<div><dt>${esc(g)}</dt><dd>${esc(s)}</dd></div>`).join('')}</dl>
-            <p class="sz-adres">${icons.pin}<span>${esc(d.iletisim.adres)}</span></p>
-            <div class="k-butonlar">
-              <a class="k-btn" href="${mapsHref(d)}" target="_blank" rel="noopener">${icons.pin}<span>Yol tarifi</span></a>
-              <a class="k-btn k-btn--ikincil" href="${telHref(d)}">${icons.phone}<span>${esc(d.iletisim.telefon)}</span></a>
-            </div>
-          </div>
-          <div class="sz-harita" data-q="${esc(mapsEmbed(d))}"><p>Harita yaklaşınca yüklenir</p></div>
-        </div>
-      </section>`;
-  },
-  mount(el) {
-    const h = el.querySelector('.sz-harita');
-    const io = new IntersectionObserver((e) => {
-      if (!e[0].isIntersecting) return;
-      h.innerHTML = `<iframe title="Konum haritası" src="${h.dataset.q}" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>`;
-      io.disconnect();
-    }, { rootMargin: '300px' });
-    io.observe(h);
   },
 };
