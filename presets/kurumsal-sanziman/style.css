@@ -121,6 +121,8 @@ body.k-ana .k-ust:not(.is-kucuk) .k-ust__teklif { background: #fff; color: var(-
 .sz-kayit__bas .k-h2 { max-width: 22ch; }
 .sz-kayit__ic { display: grid; gap: 20px; }
 @media (min-width: 1000px) { .sz-kayit__ic { grid-template-columns: 7fr 4fr; gap: 28px; align-items: start; } .sz-ekran { position: sticky; top: 84px; } }
+/* Kısa yatay ekranda (iPad) kayıt ekranı ekranın yarısından uzun: yapışmasın. */
+@media (min-width: 1000px) and (max-height: 860px) { .sz-ekran { position: relative; top: auto; } }
 .sz-ekran {
   background: radial-gradient(120% 90% at 50% 0%, #2a0e24, var(--sz-ekran) 70%); color: var(--k-koyu-metin);
   border-radius: var(--k-radius-buyuk); padding: 14px; box-shadow: 0 30px 60px -30px rgb(28 10 24 / .8), inset 0 0 0 1px rgb(255 255 255 / .07);

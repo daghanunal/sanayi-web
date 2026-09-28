@@ -130,6 +130,10 @@ body {
 .pv__liste.is-dolu { background: var(--k-vurgu); cursor: pointer; }
 .pv__liste.is-dolu .pv__gonder { opacity: 1; }
 .pv__antet { display: none; }
+/* Dikey iPad (560–899 px): tam genişlikte çizim sahneyi taşırıyor, parça kartı 100svh'nin altında kalıyordu. */
+@media (min-width: 560px) and (max-width: 899px) {
+  .pv__svg { max-height: max(260px, calc(100svh - 560px)); width: auto; max-width: 100%; margin-inline: auto; }
+}
 
 @media (min-width: 900px) {
   .pv { height: 300vh; }

@@ -199,9 +199,14 @@ body { background: var(--k-zemin); }
 }
 .ck__sonuc::before { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 4px; background: var(--iri); }
 @media (min-width: 760px) { .ck__sonuc { grid-template-columns: auto auto 1fr auto; padding: 22px 28px; } }
+/* Dikey iPad (760–1099 px): dört sütunda hüküm metni kelime kelime kırılıyordu; hüküm ve buton alt satıra iner. */
+@media (min-width: 760px) and (max-width: 1099px) {
+  .ck__sonuc { grid-template-columns: auto 1fr auto; }
+  .ck__hukum { grid-column: 1 / 3; }
+}
 .ck__onizleme { display: inline-flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 34px; font-weight: 700; padding: 6px 14px; border: 1.5px dashed rgb(255 255 255 / .3); width: max-content; }
 .ck__onizleme span { display: inline-flex; gap: 6px; }
-.ck__tarih { display: grid; }
+.ck__tarih { display: grid; gap: 6px; }
 .ck__tarih small { font-family: var(--mono); font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--k-koyu-soluk); }
 .ck__tarih strong { font-size: clamp(30px, 3.6vw, 46px); font-weight: 900; font-stretch: 118%; letter-spacing: -0.035em; line-height: 1.05; display: block; }
 .ck__hukum { padding-left: 14px; border-left: 3px solid #3ee0b5; font-size: 15.5px; line-height: 1.45; max-width: 46ch; }

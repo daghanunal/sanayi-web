@@ -165,7 +165,7 @@
 .mf__hava i:nth-child(n + 4) { display: none; }
 @keyframes mf-nefes { 0% { transform: scale(.9); opacity: .7; } 100% { transform: scale(1.5); opacity: 0; } }
 .mf__derece { display: flex; align-items: flex-start; margin-top: 18px; color: var(--renk); transition: color .3s; font-family: var(--k-font-baslik); line-height: .85; }
-.mf__derece b { font-weight: 800; font-size: clamp(104px, 28vw, 168px); letter-spacing: -.06em; font-variant-numeric: tabular-nums; }
+.mf__derece b { font-weight: 800; font-size: clamp(104px, 28vw, 168px); letter-spacing: -.06em; font-variant-numeric: tabular-nums; padding-bottom: .16em; margin-bottom: -.04em; } /* glif kutusu alttaki etikete binmesin */
 .mf__derece span { font-size: clamp(28px, 6vw, 42px); font-weight: 600; margin-top: .3em; margin-left: 4px; }
 .mf__kaydir { display: grid; gap: 12px; width: 100%; max-width: 460px; margin-top: 18px; }
 .mf__kaydir-ad { font-family: var(--tk-mono); font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--k-koyu-soluk); text-align: center; }

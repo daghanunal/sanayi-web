@@ -169,6 +169,8 @@
 .mk__ust { color: var(--k-vurgu); font-weight: 700; font-size: 13px; letter-spacing: .1em; text-transform: uppercase; }
 .mk__ic { display: grid; gap: 28px; }
 @media (min-width: 1000px) { .mk__ic { grid-template-columns: 5fr 7fr; gap: 48px; align-items: start; } .mk__sahne { position: sticky; top: 84px; } }
+/* Kısa yatay ekranda (iPad) plan + adisyon ekranın yarısından uzun: yapışmasın. */
+@media (min-width: 1000px) and (max-height: 860px) { .mk__sahne { position: relative; top: auto; } }
 .mk__secim { display: grid; gap: 22px; min-width: 0; }
 .mk__alan { border: 0; margin: 0; padding: 0; min-width: 0; }
 .mk__alan legend { font-weight: 700; margin-bottom: 10px; font-size: 15px; }
@@ -197,6 +199,12 @@
 .mk__gunler, .mk__saatler { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; padding-bottom: 4px; scroll-snap-type: x proximity; }
 .mk__gunler::-webkit-scrollbar, .mk__saatler::-webkit-scrollbar { display: none; }
 .mk__gun { flex: none; width: 62px; display: grid; justify-items: center; gap: 0; padding: 8px 0; border-radius: 14px; scroll-snap-align: start; }
+/* İki sütunda (≥ 1000 px, iPad yatay) gün ve saatler sarılır: gizli yatay kaydırıcıdaki düğmeler yapışkan adisyonun altına giriyordu, dokunmatikte de keşfedilmiyordu. */
+@media (min-width: 1000px) {
+  .mk__saatler { flex-wrap: wrap; overflow: visible; }
+  .mk__gunler { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); overflow: visible; } /* yedi gün tek sırada */
+  .mk__gun { width: auto; }
+}
 .mk__gun span { font-size: 12.5px; color: var(--k-soluk); font-weight: 600; }
 .mk__gun b { font-family: var(--k-font-baslik); font-weight: 400; font-size: 24px; line-height: 1.1; }
 .mk__saat, .mk__sebep { flex: none; padding: 9px 14px; border-radius: 999px; font-weight: 600; font-size: 15px; scroll-snap-align: start; font-variant-numeric: tabular-nums; }

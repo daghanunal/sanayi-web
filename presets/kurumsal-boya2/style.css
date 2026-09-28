@@ -189,6 +189,8 @@ body { background: var(--k-zemin); }
 .mk__panel-ad { font-family: var(--k-font-baslik); font-weight: 600; font-size: 18px; letter-spacing: -.02em; }
 .mk__deger { display: flex; align-items: baseline; gap: 10px; margin-top: 4px; }
 .mk__sayi { font: 600 clamp(84px, 22vw, 144px)/.9 var(--mono); letter-spacing: -.06em; color: var(--kagit); font-variant-numeric: tabular-nums; transition: color .3s; }
+/* Glif kutusu (satır yüksekliği .9) üstteki panel adına ve alttaki duruma binmesin: kutu kadar pay. */
+.mk__sayi { padding-block: .2em .16em; }
 .mk__birim { font: 500 20px var(--mono); color: #9aa2e6; }
 .mk__ekran[data-d='boyali'] .mk__sayi { color: var(--fosfor); }
 .mk__ekran[data-d='macun'] .mk__sayi { color: #ff6a90; }
