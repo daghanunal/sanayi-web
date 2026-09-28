@@ -3,10 +3,16 @@
   "isletme": {
     "ad": "Anka Ağır Vasıta",
     "sektor": "Ağır Vasıta Servisi",
-    "slogan": "Tır, kamyon, otobüs. Yolda kalmasın diye.",
+    "tanim": "Tır, kamyon ve otobüs bakım ve onarımı",
     "kurulus": 1995,
-    "hakkinda": "İstanbul yolunun kenarında, Şaşmaz'ın girişindeyiz. Çekici, kamyon, otobüs ve midibüsün motorundan freninin havasına kadar her işine bakıyoruz. Aracınız yatarsa para kaybedersiniz; biz de işi o hesapla yaparız: önce ne kadar süreceğini söyler, sonra sözünde teslim ederiz."
+    "hakkinda": "Çekici, kamyon, otobüs ve midibüslerin motor, şanzıman, havalı fren ve elektrik arızalarına bakılır. Tek aracıyla çalışan nakliyecilerin yanı sıra nakliye, dağıtım ve personel servisi filolarının bakımı da yapılır. Yolda kalan araca servis aracıyla gidilir."
   },
+  "bilgiler": [
+    ["Araçlar", "Çekici, kamyon, kamyonet, otobüs ve midibüs"],
+    ["Donanım", "Ağır vasıta kanalı ve lifti, marka arıza tespit cihazları, havalı fren test cihazı"],
+    ["Randevu", "Arıza tespiti için randevu gerekmez. Periyodik bakım ve filo araçları sefer arasına göre randevuyla alınır."],
+    ["Yol yardım", "Gece ve hafta sonu da dahil her gün açık. Konum WhatsApp'tan gönderilebilir."]
+  ],
   "iletisim": {
     "telefon": "0532 555 12 34",
     "whatsapp": "905325551234",
@@ -14,102 +20,76 @@
     "mapsQuery": "Şaşmaz Oto Sanayi Sitesi Etimesgut Ankara"
   },
   "saatler": [null, "08:00-19:00", "08:00-19:00", "08:00-19:00", "08:00-19:00", "08:00-19:00", "08:00-17:00"],
-  "yolYardim": "Yol yardım hattımız 7 gün 24 saat açık.",
-  "alt": [
+  "hizmetler": [
     {
-      "id": "motor",
-      "durak": "Motor",
-      "baslik": "Motoru kasadan indirmeden dinleriz.",
-      "metin": "Kabini yatırır, arıza cihazını bağlar, yağ basıncını ve blow-by'ı ölçeriz. Revizyon gerekiyorsa söyleriz; gerekmiyorsa söktürmeyiz.",
-      "hizmet": "Motor",
-      "olcum": { "etiket": "Yağ basıncı", "birim": "bar", "once": 1.2, "sonra": 4.6, "iyi": 3.0 }
+      "baslik": "Motor bakımı ve revizyonu",
+      "kisa": "Periyodik bakım, enjektör, turbo ve revizyon",
+      "aciklama": "Yağ basıncı ve blow-by ölçülerek motorun durumuna bakılır. Periyodik bakımın yanı sıra enjektör, yakıt pompası, turbo ve motor revizyonu işleri de yapılır.",
+      "sure": "1–5 gün"
     },
     {
-      "id": "sanziman",
-      "durak": "Şanzıman",
-      "baslik": "Vites kaçırıyorsa sebebi burada.",
-      "metin": "Manuel ve otomatik (AMT) şanzıman, retarder ve debriyaj. Şaftı söküp istavroz ve askı rulmanına da bakarız.",
-      "hizmet": "Şanzıman",
-      "olcum": { "etiket": "Şaft titreşimi", "birim": "mm/s", "once": 11.4, "sonra": 2.1, "iyi": 4.5, "ters": true }
+      "baslik": "Şanzıman ve diferansiyel",
+      "kisa": "Manuel ve AMT şanzıman, retarder, arka köprü",
+      "aciklama": "Manuel ve otomatik (AMT) şanzıman, retarder ve debriyaj arızaları giderilir. Arka köprüden uğultu geliyorsa ayna-mahruti, göbek rulmanı ve aks keçesi kontrol edilir.",
+      "sure": "1–3 gün"
     },
     {
-      "id": "diferansiyel",
-      "durak": "Diferansiyel",
-      "baslik": "Arka köprüden gelen uğultuya bakarız.",
-      "metin": "Diferansiyel, ayna-mahruti, göbek rulmanı ve aks keçesi. Çift köprülü çekicilerde iki köprüyü birlikte ölçeriz.",
-      "hizmet": "Diferansiyel",
-      "olcum": { "etiket": "Dişli boşluğu", "birim": "mm", "once": 0.62, "sonra": 0.2, "iyi": 0.3, "ters": true }
+      "baslik": "Havalı fren sistemi",
+      "kisa": "Kompresör, kurutucu, valfler, EBS ve ABS",
+      "aciklama": "Hat basınçla test edilip kaçağın yeri cihazla bulunur. Kompresör, kurutucu, valf, fren körüğü ve balata işlerinin yanı sıra EBS ve ABS arızalarına da bakılır.",
+      "sure": "Aynı gün"
     },
     {
-      "id": "fren",
-      "durak": "Havalı fren",
-      "baslik": "Havayı tutmayan fren, en pahalı arızadır.",
-      "metin": "Kompresör, kurutucu, valfler, fren körükleri ve balata. Hattı basınçla test eder, kaçağı kulakla değil cihazla buluruz. EBS ve ABS arızaları da bizde.",
-      "hizmet": "Havalı fren",
-      "olcum": { "etiket": "Hat basıncı", "birim": "bar", "once": 4.1, "sonra": 8.5, "iyi": 7.5 }
+      "baslik": "AdBlue ve SCR sistemi",
+      "kisa": "Pompa, enjektör, NOx sensörü ve katalizör",
+      "aciklama": "Araç güç düşürüyorsa AdBlue pompası, enjektörü ve NOx sensörü kontrol edilir. SCR katalizörü sökülüp temizlenir, arızalı parça değiştirilir.",
+      "sure": "Aynı gün"
     },
     {
-      "id": "adblue",
-      "durak": "AdBlue",
-      "baslik": "Motor arızası lambası AdBlue'dan yanıyorsa.",
-      "metin": "AdBlue pompası, enjektörü, NOx sensörü ve SCR katalizörü. Güç düşürme (limp mode) arızasını kaldırmak için sistemi söküp temizleriz; iptal yapmayız.",
-      "hizmet": "AdBlue ve SCR",
-      "olcum": { "etiket": "NOx", "birim": "ppm", "once": 1250, "sonra": 180, "iyi": 400, "ters": true }
+      "baslik": "Takograf",
+      "kisa": "Sensör, kablo ve ekran arızaları",
+      "aciklama": "Dijital ve analog takografın sensör, kablo ve ekran arızaları giderilir. Kalibrasyon gerekirse araç yetkili istasyona yönlendirilir.",
+      "sure": "2–4 saat"
     },
     {
-      "id": "korug",
-      "durak": "Körük ve aks",
-      "baslik": "Yük yamuk basıyorsa körüğe bakarız.",
-      "metin": "Havalı süspansiyon körükleri, seviye valfi, amortisör, makas ve dingil. Dingil ayarı ve lastik aşınması bir arada kontrol edilir.",
-      "hizmet": "Körük ve dingil",
-      "olcum": { "etiket": "Sürüş yüksekliği", "birim": "mm", "once": 205, "sonra": 262, "iyi": 250 }
+      "baslik": "Süspansiyon ve dingil",
+      "kisa": "Havalı körük, seviye valfi, makas ve amortisör",
+      "aciklama": "Havalı körük, seviye valfi, amortisör ve makas arızalarına bakılır. Dingil ayarı yapılırken lastiklerin aşınması da kontrol edilir.",
+      "sure": "Aynı gün"
+    },
+    {
+      "baslik": "Elektrik ve arıza tespiti",
+      "kisa": "Arıza kodu okuma, tesisat, akü ve şarj",
+      "aciklama": "Arıza kodları marka cihazlarıyla okunur. Tesisat, far, akü ve şarj dinamosu arızaları da giderilir.",
+      "sure": "1–3 saat"
+    },
+    {
+      "baslik": "Yol yardım",
+      "kisa": "Yolda kalan araca servis aracı",
+      "aciklama": "Yolda kalan araca gece ve hafta sonu da servis aracıyla gidilir, arıza mümkünse yerinde giderilir. Yerinde onarılamayan araç çekiciyle sanayiye getirilir."
     }
   ],
-  "hizmetler": [
-    { "baslik": "Motor bakım ve revizyon", "aciklama": "Periyodik bakım, enjektör ve yakıt pompası, turbo, motor revizyonu.", "sure": "1-5 gün" },
-    { "baslik": "Şanzıman ve diferansiyel", "aciklama": "Manuel ve AMT şanzıman, retarder, debriyaj, arka köprü.", "sure": "1-3 gün" },
-    { "baslik": "Havalı fren sistemi", "aciklama": "Kompresör, kurutucu, valf, körük, balata; EBS ve ABS.", "sure": "Aynı gün" },
-    { "baslik": "AdBlue ve SCR", "aciklama": "Pompa, enjektör, NOx sensörü, katalizör temizliği.", "sure": "Aynı gün" },
-    { "baslik": "Takograf", "aciklama": "Dijital ve analog takograf arızası, kalibrasyon yönlendirmesi, sensör değişimi.", "sure": "2-4 saat" },
-    { "baslik": "Süspansiyon ve dingil", "aciklama": "Havalı körük, seviye valfi, makas, amortisör, dingil ayarı.", "sure": "Aynı gün" },
-    { "baslik": "Elektrik ve arıza tespit", "aciklama": "Marka cihazlarıyla arıza okuma, tesisat, far, akü ve şarj.", "sure": "1-3 saat" },
-    { "baslik": "Yol yardım ve mobil servis", "aciklama": "Yolda kalan araca servis aracıyla gelir, mümkünse yerinde onarırız.", "sure": "7/24" }
-  ],
   "surec": [
-    { "baslik": "Arayın ya da getirin", "aciklama": "Yolda kaldıysanız konum atın, servis aracımız yola çıksın." },
-    { "baslik": "Ölçer, süre veririz", "aciklama": "Arızayı cihazla tespit eder, parça ve süreyi baştan söyleriz." },
-    { "baslik": "Onarırız", "aciklama": "Çıkan parçayı saklarız. Onayınız olmadan ek iş yapmayız." },
-    { "baslik": "Yükle deneriz", "aciklama": "Fren ve süspansiyon işlerini yükte test edip teslim ederiz." }
+    { "baslik": "Arıza tespiti", "aciklama": "Arıza kodları okunur, gereken basınç ve yağ değerleri ölçülür." },
+    { "baslik": "Bilgi", "aciklama": "Yapılacak iş, değişecek parça ve teslim zamanı araç sahibine söylenir." },
+    { "baslik": "Onarım", "aciklama": "Araç sahibi onay verince iş yapılır, sökülen parça kendisine gösterilir." },
+    { "baslik": "Deneme ve teslim", "aciklama": "Fren ve süspansiyon işlerinden sonra araç yükle denenip teslim edilir." }
   ],
   "istatistikler": [
-    { "deger": "kurulus", "sonek": " yıl", "etiket": "Şaşmaz'da" },
-    { "deger": 9, "sonek": "", "etiket": "araçlık kanal ve lift" },
-    { "deger": 64, "sonek": "", "etiket": "filo anlaşması" },
-    { "deger": 24, "sonek": "/7", "etiket": "yol yardım" }
+    { "deger": 31, "etiket": "Şaşmaz Oto Sanayi Sitesi'nde", "birim": "YIL", "sonek": " yıl", "kurulustanHesapla": true },
+    { "deger": 6, "etiket": "haftada açık", "birim": "GÜN", "sonek": " gün", "saatlerdenHesapla": true }
   ],
-  "filo": {
-    "baslik": "Filonuz yatmasın.",
-    "metin": "Nakliye ve servis filoları için bakım takvimi tutar, aracı sefer aralarına göre alırız. Her aracın dosyası bizde; ne zaman ne değişti, bir mesajla öğrenirsiniz.",
-    "maddeler": [
-      "Araç başına bakım dosyası ve hatırlatma",
-      "Sefer arasına göre randevu, gece teslim",
-      "Aylık tek fatura",
-      "Yolda kalan filo aracına öncelik"
-    ]
-  },
-  "takograf": {
-    "baslik": "Takograf da bizden sorulur.",
-    "metin": "Dijital takografın sensörü, kablosu ve ekran arızaları. Sürücü kartı okunmuyorsa ya da hız kaydı tutmuyorsa getirin; kalibrasyon gerekiyorsa yetkili istasyona yönlendiririz."
-  },
   "markalar": ["Mercedes-Benz", "Ford Trucks", "MAN", "Scania", "Volvo", "DAF", "Iveco", "BMC", "Isuzu", "Otokar"],
-  "puan": { "ortalama": 4.8, "adet": 187 },
-  "yorumlar": [
-    { "ad": "Murat Ö.", "puan": 5, "metin": "Gece 2'de Polatlı çıkışında hava kaçırdım. Kırk dakikada geldiler, sabah yüküme yetiştim.", "arac": "Actros 1845" },
-    { "ad": "Kemal B.", "puan": 5, "metin": "AdBlue arızasına üç yerde iptal dediler. Burada sensörü değiştirip temizlediler, muayeneden de geçti.", "arac": "F-MAX 500" },
-    { "ad": "Tuncay L.", "puan": 5, "metin": "On iki araçlık filomuzun bakımını burada yaptırıyoruz. Randevuyu sefere göre veriyorlar, araç boş beklemiyor.", "arac": "12 araçlık filo" },
-    { "ad": "Selim K.", "puan": 4, "metin": "Şanzıman işi söyledikleri günden bir gün uzun sürdü ama arayıp haber verdiler. İşçilik sağlam.", "arac": "TGX 18.480" },
-    { "ad": "Hüsnü A.", "puan": 5, "metin": "Servis otobüsümüzün körükleri sürekli iniyordu. Seviye valfini buldular, parayı gereksiz parçaya vermedik.", "arac": "Otokar Sultan" }
+  "galeri": [
+    { "src": "/img/tonaj/kaput.jpg", "alt": "Kabini yatırılmış kamyonun motoruna iş lambasıyla bakılıyor" },
+    { "src": "/img/tonaj/usta.jpg", "alt": "Kırmızı bir çekicinin yanında parça üzerinde çalışılıyor" },
+    { "src": "/img/tonaj/beyaz.jpg", "alt": "Gece park hâlinde beyaz frigorifik tır" }
   ],
-  "finalBaslik": "Yolda mı kaldınız?",
-  "garanti": "Yapılan işçiliğe 1 yıl ya da 50.000 km garanti."
+  "yorumlar": [
+    { "ad": "Murat Ö.", "puan": 5, "metin": "Gece ikide Polatlı çıkışında araç hava kaçırmaya başladı. Kırk dakikada geldiler, valfi yolda değiştirdiler, sabah yüküme yetiştim.", "arac": "Mercedes-Benz Actros 1845" },
+    { "ad": "Kemal B.", "puan": 5, "metin": "Araç AdBlue arızası yüzünden güç düşürüyordu. NOx sensörünü değiştirip katalizörü temizlediler, muayeneden de geçti.", "arac": "Ford Trucks F-MAX 500" },
+    { "ad": "Tuncay L.", "puan": 5, "metin": "On iki araçlık filomuzun bakımını burada yaptırıyoruz. Randevuyu sefer arasına göre veriyorlar, araç boşa beklemiyor.", "arac": "12 araçlık nakliye filosu" },
+    { "ad": "Selim K.", "puan": 4, "metin": "Şanzıman işi söyledikleri günden bir gün uzun sürdü ama önceden arayıp haber verdiler.", "arac": "MAN TGX 18.480" },
+    { "ad": "Hüsnü A.", "puan": 5, "metin": "Servis otobüsümüzün körükleri sürekli iniyordu. Sorunu seviye valfinde buldular, körükleri değiştirmeye gerek kalmadı.", "arac": "Otokar Sultan" }
+  ]
 }

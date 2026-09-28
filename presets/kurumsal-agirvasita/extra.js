@@ -1,4 +1,4 @@
-// Sektöre özel modül: 7/24 yol yardım bandı + filo bakım sözleşmesi teklif formu.
+// Sektöre özel modül: yol yardım bandı + filo bakım sözleşmesi hesabı.
 // Araç sayısı, tipler, markalar, yıllık km ve kullanım → tahmini yıllık bakım yükü + WhatsApp teklif mesajı.
 import { esc, waHref, telHref, icons, gsap, reducedMotion } from '../../shared/core.js';
 
@@ -13,7 +13,7 @@ const KMLER = [
 const KULLANIM = [
   { id: 'uzun', ad: 'Şehirlerarası nakliye', aralik: 50000 },
   { id: 'sehir', ad: 'Şehir içi dağıtım', aralik: 30000 },
-  { id: 'servis', ad: 'Personel / öğrenci servisi', aralik: 25000 },
+  { id: 'servis', ad: 'Personel ve öğrenci servisi', aralik: 25000 },
   { id: 'santiye', ad: 'Şantiye ve hafriyat', aralik: 20000 },
 ];
 const KAPSAM = [
@@ -36,12 +36,13 @@ const cip = (tur, ad, liste, secili) =>
 export const filoSozlesme = {
   render(d) {
     const markalar = d.markalar || [];
+    const yy = (d.bilgiler || []).find(([k]) => /yol yardım/i.test(k))?.[1] || 'Yolda kalan araca servis aracıyla gidilir.';
     return `
       <section class="k-bolum fs" aria-labelledby="fs-baslik">
-        <div class="fs__bant" role="region" aria-label="7/24 yol yardım">
+        <div class="fs__bant" role="region" aria-label="Yol yardım">
           <div class="k-kap fs__bant-ic">
             <span class="fs__isik" aria-hidden="true"></span>
-            <p class="fs__bant-metin"><strong>7/24 yol yardım</strong><span>${esc(d.yolYardim || 'Yol yardım hattımız 7 gün 24 saat açık.')}</span></p>
+            <p class="fs__bant-metin"><strong>Yol yardım</strong><span>${esc(yy)}</span></p>
             <div class="fs__bant-dugme">
               <a class="k-btn" href="${telHref(d)}">${icons.phone}<span>${esc(d.iletisim.telefon)}</span></a>
               ${d.iletisim.whatsapp ? `<button type="button" class="k-btn k-btn--ikincil" data-konum>${icons.pin}<span>Konumumu gönder</span></button>` : ''}
@@ -51,7 +52,7 @@ export const filoSozlesme = {
         <div class="k-kap">
           <div class="fs__bas">
             <h2 class="k-h2" id="fs-baslik" data-bol>Filo bakım sözleşmesi</h2>
-            <p class="k-lead">Filonuzu anlatın; yılda kaç bakım girişi gerektiğini görün, sözleşme teklifini hazır mesajla isteyin.</p>
+            <p class="k-lead">Araç sayısı, tipi ve yıllık kilometre seçilince filonun yılda kaç bakım girişi gerektirdiği hesaplanır. Teklif isteği hazır mesajla WhatsApp'tan gönderilir.</p>
           </div>
           <div class="fs__ic">
             <form class="fs__form" onsubmit="return false">
@@ -74,7 +75,7 @@ export const filoSozlesme = {
               <div class="fs__filo" data-o="filo" aria-hidden="true"></div>
               <dl class="fs__ozet" data-o="ozet"></dl>
               <p class="fs__not">Bakım aralığı aracın üretici değerine göre belirlenir; bu hesap genel bir tahmindir.</p>
-              <a class="k-btn fs__gonder" target="_blank" rel="noopener">Sözleşme teklifi isteyin</a>
+              <a class="k-btn fs__gonder" target="_blank" rel="noopener">${icons.whatsapp}<span>WhatsApp'tan teklif isteyin</span></a>
             </div>
           </div>
         </div>
@@ -118,7 +119,7 @@ export const filoSozlesme = {
         ['Yıllık km', `${km.ad} km, araç başına`],
         ['Kullanım', kul.ad],
         ['Bakım', `araç başına yılda ${arac}`],
-        kapsam.length ? ['Kapsam', kapsam.join(', ')] : null,
+        kapsam.length ? ['Kapsam', kapsam.map((x, i) => (i && !/^AdBlue/.test(x) ? x.charAt(0).toLocaleLowerCase('tr') + x.slice(1) : x)).join(', ')] : null,
       ].filter(Boolean);
       o('ozet').innerHTML = satir.map(([a, b]) => `<div><dt>${esc(a)}</dt><dd>${esc(b)}</dd></div>`).join('');
       const mesaj = [

@@ -10,6 +10,8 @@ const POST_GAP = 36; // lamba direkleri arası
 const SEG = 16; // yol dokusunun tekrar boyu
 const ROAD_LEN = 420;
 const GREEN = '#0b7a4b';
+const AMBER = '#ffac4a';
+const NAVY = '#101c2c';
 const smoothstep01 = (t) => t * t * (3 - 2 * t);
 
 function canvasTex(w, h, draw, { repeat = false } = {}) {
@@ -129,19 +131,19 @@ function makeMat(color, o = {}) {
 export function drawTrailerSide(g, w, h, { name = '', tel = '' } = {}) {
   // tente üstüne basılan çıkartma: zemin saydam (tentenin kıvrımları görünür)
   g.clearRect(0, 0, w, h);
-  g.fillStyle = '#0b7a4b';
+  g.fillStyle = NAVY;
   g.fillRect(0, h * 0.74, w, h * 0.12);
-  g.fillStyle = '#ffc42e';
+  g.fillStyle = AMBER;
   g.fillRect(0, h * 0.86, w, h * 0.025);
   if (name) {
     let size = 190;
     g.font = `900 ${size}px 'Saira Semi Condensed', sans-serif`;
     while (g.measureText(name).width > w * 0.8 && size > 60) { size -= 8; g.font = `900 ${size}px 'Saira Semi Condensed', sans-serif`; }
-    g.fillStyle = '#0b7a4b';
+    g.fillStyle = NAVY;
     g.fillText(name, w * 0.06, h * 0.52);
     g.font = "700 60px 'Saira Semi Condensed', sans-serif";
     g.fillStyle = '#1b2a2e';
-    g.fillText(`AĞIR VASITA SERVİSİ · YOL YARDIM ${tel}`, w * 0.06 + 6, h * 0.66);
+    g.fillText(`ŞAŞMAZ OTO SANAYİ SİTESİ · ${tel}`, w * 0.06 + 6, h * 0.66);
   }
 }
 
@@ -191,7 +193,7 @@ export function createScene(canvas, { lite = false, signs = [], finalSign = null
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFShadowMap;
   scene.environmentIntensity = 0.32;
-  const FOG = new THREE.Color(0x0f2127);
+  const FOG = new THREE.Color(0x0d1624);
   scene.fog = new THREE.Fog(FOG, 30, 190);
   scene.background = FOG;
 
@@ -207,8 +209,8 @@ export function createScene(canvas, { lite = false, signs = [], finalSign = null
       fragmentShader: `varying vec3 vP; uniform float uGlow;
         void main(){
           float h = vP.y;
-          vec3 top = vec3(0.020,0.045,0.070);
-          vec3 mid = vec3(0.060,0.130,0.150);
+          vec3 top = vec3(0.018,0.030,0.070);
+          vec3 mid = vec3(0.060,0.090,0.160);
           vec3 glow = vec3(0.85,0.46,0.20);
           vec3 c = mix(mid, top, smoothstep(0.02, 0.45, h));
           float band = exp(-pow(max(h, 0.0) * 9.0, 1.4)) * (0.55 + 0.45 * smoothstep(-0.2, 0.9, -vP.z));
@@ -257,8 +259,8 @@ export function createScene(canvas, { lite = false, signs = [], finalSign = null
       g.setIndex(idx);
       hills.add(new THREE.Mesh(g, new THREE.MeshBasicMaterial({ color, side: THREE.DoubleSide, fog: false })));
     };
-    mk(380, 46, 0x0b1a1f, 1.3);
-    mk(300, 26, 0x071114, 4.1);
+    mk(380, 46, 0x0b1320, 1.3);
+    mk(300, 26, 0x070c16, 4.1);
   }
 
   // Işıklar
@@ -289,7 +291,7 @@ export function createScene(canvas, { lite = false, signs = [], finalSign = null
   road2.position.x = -13.6;
   world.add(road2);
   // toprak/çim şeritleri
-  const groundM = new THREE.MeshStandardMaterial({ color: 0x0c1714, roughness: 1 });
+  const groundM = new THREE.MeshStandardMaterial({ color: 0x0c111a, roughness: 1 });
   const ground = new THREE.Mesh(new THREE.PlaneGeometry(400, ROAD_LEN), groundM);
   ground.rotation.x = -Math.PI / 2;
   ground.position.set(0, -0.03, -ROAD_LEN / 2 + 60);
@@ -461,7 +463,7 @@ export function createScene(canvas, { lite = false, signs = [], finalSign = null
 
   // Konvoy (filo bölümü için) ve yol yardım aracı: varlıklar yüklenince kurulur
   const convoy = [];
-  const cc = lite ? [[0x9c2f22, -3.6, -26]] : [[0x9c2f22, -3.6, -26], [0x273746, 0, 30]];
+  const cc = []; // konvoy yalnız eski filo bölümündeydi
   const van = { root: new THREE.Group(), beaconM: new THREE.MeshStandardMaterial({ color: 0x3a2206, emissive: 0xffa21a, emissiveIntensity: 0, roughness: 0.3 }), redraw: () => {} };
   van.root.position.set(3.3, 0, 60);
   van.root.visible = false;
@@ -474,20 +476,19 @@ export function createScene(canvas, { lite = false, signs = [], finalSign = null
 
   const q = pickQuality();
   const readyP = (async () => {
-    const [env, T, R, VAN] = await Promise.all([
+    const [env, T, R] = await Promise.all([
       loadEnv('night', renderer, { quality: q }),
       loadAsset('truck', { quality: q, renderer }),
       loadAsset('trailer', { quality: q, renderer }),
-      loadAsset('van', { quality: q, renderer }),
     ]);
     scene.environment = env;
     truck.T = T;
     truck.R = R;
-    // kabin koyu yeşil metalik; dorse tentesi kırık beyaz
-    T.materials.paint.color.set(0x1d5a52);
+    // kabin kırık beyaz; dorse şasisi gece mavisi, tente kırık beyaz
+    T.materials.paint.color.set(0xd8d4c8);
     T.materials.paint.metalness = 0.45;
     T.materials.paint.roughness = 0.3;
-    if (R.materials.paint) R.materials.paint.color.set(0x1d5a52);
+    if (R.materials.paint) R.materials.paint.color.set(0x2a3442);
     if (R.materials.curtain) R.materials.curtain.color.set(0xeceee8);
     rig.add(T.scene, R.scene);
     R.scene.position.set(-1.5, 0, 0);
@@ -521,26 +522,6 @@ export function createScene(canvas, { lite = false, signs = [], finalSign = null
       scene.add(g);
       convoy.push({ root: g, roll: (d) => { ct.roll(d); cr.roll(d); } });
     }
-    // yol yardım panelvanı: beyaz, tepe lambası, yan çıkartma
-    VAN.materials.paint.color.set(0xeef0ea);
-    const vr = new THREE.Group();
-    vr.rotation.y = Math.PI / 2;
-    vr.add(VAN.scene);
-    van.root.add(vr);
-    const bar = new THREE.Mesh(new THREE.BoxGeometry(0.34, 0.12, 1.2), van.beaconM);
-    bar.position.set(0.9, 2.02, 0);
-    VAN.scene.add(bar);
-    const vd = new THREE.MeshStandardMaterial({ map: vanTex, transparent: true, roughness: 0.4, polygonOffset: true, polygonOffsetFactor: -2 });
-    for (const sd of [-1, 1]) {
-      const pl = new THREE.Mesh(new THREE.PlaneGeometry(3.0, 1.5), vd);
-      pl.position.set(-0.55, 1.05, sd * 0.985);
-      if (sd < 0) pl.rotation.y = Math.PI;
-      VAN.scene.add(pl);
-    }
-    van.lights = VAN.materials.light_head;
-    if (VAN.materials.light_head) VAN.materials.light_head.emissiveIntensity = 4;
-    if (VAN.materials.light_tail) VAN.materials.light_tail.emissiveIntensity = 2;
-    van.roll = (d) => VAN.roll(d);
     truck.ready = true;
   })();
 

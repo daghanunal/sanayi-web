@@ -3,408 +3,211 @@ import ek from '../../data/agirvasita-sinematik2.json';
 import '../../shared/base.css';
 import './style.css';
 import {
-  boot, initSmoothScroll, reducedMotion, telHref, waHref, mapsHref, mapsEmbed,
-  openStatus, groupedHours, icons, esc, asset, gsap, ScrollTrigger,
+  boot, initSmoothScroll, reducedMotion, telHref, waHref, mapsHref, mapsEmbed, icons, esc, gsap, ScrollTrigger,
+  autoHideHeader, saatListesi, gunDurumu, kisaAdres, acikGunSayisi, yilEki,
 } from '../../shared/core.js';
-import { SplitText } from 'gsap/SplitText';
-import { DrawSVGPlugin } from 'gsap/DrawSVGPlugin';
 import { createScene } from './scene.js';
 
-gsap.registerPlugin(SplitText, DrawSVGPlugin);
+// Gece Seferi (sinematik aile): 3D yalnız künyede. Gece otoyolunda sodyum lambaların altından geçen bir tır;
+// kaydırınca kamera hafifçe yükselir ve sahne kararır, künye ekrandan çıkınca çizim durur. Tabela, portal ve
+// kilometre sayacı yok; geri kalan her şey sodyum turuncusu vurgulu, düz gece zemininde normal site bölümü.
 ScrollTrigger.config({ ignoreMobileResize: true });
 
-const d = boot({ ...veri, ...ek });
-const T = d.sinema;
+const d = boot({ ...veri, ...ek, preset: 'agirvasita-sinematik2' });
 const $ = (s, root = document) => root.querySelector(s);
 const $$ = (s, root = document) => [...root.querySelectorAll(s)];
 const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
-const smooth = (t) => t * t * (3 - 2 * t);
-const nf = (n, digits = 0) => Number(n).toLocaleString('tr-TR', { minimumFractionDigits: digits, maximumFractionDigits: digits });
-const dec = (n) => (Number.isInteger(n) ? 0 : String(n).split('.')[1].length);
-const up = (s) => s.toLocaleUpperCase('tr');
-const finePointer = matchMedia('(hover: hover) and (pointer: fine)').matches;
+const pad = (n) => String(n).padStart(2, '0');
+const ad = esc(d.isletme.ad);
+const tel = esc(d.iletisim.telefon);
+const st = gunDurumu(d.saatler);
+const yas = new Date().getFullYear() - d.isletme.kurulus;
+const acikGun = acikGunSayisi(d.saatler);
+const phone = matchMedia('(max-width: 899px)').matches;
 const weak = (navigator.hardwareConcurrency || 8) <= 4 || (navigator.deviceMemory || 8) <= 4;
 const lite = weak || innerWidth < 760;
 
-function ablative(n) {
-  const units = ['', 'den', 'den', 'ten', 'ten', 'ten', 'dan', 'den', 'den', 'dan'];
-  const tens = ['', 'dan', 'den', 'dan', 'tan', 'den', 'tan', 'ten', 'den', 'dan'];
-  const u = n % 10, t = Math.floor(n / 10) % 10;
-  return `${n}'${u ? units[u] : t ? tens[t] : 'den'}`;
-}
+// --- İçerik ---------------------------------------------------------------------
 
-// --- İçerik ------------------------------------------------------------------------------
+$('#top').innerHTML = `
+  <a class="top__brand" href="#kunye">${ad}</a>
+  <nav class="top__nav" aria-label="Bölümler"><a href="#hizmetler">Hizmetler</a><a href="#hakkinda">Hakkında</a><a href="#saatler">Saatler ve konum</a><a href="#iletisim">İletişim</a></nav>
+  <p class="top__status ${st.open ? 'is-open' : ''}">${st.open ? 'Açık' : 'Kapalı'}</p>
+  <a class="top__call" href="${telHref(d)}" aria-label="Ara: ${tel}">${icons.phone}<span class="top__num">${tel}</span></a>`;
 
-const binds = { ad: d.isletme.ad, slogan: d.isletme.slogan, telefon: d.iletisim.telefon, adres: d.iletisim.adres };
-$$('[data-bind]').forEach((el) => (el.textContent = binds[el.dataset.bind] ?? ''));
-$$('[data-t]').forEach((el) => (el.textContent = T[el.dataset.t] ?? ''));
-$$('[data-tel]').forEach((a) => (a.href = telHref(d)));
-$$('[data-maps]').forEach((a) => (a.href = mapsHref(d)));
-$$('[data-icon]').forEach((el) => (el.innerHTML = icons[el.dataset.icon]));
-$$('[data-wa-konum]').forEach((a) => (a.href = waHref(d, `Merhaba ${d.isletme.ad}, yolda kaldım. Konumumu gönderiyorum. Araç: `)));
-$('[data-wa-filo]').href = waHref(d, `Merhaba ${d.isletme.ad}, filomuzun bakımı için teklif almak istiyorum. Araç sayımız: `);
-$$('[data-sos]').forEach((el) => (el.textContent = d.yolYardim));
-$('.top__brand').setAttribute('aria-label', `${d.isletme.ad}, sayfa başı`);
-
-$('[data-intro-ust]').textContent = up(T.introUst);
-$('[data-intro-name]').textContent = d.isletme.ad;
-$('[data-since]').textContent = `Şaşmaz Oto Sanayi · ${ablative(d.isletme.kurulus)} beri`;
-const heroTitle = $('[data-hero-title]');
-heroTitle.textContent = d.isletme.ad;
-heroTitle.classList.toggle('is-long', d.isletme.ad.length > 22);
-
-const status = openStatus(d.saatler);
-$$('[data-status]').forEach((el) => {
-  el.textContent = status.open ? 'Atölye açık' : 'Atölye kapalı';
-  el.title = status.text;
-  el.classList.toggle('is-open', status.open);
-});
-
-// Hakkında: kelime kelime aydınlanır
-$('[data-about]').innerHTML = d.isletme.hakkinda.split(' ').map((w) => `<span>${esc(w)}</span>`).join(' ');
-
-// Duraklar (her biri bir portal)
-const fmt = (o, v) => nf(v, dec(o.iyi) || dec(o.once) || dec(o.sonra));
-$('[data-stop-list]').innerHTML = d.alt.map((a, i) => {
-  const o = a.olcum;
-  const max = Math.max(o.once, o.sonra, o.iyi) * 1.15;
-  const pct = (v) => ((v / max) * 100).toFixed(1);
-  return `
-  <article class="stop" data-cam="stop${i}" data-stop="${i}">
-    <div class="stop__card">
-      <p class="stop__tab"><span>ÇIKIŞ ${i + 1}</span>${esc(up(a.durak))}</p>
-      <h3 class="stop__title">${esc(a.baslik)}</h3>
-      <p class="stop__text">${esc(a.metin)}</p>
-      <div class="gauge" data-gauge data-once="${o.once}" data-sonra="${o.sonra}" style="--iyi:${pct(o.iyi)}%">
-        <div class="gauge__head"><span>${esc(o.etiket)}</span><b><i data-gauge-val>${esc(fmt(o, o.once))}</i> ${esc(o.birim)}</b></div>
-        <div class="gauge__bar"><i class="gauge__fill" data-gauge-fill style="--p:${pct(o.once)}%;--q:${pct(o.sonra)}%"></i><i class="gauge__mark"></i></div>
-        <div class="gauge__foot"><span>Gelişte ${esc(fmt(o, o.once))}</span><span>Olması gereken ${o.ters ? '≤' : '≥'} ${esc(fmt(o, o.iyi))}</span><span>Teslimde ${esc(fmt(o, o.sonra))}</span></div>
-      </div>
-      <a class="stop__wa" href="${esc(waHref(d, `Merhaba ${d.isletme.ad}, ${a.hizmet.toLocaleLowerCase('tr')} için bilgi almak istiyorum. Araç: `))}" target="_blank" rel="noopener">${icons.whatsapp}<span>${esc(a.hizmet)} için yazın</span></a>
-    </div>
-  </article>`;
-}).join('');
-
-// Hizmetler: çıkış listesi
-$('[data-exits]').innerHTML = d.hizmetler.map((s, i) => `
-  <li class="exit">
-    <span class="exit__no">${i + 1}</span>
-    <div class="exit__body"><h3>${esc(s.baslik)}</h3><p>${esc(s.aciklama)}</p></div>
-    <span class="exit__time">${esc(s.sure)}</span>
-  </li>`).join('');
-$('[data-tako-baslik]').textContent = d.takograf.baslik;
-$('[data-tako-metin]').textContent = d.takograf.metin;
-$('[data-ticks]').innerHTML = Array.from({ length: 13 }, (_, i) => {
-  const a = (-120 + i * 20) * (Math.PI / 180);
-  const r0 = i % 2 ? 44 : 40;
-  return `<line x1="${(60 + Math.sin(a) * r0).toFixed(1)}" y1="${(60 - Math.cos(a) * r0).toFixed(1)}" x2="${(60 + Math.sin(a) * 50).toFixed(1)}" y2="${(60 - Math.cos(a) * 50).toFixed(1)}"/>`;
-}).join('');
-
-// Kilometre sayaçları
-const yil = new Date().getFullYear() - d.isletme.kurulus;
-const stats = d.istatistikler.map((s) => ({ ...s, deger: s.deger === 'kurulus' ? yil : s.deger }));
-$('[data-stats]').innerHTML = stats.map((s) => {
-  const digits = String(s.deger).split('');
-  return `
-  <div class="odo" aria-label="${esc(`${s.deger}${s.sonek} ${s.etiket}`)}">
-    <div class="odo__win" aria-hidden="true">${digits.map((n) => `<span class="odo__col" data-digit="${n}">${Array.from({ length: 10 }, (_, k) => `<i>${k}</i>`).join('')}</span>`).join('')}${s.sonek ? `<em>${esc(s.sonek.trim())}</em>` : ''}</div>
-    <p class="odo__lbl">${esc(s.etiket)}</p>
+$('#kunye-ic').innerHTML = `
+  <h1 class="hero__title${d.isletme.ad.length > 20 ? ' is-long' : ''}" id="hero-title">${ad}</h1>
+  <p class="hero__what">${esc(d.isletme.tanim)}</p>
+  <dl class="kunye">
+    <div><dt>Adres</dt><dd>${esc(kisaAdres(d.iletisim.adres))}</dd></div>
+    <div><dt>Bugün</dt><dd class="durum ${st.open ? 'is-open' : ''}">${esc(st.kunye)}</dd></div>
+    <div><dt>Telefon</dt><dd><a href="${telHref(d)}">${tel}</a></dd></div>
+  </dl>
+  <div class="hero__cta">
+    <a class="btn btn--sodium" href="${telHref(d)}">${icons.phone}<span>Ara</span></a>
+    <a class="btn btn--ghost" href="${waHref(d)}" target="_blank" rel="noopener">${icons.whatsapp}<span>WhatsApp</span></a>
+    <a class="btn btn--ghost" href="${mapsHref(d)}" target="_blank" rel="noopener">${icons.pin}<span>Yol tarifi</span></a>
   </div>`;
-}).join('');
 
-$('[data-filo-baslik]').textContent = d.filo.baslik;
-$('[data-filo-metin]').textContent = d.filo.metin;
-$('[data-filo-list]').innerHTML = d.filo.maddeler.map((m) => `<li>${esc(m)}</li>`).join('');
-const chunk = `<span class="brands__chunk">${d.markalar.map((m) => `<span>${esc(m)}</span>`).join('<i>·</i>')}<i>·</i></span>`;
-$('[data-brands]').innerHTML = chunk + chunk;
+$('#hizmetler').innerHTML = `
+  <div class="wrap">
+    <div class="exits__head">
+      <h2 class="h2" id="hizmet-t">Hizmetler</h2>
+      <p class="exits__lead">Çekici, kamyon, otobüs ve midibüs. Süreler yaklaşıktır, araca göre değişebilir. Fiyat ve randevu için arayın.</p>
+    </div>
+    <ol class="exits__list">
+      ${d.hizmetler.map((h, i) => `
+        <li class="exit">
+          <span class="exit__no">${pad(i + 1)}</span>
+          <div class="exit__body"><h3>${esc(h.baslik)}</h3><p>${esc(h.aciklama)}</p></div>
+          ${h.sure ? `<span class="exit__time">${esc(h.sure)}</span>` : ''}
+        </li>`).join('')}
+    </ol>
+  </div>`;
 
-// Süreç
-$('[data-steps]').innerHTML = d.surec.map((s, i) => `
-  <li class="step"><span class="step__n">${i + 1}</span><div><h3>${esc(s.baslik)}</h3><p>${esc(s.aciklama)}</p></div></li>`).join('');
-$('[data-garanti]').textContent = d.garanti;
+const g = d.galeri || [];
+$('#hakkinda').innerHTML = `
+  <div class="wrap about__grid">
+    <div>
+      <h2 class="h2" id="hakkinda-t">Hakkında</h2>
+      <p class="about__text">${ad} ${esc(yilEki(d.isletme.kurulus))} beri Şaşmaz Oto Sanayi Sitesi'nde. ${esc(d.isletme.hakkinda)}</p>
+      <dl class="odos">
+        <div class="odo"><dt>Şaşmaz Oto Sanayi Sitesi'nde</dt><dd><b>${yas}</b> yıl</dd></div>
+        <div class="odo"><dt>Haftada açık</dt><dd><b>${acikGun}</b> gün</dd></div>
+      </dl>
+      <dl class="facts">
+        ${(d.bilgiler || []).map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join('')}
+        ${d.markalar?.length ? `<div><dt>Bakım yapılan markalar</dt><dd>${d.markalar.map(esc).join(', ')}</dd></div>` : ''}
+      </dl>
+    </div>
+    <div class="about__photos">
+      ${g.slice(0, 2).map((p, i) => `<figure class="about__photo about__photo--${i}"><img src="${esc(p.src)}" alt="${esc(p.alt)}" loading="lazy" decoding="async" /></figure>`).join('')}
+    </div>
+  </div>`;
 
-// Yorumlar: telsiz mesajları
-$('[data-score]').innerHTML = `
-  <b>${esc(nf(d.puan.ortalama, 1))}</b>
-  <div><p class="score__stars" aria-hidden="true">${icons.star.repeat(5)}</p><p>Örnek puan · ${esc(nf(d.puan.adet))} değerlendirme</p></div>`;
-$('[data-msgs]').innerHTML = d.yorumlar.map((y, i) => `
-  <li class="msg ${i % 2 ? 'msg--r' : ''}">
-    <p class="msg__meta"><span class="msg__ch">KANAL ${esc(String(9 + (i % 3)))}</span><b>${esc(y.ad)}</b><span>${esc(y.arac)}</span></p>
-    <blockquote>${esc(y.metin)}</blockquote>
-    <p class="msg__stars" aria-label="${y.puan} yıldız">${icons.star.repeat(y.puan)}</p>
-  </li>`).join('');
+$('#saatler').innerHTML = `
+  <div class="wrap hours__grid">
+    <div>
+      <h2 class="h2" id="saatler-t">Çalışma saatleri ve konum</h2>
+      <p class="hours__now ${st.open ? 'is-open' : ''}">${esc(st.metin)}</p>
+      <dl class="hours__list">
+        ${saatListesi(d.saatler).map(([gun, s]) => `<div class="${s === 'Kapalı' ? 'is-closed' : ''}"><dt>${esc(gun)}</dt><dd>${esc(s)}</dd></div>`).join('')}
+      </dl>
+    </div>
+    <div class="loc">
+      <p class="loc__addr">${esc(d.iletisim.adres)}</p>
+      <div class="loc__map" data-map><p>Harita</p></div>
+      <div class="loc__cta">
+        <a class="btn btn--sodium" href="${mapsHref(d)}" target="_blank" rel="noopener">${icons.pin}<span>Yol tarifi</span></a>
+        <a class="btn btn--ghost" href="${telHref(d)}">${icons.phone}<span>${tel}</span></a>
+      </div>
+    </div>
+  </div>`;
 
-// Saatler + VMS tabelası
-$('[data-hours]').innerHTML = groupedHours(d.saatler)
-  .map(([g, h]) => `<div class="${h === 'Kapalı' ? 'is-closed' : ''}"><dt>${esc(g)}</dt><dd>${esc(h)}</dd></div>`).join('');
-const vms = $('[data-vms]');
-$('[data-vms-text]').textContent = up(status.text);
-vms.classList.toggle('is-open', status.open);
+const yildiz = (n) => `<p class="msg__stars" role="img" aria-label="5 üzerinden ${n}">${Array.from({ length: 5 }, (_, i) => `<span class="${i < n ? 'on' : ''}">${icons.star}</span>`).join('')}</p>`;
+$('#yorumlar').innerHTML = `
+  <div class="wrap">
+    <h2 class="h2" id="yorum-t">Örnek yorumlar</h2>
+    <p class="radio__note">Buradaki yorumlar örnektir, yerlerine işletmenin gerçek yorumları konur.</p>
+    <ul class="msgs">
+      ${d.yorumlar.map((y, i) => `
+        <li class="msg ${i % 2 ? 'msg--r' : ''}">
+          <p class="msg__meta"><b>${esc(y.ad)}</b><span>${esc(y.arac)}</span></p>
+          <blockquote>${esc(y.metin)}</blockquote>
+          ${yildiz(y.puan)}
+        </li>`).join('')}
+    </ul>
+  </div>`;
 
-$('[data-final-title]').textContent = d.finalBaslik;
-$('[data-year]').textContent = new Date().getFullYear();
+$('#iletisim').innerHTML = `
+  <div class="wrap final__in">
+    <h2 class="final__title" id="final-t">İletişim</h2>
+    <p class="final__text">Fiyat ve randevu için arayın ya da WhatsApp'tan yazın. Yolda kaldıysanız konumunuzu WhatsApp'tan gönderebilirsiniz.</p>
+    <a class="final__tel" href="${telHref(d)}">${tel}</a>
+    <div class="final__cta">
+      <a class="btn btn--sodium" href="${telHref(d)}">${icons.phone}<span>Ara</span></a>
+      <a class="btn btn--ghost" href="${waHref(d)}" target="_blank" rel="noopener">${icons.whatsapp}<span>WhatsApp</span></a>
+    </div>
+    <p class="final__addr">${esc(d.iletisim.adres)}<br>${esc(st.metin)}</p>
+  </div>`;
+
+$('#foot').innerHTML = `
+  <div class="wrap">
+    <p class="foot__name">${ad}</p>
+    <p>${esc(d.isletme.tanim)}</p>
+    <p>${esc(d.iletisim.adres)} · <a href="${telHref(d)}">${tel}</a></p>
+    <p class="foot__small">© ${new Date().getFullYear()} ${ad}. Pexels'ten alınan fotoğraflar ve 3D sahne temsilîdir. Yorumlar örnektir.</p>
+  </div>`;
 
 const mapBox = $('[data-map]');
 new IntersectionObserver((entries, obs) => {
-  if (!entries[0].isIntersecting) return;
-  mapBox.innerHTML = `<iframe title="${esc(d.isletme.ad)} konumu" src="${esc(mapsEmbed(d))}" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>`;
+  if (!entries.some((e) => e.isIntersecting)) return;
+  mapBox.innerHTML = `<iframe title="${ad} konumu" src="${esc(mapsEmbed(d))}" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>`;
   obs.disconnect();
 }, { rootMargin: '600px' }).observe(mapBox);
 
-// Fotoğraflar (arka plan olarak)
-$$('[data-photo]').forEach((el) => (el.style.backgroundImage = `url("${asset(el.dataset.photo)}")`));
+const top = $('#top');
+if (phone) autoHideHeader(top, { offset: 120 });
+const solid = () => top.classList.toggle('is-solid', scrollY > 40);
+addEventListener('scroll', solid, { passive: true });
+solid();
 
-// --- Sahne -------------------------------------------------------------------------------
+// --- Sahne: yalnız künye --------------------------------------------------------------
 
-const signs = d.alt.map((a, i) => ({
-  tab: `ÇIKIŞ ${i + 1}`,
-  main: up(a.durak),
-  sub: `${a.olcum.etiket} ${a.olcum.ters ? '≤' : '≥'} ${fmt(a.olcum, a.olcum.iyi)} ${a.olcum.birim}`,
-  d: 1e6,
-}));
 const canvas = $('[data-stage]');
 let S = null;
 try {
-  S = createScene(canvas, { lite, signs, finalSign: T.cikisTabela, name: up(d.isletme.ad), tel: d.iletisim.telefon });
-} catch (e) {
+  S = createScene(canvas, { lite, signs: [], finalSign: null, name: d.isletme.ad.toLocaleUpperCase('tr'), tel: d.iletisim.telefon });
+} catch {
   document.documentElement.classList.add('no-webgl');
+  canvas.remove();
 }
 document.fonts?.ready.then(() => document.fonts.load("900 80px 'Saira Semi Condensed'")).then(() => S?.redrawSigns());
-if (import.meta.env.DEV) window.__av = { S, signs };
 
-// Kamera pozları [kamX, kamY, kamZ, bakX, bakY, bakZ]. Araç -z yönüne gider.
-const CAMS = {
-  hero: [4.4, 1.3, -18.5, 3.2, 2.5, -3],
-  side: [-12.5, 2.6, -2, 0, 2.3, -3],
-  chase0: [-3.6, 7, 24, 0, 3, -34],
-  stop0: [-8.2, 4.4, 3, -1.6, 3.2, -30],
-  stop1: [5.2, 3.4, 17, 0, 2.2, -30],
-  stop2: [-2.6, 1.3, 16, 0, 2.2, -34],
-  stop3: [3.6, 8.5, 17, -0.5, 3.4, -32],
-  stop4: [-6.4, 5, 8, -0.4, 3.4, -32],
-  stop5: [0.4, 3.4, 22, 0, 3.4, -34],
-  aerial: [-22, 34, 12, -1.4, 0, -14],
-  aerial2: [-8, 20, 50, -1.8, 1, -24],
-  cab: [-8.5, 3.6, -9, 0, 2.6, -4],
-  final: [-2.5, 3.4, 26, 3.4, 2.2, 0],
-};
-// Dikey ekranda dar açıda tır kadrajdan çıkmasın diye bazı pozlar değişir
-const CAMS_P = {
-  hero: [-6.8, 1.4, -18.5, -2.6, 2.6, -3],
-  stop0: [-4.6, 4.2, 9, 1.4, 2.8, -30],
-};
-const K = 0.06; // metre / piksel
-let keys = [];
-let solids = [];
-let finalTop = 0;
-let heroFade = 0;
-
-function layout() {
-  const ih = innerHeight;
-  const y = (el) => el.getBoundingClientRect().top + scrollY;
-  keys = $$('[data-cam]').map((el) => {
-    const top = y(el);
-    const h = el.offsetHeight;
-    // pozun tam oturduğu kaydırma değeri: bölüm ekranın ortasına geldiğinde
-    const at = el.dataset.cam === 'hero' ? 0 : el.dataset.cam === 'final' ? top + h - ih : top + Math.min(h, ih) * 0.5 - ih * 0.5;
-    return { at, cam: (portrait() && CAMS_P[el.dataset.cam]) || CAMS[el.dataset.cam] };
-  }).sort((a, b) => a.at - b.at);
-  solids = $$('.solid').map((el) => [y(el), y(el) + el.offsetHeight]);
-  const fin = $('[data-final]');
-  finalTop = y(fin) - ih;
-  $$('[data-stop]').forEach((el, i) => {
-    const top = y(el);
-    signs[i].d = K * (top + el.offsetHeight - ih) + 6;
-  });
-}
-
-function camAt(sy) {
-  if (!keys.length) return CAMS.hero;
-  if (sy <= keys[0].at) return keys[0].cam;
-  for (let i = 0; i < keys.length - 1; i++) {
-    const a = keys[i], b = keys[i + 1];
-    if (sy <= b.at) {
-      const t = smooth(clamp((sy - a.at) / Math.max(1, b.at - a.at)));
-      return a.cam.map((v, k) => v + (b.cam[k] - v) * t);
-    }
-  }
-  return keys.at(-1).cam;
-}
-
+// Kamera [x, y, z, bakX, bakY, bakZ]. Araç −z yönüne gider; masaüstünde metin solda, tır sağda.
 const portrait = () => innerWidth / innerHeight < 0.8;
-let mx = 0, my = 0;
-if (finePointer) addEventListener('pointermove', (e) => { mx = e.clientX / innerWidth - 0.5; my = e.clientY / innerHeight - 0.5; });
+const CAM = () => (portrait() ? [-5.5, 2.6, -21, 0.2, -1.6, -4] : [4.4, 1.3, -18.5, 3.2, 2.5, -3]);
+const CAM_UST = () => (portrait() ? [-8, 8, -18, 0, -2, -3] : [7, 6.5, -15, 2.2, 1.6, -2]);
 
-// HUD: Şaşmaz'a kalan yol
-const kmEl = $('[data-km]');
-let lastKm = '';
-const hud = $('[data-hud]');
-
-let flow = 0;
+let visible = true;
+let heroP = 0; // künyeden çıkış (0–1)
+let travel = 0;
 let last = performance.now();
-let running = true;
-let started = false;
+let t0 = performance.now();
+S?.setCam(CAM());
 function frame(now) {
   requestAnimationFrame(frame);
+  if (!S || !visible || document.hidden) { last = now; return; }
   const dt = Math.min(0.05, (now - last) / 1000);
   last = now;
-  const sy = scrollY;
-  const ih = innerHeight;
-  // HUD
-  const remain = Math.max(0, 1 - sy / Math.max(1, finalTop));
-  const km = remain > 0.001 ? `${nf(remain * 42, 1)} km` : 'ÇIKIŞ';
-  if (km !== lastKm) { kmEl.textContent = km; lastKm = km; }
-  hud.classList.toggle('is-on', sy > ih * 0.4);
-  if (!S) return;
-  // solid bölüm ekranı tamamen kapatıyorsa çizme
-  const covered = solids.some(([a, b]) => a <= sy && b >= sy + ih);
-  if (covered) { running = false; return; }
-  running = true;
-  const travel = K * Math.min(sy, finalTop);
-  const f = clamp((sy - finalTop) / (ih * 0.9));
-  flow += dt * (reducedMotion ? 0 : 2.2) * (1 - f);
-  const cam = camAt(sy).slice();
-  if (portrait() && sy < ih) {
-    // telefonda tır başlığın üstünde görünsün
-    const t = clamp(1 - sy / ih);
-    cam[3] += (0.4 - cam[3]) * t; cam[4] += (-2.2 - cam[4]) * t;
-  }
-  let fov = 42;
-  if (portrait()) {
-    // dar ekranda kamerayı geri çek, açıyı büyüt
-    fov = 60;
-    const dx = cam[0] - cam[3], dy = cam[1] - cam[4], dz = cam[2] - cam[5];
-    const k = 1.12;
-    cam[0] = cam[3] + dx * k; cam[1] = cam[4] + dy * k; cam[2] = cam[5] + dz * k;
-    // son sahnede araçlar metnin üstünde kalsın
-    const fz = clamp((sy - finalTop) / ih);
-    cam[4] -= 2.2 * fz; cam[1] += 1.5 * fz;
-  }
-  S.update({
-    travel: travel + flow,
-    gantryTravel: travel,
-    cam, fov, final: f, time: now / 1000,
-    convoy: convoyAmt(sy),
-    px: finePointer ? mx * 1.4 : 0,
-    py: finePointer ? -my * 0.8 : 0,
-  }, started ? dt : 1);
+  if (!reducedMotion) travel += dt * 14;
+  const a = CAM(), b = CAM_UST();
+  const k = heroP * heroP * (3 - 2 * heroP);
+  const cam = a.map((v, i) => v + (b[i] - v) * k);
+  // açılışta kamera ~1,2 sn'de yerine süzülür
+  const intro = reducedMotion ? 1 : clamp((now - t0) / 1200);
+  cam[2] -= (1 - intro * intro * (3 - 2 * intro)) * 6;
+  S.update({ travel, gantryTravel: 0, cam, fov: portrait() ? 58 : 42, final: 0, time: now / 1000, convoy: 0, px: 0, py: 0 }, dt);
   S.render();
 }
-
-let convoyRange = [0, 0];
-function convoyAmt(sy) {
-  const [a, b] = convoyRange;
-  if (sy < a - innerHeight || sy > b) return 0;
-  return clamp((sy - (a - innerHeight)) / innerHeight);
+if (S) {
+  addEventListener('resize', () => S.resize());
+  new IntersectionObserver((e) => (visible = e[0].isIntersecting)).observe($('#kunye'));
+  S.readyP?.then(() => gsap.fromTo(canvas, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.8 })).catch(() => {});
+  requestAnimationFrame(frame);
 }
 
-function resize() {
-  S?.resize();
-  layout();
-  const km = $('.km');
-  const top = km.getBoundingClientRect().top + scrollY;
-  convoyRange = [top, top + km.offsetHeight];
-}
-addEventListener('resize', () => { resize(); ScrollTrigger.refresh(); });
-
-// --- Hareket ------------------------------------------------------------------------------
-
-const lenis = initSmoothScroll();
-resize();
-requestAnimationFrame(frame);
-
-function intro() {
-  const el = $('[data-intro]');
-  let finished = false;
-  const done = () => {
-    if (finished) return;
-    finished = true;
-    document.body.classList.remove('is-loading');
-    el.remove();
-    started = true;
-    lenis?.start();
-    heroIn();
-  };
-  if (reducedMotion || document.documentElement.classList.contains('is-vitrin')) return done();
-  lenis?.stop();
-  // tabela farla aydınlanır (en fazla ~2 sn), model hazır olunca ya da dokununca yol başlar
-  let ok = false;
-  const tl = gsap.timeline({ onComplete: done });
-  tl.fromTo('[data-intro-sign]', { filter: 'brightness(0.08)', scale: 0.9 }, { filter: 'brightness(1)', scale: 1, duration: 0.8, ease: 'power2.out' })
-    .fromTo('[data-intro-shine]', { xPercent: -120 }, { xPercent: 260, duration: 0.6, ease: 'power2.inOut' }, 0.35)
-    .call(() => { if (!ok) tl.pause(); }, [], 1.1)
-    .call(() => gsap.set(el, { pointerEvents: 'none' }))
-    .to('[data-intro-sign]', { scale: 1.7, autoAlpha: 0, duration: 0.45, ease: 'power3.in' })
-    .to(el, { autoAlpha: 0, duration: 0.35 }, '-=0.2');
-  const go = () => { ok = true; if (tl.paused()) tl.play(); };
-  setTimeout(done, 3000);
-  Promise.race([S?.readyP || Promise.resolve(), new Promise((r) => setTimeout(r, 1300))]).then(() => setTimeout(go, 150));
-  el.addEventListener('pointerdown', () => { go(); tl.timeScale(2.5); }, { once: true });
-}
-
-function heroIn() {
-  if (reducedMotion) return;
-  const split = new SplitText(heroTitle, { type: 'words,chars', charsClass: 'ch' });
-  gsap.from(split.chars, { yPercent: 110, opacity: 0, rotate: 4, duration: 0.9, ease: 'power4.out', stagger: 0.025 });
-  gsap.from(['.hero__since', '.hero__slogan', '.hero__cta', '.hero__sos'], { y: 24, opacity: 0, duration: 0.8, ease: 'power3.out', stagger: 0.08, delay: 0.3 });
-}
+// --- Hareket ---------------------------------------------------------------------------
 
 if (!reducedMotion) {
-  // hero yukarı kayarken söner
-  gsap.to('.hero__in', { opacity: 0, y: -60, ease: 'none', scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom 30%', scrub: true } });
-  gsap.to('.hero__hint', { opacity: 0, scrollTrigger: { trigger: '.hero', start: 'top top', end: '+=200', scrub: true } });
-
-  // hakkında: kelimeler yanar
-  gsap.fromTo('.about__text span', { opacity: 0.16 }, {
-    opacity: 1, stagger: 0.1, ease: 'none',
-    scrollTrigger: { trigger: '.about', start: 'top 75%', end: 'bottom 60%', scrub: true },
+  initSmoothScroll();
+  gsap.from('#kunye-ic > *', { y: 18, autoAlpha: 0, duration: 0.6, stagger: 0.06, ease: 'power3.out', clearProps: 'all' });
+  ScrollTrigger.create({
+    trigger: '#kunye', start: 'top top', end: 'bottom top',
+    onUpdate: (s) => { heroP = s.progress; $('.hero__shade').style.opacity = String(0.2 + s.progress * 0.8); },
   });
-
-  gsap.from('.stops__head > *', { y: 40, opacity: 0, stagger: 0.1, duration: 0.8, ease: 'power3.out', scrollTrigger: { trigger: '.stops__head', start: 'top 70%' } });
-
-  // durak kartları + ölçü göstergesi
-  $$('.stop').forEach((st) => {
-    const card = $('.stop__card', st);
-    const g = $('[data-gauge]', st);
-    const fill = $('[data-gauge-fill]', st);
-    const val = $('[data-gauge-val]', st);
-    const once = Number(g.dataset.once), sonra = Number(g.dataset.sonra);
-    const digits = Math.max(dec(once), dec(sonra));
-    gsap.from(card, { y: 80, opacity: 0, duration: 0.9, ease: 'power3.out', scrollTrigger: { trigger: card, start: 'top 92%' } });
-    gsap.fromTo(card, { '--shine': '-40%' }, { '--shine': '140%', duration: 1.1, ease: 'power2.inOut', scrollTrigger: { trigger: card, start: 'top 70%' } });
-    const o = { v: once, t: 0 };
-    gsap.to(o, {
-      v: sonra, t: 1, ease: 'none',
-      scrollTrigger: { trigger: card, start: 'top 75%', end: 'bottom 55%', scrub: 0.6 },
-      onUpdate() {
-        val.textContent = nf(o.v, digits);
-        fill.style.setProperty('--t', o.t.toFixed(3));
-        g.classList.toggle('is-ok', o.t > 0.75);
-      },
-    });
-  });
-
-  gsap.from('.exit', { x: -30, opacity: 0, stagger: 0.06, duration: 0.6, ease: 'power3.out', scrollTrigger: { trigger: '.exits__list', start: 'top 80%' } });
-  gsap.fromTo('.tako__needle', { rotate: -120 }, { rotate: 40, transformOrigin: '60px 60px', duration: 1.6, ease: 'elastic.out(1, 0.5)', scrollTrigger: { trigger: '.tako', start: 'top 85%' } });
-
-  // kilometre sayaçları döner
-  $$('.odo__col').forEach((c, i) => {
-    const n = Number(c.dataset.digit);
-    gsap.fromTo(c, { yPercent: 0 }, { yPercent: -n * 10 - 0, duration: 1.6 + (i % 3) * 0.2, ease: 'power3.out', scrollTrigger: { trigger: c.closest('.odos'), start: 'top 80%' } });
-  });
-  gsap.from('.filo__card', { y: 60, opacity: 0, duration: 0.9, ease: 'power3.out', scrollTrigger: { trigger: '.filo__card', start: 'top 85%' } });
-
-  gsap.fromTo('[data-road-line]', { drawSVG: '0%' }, { drawSVG: '100%', ease: 'none', scrollTrigger: { trigger: '.steps', start: 'top 70%', end: 'bottom 60%', scrub: true } });
-  $$('.step').forEach((s) => gsap.from(s, { x: 30, opacity: 0, duration: 0.7, ease: 'power3.out', scrollTrigger: { trigger: s, start: 'top 82%' } }));
-
-  $$('.msg').forEach((m) => gsap.from(m, { y: 30, opacity: 0, scale: 0.96, duration: 0.6, ease: 'back.out(1.6)', scrollTrigger: { trigger: m, start: 'top 88%' } }));
-
-  const fsplit = new SplitText('[data-final-title]', { type: 'words,chars', charsClass: 'ch' });
-  gsap.from(fsplit.chars, { yPercent: 100, opacity: 0, stagger: 0.03, duration: 0.8, ease: 'power4.out', scrollTrigger: { trigger: '.final', start: 'top 40%' } });
-  gsap.from(['.final__text', '.final__tel', '.final__cta'], { y: 30, opacity: 0, stagger: 0.1, duration: 0.7, ease: 'power3.out', scrollTrigger: { trigger: '.final', start: 'top 30%' } });
-} else {
-  $$('.odo__col').forEach((c) => (c.style.transform = `translateY(${-Number(c.dataset.digit) * 10}%)`));
+  const gel = (sel, v) => $$(sel).forEach((el) => gsap.from(el, { ...v, autoAlpha: 0, duration: 0.6, ease: 'power3.out', scrollTrigger: { trigger: el, start: 'top 92%', toggleActions: 'play none none none' } }));
+  gel('.exit', { x: -24 });
+  gel('.msg', { y: 24 });
+  addEventListener('load', () => ScrollTrigger.refresh());
 }
-
-document.fonts?.ready.then(() => { resize(); ScrollTrigger.refresh(); });
-intro();

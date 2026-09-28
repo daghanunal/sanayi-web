@@ -1,18 +1,7 @@
 {
-  "sinema": {
-    "introUst": "Şaşmaz Oto Sanayi",
-    "introAlt": "Ağır vasıta servisi",
-    "hakkindaEtiket": "Yolun kenarındayız",
-    "duraklarEtiket": "Aracın altı, durak durak",
-    "duraklarBaslik": "Her tabela bir arıza. Hepsi aynı çatı altında.",
-    "duraklarMetin": "Motordan körüğe altı durak. Her birinde araç geldiğinde ne ölçtüğümüzü, teslim ederken ne gördüğümüzü yazdık.",
-    "hizmetBaslik": "Hangi çıkıştan girerseniz girin",
-    "hizmetMetin": "Süreler ortalamadır. Aracınızı görünce kesin süreyi söyleriz; fiyatı da işe başlamadan.",
-    "kmBaslik": "Kilometre taşları",
-    "surecBaslik": "Yolda kaldığınız andan teslime",
-    "yorumBaslik": "Telsizden gelenler · örnek yorumlar",
-    "saatBaslik": "Atölye saatleri",
-    "konumBaslik": "Şaşmaz'ın girişindeyiz",
-    "cikisTabela": { "tab": "ÇIKIŞ", "main": "ŞAŞMAZ", "sub": "Oto Sanayi · Ağır Vasıta" }
-  }
+  "preset": "agirvasita-sinematik2",
+  "galeri": [
+    { "src": "/img/tonaj/kaput.jpg", "alt": "Kaputu açık kamyonun motoruna iş lambasıyla bakılıyor" },
+    { "src": "/img/tonaj/beyaz.jpg", "alt": "Gece park hâlinde farları yanan beyaz frigorifik tır" }
+  ]
 }
