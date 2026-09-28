@@ -80,7 +80,7 @@ body {
 .top__mark i:nth-child(1) { height: 40%; } .top__mark i:nth-child(2) { height: 100%; }
 .top__mark i:nth-child(3) { height: 60%; } .top__mark i:nth-child(4) { height: 25%; } .top__mark i:nth-child(5) { height: 12%; }
 .top__nav { display: flex; gap: 22px; }
-.top__nav a { text-decoration: none; font-weight: 600; font-size: 15px; opacity: .8; }
+.top__nav a { text-decoration: none; font-weight: 600; font-size: 15px; opacity: .8; display: inline-flex; align-items: center; justify-content: center; min-height: 44px; min-width: 44px; }
 .top__nav a:hover { opacity: 1; }
 .top__status { font-size: 13px; font-weight: 500; display: inline-flex; align-items: center; gap: 8px; opacity: .85; }
 .top__status::before, .konum__status::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: var(--muted-d); flex: none; }
@@ -155,6 +155,8 @@ body {
 .hero__hint span { width: 1.5px; height: 48px; background: currentColor; animation: hint 1.6s ease-in-out infinite; transform-origin: top; }
 @keyframes hint { 0% { transform: scaleY(0); } 50% { transform: scaleY(1); } 100% { transform: scaleY(1); opacity: 0; } }
 
+/* Dikey tablet: alt çubuk var, hero düğmeleri onun üstünde kalsın */
+@media (min-width: 700px) and (max-width: 899px) { .hero__pin { padding-bottom: calc(var(--bar-reserve) + 12px); } }
 @media (max-width: 699px) {
   .hero__pin { padding: 80px 16px calc(var(--bar-reserve) + 12px); min-height: 560px; }
   .hero__name { font-size: min(19vw, 84px); }
@@ -217,7 +219,7 @@ body {
 /* --- Rakam bandı --- */
 .band { background: var(--sig); color: var(--is); padding: clamp(48px, 7vw, 96px) var(--pad); }
 .band__list { display: grid; grid-template-columns: 1fr 1fr; gap: 36px 20px; }
-.stat__val { font: 900 clamp(58px, 9vw, 140px)/0.82 var(--display); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.stat__val { font: 900 clamp(58px, 9vw, 140px)/1.02 var(--display); font-variant-numeric: tabular-nums; white-space: nowrap; }
 .stat__val small { font-size: .45em; margin-left: 2px; }
 .stat__lbl { font: 600 14px/1.35 var(--body); margin-top: 10px; max-width: 18ch; }
 @media (min-width: 900px) { .band__list { grid-template-columns: repeat(4, 1fr); } }

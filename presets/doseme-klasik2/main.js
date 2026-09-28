@@ -429,6 +429,16 @@ if (reducedMotion) {
       '--dim': 1, ease: 'none',
       scrollTrigger: { trigger: all[i + 1], start: 'top bottom', end: 'top 30%', scrub: true },
     });
+    // Sıradaki kart yazıya ulaşmadan öncekinin yazısı söner (yazılar üst üste binmesin)
+    gsap.to(st.querySelector('.step__body'), {
+      autoAlpha: 0, ease: 'none',
+      scrollTrigger: { trigger: all[i + 1], start: 'top 92%', end: 'top 66%', scrub: true },
+    });
+    // Sıradaki kart yerine oturunca alttaki tamamen çekilir: aynı anda en çok iki kart görünür
+    gsap.to(st, {
+      autoAlpha: 0, ease: 'none',
+      scrollTrigger: { trigger: all[i + 1], start: () => `top ${110 + (i + 1) * 16 + 60}px`, end: () => `top ${110 + (i + 1) * 16 + 2}px`, scrub: true, invalidateOnRefresh: true },
+    });
   });
 
   // Galeri: kareler aşağıdan açılır

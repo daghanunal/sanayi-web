@@ -438,7 +438,7 @@ function hareket() {
 
   // Rakamlar: satırlar kaydırmayla ters yönlere kayar, sayılar sıfırdan sayar.
   $$('.sayi').forEach((el, i) => {
-    const dr = mobil() ? 0.25 : 1; // telefonda kayma küçük: rakam ekrandan taşmasın
+    const dr = mobil() ? 0.25 : 0.5; // telefon/tablette kayma küçük: rakam ekrandan taşmasın
     gsap.fromTo(el, { xPercent: (i % 2 ? -14 : 14) * dr }, { xPercent: (i % 2 ? 6 : -6) * dr, ease: 'none', scrollTrigger: { trigger: el, start: 'top bottom', end: 'bottom top', scrub: true } });
     const n = $('.sayi__n', el);
     const hedef = Number($('dd', el).dataset.sayi);

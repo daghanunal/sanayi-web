@@ -173,6 +173,33 @@ export function kurumsal({ veri, tema = {}, sayfalar = VARSAYILAN_SAYFALAR, ekst
   basligiAyarla();
   telefon.addEventListener?.('change', basligiAyarla);
 
+  // Üst menü sığıyor mu? (iPad yatay 1180/1024 px ve uzun etiketli varyantlar.) Bağlantılar tek satırda kalır;
+  // sığmazsa önce telefon numarası simgeye iner, yine sığmazsa burger'a dönülür. Ölçüm, öğeler doğal
+  // genişliklerindeyken (html.k-olc: flex: none) yapılır, aynı karede sınıf kalkar; titreme olmaz.
+  const navSigdir = () => {
+    const kok = document.documentElement;
+    const ic = ust.querySelector('.k-ust__ic');
+    kok.classList.remove('k-dar', 'k-dar1');
+    if (matchMedia('(max-width: 1080px)').matches || !ic) return; // CSS zaten burger'da
+    const tasar = () => {
+      kok.classList.add('k-olc');
+      const t = ic.scrollWidth > ic.clientWidth + 1;
+      kok.classList.remove('k-olc');
+      return t;
+    };
+    if (tasar()) {
+      kok.classList.add('k-dar1');
+      if (tasar()) kok.classList.replace('k-dar1', 'k-dar');
+    }
+    if (!kok.classList.contains('k-dar')) menuKapat(ctx, false); // burger görünmüyorsa açık menü kalmasın
+  };
+  let navKare = 0;
+  const navYenile = () => { cancelAnimationFrame(navKare); navKare = requestAnimationFrame(navSigdir); };
+  navSigdir();
+  document.fonts?.ready.then(navYenile);
+  addEventListener('resize', navYenile);
+  document.querySelector('.k-metin-dugme')?.addEventListener('click', navYenile);
+
   sayfaGoster(rotaCoz(), false);
   if (!reducedMotion) acilis();
   onHazir?.(ctx);

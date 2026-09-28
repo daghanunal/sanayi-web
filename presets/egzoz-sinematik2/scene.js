@@ -280,12 +280,17 @@ export function createScene(canvas) {
   scene.add(ring);
 
   // --- Boyut ---
-  let W = 1, H = 1;
+  let W = 1, H = 1, compact = false;
   function resize() {
     W = canvas.clientWidth || innerWidth;
     H = canvas.clientHeight || innerHeight;
     renderer.setSize(W, H, false);
     camera.aspect = W / H;
+    // Kısa/dar yatay ekranda (iPad yatay) araç biraz uzaklaşır ve kadrajın sağ üstüne kayar:
+    // sol üstte gösterge, sol altta dev kelime, sağ altta bölüm kartı var.
+    compact = W >= 900 && W / H >= 1 && (H <= 880 || W / H <= 1.45);
+    if (compact) camera.setViewOffset(W, H, -W * 0.15, H * 0.12, W, H);
+    else camera.clearViewOffset();
     camera.updateProjectionMatrix();
     U.uScale.value = camera.projectionMatrix.elements[5] * H * dpr * 0.5;
     U.uMaxPx.value = H * dpr * (lite ? 0.45 : 0.6);
@@ -297,9 +302,9 @@ export function createScene(canvas) {
 
   function render(s) {
     const portrait = W / H < 0.85;
-    const dist = s.dist * (portrait ? 3.7 : 3.2);
+    const dist = s.dist * (portrait ? 3.7 : compact ? 4.1 : 3.2);
     const az = s.az, el = s.el;
-    target.set(s.lookX * (portrait ? 0.3 : 0.5) + (portrait ? 0 : 1.9), s.lookY + (portrait ? -1.3 : 0.5), 0);
+    target.set(s.lookX * (portrait ? 0.3 : 0.5) + (portrait ? 0 : compact ? 0.5 : 1.9), s.lookY + (portrait ? -1.3 : 0.5), 0);
     camera.position.set(
       target.x + Math.sin(az) * Math.cos(el) * dist,
       target.y + Math.sin(el) * dist,

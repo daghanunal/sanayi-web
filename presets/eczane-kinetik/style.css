@@ -89,7 +89,7 @@ img { display: block; max-width: 100%; }
 .ornek { display: inline-flex; align-items: center; min-height: 24px; padding: 0 10px; margin-right: 8px; border-radius: 999px; background: #ffe7c2; color: #6b3d00; font-size: .72rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; vertical-align: middle; }
 .top__brand .caps { font-size: 1.1rem; }
 .top__nav { display: none; gap: 22px; }
-.top__nav a { color: var(--ink); text-decoration: none; font-weight: 600; font-size: .98rem; }
+.top__nav a { color: var(--ink); text-decoration: none; font-weight: 600; font-size: .98rem; display: inline-flex; align-items: center; justify-content: center; min-height: 44px; min-width: 44px; }
 .top__nav a:hover { color: var(--mor); }
 .top__status { display: none !important; }
 [data-status], .hero__status, .pillstatus { display: inline-flex; align-items: center; gap: 8px; margin: 0; font-weight: 600; font-size: .95rem; }
@@ -131,9 +131,9 @@ img { display: block; max-width: 100%; }
 .hero__meta span { display: inline-block; }
 .hero__h {
   font-family: var(--disp); font-weight: 900; letter-spacing: -.045em; line-height: .9;
-  font-size: clamp(3.1rem, 14.2vw, 8.8rem); margin: 0; max-width: 11ch; text-wrap: balance;
+  font-size: clamp(3.1rem, 14.2vw, 8.8rem); margin: 0; max-width: 11ch; text-wrap: balance; padding-top: .16em;
 }
-.hero__h .w, .son__h .w { display: inline-block; overflow: clip; padding: .12em .02em .08em; margin: -.12em 0 -.08em; vertical-align: top; }
+.hero__h .w, .son__h .w { display: inline-block; overflow: clip; padding: .17em .02em .17em; margin: -.17em 0 -.17em; vertical-align: top; }
 .hero__h .wi, .son__h .wi { display: inline-block; }
 .hero__h .w--pill .wi { color: #fff; background: var(--mor); border-radius: 999px; padding: 0 .28em .04em; margin-left: -.06em; }
 .cap {
@@ -152,7 +152,7 @@ img { display: block; max-width: 100%; }
 .hero__status { margin-top: 18px; }
 .hero__after {
   position: absolute; z-index: 3; left: var(--pad); right: var(--pad); bottom: max(96px, 12vh); color: #fff; opacity: 0;
-  max-width: 760px;
+  max-width: 760px; pointer-events: none; /* yalnız yazı: görünmezken hero düğmelerine dokunmayı yutmasın */
 }
 .hero__after .mono { color: var(--sari); margin: 0 0 12px; }
 .hero__about { font-family: var(--disp); font-weight: 700; font-size: clamp(1.5rem, 4.2vw, 2.8rem); line-height: 1.12; letter-spacing: -.02em; margin: 0; text-wrap: balance; }
@@ -297,7 +297,7 @@ img { display: block; max-width: 100%; }
 .rakam { background: var(--tur); color: var(--ink); padding: clamp(60px, 8vw, 110px) var(--pad); }
 .stats { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 28px 18px; max-width: 1400px; }
 .stats li { display: flex; flex-wrap: wrap; align-items: baseline; border-top: 3px solid var(--ink); padding-top: 12px; }
-.stats b { font-family: var(--disp); font-weight: 900; font-size: clamp(3.8rem, 15vw, 8rem); line-height: .9; letter-spacing: -.05em; font-variant-numeric: tabular-nums; }
+.stats b { font-family: var(--disp); font-weight: 900; font-size: clamp(3.8rem, 15vw, 8rem); line-height: 1.12; letter-spacing: -.05em; font-variant-numeric: tabular-nums; }
 .stats small { font-family: var(--disp); font-weight: 800; font-size: 1.6rem; margin-left: 4px; }
 .stats span { flex-basis: 100%; font-weight: 600; font-size: 1rem; margin-top: 8px; line-height: 1.3; }
 .rakam__g { margin: 36px 0 0; font-size: .9rem; }
@@ -311,7 +311,7 @@ img { display: block; max-width: 100%; }
 .srv__img { margin: 0; aspect-ratio: 2 / 1; border-radius: 999px; overflow: hidden; background: var(--lila); }
 .srv__img img { width: 100%; height: 100%; object-fit: cover; }
 .srv__n { margin: 0 0 8px; color: var(--mor); }
-.srv h3 { font-family: var(--disp); font-weight: 900; font-size: clamp(2rem, 8.4vw, 4.6rem); letter-spacing: -.04em; line-height: .95; margin: 0 0 12px; text-wrap: balance; }
+.srv h3 { font-family: var(--disp); font-weight: 900; font-size: clamp(2rem, 8.4vw, 4.6rem); letter-spacing: -.04em; line-height: .95; margin: 0 0 12px; padding-top: .14em; text-wrap: balance; }
 .srv p { margin: 0; color: var(--soluk); max-width: 32em; }
 .srv__wa { display: inline-flex; align-items: center; gap: 8px; margin-top: 14px; color: var(--mor); font-weight: 700; text-decoration: none; min-height: 44px; }
 .srv__wa svg { width: 20px; height: 20px; }

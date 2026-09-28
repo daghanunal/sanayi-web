@@ -131,6 +131,14 @@ a:hover > .k-ok { transform: translateX(4px); }
   .k-burger { display: block; }
   .k-ust__sag { margin-left: auto; }
 }
+/* Menü sığmıyorsa (engine.js navSigdir: 1081–1300 px, iPad yatay, uzun etiketli varyantlar) bağlantılar iki satıra
+   kırılmaz: önce telefon numarası simgeye iner (k-dar1), yine sığmazsa üst menü burger'a döner (k-dar). */
+.k-nav a, .k-ust__teklif, .k-ust__tel span { white-space: nowrap; }
+html.k-olc .k-logo, html.k-olc .k-nav { flex: none; }
+html.k-dar1 .k-ust__tel span { display: none; }
+html.k-dar .k-nav, html.k-dar .k-ust__tel span { display: none; }
+html.k-dar .k-burger { display: block; }
+html.k-dar .k-ust__sag { margin-left: auto; }
 @media (max-width: 600px) {
   .k-ust__teklif, .k-ust__tel { display: none; }
   :root { --k-ust: 64px; }

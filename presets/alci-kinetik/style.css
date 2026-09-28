@@ -72,7 +72,7 @@ section { position: relative; }
 }
 @keyframes dk-in { from { opacity: 0; transform: scale(.9); } }
 .ust__nav { display: none; gap: 26px; margin-left: auto; font-weight: 600; font-size: 15px; }
-.ust__nav a { text-decoration: none; opacity: .85; }
+.ust__nav a { text-decoration: none; opacity: .85; display: inline-flex; align-items: center; min-height: 44px; }
 .ust__nav a:hover { opacity: 1; text-decoration: underline; text-underline-offset: 6px; }
 .ust__tel {
   margin-left: auto; display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 16px;
@@ -137,7 +137,7 @@ section { position: relative; }
 .rakam__k { display: flex; flex-direction: column-reverse; justify-content: flex-end; gap: 6px; padding: 20px 0 22px; border-top: 2px solid var(--murekkep); }
 .rakam__k:nth-child(odd) { padding-right: 14px; }
 .rakam__k:nth-child(even) { padding-left: 14px; border-left: 1px solid var(--cizgi); }
-.rakam__k dd { margin: 0; font-weight: 900; font-size: clamp(52px, 13vw, 128px); line-height: .9; letter-spacing: -.05em; color: var(--kobalt); font-variant-numeric: tabular-nums; }
+.rakam__k dd { margin: 0; font-weight: 900; font-size: clamp(52px, 13vw, 128px); line-height: .9; letter-spacing: -.05em; color: var(--kobalt); font-variant-numeric: tabular-nums; padding-top: .14em; }
 .rakam__k dt b { display: block; font-size: 18px; }
 .rakam__k dt span { font: 500 12.5px/1.35 var(--mono); color: var(--gri); }
 @media (min-width: 960px) { .rakam__liste { grid-template-columns: repeat(4, 1fr); } .rakam__k:nth-child(n) { padding: 22px 18px; border-left: 1px solid var(--cizgi); } .rakam__k:first-child { border-left: 0; padding-left: 0; } }
@@ -166,7 +166,7 @@ section { position: relative; }
 }
 .pz__yazi { display: grid; gap: 8px; }
 .pz__ust { font: 600 13px/1 var(--mono); letter-spacing: .06em; text-transform: uppercase; opacity: .85; }
-.pz__ad { font-size: clamp(40px, 11.5vw, 120px); font-weight: 900; line-height: .9; letter-spacing: -.045em; padding-top: .1em; }
+.pz__ad { font-size: clamp(40px, min(11.5vw, 13svh), 120px); font-weight: 900; line-height: .9; letter-spacing: -.045em; padding-top: .1em; }
 .pz__kel { display: inline-block; white-space: nowrap; }
 .pz__kisa { max-width: 44ch; font-size: 16px; opacity: .92; margin-top: .5em; }
 @media (min-width: 960px) { .pz__kisa { font-size: 18px; margin-top: .9em; } }
@@ -241,6 +241,7 @@ section { position: relative; }
 .torba button:hover img { transform: translateY(-6px) rotate(3deg); }
 .torba__ad { font-weight: 900; font-size: 18px; line-height: 1.02; letter-spacing: -.02em; }
 .torba__kisa { font-size: 13px; line-height: 1.35; opacity: .88; }
+@media (max-height: 860px) and (min-width: 960px) { .pz__ad { font-size: clamp(40px, min(11.5vw, 10svh), 120px); } }
 @media (max-height: 760px) and (max-width: 759px) { .pz__torba { max-height: 30svh; } .pz__ad { font-size: clamp(34px, 10vw, 60px); } }
 .torba__dk { font: 700 12px/1.2 var(--mono); justify-self: start; align-self: end; padding: 7px 10px; border-radius: 999px; background: rgb(255 255 255 / .2); margin-top: 6px; }
 @media (min-width: 760px) { .torbalar { grid-template-columns: repeat(4, 1fr); gap: 16px; } .torba__ad { font-size: 22px; } .torba__kisa { font-size: 14px; } }
@@ -249,7 +250,8 @@ section { position: relative; }
 .plaka { padding: clamp(64px, 9vw, 130px) 0 40px; }
 .yigin { max-width: 1320px; margin: 0 auto; padding: 0 var(--gut); box-sizing: border-box; }
 .kart { margin-bottom: 14px; }
-@media (min-width: 760px) { .kart { position: sticky; top: calc(90px + var(--i) * 18px); margin-bottom: 18px; } }
+/* Yığın yalnız kart ekrana sığınca: iki sütunlu düzen ve yeterli yükseklik (dikey tablette kartın altı hiç görünmüyordu). */
+@media (min-width: 960px) and (min-height: 700px) { .kart { position: sticky; top: calc(90px + var(--i) * 18px); margin-bottom: 18px; } }
 .kart__ic {
   background: var(--bg); color: #fff; border-radius: 26px; padding: 22px; display: grid; gap: 14px; transform-origin: 50% 0;
   box-shadow: 0 -10px 40px rgb(0 0 0 / .12);
@@ -257,7 +259,7 @@ section { position: relative; }
 .kart:first-child .kart__ic { color: var(--murekkep); }
 .kart__bas h3 { font-size: clamp(44px, 12vw, 110px); font-weight: 900; line-height: .9; letter-spacing: -.05em; padding-top: .08em; }
 .kart__no { font: 700 13px/1 var(--mono); }
-.kart__tanim { font-weight: 700; font-size: 18px; margin-top: 6px; }
+.kart__tanim { font-weight: 700; font-size: 18px; margin-top: 14px; }
 .kart img { border-radius: 16px; background: #fff; width: 100%; aspect-ratio: 16 / 9; object-fit: contain; }
 .kart__govde { display: grid; gap: 10px; font-size: 15.5px; }
 .kart__std { font: 600 13px/1 var(--mono); }
@@ -267,7 +269,7 @@ section { position: relative; }
 .tablo-kap td { padding: 8px 8px 8px 0; border-bottom: 1px solid rgb(255 255 255 / .35); white-space: nowrap; }
 .kart:first-child td { border-bottom-color: rgb(0 0 0 / .18); }
 @media (min-width: 960px) {
-  .kart { top: calc(90px + var(--i) * 18px); }
+  .kart__bas h3 { font-size: clamp(44px, min(7.6vw, 11svh), 110px); }
   .kart__ic { grid-template-columns: 1fr 1fr; grid-template-areas: 'bas img' 'govde img'; padding: 40px; column-gap: 40px; min-height: 520px; box-sizing: border-box; }
   .kart__bas { grid-area: bas; } .kart img { grid-area: img; align-self: center; aspect-ratio: 4 / 3; } .kart__govde { grid-area: govde; align-self: end; }
 }
@@ -336,7 +338,7 @@ section { position: relative; }
 /* Final */
 .final { background: var(--kobalt); color: #fff; padding: clamp(80px, 12vw, 170px) 0; overflow: clip; }
 .final__ic { display: grid; gap: 22px; }
-.final__baslik { font-size: clamp(56px, 15vw, 210px); font-weight: 900; line-height: .86; letter-spacing: -.055em; padding-top: .1em; }
+.final__baslik { font-size: clamp(56px, 15vw, 210px); font-weight: 900; line-height: .86; letter-spacing: -.055em; padding-top: .1em; padding-bottom: .14em; }
 .final__baslik span { display: inline-block; }
 .final__metin { font-size: 19px; max-width: 42ch; opacity: .92; }
 .final__tel {

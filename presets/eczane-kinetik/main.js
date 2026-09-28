@@ -355,7 +355,7 @@ function motion() {
     .fromTo(photo, { clipPath: capClip }, { clipPath: 'inset(0px 0px 0px 0px round 0px)', duration: 0.6 }, 0.05)
     .fromTo('.hero__photo img', { scale: 1.35 }, { scale: 1, duration: 0.8 }, 0)
     .to('.hero__h', { yPercent: -40, opacity: 0, duration: 0.35 }, 0.05)
-    .to('.hero__meta, .hero__cta, .hero__status', { opacity: 0, y: -30, duration: 0.25 }, 0.05)
+    .to('.hero__meta, .hero__cta, .hero__status', { autoAlpha: 0, y: -30, duration: 0.2 }, 0.05)
     .to('.hero .cap', { opacity: 0, duration: 0.2 }, 0.45)
     .fromTo('.hero__shade', { opacity: 0 }, { opacity: 1, duration: 0.3 }, 0.5)
     .fromTo('.hero__after', { opacity: 0, y: 60 }, { opacity: 1, y: 0, duration: 0.3 }, 0.6)

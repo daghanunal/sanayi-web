@@ -58,6 +58,21 @@ main, .foot { position: relative; z-index: 3; }
   .word--temiz { font-size: 34vw; }
 }
 
+/* Kısa/dar yatay ekran (iPad yatay, küçük dizüstü): dev kelime sol alta, gösterge sol üstte, kart sağ altta kalır;
+   araç kadrajı scene.js'te sağ üste kayar. Üçü birbirinin üstüne binmez. */
+@media (min-width: 900px) and (max-height: 880px), (min-width: 900px) and (min-aspect-ratio: 1/1) and (max-aspect-ratio: 29/20) {
+  .word { left: var(--pad); top: auto; bottom: 24px; translate: 0 0; transform-origin: 0 100%; font-size: min(19vw, 29svh); }
+  body .chap { bottom: 32px; width: min(460px, 42vw); padding: 20px 22px 18px; gap: 10px; }
+  body .chap__title { font-size: 22px; }
+  body .chap__text { font-size: 15px; line-height: 1.5; }
+  /* araç göstergenin arkasına girebilir: gösterge kendi zeminini taşır, rakamlar okunur kalır */
+  body .gauge {
+    top: 84px; padding: 14px 16px; border-radius: 16px;
+    background: color-mix(in srgb, var(--bgc, #101013) 82%, transparent);
+    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  }
+}
+
 /* --- Butonlar --- */
 .btn {
   display: inline-flex; align-items: center; justify-content: center; gap: 10px;
@@ -245,6 +260,21 @@ body:not(.is-intro) .intro-meter { opacity: 0; visibility: hidden; transition: o
 .dots li.is-on { background: var(--fg); transform: scale(1.35); }
 @media (max-width: 759px) { .dots { right: auto; left: 50%; top: auto; bottom: 74px; translate: -50% 0; grid-auto-flow: column; display: none; } }
 
+/* Dokunmatik tablet: duman durakları boyunca üstte tek öğe (gösterge) kalsın; başlık çekilir, noktalar gizlenir.
+   Kartlardaki WhatsApp düğmesi iletişimi taşır; yukarı kaydırıp duraklardan çıkınca başlık geri gelir. */
+@media (pointer: coarse) and (min-width: 760px) {
+  .top { transition: background .3s ease, color .3s ease, top .35s ease; }
+  html.is-story .top { top: -90px; }
+  .dots { display: none; }
+  /* başlık çekilince gösterge yukarı çıkar; araç arkasına girse de kendi zemininde okunur */
+  html.is-story body .gauge { top: 20px; }
+  body .gauge {
+    padding: 14px 16px; border-radius: 16px; transition: top .35s ease;
+    background: color-mix(in srgb, var(--bgc, #101013) 82%, transparent);
+    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  }
+}
+
 /* --- Güven --- */
 .trust {
   background: var(--paper); padding: clamp(90px, 14vw, 180px) var(--pad) clamp(80px, 10vw, 140px);
@@ -255,7 +285,7 @@ body:not(.is-intro) .intro-meter { opacity: 0; visibility: hidden; transition: o
 .stats { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 3px solid var(--ink); }
 .stat { padding: 24px 20px 0 0; display: grid; gap: 8px; }
 .stat + .stat { padding-left: 20px; border-left: 1px solid rgb(20 16 19 / .15); }
-.stat__num { font: 400 clamp(52px, 6.5vw, 110px)/.9 var(--display); padding-top: .06em; display: flex; align-items: baseline; white-space: nowrap; }
+.stat__num { font: 400 clamp(52px, 6.5vw, 110px)/1.4 var(--display); padding-top: .06em; display: flex; align-items: baseline; white-space: nowrap; }
 .stat__num span { font-size: .42em; margin-left: .1em; color: var(--hot); }
 .stat__lbl { font: 400 13px/1.35 var(--mono); color: var(--muted); text-transform: uppercase; letter-spacing: .03em; }
 @media (max-width: 759px) {
@@ -371,7 +401,7 @@ body:not(.is-intro) .intro-meter { opacity: 0; visibility: hidden; transition: o
 .reviews__head { padding: 0 var(--pad); display: grid; gap: 14px; margin-bottom: 44px; }
 .reviews__tag { justify-self: start; font: 400 12px/1 var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); border: 1.5px solid rgb(20 16 19 / .25); border-radius: 999px; padding: 7px 12px; }
 .reviews__score { display: flex; align-items: center; gap: 18px; }
-.reviews__score > b { font: 400 clamp(90px, 12vw, 180px)/.85 var(--display); color: var(--hot); padding-top: .08em; }
+.reviews__score > b { font: 400 clamp(90px, 12vw, 180px)/1.1 var(--display); color: var(--hot); padding-top: .22em; }
 .reviews__score > span { display: grid; gap: 6px; font: 400 13px/1.3 var(--mono); color: var(--muted); }
 .reviews__stars { display: flex; gap: 3px; color: var(--ink); }
 .reviews__stars svg, .rev__stars svg { width: 20px; height: 20px; }

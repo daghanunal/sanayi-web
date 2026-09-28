@@ -24,6 +24,8 @@ const telYaz = (t) => t.replace(/^\+90\s?/, '0');
 const gmaps = (q) => `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(q)}`;
 const upper = (s) => s.toLocaleUpperCase('tr-TR');
 const mobile = matchMedia('(max-width: 759px)').matches;
+// Kart yığını (sticky) yalnız geniş ve yeterince yüksek ekranda; CSS ile aynı koşul
+const yiginMod = matchMedia('(min-width: 960px) and (min-height: 700px)').matches;
 // Yıla doğru ayrılma eki: 1992'den, 1985'ten, 1990'dan
 const yilDen = (n) => {
   const y = String(n);
@@ -523,12 +525,16 @@ if (reducedMotion) {
   // Plaka yığını: alttaki kart küçülür
   const kart = $$('.kart');
   kart.forEach((k, i) => {
-    if (mobile) {
+    if (!yiginMod) {
       gsap.from($('.kart__ic', k), { y: 90, rotate: i % 2 ? 3 : -3, opacity: 0, duration: 0.9, ease: 'expo.out', scrollTrigger: { trigger: k, start: 'top 88%' } });
       return;
     }
     if (i === kart.length - 1) return;
     gsap.to($('.kart__ic', k), { scale: 0.93, ease: 'none', scrollTrigger: { trigger: kart[i + 1], start: 'top bottom', end: 'top 20%', scrub: true } });
+    // Üstüne gelen kart yazıyı örtmeden önce alttaki kartın içeriği söner (yazı yazı üstüne binmesin)
+    gsap.to($$('.kart__bas, .kart__govde, img', k), { autoAlpha: 0, ease: 'none', scrollTrigger: { trigger: kart[i + 1], start: 'top 97%', end: 'top 74%', scrub: true } });
+    // Sıradaki kart yerine oturunca alttaki tamamen çekilir: aynı anda en çok iki kart görünür
+    gsap.to(k, { autoAlpha: 0, ease: 'none', scrollTrigger: { trigger: kart[i + 1], start: () => `top ${90 + (i + 1) * 18 + 60}px`, end: () => `top ${90 + (i + 1) * 18 + 2}px`, scrub: true, invalidateOnRefresh: true } });
   });
 
   // Kimya: 2 → ½ → 2
