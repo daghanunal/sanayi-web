@@ -1,96 +1,76 @@
 {
   "kurumsal": {
-    "hero": {
-      "baslik": "Hasarlı gelir, ilk günkü gibi çıkar.",
-      "metin": "Kasko ve sigorta dosyalı kaporta-boya, boyasız göçük, pasta-cila, seramik ve PPF. Eksper sürecini sizin adınıza biz takip ederiz; aracınızı fotoğraflı iş raporuyla teslim ederiz.",
-      "birincil": "Hasar fotoğrafı gönderin",
-      "ikincil": "Hizmetlerimiz",
-      "ikincilRota": "hizmetler"
-    },
+    "hizmetOzetBaslik": "Hizmetler",
     "ozet": {
-      "baslik": "Fırınlı kabin, ölçülü iş",
-      "metin": "Renk kodunu cihazla okur, boya kalınlığını ölçer, şaseyi ölçüyle düzeltiriz. Bireysel müşterilerimizin yanında şirket araçlarına ve sigorta dosyalı işlere de bakıyoruz."
+      "baslik": "Hakkında",
+      "metin": "Şaşmaz Oto Sanayi Sitesi'nde binek ve hafif ticari araçların boya ve kaporta işleri yapılır. Şahıs araçlarının yanı sıra kasko ve trafik sigortası dosyalı işler, şirket ve kiralama araçları da gelir."
     },
-    "hizmetOzetBaslik": "Boya, kaporta ve bakım",
-    "anlasmaBaslik": "Sigorta dosyası ve şirket araçları",
-    "anlasmaMetin": "Hasar sürecini tek muhatapla yürütün: eksper randevusu, onay takibi, onarım ve fotoğraflı teslim.",
+    "konumBaslik": "Çalışma saatleri ve konum",
+    "yorumBaslik": "Örnek yorumlar",
+    "cta": {
+      "baslik": "İletişim",
+      "metin": "Fiyat ve randevu için arayın ya da formdan yazın. Hasarın fotoğrafı WhatsApp'tan gönderilebilir.",
+      "buton": "İletişim formu"
+    },
+    "hizmetLink": "Bu hizmet için bilgi alın",
+    "surecBaslik": "Çalışma sırası",
+    "anlasmaBaslik": "Sigorta, şirket ve kiralama araçları",
+    "anlasmaMetin": "Kasko ve trafik sigortası dosyalı onarımlar, şirket ve kiralama araçlarının boya ve kaporta işleri de yapılır.",
     "anlasmalar": [
       {
         "baslik": "Kasko ve trafik sigortası hasarları",
-        "kisa": "İhbardan dosya kapanışına kadar süreci biz takip ederiz.",
-        "metin": "Kasko ya da karşı tarafın trafik sigortasıyla yapılan onarımlarda eksper randevusunu alır, parça ve işçilik onayını takip ederiz. Çalıştığımız sigorta şirketlerinin güncel listesi için bizi arayın.",
-        "maddeler": ["Eksper randevusu ve fotoğraflı hasar kaydı", "Onay gelmeden işe başlamama", "Onarım boyunca fotoğrafla bilgilendirme", "Teslimde fotoğraflı iş raporu"],
-        "buton": "Hasar dosyası için yazın"
+        "kisa": "Eksper randevusundan teslime kadar dosya takip edilir.",
+        "metin": "Kasko ya da karşı tarafın trafik sigortasıyla yapılan onarımlarda eksper randevusu alınır, parça ve işçilik onayı takip edilir. Anlaşmalı sigorta şirketlerini öğrenmek için arayın.",
+        "maddeler": ["Eksper randevusu ve hasar fotoğrafları", "Onay gelmeden işe başlanmaz", "Onarım sırasında ara aşamaların fotoğrafları", "Teslimde yapılan işin dökümü"],
+        "buton": "Hasar dosyası için bilgi alın"
       },
       {
-        "baslik": "Şirket ve filo araçları",
-        "kisa": "Filo araçlarında boya, kaporta ve iade öncesi düzeltme.",
-        "metin": "Şirket araçlarınızın küçük hasarlarını birikmeden gideririz. Araç bazında iş kaydı tutar, dönem sonunda tek fatura ve iş dökümü veririz.",
-        "maddeler": ["Araç bazında iş ve fotoğraf kaydı", "Küçük hasarlar için hızlı giriş", "Dönemlik tek fatura"],
-        "buton": "Filo görüşmesi talep edin"
+        "baslik": "Şirket araçları",
+        "kisa": "Küçük hasarlar birikmeden giderilir, her araç ayrı kaydedilir.",
+        "metin": "Şirket araçlarının boya ve kaporta işleri her araç için ayrı kaydedilir. Fatura dönem sonunda toplu kesilir.",
+        "maddeler": ["Her araç için ayrı iş ve fotoğraf kaydı", "Küçük hasarlar için kısa sürede giriş", "Dönem sonunda tek fatura"],
+        "buton": "Şirket araçları için bilgi alın"
       },
       {
         "baslik": "Kiralama ve galeri araçları",
-        "kisa": "İade ve satış öncesi boyasız göçük, pasta ve detaylı temizlik.",
-        "metin": "Kiralama dönüşü ya da satış öncesi araçlarda boyasız göçük düzeltme, pasta-cila ve detaylı temizlikle aracı ekspertize hazır hâle getiririz. Orijinal boyaya dokunmadan çıkabilen işi boyayla çözmeyiz.",
-        "maddeler": ["Boyasız göçükte orijinal boya korunur", "Boya kalınlığı ölçümü ve kayıt", "Toplu araç kabulü için planlama"],
-        "buton": "Görüşme talep edin"
+        "kisa": "İade ve satış öncesi göçük, pasta ve detaylı temizlik.",
+        "metin": "Kiralama dönüşü ya da satış öncesi araçlarda boyasız göçük düzeltme, pasta ve detaylı temizlik yapılır. Boyasız çıkabilecek göçük boyanmaz.",
+        "maddeler": ["Boyasız göçükte orijinal boya korunur", "Boya kalınlığı ölçülüp kaydedilir", "Toplu araç kabulü için gün ayarlanır"],
+        "buton": "Bilgi alın"
       }
     ],
-    "anlasmaNotu": "Sigorta şirketinin onay süresi dosyaya göre değişir. Süreci her adımda size yazılı olarak bildiririz.",
+    "anlasmaNotu": "Sigorta şirketinin onay süresi dosyaya göre değişir. Dosyanın hangi aşamada olduğu araç sahibine bildirilir.",
     "hakkimizda": {
-      "baslik": "Biz kimiz",
+      "baslik": "Hakkında",
       "paragraflar": [
-        "Şaşmaz Oto Sanayi Sitesi'ndeki atölyemizde boya, kaporta ve detaylı bakım yapıyoruz. Fırınlı boya kabinimiz, renk ölçüm cihazımız ve şase ölçü düzeneğimizle kazalı araçtan tek panel çiziğe kadar her işi aynı yerde çözüyoruz.",
-        "Çalışma biçimimiz basit: aracı gün ışığında inceler, boya kalınlığını ölçer, fiyatı baştan yazılı veririz. Onayınız olmadan işe başlamayız; teslimden önce aracı gün ışığı lambasının altında son bir kez biz kontrol ederiz."
+        "Atölyede binek ve hafif ticari araçların boya ve kaporta işleri yapılır. Lokal ve komple boyanın yanı sıra boyasız göçük ve şase düzeltme, pasta, seramik kaplama ve boya koruma filmi de uygulanır.",
+        "Atölyede fırınlı boya kabini, şase sehpası, renk ölçüm cihazı ve boya kalınlık ölçer var. Hasar tespiti ve boya ölçümü için randevu gerekmez. Boya, kaporta ve seramik işleri randevuyla yapılır."
       ],
       "gorsel": "/img/showroom/s-boya.jpg",
-      "gorselAlt": "Boya kabininde tabancayla boya uygulayan usta"
+      "gorselAlt": "Boya kabininde tabancayla boya atan usta"
     },
-    "misyon": "Hasarlı aracı, onarıldığı anlaşılmayacak bir işçilikle ve baştan söylenen fiyatla teslim etmek.",
-    "vizyon": "Ankara'da sigorta dosyalı işlerde ve boya-kaporta işçiliğinde akla ilk gelen, kayıtlı ve şeffaf çalışan atölye olmak.",
-    "degerler": [
-      { "baslik": "Yazılı fiyat", "metin": "İşe başlamadan parça ve işçilik fiyatını yazılı veririz." },
-      { "baslik": "Ölçerek çalışma", "metin": "Boya kalınlığını ve şase ölçüsünü ölçmeden işe başlamayız." },
-      { "baslik": "Fotoğraflı rapor", "metin": "Kabulden teslime aracın fotoğraflarını kaydeder, size veririz." },
-      { "baslik": "Yazılı garanti", "metin": "Boya ve vernik işçiliğimizin arkasında dururuz." }
-    ],
-    "kalite": {
-      "baslik": "Kalite anlayışımız",
-      "metin": "Her araçta aynı iş akışı: kabul ve fotoğraf, ölçüm, yazılı teklif, onay, onarım, gün ışığında son kontrol ve teslim.",
-      "maddeler": [
-        "Araç kabulünde tüm paneller fotoğraflanır, boya kalınlığı ölçülür.",
-        "Renk kodu cihazla okunur, karışım panel panel tutturulur.",
-        "Boya ve vernik tozsuz, fırınlı kabinde yapılır.",
-        "Teslimden önce gün ışığı lambası altında son kontrol yapılır."
-      ]
-    },
+    "markaBaslik": "Sık gelen markalar",
     "kariyer": {
-      "baslik": "Ekibimize katılın",
-      "metin": "Boya, kaporta ve pasta-cila işlerinde deneyimli usta ve mesleği öğrenmek isteyen çırak arkadaşlarla tanışmak isteriz. Kısa bir tanıtımla bize yazın."
+      "baslik": "Kariyer",
+      "metin": "Boya, kaporta ve pasta işlerinde tecrübeli ustalar ile mesleği öğrenmek isteyen çıraklar başvurabilir. Başvuru için ad, telefon ve kısa bir not yeterli."
     },
+    "sssBaslik": "Hasar ve sigorta",
     "sss": [
-      { "soru": "Kaza yaptım, önce sigortayı mı aramalıyım?", "cevap": "Kaza tespit tutanağını doldurun ve fotoğraf çekin, sonra bizi arayın. İhbarı ve eksper randevusunu sizin adınıza biz başlatırız." },
-      { "soru": "Eksper gelmeden onarıma başlar mısınız?", "cevap": "Hayır. Sigorta dosyalı işte eksper hasarı görmeden ve onay gelmeden parça sökmeyiz; aksi hâlde dosya sorun çıkarabilir." },
-      { "soru": "Boyasız göçük her göçükte olur mu?", "cevap": "Boyası çatlamamış, kenara ya da katlama yerine denk gelmeyen göçüklerde olur. Fotoğrafını gönderin, olup olmayacağını söyleyelim." },
-      { "soru": "Boyanan parça ekspertizde belli olur mu?", "cevap": "Ekspertiz raporunda boyalı olarak görünür; ama renk ve parlaklık farkı gözle anlaşılmaz. Boyasız çıkarılabilecek göçüğü boyamayız." },
-      { "soru": "Onarım sırasında aracımı görebilir miyim?", "cevap": "Evet. Atölyeye gelebilir ya da ara aşamaların fotoğraflarını WhatsApp'tan isteyebilirsiniz." }
+      { "soru": "Kaza sonrası önce sigorta mı aranmalı?", "cevap": "Önce kaza tespit tutanağı doldurulur ve hasarın fotoğrafları çekilir. İhbar ve eksper randevusu için atölyeden de yardım alınabilir." },
+      { "soru": "Eksper gelmeden onarıma başlanır mı?", "cevap": "Başlanmaz. Sigorta dosyalı işte eksper hasarı görüp onay vermeden parça sökülmez, yoksa dosyada sorun çıkabilir." },
+      { "soru": "Boyasız göçük her göçükte olur mu?", "cevap": "Boyası çatlamamış, kenara ya da katlama yerine denk gelmeyen göçüklerde olur. Fotoğrafı gönderilirse olup olmayacağı söylenir." },
+      { "soru": "Boyanan parça ekspertizde belli olur mu?", "cevap": "Ekspertiz raporunda boyalı olarak görünür, ama renk ve parlaklık farkı gözle anlaşılmaz. Boyasız çıkabilecek göçük boyanmaz." },
+      { "soru": "Onarım sırasında araç görülebilir mi?", "cevap": "Görülebilir. Atölyeye gelinebilir ya da ara aşamaların fotoğrafları WhatsApp'tan istenebilir." }
     ],
-    "sssBaslik": "Hasar ve sigorta hakkında",
-    "galeriBaslik": "Boya ve bakım işlerinden örnekler",
-    "yorumBaslik": "Örnek müşteri yorumları",
+    "galeriBaslik": "Boya ve bakım işleri",
     "sayfalar": {
-      "kurumsal": { "baslik": "Kurumsal", "metin": "Kim olduğumuz, nasıl çalıştığımız ve neye önem verdiğimiz.", "gorsel": "/img/kurumsal-boya/kurumsal.jpg" },
-      "hizmetler": { "baslik": "Hizmetlerimiz", "metin": "Lokal boyadan PPF'ye, her iş için ortalama süre ve kapsam." },
-      "kurumsal-musteriler": { "baslik": "Hasar ve sigorta", "metin": "Kasko, trafik sigortası ve şirket araçları için hasar süreci tek elden.", "gorsel": "/img/kurumsal-boya/hasar.jpg" },
-      "islerimiz": { "baslik": "İşlerimiz", "metin": "Yaptığımız iş türlerinden örnek kareler ve örnek müşteri yorumları." },
-      "iletisim": { "baslik": "İletişim", "metin": "Hasar fotoğrafı, randevu ya da bir sorunuz için yazın; aynı gün dönüş yapalım." }
+      "hakkinda": { "baslik": "Hakkında", "metin": "Şaşmaz Oto Sanayi Sitesi'nde boya, kaporta ve detaylı bakım", "gorsel": "/img/kurumsal-boya/kurumsal.jpg" },
+      "hizmetler": { "baslik": "Hizmetler", "metin": "Süreler yaklaşıktır, araca göre değişebilir. Fiyat ve randevu için arayın." },
+      "kurumsal-musteriler": { "baslik": "Hasar ve sigorta", "metin": "Kasko, trafik sigortası, şirket ve kiralama araçlarının boya ve kaporta işleri", "gorsel": "/img/kurumsal-boya/hasar.jpg" },
+      "galeri": { "baslik": "Galeri", "metin": "Boya, pasta, seramik ve koruma filmi işlerinden örnek görseller. Fotoğraflar temsilîdir." },
+      "iletisim": { "baslik": "İletişim", "metin": "Fiyat ve randevu için arayın ya da formdan yazın." }
     },
-    "konular": ["Hasar / sigorta dosyası", "Fiyat teklifi", "Randevu", "Şirket araçları", "Genel bilgi"],
-    "cta": {
-      "baslik": "Hasarın fotoğrafını gönderin, fiyatını söyleyelim",
-      "metin": "Dört kare yeter: genel görünüm, hasarın yakını, plaka ve kilometre göstergesi.",
-      "buton": "Bize yazın"
-    }
+    "konular": ["Hasar / sigorta dosyası", "Fiyat bilgisi", "Randevu", "Şirket araçları", "Genel bilgi"],
+    "formBaslik": "Mesaj gönderin"
   }
 }

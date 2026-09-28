@@ -4,19 +4,58 @@
 import './base.css';
 import { boot, initSmoothScroll, reducedMotion, vitrinModu, icons, gsap, ScrollTrigger, autoHideHeader } from '../../shared/core.js';
 import { SplitText } from 'gsap/SplitText';
-import { BOLUMLER, sayfaBasligi, yilEki } from './bolumler.js';
+import { BOLUMLER, sayfaBasligi, yilEki, tanimMetni, duz } from './bolumler.js';
 
 gsap.registerPlugin(SplitText);
 
-// Varsayılan bilgi mimarisi. Varyant `sayfalar` ile tamamen ya da kısmen değiştirir.
+// Varsayılan bilgi mimarisi (İÇERİK-BRIEF akışı: künye → hizmetler → hakkında → saatler ve konum →
+// örnek yorumlar → iletişim). Varyant `sayfalar` ile tamamen ya da kısmen değiştirir. Sayfa id'leri
+// eski varyantların `VARSAYILAN_SAYFALAR.map(s => s.id === 'kurumsal' ? …)` kalıbı bozulmasın diye aynı.
 export const VARSAYILAN_SAYFALAR = [
-  { id: 'anasayfa', baslik: 'Ana Sayfa', bolumler: ['hero', 'ozet', 'hizmetOzet', 'rakamlar', 'anlasmaOzet', 'yorumlar', 'cta'] },
-  { id: 'kurumsal', baslik: 'Kurumsal', bolumler: ['hakkimizda', 'vizyon', 'kalite', 'tarihce', 'cta'] },
+  { id: 'anasayfa', baslik: 'Ana Sayfa', bolumler: ['hero', 'hizmetOzet', 'ozet', 'rakamlar', 'konum', 'yorumlar', 'cta'] },
   { id: 'hizmetler', baslik: 'Hizmetler', bolumler: ['hizmetler', 'surec', 'cta'] },
+  { id: 'kurumsal', baslik: 'Hakkında', bolumler: ['hakkimizda', 'bilgiler', 'kalite', 'tarihce', 'markalar', 'cta'] },
   { id: 'kurumsal-musteriler', baslik: 'Kurumsal Müşteriler', bolumler: ['anlasmalar', 'cta'] },
-  { id: 'referanslar', baslik: 'Referanslar', bolumler: ['galeri', 'yorumlar', 'markalar', 'cta'] },
+  { id: 'referanslar', baslik: 'Galeri', bolumler: ['galeri', 'markalar', 'cta'] },
   { id: 'iletisim', baslik: 'İletişim', bolumler: ['iletisim'] },
 ];
+
+// "Çalışma saatleri ve konum" ana sayfada varsayılan: sayfa listesinde `konum` yoksa ana sayfaya,
+// "Örnek yorumlar"dan (yoksa CTA'dan) önce eklenir. Eklenmez: `tema.konum: false`; `konum` başka bir
+// sayfada; ana sayfada `iletisim` var; ana sayfada saatleri zaten gösteren bir varyant modülü var
+// (modül `konumYerine: true` der ya da kodu `saatler` verisini okur: mesai, saat, bugün, nöbet…).
+function konumEkle(sayfalar, bolumler, tema) {
+  if (tema.konum === false || !sayfalar.length) return sayfalar;
+  if (sayfalar.some((s) => s.bolumler.includes('konum'))) return sayfalar;
+  const [ana, ...diger] = sayfalar;
+  if (ana.bolumler.includes('iletisim')) return sayfalar;
+  const saatModulu = ana.bolumler.some((id) => {
+    const b = bolumler[id];
+    if (!b || b === BOLUMLER[id]) return false;
+    return b.konumYerine || /saatler/.test(`${b.render}${b.mount || ''}`);
+  });
+  if (saatModulu) return sayfalar;
+  const liste = [...ana.bolumler];
+  const i = [liste.indexOf('yorumlar'), liste.indexOf('cta')].find((x) => x >= 0) ?? liste.length;
+  liste.splice(i, 0, 'konum');
+  return [{ ...ana, bolumler: liste }, ...diger];
+}
+
+// Verisi olmayan sayfa menüye girmez: ana sayfa ve iletişim dışında, CTA dışındaki bütün motor bölümleri
+// boş dönüyorsa (ör. eski veride yalnız misyon/vizyon kalmış bir sayfa). Varyant modülü olan sayfa kalır.
+function bosSayfalariAyikla(sayfalar, bolumler, d, ctx) {
+  const bos = new URLSearchParams();
+  return sayfalar.filter((s, i) => {
+    if (i === 0 || s.bolumler.includes('iletisim')) return true;
+    return s.bolumler.some((id) => {
+      if (id === 'cta') return false;
+      const b = bolumler[id];
+      if (!b) return false;
+      if (b !== BOLUMLER[id]) return true;
+      try { return !!b.render(d, ctx, bos); } catch { return true; }
+    });
+  });
+}
 
 export function derinBirlestir(a, b) {
   if (Array.isArray(b) || typeof b !== 'object' || b === null) return b === undefined ? a : b;
@@ -42,8 +81,12 @@ function temayiUygula(tema) {
 export function kurumsal({ veri, tema = {}, sayfalar = VARSAYILAN_SAYFALAR, ekstralar = {}, ld, aksiyon, onHazir }) {
   temayiUygula(tema);
   const d = boot(veri);
-  const ctx = { d, tema, sayfalar, git, reducedMotion };
   const bolumler = { ...BOLUMLER, ...ekstralar };
+  const ctx = { d, tema, sayfalar, git, reducedMotion };
+  sayfalar = konumEkle(sayfalar, bolumler, tema);
+  ctx.sayfalar = sayfalar;
+  sayfalar = bosSayfalariAyikla(sayfalar, bolumler, d, ctx);
+  ctx.sayfalar = sayfalar;
 
   // JSON-LD: çekirdeğin AutoRepair kaydını varyantın türüyle değiştir.
   if (ld) {
@@ -54,10 +97,7 @@ export function kurumsal({ veri, tema = {}, sayfalar = VARSAYILAN_SAYFALAR, ekst
     document.head.append(s);
   }
   if (tema.baslikEki) document.title = `${d.isletme.ad} | ${tema.baslikEki}`;
-  // Sloganı olmayan veri: meta açıklama künyeden kurulur (çekirdek applyMeta sloganı okur).
-  if (!d.isletme.slogan) {
-    document.querySelector('meta[name="description"]')?.setAttribute('content', `${d.isletme.ad}: ${d.isletme.tanim || d.isletme.sektor}. ${d.iletisim.adres}. Telefon: ${d.iletisim.telefon}`);
-  }
+  // Meta açıklama çekirdekte (applyMeta) künyeden kurulur: ad, tanım (yoksa sektör), adres, telefon. Slogan okunmaz.
 
   // Özel alt çubuk (ör. WhatsApp'ı olmayan üretici). Vitrin modunda dokunma.
   if (aksiyon && !vitrinModu()) {
@@ -231,7 +271,7 @@ function iskeletKur(ctx) {
         <div class="k-ust__sag">
           ${tema.metinBoyutu ? `<button type="button" class="k-metin-dugme" aria-pressed="false" aria-label="Yazı boyutunu büyüt">A<span>A</span></button>` : ''}
           <a class="k-ust__tel" href="${tel}">${icons.phone}<span>${esc(d.iletisim.telefon)}</span></a>
-          <a class="k-btn k-btn--kucuk k-ust__teklif" href="#/iletisim" data-rota="iletisim">${tema.teklifEtiketi || 'Teklif isteyin'}</a>
+          <a class="k-btn k-btn--kucuk k-ust__teklif" href="#/iletisim" data-rota="iletisim">${tema.teklifEtiketi || 'İletişim'}</a>
           <button type="button" class="k-burger" aria-expanded="false" aria-controls="k-menu" aria-label="Menüyü aç"><span></span><span></span></button>
         </div>
       </div>
@@ -251,7 +291,7 @@ function iskeletKur(ctx) {
     <dialog class="k-dialog" id="k-kvkk" aria-labelledby="k-kvkk-baslik">
       <div class="k-dialog__ic" data-lenis-prevent>
         <h2 id="k-kvkk-baslik">Kişisel verilerin korunması</h2>
-        ${kvkkMetni(d)}
+        ${kvkkMetni(d, tema)}
         <button type="button" class="k-btn" data-kapat>Kapat</button>
       </div>
     </dialog>`
@@ -341,11 +381,11 @@ function altBilgi({ d, tema, sayfalar }) {
     <div class="k-alt__ic">
       <div class="k-alt__kurum">
         <p class="k-alt__ad">${esc(d.isletme.unvan || d.isletme.ad)}</p>
-        ${d.isletme.tanim || d.isletme.slogan ? `<p>${esc(d.isletme.tanim || d.isletme.slogan)}</p>` : ''}
-        <p class="k-alt__kurulus">${d.isletme.kurulus ? `${yilEki(d.isletme.kurulus)} beri` : ''}</p>
+        ${tanimMetni(d) ? `<p>${esc(tanimMetni(d))}</p>` : ''}
+        ${d.isletme.kurulus ? `<p class="k-alt__kurulus">${yilEki(d.isletme.kurulus)} beri</p>` : ''}
       </div>
       <nav aria-label="Alt menü"><p class="k-alt__baslik">Sayfalar</p><ul>${sayfalar.map((s) => `<li><a href="#/${s.id}" data-rota="${s.id}">${s.menu || s.baslik}</a></li>`).join('')}</ul></nav>
-      ${hiz ? `<div><p class="k-alt__baslik">${tema.hizmetEtiketi || 'Hizmetler'}</p><ul>${hiz}</ul></div>` : ''}
+      ${hiz ? `<div><p class="k-alt__baslik">${esc(duz(tema.hizmetEtiketi, 'Hizmetler'))}</p><ul>${hiz}</ul></div>` : ''}
       <div><p class="k-alt__baslik">İletişim</p>
         <ul>
           <li><a href="tel:${(d.iletisim.telefon || '').replace(/[^\d+]/g, '')}">${esc(d.iletisim.telefon)}</a></li>
@@ -361,14 +401,17 @@ function altBilgi({ d, tema, sayfalar }) {
     </div>`;
 }
 
-function kvkkMetni(d) {
+// Öznesiz bilgi cümleleri; veri sorumlusu en altta adıyla ve adresiyle yazılır.
+function kvkkMetni(d, tema = {}) {
   const k = d.kurumsal?.kvkk;
   if (k?.paragraflar) return k.paragraflar.map((p) => `<p>${esc(p)}</p>`).join('');
   const ad = esc(d.isletme.unvan || d.isletme.ad);
+  const kayit = tema.metinBoyutu ? 'çerez notunun kapatılıp kapatılmadığı ve seçilen yazı boyutu' : 'çerez notunun kapatılıp kapatılmadığı';
   return `
-    <p>${ad}, iletişim formu ya da WhatsApp üzerinden gönderdiğiniz ad, telefon, e-posta ve mesaj bilgilerini yalnızca talebinizi yanıtlamak için kullanır.</p>
-    <p>Bu bilgiler 6698 sayılı Kişisel Verilerin Korunması Kanunu'na uygun olarak saklanır ve yasal zorunluluk olmadıkça üçüncü kişilerle paylaşılmaz. Kanunun 11. maddesindeki haklarınız için ${esc(d.iletisim.telefon)} numarasından ya da işletmenin adresinden başvurabilirsiniz.</p>
-    <p>Bu sitede reklam ya da takip çerezi yoktur. Tarayıcınızda yalnızca çerez bildirimini ve yazı boyutu tercihinizi hatırlamak için küçük bir kayıt tutulur. Harita açılınca Google Haritalar kendi çerezlerini kullanabilir.</p>`;
+    <p>İletişim formundan ya da WhatsApp'tan gönderilen ad, telefon, e-posta ve mesaj bilgileri yalnız talebe cevap vermek için kullanılır.</p>
+    <p>Bu bilgiler 6698 sayılı Kişisel Verilerin Korunması Kanunu'na uygun olarak saklanır, yasal bir zorunluluk olmadıkça başkalarıyla paylaşılmaz. Kanunun 11. maddesindeki haklar için ${esc(d.iletisim.telefon)} numarasından ya da işletmenin adresinden başvurulabilir.</p>
+    <p>Sitede reklam ya da takip çerezi yoktur. Tarayıcıda yalnız ${kayit} saklanır. Harita açılınca Google Haritalar kendi çerezlerini kullanabilir.</p>
+    <p class="k-soluk">Veri sorumlusu: ${ad}, ${esc(d.iletisim.adres)}</p>`;
 }
 
 // Çerez notu. Telefon sözleşmesi: alt çubukla üst üste binmez. Telefonda footer'ın başında akışta
@@ -380,7 +423,7 @@ function cerezBandi() {
   b.className = 'k-cerez';
   b.setAttribute('role', 'region');
   b.setAttribute('aria-label', 'Çerez bildirimi');
-  b.innerHTML = `<p>Bu sitede takip çerezi yoktur. Harita açılınca Google kendi çerezlerini kullanabilir. <a href="#" data-kvkk>Ayrıntılar</a></p><button type="button" class="k-btn k-btn--kucuk">Tamam</button>`;
+  b.innerHTML = `<p>Sitede takip çerezi yoktur. Harita açılınca Google kendi çerezlerini kullanabilir. <a href="#" data-kvkk>Ayrıntılar</a></p><button type="button" class="k-btn k-btn--kucuk">Tamam</button>`;
   b.querySelector('button').addEventListener('click', () => {
     depo.koy('k-cerez', 'tamam');
     b.remove();
@@ -398,6 +441,10 @@ function acilis() {
   gsap.from(ic, { yPercent: -100, autoAlpha: 0, duration: 0.7, ease: 'power3.out', delay: 0.1, clearProps: 'transform,opacity,visibility' });
 }
 
+// Tetikleyiciler `once: true` değil `toggleActions: 'play none none none'`: sayfa zaten tetikleyicinin
+// ötesine kaydırılmışken (fonts.ready'den önce kaydırma, rota değişimi) oluşan `once` tetikleyicisi
+// refresh() içinde kendini siler ve sonraki tetikleyici "reading 'end'" hatası verir. Görünüm aynı: bir kez oynar,
+// geri sarılmaz; tetikleyiciler sayfa değişince gsap.context ile temizlenir.
 function hareketler(kok, ilk) {
   // Başlıklar: satır maskesiyle yükselir. İ noktası kesilmesin diye maskeye üst pay (base.css).
   kok.querySelectorAll('[data-bol]').forEach((el) => {
@@ -409,20 +456,20 @@ function hareketler(kok, ilk) {
       stagger: 0.08,
       ease: 'power4.out',
       delay: hero ? (ilk ? 0.35 : 0.15) : 0,
-      scrollTrigger: hero ? undefined : { trigger: el, start: 'top 88%', once: true },
+      scrollTrigger: hero ? undefined : { trigger: el, start: 'top 88%', toggleActions: 'play none none none' },
     });
   });
   // Görseller: perde gibi açılır, içindeki fotoğraf hafif küçülerek oturur.
   kok.querySelectorAll('[data-perde]').forEach((el) => {
     const img = el.querySelector('img');
     const hero = el.closest('.k-hero, .k-sb');
-    const tl = gsap.timeline(hero ? { delay: 0.2 } : { scrollTrigger: { trigger: el, start: 'top 85%', once: true } });
+    const tl = gsap.timeline(hero ? { delay: 0.2 } : { scrollTrigger: { trigger: el, start: 'top 85%', toggleActions: 'play none none none' } });
     tl.fromTo(el, { clipPath: 'inset(0 0 100% 0)' }, { clipPath: 'inset(0 0 0% 0)', duration: 1.1, ease: 'power3.inOut' });
     if (img) tl.fromTo(img, { scale: 1.18 }, { scale: 1, duration: 1.4, ease: 'power3.out' }, 0);
   });
   // Ayırıcı çizgiler soldan çizilir.
   kok.querySelectorAll('[data-cizgi]').forEach((el) =>
-    gsap.fromTo(el, { scaleX: 0 }, { scaleX: 1, transformOrigin: 'left center', duration: 1, ease: 'power3.inOut', scrollTrigger: { trigger: el, start: 'top 92%', once: true } })
+    gsap.fromTo(el, { scaleX: 0 }, { scaleX: 1, transformOrigin: 'left center', duration: 1, ease: 'power3.inOut', scrollTrigger: { trigger: el, start: 'top 92%', toggleActions: 'play none none none' } })
   );
   // Sayaçlar.
   kok.querySelectorAll('[data-sayac]').forEach((el) => {
@@ -432,13 +479,13 @@ function hareketler(kok, ilk) {
       v: hedef,
       duration: 1.6,
       ease: 'power2.out',
-      scrollTrigger: { trigger: el, start: 'top 90%', once: true },
+      scrollTrigger: { trigger: el, start: 'top 90%', toggleActions: 'play none none none' },
       onUpdate: () => (el.textContent = Math.round(o.v).toLocaleString('tr-TR')),
     });
   });
   // Satır listeleri: sırayla, küçük bir kayma ile (kartlar değil, liste satırları).
   kok.querySelectorAll('[data-sira]').forEach((liste) =>
-    gsap.from(liste.children, { y: 24, opacity: 0, duration: 0.6, stagger: 0.06, ease: 'power2.out', scrollTrigger: { trigger: liste, start: 'top 85%', once: true } })
+    gsap.from(liste.children, { y: 24, opacity: 0, duration: 0.6, stagger: 0.06, ease: 'power2.out', scrollTrigger: { trigger: liste, start: 'top 85%', toggleActions: 'play none none none' } })
   );
   // Hero görseli kaydırdıkça yavaşça geri çekilir.
   kok.querySelectorAll('[data-paralaks]').forEach((el) =>

@@ -1,155 +1,125 @@
 {
   "kurumsal": {
-    "hero": {
-      "baslik": "Önce yazarız, sonra açarız.",
-      "metin": "Motoru açmadan önce dinler, ölçer, ne yapılacağını ve fiyatını iş emrine yazarız. Onayınız olmadan tek vida sökülmez; çıkan parça size teslim edilir.",
-      "birincil": "İş emri açın",
-      "ikincil": "Hizmetlerimiz",
-      "ikincilRota": "hizmetler"
-    },
+    "hizmetOzetBaslik": "Hizmetler",
     "ozet": {
-      "baslik": "Her araç bir dosya, her iş bir satır",
-      "metin": "Aracınız atölyeye girdiği anda kilometresi, şikâyeti ve yapılacak iş kâğıda geçer. Yıllar sonra gelseniz de dosyanız dolaptadır; neyin ne zaman değiştiğini birlikte bakarız."
+      "baslik": "Hakkında",
+      "metin": "Şaşmaz Oto Sanayi Sitesi'nde benzinli ve dizel binek araçlarla hafif ticari araçların motor ve mekanik arızalarına bakılır. Her aracın yapılan işleri iş emrine yazılır, iş emrinin bir nüshası araç sahibine verilir."
     },
-    "hizmetOzetBaslik": "Tezgâhtaki işler",
+    "yorumBaslik": "Örnek yorumlar",
+    "cta": {
+      "baslik": "İletişim",
+      "metin": "Fiyat ve randevu için arayın ya da formdan yazın.",
+      "buton": "İletişim formu"
+    },
+    "hizmetLink": "Bu hizmet için bilgi alın",
+    "surecBaslik": "Çalışma sırası",
     "anlasmaBaslik": "Şirket ve esnaf araçları",
-    "anlasmaMetin": "Ekmeğini araçla kazananı bekletmeyiz. Ticari araç, filo ve kasko işlerinde tek dosya, tek muhatap.",
+    "anlasmaMetin": "Ticari araç, filo ve kasko işlerinde her araç için ayrı iş emri açılır. Fatura dönem sonunda toplu kesilir.",
     "anlasmalar": [
       {
-        "baslik": "Ticari araç önceliği",
-        "kisa": "Arızalı iş aracı sıraya girmeden atölyeye alınır.",
-        "metin": "Taksi, servis, kargo ya da hafif ticari; aracınız yoldaysa para kazanıyorsunuz. Arızalı iş aracını aynı gün teşhise alır, işin ne kadar süreceğini baştan söyleriz.",
+        "baslik": "Ticari araçlar",
+        "kisa": "Arızalı iş aracı aynı gün arıza tespitine alınır",
+        "metin": "Taksi, servis, kargo ve hafif ticari araçlar aynı gün arıza tespitine alınır. İşin ne kadar süreceği araç sahibine baştan söylenir.",
         "maddeler": [
-          "Aynı gün teşhis",
-          "Süre ve fiyat işe başlamadan",
-          "Çıkan parçalar araçla birlikte teslim",
-          "Araç bazında bakım dosyası"
+          "Aynı gün arıza tespiti",
+          "Süre bilgisi işe başlamadan",
+          "Sökülen parçalar araçla birlikte geri verilir",
+          "Her aracın bakım dosyası"
         ],
-        "buton": "Ticari aracım için yazın"
+        "buton": "Ticari araç için bilgi alın"
       },
       {
         "baslik": "Şirket filoları",
-        "kisa": "Kilometreye göre bakım hatırlatması, aylık tek fatura.",
-        "metin": "Şirket araçlarınızın bakım zamanını kilometresine göre takip eder, zamanı gelen aracı biz hatırlatırız. Her araç için ayrı iş dökümü, ayda tek fatura.",
+        "kisa": "Kilometreye göre bakım hatırlatması, dönem sonunda tek fatura",
+        "metin": "Şirket araçlarının bakım zamanı kilometresine göre takip edilir, zamanı gelen araç için haber verilir. Her araç için ayrı iş dökümü çıkarılır.",
         "maddeler": [
-          "Araç bazında iş ve parça geçmişi",
+          "Her aracın iş ve parça geçmişi",
           "Bakım zamanı hatırlatması",
-          "Aylık tek fatura ve döküm"
+          "Dönem sonunda tek fatura ve döküm"
         ],
-        "buton": "Filo görüşmesi isteyin"
+        "buton": "Filo için bilgi alın"
       },
       {
         "baslik": "Kasko ve hasar dosyası",
-        "kisa": "Mekanik hasarda eksper sürecini birlikte yürütürüz.",
-        "metin": "Kasko kapsamındaki mekanik hasarlarda eksper randevusu, fotoğraflı tespit ve evrak takibini yürütürüz. Çalıştığımız sigorta şirketlerinin güncel listesi için bizi arayın.",
+        "kisa": "Mekanik hasarda eksper randevusu ve evrak takibi",
+        "metin": "Kasko kapsamındaki mekanik hasarlarda eksper randevusu, fotoğraflı tespit ve evrak takibi atölyeden yürütülür. Anlaşmalı sigorta şirketlerinin güncel listesi için arayın.",
         "maddeler": [
           "Fotoğraflı hasar tespiti",
-          "Parça onayı gelmeden işe başlamama",
-          "Her adımda telefonla bilgi"
+          "Parça onayından sonra onarım",
+          "Her aşamada telefonla bilgi"
         ],
-        "buton": "Hasar dosyası için yazın"
+        "buton": "Hasar dosyası için bilgi alın"
       }
     ],
-    "anlasmaNotu": "Anlaşma koşulları araç sayısına ve tipine göre konuşulur; teklifimizi yazılı veririz.",
+    "anlasmaNotu": "Koşullar araç sayısına ve tipine göre konuşulur, teklif yazılı verilir.",
     "hakkimizda": {
-      "baslik": "Kâğıdı olan atölye",
+      "baslik": "Hakkında",
       "paragraflar": [
-        "Tek kanallı küçük bir dükkânda başladık. İlk günden beri aynı alışkanlıkla çalışıyoruz: her aracın bir iş emri, her işin bir satırı olur. Ne söylediysek o yazılır, ne yazıldıysa o yapılır.",
-        "Bugün daha geniş bir atölyede motor revizyonu, silindir kapak, triger, şanzıman ve yürüyen aksam işleri yapıyoruz. Motoru açmadan önce dinliyor, ölçüyor, ne olduğunu size gösteriyoruz."
+        "Atölyede motor revizyonu, silindir kapağı, triger, şanzıman ve yürüyen aksam işleri yapılır. Benzinli, dizel ve LPG'li binek araçlarla hafif ticari araçlar gelir.",
+        "Araç atölyeye girince kilometresi, şikâyeti ve yapılacak iş iş emrine yazılır. İş emrinin bir nüshası araç sahibine verilir, bir nüshası aracın dosyasında saklanır."
       ],
       "gorsel": "/img/kurumsal-motor2/eller.jpg",
-      "gorselAlt": "Silindir kapağını söküp temizleyen ustanın elleri"
+      "gorselAlt": "Silindir kapağını temizleyen ustanın elleri"
     },
-    "misyon": "Arızayı tahminle değil ölçerek bulmak, ne yapacağımızı ve fiyatını işe başlamadan yazmak.",
-    "vizyon": "Şaşmaz'da aracını bırakan herkesin, dosyasına bakıp neyin neden yapıldığını görebildiği bir atölye olmak.",
-    "degerler": [
-      {
-        "baslik": "Yazılı fiyat",
-        "metin": "Parça ve işçilik fiyatı iş emrine işe başlamadan yazılır."
-      },
-      {
-        "baslik": "Onaysız iş yok",
-        "metin": "Yeni bir arıza çıkarsa önce sizi ararız, sonra devam ederiz."
-      },
-      {
-        "baslik": "Eski parça sizin",
-        "metin": "Değişen parçalar atılmaz, aracınızla birlikte teslim edilir."
-      },
-      {
-        "baslik": "Dosya saklanır",
-        "metin": "Yaptığımız her iş aracınızın dosyasında durur."
-      }
-    ],
-    "kalite": {
-      "baslik": "Bir iş emri nasıl kapanır",
-      "metin": "Kabulden teslime kadar her adım iş emrine işlenir; siz de aynı kâğıdın kopyasını alırsınız.",
-      "maddeler": [
-        "Kabulde kilometre, yakıt seviyesi ve görünen hasarlar yazılır.",
-        "Teşhis cihaz ve ölçü aletleriyle yapılır, sonuç size gösterilir.",
-        "Parça seçenekleri orijinal ve muadil olarak fiyatlarıyla sunulur.",
-        "Teslimden önce test sürüşü yapılır, iş emri birlikte kapatılır."
-      ]
-    },
+    "bilgiBaslik": "Genel bilgiler",
+    "markaBaslik": "Bakım yapılan markalar",
+    "galeriBaslik": "Motor ve mekanik işleri",
+    "sssBaslik": "Sık sorulan sorular",
     "sss": [
       {
-        "soru": "Fiyatı ne zaman öğrenirim?",
-        "cevap": "Teşhisten sonra, işe başlamadan. Parça ve işçilik ayrı ayrı yazılır; onayınız olmadan başlamayız."
+        "soru": "Motordan tıkırtı geliyor, araçla gelinebilir mi?",
+        "cevap": "Tıkırtı rölantide hafifse ve yağ lambası yanmıyorsa sakin sürüşle gelinebilir. Yağ lambası yanıyorsa ya da ses devirle artıyorsa motor durdurulmalı, araç çekiciyle getirilmeli."
       },
       {
-        "soru": "Motoru açınca başka arıza çıkarsa?",
-        "cevap": "Durur, sizi arar, gördüğümüzü fotoğrafla gösteririz. Yeni kalem ancak onayınızla iş emrine eklenir."
+        "soru": "Egzozdan duman gelmesi ne anlama gelir?",
+        "cevap": "Mavi duman motorun yağ yaktığını, beyaz ve tatlı kokulu duman soğutma suyunun yandığını gösterir. İkisinde de kompresyon ve kaçak testiyle sebep bulunur."
       },
       {
-        "soru": "Eski parçaları görebilir miyim?",
-        "cevap": "Evet. Değişen parçaları saklarız, aracınızla birlikte teslim ederiz."
+        "soru": "Motor açılınca başka arıza çıkarsa ne olur?",
+        "cevap": "İş durdurulur, araç sahibi aranır ve görülen arıza fotoğrafla gösterilir. Yeni iş ancak araç sahibi onay verince iş emrine eklenir."
       },
       {
-        "soru": "Randevusuz gelebilir miyim?",
-        "cevap": "Gelebilirsiniz; ama önceden ararsanız aracınızı bekletmeden teşhise alırız."
+        "soru": "Randevusuz gelinebilir mi?",
+        "cevap": "Arıza tespiti ve periyodik bakım için randevu gerekmez. Motor revizyonu ve şanzıman işleri randevuyla yapılır."
       }
     ],
     "kariyer": {
-      "baslik": "Tezgâha usta ve çırak arıyoruz",
-      "metin": "Motor ve şanzıman işinde elini taşın altına koyan usta ya da mesleği öğrenmek isteyen çırak arkadaşlarla tanışmak isteriz. Kısa bir tanıtımla bize yazın."
+      "baslik": "Kariyer",
+      "metin": "Motor ve şanzıman işlerinde tecrübeli ustalar ile mesleği öğrenmek isteyen çıraklar başvurabilir. Başvuru için ad, telefon ve kısa bir not yeterli."
     },
     "sayfalar": {
-      "kurumsal": {
-        "baslik": "Kurumsal",
-        "metin": "Kim olduğumuz, nasıl çalıştığımız ve iş emrimizin arkasında nasıl durduğumuz.",
+      "hakkinda": {
+        "baslik": "Hakkında",
+        "metin": "Şaşmaz Oto Sanayi Sitesi'nde motor, şanzıman ve mekanik onarım",
         "gorsel": "/img/kurumsal-motor2/eksantrik.jpg"
       },
       "hizmetler": {
-        "baslik": "Hizmetlerimiz",
-        "metin": "Motor revizyonundan periyodik bakıma, her iş için ortalama süre ve kapsam."
+        "baslik": "Hizmetler",
+        "metin": "Süreler yaklaşıktır, araca göre değişebilir. Fiyat ve randevu için arayın."
+      },
+      "ariza-kaydi": {
+        "baslik": "Arıza Kaydı",
+        "metin": "Formdaki bilgiler WhatsApp'tan atölyeye hazır mesaj olarak gider."
       },
       "kurumsal-musteriler": {
-        "baslik": "Şirket ve esnaf araçları",
-        "metin": "Ticari araç önceliği, filo bakım takibi ve kasko dosyası.",
+        "baslik": "Şirket Araçları",
+        "metin": "Ticari araç, şirket filosu ve kasko işleri",
         "gorsel": "/img/kurumsal-motor2/lift.jpg"
-      },
-      "referanslar": {
-        "baslik": "Tezgâhtan ve müşterilerden",
-        "metin": "Atölyeden kareler, müşterilerimizin yorumları ve baktığımız markalar."
       },
       "iletisim": {
         "baslik": "İletişim",
-        "metin": "Randevu, fiyat ya da bir sorunuz için yazın; aynı gün dönüş yapalım."
+        "metin": "Fiyat ve randevu için arayın ya da formdan yazın."
       }
     },
     "konular": [
-      "İş emri / arıza",
-      "Fiyat sorma",
+      "Arıza kaydı",
       "Randevu",
+      "Fiyat bilgisi",
       "Ticari araç / filo",
       "Kasko / hasar dosyası",
       "Genel bilgi"
     ],
-    "formBaslik": "Bize yazın",
-    "cta": {
-      "baslik": "Aracınız ne yapıyor, yazın.",
-      "metin": "Şikâyeti anlatın, ne kontrol edileceğini ve fiyatı işe başlamadan söyleyelim.",
-      "buton": "İş emri açın"
-    }
+    "formBaslik": "Mesaj gönderin"
   },
   "galeri": [
     {
@@ -166,7 +136,7 @@
     },
     {
       "src": "/img/kurumsal-motor2/revizyon.jpg",
-      "alt": "Revizyon için sökülmüş motor tezgâhta"
+      "alt": "Revizyon için sökülmüş motor, sehpada"
     },
     {
       "src": "/img/kurumsal-motor2/eller.jpg",

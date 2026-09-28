@@ -1,27 +1,27 @@
 // Sektöre özel modül: sigorta / kasko hasar dosyası. Dört adımlı süreç göstergesi (ekspertiz → onay → onarım → teslim)
-// ve araç üstten görünüşünde hasarlı bölgeyi işaretleyip WhatsApp'tan fotoğraf gönderme akışı.
+// ve araç üstten görünüşünde hasarlı bölgeyi işaretleyip WhatsApp'tan fotoğraf gönderme akışı. Metinler öznesiz.
 import { esc, waHref, gsap, reducedMotion } from '../../shared/core.js';
 
 const ADIMLAR = [
   {
-    baslik: 'Ekspertiz', sure: '1-3 iş günü',
-    biz: 'Aracı kabul eder, hasarı fotoğraflarız. Sigorta ihbarını ve eksper randevusunu sizin adınıza biz alırız.',
-    siz: 'Kaza tespit tutanağı, ruhsat ve ehliyet fotoğrafı.',
+    baslik: 'Ekspertiz', sure: '1–3 iş günü',
+    is: 'Araç kabul edilir, hasar fotoğraflanır. Sigorta ihbarı ve eksper randevusu için yardımcı olunur.',
+    gerek: 'Kaza tespit tutanağı, ruhsat ve ehliyet fotoğrafı.',
   },
   {
-    baslik: 'Onay', sure: '1-5 iş günü',
-    biz: 'Eksperle birlikte parça ve işçilik listesini çıkarırız. Onay gelmeden işe başlamaz, durumu size yazarız.',
-    siz: 'Poliçe numaranız. Muafiyet varsa baştan söyleriz.',
+    baslik: 'Onay', sure: '1–5 iş günü',
+    is: 'Eksperle parça ve işçilik listesi çıkarılır. Sigorta onayı gelmeden işe başlanmaz.',
+    gerek: 'Poliçe numarası. Muafiyet varsa işe başlamadan söylenir.',
   },
   {
-    baslik: 'Onarım', sure: 'Hasara göre 2-10 gün',
-    biz: 'Kaporta ölçüyle düzeltilir, boya fırınlı kabinde yapılır. Ara aşamaları fotoğrafla size göndeririz.',
-    siz: 'Hiçbir şey. Merak ettiğinizde arayın ya da yazın.',
+    baslik: 'Onarım', sure: 'Hasara göre 2–10 gün',
+    is: "Kaporta ölçülerek düzeltilir, boya fırınlı kabinde atılır. Ara aşamaların fotoğrafları WhatsApp'tan gönderilir.",
+    gerek: 'Bu aşamada bir şey gerekmez.',
   },
   {
     baslik: 'Teslim', sure: 'Aynı gün',
-    biz: 'Gün ışığı lambası altında son kontrol, yıkama ve fotoğraflı iş raporuyla teslim. Dosya kapanışını biz takip ederiz.',
-    siz: 'Aracı teslim alırken bizimle bir tur dönüp bakın.',
+    is: 'Araç gün ışığı lambasının altında kontrol edilir, yıkanıp teslim edilir.',
+    gerek: 'Teslim sırasında aracın birlikte gözden geçirilmesi.',
   },
 ];
 
@@ -50,9 +50,9 @@ export const hasarDosyasi = {
       <section class="k-bolum hd" aria-labelledby="hd-baslik">
         <div class="k-kap">
           <div class="hd__bas">
-            <p class="hd__etiket">Sigorta ve kasko hasarı</p>
-            <h2 class="k-h2" id="hd-baslik" data-bol>Dosyanız dört adımda kapanır</h2>
-            <p class="k-lead">Kaza sonrası evrak ve eksper işini siz değil, biz takip ederiz. Hangi adımda ne olduğunu her zaman bilirsiniz.</p>
+            <p class="hd__etiket">Kasko ve trafik sigortası</p>
+            <h2 class="k-h2" id="hd-baslik" data-bol>Hasar dosyası</h2>
+            <p class="k-lead">Sigorta dosyalı onarım dört adımda ilerler. Süreler dosyaya ve sigorta şirketine göre değişir.</p>
           </div>
 
           <div class="hd__surec">
@@ -65,7 +65,7 @@ export const hasarDosyasi = {
 
           <div class="hd__gonder">
             <div class="hd__arac">
-              <p class="hd__soru">Hasar nerede? <span>Araçta dokunarak işaretleyin</span></p>
+              <p class="hd__soru">Hasarlı bölge <span>Araç üzerinde dokunarak işaretlenir</span></p>
               <svg class="hd__svg" viewBox="0 0 200 392" role="group" aria-label="Araç üstten görünüş, hasarlı bölgeyi seçin">
                 <rect class="hd__govde" x="30" y="4" width="140" height="384" rx="46"/>
                 <path class="hd__cam" d="M56 124h88l-6 22H62z"/><path class="hd__cam" d="M60 266h80l4 20H56z"/>
@@ -76,14 +76,14 @@ export const hasarDosyasi = {
               <fieldset><legend class="hd__soru">Dosya türü</legend>
                 <div class="hd__secim">${TURLER.map((t, i) => `<label><input type="radio" name="tur" value="${esc(t)}"${i === 0 ? ' checked' : ''}><span>${esc(t)}</span></label>`).join('')}</div>
               </fieldset>
-              <label class="hd__alan"><span class="hd__soru">Araç <span>marka, model, yıl</span></span><input name="arac" autocomplete="off" placeholder="Örn. 2019 Passat"></label>
+              <label class="hd__alan"><span class="hd__soru">Araç <span>marka, model, yıl</span></span><input name="arac" autocomplete="off" placeholder="Örneğin 2019 Passat"></label>
               <p class="hd__secilen" aria-live="polite">Bölge seçilmedi</p>
               <div class="hd__kareler">
-                <p class="hd__soru">Göndereceğiniz dört kare</p>
+                <p class="hd__soru">Gönderilecek dört fotoğraf</p>
                 <ol>${KARELER.map((k) => `<li>${esc(k)}</li>`).join('')}</ol>
               </div>
-              <a class="k-btn hd__wa" target="_blank" rel="noopener">WhatsApp'tan fotoğraf gönderin</a>
-              <p class="hd__not">Mesaj hazır açılır; fotoğrafları aynı sohbete ekleyin. Aynı gün fiyat ve süre bildiririz.</p>
+              <a class="k-btn hd__wa" target="_blank" rel="noopener">WhatsApp'tan gönder</a>
+              <p class="hd__not">Mesaj hazır açılır, fotoğraflar aynı sohbete eklenir. Fiyat ve süre WhatsApp'tan bildirilir.</p>
             </form>
           </div>
         </div>
@@ -103,8 +103,8 @@ export const hasarDosyasi = {
       panel.setAttribute('aria-labelledby', `hd-tab-${i}`);
       panel.innerHTML = `
         <div class="hd__sure"><span>Adım ${i + 1} / ${ADIMLAR.length}</span><strong>${esc(a.sure)}</strong></div>
-        <div><h3>Biz ne yapıyoruz</h3><p>${esc(a.biz)}</p></div>
-        <div><h3>Sizden ne gerekiyor</h3><p>${esc(a.siz)}</p></div>`;
+        <div><h3>Yapılan iş</h3><p>${esc(a.is)}</p></div>
+        <div><h3>Gerekenler</h3><p>${esc(a.gerek)}</p></div>`;
       const oran = i / (ADIMLAR.length - 1);
       if (reducedMotion || ilk) gsap.set(dolu, { scaleX: oran });
       else {
@@ -171,10 +171,10 @@ export const hasarDosyasi = {
 // Sektör imzası: "son kontrol". Kütüphanedeki otomobilin (lib3d car) şampanya metalik Cycles render'ı, gün ışığı
 // lambalarının yansıması gövde boyunca akıyor; kaydırdıkça lamba ışığı görselin üstünden geçer. Görsel temsilîdir.
 const KONTROLLER = [
-  ['Renk tonu', 'Boyanan panel komşu panelle gün ışığında yan yana karşılaştırılır. Ton farkı görünüyorsa araç teslim edilmez.'],
-  ['Yüzey ve parlaklık', 'Lambanın yansıması panel boyunca düz akmalı. Portakal kabuğu, akıntı ya da toz varsa pastayla alınır.'],
-  ['Kenar ve aralıklar', 'Söküp takılan çıta, fitil ve kapı aralıkları kontrol edilir; bant izi, boya taşması bırakılmaz.'],
-  ['Ölçüm ve rapor', 'Boya kalınlığı panel panel ölçülür, fotoğraflarla birlikte iş raporuna yazılır ve size verilir.'],
+  ['Renk tonu', 'Boyanan panel yandaki panelle gün ışığında karşılaştırılır.'],
+  ['Yüzey ve parlaklık', 'Lambanın yansımasının panel boyunca düz akıp akmadığına bakılır. Portakal kabuğu, akıntı ya da toz pastayla alınır.'],
+  ['Kenar ve aralıklar', 'Söküp takılan çıta, fitil ve kapı aralıkları kontrol edilir. Bant izi ve boya taşması temizlenir.'],
+  ['Boya kalınlığı', 'Boya kalınlığı panel panel ölçülüp kaydedilir.'],
 ];
 const okSvg = `<svg class="k-ok" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 
@@ -192,12 +192,12 @@ export const sonKontrol = {
           </figure>
           <div class="sk__metin">
             <p class="sk__ust">Teslimden önce</p>
-            <h2 class="k-h2" id="sk-baslik" data-bol>Gün ışığı lambasının altında <em>son tur</em></h2>
-            <p class="k-lead">Kabinden çıkan araç doğrudan size gitmez. Lambanın altında dört şeye bakarız; biri bile tutmuyorsa iş bitmemiş sayılır.</p>
+            <h2 class="k-h2" id="sk-baslik" data-bol>Gün ışığında <em>son kontrol</em></h2>
+            <p class="k-lead">Kabinden çıkan araç teslimden önce gün ışığı lambasının altında dört açıdan kontrol edilir.</p>
             <ol class="sk__liste" data-sira>
               ${KONTROLLER.map(([a, b], i) => `<li><span class="sk__no">${['i', 'ii', 'iii', 'iv'][i]}</span><div><h3>${esc(a)}</h3><p>${esc(b)}</p></div></li>`).join('')}
             </ol>
-            <a class="k-link sk__link" href="#/iletisim?konu=${konu}" data-rota="iletisim?konu=${konu}">Hasar fotoğrafı gönderin ${okSvg}</a>
+            <a class="k-link sk__link" href="#/iletisim?konu=${konu}" data-rota="iletisim?konu=${konu}">Hasar için bilgi alın ${okSvg}</a>
           </div>
         </div>
       </section>`;

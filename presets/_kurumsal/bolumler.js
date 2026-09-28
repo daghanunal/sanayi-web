@@ -2,7 +2,7 @@
 // Veri yoksa bölüm boş döner ve sayfada görünmez; böylece aynı sayfa listesi her sektörde çalışır.
 import {
   esc, telHref, waHref, mapsHref, mapsEmbed, openStatus, groupedHours, icons, GUNLER,
-  yilEki, saatListesi, gunDurumu, kisaAdres,
+  yilEki, saatListesi, gunDurumu, kisaAdres, acikGunSayisi,
 } from '../../shared/core.js';
 
 const buYil = new Date().getFullYear();
@@ -11,12 +11,42 @@ const buYil = new Date().getFullYear();
 export { yilEki };
 
 // --- Künye yardımcıları (tema.kunye): shared/core.js → saatListesi, gunDurumu, kisaAdres ---------
-// Künye modunda saatler yeni biçimde, değilse eski (varyant verisine dokunmadan geriye uyumlu).
-const saatSatirlari = (d, tema) => (tema?.kunye ? saatListesi(d.saatler) : groupedHours(d.saatler));
+// Künye (varsayılan) saatleri "08.30–19.00" biçiminde yazar; `tema.kunye: false` eski biçimi korur.
+const kunyeMi = (tema) => tema?.kunye !== false;
+const saatSatirlari = (d, tema) => (kunyeMi(tema) ? saatListesi(d.saatler) : groupedHours(d.saatler));
 const durumSatiri = (d, tema) => {
-  if (!tema?.kunye) { const st = openStatus(d.saatler); return { acik: st.open, metin: st.text }; }
+  if (!kunyeMi(tema)) { const st = openStatus(d.saatler); return { acik: st.open, metin: st.text }; }
   const b = gunDurumu(d.saatler);
   return { acik: b.open, metin: b.metin };
+};
+
+// --- Başlık süzgeci (İÇERİK-BRIEF: başlık düz ve bilgi verir, "biz" dili yok) -------------------------
+// Eski varyant verisinde kalan "Biz kimiz", "Hizmetlerimiz", "Nasıl çalışıyoruz", "Birlikte çalışalım",
+// "Atölyemizden" gibi başlıklar yerine bölümün düz başlığı yazılır. Yalnız başlıklara ve CTA metnine
+// uygulanır; gövde metni veri sahibinin işidir. "temiz" gibi -miz ile biten sıradan sözcükler hariç.
+const SON = '(?![a-zçğıöşüâîû])';
+const BIZ_DILI = new RegExp(
+  [
+    `(?:^|[^a-zçğıöşü])biz(?:im|imle|e|i|den|le)?${SON}`, // biz, bize, bizimle…
+    `[aeıioöuü]m[ıiuü]z(?:d[ae]n|t[ae]n|[ıi]n|[ae]|[ıiuü]|l[ae]|d[ae])?${SON}`, // -ımız / -imiz / -miz (+ ek)
+    `[ıiuü]yoruz${SON}`, `[ae]l[ıi]m${SON}`, `[aeıiuü]r[ıiuü]z${SON}`, `m[ae]y[ıi]z${SON}`, `[ae]c[ae]ğ[ıi]z${SON}`,
+    'misyon', 'vizyon', 'neden biz', 'atölyeden', 'dükkândan', 'dükkandan',
+  ].join('|'),
+  'i'
+);
+const HARIC = /(temiz|omuz|domuz|selim|halim)/g;
+export const bizDiliMi = (m) => BIZ_DILI.test(String(m || '').toLocaleLowerCase('tr').replace(HARIC, ''));
+// Veri başlığı düz ise o, değilse bölümün varsayılan başlığı.
+export const duz = (veri, varsayilan) => (veri && !bizDiliMi(veri) ? veri : varsayilan);
+
+// Künye ve footer'daki tek olgu cümlesi: isletme.tanim; yoksa sektör adı cümle düzeninde
+// ("Egzoz, DPF ve Katalitik Konvertör" → "Egzoz, DPF ve katalitik konvertör"; kısaltmalar korunur).
+export const tanimMetni = (d) => {
+  if (d.isletme.tanim) return d.isletme.tanim;
+  return String(d.isletme.sektor || '')
+    .split(' ')
+    .map((w, i) => (i && /\p{Ll}/u.test(w) ? w.toLocaleLowerCase('tr') : w))
+    .join(' ');
 };
 
 const rota = (id, metin, cls = 'k-btn') => `<a class="${cls}" href="#/${id}" data-rota="${id}">${metin}</a>`;
@@ -25,12 +55,29 @@ const baslik = (metin, cls = 'k-h2') => `<h2 class="${cls}" data-bol>${esc(metin
 const k = (d) => d.kurumsal || {};
 const kurulusYili = (d) => d.isletme.kurulus;
 
-function istatistikler(d) {
-  return (d.istatistikler || []).map((s) => {
-    const yilMi = s.kurulustanHesapla || /yıldır/.test(s.etiket);
-    if (s.saatlerdenHesapla && d.saatler) return { ...s, deger: d.saatler.filter(Boolean).length };
-    return { ...s, deger: yilMi && kurulusYili(d) ? buYil - kurulusYili(d) : s.deger };
-  });
+// Rakam blokları yalnız veriden türeyen olguları gösterir (İÇERİK-BRIEF): kuruluştan geçen yıl ve
+// haftada açık gün. Uydurma sayaçlar ("18.400 araç", "1 yıl garanti") eski veride kalsa da gösterilmez;
+// gerçekten doğrulanmış bir olgu `olgu: true` ile açıkça işaretlenir. Hiç olgu kalmazsa kuruluş yılı ve
+// saatlerden iki varsayılan blok kurulur; `istatistikler: []` blokları tamamen kapatır.
+function istatistikler(d, tema = {}) {
+  const yil = kurulusYili(d) ? buYil - kurulusYili(d) : null;
+  const gun = d.saatler ? acikGunSayisi(d.saatler) : null;
+  const kaynak = d.istatistikler;
+  if (Array.isArray(kaynak) && !kaynak.length) return [];
+  const liste = (kaynak || [])
+    .map((s) => {
+      const yilMi = s.kurulustanHesapla || /^kurulus/.test(String(s.deger)) || /yıldır/.test(s.etiket || '');
+      const gunMu = s.saatlerdenHesapla || /haftada açık/.test(s.etiket || '');
+      if (yilMi) return yil ? { ...s, deger: yil } : null;
+      if (gunMu) return gun ? { ...s, deger: gun } : null;
+      return s.olgu && Number.isFinite(Number(s.deger)) ? { ...s, deger: Number(s.deger) } : null;
+    })
+    .filter(Boolean);
+  if (liste.length) return liste;
+  return [
+    yil ? { deger: yil, sonek: ' yıl', etiket: tema.yer || `${yilEki(kurulusYili(d))} beri` } : null,
+    gun ? { deger: gun, sonek: ' gün', etiket: 'haftada açık' } : null,
+  ].filter(Boolean);
 }
 
 // --- Sayfa başlığı (ana sayfa dışındaki sayfalarda) ------------------------------------------
@@ -42,8 +89,8 @@ export function sayfaBasligi(sayfa, d, ctx) {
     <header class="k-sb">
       <div class="k-kap">
         <nav class="k-kirinti" aria-label="Bulunduğunuz yer"><a href="#/${ilk.id}" data-rota="${ilk.id}">${ilk.baslik}</a><span aria-hidden="true">/</span><span aria-current="page">${sayfa.baslik}</span></nav>
-        <h1 class="k-h1 k-sb__baslik" data-bol>${esc(s.baslik || sayfa.baslik)}</h1>
-        ${s.metin ? `<p class="k-lead k-sb__metin">${esc(s.metin)}</p>` : ''}
+        <h1 class="k-h1 k-sb__baslik" data-bol>${esc(duz(s.baslik, sayfa.baslik))}</h1>
+        ${s.metin && !bizDiliMi(s.metin) ? `<p class="k-lead k-sb__metin">${esc(s.metin)}</p>` : ''}
       </div>
       ${s.gorsel ? `<figure class="k-sb__gorsel" data-perde><img src="${s.gorsel}" alt="" fetchpriority="high"></figure>` : ''}
       <span class="k-sb__cizgi" data-cizgi></span>
@@ -57,14 +104,14 @@ export const BOLUMLER = {
     render(d, { tema }) {
       const h = k(d).hero || {};
       // Künye: işletmenin adı, işi (tek olgu), adresi, bugünkü saatleri; Ara / WhatsApp / Yol tarifi. Slogan yok.
-      if (tema.kunye) {
+      if (kunyeMi(tema)) {
         const b = d.saatler ? gunDurumu(d.saatler) : null;
         return `
         <section class="k-hero k-hero--kunye" aria-label="Künye">
           <div class="k-kap k-hero__ic">
             <div class="k-hero__metin">
               <h1 class="k-h1 k-hero__baslik" data-bol>${esc(d.isletme.ad)}</h1>
-              <p class="k-lead k-hero__tanim">${esc(d.isletme.tanim || d.isletme.sektor)}</p>
+              <p class="k-lead k-hero__tanim">${esc(tanimMetni(d))}</p>
               <dl class="k-kunye">
                 <div><dt>Adres</dt><dd>${esc(kisaAdres(d.iletisim.adres))}</dd></div>
                 ${b ? `<div><dt>Bugün</dt><dd><span class="k-durum ${b.open ? 'is-acik' : ''}"><span></span>${esc(b.kunye)}</span></dd></div>` : ''}
@@ -80,10 +127,11 @@ export const BOLUMLER = {
           </div>
         </section>`;
       }
-      const ust = h.ust || `${d.isletme.sektor}. ${tema.yer ? `${tema.yer} ` : ''}${yilEki(kurulusYili(d))} beri.`;
+      // Eski hero (yalnız `tema.kunye: false`). Slogan okunmaz: başlık yoksa işletmenin adı.
+      const ust = h.ust || [tanimMetni(d), kurulusYili(d) ? `${tema.yer ? `${tema.yer} ` : ''}${yilEki(kurulusYili(d))} beri` : tema.yer].filter(Boolean).join('. ');
       const st = d.saatler ? openStatus(d.saatler) : null;
       const varsayilan = [
-        ['Kuruluş', String(kurulusYili(d))],
+        kurulusYili(d) ? ['Kuruluş', String(kurulusYili(d))] : null,
         st ? ['Bugün', st.text] : null,
         ['Telefon', d.iletisim.telefon],
       ].filter(Boolean);
@@ -95,10 +143,10 @@ export const BOLUMLER = {
           <div class="k-kap k-hero__ic">
             <div class="k-hero__metin">
               <p class="k-hero__ust">${esc(ust)}</p>
-              <h1 class="k-h1 k-hero__baslik" data-bol>${esc(h.baslik || d.isletme.slogan)}</h1>
-              <p class="k-lead">${esc(h.metin || d.isletme.hakkinda)}</p>
+              <h1 class="k-h1 k-hero__baslik" data-bol>${esc(h.baslik || d.isletme.ad)}</h1>
+              ${h.metin || d.isletme.hakkinda ? `<p class="k-lead">${esc(h.metin || d.isletme.hakkinda)}</p>` : ''}
               <div class="k-butonlar">
-                ${rota('iletisim', `${h.birincil || 'Teklif isteyin'} ${ok}`)}
+                ${rota('iletisim', `${h.birincil || 'İletişim'} ${ok}`)}
                 ${h.ikincil ? rota(h.ikincilRota || 'hizmetler', h.ikincil, 'k-btn k-btn--ikincil') : `<a class="k-btn k-btn--ikincil" href="${telHref(d)}">${icons.phone}<span>${esc(d.iletisim.telefon)}</span></a>`}
               </div>
             </div>
@@ -113,14 +161,18 @@ export const BOLUMLER = {
     render(d, ctx = {}) {
       const o = k(d).ozet || {};
       // Bağlantı kurumsal/hakkında sayfasına gider (varyant sayfayı "hakkinda" diye adlandırmış olabilir).
-      const sf = ctx.sayfalar?.find((x) => x.id === 'kurumsal') || ctx.sayfalar?.find((x) => x.id === 'hakkinda') || { id: 'kurumsal', baslik: 'Kurumsal' };
+      // "Biz" diliyle yazılmış eski özet yerine (varsa) düz yazılmış isletme.hakkinda.
+      const adaylar = [o.metin, d.isletme.hakkinda].filter(Boolean);
+      const metin = adaylar.find((x) => !bizDiliMi(x)) || adaylar[0];
+      if (!metin) return '';
+      const sf = ctx.sayfalar?.find((x) => x.id === 'kurumsal') || ctx.sayfalar?.find((x) => x.id === 'hakkinda') || ctx.sayfalar?.find((x) => x.bolumler?.includes('hakkimizda'));
       return `
         <section class="k-bolum k-ozet">
           <div class="k-kap k-iki">
-            <div>${baslik(o.baslik || 'Hakkımızda')}</div>
+            <div>${baslik(duz(o.baslik, 'Hakkında'))}</div>
             <div>
-              <p class="k-buyuk-metin">${esc(o.metin || d.isletme.hakkinda)}</p>
-              ${rota(sf.id, `${sf.menu || sf.baslik} ${ok}`, 'k-link')}
+              <p class="k-buyuk-metin">${esc(metin)}</p>
+              ${sf ? rota(sf.id, `${sf.menu || sf.baslik} ${ok}`, 'k-link') : ''}
             </div>
           </div>
         </section>`;
@@ -128,17 +180,20 @@ export const BOLUMLER = {
   },
 
   hizmetOzet: {
-    render(d, { tema }) {
+    render(d, { tema, sayfalar = [] }) {
       const list = (d.hizmetler || []).slice(0, 6);
       if (!list.length) return '';
+      // Hizmet listesi hangi sayfadaysa oraya bağlanır (varyant sayfayı "urunler", "menu" diye adlandırmış olabilir).
+      const hizmetSayfasi = sayfalar.find((x) => x.bolumler?.includes('hizmetler'));
+      const hRota = hizmetSayfasi?.id || 'hizmetler';
       return `
         <section class="k-bolum k-hozet">
           <div class="k-kap">
-            <div class="k-bolum__bas">${baslik(k(d).hizmetOzetBaslik || tema.hizmetEtiketi || 'Hizmetlerimiz')}${rota('hizmetler', `Tümü ${ok}`, 'k-link')}</div>
+            <div class="k-bolum__bas">${baslik(duz(k(d).hizmetOzetBaslik, duz(tema.hizmetEtiketi, 'Hizmetler')))}${hizmetSayfasi ? rota(hizmetSayfasi.id, `Tümü ${ok}`, 'k-link') : ''}</div>
             <ul class="k-hozet__liste" data-sira>
               ${list
                 .map(
-                  (h) => `<li><a href="#/hizmetler" data-rota="hizmetler">
+                  (h) => `<li><a href="#/${hRota}" data-rota="${hRota}">
                     ${h.gorsel ? `<span class="k-hozet__gorsel"><img src="${h.gorsel}" alt="" loading="lazy"></span>` : ''}
                     <span class="k-hozet__ad">${esc(h.baslik)}</span>
                     <span class="k-hozet__metin">${esc(h.kisa || h.aciklama)}</span>
@@ -152,8 +207,8 @@ export const BOLUMLER = {
   },
 
   rakamlar: {
-    render(d) {
-      const s = istatistikler(d);
+    render(d, { tema } = {}) {
+      const s = istatistikler(d, tema);
       if (!s.length) return '';
       return `
         <section class="k-bolum k-rakamlar">
@@ -171,16 +226,18 @@ export const BOLUMLER = {
   },
 
   anlasmaOzet: {
-    render(d) {
+    render(d, { sayfalar = [] } = {}) {
       const a = k(d).anlasmalar;
       if (!a?.length) return '';
+      // Bağlantı anlaşmaların bulunduğu sayfaya gider ("filo", "servisler", "bayi"…); öyle bir sayfa yoksa bağlantı yok.
+      const sf = sayfalar.find((x) => x.bolumler?.includes('anlasmalar'));
       return `
         <section class="k-bolum k-aozet">
           <div class="k-kap k-iki">
             <div>
-              ${baslik(k(d).anlasmaBaslik || 'Kurumsal müşterilerimiz için')}
-              <p class="k-lead">${esc(k(d).anlasmaMetin || '')}</p>
-              ${rota('kurumsal-musteriler', `Kurumsal çözümler ${ok}`, 'k-link')}
+              ${baslik(duz(k(d).anlasmaBaslik, 'Kurumsal müşteriler'))}
+              ${k(d).anlasmaMetin && !bizDiliMi(k(d).anlasmaMetin) ? `<p class="k-lead">${esc(k(d).anlasmaMetin)}</p>` : ''}
+              ${sf ? rota(sf.id, `${sf.menu || sf.baslik} ${ok}`, 'k-link') : ''}
             </div>
             <ul class="k-aozet__liste" data-sira>
               ${a.map((x) => `<li><span class="k-aozet__ad">${esc(x.baslik)}</span><span>${esc(x.kisa || x.metin)}</span></li>`).join('')}
@@ -193,13 +250,14 @@ export const BOLUMLER = {
   yorumlar: {
     render(d) {
       if (!d.yorumlar?.length) return '';
-      const p = d.puan;
+      // Yorumlar örnektir; başlık bunu söyler. Başlıkta "örnek" geçmiyorsa düz başlık yazılır. Puan ve
+      // değerlendirme sayısı (gerçek kaynak ima eder) gösterilmez.
+      const yb = k(d).yorumBaslik;
       return `
         <section class="k-bolum k-yorumlar">
           <div class="k-kap">
             <div class="k-bolum__bas">
-              ${baslik(k(d).yorumBaslik || 'Müşterilerimiz ne diyor')}
-              ${p ? `<p class="k-puan"><strong>${String(p.ortalama).replace('.', ',')}</strong><span class="k-yildiz" aria-hidden="true">${icons.star.repeat(5)}</span><span>${p.adet} değerlendirme</span></p>` : ''}
+              ${baslik(yb && /örnek/i.test(yb) ? yb : 'Örnek yorumlar')}
             </div>
             <ul class="k-yorumlar__liste" data-lenis-prevent>
               ${d.yorumlar
@@ -219,10 +277,10 @@ export const BOLUMLER = {
       return `
         <section class="k-bolum k-cta">
           <div class="k-kap k-cta__ic">
-            ${baslik(c.baslik || 'Birlikte çalışalım', 'k-h2 k-cta__baslik')}
-            <p class="k-lead">${esc(c.metin || 'İhtiyacınızı anlatın, aynı gün dönüş yapalım.')}</p>
+            ${baslik(duz(c.baslik, 'İletişim'), 'k-h2 k-cta__baslik')}
+            <p class="k-lead">${esc(duz(c.metin, 'Bilgi için arayın ya da formdan yazın.'))}</p>
             <div class="k-butonlar">
-              ${rota('iletisim', `${c.buton || 'Teklif isteyin'} ${ok}`)}
+              ${rota('iletisim', `${esc(duz(c.buton, 'İletişim formu'))} ${ok}`)}
               <a class="k-btn k-btn--ikincil" href="${telHref(d)}">${icons.phone}<span>${esc(d.iletisim.telefon)}</span></a>
             </div>
           </div>
@@ -233,14 +291,18 @@ export const BOLUMLER = {
   hakkimizda: {
     render(d, { tema }) {
       const h = k(d).hakkimizda || {};
-      const paragraflar = h.paragraflar || [d.isletme.hakkinda];
+      const paragraflar = (h.paragraflar || [d.isletme.hakkinda]).filter(Boolean);
+      if (!paragraflar.length) return '';
+      // İmza satırı bir olgu cümlesidir: "Volt Oto Elektrik 2001'den beri Şaşmaz'da."
+      const kur = d.isletme.kurulus;
+      const imza = kur ? (tema.yer ? `${d.isletme.unvan || d.isletme.ad} ${yilEki(kur)} beri ${tema.yer}.` : `Kuruluş yılı ${kur}.`) : '';
       return `
         <section class="k-bolum k-hakkimizda">
           <div class="k-kap k-iki k-iki--gorsel">
             <div>
-              ${baslik(h.baslik || 'Biz kimiz')}
+              ${baslik(duz(h.baslik, 'Hakkında'))}
               ${paragraflar.map((p) => `<p class="k-metin">${esc(p)}</p>`).join('')}
-              ${d.isletme.kurulus ? `<p class="k-imza">${esc(d.isletme.unvan || d.isletme.ad)}, ${yilEki(d.isletme.kurulus)} beri.</p>` : ''}
+              ${imza && h.imza !== false ? `<p class="k-imza">${esc(imza)}</p>` : ''}
             </div>
             ${h.gorsel || tema.hakkimizdaGorsel ? `<figure class="k-gorsel" data-perde><img src="${h.gorsel || tema.hakkimizdaGorsel}" alt="${esc(h.gorselAlt || '')}" loading="lazy"></figure>` : ''}
           </div>
@@ -248,37 +310,36 @@ export const BOLUMLER = {
     },
   },
 
-  vizyon: {
+  // Misyon, vizyon ve "değerlerimiz" listesi slogan ve övgüdür (İÇERİK-BRIEF): eski veride kalsa da
+  // gösterilmez. Sayfa listesinde kalması zararsızdır; bölüm boş döner.
+  vizyon: { render: () => '' },
+
+  // "Kalite anlayışımız" maddeleri ve garanti cümlesi vaat olduğu için gösterilmez. Kalan tek olgu:
+  // gerçek belgeler (`kurumsal.belgeler` ya da `belgeler`, ör. üreticinin kendi sitesinde yayımladığı).
+  kalite: {
     render(d) {
-      const v = k(d);
-      if (!v.vizyon && !v.misyon) return '';
+      const belgeler = k(d).belgeler || d.belgeler;
+      if (!belgeler?.length) return '';
       return `
-        <section class="k-bolum k-vizyon">
-          <div class="k-kap">
-            <div class="k-vizyon__iki">
-              ${v.misyon ? `<div><h2 class="k-h3">Misyonumuz</h2><span class="k-cizgi" data-cizgi></span><p class="k-buyuk-metin">${esc(v.misyon)}</p></div>` : ''}
-              ${v.vizyon ? `<div><h2 class="k-h3">Vizyonumuz</h2><span class="k-cizgi" data-cizgi></span><p class="k-buyuk-metin">${esc(v.vizyon)}</p></div>` : ''}
-            </div>
-            ${v.degerler?.length ? `<ul class="k-degerler" data-sira>${v.degerler.map((x) => `<li><h3>${esc(x.baslik)}</h3><p>${esc(x.metin)}</p></li>`).join('')}</ul>` : ''}
+        <section class="k-bolum k-kalite">
+          <div class="k-kap k-iki">
+            <div>${baslik(duz(k(d).belgeBaslik, 'Belgeler'))}</div>
+            <ul class="k-belgeler">${belgeler.map((b) => `<li>${esc(b)}</li>`).join('')}</ul>
           </div>
         </section>`;
     },
   },
 
-  kalite: {
+  // Kısa bilgiler: `bilgiler: [[etiket, değer]]` (sektör verisi; ör. ["Araçlar", "…"], ["Randevu", "…"]).
+  bilgiler: {
     render(d) {
-      const q = k(d).kalite;
-      const belgeler = k(d).belgeler || d.belgeler;
-      if (!q && !belgeler?.length) return '';
+      const b = k(d).bilgiler || d.bilgiler;
+      if (!b?.length) return '';
       return `
-        <section class="k-bolum k-kalite">
+        <section class="k-bolum k-bilgiler">
           <div class="k-kap k-iki">
-            <div>${baslik(q?.baslik || 'Kalite anlayışımız')}${q?.metin ? `<p class="k-lead">${esc(q.metin)}</p>` : ''}</div>
-            <div>
-              ${q?.maddeler ? `<ul class="k-maddeler" data-sira>${q.maddeler.map((m) => `<li>${esc(m)}</li>`).join('')}</ul>` : ''}
-              ${belgeler?.length ? `<p class="k-alt-baslik">Belgelerimiz</p><ul class="k-belgeler">${belgeler.map((b) => `<li>${esc(b)}</li>`).join('')}</ul>` : ''}
-              ${d.garanti ? `<p class="k-not">${esc(d.garanti)}</p>` : ''}
-            </div>
+            <div>${baslik(duz(k(d).bilgiBaslik, 'Genel bilgiler'))}</div>
+            <dl class="k-bilgiler__liste">${b.map(([e, v]) => `<div><dt>${esc(e)}</dt><dd>${esc(v)}</dd></div>`).join('')}</dl>
           </div>
         </section>`;
     },
@@ -292,7 +353,7 @@ export const BOLUMLER = {
       return `
         <section class="k-bolum k-tarihce">
           <div class="k-kap">
-            ${baslik(k(d).tarihceBaslik || 'Kilometre taşları')}
+            ${baslik(duz(k(d).tarihceBaslik, 'Tarihçe'))}
             <ol class="k-tarihce__liste" data-sira>
               ${t.map((x) => `<li><span class="k-tarihce__yil">${esc(x.yil)}</span><div>${x.baslik ? `<h3>${esc(x.baslik)}</h3>` : ''}<p>${esc(x.metin)}</p></div></li>`).join('')}
             </ol>
@@ -319,7 +380,7 @@ export const BOLUMLER = {
                     <div class="k-hizmet__govde">
                       <p class="k-metin">${esc(h.aciklama)}</p>
                       ${h.detay?.length ? `<dl class="k-detay">${h.detay.map(([a, b]) => `<div><dt>${esc(a)}</dt><dd>${esc(b)}</dd></div>`).join('')}</dl>` : ''}
-                      <a class="k-link" href="#/iletisim?konu=${encodeURIComponent(h.baslik)}" data-rota="iletisim?konu=${encodeURIComponent(h.baslik)}">${esc(k(d).hizmetLink || 'Bu hizmet için teklif isteyin')} ${ok}</a>
+                      <a class="k-link" href="#/iletisim?konu=${encodeURIComponent(h.baslik)}" data-rota="iletisim?konu=${encodeURIComponent(h.baslik)}">${esc(k(d).hizmetLink || 'Bu hizmet için bilgi alın')} ${ok}</a>
                     </div>
                     ${h.gorsel ? `<figure class="k-hizmet__gorsel" data-perde><img src="${h.gorsel}" alt="" loading="lazy"></figure>` : ''}
                     <span class="k-cizgi" data-cizgi></span>
@@ -338,7 +399,7 @@ export const BOLUMLER = {
       return `
         <section class="k-bolum k-surec">
           <div class="k-kap">
-            ${baslik(k(d).surecBaslik || 'Nasıl çalışıyoruz')}
+            ${baslik(duz(k(d).surecBaslik, 'Çalışma sırası'))}
             <ol class="k-surec__liste" data-sira>
               ${d.surec.map((s, i) => `<li><span class="k-surec__no">${String(i + 1).padStart(2, '0')}</span><h3>${esc(s.baslik)}</h3><p>${esc(s.aciklama)}</p></li>`).join('')}
             </ol>
@@ -359,7 +420,7 @@ export const BOLUMLER = {
                 (x, i) => `<article class="k-anlasma">
                   <div class="k-anlasma__bas"><h2 class="k-h2" data-bol>${esc(x.baslik)}</h2><p class="k-lead">${esc(x.metin)}</p></div>
                   ${x.maddeler ? `<ul class="k-maddeler" data-sira>${x.maddeler.map((m) => `<li>${esc(m)}</li>`).join('')}</ul>` : ''}
-                  <a class="k-link" href="#/iletisim?konu=${encodeURIComponent(x.baslik)}" data-rota="iletisim?konu=${encodeURIComponent(x.baslik)}">${esc(x.buton || 'Görüşme talep edin')} ${ok}</a>
+                  <a class="k-link" href="#/iletisim?konu=${encodeURIComponent(x.baslik)}" data-rota="iletisim?konu=${encodeURIComponent(x.baslik)}">${esc(x.buton || 'Bilgi alın')} ${ok}</a>
                   <span class="k-cizgi" data-cizgi></span>
                 </article>`
               )
@@ -377,7 +438,7 @@ export const BOLUMLER = {
       return `
         <section class="k-bolum k-galeri">
           <div class="k-kap">
-            ${baslik(k(d).galeriBaslik || 'Atölyemizden')}
+            ${baslik(duz(k(d).galeriBaslik, 'Galeri'))}
             <ul class="k-galeri__liste">
               ${g.map((x) => `<li><figure data-perde><img src="${x.src}" alt="${esc(x.alt)}" loading="lazy"></figure>${x.alt ? `<p>${esc(x.alt)}</p>` : ''}</li>`).join('')}
             </ul>
@@ -393,7 +454,7 @@ export const BOLUMLER = {
       return `
         <section class="k-bolum k-markalar">
           <div class="k-kap">
-            <p class="k-alt-baslik">${esc(k(d).markaBaslik || 'Hizmet verdiğimiz markalar')}</p>
+            <p class="k-alt-baslik">${esc(duz(k(d).markaBaslik, 'Markalar'))}</p>
             <ul class="k-markalar__liste">${m.map((x) => `<li>${esc(x)}</li>`).join('')}</ul>
           </div>
         </section>`;
@@ -407,7 +468,7 @@ export const BOLUMLER = {
       return `
         <section class="k-bolum k-sss">
           <div class="k-kap k-iki">
-            <div>${baslik(k(d).sssBaslik || 'Sık sorulan sorular')}</div>
+            <div>${baslik(duz(k(d).sssBaslik, 'Sık sorulan sorular'))}</div>
             <div class="k-sss__liste">
               ${s.map((x) => `<details><summary>${esc(x.soru)}<span aria-hidden="true"></span></summary><p>${esc(x.cevap)}</p></details>`).join('')}
             </div>
@@ -423,8 +484,8 @@ export const BOLUMLER = {
       return `
         <section class="k-bolum k-kariyer">
           <div class="k-kap k-iki">
-            ${baslik(c.baslik || 'Kariyer')}
-            <div><p class="k-metin">${esc(c.metin)}</p>${rota(`iletisim?konu=${encodeURIComponent('İş başvurusu')}`, `Başvurun ${ok}`, 'k-link')}</div>
+            ${baslik(duz(c.baslik, 'Kariyer'))}
+            <div>${c.metin ? `<p class="k-metin">${esc(c.metin)}</p>` : ''}${rota(`iletisim?konu=${encodeURIComponent('İş başvurusu')}`, `İş başvurusu ${ok}`, 'k-link')}</div>
           </div>
         </section>`;
     },
@@ -439,7 +500,7 @@ export const BOLUMLER = {
         <section class="k-bolum k-konum">
           <div class="k-kap k-iki">
             <div>
-              ${baslik(k(d).konumBaslik || 'Çalışma saatleri ve konum')}
+              ${baslik(duz(k(d).konumBaslik, 'Çalışma saatleri ve konum'))}
               <div class="k-saatler">
                 <p class="k-durum ${st.acik ? 'is-acik' : ''}"><span></span>${esc(st.metin)}</p>
                 <dl>${saatSatirlari(d, tema).map(([g, s]) => `<div><dt>${g}</dt><dd>${s}</dd></div>`).join('')}</dl>
@@ -471,7 +532,7 @@ export const BOLUMLER = {
       const konumlar = d.konumlar || [{ ad: 'Adres', adres: d.iletisim.adres, tel: d.iletisim.telefon, mapsQuery: d.iletisim.mapsQuery }];
       const st = d.saatler ? durumSatiri(d, ctx.tema) : null;
       const bugun = new Date().getDay();
-      const konular = k(d).konular || ['Genel bilgi', 'Fiyat teklifi', 'Kurumsal / filo anlaşması', 'Randevu', 'Diğer'];
+      const konular = k(d).konular || ['Randevu', 'Fiyat bilgisi', 'Genel bilgi', 'Diğer'];
       const secili = sorgu?.get('konu');
       const konuSec = secili && !konular.includes(secili) ? [secili, ...konular] : konular;
       const wa = !!d.iletisim.whatsapp;
@@ -503,7 +564,7 @@ export const BOLUMLER = {
               <div class="k-harita" data-harita-kutu data-q="${esc(konumlar[0].mapsQuery || konumlar[0].adres)}"><p class="k-soluk">Harita yükleniyor</p></div>
             </div>
             <form class="k-form" novalidate>
-              ${baslik(k(d).formBaslik || 'Bize yazın', 'k-h3')}
+              ${baslik(duz(k(d).formBaslik, 'Mesaj gönderin'), 'k-h3')}
               <div class="k-form__iki">
                 <label><span>Ad soyad</span><input name="ad" autocomplete="name" required></label>
                 <label><span>Firma <span class="k-soluk">(isteğe bağlı)</span></span><input name="firma" autocomplete="organization"></label>

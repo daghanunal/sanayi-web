@@ -1,4 +1,4 @@
-// Sektöre özel modül: filo bakım planlayıcı. Araç sayısı, tip ve yıllık km → bakım takvimi + WhatsApp teklif mesajı.
+// Sektöre özel modül: filo bakım planlayıcı. Araç sayısı, tip ve yıllık km → yıllık bakım sayısı + WhatsApp'ta hazır mesaj.
 import { esc, waHref, gsap, reducedMotion } from '../../shared/core.js';
 
 const TIPLER = [
@@ -8,11 +8,11 @@ const TIPLER = [
 ];
 const KMLER = [15000, 30000, 50000, 80000];
 const TABLO = [
-  ['Motor yağı ve yağ filtresi', '10.000-15.000 km ya da yılda bir'],
+  ['Motor yağı ve yağ filtresi', '10.000–15.000 km ya da yılda bir'],
   ['Fren, rotil ve yürüyen aksam kontrolü', 'Her bakımda'],
-  ['Hava, polen ve yakıt filtresi', '15.000-30.000 km'],
-  ['Buji ve ateşleme kontrolü', '30.000-60.000 km'],
-  ['Triger ya da zincir seti', 'Üretici değerine göre, genelde 60.000-120.000 km'],
+  ['Hava, polen ve yakıt filtresi', '15.000–30.000 km'],
+  ['Buji ve ateşleme kontrolü', '30.000–60.000 km'],
+  ['Triger ya da zincir seti', 'Üretici değerine göre, genelde 60.000–120.000 km'],
   ['Şanzıman yağı ve debriyaj kontrolü', '60.000 km civarı'],
 ];
 const nf = new Intl.NumberFormat('tr-TR');
@@ -23,8 +23,8 @@ export const filoPlan = {
       <section class="k-bolum filo" aria-labelledby="filo-baslik">
         <div class="k-kap">
           <div class="filo__bas">
-            <h2 class="k-h2" id="filo-baslik" data-bol>Filonuzun bakım takvimi</h2>
-            <p class="k-lead">Araç sayınızı ve yıllık kilometrenizi seçin; bir yılda kaç bakım randevusu gerektiğini görün, teklif talebinizi hazır mesajla gönderin.</p>
+            <h2 class="k-h2" id="filo-baslik" data-bol>Filo bakım takvimi</h2>
+            <p class="k-lead">Araç sayısı, tipi ve yıllık kilometre seçilince bir yılda kaç bakım gerektiği görünür. Seçilen plan WhatsApp'tan hazır mesajla gönderilebilir.</p>
           </div>
           <div class="filo__ic">
             <form class="filo__form" onsubmit="return false">
@@ -41,15 +41,15 @@ export const filoPlan = {
             </form>
             <div class="filo__sonuc">
               <div class="filo__rakamlar">
-                <p><span data-o="arac">2</span><small>bakım, araç başına yılda</small></p>
-                <p><span data-o="toplam">20</span><small>randevu, filo için yılda</small></p>
+                <p><span data-o="arac">2</span><small>araç başına yıllık bakım</small></p>
+                <p><span data-o="toplam">20</span><small>filo için yıllık bakım</small></p>
               </div>
               <div class="filo__cubuk" aria-hidden="true"><span class="filo__dolu"></span><div class="filo__noktalar"></div><span class="filo__bas-km">0 km</span><span class="filo__son-km" data-o="kmyazi">30.000 km</span></div>
-              <a class="k-btn filo__gonder" target="_blank" rel="noopener">Bu plan için teklif isteyin</a>
+              <a class="k-btn filo__gonder" target="_blank" rel="noopener">Bu plan için bilgi alın</a>
             </div>
           </div>
           <table class="filo__tablo">
-            <caption>Tipik bakım aralıkları. Aracınızın üretici değerleri esas alınır.</caption>
+            <caption>Tipik bakım aralıkları. Aracın üretici değerleri esas alınır.</caption>
             <thead><tr><th scope="col">İş</th><th scope="col">Aralık</th></tr></thead>
             <tbody>${TABLO.map(([a, b]) => `<tr><th scope="row">${esc(a)}</th><td>${esc(b)}</td></tr>`).join('')}</tbody>
           </table>
@@ -76,7 +76,7 @@ export const filoPlan = {
         gsap.fromTo(noktalar.children, { scale: 0 }, { scale: 1, duration: 0.45, stagger: 0.05, ease: 'back.out(2)' });
         gsap.fromTo(el.querySelector('.filo__dolu'), { scaleX: 0 }, { scaleX: 1, duration: 0.6, ease: 'power3.out' });
       }
-      const mesaj = `Merhaba ${d.isletme.ad}, filo bakım anlaşması için teklif istiyoruz.\nAraç sayısı: ${adet}\nAraç tipi: ${tip.ad}\nAraç başına yıllık km: ${nf.format(km)}\nTahmini bakım: araç başına yılda ${bakim}, toplam ${bakim * adet} randevu.`;
+      const mesaj = `Merhaba ${d.isletme.ad}, filo bakım anlaşması için bilgi almak istiyoruz.\nAraç sayısı: ${adet}\nAraç tipi: ${tip.ad}\nAraç başına yıllık km: ${nf.format(km)}\nTahmini bakım: araç başına yılda ${bakim}, toplam ${bakim * adet} randevu.`;
       gonder.href = waHref(d, mesaj);
     };
     form.addEventListener('input', () => guncelle(false));
@@ -87,12 +87,12 @@ export const filoPlan = {
 // Sektör imzası: revizyon kesiti. Kütüphanedeki motorun (lib3d engine) patlatılmış Cycles render'ı +
 // yukarıdan aşağı parça parça ölçüm listesi. Görsel temsilîdir ve öyle etiketlenir.
 const PARCALAR = [
-  ['Silindir kapağı', 'Çatlak ve eğiklik kontrol edilir, gerekirse planya yapılır; supaplar alıştırılır.'],
-  ['Eksantrik mili', 'Kam ve yatak aşınması ölçülür; triger seti ile birlikte değerlendirilir.'],
+  ['Silindir kapağı', 'Çatlak ve eğiklik kontrol edilir, gerekirse planyaya verilir. Supaplar alıştırılır.'],
+  ['Eksantrik mili', 'Kam ve yatak aşınması ölçülür, triger setiyle birlikte kontrol edilir.'],
   ['Piston ve segman', 'Piston çapı, segman ağız aralığı ve kanal boşluğu ölçülür.'],
-  ['Silindir bloğu', 'Silindir çapı ve ovallik ölçülür; ölçü dışıysa honlama ya da rektifiye.'],
-  ['Krank mili', 'Muylular ölçülür; kol ve ana yataklar bu ölçüye göre seçilir.'],
-  ['Karter ve yağ pompası', 'Temizlenir; pompa, süzgeç ve yağ kanalları kontrol edilir.'],
+  ['Silindir bloğu', 'Silindir çapı ve ovalliği ölçülür. Ölçü dışındaysa silindirler honlanır ya da rektifiyeye verilir.'],
+  ['Krank mili', 'Muylular ölçülür, kol ve ana yataklar bu ölçüye göre seçilir.'],
+  ['Karter ve yağ pompası', 'Karter temizlenir, yağ pompası, süzgeç ve yağ kanalları kontrol edilir.'],
 ];
 const okSvg = `<svg class="k-ok" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 
@@ -104,13 +104,12 @@ export const revizyon = {
       <section class="k-bolum rv" aria-labelledby="rv-baslik">
         <div class="k-kap rv__ic">
           <div class="rv__metin">
-            <p class="rv__ust">Motor revizyonu</p>
-            <h2 class="k-h2" id="rv-baslik" data-bol>Motoru parça parça açar, her parçayı ölçeriz.</h2>
-            <p class="k-lead">Revizyon tahminle yapılmaz. Motor sökülür, her parça temizlenip ölçülür, sonuç size yazılı gösterilir; neyin değişeceğine ölçüye bakıp birlikte karar veririz.</p>
+            <h2 class="k-h2" id="rv-baslik" data-bol>Motor revizyonu</h2>
+            <p class="k-lead">Motor sökülür, her parça temizlenip ölçülür. Hangi parçanın değişeceğine ölçü sonucuna bakılarak karar verilir, sonuç araç sahibine yazılı gösterilir.</p>
             <ol class="rv__liste" data-sira>
               ${PARCALAR.map(([a, b], i) => `<li><span class="rv__no">${String(i + 1).padStart(2, '0')}</span><div><h3>${esc(a)}</h3><p>${esc(b)}</p></div></li>`).join('')}
             </ol>
-            <a class="k-link rv__link" href="#/iletisim?konu=${konu}" data-rota="iletisim?konu=${konu}">Motor revizyonu için yazın ${okSvg}</a>
+            <a class="k-link rv__link" href="#/iletisim?konu=${konu}" data-rota="iletisim?konu=${konu}">Motor revizyonu için bilgi alın ${okSvg}</a>
           </div>
           <figure class="rv__gorsel" data-perde>
             <img src="${img}" alt="Parçalarına ayrılmış dört silindirli motorun temsilî 3D çizimi" loading="lazy" width="1000" height="1150">

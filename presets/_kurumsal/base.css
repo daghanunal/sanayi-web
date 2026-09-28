@@ -214,6 +214,22 @@ html.k-dar .k-ust__sag { margin-left: auto; }
   .k-hero--kunye .k-butonlar .k-btn { justify-content: center; }
   .k-hero--kunye .k-butonlar .k-btn:first-child { grid-column: 1 / -1; }
 }
+.k-bilgiler__liste { margin: 0; border-top: 1px solid var(--k-cizgi); }
+.k-bilgiler__liste > div { display: grid; grid-template-columns: minmax(96px, 180px) 1fr; gap: 16px; align-items: baseline; padding: 14px 0; border-bottom: 1px solid var(--k-cizgi); }
+.k-bilgiler__liste dt { font-size: 13px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--k-soluk); }
+.k-bilgiler__liste dd { margin: 0; }
+@media (max-width: 599px) { .k-bilgiler__liste > div { grid-template-columns: 1fr; gap: 4px; } }
+/* künye + yazı hero, geniş ekran: ad tam satır; tanım ve düğmeler solda, künye listesi sağda. Yalnız yerleşim
+   (grid satır/sütun) motorda; eski hero için .k-hero__metin'i grid yapan varyant kuralları (0,2,0–0,3,0) ezilir,
+   varyantın boşluk ve yazı ayarları kalır. */
+@media (min-width: 900px) {
+  [data-hero='yazi'] .k-hero.k-hero--kunye .k-hero__metin { display: grid; grid-template-columns: 6fr 5fr; column-gap: 64px; align-items: start; }
+  [data-hero='yazi'] .k-hero--kunye .k-hero__metin > .k-hero__baslik { grid-column: 1 / -1; grid-row: 1; }
+  [data-hero='yazi'] .k-hero--kunye .k-hero__metin > .k-hero__tanim { grid-column: 1; grid-row: 2; }
+  [data-hero='yazi'] .k-hero--kunye .k-hero__metin > .k-kunye { grid-column: 2; grid-row: 2 / span 2; }
+  [data-hero='yazi'] .k-hero--kunye .k-hero__metin > .k-butonlar { grid-column: 1; grid-row: 3; justify-content: flex-start; align-self: start; }
+  [data-hero='yazi'] .k-hero--kunye .k-kunye { margin: 14px 0 0; }
+}
 .k-konum .k-saatler { margin-top: 24px; }
 .k-konum__adres { margin-top: 20px; }
 @media (min-width: 900px) { .k-konum .k-harita { margin-top: 0; aspect-ratio: auto; min-height: 420px; } }

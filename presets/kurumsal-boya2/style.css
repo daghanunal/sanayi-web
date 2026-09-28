@@ -29,10 +29,6 @@ body { background: var(--k-zemin); }
 .k-hero .k-lead { color: var(--k-metin); opacity: .88; max-width: 54ch; }
 [data-hero='yazi'] .k-hero__gorsel { aspect-ratio: 21 / 8; border-radius: 0; overflow: hidden; }
 .k-hero__gorsel img { object-position: 60% 40%; }
-.k-hero__gorsel::before {
-  content: 'ÖN KAPI  ·  134 µm  ·  FABRİKA'; position: absolute; z-index: 2; left: 16px; top: 16px; padding: 8px 12px;
-  background: var(--lacivert); color: var(--kagit); font: 500 12px/1 var(--mono); letter-spacing: .06em; white-space: nowrap;
-}
 .k-hero__gorsel::after {
   content: ''; position: absolute; z-index: 2; left: 0; right: 0; bottom: 0; height: 28px;
   background: linear-gradient(180deg, rgb(243 244 251 / .9) 0 25%, var(--fosfor) 25% 50%, #c9cde8 50% 75%, #5b63a6 75% 100%);
@@ -185,7 +181,6 @@ body { background: var(--k-zemin); }
 
 .mk__okuma { display: grid; gap: 4px; align-content: start; }
 .mk__ekran { background: #0c1256; box-shadow: inset 0 0 0 1px rgb(154 162 230 / .25); padding: 18px 18px 22px; position: relative; }
-.mk__ekran::before { content: 'CANLI OKUMA'; position: absolute; right: 14px; top: 16px; font: 500 11px/1 var(--mono); letter-spacing: .08em; color: #9aa2e6; }
 .mk__panel-ad { font-family: var(--k-font-baslik); font-weight: 600; font-size: 18px; letter-spacing: -.02em; }
 .mk__deger { display: flex; align-items: baseline; gap: 10px; margin-top: 4px; }
 .mk__sayi { font: 600 clamp(84px, 22vw, 144px)/.9 var(--mono); letter-spacing: -.06em; color: var(--kagit); font-variant-numeric: tabular-nums; transition: color .3s; }

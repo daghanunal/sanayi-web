@@ -1,6 +1,6 @@
-// Sektör modülleri: (1) arıza kabul iş emri — şikâyeti işaretle, karbon kopya iş emri canlı yazılsın, kaşe basılsın,
-// WhatsApp'a hazır mesaj; (2) mesai kartı — saatler, canlı açık/kapalı, yol tarifi, yaklaşınca yüklenen harita.
-import { esc, waHref, telHref, mapsHref, mapsEmbed, openStatus, GUNLER, icons, gsap, reducedMotion } from '../../shared/core.js';
+// Sektör modülleri: (1) arıza kabul formu: şikâyet işaretlenince karbon kopya iş emri canlı yazılır, kaşe basılır,
+// WhatsApp'a hazır mesaj; (2) mesai kartı: "Çalışma saatleri ve konum" (saatler, bugünkü durum, yol tarifi, harita).
+import { esc, waHref, telHref, mapsHref, mapsEmbed, gunDurumu, saatBicim, GUNLER, icons, gsap, reducedMotion } from '../../shared/core.js';
 
 const SIKAYETLER = [
   { id: 'ses', ad: 'Tıkırtı ya da vuruntu sesi', bak: 'Supap boşluğu, kol yatağı, triger gergisi' },
@@ -10,11 +10,11 @@ const SIKAYETLER = [
   { id: 'yag', ad: 'Yağ eksiltiyor', bak: 'Keçe ve karter kaçağı, yağ yakma kontrolü' },
   { id: 'cekis', ad: 'Çekişten düştü', bak: 'Enjektör, yakıt pompası, hava akış, turbo' },
   { id: 'titreme', ad: 'Rölantide titriyor', bak: 'Buji, bobin, motor kulakları' },
-  { id: 'lamba', ad: 'Arıza lambası yandı', bak: 'Arıza tespit cihazıyla hata kaydı okuma' },
+  { id: 'lamba', ad: 'Arıza lambası yandı', bak: 'Arıza tespit cihazıyla hata kayıtlarının okunması' },
   { id: 'vites', ad: 'Vites zor geçiyor', bak: 'Debriyaj seti, şanzıman yağı, vites telleri' },
   { id: 'bakim', ad: 'Bakım zamanı geldi', bak: 'Yağ, filtreler, buji ve sıvılar' },
 ];
-const KMLER = ['50.000 altı', '50-100 bin', '100-200 bin', '200 bin üstü'];
+const KMLER = ['50.000 altı', '50–100 bin', '100–200 bin', '200 bin üstü'];
 const buYil = new Date().getFullYear();
 const YILLAR = Array.from({ length: 22 }, (_, i) => String(buYil - i));
 
@@ -29,8 +29,8 @@ export const isEmri = {
         <div class="k-kap">
           <div class="ie__bas">
             <p class="ie__etiket">Form 02 · Arıza kabul</p>
-            <h2 class="k-h2" id="ie-baslik" data-bol>Şikâyeti işaretleyin, iş emri kendiliğinden yazılsın.</h2>
-            <p class="k-lead">Ne duyduğunuzu, ne gördüğünüzü seçin. Ustamızın ilk bakacağı yerler kâğıda düşer; bu kâğıdı WhatsApp'tan bize gönderin, fiyatı işe başlamadan söyleyelim.</p>
+            <h2 class="k-h2" id="ie-baslik" data-bol>Arıza kabul formu</h2>
+            <p class="k-lead">Şikâyet ve araç bilgisi seçilince atölyede ilk bakılacak yerler iş emrine yazılır. Form WhatsApp'tan gönderilebilir; fiyat ve randevu telefonda konuşulur.</p>
           </div>
           <div class="ie__ic">
             <form class="ie__form" onsubmit="return false">
@@ -63,10 +63,9 @@ export const isEmri = {
                 <p class="ie__alt">İlk bakılacaklar</p>
                 <ol class="ie__liste ie__liste--bak" data-o="bak"></ol>
               </div>
-              <p class="ie__fiyat"><span>Fiyat</span>Teşhisten sonra, işe başlamadan yazılır.</p>
-              <p class="ie__kalem" aria-hidden="true">eski parça müşteriye!</p>
-              <div class="ie__damga" aria-hidden="true"><span>Onayınız olmadan</span><b>başlanmaz</b><span>${esc(d.isletme.ad)}</span></div>
-              <a class="k-btn ie__gonder" target="_blank" rel="noopener">${icons.whatsapp}<span>Bu iş emrini gönderin</span></a>
+              <p class="ie__fiyat"><span>Not</span>Fiyat ve randevu için arayın.</p>
+              <div class="ie__damga" aria-hidden="true"><span>Arıza</span><b>kabul</b><span>${esc(d.isletme.ad)}</span></div>
+              <a class="k-btn ie__gonder" target="_blank" rel="noopener">${icons.whatsapp}<span>Formu WhatsApp'tan gönder</span></a>
             </article>
           </div>
         </div>
@@ -83,7 +82,7 @@ export const isEmri = {
     const yaz = (liste, satirlar, yeniler) => {
       liste.innerHTML = satirlar.length
         ? satirlar.map(([id, t]) => `<li data-id="${id}">${esc(t)}</li>`).join('')
-        : `<li class="ie__bos">İşaretlemediniz; ustamız dinleyip yazacak.</li>`;
+        : `<li class="ie__bos">Şikâyet seçilmedi, atölyede dinlenip yazılır.</li>`;
       if (reducedMotion) return;
       liste.querySelectorAll('li').forEach((li) => {
         if (yeniler.has(li.dataset.id)) gsap.fromTo(li, { clipPath: 'inset(0 100% 0 0)' }, { clipPath: 'inset(0 0% 0 0)', duration: 0.55, ease: 'steps(22)' });
@@ -124,16 +123,16 @@ export const isEmri = {
       gsap.set(damga, { opacity: 0 });
       gsap.timeline({ scrollTrigger: { trigger: kagit, start: 'top 70%', once: true } })
         .from(kagit, { rotate: 3, y: 60, duration: 0.9, ease: 'power3.out' })
-        .add(bas, '-=0.1')
-        .fromTo(el.querySelector('.ie__kalem'), { clipPath: 'inset(0 100% 0 0)' }, { clipPath: 'inset(0 0% 0 0)', duration: 0.8, ease: 'power1.inOut' }, '+=0.2');
+        .add(bas, '-=0.1');
     }
   },
 };
 
 export const mesai = {
+  konumYerine: true, // ana sayfanın "Çalışma saatleri ve konum" bölümü bu kart
   render(d) {
     if (!d.saatler) return '';
-    const st = openStatus(d.saatler);
+    const st = gunDurumu(d.saatler);
     const bugun = new Date().getDay();
     const sira = [1, 2, 3, 4, 5, 6, 0];
     return `
@@ -141,8 +140,8 @@ export const mesai = {
         <div class="k-kap ms__ic">
           <div class="ms__sol">
             <p class="ie__etiket">Form 03 · Mesai kartı</p>
-            <h2 class="k-h2" id="ms-baslik" data-bol>Kapımız bu saatlerde açık.</h2>
-            <p class="ms__durum ${st.open ? 'is-acik' : ''}"><span></span>${esc(st.text)}</p>
+            <h2 class="k-h2" id="ms-baslik" data-bol>Çalışma saatleri ve konum</h2>
+            <p class="ms__durum ${st.open ? 'is-acik' : ''}"><span></span>${esc(st.metin)}</p>
             <p class="ms__adres">${esc(d.iletisim.adres)}</p>
             <div class="k-butonlar">
               <a class="k-btn" href="${mapsHref(d)}" target="_blank" rel="noopener">${icons.pin}<span>Yol tarifi</span></a>
@@ -156,11 +155,11 @@ export const mesai = {
                 .map((g) => {
                   const s = d.saatler[g];
                   const [a, b] = s ? s.split('-') : [];
-                  return `<li class="${g === bugun ? 'is-bugun' : ''}${s ? '' : ' is-kapali'}"><span>${GUNLER[g]}</span>${s ? `<time>${a}</time><time>${b}</time>` : `<em>Kapalı</em>`}${g === bugun ? '<i aria-label="bugün">bugün</i>' : ''}</li>`;
+                  return `<li class="${g === bugun ? 'is-bugun' : ''}${s ? '' : ' is-kapali'}"><span>${GUNLER[g]}</span>${s ? `<time>${saatBicim(a)}</time><time>${saatBicim(b)}</time>` : `<em>Kapalı</em>`}${g === bugun ? '<i>bugün</i>' : ''}</li>`;
                 })
                 .join('')}
             </ol>
-            <div class="ms__harita" data-q="${esc(mapsEmbed(d))}"><p>Harita yükleniyor</p></div>
+            <div class="ms__harita" data-q="${esc(mapsEmbed(d))}"><p>Harita</p></div>
           </div>
         </div>
       </section>`;
@@ -177,17 +176,5 @@ export const mesai = {
       const d = el.querySelector('.is-bugun i');
       if (d) gsap.fromTo(d, { scale: 2.2, opacity: 0, rotate: -30 }, { scale: 1, opacity: 1, rotate: -8, duration: 0.35, ease: 'power4.in', scrollTrigger: { trigger: el.querySelector('.ms__kart'), start: 'top 70%', once: true }, delay: 0.5 });
     }
-  },
-};
-
-// Hero altında eğik şerit: iş akışı kayan yazı (yalnızca CSS animasyonu, kompozitörde).
-const ADIMLAR = ['Dinleriz', 'Ölçeriz', 'Yazarız', 'Onayınızı alırız', 'Onarırız', 'Yolda deneriz', 'Eski parçayı teslim ederiz'];
-export const serit = {
-  render() {
-    const grup = ADIMLAR.map((a) => `<span>${esc(a)}</span>`).join('');
-    return `
-      <div class="sr" aria-label="Çalışma sıramız: ${esc(ADIMLAR.join(', '))}">
-        <div class="sr__bant" aria-hidden="true"><div class="sr__akis">${grup}${grup}</div></div>
-      </div>`;
   },
 };

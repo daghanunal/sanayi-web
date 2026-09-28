@@ -27,10 +27,10 @@ const YAZI = {
 };
 
 const DURUM = {
-  orijinal: { ad: 'Fabrika boyası', aralik: '160 µm altı', yorum: 'Kataforez, astar, baz boya ve vernik fabrikadan geldiği gibi. Pasta yapılabilir; vernik payı yeterli.' },
-  boyali: { ad: 'Boyanmış', aralik: '160-300 µm', yorum: 'Fabrika katlarının üstüne tamir astarı ve yeni boya gelmiş. Renk ve parlaklık tutuyorsa sorun değil; ekspertizde boyalı görünür.' },
-  macun: { ad: 'Macun + boya', aralik: '300 µm üstü', yorum: 'Boyanın altında macun var; panel daha önce göçük düzeltilip boyanmış. Alım-satımda mutlaka sorulur; gerekirse sökülüp bakılır.' },
-  plastik: { ad: 'Plastik parça', aralik: 'Ölçülmez', yorum: 'Tampon plastiktir, cihaz metal olmayan yüzeyde doğru okumaz. Burada gün ışığı lambasıyla renk ve parlaklık farkına bakarız.' },
+  orijinal: { ad: 'Fabrika boyası', aralik: '160 µm altı', yorum: 'Kataforez, astar, baz boya ve vernik fabrikadan geldiği gibi duruyor. Vernik payı pastaya yeter.' },
+  boyali: { ad: 'Boyanmış', aralik: '160–300 µm', yorum: 'Fabrika katlarının üstüne tamir astarı ve yeni boya atılmış. Panel ekspertizde boyalı görünür.' },
+  macun: { ad: 'Macun ve boya', aralik: '300 µm üstü', yorum: 'Boyanın altında macun var, panel daha önce göçüğü düzeltilip boyanmış. Alım-satımda sorulması gereken bir durumdur.' },
+  plastik: { ad: 'Plastik parça', aralik: 'Ölçülmez', yorum: 'Tampon plastiktir, cihaz metal olmayan yüzeyde doğru okumaz. Tamponda gün ışığı lambasıyla renk ve parlaklık farkına bakılır.' },
 };
 const durumu = (um) => (um == null ? 'plastik' : um <= 160 ? 'orijinal' : um <= 300 ? 'boyali' : 'macun');
 
@@ -42,7 +42,7 @@ const KATMANLAR = [
   ['vernik', 'Vernik'],
   ['macun', 'Macun'],
   ['tamir', 'Tamir astarı'],
-  ['yeni', 'Yeni boya + vernik'],
+  ['yeni', 'Yeni boya ve vernik'],
 ];
 function katmanlar(um, durum) {
   const k = { kataforez: 0, astar: 0, baz: 0, vernik: 0, macun: 0, tamir: 0, yeni: 0 };
@@ -69,8 +69,8 @@ export const mikron = {
         <div class="k-kap">
           <div class="mk__bas">
             <p class="mk__etiket"><span>Boya kalınlık ölçümü</span><span>Örnek araç</span></p>
-            <h2 class="k-h2" id="mk-baslik" data-bol>Her panelin bir kalınlığı var</h2>
-            <p class="k-lead">Fabrika boyası genelde 90 ile 160 mikron arasıdır. Üstünü görürsek o panel boyanmıştır, çok üstünü görürsek altında macun vardır. Pastaya da boyaya da bu ölçüyle başlarız.</p>
+            <h2 class="k-h2" id="mk-baslik" data-bol>Panel panel boya kalınlığı</h2>
+            <p class="k-lead">Fabrika boyası genelde 90 ile 160 mikron arasındadır. Daha kalın ölçülen panel boyanmıştır, çok daha kalın ölçülüyorsa altında macun vardır.</p>
           </div>
 
           <div class="mk__izgara">
@@ -119,7 +119,7 @@ export const mikron = {
                   ${KATMANLAR.map(([id, ad]) => `<li data-l="${id}"><i></i><span>${esc(ad)}</span><b>0 µm</b></li>`).join('')}
                 </ul>
               </div>
-              <p class="mk__yorum">Bölüm ekrana girince cihaz panelleri tek tek ölçer. Sonra istediğiniz panele dokunun.</p>
+              <p class="mk__yorum">Örnek araçta paneller sırayla ölçülür. Bir panele dokununca boya katmanları görünür.</p>
             </div>
           </div>
 
@@ -129,10 +129,10 @@ export const mikron = {
             </ul>
             <div class="mk__cta">
               <button type="button" class="k-btn k-btn--ikincil mk__tekrar">Tekrar ölç</button>
-              <a class="k-btn mk__wa" target="_blank" rel="noopener">Aracımı ölçtürmek istiyorum</a>
+              <a class="k-btn mk__wa" target="_blank" rel="noopener">Ölçüm için bilgi alın</a>
             </div>
           </div>
-          <p class="mk__not">Değerler örnek bir aracın ölçümüdür. Sizin aracınızda her panel ayrı ölçülür, döküm size verilir.</p>
+          <p class="mk__not">Değerler örnek bir aracın ölçümüdür. Her aracın panelleri ayrı ayrı ölçülür.</p>
         </div>
       </section>`;
   },
