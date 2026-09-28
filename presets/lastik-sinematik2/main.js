@@ -135,7 +135,9 @@ const otelStat = d.istatistikler.find((s) => /otel/.test(s.etiket)) ?? d.istatis
 $('[data-otel-label]').textContent = otelStat.etiket;
 $('[data-otel-list]').innerHTML = d.otel.maddeler.map((m) => `<li>${esc(m)}</li>`).join('');
 const otelTxt = $('[data-otel-txt]');
-const setOtelTxt = () => (otelTxt.textContent = phone() && d.otel.kisa ? d.otel.kisa : d.otel.metin);
+// Telefonda ve kısa yatay ekranda (iPad yatay) kart ekranın %40'ını geçmesin: kısa metin.
+const shortScreen = () => phone() || innerHeight < 860 || matchMedia('(max-width: 1399px) and (pointer: coarse)').matches;
+const setOtelTxt = () => (otelTxt.textContent = shortScreen() && d.otel.kisa ? d.otel.kisa : d.otel.metin);
 setOtelTxt();
 
 // Mevsim
@@ -413,12 +415,21 @@ function heroIn() {
 
 const sc = (sel, extraOpts = {}) => ({ trigger: sel, start: 'top top', end: 'bottom bottom', scrub: 0.5, ...extraOpts });
 
+// Hikâye modu oyları: bölüm tetikleri ve perde aynı anda karar verir; biri kapanırken
+// ötekinin açtığını ezmesin (sırayla gelen onLeave/onToggle yarışı).
+const storyVotes = new Set();
+function storyVote(key, on) {
+  if (on) storyVotes.add(key); else storyVotes.delete(key);
+  setStoryMode(storyVotes.size ? true : null);
+}
+
 function setupScroll() {
   // Hikâye modu: pinli sahneler ekranı kaplarken alt çubuk (ve telefonda üst başlık) saklanır.
   $$('.ch--dis, .ch--iz, .ch--iz2, .ch--otel, .ch--final').forEach((sec) => {
     ScrollTrigger.create({
-      trigger: sec, start: 'top top', end: 'bottom bottom',
-      onToggle: (st) => setStoryMode(st.isActive ? true : null),
+      // Final: CTA'lar sahneyle birlikte yukarı kayarken alt çubuk geri gelmesin (tek alt öğe).
+      trigger: sec, start: 'top top', end: sec.classList.contains('ch--final') ? 'bottom top' : 'bottom bottom',
+      onToggle: (st) => storyVote(sec, st.isActive),
     });
   });
 
@@ -551,7 +562,7 @@ function setupScroll() {
   const wipeStory = (on) => {
     if (on === wipeOn) return;
     wipeOn = on;
-    setStoryMode(on ? true : null);
+    storyVote('wipe', on);
   };
   const wipe = $('[data-wipe]');
   const band = $('[data-wipe-band]');

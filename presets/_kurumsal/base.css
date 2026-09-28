@@ -194,6 +194,30 @@ html.k-dar .k-ust__sag { margin-left: auto; }
   [data-hero='bolunmus'] .k-hero__gorsel { aspect-ratio: 4 / 3; }
 }
 
+/* künye (tema.kunye): ad, tek olgu cümlesi, adres / bugün / telefon listesi */
+.k-hero__tanim { margin-top: 14px; }
+.k-kunye { margin: 28px 0 30px; max-width: 560px; border-top: 1px solid var(--k-cizgi); }
+.k-kunye > div { display: grid; grid-template-columns: 96px 1fr; gap: 14px; align-items: baseline; padding: 12px 0; border-bottom: 1px solid var(--k-cizgi); }
+.k-kunye dt { font-size: 13px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--k-soluk); }
+.k-kunye dd { margin: 0; font-weight: 600; font-size: 17px; line-height: 1.35; }
+.k-kunye a { color: inherit; text-decoration: none; display: inline-flex; align-items: center; min-height: 32px; font-variant-numeric: tabular-nums; }
+.k-kunye .k-durum { font-weight: 600; }
+[data-hero='tam'] .k-kunye { border-color: rgb(255 255 255 / .3); }
+[data-hero='tam'] .k-kunye > div { border-color: rgb(255 255 255 / .3); }
+[data-hero='tam'] .k-kunye dt { color: rgb(255 255 255 / .75); }
+@media (max-width: 899px) {
+  .k-kunye { margin: 20px 0 22px; }
+  .k-kunye > div { grid-template-columns: 78px 1fr; gap: 10px; padding: 10px 0; }
+  .k-kunye dd { font-size: 16px; }
+  .k-hero--kunye .k-butonlar { display: grid; grid-template-columns: 1fr 1fr; }
+  .k-hero--kunye .k-butonlar .k-btn { padding-inline: 12px; }
+  .k-hero--kunye .k-butonlar .k-btn { justify-content: center; }
+  .k-hero--kunye .k-butonlar .k-btn:first-child { grid-column: 1 / -1; }
+}
+.k-konum .k-saatler { margin-top: 24px; }
+.k-konum__adres { margin-top: 20px; }
+@media (min-width: 900px) { .k-konum .k-harita { margin-top: 0; aspect-ratio: auto; min-height: 420px; } }
+
 /* tam: fotoğraf tüm ekran, metin üstünde */
 [data-hero='tam'] .k-hero { padding: 0; min-height: 100svh; display: flex; flex-direction: column; justify-content: flex-end; color: #fff; }
 [data-hero='tam'] .k-hero__ic { position: static; padding-top: calc(var(--k-ust) + 40px); padding-bottom: 40px; }
@@ -461,3 +485,4 @@ html body .k-alt { margin-bottom: 0; }
 .k-menu-acik .k-logo__img--acik { display: block; }
 [data-hero='tam'] body.k-ana .k-ust:not(.is-kucuk) .k-logo__img:not(.k-logo__img--acik),
 .k-menu-acik .k-logo__img:not(.k-logo__img--acik) { display: none; }
+.k-hero--kunye .k-butonlar { margin-top: 0; }

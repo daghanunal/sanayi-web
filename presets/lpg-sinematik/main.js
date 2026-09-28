@@ -146,10 +146,14 @@ const filmEl = $('[data-film]');
 const stopEls = $$('[data-stop]');
 const overEl = $('[data-over]');
 const mobileQ = matchMedia('(max-width: 759px)');
+// Tablet (iPad, 1399px'e kadar): güzergâh da başlığın içinde (tek üst öğe); hat okuması sahnede kalır.
+const instQ = matchMedia('(max-width: 1399px)');
+// Dikey tablet (iPad dikey): sahne telefon gibi kurulur — kart altta, nesne üstte; hat okuması da başlıkta.
+const lowQ = matchMedia('(max-width: 759px), (max-width: 1399px) and (max-aspect-ratio: 20/23)');
 function measure() {
   const vh = innerHeight;
   const total = Math.max(1, filmEl.offsetHeight - vh);
-  const m = mobileQ.matches;
+  const m = lowQ.matches;
   stopEls.forEach((el, i) => {
     const card = el.firstElementChild;
     const padTop = parseFloat(getComputedStyle(el).paddingTop) || 0;
@@ -253,11 +257,14 @@ if (!reducedMotion) {
 
 // Telefonda güzergâh + hat okuması başlığın içine (tek üst öğe), masaüstünde sahnenin üstünde
 function placeInst() {
-  if (mobileQ.matches) inst.append(route, meter);
+  if (lowQ.matches) inst.append(route, meter);
+  else if (instQ.matches) { inst.append(route); filmui.append(meter); }
   else filmui.append(route, meter);
+  // Sahnede ortalama CSS translate ile (-50%); GSAP bunu xPercent'e çevirmiş olabilir — başlıkta sıfırla.
+  if (instQ.matches) gsap.set(route, { xPercent: 0, x: 0 });
 }
 placeInst();
-mobileQ.addEventListener('change', () => { placeInst(); ScrollTrigger.refresh(); });
+for (const q of [mobileQ, instQ, lowQ]) q.addEventListener('change', () => { placeInst(); ScrollTrigger.refresh(); });
 ScrollTrigger.addEventListener('refresh', measure);
 measure();
 
@@ -274,11 +281,11 @@ if (!reducedMotion) {
     const stop = card.parentElement;
     gsap.fromTo(card, { autoAlpha: 0, y: 36 }, {
       autoAlpha: 1, y: 0, ease: 'power2.out', immediateRender: true,
-      scrollTrigger: { trigger: stop, start: () => (mobileQ.matches ? `top+=${Math.round(innerHeight * 0.3)} bottom` : 'top 75%'), end: () => (mobileQ.matches ? `top+=${Math.round(innerHeight * 0.38)} 78%` : 'top 30%'), scrub: 0.4 },
+      scrollTrigger: { trigger: stop, start: () => (lowQ.matches ? `top+=${Math.round(innerHeight * 0.3)} bottom` : 'top 75%'), end: () => (lowQ.matches ? `top+=${Math.round(innerHeight * 0.38)} 78%` : 'top 30%'), scrub: 0.4 },
     });
     gsap.fromTo(card, { autoAlpha: 1, y: 0 }, {
       autoAlpha: 0, y: -30, ease: 'power1.in', immediateRender: false,
-      scrollTrigger: { trigger: stop, start: () => (mobileQ.matches ? 'bottom bottom' : 'bottom 85%'), end: () => (mobileQ.matches ? 'bottom 72%' : 'bottom 55%'), scrub: 0.4 },
+      scrollTrigger: { trigger: stop, start: () => (lowQ.matches ? 'bottom bottom' : 'bottom 85%'), end: () => (lowQ.matches ? 'bottom 72%' : 'bottom 55%'), scrub: 0.4 },
     });
   });
 }
@@ -433,7 +440,7 @@ function tick() {
   canvas.style.opacity = vis.toFixed(3);
   const fuD = afterFilm >= 1 ? 'none' : '';
   if (filmui.style.display !== fuD) filmui.style.display = fuD;
-  const rop = introDone ? (mobileQ.matches ? smooth(seg(filmP, KF[0].p1 * 0.6, KF[0].p1 + 0.01)) : 1) * (1 - smooth(seg(afterFilm, 0, 0.3))) : 0;
+  const rop = introDone ? (instQ.matches ? smooth(seg(filmP, KF[0].p1 * 0.6, KF[0].p1 + 0.01)) : 1) * (1 - smooth(seg(afterFilm, 0, 0.3))) : 0;
   route.style.opacity = String(rop);
   const instOn = rop > 0.01;
   if (instOn !== lastInst) { top.classList.toggle('has-inst', instOn); lastInst = instOn; }

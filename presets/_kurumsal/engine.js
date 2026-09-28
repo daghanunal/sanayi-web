@@ -54,6 +54,10 @@ export function kurumsal({ veri, tema = {}, sayfalar = VARSAYILAN_SAYFALAR, ekst
     document.head.append(s);
   }
   if (tema.baslikEki) document.title = `${d.isletme.ad} | ${tema.baslikEki}`;
+  // Sloganı olmayan veri: meta açıklama künyeden kurulur (çekirdek applyMeta sloganı okur).
+  if (!d.isletme.slogan) {
+    document.querySelector('meta[name="description"]')?.setAttribute('content', `${d.isletme.ad}: ${d.isletme.tanim || d.isletme.sektor}. ${d.iletisim.adres}. Telefon: ${d.iletisim.telefon}`);
+  }
 
   // Özel alt çubuk (ör. WhatsApp'ı olmayan üretici). Vitrin modunda dokunma.
   if (aksiyon && !vitrinModu()) {
@@ -337,7 +341,7 @@ function altBilgi({ d, tema, sayfalar }) {
     <div class="k-alt__ic">
       <div class="k-alt__kurum">
         <p class="k-alt__ad">${esc(d.isletme.unvan || d.isletme.ad)}</p>
-        <p>${esc(d.isletme.slogan)}</p>
+        ${d.isletme.tanim || d.isletme.slogan ? `<p>${esc(d.isletme.tanim || d.isletme.slogan)}</p>` : ''}
         <p class="k-alt__kurulus">${d.isletme.kurulus ? `${yilEki(d.isletme.kurulus)} beri` : ''}</p>
       </div>
       <nav aria-label="Alt menü"><p class="k-alt__baslik">Sayfalar</p><ul>${sayfalar.map((s) => `<li><a href="#/${s.id}" data-rota="${s.id}">${s.menu || s.baslik}</a></li>`).join('')}</ul></nav>

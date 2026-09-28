@@ -217,13 +217,28 @@ function camFor(p, time) {
   const m = mobile();
   const port = innerHeight > innerWidth * 1.15;
   const idle = Math.sin(time * 0.35) * 0.02;
+  // Dikey tablet (iPad dikey): iki sayfa da ekrana sığar, karne üstte, kart altta.
+  if (!m && port) {
+    const HERO_T = [0, 0.0, 4.3, 0.55, 0.0, 34, 0, 0.17];
+    const FLIP_T = (x) => [x * 0.3, 0.02, 4.9, 1.02, 0, 34, 0, -0.11];
+    const PAGE_T = (x) => [x * 0.1, 0.04, 4.8, 1.1, x * -0.1, 34, 0, -0.11];
+    const OVER_T = [0, 0.08, 5.6, 0.9, 0.2, 34, 0, 0.1];
+    return camPath(p, time, HERO_T, FLIP_T, PAGE_T, OVER_T, false, idle);
+  }
   const HERO = m
     ? [0, 0.05, 4.9, 0.62, 0.0, 40, 0, 0.2]
     : [0, 0.0, 3.3, 0.55, 0.0, 34, 0.17, 0.02];
   const FLIP = m ? (x) => [x, 0, 4.5, 1.18, 0, 40, 0, -0.19] : (x) => [x, 0.02, 3.7, 1.02, 0, 34, 0.15, 0.0];
   const PAGE = m ? (x) => [x, 0.02, port ? 3.95 : 4.1, 1.22, x * -0.05, 40, 0, -0.2] : (x) => [x * 0.1, 0.04, 3.5, 1.1, x * -0.1, 34, 0.165, 0.0];
   const OVER = m ? [0, 0.1, 6.2, 1.0, 0.18, 40, 0, -0.08] : [0, 0.08, 4.5, 0.9, 0.2, 34, 0.18, 0.0];
+  if (m) return camPath(p, time, HERO, FLIP, PAGE, OVER, m, idle);
+  // Dar yatay ekran (iPad yatay 4:3 / 1180×820): karne sağdan taşmasın, kartla daha az çakışsın.
+  const kd = Math.max(1, 1.55 / (innerWidth / innerHeight));
+  const far = (A) => A.map((v, j) => (j === 2 ? v * kd : v));
+  return camPath(p, time, far(HERO), (x) => far(FLIP(x)), (x) => far(PAGE(x)), far(OVER), m, idle);
+}
 
+function camPath(p, time, HERO, FLIP, PAGE, OVER, m, idle) {
   if (p < R.c1[0]) return HERO;
   const lerpA = (A, B, t) => A.map((v, j) => L(v, B[j], sm(t)));
   if (p < R.hero[1] + 0.001) return HERO;
@@ -309,6 +324,16 @@ function vis(el, v) {
   el.style.visibility = v > 0.01 ? 'visible' : 'hidden';
 }
 
+// Etiket kutusu (nokta üstte, yazı ortalı) kart ya da üst başlıkla kesişiyor mu?
+function tagHits(pt, card) {
+  const w = tagText.offsetWidth + 16, h = tagText.offsetHeight + 16;
+  const box = { l: pt.x - w / 2, r: pt.x + w / 2, t: pt.y - 16 - h, b: pt.y + 12 };
+  const hit = (r) => box.l < r.right && box.r > r.left && box.t < r.bottom && box.b > r.top;
+  const top = $('[data-top]').getBoundingClientRect();
+  // Üst bölgeye (ekranın ilk %20'si) de girmesin: başlıkla ikinci bir üst şerit gibi durur.
+  return hit(card.getBoundingClientRect()) || box.t < Math.max(top.bottom + 4, innerHeight * 0.2);
+}
+
 function filmUI(p) {
   hint.style.opacity = 1 - seg(p, 0.0, 0.02);
   let active = -1, activeV = 1;
@@ -329,9 +354,11 @@ function filmUI(p) {
     const at = tagLayout[f.id] || [0.5, 0.5];
     const pt = S.project(active + 1, at[0], at[1]);
     const [a, b] = CARD_R[active];
-    const tv = bump(p, a, b, 0.25) * activeV;
+    let tv = bump(p, a, b, 0.25) * activeV;
     if (tagText.textContent !== f.etiket) tagText.textContent = f.etiket;
     tag.classList.toggle('is-acil', f.id === 'acil');
+    // Etiket kartın ya da üst başlığın üstüne binerse gösterme (iPad'de sahne kadrajı daralır).
+    if (tv > 0.01 && tagHits(pt, cards[active])) tv = 0;
     vis(tag, tv);
     tag.style.transform = `translate3d(${pt.x.toFixed(1)}px, ${pt.y.toFixed(1)}px, 0)`;
   } else vis(tag, 0);
@@ -556,6 +583,7 @@ function endIntro() {
   if (introDone) return;
   introDone = true;
   document.body.classList.remove('is-loading');
+  intro.style.pointerEvents = 'none'; // kapanırken (0,9 sn) ilk dokunuş alttaki butona gitsin
   gsap.to(intro, {
     clipPath: 'circle(0% at 50% 50%)', duration: reducedMotion ? 0.01 : 0.9, ease: 'expo.inOut',
     onComplete: () => intro.remove(),

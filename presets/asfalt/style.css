@@ -480,3 +480,12 @@ img { display: block; }
   .steer { animation: none; }
   .btn, .top { transition: none; }
 }
+
+/* --- iPad / tablet ---------------------------------------------------------- */
+/* Kalın display rakamların satır kutusu yazı boyundan ~1,2 kat yüksek: komşu yazıyla aradaki boşluk em ile. */
+@media (min-width: 600px) {
+  .stone b { margin-bottom: .14em; }
+  .fren__m b { display: inline-block; margin-block: .2em .16em; }
+}
+/* Dokunmatikte kaydırma ipucu gereksiz; hız göstergesiyle alt bölgede ikinci katman olmasın. */
+@media (pointer: coarse) { .hero__hint { display: none; } }

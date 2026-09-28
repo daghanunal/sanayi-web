@@ -478,7 +478,8 @@ if (reducedMotion) {
   gsap.to(track, {
     x: () => -dist(), ease: 'none',
     scrollTrigger: {
-      trigger: '#teslimat', start: 'top top', end: () => `+=${dist()}`, pin: '.teslim__pin', scrub: 0.5, invalidateOnRefresh: true,
+      // Kısa yatay ekranda (iPad yatay) yatay dizi en çok 2,6 ekran boyu pinli kalır: daha hızlı akar.
+      trigger: '#teslimat', start: 'top top', end: () => `+=${Math.min(dist(), innerHeight * 2.6)}`, pin: '.teslim__pin', scrub: 0.5, invalidateOnRefresh: true,
       onUpdate: (st) => $('.teslim__rail i').style.transform = `scaleX(${st.progress.toFixed(3)})`,
     },
   });

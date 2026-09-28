@@ -41,7 +41,7 @@
     <!-- 1. Döner vitrin: her kategori sırayla kaideye çıkar. İki kısa sahne (her biri ≤ 3 ekran pinli);
          arada kaide dönmeye devam eder, kart kayıp yeniden gelir. -->
     <section class="film film--vitrin film--vitrin-a" data-film="1" data-film-end="1.475" id="parcalar" aria-label="Parça kategorileri">
-      <div class="stick">
+      <div class="stick" data-pinned>
         <div class="vcard" data-vcard>
           <p class="vcard__top"><span class="vcard__raf" data-v-raf></span><span class="vcard__n"><b data-v-n>01</b> / <span data-v-total></span></span></p>
           <h2 class="vcard__title" data-v-title></h2>
@@ -55,7 +55,7 @@
       <ul class="sr-only" data-v-list></ul>
     </section>
     <section class="film film--vitrin film--vitrin-b" data-film="1.475" data-film-end="2" aria-label="Parça kategorileri, devamı">
-      <div class="stick">
+      <div class="stick" data-pinned>
         <div class="vcard" data-vcard aria-hidden="true">
           <p class="vcard__top"><span class="vcard__raf" data-v-raf></span><span class="vcard__n"><b data-v-n>01</b> / <span data-v-total></span></span></p>
           <h2 class="vcard__title" data-v-title></h2>
@@ -69,7 +69,7 @@
 
     <!-- 2. Şasi numarası: 17 hane çözülür, rulet doğru parçada durur -->
     <section class="film film--sasi" data-film="2" id="sasi" aria-label="Şasi numarasıyla parça bulma">
-      <div class="stick">
+      <div class="stick" data-pinned>
         <div class="sasi">
           <p class="kicker">Nasıl çalışıyoruz</p>
           <h2 class="sasi__title">Parçanın adını bilmeniz gerekmez.</h2>
@@ -87,7 +87,7 @@
 
     <!-- 3. Rakamlar: parçalar üst üste dizilir, kamera sütunu tırmanır -->
     <section class="film film--stats" data-film="3" aria-label="Rakamlarla">
-      <div class="stick">
+      <div class="stick" data-pinned>
         <div class="stats">
           <p class="kicker kicker--light" data-since></p>
           <p class="stats__about" data-bind="hakkinda"></p>
@@ -98,7 +98,7 @@
 
     <!-- 4. Teslimat: kaide merkez, halkalar yayılır, parçalar kurye gibi döner -->
     <section class="film film--teslimat" data-film="4" aria-label="Teslimat süreleri">
-      <div class="stick">
+      <div class="stick" data-pinned>
         <div class="tes">
           <p class="kicker">Teslimat</p>
           <h2 class="tes__title">Parça kapınıza ne kadar sürede gelir?</h2>

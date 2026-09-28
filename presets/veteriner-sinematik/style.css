@@ -458,3 +458,32 @@ body.is-loading { overflow: hidden; }
 @media (prefers-reduced-motion: reduce) {
   .who__track, .tag i, .hint i::after { animation: none; }
 }
+
+/* --- iPad / tablet ---------------------------------------------------------- */
+/* Dokunmatik tablette alttaki sayfa rayı gizli: kart zaten "02 Muayene" yazıyor (telefondaki gibi);
+   kart + etiket + başlıkla aynı anda dördüncü katman olmasın. */
+@media (min-width: 760px) and (pointer: coarse) {
+  .rail { display: none; }
+}
+/* Dev rakam ve kontur yazının satır kutusu yazı boyundan yüksek: komşu yazıyla arası em ile. */
+@media (min-width: 600px) {
+  .flipnote b { margin-bottom: .1em; }
+  .reviews__score b { margin-bottom: .14em; }
+}
+/* Dikey tablet (iPad dikey): karne üstte iki sayfa birden, kart altta geniş; kahraman yazısı üstte. */
+@media (min-width: 760px) and (max-aspect-ratio: 20/23) {
+  .film__hero { align-items: flex-start; padding-top: 120px; }
+  .hero { width: min(620px, 100%); }
+  .hero__title { font-size: clamp(56px, 9vw, 96px); }
+  .card { width: min(600px, 100%); bottom: clamp(40px, 5svh, 72px); margin-bottom: clamp(40px, 5svh, 72px); max-height: 40svh; }
+  .stop--over { justify-content: flex-start; padding-top: 120px; }
+  .fgap { align-items: flex-end; padding-bottom: 8svh; }  /* sayfa notu karnenin altında, kartın yerinde */
+  .overview { max-width: 640px; }
+}
+/* Kısa yatay ekran (iPad yatay 768–820 px): kart ekranın %40'ına sığar. */
+@media (min-width: 760px) and (max-height: 860px) and (min-aspect-ratio: 1/1) {
+  .card { width: min(500px, 44vw); padding: 20px 24px 20px; bottom: clamp(40px, 7svh, 72px); margin-bottom: clamp(40px, 7svh, 72px); }
+  .card__title { margin-top: 12px; font-size: clamp(26px, 2.5vw, 36px); }
+  .card__text { margin-top: 8px; font-size: 15px; line-height: 1.5; }
+  .card__wa { margin-top: 14px; }
+}

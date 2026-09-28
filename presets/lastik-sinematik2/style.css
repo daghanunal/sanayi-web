@@ -544,3 +544,37 @@ main, .foot { position: relative; z-index: 2; }
 /* Azaltılmış hareket */
 .rm .st:first-child { opacity: 1; visibility: visible; }
 .rm .intro { display: none; }
+
+/* --- iPad / tablet ---------------------------------------------------------- */
+/* Dela Gothic satır kutusu yazı boyunun ~1,45 katı: dev "7°C" ile komşu yazı arasındaki boşluk em ile. */
+@media (min-width: 600px) {
+  .season__rule { margin-block: .1em; }
+}
+/* Dikey tablet: final yazısı başlığın altında, ekranın üst-orta bölgesinde (başlık görünürken çakışmasın). */
+@media (min-width: 600px) and (max-width: 899px) {
+  .final { top: 22svh; }
+}
+/* Dokunmatik tablet (900px+): pinli sahne ve perde sırasında başlık saklanır (tek üst öğe); yukarı kaydırınca döner. */
+@media (min-width: 900px) and (pointer: coarse) {
+  html[data-phone-story] .top { transform: translateY(calc(-100% - 8px)); }
+}
+/* Tablet boyları: saat ekran yüksekliğine göre ve ortada yapışır; final yazısı üst-orta bölgede. */
+@media (min-width: 761px) and (max-width: 1399px) {
+  .clockbar { width: 100%; max-width: min(420px, 38svh); top: max(120px, calc(50svh - min(210px, 19svh))); }
+}
+@media (min-width: 900px) and (max-width: 1399px) {
+  .final { top: 22svh; }
+}
+/* Kısa yatay ekran (iPad yatay 768–820 px) ve dokunmatik büyük tablet (iPad Pro): diş ve otel kartları ekranın %40'ına sığar. */
+@media (min-width: 900px) and (max-height: 860px), (min-width: 900px) and (max-width: 1399px) and (pointer: coarse) {
+  .dis { top: calc(var(--header-h, 64px) + 20px); transform: none; gap: 14px; }
+  .dis .ch__title { font-size: min(4.2vw, 5svh); }
+  .dis__note { display: none; }
+  .gauge { bottom: 28px; padding: 10px 22px 10px 18px; }
+  .gauge__num b { font-size: min(6vw, 9svh); }
+  .otel { width: min(52vw, 640px); gap: 10px; padding: 22px 26px; }
+  .otel__count b { font-size: min(6vw, 6svh); }
+  .otel .ch__title { font-size: min(3.2vw, 4.4svh); }
+  .otel__list { display: none; }
+  .otel .btn { min-height: 46px; }
+}

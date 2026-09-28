@@ -12,6 +12,44 @@ export function yilEki(n) {
   return `${n}${s}`;
 }
 
+// --- Künye yardımcıları (tema.kunye) ------------------------------------------------------
+// Saat biçimi "08.30–19.00"; ek, saatin okunuşuna göre: 08.30'da, 17.00'de, 19.00'da.
+const SAAT_EK = { b: ['', 'de', 'de', 'te', 'te', 'te', 'da', 'de', 'de', 'da'], o: ['', 'da', 'de', 'da', 'ta', 'de'] };
+const saatEki = (t) => {
+  const [h, m] = t.split(':').map(Number);
+  const n = m || h;
+  return (n % 10 ? SAAT_EK.b[n % 10] : SAAT_EK.o[Math.floor(n / 10) % 10]) || 'da';
+};
+export const saatBicim = (s) => String(s).replace(/:/g, '.').replace(/\s*[-–]\s*/, '–');
+const dakika = (t) => { const [h, m] = t.split(':').map(Number); return h * 60 + m; };
+// { acik, durum: 'Şu an açık' | 'Şu an kapalı' | 'Bugün kapalı', saat: 'Bugün 08.30–19.00' | 'Yarın 08.30'da açılır' }
+export function durumBilgisi(saatler, now = new Date()) {
+  const g = now.getDay();
+  const bugun = saatler[g];
+  const simdi = now.getHours() * 60 + now.getMinutes();
+  if (bugun) {
+    const [ac, kapa] = bugun.split('-');
+    if (simdi >= dakika(ac) && simdi < dakika(kapa)) return { acik: true, durum: 'Şu an açık', saat: `Bugün ${saatBicim(bugun)}` };
+    if (simdi < dakika(ac)) return { acik: false, durum: 'Şu an kapalı', saat: `Bugün ${saatBicim(bugun)}` };
+  }
+  for (let i = 1; i <= 7; i++) {
+    const s = saatler[(g + i) % 7];
+    if (!s) continue;
+    const ac = s.split('-')[0];
+    return { acik: false, durum: bugun ? 'Şu an kapalı' : 'Bugün kapalı', saat: `${i === 1 ? 'Yarın' : GUNLER[(g + i) % 7]} ${saatBicim(ac)}'${saatEki(ac)} açılır` };
+  }
+  return { acik: false, durum: 'Kapalı', saat: '' };
+}
+const kunyeSaatleri = (saatler) => groupedHours(saatler).map(([g, s]) => [g.replace(' – ', '–'), s === 'Kapalı' ? s : saatBicim(s)]);
+const kisaAdres = (a) => String(a || '').replace(/,\s*[^,]+\/\s*[^,]+$/, '');
+// Künye modunda saatler yeni biçimde, değilse eski (varyant verisine dokunmadan geriye uyumlu).
+const saatSatirlari = (d, tema) => (tema?.kunye ? kunyeSaatleri(d.saatler) : groupedHours(d.saatler));
+const durumSatiri = (d, tema) => {
+  if (!tema?.kunye) { const st = openStatus(d.saatler); return { acik: st.open, metin: st.text }; }
+  const b = durumBilgisi(d.saatler);
+  return { acik: b.acik, metin: `${b.durum} · ${b.saat}` };
+};
+
 const rota = (id, metin, cls = 'k-btn') => `<a class="${cls}" href="#/${id}" data-rota="${id}">${metin}</a>`;
 const ok = `<svg class="k-ok" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 const baslik = (metin, cls = 'k-h2') => `<h2 class="${cls}" data-bol>${esc(metin)}</h2>`;
@@ -21,6 +59,7 @@ const kurulusYili = (d) => d.isletme.kurulus;
 function istatistikler(d) {
   return (d.istatistikler || []).map((s) => {
     const yilMi = s.kurulustanHesapla || /yıldır/.test(s.etiket);
+    if (s.saatlerdenHesapla && d.saatler) return { ...s, deger: d.saatler.filter(Boolean).length };
     return { ...s, deger: yilMi && kurulusYili(d) ? buYil - kurulusYili(d) : s.deger };
   });
 }
@@ -48,6 +87,30 @@ export const BOLUMLER = {
   hero: {
     render(d, { tema }) {
       const h = k(d).hero || {};
+      // Künye: işletmenin adı, işi (tek olgu), adresi, bugünkü saatleri; Ara / WhatsApp / Yol tarifi. Slogan yok.
+      if (tema.kunye) {
+        const b = d.saatler ? durumBilgisi(d.saatler) : null;
+        return `
+        <section class="k-hero k-hero--kunye" aria-label="Künye">
+          <div class="k-kap k-hero__ic">
+            <div class="k-hero__metin">
+              <h1 class="k-h1 k-hero__baslik" data-bol>${esc(d.isletme.ad)}</h1>
+              <p class="k-lead k-hero__tanim">${esc(d.isletme.tanim || d.isletme.sektor)}</p>
+              <dl class="k-kunye">
+                <div><dt>Adres</dt><dd>${esc(kisaAdres(d.iletisim.adres))}</dd></div>
+                ${b ? `<div><dt>Bugün</dt><dd><span class="k-durum ${b.acik ? 'is-acik' : ''}"><span></span>${esc(b.durum)} · ${esc(b.saat.replace(/^Bugün /, ''))}</span></dd></div>` : ''}
+                <div><dt>Telefon</dt><dd><a href="${telHref(d)}">${esc(d.iletisim.telefon)}</a></dd></div>
+              </dl>
+              <div class="k-butonlar">
+                <a class="k-btn" href="${telHref(d)}">${icons.phone}<span>Ara</span></a>
+                ${d.iletisim.whatsapp ? `<a class="k-btn k-btn--ikincil" href="${waHref(d)}" target="_blank" rel="noopener">${icons.whatsapp}<span>WhatsApp</span></a>` : ''}
+                <a class="k-btn k-btn--ikincil" href="${mapsHref(d)}" target="_blank" rel="noopener">${icons.pin}<span>Yol tarifi</span></a>
+              </div>
+            </div>
+            <figure class="k-hero__gorsel" data-perde><div class="k-hero__gorsel-ic" data-paralaks><img src="${tema.heroGorsel}" alt="${esc(tema.heroAlt || '')}" fetchpriority="high"></div></figure>
+          </div>
+        </section>`;
+      }
       const ust = h.ust || `${d.isletme.sektor}. ${tema.yer ? `${tema.yer} ` : ''}${yilEki(kurulusYili(d))} beri.`;
       const st = d.saatler ? openStatus(d.saatler) : null;
       const varsayilan = [
@@ -285,7 +348,7 @@ export const BOLUMLER = {
                     <div class="k-hizmet__govde">
                       <p class="k-metin">${esc(h.aciklama)}</p>
                       ${h.detay?.length ? `<dl class="k-detay">${h.detay.map(([a, b]) => `<div><dt>${esc(a)}</dt><dd>${esc(b)}</dd></div>`).join('')}</dl>` : ''}
-                      <a class="k-link" href="#/iletisim?konu=${encodeURIComponent(h.baslik)}" data-rota="iletisim?konu=${encodeURIComponent(h.baslik)}">Bu hizmet için teklif isteyin ${ok}</a>
+                      <a class="k-link" href="#/iletisim?konu=${encodeURIComponent(h.baslik)}" data-rota="iletisim?konu=${encodeURIComponent(h.baslik)}">${esc(k(d).hizmetLink || 'Bu hizmet için teklif isteyin')} ${ok}</a>
                     </div>
                     ${h.gorsel ? `<figure class="k-hizmet__gorsel" data-perde><img src="${h.gorsel}" alt="" loading="lazy"></figure>` : ''}
                     <span class="k-cizgi" data-cizgi></span>
@@ -396,10 +459,46 @@ export const BOLUMLER = {
     },
   },
 
+  // Çalışma saatleri ve konum (formsuz): ana sayfanın "saatler ve konum" bölümü.
+  konum: {
+    render(d, { tema }) {
+      if (!d.saatler) return '';
+      const st = durumSatiri(d, tema);
+      return `
+        <section class="k-bolum k-konum">
+          <div class="k-kap k-iki">
+            <div>
+              ${baslik(k(d).konumBaslik || 'Çalışma saatleri ve konum')}
+              <div class="k-saatler">
+                <p class="k-durum ${st.acik ? 'is-acik' : ''}"><span></span>${esc(st.metin)}</p>
+                <dl>${saatSatirlari(d, tema).map(([g, s]) => `<div><dt>${g}</dt><dd>${s}</dd></div>`).join('')}</dl>
+              </div>
+              <p class="k-metin k-konum__adres">${esc(d.iletisim.adres)}</p>
+              <p class="k-butonlar">
+                <a class="k-btn" href="${mapsHref(d)}" target="_blank" rel="noopener">${icons.pin}<span>Yol tarifi</span></a>
+                <a class="k-btn k-btn--ikincil" href="${telHref(d)}">${icons.phone}<span>${esc(d.iletisim.telefon)}</span></a>
+              </p>
+            </div>
+            <div class="k-harita" data-harita-kutu data-q="${esc(d.iletisim.mapsQuery || d.iletisim.adres)}"><p class="k-soluk">Harita</p></div>
+          </div>
+        </section>`;
+    },
+    mount(el) {
+      const kutu = el.querySelector('[data-harita-kutu]');
+      if (!kutu) return;
+      const io = new IntersectionObserver((e) => {
+        if (!e[0].isIntersecting) return;
+        kutu.innerHTML = `<iframe title="Konum haritası" src="https://maps.google.com/maps?q=${encodeURIComponent(kutu.dataset.q)}&z=15&hl=tr&output=embed" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>`;
+        io.disconnect();
+      }, { rootMargin: '300px' });
+      io.observe(kutu);
+    },
+  },
+
   iletisim: {
     render(d, ctx, sorgu) {
       const konumlar = d.konumlar || [{ ad: 'Adres', adres: d.iletisim.adres, tel: d.iletisim.telefon, mapsQuery: d.iletisim.mapsQuery }];
-      const st = d.saatler ? openStatus(d.saatler) : null;
+      const st = d.saatler ? durumSatiri(d, ctx.tema) : null;
       const bugun = new Date().getDay();
       const konular = k(d).konular || ['Genel bilgi', 'Fiyat teklifi', 'Kurumsal / filo anlaşması', 'Randevu', 'Diğer'];
       const secili = sorgu?.get('konu');
@@ -424,8 +523,8 @@ export const BOLUMLER = {
               ${
                 d.saatler
                   ? `<div class="k-saatler">
-                      <p class="k-durum ${st.open ? 'is-acik' : ''}"><span></span>${esc(st.text)}</p>
-                      <dl>${groupedHours(d.saatler).map(([g, s]) => `<div><dt>${g}</dt><dd>${s}</dd></div>`).join('')}</dl>
+                      <p class="k-durum ${st.acik ? 'is-acik' : ''}"><span></span>${esc(st.metin)}</p>
+                      <dl>${saatSatirlari(d, ctx.tema).map(([g, s]) => `<div><dt>${g}</dt><dd>${s}</dd></div>`).join('')}</dl>
                       <p class="k-soluk">Bugün ${GUNLER[bugun]}</p>
                     </div>`
                   : ''

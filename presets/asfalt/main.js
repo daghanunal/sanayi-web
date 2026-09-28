@@ -238,7 +238,9 @@ if (isMobile()) autoHideHeader($('[data-top]'), { offset: 80 });
 // Header: hero geçince zemin alır
 ScrollTrigger.create({
   trigger: '[data-hero]', start: 'bottom top+=80', end: 'max',
-  onToggle: (s) => $('[data-top]').classList.toggle('is-solid', s.isActive),
+  // end 'max' anında isActive düşer; sayfa sonunda zemin kalkmasın diye yalnız giriş/geri çıkış.
+  onEnter: () => $('[data-top]').classList.add('is-solid'),
+  onLeaveBack: () => $('[data-top]').classList.remove('is-solid'),
 });
 
 // Kaydırma hızı: işaretler hızlandıkça uzar (hareket bulanıklığı hissi)
