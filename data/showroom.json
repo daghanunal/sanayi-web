@@ -3,10 +3,16 @@
   "isletme": {
     "ad": "Parlak Kaporta & Boya",
     "sektor": "Boya, Kaporta ve Detaylı Bakım",
-    "slogan": "Çizik gider, parlaklık kalır.",
+    "tanim": "Boya, kaporta ve detaylı bakım",
     "kurulus": 2008,
-    "hakkinda": "2008'den beri Şaşmaz'da boya, kaporta ve detaylı bakım yapıyoruz. Kabinimiz fırınlı, boyamız renk ölçüm cihazıyla karışıyor. Aracınızı teslim etmeden önce gün ışığı lambasının altında son bir kez biz kontrol ediyoruz."
+    "hakkinda": "Binek ve hafif ticari araçların boya ve kaporta işlerine bakılır. Lokal ve komple boyanın yanı sıra boyasız göçük ve şase düzeltme, pasta ve cila, seramik kaplama ve boya koruma filmi (PPF) işleri de yapılır."
   },
+  "bilgiler": [
+    ["Araçlar", "Binek araçlar, SUV'lar ve hafif ticari araçlar"],
+    ["Atölye", "Fırınlı boya kabini, şase sehpası, renk ölçüm cihazı, boya kalınlık ölçer"],
+    ["Randevu", "Hasar tespiti ve boya ölçümü için randevu gerekmez. Boya, kaporta ve seramik işleri randevuyla yapılır."],
+    ["Sigorta", "Kasko ve trafik sigortası dosyalı işler de alınır. Anlaşmalı sigorta şirketlerini öğrenmek için arayın."]
+  ],
   "iletisim": {
     "telefon": "0532 555 12 34",
     "whatsapp": "905325551234",
@@ -17,82 +23,84 @@
   "hizmetler": [
     {
       "baslik": "Lokal ve komple boya",
-      "aciklama": "Fırınlı kabinde boyuyoruz. Renk kodu cihazla okunur, karışım panel panel tutturulur. Parça değişmiş gibi durmaz.",
-      "sure": "2-5 gün",
+      "kisa": "Fırınlı kabinde boya",
+      "aciklama": "Renk kodu cihazla okunur, boya yandaki panelin tonuna göre karıştırılır. Boya ve vernik fırınlı kabinde atılır.",
+      "sure": "2–5 gün",
       "gorsel": "/img/showroom/s-boya.jpg"
     },
     {
       "baslik": "Boyasız göçük düzeltme",
-      "aciklama": "Dolu ve kapı göçüklerini boyaya dokunmadan içeriden çıkarıyoruz. Orijinal boya ve ekspertiz raporu korunur.",
+      "kisa": "Dolu ve park göçükleri",
+      "aciklama": "Dolu ve park göçükleri boyaya dokunulmadan içeriden çıkarılır. Orijinal boya yerinde kaldığı için parça ekspertizde boyasız görünür.",
       "sure": "Aynı gün",
       "gorsel": "/img/showroom/g-klasik.jpg"
     },
     {
       "baslik": "Kaporta ve şase düzeltme",
-      "aciklama": "Kazalı araçta ölçü alıp şaseyi fabrika değerine çekiyoruz. Sigorta dosyasını da biz takip ediyoruz.",
-      "sure": "3-10 gün",
+      "kisa": "Kazalı araç onarımı",
+      "aciklama": "Kazalı aracın şasesi sehpada ölçülerek fabrika ölçüsüne çekilir. Ezilen saclar düzeltilir, düzelmeyen parça değiştirilir.",
+      "sure": "3–10 gün",
       "gorsel": "/img/showroom/s-kaporta.jpg"
     },
     {
       "baslik": "Pasta ve cila",
-      "aciklama": "Üç aşamalı makine pastasıyla hare, kılcal çizik ve matlığı alıyoruz. Boya kalınlığını ölçmeden makineye dokunmuyoruz.",
+      "kisa": "Hare ve kılcal çizik giderme",
+      "aciklama": "Vernik kalınlığı ölçülüp üç aşamalı makine pastası yapılır. Hareler, kılcal çizikler ve matlık giderilir.",
       "sure": "1 gün",
       "gorsel": "/img/showroom/cila.jpg"
     },
     {
       "baslik": "Seramik kaplama",
-      "aciklama": "Pastadan sonra 2 kat seramik. Su boncuk boncuk akar, kir tutmaz, yıkaması kolaylaşır. Yıllık kontrolü ücretsiz.",
+      "kisa": "İki kat seramik",
+      "aciklama": "Pastadan sonra boyanın üstüne iki kat seramik sürülür. Su yüzeyde tutunmadan akar, araç daha kolay temizlenir.",
       "sure": "2 gün",
       "gorsel": "/img/showroom/g-model3.jpg"
     },
     {
       "baslik": "Boya koruma filmi (PPF)",
-      "aciklama": "Ön tampon, kaput ve çamurluklara şeffaf film. Taş sekmesine ve çizilmeye karşı boyanın önüne kalkan koyar.",
-      "sure": "2-3 gün",
+      "kisa": "Şeffaf koruma filmi",
+      "aciklama": "Ön tampon, kaput, çamurluk ve aynalar şeffaf filmle kaplanır. Film, boyayı taş sekmesine ve çizilmeye karşı korur.",
+      "sure": "2–3 gün",
       "gorsel": "/img/showroom/g-i8.jpg"
     },
     {
       "baslik": "Detaylı iç ve dış temizlik",
-      "aciklama": "Köpüklü ön yıkama, jant ve kalipere ayrı fırça, koltuk ve tavan buharla. Araç sıfır gibi kokar.",
-      "sure": "4-6 saat",
+      "kisa": "İç ve dış temizlik",
+      "aciklama": "Araç köpükle yıkanır, jant ve kaliperler ayrı fırçayla temizlenir. Koltuk, döşeme ve tavana buharlı temizlik yapılır.",
+      "sure": "4–6 saat",
       "gorsel": "/img/showroom/s-yikama.jpg"
     }
   ],
   "surec": [
-    { "baslik": "Ekspertiz ve fiyat", "aciklama": "Aracı gün ışığında inceler, boya kalınlığını ölçer, fiyatı baştan yazılı veririz." },
-    { "baslik": "Söküm ve hazırlık", "aciklama": "Plastik ve çıtaları sökeriz; bantla boyanmış kenar bırakmayız." },
-    { "baslik": "Astar ve zımpara", "aciklama": "Macun, astar, ıslak zımpara. Yüzey el değmiş gibi pürüzsüz olana kadar." },
-    { "baslik": "Fırınlı kabinde boya", "aciklama": "Tozsuz kabinde boya ve vernik, ardından 60 derecede fırın." },
-    { "baslik": "Pasta, cila, kontrol", "aciklama": "Üç aşamalı pasta. Son kontrol gün ışığı lambasının altında." },
-    { "baslik": "Teslim", "aciklama": "Yıkanmış, içi süpürülmüş olarak, fotoğraflı iş raporuyla teslim ederiz." }
+    { "baslik": "Ölçüm ve fiyat", "aciklama": "Araç gün ışığında incelenir, boya kalınlığı ölçülür. Yapılacak iş ve fiyat araç sahibine söylenir." },
+    { "baslik": "Söküm ve maskeleme", "aciklama": "Paneldeki plastik parçalar ve çıtalar sökülür, boyanmayacak yerler kâğıtla kapatılır." },
+    { "baslik": "Macun, astar ve zımpara", "aciklama": "Macun ve astar atılır, yüzey ıslak zımparayla düzeltilir." },
+    { "baslik": "Fırınlı kabinde boya", "aciklama": "Boya ve vernik tozsuz kabinde atılıp 60 derecede fırınlanır." },
+    { "baslik": "Pasta ve kontrol", "aciklama": "Boyanan panele pasta yapılır, renk gün ışığı lambasının altında kontrol edilir." },
+    { "baslik": "Teslim", "aciklama": "Araç yıkanıp içi süpürüldükten sonra teslim edilir." }
   ],
   "istatistikler": [
-    { "deger": "kurulustan", "sonek": " yıl", "etiket": "Şaşmaz'da aynı yerde" },
-    { "deger": 9400, "sonek": "+", "etiket": "boyası yenilenen panel" },
-    { "deger": 2600, "sonek": "+", "etiket": "seramik kaplanan araç" },
-    { "deger": 98, "sonek": "%", "etiket": "tek seferde renk tutturma" }
+    { "deger": 18, "etiket": "Şaşmaz Oto Sanayi Sitesi'nde", "birim": "YIL", "sonek": " yıl", "kurulustanHesapla": true },
+    { "deger": 6, "etiket": "haftada açık", "birim": "GÜN", "sonek": " gün", "saatlerdenHesapla": true }
   ],
-  "parlaklik": { "once": 38, "sonra": 94 },
   "markalar": ["Volkswagen", "Renault", "Fiat", "Toyota", "BMW", "Mercedes-Benz", "Audi", "Hyundai", "Ford", "Peugeot"],
   "galeri": [
-    { "src": "/img/showroom/g-tesla-y.jpg", "alt": "Beyaz SUV, stüdyo ışığında parlak gövde", "baslik": "Seramik kaplama", "detay": "2 kat, 2 gün" },
-    { "src": "/img/showroom/g-i8.jpg", "alt": "Beyaz spor otomobil, sergi ışığında parlak gövde", "baslik": "Komple PPF", "detay": "Tam gövde şeffaf film" },
-    { "src": "/img/showroom/kaput.jpg", "alt": "Kırmızı kaputta ayna gibi yansıma, arma yakın plan", "baslik": "Kaput boyası", "detay": "Renk cihazla eşlendi" },
-    { "src": "/img/showroom/g-corvette.jpg", "alt": "Turuncu spor otomobilin arkası", "baslik": "Arka tampon", "detay": "Kaporta ve lokal boya" },
-    { "src": "/img/showroom/g-klasik.jpg", "alt": "Klasik otomobilin siyah kaputu", "baslik": "Klasik araç", "detay": "Komple boya, 3 aşamalı pasta" },
-    { "src": "/img/showroom/g-model3.jpg", "alt": "Beyaz sedan, parlak ön görünüm", "baslik": "Detaylı temizlik", "detay": "İç ve dış, 5 saat" }
+    { "src": "/img/showroom/g-tesla-y.jpg", "alt": "Beyaz SUV, stüdyo ışığında parlak gövde", "baslik": "Seramik kaplama", "detay": "Beyaz SUV, parlak gövde" },
+    { "src": "/img/showroom/g-i8.jpg", "alt": "Beyaz spor otomobil, sergi ışığında parlak gövde", "baslik": "Boya koruma filmi", "detay": "Beyaz spor otomobil" },
+    { "src": "/img/showroom/kaput.jpg", "alt": "Kırmızı kaputta ayna gibi yansıma", "baslik": "Kaput boyası", "detay": "Kırmızı kaput, yakın plan" },
+    { "src": "/img/showroom/g-corvette.jpg", "alt": "Turuncu spor otomobilin arkası", "baslik": "Kaporta ve lokal boya", "detay": "Turuncu spor otomobil, arka" },
+    { "src": "/img/showroom/g-klasik.jpg", "alt": "Klasik otomobilin siyah kaputu", "baslik": "Klasik araç boyası", "detay": "Siyah kaput" },
+    { "src": "/img/showroom/g-model3.jpg", "alt": "Beyaz sedan, parlak ön görünüm", "baslik": "Detaylı temizlik", "detay": "Beyaz sedan, ön görünüm" }
   ],
   "oncesiSonrasi": [
-    { "once": "/img/showroom/cila-once.jpg", "sonra": "/img/showroom/cila.jpg", "baslik": "Siyah kaput, 3 aşamalı pasta" },
+    { "once": "/img/showroom/cila-once.jpg", "sonra": "/img/showroom/cila.jpg", "baslik": "Siyah kaput, pasta" },
     { "once": "/img/showroom/kaput-once.jpg", "sonra": "/img/showroom/kaput.jpg", "baslik": "Kırmızı kaput, pasta ve seramik" }
   ],
-  "puan": { "ortalama": 4.9, "adet": 318 },
   "yorumlar": [
-    { "ad": "Serkan A.", "puan": 5, "metin": "Kapıdaki göçüğü boyasız çıkardılar, ekspertizde iz bile görünmedi. Aynı gün teslim ettiler.", "arac": "2019 Passat" },
-    { "ad": "Elif Y.", "puan": 5, "metin": "Beyaz arabanın sağ çamurluğu boyandı, yan yana koyunca fark etmiyorsunuz. Fiyat da baştan ne dendiyse o çıktı.", "arac": "2021 Clio" },
-    { "ad": "Murat D.", "puan": 5, "metin": "Seramik kaplama yaptırdım, altı ay oldu hâlâ su boncuk gibi akıyor. Yıllık kontrolü de ücretsiz yaptılar.", "arac": "2022 Corolla" },
-    { "ad": "Hakan T.", "puan": 4, "metin": "Kaza sonrası kaporta ve boya işi temiz oldu. Parça beklediğimiz için bir gün uzadı ama haber verdiler.", "arac": "2017 Megane" },
-    { "ad": "Zeynep K.", "puan": 5, "metin": "Pastadan sonra araba ilk aldığım günkü gibi oldu. Hareler tamamen gitti, fotoğraflı rapor da verdiler.", "arac": "2018 BMW 320i" }
-  ],
-  "garanti": "Boya ve vernik işçiliğine 2 yıl, seramik kaplamaya 3 yıl yazılı garanti."
+    { "ad": "Serkan A.", "puan": 5, "metin": "Kapıdaki göçüğü boyasız çıkardılar. Ekspertize götürdüğümde parça orijinal çıktı, aracı da aynı gün aldım.", "arac": "2019 Volkswagen Passat" },
+    { "ad": "Elif Y.", "puan": 5, "metin": "Beyaz aracın sağ çamurluğunu boyadılar. Kapıyla yan yana bakınca renk farkı görünmüyor.", "arac": "2021 Renault Clio" },
+    { "ad": "Murat D.", "puan": 5, "metin": "Seramik kaplama yaptırdım. Altı ay oldu, yağmurda su hâlâ boncuk boncuk akıyor.", "arac": "2022 Toyota Corolla" },
+    { "ad": "Hakan T.", "puan": 4, "metin": "Kazadan sonra kaportasını ve boyasını yaptılar, iş temiz çıktı. Parça geç geldiği için teslim bir gün uzadı ama önceden haber verdiler.", "arac": "2017 Renault Megane" },
+    { "ad": "Zeynep K.", "puan": 5, "metin": "Pastadan sonra araç ilk aldığım günkü gibi parladı. Hareler tamamen gitti.", "arac": "2018 BMW 320i" }
+  ]
 }

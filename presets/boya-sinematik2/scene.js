@@ -876,7 +876,7 @@ export function createWorld(canvas, { phone, low }) {
 
   // Telefonda göçük itme karesi metnin üstüne taşmasın: biraz geri çekil
   const V = phone
-    ? { ...VIEWS, pdr: { ...VIEWS.pdr, dist: 6.0, pitch: 0.28 }, renk: { ...VIEWS.renk, dist: 3.3, tx: -0.8 } }
+    ? { ...VIEWS, hero: { ...VIEWS.hero, dist: 8.4 }, seramik: { ...VIEWS.seramik, dist: 8.4 }, pdr: { ...VIEWS.pdr, dist: 6.0, pitch: 0.28 }, renk: { ...VIEWS.renk, dist: 3.3, tx: -0.8 } }
     : VIEWS;
   const cur = { ...VIEWS.hero };
   const goal = { ...VIEWS.hero };
