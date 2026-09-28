@@ -3,10 +3,15 @@
   "isletme": {
     "ad": "Kardelen Oto Yedek Parça",
     "sektor": "Oto Yedek Parça",
-    "slogan": "Parçanın adını bilmeniz gerekmez. Şasi numarasını yazın, gerisini biz buluruz.",
+    "tanim": "Orijinal ve muadil oto yedek parça",
     "kurulus": 2003,
-    "hakkinda": "Binek ve hafif ticari araçlar için orijinal ve muadil yedek parça satıyoruz. Rafta olmayanı aynı gün tedarik ediyoruz, sanayi içinde dükkânınıza kadar getiriyoruz. Yanlış parça gelirse değişimi bizden."
+    "hakkinda": "Binek araçlarla hafif ticari araçların yedek parçaları satılır. Parçaların orijinali de muadili de bulunur; rafta olmayan parça sipariş edilir."
   },
+  "bilgiler": [
+    ["Araçlar", "Binek araçlar ve hafif ticari araçlar, yerli ve ithal markalar"],
+    ["Parça", "Orijinal parça, muadil parça ve periyodik bakım setleri"],
+    ["Parça sorma", "Parça telefonla ya da WhatsApp'tan sorulur. Ruhsatın fotoğrafını göndermek yeterlidir."]
+  ],
   "iletisim": {
     "telefon": "0532 555 12 34",
     "whatsapp": "905325551234",
@@ -15,49 +20,81 @@
   },
   "saatler": [null, "08:00-19:00", "08:00-19:00", "08:00-19:00", "08:00-19:00", "08:00-19:00", "08:30-17:00"],
   "hizmetler": [
-    { "baslik": "Fren sistemi", "aciklama": "Balata, disk, kampana, fren merkezi ve hidrolik. Ön ve arka takım halinde.", "ornekler": ["Balata", "Fren diski", "Kampana", "ABS sensörü"], "raf": "A-04", "stok": 3120, "parca": "disk" },
-    { "baslik": "Filtre ve periyodik bakım", "aciklama": "Yağ, hava, polen ve yakıt filtresi. Bakım setini aracınıza göre tek pakette hazırlıyoruz.", "ornekler": ["Yağ filtresi", "Hava filtresi", "Polen filtresi", "Yakıt filtresi"], "raf": "B-11", "stok": 6480, "parca": "filtre" },
-    { "baslik": "Süspansiyon ve direksiyon", "aciklama": "Amortisör, helezon yay, rotil, salıncak ve rot başı. Takım değişiminde fiyat avantajı.", "ornekler": ["Amortisör", "Helezon yay", "Rotil", "Salıncak"], "raf": "C-07", "stok": 2290, "parca": "amortisor" },
-    { "baslik": "Triger ve kayış", "aciklama": "Triger seti, V kayışı, gergi ve devirdaim. Seti eksiksiz verir, hangi km'de değişeceğini yazarız.", "ornekler": ["Triger seti", "V kayışı", "Gergi rulmanı", "Devirdaim"], "raf": "D-02", "stok": 1540, "parca": "triger" },
-    { "baslik": "Debriyaj", "aciklama": "Baskı, disk ve rulmandan oluşan set. Volan gerekiyorsa aynı gün getiriyoruz.", "ornekler": ["Debriyaj seti", "Baskı balata", "Debriyaj rulmanı", "Volan"], "raf": "D-09", "stok": 860, "parca": "debriyaj" },
-    { "baslik": "Ateşleme ve sensörler", "aciklama": "Buji, bobin, kızdırma bujisi ve motor sensörleri. Arıza koduyla gelin, doğru sensörü bulalım.", "ornekler": ["Buji", "Ateşleme bobini", "Kızdırma bujisi", "Oksijen sensörü"], "raf": "E-14", "stok": 4210, "parca": "buji" },
-    { "baslik": "Motor parçaları", "aciklama": "Piston, segman, conta takımı, yatak ve supap. Revizyon için eksiksiz liste çıkarıyoruz.", "ornekler": ["Piston ve segman", "Üst takım conta", "Kol yatağı", "Supap"], "raf": "F-03", "stok": 1980, "parca": "piston" }
+    {
+      "baslik": "Orijinal ve muadil parça",
+      "kisa": "İki seçenek, aynı parça numarası",
+      "aciklama": "Her parçanın orijinali de muadili de bulunur. Muadil parça, orijinal parça numarasıyla eşleştirilerek verilir.",
+      "parca": "disk"
+    },
+    {
+      "baslik": "Şasi numarasıyla parça bulma",
+      "kisa": "Ruhsattaki numaradan eşleştirme",
+      "aciklama": "Ruhsattaki şasi numarasından aracın motoru ve donanımı çıkarılır, parça katalogdan bu bilgiyle bulunur. Ruhsatın fotoğrafını göndermek de yeterlidir.",
+      "parca": "piston"
+    },
+    {
+      "baslik": "Eski parçadan eşleştirme",
+      "kisa": "Parça numarası ya da fotoğrafla",
+      "aciklama": "Sökülen parçanın üstündeki numaradan ya da fotoğrafından yenisi bulunur. Parçanın adını bilmek gerekmez.",
+      "parca": "debriyaj"
+    },
+    {
+      "baslik": "Periyodik bakım setleri",
+      "kisa": "Filtreler ve buji tek pakette",
+      "aciklama": "Yağ, hava, polen ve yakıt filtreleri araca göre tek pakette hazırlanır. Buji ve motor yağı da sete eklenebilir.",
+      "parca": "filtre"
+    },
+    {
+      "baslik": "Parça siparişi",
+      "kisa": "Rafta olmayan parçalar",
+      "aciklama": "Rafta olmayan parça tedarikçiden sipariş edilir. Parçanın geliş günü sipariş verilirken bildirilir.",
+      "parca": "triger"
+    },
+    {
+      "baslik": "Sanayi içi teslim ve kargo",
+      "kisa": "Dükkâna teslim, şehir dışına kargo",
+      "aciklama": "Şaşmaz Oto Sanayi Sitesi'ndeki dükkânlara parça kuryeyle götürülür. Ankara dışındaki siparişler kargoyla gönderilir.",
+      "parca": "amortisor"
+    },
+    {
+      "baslik": "Usta ve servislere cari hesap",
+      "kisa": "Aylık hesap, tek fatura",
+      "aciklama": "Sanayideki usta ve servislere cari hesap açılır. Alınan parçalar plakaya göre kaydedilip ay sonunda tek faturada toplanır.",
+      "parca": "buji"
+    }
+  ],
+  "urunler": [
+    { "baslik": "Fren sistemi", "aciklama": "Balata, disk ve kampana ön ve arka takım olarak satılır.", "ornekler": ["Balata", "Fren diski", "Kampana", "ABS sensörü"], "parca": "disk" },
+    { "baslik": "Filtreler", "aciklama": "Filtreler tek tek ya da bakım seti olarak satılır.", "ornekler": ["Yağ filtresi", "Hava filtresi", "Polen filtresi", "Yakıt filtresi"], "parca": "filtre" },
+    { "baslik": "Süspansiyon ve direksiyon", "aciklama": "Amortisörler çift olarak, rotil ve salıncaklar tek tek satılır.", "ornekler": ["Amortisör", "Helezon yay", "Rotil", "Salıncak"], "parca": "amortisor" },
+    { "baslik": "Triger ve kayışlar", "aciklama": "Triger kayışı gergi ve rulmanlarıyla set olarak satılır, devirdaim sete eklenebilir.", "ornekler": ["Triger seti", "V kayışı", "Gergi rulmanı", "Devirdaim"], "parca": "triger" },
+    { "baslik": "Debriyaj", "aciklama": "Baskı, disk ve rulman set olarak satılır. Çift kütleli volan ayrıca bulunur.", "ornekler": ["Debriyaj seti", "Baskı balata", "Debriyaj rulmanı", "Volan"], "parca": "debriyaj" },
+    { "baslik": "Ateşleme ve sensörler", "aciklama": "Buji, bobin ve motor sensörleri arıza koduna ya da parça numarasına göre bulunur.", "ornekler": ["Buji", "Ateşleme bobini", "Kızdırma bujisi", "Oksijen sensörü"], "parca": "buji" },
+    { "baslik": "Motor parçaları", "aciklama": "Motor revizyonu için piston, segman, yatak ve conta takımları bulunur.", "ornekler": ["Piston ve segman", "Üst takım conta", "Kol yatağı", "Supap"], "parca": "piston" }
   ],
   "surec": [
-    { "baslik": "Şasi numarasını gönderin", "aciklama": "Ruhsatın ön yüzündeki 17 haneli numara. Fotoğrafını atmanız da yeter." },
-    { "baslik": "Parçayı eşleştiriyoruz", "aciklama": "Numaradan aracın motorunu ve donanımını çıkarıp doğru parçayı katalogdan buluyoruz." },
-    { "baslik": "Fiyatı yazıyoruz", "aciklama": "Orijinal ve muadil seçeneğini, stok durumunu ve teslim saatini tek mesajda gönderiyoruz." },
-    { "baslik": "Parça yola çıkıyor", "aciklama": "Sanayi içindeyseniz dükkânınıza getiriyoruz, değilseniz kargoya aynı gün veriyoruz." }
+    { "baslik": "Parçayı sorma", "aciklama": "Parçanın adı, eski parçanın fotoğrafı ya da ruhsattaki şasi numarası telefonla veya WhatsApp'tan iletilir." },
+    { "baslik": "Seçenekler", "aciklama": "Parçanın orijinal ve muadil seçenekleri, rafta olup olmadığıyla birlikte bildirilir." },
+    { "baslik": "Teslim", "aciklama": "Parça dükkândan alınabilir ya da sanayi içine götürülür. Ankara dışına kargoyla gönderilir." }
   ],
   "istatistikler": [
-    { "deger": "kurulus", "sonek": "", "etiket": "yıldır Şaşmaz'da" },
-    { "deger": 48000, "sonek": "+", "etiket": "çeşit parça rafta" },
-    { "deger": 45, "sonek": " dk", "etiket": "sanayi içi teslim" },
-    { "deger": 1200, "sonek": "+", "etiket": "usta ve servisle çalışıyoruz" }
+    { "deger": 23, "etiket": "Şaşmaz Oto Sanayi Sitesi'nde", "birim": "YIL", "sonek": " yıl", "kurulustanHesapla": true },
+    { "deger": 6, "etiket": "haftada açık", "birim": "GÜN", "sonek": " gün", "saatlerdenHesapla": true }
   ],
-  "markalar": ["Renault", "Fiat", "Volkswagen", "Ford", "Toyota", "Hyundai", "Opel", "Peugeot", "Citroën", "Dacia", "Skoda", "Honda", "Nissan", "Kia", "Mercedes-Benz", "BMW"],
-  "parcaMarkalari": ["Bosch", "Valeo", "Mahle", "Mann-Filter", "Sachs", "LuK", "Gates", "Febi", "Lemförder", "NGK", "Brembo", "SKF"],
-  "teslimat": [
-    { "yer": "Şaşmaz Oto Sanayi içi", "sure": "45 dakika", "not": "Dükkânınıza kadar, ücretsiz" },
-    { "yer": "Etimesgut, Eryaman, Sincan", "sure": "Aynı gün", "not": "Saat 15:00'e kadar verilen siparişler" },
-    { "yer": "Ankara geneli", "sure": "Aynı gün ya da ertesi sabah", "not": "Kuryeyle" },
-    { "yer": "Türkiye geneli", "sure": "1-2 gün", "not": "Aynı gün kargoya veriyoruz" }
-  ],
+  "markalar": ["Renault", "Fiat", "Volkswagen", "Ford", "Toyota", "Hyundai", "Opel", "Peugeot", "Citroën", "Dacia", "Skoda", "Honda"],
   "galeri": [
-    { "src": "/img/depo/koridor.jpg", "alt": "Deponun uzun koridoru, iki yanda tavana kadar dolu raflar" },
-    { "src": "/img/depo/raf.jpg", "alt": "Rafta etiketli kutular" },
+    { "src": "/img/depo/koridor.jpg", "alt": "Uzun depo koridoru, iki yanda tavana kadar dolu raflar" },
+    { "src": "/img/depo/raf.jpg", "alt": "Rafta etiketli parça kutuları" },
     { "src": "/img/depo/disk.jpg", "alt": "Fren diski ve kaliper yakından" },
     { "src": "/img/depo/kutu-arac.jpg", "alt": "Parça kutuları teslimat aracına yükleniyor" },
     { "src": "/img/depo/yuksek-raf.jpg", "alt": "Tavana kadar yükselen turuncu raflarda kutular" },
-    { "src": "/img/depo/karanlik-raf.jpg", "alt": "Akşam saatinde deponun raf aralığı" }
+    { "src": "/img/depo/karanlik-raf.jpg", "alt": "Akşam saatinde bir depo raf aralığı" }
   ],
-  "puan": { "ortalama": 4.8 },
   "yorumlar": [
-    { "ad": "Serkan A.", "puan": 5, "metin": "Şasi numarasını attım, on dakikada orijinal ve muadil fiyatı geldi. Yarım saat sonra balata dükkândaydı.", "arac": "Oto servis, Şaşmaz" },
-    { "ad": "Hakan T.", "puan": 5, "metin": "Yanlış triger seti sipariş etmişim, hiç sorun çıkarmadan aynı gün değiştirdiler.", "arac": "2015 Fiat Doblo" },
-    { "ad": "Emre K.", "puan": 5, "metin": "Başka yerde bulamadığım sensörü ertesi sabah getirdiler.", "arac": "2012 Renault Fluence" },
-    { "ad": "Murat Y.", "puan": 4, "metin": "Bakım setini hazır paket yapıyorlar, filtreler tek tek aramaktan kurtardı. Öğlen biraz kalabalık oluyor.", "arac": "2018 Toyota Corolla" },
-    { "ad": "Oğuz D.", "puan": 5, "metin": "On yıldır parçamı buradan alıyorum. Muadilin hangisi iyi, hangisi değil dürüstçe söylüyorlar.", "arac": "Mekanik usta, Şaşmaz" }
-  ],
-  "garanti": "Yanlış parça gelirse aynı gün değişim. Tüm parçalarda üretici garantisi."
+    { "ad": "Serkan A.", "puan": 5, "metin": "Şasi numarasını WhatsApp'tan attım, balatanın orijinalini ve muadilini yazdılar. Yarım saat sonra balata dükkândaydı.", "arac": "Oto servis, Şaşmaz" },
+    { "ad": "Hakan T.", "puan": 5, "metin": "Yanlış triger seti sipariş etmişim. Şasi numarasından yeniden bakıp doğru seti verdiler.", "arac": "2015 Fiat Doblo" },
+    { "ad": "Emre K.", "puan": 5, "metin": "Oksijen sensörünü başka yerde bulamamıştım. Sipariş ettiler, ertesi sabah geldi.", "arac": "2012 Renault Fluence" },
+    { "ad": "Murat Y.", "puan": 4, "metin": "Bakım setini filtreleriyle birlikte tek pakette hazırladılar. Öğle saatinde dükkân biraz kalabalık oluyor.", "arac": "2018 Toyota Corolla" },
+    { "ad": "Oğuz D.", "puan": 5, "metin": "On yıldır parçayı buradan alıyorum. Muadil parçaların farkını anlatıyorlar, seçimi bana bırakıyorlar.", "arac": "Mekanik usta, Şaşmaz" }
+  ]
 }

@@ -20,10 +20,9 @@ gsap.registerPlugin(ScrollTrigger);
 export const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 // Sahada demo gösterirken URL ile kişiselleştirme:
-//   ?ad=Yıldız%20Oto&tel=05321234567&wa=905321234567&slogan=...&kurulus=1994
+//   ?ad=Yıldız%20Oto&tel=05321234567&wa=905321234567&kurulus=1994
 const OVERRIDES = {
   ad: (d, v) => (d.isletme.ad = v),
-  slogan: (d, v) => (d.isletme.slogan = v),
   kurulus: (d, v) => (d.isletme.kurulus = Number(v) || d.isletme.kurulus),
   tel: (d, v) => (d.iletisim.telefon = v),
   wa: (d, v) => (d.iletisim.whatsapp = v.replace(/\D/g, '')),

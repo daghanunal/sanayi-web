@@ -146,12 +146,11 @@ function featLabel(stop, idx) {
     g.fillRect(60, 70, 392, 44);
     g.fillStyle = '#16171a';
     g.font = '700 26px sans-serif';
-    g.fillText(`RAF ${stop.raf}`, 76, 101);
+    g.fillText(`GRUP ${String(idx + 1).padStart(2, '0')}`, 76, 101);
     g.font = '700 30px sans-serif';
     g.fillText(stop.baslik.toLocaleUpperCase('tr').slice(0, 22), 76, 154);
     barcode(g, 76, 172, 250, 70, idx + 11);
     g.font = '600 20px monospace';
-    g.fillText(`${String(idx + 1).padStart(2, '0')}/${String(stop.stok).padStart(5, '0')}`, 340, 212);
   });
 }
 
@@ -470,7 +469,7 @@ export function createStage(canvas, { stops, ad, tel, lite, weak, quality = 'hi'
     scene.add(sp);
     return sp;
   }
-  const catSprites = feats.map((f, i) => labelSprite(stops[i].raf, stops[i].ornekler?.[0] || stops[i].baslik));
+  const catSprites = feats.map((f, i) => labelSprite(String(i + 1).padStart(2, '0'), stops[i].ornekler?.[0] || stops[i].baslik));
 
   // Katalog dizilimi
   function gridPos(i, portrait) {

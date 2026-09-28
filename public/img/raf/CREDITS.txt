@@ -1,5 +1,3 @@
-Tüm görseller Pexels lisansıyla (ücretsiz, ticari kullanım serbest):
-motor-tezgah.jpg: https://www.pexels.com/photo/car-engine-on-table-in-garage-6517339/
-usta-motor.jpg: https://www.pexels.com/photo/close-up-photo-of-an-auto-mechanic-8478223/
-Ayrıca public/img/depo/ görselleri kullanılır (kaynaklar orada).
+public/img/depo/ görselleri kullanılır (kaynaklar orada).
+katalog-3d*.jpg: bu site için hazırlanmış 3D görsel; temsilîdir.
 Parça çizimleri bu site için SVG olarak kodla çizildi.

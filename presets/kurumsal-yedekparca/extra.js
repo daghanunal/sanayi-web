@@ -38,22 +38,22 @@ function modelYili(c) {
 function temizle(s) {
   const notlar = [];
   let t = s.toUpperCase().replace(/[\s-]/g, '');
-  if (/[OQ]/.test(t)) { t = t.replace(/[OQ]/g, '0'); notlar.push('O ve Q harflerini 0 (sıfır) yaptık'); }
-  if (/I/.test(t)) { t = t.replace(/I/g, '1'); notlar.push('I harfini 1 yaptık'); }
+  if (/[OQ]/.test(t)) { t = t.replace(/[OQ]/g, '0'); notlar.push('O ve Q harfleri 0 (sıfır) yapıldı'); }
+  if (/I/.test(t)) { t = t.replace(/I/g, '1'); notlar.push('I harfi 1 yapıldı'); }
   return { t: t.replace(/[^A-Z0-9]/g, '').slice(0, 17), notlar };
 }
 
 export const sasiSorgu = {
   render(d) {
-    const gruplar = (d.hizmetler || []).map((h) => h.baslik);
+    const gruplar = (d.urunler || []).map((h) => h.baslik);
     return `
       <section class="k-bolum ss" aria-labelledby="ss-baslik">
         <div class="k-kap">
           <div class="ss__kart">
             <div class="ss__bas">
               <p class="ss__ust"><span>VIN</span> Şasi numarasıyla sorgu</p>
-              <h2 class="k-h2" id="ss-baslik" data-bol>Parçanın adını bilmeniz gerekmez</h2>
-              <p class="k-lead">Ruhsattaki 17 haneli şasi numarasını yazın, hangi parçayı aradığınızı seçin. Numaradan aracı ve donanımını çıkarır, orijinal ve muadil fiyatını tek mesajda yazarız.</p>
+              <h2 class="k-h2" id="ss-baslik" data-bol>Şasi numarasıyla parça sorma</h2>
+              <p class="k-lead">Ruhsattaki 17 haneli şasi numarası ve aranan parça grubu WhatsApp mesajı olarak gönderilir. Üretici ve model yılı burada ön bilgi olarak görünür; parça katalogdan şasi numarasıyla eşleştirilir.</p>
             </div>
             <form class="ss__form" novalidate>
               <label class="ss__giris">
@@ -89,11 +89,6 @@ export const sasiSorgu = {
               </div>
             </form>
           </div>
-          ${d.teslimat?.length ? `
-          <div class="ss__teslim">
-            <p class="ss__teslim-baslik">Teslim süreleri</p>
-            <ul data-sira>${d.teslimat.map((t) => `<li><span>${esc(t.yer)}</span><strong>${esc(t.sure)}</strong><small>${esc(t.not)}</small></li>`).join('')}</ul>
-          </div>` : ''}
         </div>
       </section>`;
   },
@@ -131,9 +126,9 @@ export const sasiSorgu = {
       o('seri').textContent = t.length === 17 ? t.slice(11) : '—';
       form.classList.toggle('is-tamam', t.length === 17);
       durum.textContent =
-        t.length === 17 ? `Numara tam. ${notlar.join(', ')}${notlar.length ? '. ' : ''}Parça grubunu seçip gönderin.`
+        t.length === 17 ? `Numara tam. ${notlar.join(', ')}${notlar.length ? '. ' : ''}Parça grubu seçilip gönderilebilir.`
         : t.length ? `${17 - t.length} hane kaldı.${notlar.length ? ` ${notlar.join(', ')}.` : ''}`
-        : 'I, O ve Q harfleri şasi numarasında bulunmaz; yazarsanız düzeltiriz.';
+        : 'I, O ve Q harfleri şasi numarasında bulunmaz; yazılırsa düzeltilir.';
       return t;
     };
 
@@ -162,7 +157,7 @@ export const sasiSorgu = {
         `Tercih: ${f.get('tercih')}`,
       ].filter(Boolean).join('\n');
       window.open(waHref(d, mesaj), '_blank', 'noopener');
-      durum.textContent = 'WhatsApp açıldı. Mesajı gönderdiğinizde fiyatı yazıyoruz.';
+      durum.textContent = 'WhatsApp açıldı, mesaj gönderilmeye hazır.';
     });
     cozumle();
   },

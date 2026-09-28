@@ -196,6 +196,10 @@ Başlıklara `data-bol` (satır satır açılır), görsellere `data-perde` (per
 sayılara `data-sayac="1200"`, listelere `data-sira` verirsen motorun hareketleri otomatik uygulanır.
 `reducedMotion` açıkken hiçbiri çalışmaz.
 
+Varyant kendi künye hero'sunu çiziyorsa bölüme `k-hero k-hero--kunye` sınıfını ver: telefondaki düğme ızgarası ve
+künye düzeni bu sınıfa bağlı. Kendi ScrollTrigger'larında `once: true` kullanma (sayfa zaten kaymışken oluşunca
+sonraki tetikleyiciyi düşürür); yerine `toggleActions: 'play none none none'`.
+
 ## Diğer seçenekler
 
 - `ld: (d) => ({...})`: JSON-LD'yi değiştirir (eczane `Pharmacy`, üretici `Organization`).

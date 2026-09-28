@@ -1,109 +1,242 @@
 import raw from '../../data/depo.json';
 import {
-  boot, initSmoothScroll, gsap, ScrollTrigger, reducedMotion, esc,
-  telHref, waHref, mapsHref, mapsEmbed, openStatus, groupedHours, icons, GUNLER,
+  boot, initSmoothScroll, gsap, ScrollTrigger, reducedMotion, esc, asset, autoHideHeader,
+  telHref, waHref, mapsHref, mapsEmbed, saatListesi, gunDurumu, kisaAdres, acikGunSayisi, yilEki, icons, GUNLER,
 } from '../../shared/core.js';
 import { SplitText } from 'gsap/SplitText';
 import { DrawSVGPlugin } from 'gsap/DrawSVGPlugin';
 import { partSvg } from './parts.js';
 
+// Klasik aile: WebGL yok. Kimlik: basılı yedek parça kataloğu. Katalog kırmızısı, siyah baskı,
+// teknik parça çizimleri; bölümler "Bölüm A, B, C" diye numaralı katalog sayfaları.
 gsap.registerPlugin(SplitText, DrawSVGPlugin);
 ScrollTrigger.config({ ignoreMobileResize: true });
 
-// Örnek puan yapısal veriye (JSON-LD aggregateRating) girmesin: boot'tan önce ayır, sonra geri ekle.
-const { puan: ornekPuan, ...rawLd } = raw;
-const d = boot(rawLd);
-d.puan = ornekPuan;
+const d = boot({ ...raw, preset: 'raf' });
 const $ = (s, root = document) => root.querySelector(s);
 const $$ = (s, root = document) => [...root.querySelectorAll(s)];
-const fmt = (n) => Number(n).toLocaleString('tr-TR');
-const yil = new Date().getFullYear() - d.isletme.kurulus;
+const root = document.documentElement;
 
-// "2003'ten", "1998'den", "1990'dan": son okunan kelimeye göre ayrılma eki
-function ablative(n) {
-  const birler = ['', 'den', 'den', 'ten', 'ten', 'ten', 'dan', 'den', 'den', 'dan'];
-  const onlar = ['', 'dan', 'den', 'dan', 'tan', 'den', 'tan', 'ten', 'den', 'dan'];
-  if (n % 10) return `${n}'${birler[n % 10]}`;
-  if (n % 100) return `${n}'${onlar[(n % 100) / 10]}`;
-  return `${n}'den`;
-}
+const ad = esc(d.isletme.ad);
+const tel = esc(d.iletisim.telefon);
+const yas = new Date().getFullYear() - d.isletme.kurulus;
+const acikGun = acikGunSayisi(d.saatler);
+const st = gunDurumu(d.saatler);
+const urunler = d.urunler ?? [];
+const wa = (m) => waHref(d, m ?? `Merhaba ${d.isletme.ad}, parça sormak istiyorum.`);
+const no = (i) => String(i + 1).padStart(2, '0');
 
-// Mağazanın kendi katalog kodu (üretici numarası değil): KRD-A04-0117
-const katNo = (h, i) => `KRD-${h.raf.replace('-', '')}-${String(117 + i * 263).padStart(4, '0')}`;
+// --- Üst bar ----------------------------------------------------------------------
 
-// --- Metin ve linkler ----------------------------------------------------------
-const binds = {
-  ad: d.isletme.ad,
-  slogan: d.isletme.slogan,
-  hakkinda: d.isletme.hakkinda,
-  telefon: d.iletisim.telefon,
-  adres: d.iletisim.adres,
-  garanti: d.garanti,
-  since: `Şaşmaz Oto Sanayi, ${ablative(d.isletme.kurulus)} beri`,
-  copy: `© ${new Date().getFullYear()} ${d.isletme.ad}`,
-};
-$$('[data-bind]').forEach((el) => (el.textContent = binds[el.dataset.bind] ?? ''));
-const hrefs = {
-  tel: telHref(d),
-  wa: waHref(d, `Merhaba ${d.isletme.ad}, parça sormak istiyorum.`),
-  'wa-ruhsat': waHref(d, 'Merhaba, ruhsatımın fotoğrafını gönderiyorum. Parça sormak istiyorum.'),
-  maps: mapsHref(d),
-};
-$$('[data-href]').forEach((el) => (el.href = hrefs[el.dataset.href]));
-$$('[data-icon]').forEach((el) => (el.outerHTML = icons[el.dataset.icon]));
-$('.top__call').setAttribute('aria-label', `Ara: ${d.iletisim.telefon}`);
+$('#top').innerHTML = `
+  <a class="top__brand" href="#kunye"><span class="top__mark" aria-hidden="true"></span><span>${ad}</span></a>
+  <nav class="top__nav" aria-label="Bölümler"><a href="#hizmetler">Hizmetler</a><a href="#hakkinda">Hakkında</a><a href="#saatler">Saatler ve konum</a><a href="#iletisim">İletişim</a></nav>
+  <span class="top__status"><span class="dot ${st.open ? 'is-open' : ''}"></span><span>${st.open ? 'Açık' : 'Kapalı'}</span></span>
+  <a class="top__call" href="${telHref(d)}" aria-label="Ara: ${tel}">${icons.phone}<span class="top__num">${tel}</span></a>`;
 
-function refreshStatus() {
-  const s = openStatus(d.saatler);
-  $$('[data-status]').forEach((el) => {
-    el.textContent = s.text;
-    el.classList.toggle('is-open', s.open);
-  });
-  $$('[data-status-short]').forEach((el) => (el.textContent = s.open ? 'Açık' : 'Kapalı'));
-  $$('[data-status-dot]').forEach((el) => el.classList.toggle('is-open', s.open));
-}
-refreshStatus();
-setInterval(refreshStatus, 60_000);
+// --- Künye ------------------------------------------------------------------------
 
-// --- Hero: özet tablo ve raf ızgarası ----------------------------------------
-const stat = (i) => d.istatistikler[i];
-$('[data-hero-spec]').innerHTML = [
-  [`${fmt(stat(1).deger)}${stat(1).sonek}`, 'çeşit parça rafta'],
-  [`${stat(2).deger}${stat(2).sonek}`, 'sanayi içi teslim'],
-  [`${yil} yıl`, 'aynı tezgâhta'],
-].map(([v, k]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join('');
-
-$('[data-shelf]').innerHTML = d.hizmetler.map((h, i) => `
-  <div class="bin" style="--i:${i}">
-    <div class="bin__part">${partSvg(h.parca)}</div>
-    <div class="bin__label"><span class="bin__raf">${esc(h.raf)}</span><span class="bin__name">${esc(h.baslik)}</span></div>
-  </div>`).join('') + `<div class="bin bin--more"><span>+${fmt(stat(1).deger)}</span><small>kalem daha</small></div>`;
-
-// --- Katalog ------------------------------------------------------------------
-$('[data-catalog]').innerHTML = d.hizmetler.map((h, i) => `
-  <li class="row">
-    <span class="row__poz">${String(i + 1).padStart(2, '0')}</span>
-    <div class="row__fig">${partSvg(h.parca)}</div>
-    <div class="row__main">
-      <h3 class="row__title">${esc(h.baslik)}</h3>
-      <p class="row__desc">${esc(h.aciklama)}</p>
-      <ul class="row__tags">${h.ornekler.map((o) => `<li>${esc(o)}</li>`).join('')}</ul>
+$('#kunye').innerHTML = `
+  <div class="hero__text">
+    <h1 class="hero__title" id="hero-title">${ad}</h1>
+    <p class="hero__what">${esc(d.isletme.tanim)}</p>
+    <dl class="kunye">
+      <div><dt>Adres</dt><dd>${esc(kisaAdres(d.iletisim.adres))}</dd></div>
+      <div><dt>Bugün</dt><dd class="kunye__durum ${st.open ? 'is-open' : ''}"><span class="dot ${st.open ? 'is-open' : ''}"></span>${esc(st.kunye)}</dd></div>
+      <div><dt>Telefon</dt><dd><a href="${telHref(d)}">${tel}</a></dd></div>
+    </dl>
+    <div class="hero__actions">
+      <a class="btn btn--red" href="${telHref(d)}">${icons.phone}<span>Ara</span></a>
+      <a class="btn btn--wa" href="${wa()}" target="_blank" rel="noopener">${icons.whatsapp}<span>WhatsApp</span></a>
+      <a class="btn btn--line" href="${mapsHref(d)}" target="_blank" rel="noopener">${icons.pin}<span>Yol tarifi</span></a>
     </div>
-    <div class="row__raf"><span class="row__k">Raf</span><span class="row__v">${esc(h.raf)}</span><span class="row__code" data-scramble="${katNo(h, i)}">${katNo(h, i)}</span></div>
-    <div class="row__stok"><span class="row__k">Stok</span><span class="row__v"><mark>${fmt(h.stok)}</mark> kalem</span></div>
-    <a class="row__ask" href="${waHref(d, `Merhaba, ${h.baslik.toLocaleLowerCase('tr')} rafından parça sormak istiyorum. Aracım: `)}" target="_blank" rel="noopener">${icons.whatsapp}<span>Bu raftan sor</span></a>
-  </li>`).join('');
+  </div>
+  <figure class="hero__shelf" aria-hidden="true">
+    <div class="shelf">
+      ${urunler.slice(0, 7).map((u, i) => `
+        <div class="bin" style="--i:${i}">
+          <div class="bin__part">${partSvg(u.parca)}</div>
+          <div class="bin__label"><span class="bin__raf">${no(i)}</span><span class="bin__name">${esc(u.baslik)}</span></div>
+        </div>`).join('')}
+      <div class="bin bin--more"><span>${yas} yıl</span><small>Şaşmaz'da</small></div>
+    </div>
+    <figcaption class="shelf__caption">Şekil 1. Parça grupları</figcaption>
+  </figure>`;
 
-// --- Şasi no fişi ---------------------------------------------------------------
-$('[data-steps]').innerHTML = d.surec.map((s) => `
-  <li><h3>${esc(s.baslik)}</h3><p>${esc(s.aciklama)}</p></li>`).join('');
-$('[data-slip-no]').textContent = `No ${String(Math.floor(Date.now() / 1000) % 100000).padStart(5, '0')}`;
-$('[data-vin-cells]').innerHTML = Array.from({ length: 17 }, () => '<span></span>').join('');
-$('[data-chips]').innerHTML = d.hizmetler.map((h) => `
-  <label class="chip"><input type="checkbox" name="parca" value="${esc(h.baslik)}"><span>${esc(h.baslik)}</span></label>`).join('');
+// --- Hizmetler ve parça grupları ---------------------------------------------------
+
+// Katalog plakasındaki parçalar görselde sabittir (3D render); numaralar görseldeki yerleridir.
+const PLATE = [
+  { ad: 'Fren diski ve kaliper', x: 22, y: 47 },
+  { ad: 'Yağ filtresi', x: 29, y: 13 },
+  { ad: 'Triger kayışı ve gergi', x: 60, y: 11 },
+  { ad: 'Piston ve biyel', x: 44, y: 38 },
+  { ad: 'Volan', x: 81, y: 36 },
+  { ad: 'Ateşleme bobini', x: 45, y: 76 },
+  { ad: 'Silindir kapak cıvatası', x: 70, y: 78 },
+];
+
+$('#hizmetler').innerHTML = `
+  <header class="sec__head">
+    <p class="sec__code">Bölüm A</p>
+    <h2 class="sec__title" id="hizmet-title">Hizmetler</h2>
+    <p class="sec__lead">Fiyat ve stok bilgisi için arayın ya da WhatsApp'tan yazın.</p>
+  </header>
+  <ol class="svc">
+    ${d.hizmetler.map((h, i) => `
+      <li class="svc__item">
+        <span class="svc__poz">${no(i)}</span>
+        <div>
+          <h3 class="svc__title">${esc(h.baslik)}</h3>
+          <p class="svc__desc">${esc(h.aciklama)}</p>
+        </div>
+      </li>`).join('')}
+  </ol>
+
+  ${urunler.length ? `
+  <div class="groups">
+    <header class="groups__head">
+      <h3 class="groups__title">Parça grupları</h3>
+      <p class="sec__lead">Binek ve hafif ticari araçlar için. Her grubun orijinali ve muadili bulunur.</p>
+    </header>
+    <figure class="plate">
+      <div class="plate__img">
+        <img src="${asset('/img/raf/katalog-3d.jpg')}" srcset="${asset('/img/raf/katalog-3d-800.jpg')} 800w, ${asset('/img/raf/katalog-3d.jpg')} 1600w" sizes="(min-width: 1100px) 760px, 100vw" alt="Beyaz zeminde yan yana dizilmiş fren diski, triger kayışı, volan, piston, yağ filtresi, ateşleme bobini ve cıvatalar" width="1600" height="1200" loading="lazy" decoding="async" />
+        <ol class="plate__pins" aria-hidden="true">${PLATE.map((p, i) => `<li style="--x:${p.x}%;--y:${p.y}%">${i + 1}</li>`).join('')}</ol>
+      </div>
+      <figcaption>
+        <p class="plate__cap">Şekil 2. Örnek parçalar. 3D görsel, temsilîdir.</p>
+        <ol class="plate__legend">${PLATE.map((p, i) => `<li><span class="plate__n">${i + 1}</span><span>${esc(p.ad)}</span></li>`).join('')}</ol>
+      </figcaption>
+    </figure>
+    <div class="cat__thead" aria-hidden="true"><span>Poz.</span><span>Grup</span></div>
+    <ol class="cat">
+      ${urunler.map((u, i) => `
+        <li class="row">
+          <span class="row__poz">${no(i)}</span>
+          <div class="row__fig">${partSvg(u.parca)}</div>
+          <div class="row__main">
+            <h4 class="row__title">${esc(u.baslik)}</h4>
+            <p class="row__desc">${esc(u.aciklama)}</p>
+            <ul class="row__tags">${(u.ornekler ?? []).map((o) => `<li>${esc(o)}</li>`).join('')}</ul>
+          </div>
+        </li>`).join('')}
+    </ol>
+  </div>` : ''}`;
+
+// --- Hakkında ----------------------------------------------------------------------
+
+const foto = d.galeri ?? [];
+$('#hakkinda').innerHTML = `
+  <div class="about__grid">
+    <div class="about__text">
+      <p class="sec__code">Bölüm B</p>
+      <h2 class="sec__title" id="about-title">Hakkında</h2>
+      <p class="about__lead">${ad} ${esc(yilEki(d.isletme.kurulus))} beri Şaşmaz Oto Sanayi Sitesi'nde. ${esc(d.isletme.hakkinda)}</p>
+      <dl class="facts">
+        ${(d.bilgiler ?? []).map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join('')}
+        ${d.markalar?.length ? `<div><dt>Parça bulunan markalar</dt><dd>${d.markalar.map(esc).join(', ')}</dd></div>` : ''}
+      </dl>
+      <ul class="stats__grid">
+        <li><span class="stat__v" data-count="${yas}" data-suffix=" yıl">${yas} yıl</span><span class="stat__k">Şaşmaz Oto Sanayi Sitesi'nde</span></li>
+        <li><span class="stat__v" data-count="${acikGun}" data-suffix=" gün">${acikGun} gün</span><span class="stat__k">haftada açık</span></li>
+      </ul>
+    </div>
+    <div class="about__photos">
+      ${[foto[0], foto[3]].filter(Boolean).map((g, i) => `
+        <figure class="gal__item gal__item--${i}"><img src="${esc(g.src)}" alt="${esc(g.alt)}" width="1200" height="${i ? 900 : 1500}" loading="lazy" decoding="async" /><figcaption>Şekil ${i + 3}. ${esc(g.alt)}</figcaption></figure>`).join('')}
+    </div>
+  </div>`;
+
+// --- Çalışma saatleri ve konum -----------------------------------------------------
+
+const bugun = GUNLER[new Date().getDay()];
+const bugunMu = (g) => {
+  if (g === bugun) return true;
+  if (!g.includes('–')) return false;
+  const [a, b] = g.split('–').map((x) => GUNLER.indexOf(x));
+  const t = new Date().getDay();
+  return a <= b ? t >= a && t <= b : t >= a || t <= b;
+};
+$('#saatler').innerHTML = `
+  <div class="visit__info">
+    <p class="sec__code">Bölüm C</p>
+    <h2 class="sec__title" id="visit-title">Çalışma saatleri ve konum</h2>
+    <p class="visit__status ${st.open ? 'is-open' : ''}">${esc(st.metin)}</p>
+    <table class="hours">
+      <caption class="sr-only">Çalışma saatleri</caption>
+      <tbody>${saatListesi(d.saatler).map(([g, s]) => `<tr class="${bugunMu(g) ? 'is-today' : ''}"><th scope="row">${esc(g)}</th><td>${esc(s)}</td></tr>`).join('')}</tbody>
+    </table>
+    <p class="visit__addr">${esc(d.iletisim.adres)}</p>
+    <div class="visit__actions">
+      <a class="btn btn--red" href="${mapsHref(d)}" target="_blank" rel="noopener">${icons.pin}<span>Yol tarifi</span></a>
+      <a class="btn btn--line" href="${telHref(d)}">${icons.phone}<span>${tel}</span></a>
+    </div>
+  </div>
+  <div class="visit__map" data-map><p>Harita</p></div>`;
+
+// --- Örnek yorumlar ----------------------------------------------------------------
+
+const yildiz = (n) => `<span class="rev__stars" role="img" aria-label="5 üzerinden ${n}">${Array.from({ length: 5 }, (_, i) => `<i class="${i < n ? 'on' : ''}">${icons.star}</i>`).join('')}</span>`;
+$('#yorumlar').innerHTML = `
+  <header class="reviews__head">
+    <p class="sec__code">Bölüm D</p>
+    <h2 class="sec__title" id="rev-title">Örnek yorumlar</h2>
+    <p class="sec__lead">Buradaki yorumlar örnektir, yerlerine işletmenin gerçek yorumları konur.</p>
+  </header>
+  <ul class="reviews__list" data-lenis-prevent-touch>
+    ${d.yorumlar.map((r) => `
+      <li class="rev">
+        ${yildiz(r.puan)}
+        <p class="rev__text">${esc(r.metin)}</p>
+        <p class="rev__who"><strong>${esc(r.ad)}</strong> <span>${esc(r.arac)}</span></p>
+      </li>`).join('')}
+  </ul>`;
+
+// --- İletişim: parça sorgu fişi -----------------------------------------------------
+
+$('#iletisim').innerHTML = `
+  <div class="final__in">
+    <div class="final__text">
+      <p class="sec__code sec__code--light">Bölüm E</p>
+      <h2 class="final__title" id="final-title">İletişim</h2>
+      <p class="final__lead">Fiyat ve stok bilgisi için arayın ya da WhatsApp'tan yazın. Şasi numarası ya da ruhsatın fotoğrafı parçanın bulunması için yeterlidir.</p>
+      <div class="final__actions">
+        <a class="btn btn--white btn--big" href="${telHref(d)}">${icons.phone}<span>${tel}</span></a>
+        <a class="btn btn--lineW btn--big" href="${wa()}" target="_blank" rel="noopener">${icons.whatsapp}<span>WhatsApp</span></a>
+      </div>
+      <p class="final__addr">${esc(d.iletisim.adres)}<br>${esc(st.metin)}</p>
+    </div>
+    <form class="slip" data-slip novalidate>
+      <div class="slip__head"><span>Parça sorgu fişi</span><span class="slip__no">WhatsApp ile</span></div>
+      <label class="slip__label" for="vin">Şasi numarası</label>
+      <div class="vin">
+        <div class="vin__cells" aria-hidden="true">${'<span></span>'.repeat(17)}</div>
+        <input class="vin__input" id="vin" name="vin" maxlength="17" autocomplete="off" autocapitalize="characters" spellcheck="false" inputmode="text" aria-describedby="vin-help" />
+      </div>
+      <p class="vin__help" id="vin-help"><span data-vin-count>0</span>/17 hane. Şasi numarasında I, O ve Q harfleri bulunmaz; yazılırsa 1 ve 0 olarak düzeltilir.</p>
+      ${urunler.length ? `
+      <fieldset class="slip__parts">
+        <legend class="slip__label">Parça grubu</legend>
+        <div class="chips">${urunler.map((u) => `<label class="chip"><input type="checkbox" name="parca" value="${esc(u.baslik)}"><span>${esc(u.baslik)}</span></label>`).join('')}</div>
+      </fieldset>` : ''}
+      <label class="slip__label" for="not">Not (isteğe bağlı)</label>
+      <input class="slip__note" id="not" name="not" placeholder="Örn. ön takım, sol taraf" autocomplete="off" />
+      <button class="btn btn--wa slip__send" type="submit">${icons.whatsapp}<span>WhatsApp'tan gönder</span></button>
+      <p class="slip__alt">Numara elinizde değilse <a href="${wa(`Merhaba ${d.isletme.ad}, ruhsatımın fotoğrafını gönderiyorum. Parça sormak istiyorum.`)}" target="_blank" rel="noopener">ruhsatın fotoğrafını gönderin</a>.</p>
+    </form>
+  </div>`;
+
+$('#foot').innerHTML = `
+  <p class="foot__name">${ad}</p>
+  <p>${esc(d.isletme.tanim)}</p>
+  <p>${esc(d.iletisim.adres)} · <a href="${telHref(d)}">${tel}</a></p>
+  <p class="foot__small">© ${new Date().getFullYear()} ${ad}. Fotoğraflar Pexels'ten alınmıştır, temsilîdir. Parça çizimleri ve 3D görsel bu site için hazırlandı, temsilîdir. Yorumlar örnektir.</p>`;
+
+// --- Fiş: şasi numarası hücreleri --------------------------------------------------
 
 const vin = $('#vin');
-const cells = $$('[data-vin-cells] span');
+const cells = $$('.vin__cells span');
 function paintVin() {
   const clean = vin.value.toUpperCase().replace(/[^A-Z0-9]/g, '').replace(/I/g, '1').replace(/[OQ]/g, '0').slice(0, 17);
   if (vin.value !== clean) vin.value = clean;
@@ -121,215 +254,85 @@ paintVin();
 $('[data-slip]').addEventListener('submit', (e) => {
   e.preventDefault();
   const f = new FormData(e.currentTarget);
-  const no = f.get('vin');
+  const sasi = f.get('vin');
   const parcalar = f.getAll('parca');
-  const not = f.get('not').trim();
+  const not = String(f.get('not') || '').trim();
   const satirlar = [
     `Merhaba ${d.isletme.ad}, parça sormak istiyorum.`,
-    no ? `Şasi no: ${no}${no.length < 17 ? ` (${no.length} hane yazabildim)` : ''}` : 'Şasi numarasını birazdan göndereceğim.',
-    parcalar.length ? `Lazım olan: ${parcalar.join(', ')}` : '',
+    sasi ? `Şasi no: ${sasi}${sasi.length < 17 ? ` (${sasi.length} hane)` : ''}` : 'Şasi numarasını ayrıca göndereceğim.',
+    parcalar.length ? `Parça grubu: ${parcalar.join(', ')}` : '',
     not ? `Not: ${not}` : '',
   ].filter(Boolean);
   window.open(waHref(d, satirlar.join('\n')), '_blank', 'noopener');
 });
 
-// --- Rakamlar -------------------------------------------------------------------
-$('[data-stats]').innerHTML = d.istatistikler.map((s) => {
-  const v = s.deger === 'kurulus' ? yil : s.deger;
-  return `<li><span class="stat__v" data-count="${v}" data-suffix="${esc(s.sonek)}">${fmt(v)}${esc(s.sonek)}</span><span class="stat__k">${esc(s.etiket)}</span></li>`;
-}).join('');
-
-// --- Teslimat -------------------------------------------------------------------
-$('[data-zones]').innerHTML = d.teslimat.map((z, i) => `
-  <li class="zone" style="--i:${i}"><span class="zone__ring">${i + 1}</span><div><h3>${esc(z.yer)}</h3><p>${esc(z.not)}</p></div><strong>${esc(z.sure)}</strong></li>`).join('');
-const ringR = [44, 92, 140, 188];
-$('[data-ring-labels]').innerHTML = d.teslimat.map((z, i) => {
-  const a = (-135 * Math.PI) / 180;
-  const x = (200 + ringR[i] * Math.cos(a)).toFixed(1), y = (200 + ringR[i] * Math.sin(a)).toFixed(1);
-  return `<g class="rings__badge"><circle cx="${x}" cy="${y}" r="13"/><text x="${x}" y="${y}" dy=".36em" text-anchor="middle">${i + 1}</text></g>`;
-}).join('');
-
-// --- Markalar -------------------------------------------------------------------
-$('[data-brands]').innerHTML = d.markalar.map((m, i) =>
-  `<li><span class="brand__i">${String.fromCharCode(65 + Math.floor(i / 4))}${(i % 4) + 1}</span>${esc(m)}</li>`).join('');
-const pb = d.parcaMarkalari.map((m) => `<span>${esc(m)}</span>`).join('');
-$('[data-partbrands]').innerHTML = `<div class="partbrands__row">${pb}${pb}</div>`;
-
-// --- Katalog plakası (3D görsel) -------------------------------------------------
-// Görseldeki parçalar sabit; raf kodu verideki gruptan (parca anahtarı) okunur.
-{
-  const rafOf = (k) => d.hizmetler.find((h) => h.parca === k)?.raf;
-  const PLATE = [
-    { ad: 'Fren diski ve kaliper', k: 'disk', x: 22, y: 47 },
-    { ad: 'Yağ filtresi', k: 'filtre', x: 29, y: 13 },
-    { ad: 'Triger kayışı ve gergi', k: 'triger', x: 60, y: 11 },
-    { ad: 'Piston ve biyel', k: 'piston', x: 44, y: 38 },
-    { ad: 'Volan', k: 'debriyaj', x: 81, y: 36 },
-    { ad: 'Ateşleme bobini', k: 'buji', x: 45, y: 76 },
-    { ad: 'Silindir kapak civatası', k: 'piston', x: 70, y: 78 },
-  ];
-  $('[data-plate-pins]').innerHTML = PLATE.map((p, i) => `<li style="--x:${p.x}%;--y:${p.y}%">${i + 1}</li>`).join('');
-  $('[data-plate-legend]').innerHTML = PLATE.map((p, i) => {
-    const raf = rafOf(p.k);
-    return `<li><span class="plate__n">${i + 1}</span><span>${esc(p.ad)}</span>${raf ? `<span class="plate__raf">Raf ${esc(raf)}</span>` : ''}</li>`;
-  }).join('');
-}
-
-// --- Galeri ---------------------------------------------------------------------
-const galeri = [
-  { src: d.galeri[0].src, alt: d.galeri[0].alt },
-  { src: `${import.meta.env.BASE_URL}img/raf/usta-motor.jpg`, alt: 'Usta aracın motor bölmesinde parçayı kontrol ediyor' },
-  { src: d.galeri[1].src, alt: d.galeri[1].alt },
-  { src: d.galeri[3].src, alt: d.galeri[3].alt },
-  { src: `${import.meta.env.BASE_URL}img/raf/motor-tezgah.jpg`, alt: 'Revizyon için sökülmüş motor tezgâhta' },
-];
-$('[data-gallery]').innerHTML = galeri.map((g, i) => `
-  <figure class="gal__item gal__item--${i}"><img src="${g.src}" alt="${esc(g.alt)}" loading="lazy" /><figcaption>Şekil ${i + 2}. ${esc(g.alt)}</figcaption></figure>`).join('');
-
-// --- Yorumlar -------------------------------------------------------------------
-$('[data-score]').textContent = d.puan.ortalama.toLocaleString('tr-TR', { minimumFractionDigits: 1 });
-$('[data-stars]').innerHTML = icons.star.repeat(5);
-$('[data-score-count]').textContent = 'Örnek yorumlar · 5 üzerinden örnek puan';
-$('[data-reviews]').innerHTML = d.yorumlar.map((r) => `
-  <li class="rev">
-    <span class="rev__stars" aria-label="${r.puan} yıldız">${icons.star.repeat(r.puan)}</span>
-    <p class="rev__text">${esc(r.metin)}</p>
-    <p class="rev__who"><strong>${esc(r.ad)}</strong> <span>${esc(r.arac)}</span></p>
-  </li>`).join('');
-
-// --- Saatler ve harita ---------------------------------------------------------
-const bugun = GUNLER[new Date().getDay()];
-$('[data-hours]').innerHTML = `<tbody>${groupedHours(d.saatler).map(([g, s]) => {
-  const today = g === bugun || (g.includes('–') && (() => {
-    const [a, b] = g.split(' – ').map((x) => GUNLER.indexOf(x));
-    const t = new Date().getDay();
-    return t >= a && t <= b;
-  })());
-  return `<tr class="${today ? 'is-today' : ''}"><th scope="row">${g}</th><td>${s}</td></tr>`;
-}).join('')}</tbody>`;
+// --- Harita: yaklaşınca yükle --------------------------------------------------------
 
 const mapBox = $('[data-map]');
 new IntersectionObserver((entries, io) => {
   if (!entries[0].isIntersecting) return;
-  mapBox.innerHTML = `<iframe title="${esc(d.isletme.ad)} konumu" src="${mapsEmbed(d)}" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>`;
+  mapBox.innerHTML = `<iframe title="${ad} konumu" src="${mapsEmbed(d)}" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>`;
   io.disconnect();
 }, { rootMargin: '600px' }).observe(mapBox);
 
-// --- Hareket --------------------------------------------------------------------
+// --- Hareket -------------------------------------------------------------------------
+
 const header = $('.top');
-ScrollTrigger.create({ start: 0, end: 'max', onUpdate: (self) => header.classList.toggle('is-solid', self.scroll() > 80) });
-header.classList.toggle('is-solid', scrollY > 80);
+const solid = () => header.classList.toggle('is-solid', scrollY > 40);
+addEventListener('scroll', solid, { passive: true });
+solid();
+const phoneMq = matchMedia('(max-width: 899px)');
+let unhide = null;
+const syncHeader = () => {
+  if (phoneMq.matches && !unhide) unhide = autoHideHeader(header, { offset: 120 });
+  else if (!phoneMq.matches && unhide) { unhide(); unhide = null; }
+};
+syncHeader();
+phoneMq.addEventListener('change', syncHeader);
+
+// Bir kez oynayan tetikleyici (sayfa ortasından açılınca da güvenli).
+const bir = (trigger, start = 'top 86%') => ({ trigger, start, toggleActions: 'play none none none' });
 
 if (!reducedMotion) {
   initSmoothScroll();
-  document.documentElement.classList.add('js-motion');
+  root.classList.add('js-motion');
 
-  // Başlık satırları ve raf açılışı (tek orkestra)
+  // Açılış: ad satır satır, künye ve düğmeler; raf gözleri yerine kayar, çizimler kendini çizer (~1 sn).
   const split = new SplitText('.hero__title', { type: 'lines', mask: 'lines', linesClass: 'line' });
-  const bins = $$('.bin');
   const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
-  tl.from(split.lines, { yPercent: 105, duration: 0.9, stagger: 0.08 })
-    .from('.hero__kicker, .hero__lead, .hero__actions, .hero__spec', { y: 18, autoAlpha: 0, duration: 0.6, stagger: 0.07 }, '-=0.5')
-    .fromTo('.shelf', { '--grid': 0 }, { '--grid': 1, duration: 0.8 }, 0.1)
-    .from(bins, {
-      xPercent: (i) => (i % 2 ? 60 : -60), autoAlpha: 0, duration: 0.8, stagger: 0.07, ease: 'back.out(1.3)',
-    }, 0.25)
-    .from($$('.bin__part .ln, .bin__part .aux'), { drawSVG: 0, duration: 1.1, stagger: 0.004, ease: 'power2.inOut' }, 0.35)
-    .from($$('.bin__label'), { yPercent: 100, duration: 0.45, stagger: 0.06 }, 0.9);
+  tl.from(split.lines, { yPercent: 105, duration: 0.8, stagger: 0.07 })
+    .from('.hero__what, .kunye, .hero__actions', { y: 16, autoAlpha: 0, duration: 0.5, stagger: 0.06, clearProps: 'all' }, 0.2)
+    .from('.bin', { xPercent: (i) => (i % 2 ? 40 : -40), autoAlpha: 0, duration: 0.6, stagger: 0.05, ease: 'back.out(1.3)' }, 0.1)
+    .from('.bin__part .ln, .bin__part .aux', { drawSVG: 0, duration: 0.9, stagger: 0.003, ease: 'power2.inOut' }, 0.2);
 
-  // Raf ızgarası kaydırınca hafif derinlik
-  gsap.to(bins, {
-    y: (i) => [-18, 10, -6, 16, -12, 6, -10, 12][i] ?? 0,
-    ease: 'none',
-    scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true },
+  // Hizmet satırları ve parça grupları: çizgi çekilir, çizim kendini çizer.
+  $$('.svc__item, .row').forEach((row) => {
+    const t = gsap.timeline({ scrollTrigger: bir(row) });
+    t.fromTo(row, { '--rule': 0 }, { '--rule': 1, duration: 0.6, ease: 'power2.out' })
+      .from(row.querySelectorAll('.part .ln, .part .aux'), { drawSVG: 0, duration: 0.8, stagger: 0.005, ease: 'power2.inOut' }, 0)
+      .from(row.querySelectorAll('.svc__poz, .svc__item > div > *, .row__main > *'), { y: 12, autoAlpha: 0, duration: 0.45, stagger: 0.05, clearProps: 'all' }, 0.1);
   });
 
-  // Katalog satırları: çizgi çekilir, çizim kendini çizer, kod karışıp oturur
-  $$('.row').forEach((row) => {
-    const t = gsap.timeline({ scrollTrigger: { trigger: row, start: 'top 85%', once: true } });
-    t.fromTo(row, { '--rule': 0 }, { '--rule': 1, duration: 0.7, ease: 'power2.out' })
-      .from(row.querySelectorAll('.part .ln, .part .aux'), { drawSVG: 0, duration: 0.9, stagger: 0.006, ease: 'power2.inOut' }, 0)
-      .from(row.querySelectorAll('.row__main > *, .row__raf, .row__stok, .row__ask'), { y: 14, autoAlpha: 0, duration: 0.5, stagger: 0.05 }, 0.1)
-      .add(() => scramble(row.querySelector('[data-scramble]')), 0.3);
-  });
+  const pt = gsap.timeline({ scrollTrigger: bir('.plate', 'top 80%') });
+  pt.from('.plate__img', { clipPath: 'inset(0 0 100% 0)', duration: 0.9, ease: 'power3.inOut' })
+    .from('.plate__pins li', { scale: 0, autoAlpha: 0, duration: 0.35, stagger: 0.06, ease: 'back.out(2)' }, 0.5)
+    .from('.plate__legend li', { y: 10, autoAlpha: 0, duration: 0.35, stagger: 0.04, clearProps: 'all' }, 0.55);
 
-  // Katalog plakası: fotoğraf açılır, numaralar sırayla düşer
-  const pt = gsap.timeline({ scrollTrigger: { trigger: '.plate', start: 'top 80%', once: true } });
-  pt.from('.plate__img', { clipPath: 'inset(0 0 100% 0)', duration: 1, ease: 'power3.inOut' })
-    .from('.plate__pins li', { scale: 0, autoAlpha: 0, duration: 0.4, stagger: 0.07, ease: 'back.out(2)' }, 0.6)
-    .from('.plate__legend li', { y: 10, autoAlpha: 0, duration: 0.4, stagger: 0.05 }, 0.7);
-
-  // Süreç adımları: bağlantı çizgisi
-  gsap.fromTo('.steps', { '--progress': 0 }, {
-    '--progress': 1, ease: 'none',
-    scrollTrigger: { trigger: '.steps', start: 'top 80%', end: 'bottom 60%', scrub: true },
-  });
-
-  // Fiş: yazıcıdan çıkar gibi
-  gsap.from('.slip', {
-    yPercent: -8, rotate: -1.5, autoAlpha: 0, duration: 0.9, ease: 'power3.out',
-    scrollTrigger: { trigger: '.slip', start: 'top 85%', once: true },
-  });
-
-  // Rakamlar
   $$('[data-count]').forEach((el) => {
     const v = Number(el.dataset.count), suf = el.dataset.suffix;
     const o = { n: 0 };
     gsap.to(o, {
-      n: v, duration: 1.4, ease: 'power2.out',
-      scrollTrigger: { trigger: el, start: 'top 90%', once: true },
-      onUpdate: () => (el.textContent = fmt(Math.round(o.n)) + suf),
+      n: v, duration: 1.2, ease: 'power2.out', scrollTrigger: bir(el, 'top 92%'),
+      onUpdate: () => (el.textContent = Math.round(o.n) + suf),
     });
   });
 
-  // Teslimat halkaları ve rota
-  const rt = gsap.timeline({ defaults: { ease: 'power2.out' }, scrollTrigger: { trigger: '.teslim__body', start: 'top 80%', once: true } });
-  rt.from('.ring', { drawSVG: '50% 50%', duration: 0.9, stagger: -0.15 })
-    .from('.rings__route', { autoAlpha: 0, duration: 0.6 }, 0.6)
-    .from('.rings__badge', { autoAlpha: 0, scale: 0, transformOrigin: '50% 50%', duration: 0.4, stagger: 0.1 }, 0.5)
-    .from('.zone', { x: 24, autoAlpha: 0, duration: 0.5, stagger: 0.1 }, 0.2);
-
-  // Marka dizini
-  gsap.from('.brands__grid li', {
-    autoAlpha: 0, y: 10, duration: 0.4, stagger: { each: 0.025, from: 'start' },
-    scrollTrigger: { trigger: '.brands__grid', start: 'top 85%', once: true },
+  $$('.gal__item').forEach((fig) => {
+    gsap.from(fig, { clipPath: 'inset(0 0 100% 0)', duration: 0.9, ease: 'power3.inOut', scrollTrigger: bir(fig, 'top 88%') });
   });
 
-  // Galeri: fotoğraflar katalog sayfasına yapıştırılır gibi
-  $$('.gal__item').forEach((fig, i) => {
-    gsap.from(fig, {
-      clipPath: 'inset(0 0 100% 0)', duration: 1, ease: 'power3.inOut',
-      scrollTrigger: { trigger: fig, start: 'top 88%', once: true },
-    });
-    gsap.fromTo(fig.querySelector('img'), { yPercent: -6 }, {
-      yPercent: 6, ease: 'none',
-      scrollTrigger: { trigger: fig, start: 'top bottom', end: 'bottom top', scrub: true },
-    });
-  });
-
-  // Final başlığı
-  const fs = new SplitText('.final__title', { type: 'lines', mask: 'lines', linesClass: 'line' });
-  gsap.from(fs.lines, {
-    yPercent: 105, duration: 0.9, stagger: 0.08, ease: 'power3.out',
-    scrollTrigger: { trigger: '.final', start: 'top 75%', once: true },
-  });
+  gsap.from('.slip', { yPercent: -6, rotate: -1.2, autoAlpha: 0, duration: 0.8, ease: 'power3.out', clearProps: 'all', scrollTrigger: bir('.slip', 'top 88%') });
 
   addEventListener('load', () => ScrollTrigger.refresh());
-}
-
-// Katalog kodu: karakterler karışır, soldan sağa yerine oturur
-function scramble(el) {
-  if (!el) return;
-  const target = el.dataset.scramble;
-  const pool = 'ABCDEFGHJKLMNPRSTUVYZ0123456789';
-  const o = { p: 0 };
-  gsap.to(o, {
-    p: 1, duration: 0.9, ease: 'none',
-    onUpdate: () => {
-      const n = Math.floor(o.p * target.length);
-      el.textContent = target.split('').map((c, i) =>
-        i < n || c === '-' ? c : pool[Math.floor(Math.random() * pool.length)]).join('');
-    },
-    onComplete: () => (el.textContent = target),
-  });
+  document.fonts?.ready.then(() => ScrollTrigger.refresh());
 }

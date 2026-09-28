@@ -290,3 +290,6 @@ body {
   .k-blok:has(> .pv:not(.is-durgun)) + .k-blok { position: relative; z-index: 1; }
 }
 .pv.is-durgun .pv__sahne { padding-bottom: 8px; }
+
+/* Künye başlığı: geniş Syne'de ad iki satıra sığsın, künye ilk ekranda kalsın. */
+[data-hero='yazi'] .k-hero__baslik { font-size: clamp(44px, 6.2vw, 108px); max-width: none; }

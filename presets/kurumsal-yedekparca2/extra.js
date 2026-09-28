@@ -1,7 +1,7 @@
 // Sektöre özel modül: patlatılmış ön teker çizimi ("Şekil 1").
 // Kaydırdıkça toplu duran teker grubu parça parça açılır, ölçü ve kılavuz çizgileri çizilir, numaralar belirir.
 // Numaraya ya da parçanın kendisine dokunulunca parça kartı açılır; parçalar listeye eklenir ve liste WhatsApp'a gider.
-import { esc, waHref, telHref, openStatus, gsap, ScrollTrigger, reducedMotion } from '../../shared/core.js';
+import { esc, waHref, telHref, gunDurumu, gsap, reducedMotion } from '../../shared/core.js';
 import { DrawSVGPlugin } from 'gsap/DrawSVGPlugin';
 import { yilEki } from '../_kurumsal/bolumler.js';
 
@@ -26,7 +26,7 @@ const cevre = (cx, cy, rx, ry, n, r0 = -90) =>
 // Her parça: çizim (patlatılmış konumda), toplu hâldeki kayması (dx, dy), kılavuz çizgisi [x1,y1,x2,y2] ve numara yeri.
 const PARCALAR = [
   {
-    id: 'disk', ad: 'Fren diski', grup: 'Fren', not: 'Havalı ya da düz; ön ve arka takım halinde verilir.', dx: 250, dy: 0, k: [150, 300, 92, 150],
+    id: 'disk', ad: 'Fren diski', grup: 'Fren', not: 'Havalandırmalı ya da düz; ön ve arka takım hâlinde verilir.', dx: 250, dy: 0, k: [150, 300, 92, 150],
     svg: `<ellipse class="pv-f2" cx="188" cy="400" rx="52" ry="170"/><path class="pv-c" d="M170,230H188M170,570H188"/>
       <ellipse class="pv-f" cx="170" cy="400" rx="52" ry="170"/><ellipse class="pv-i" cx="170" cy="400" rx="37" ry="120"/>
       ${cevre(170, 400, 44, 145, 14).map(([x, y]) => `<ellipse class="pv-f2" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" rx="2.2" ry="5.5"/>`).join('')}
@@ -71,7 +71,7 @@ const PARCALAR = [
       <circle class="pv-f2" cx="574" cy="258" r="7"/><circle class="pv-f2" cx="576" cy="540" r="7"/>`,
   },
   {
-    id: 'amortisor', ad: 'Amortisör', grup: 'Süspansiyon', not: 'Yağlı ya da gazlı; ön takım halinde değişmesi önerilir.', dx: -195, dy: -17, k: [650, 200, 598, 160],
+    id: 'amortisor', ad: 'Amortisör', grup: 'Süspansiyon', not: 'Yağlı ya da gazlı; çift olarak verilir.', dx: -195, dy: -17, k: [650, 200, 598, 160],
     svg: `<rect class="pv-f" x="661" y="60" width="8" height="76"/><rect class="pv-f" x="650" y="132" width="30" height="118" rx="5"/>
       <ellipse class="pv-f2" cx="665" cy="150" rx="26" ry="7"/><circle class="pv-f" cx="665" cy="52" r="12"/><circle class="pv-f2" cx="665" cy="52" r="5"/>
       <circle class="pv-f" cx="665" cy="262" r="11"/><circle class="pv-f2" cx="665" cy="262" r="5"/>`,
@@ -94,36 +94,28 @@ const oku = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l
 const iki = (n) => String(n).padStart(2, '0');
 
 function grupBilgi(d, p) {
-  const h = (d.hizmetler || []).find((x) => x.baslik?.startsWith(p.grup));
-  if (!h) return '';
-  const nf = new Intl.NumberFormat('tr-TR');
-  return [p.grup, h.raf ? `Raf ${h.raf}` : '', h.stok ? `${nf.format(h.stok)} stokta` : ''].filter(Boolean).join(' · ');
+  return p.grup;
 }
 
 export const patlatma = {
   render(d) {
-    const ana = !location.hash || /^#\/?(anasayfa)?(\?|$)/.test(location.hash);
-    const st = d.saatler ? openStatus(d.saatler) : null;
-    const tes = d.teslimat?.[0];
-    const baslik = ana
-      ? `<p class="pv__kicker">Parçanın adını bilmeseniz de olur.</p><h1 class="k-h1 pv__baslik" data-bol>Gösterin, bulalım.</h1>`
-      : `<h2 class="k-h2 pv__baslik" data-bol>Parçanın yerine dokunun</h2>`;
+    const st = d.saatler ? gunDurumu(d.saatler) : null;
+    const baslik = `<h2 class="k-h2 pv__baslik" data-bol>Ön teker grubu çizimi</h2>`;
     return `
-      <section class="pv${ana ? ' pv--ana' : ''}" aria-label="Patlatılmış ön teker çizimi">
+      <section class="pv is-durgun" aria-label="Patlatılmış ön teker çizimi">
         <div class="pv__sahne">
           <div class="k-kap pv__ic">
             <div class="pv__metin">
               <p class="pv__ust"><span>Şekil 1</span>Şaşmaz'da ${esc(yilEki(d.isletme.kurulus))} beri</p>
               ${baslik}
               <div class="pv__alt">
-                <p class="k-lead">Çizimde parçanın yerine dokunun, listeye ekleyin, WhatsApp'tan gönderin. Orijinal ve muadil fiyatını tek mesajda yazarız.</p>
+                <p class="k-lead">Çizimdeki numaraya dokunulunca parçanın adı görünür. Seçilen parçalar liste olarak WhatsApp'tan gönderilir; parça adını bilmek gerekmez.</p>
                 <div class="k-butonlar">
-                  <a class="k-btn" href="#/iletisim" data-rota="iletisim">Parça sorun ${oku}</a>
+                  <a class="k-btn" href="#/iletisim" data-rota="iletisim">İletişim ${oku}</a>
                   <a class="k-btn k-btn--ikincil pv__tel" href="${telHref(d)}">${esc(d.iletisim.telefon)}</a>
                 </div>
                 <dl class="pv__bilgi">
-                  ${st ? `<div><dt>Bugün</dt><dd class="${st.open ? 'is-acik' : ''}">${esc(st.text)}</dd></div>` : ''}
-                  ${tes ? `<div><dt>${esc(tes.yer)}</dt><dd>${esc(tes.sure)}</dd></div>` : ''}
+                  ${st ? `<div><dt>Bugün</dt><dd class="${st.open ? 'is-acik' : ''}">${esc(st.kunye)}</dd></div>` : ''}
                 </dl>
               </div>
             </div>
@@ -165,7 +157,7 @@ export const patlatma = {
                 </div>
                 <a class="pv__liste" target="_blank" rel="noopener" aria-disabled="true">
                   <span class="pv__sayi" data-o="sayi">0</span>
-                  <span class="pv__liste-metin" data-o="liste">Listeniz boş</span>
+                  <span class="pv__liste-metin" data-o="liste">Liste boş</span>
                   <span class="pv__gonder">WhatsApp'la sor ${oku}</span>
                 </a>
               </div>
@@ -192,7 +184,7 @@ export const patlatma = {
     const listeGuncelle = () => {
       const adlar = [...liste].sort((a, b) => a - b).map((i) => PARCALAR[i].ad);
       o('sayi').textContent = adlar.length;
-      o('liste').textContent = adlar.length ? adlar.join(', ') : 'Listeniz boş';
+      o('liste').textContent = adlar.length ? adlar.join(', ') : 'Liste boş';
       listeA.classList.toggle('is-dolu', adlar.length > 0);
       listeA.setAttribute('aria-disabled', adlar.length ? 'false' : 'true');
       const mesaj = [
@@ -243,47 +235,15 @@ export const patlatma = {
     listeA.addEventListener('click', (e) => { if (!liste.size) e.preventDefault(); });
     listeGuncelle();
 
-    // Motor mount'a .k-blok sarmalayıcısını verir; durum sınıfları .pv'ye gitmeli.
-    const kok = el.querySelector('.pv') || el;
-    if (reducedMotion) { kok.classList.add('is-durgun'); return; }
-
-    // Kaydırma filmi: toplu → patlatılmış → ölçüler ve numaralar.
-    const mobil = matchMedia('(max-width: 899px)').matches;
-    const alt = el.querySelector('.pv__alt');
-    const panel = el.querySelector('.pv__panel');
-    const tl = gsap.timeline({
-      defaults: { ease: 'none' },
-      scrollTrigger: { trigger: el, start: 'top top', end: 'bottom bottom', scrub: 0.6, invalidateOnRefresh: true },
-    });
-    tl.fromTo('.pv__govde', { scale: 1.12, x: -40, transformOrigin: '50% 50%' }, { scale: 1, x: 0, duration: 0.5 }, 0.05);
+    // Kaydırmaya bağlı uzun film yok: çizim ekrana girince bir kez toplu hâlden patlatılmış görünüme açılır (~1,4 sn).
+    if (reducedMotion) return;
+    const tl = gsap.timeline({ scrollTrigger: { trigger: svg, start: 'top 80%', toggleActions: 'play none none none' } });
+    tl.fromTo('.pv__govde', { scale: 1.08, transformOrigin: '50% 50%' }, { scale: 1, duration: 0.9, ease: 'power2.out' }, 0);
     parcalar.forEach((g, i) => {
-      tl.fromTo(g, { x: Number(g.dataset.dx), y: Number(g.dataset.dy) }, { x: 0, y: 0, duration: 0.45, ease: 'power2.inOut' }, 0.08 + (i % 5) * 0.02);
+      tl.fromTo(g, { x: Number(g.dataset.dx), y: Number(g.dataset.dy) }, { x: 0, y: 0, duration: 0.9, ease: 'power3.inOut' }, 0.05 + (i % 5) * 0.04);
     });
-    gsap.set('.pv-eksen, .pv-olcu', { drawSVG: '0%' });
-    gsap.set(kilavuz, { drawSVG: '0%' });
-    gsap.set(numaralar, { scale: 0, opacity: 0, transformOrigin: '50% 50%' });
-    gsap.set(['.pv-yazi', '.pv__antet'], { opacity: 0 });
-    gsap.set(panel, { y: 30, opacity: 0 });
-    tl.to('.pv-eksen, .pv-olcu', { drawSVG: '100%', duration: 0.25 }, 0.4)
-      .to('.pv-yazi', { opacity: 1, duration: 0.1 }, 0.55)
-      .to(kilavuz, { drawSVG: '100%', duration: 0.12, stagger: 0.015 }, 0.55)
-      .to(numaralar, { scale: 1, opacity: 1, duration: 0.1, stagger: 0.015, ease: 'back.out(2)' }, 0.6)
-      .to(panel, { y: 0, opacity: 1, duration: 0.12 }, 0.72)
-      .to('.pv__antet', { opacity: 1, duration: 0.1 }, 0.75)
-      .to({}, { duration: 0.12 }, 0.88);
-    if (!mobil) tl.to(alt, { opacity: 0, y: -20, duration: 0.12, ease: 'power1.in' }, 0.58);
-    if (mobil) {
-      const kicker = el.querySelector('.pv__kicker');
-      const kh = () => (kicker ? kicker.offsetHeight + 6 : 0);
-      tl.to(alt, { opacity: 0, y: -24, duration: 0.18, ease: 'power1.in' }, 0.04)
-        .to(el.querySelector('.pv__baslik'), { y: () => -kh(), scale: 0.64, transformOrigin: '0% 0%', duration: 0.3, ease: 'power2.inOut' }, 0.12)
-        .to('.pv__cizim', { y: () => -alt.offsetHeight - kh() - el.querySelector('.pv__baslik').offsetHeight * 0.36, duration: 0.3, ease: 'power2.inOut' }, 0.12);
-      if (kicker) tl.to(kicker, { opacity: 0, duration: 0.12 }, 0.04);
-    }
-    // Panel görünmeden dokunulamasın.
-    ScrollTrigger.create({
-      trigger: el, start: 'top top', end: 'bottom bottom',
-      onUpdate: (s) => kok.classList.toggle('is-acik', s.progress > 0.7),
-    });
+    tl.fromTo('.pv-eksen, .pv-olcu', { drawSVG: '0%' }, { drawSVG: '100%', duration: 0.5 }, 0.6)
+      .fromTo(kilavuz, { drawSVG: '0%' }, { drawSVG: '100%', duration: 0.3, stagger: 0.02 }, 0.8)
+      .fromTo(numaralar, { scale: 0, opacity: 0, transformOrigin: '50% 50%' }, { scale: 1, opacity: 1, duration: 0.3, stagger: 0.03, ease: 'back.out(2)' }, 0.9);
   },
 };

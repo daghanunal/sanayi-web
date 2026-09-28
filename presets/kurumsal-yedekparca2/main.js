@@ -6,25 +6,10 @@ import { icons } from '../../shared/core.js';
 import { patlatma } from './extra.js';
 import './style.css';
 
-// Depo verisi → motor şeması: ürün grubu = hizmet; raf kodu, stok ve örnek parçalar ayrıntıda.
+// Hizmetler ortak veriden gelir (parça satışı, şasiyle bulma, sipariş, teslim, cari hesap).
+// Sektör modülü: patlatılmış ön teker çizimi (Parça Bul sayfası), parça seçilip WhatsApp'tan sorulur.
 const v = derinBirlestir(ana, ek);
-const nf = new Intl.NumberFormat('tr-TR');
-v.hizmetler = v.hizmetler.map((h) => ({
-  ...h,
-  kisa: `Raf ${h.raf} · ${h.ornekler.join(', ')}`,
-  sure: null,
-  detay: [
-    ['Raf', h.raf],
-    ['Stokta', `${nf.format(h.stok)} kalem`],
-    ['Örnek parçalar', h.ornekler.slice(0, 3).join(', ')],
-  ],
-}));
-
-// Yorumlar örnektir: uydurma puan ve "N değerlendirme" sayısı gösterilmez.
-delete v.puan;
-v.kurumsal = { ...v.kurumsal, yorumBaslik: 'Tezgâhtan örnek yorumlar' };
-// Karşılaştırmalı fiyat iddiası taşımasın.
-v.yorumlar = (v.yorumlar || []).map((y) => ({ ...y, metin: y.metin.replace(/\s*Fiyatı da piyasanın altındaydı\./, '') }));
+const B = import.meta.env.BASE_URL;
 
 const hedef = '<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="8"/><path d="M12 2v5M12 17v5M2 12h5M17 12h5"/></svg>';
 
@@ -33,11 +18,14 @@ kurumsal({
   tema: {
     hero: 'yazi',
     gecis: 'yan',
-    logoAlt: 'Yedek parça · Şekil ve numarayla',
+    yer: "Şaşmaz'da",
+    heroGorsel: `${B}img/kurumsal-yedekparca2/parca-tepsisi.jpg`,
+    heroAlt: 'Tezgâhta tepsiye dizilmiş motor parçaları',
+    logoAlt: 'Orijinal ve muadil yedek parça',
     baslikEki: 'Oto yedek parça | Şaşmaz, Ankara',
-    teklifEtiketi: 'Parça sorun',
-    hizmetEtiketi: 'Ürün grupları',
-    altNot: 'Fotoğraflar Pexels, temsilîdir; yorumlar örnektir.',
+    teklifEtiketi: 'İletişim',
+    hizmetEtiketi: 'Hizmetler',
+    altNot: "Pexels'ten alınan fotoğraflar ve çizimler temsilîdir. Yorumlar örnektir.",
     css: {
       zemin: '#d7eadc', yuzey: '#c5dfcd', metin: '#0c2a2a', soluk: '#3d5c57', cizgi: 'rgb(12 42 42 / .2)',
       vurgu: '#ff4a1c', 'vurgu-metin': '#0c2a2a', koyu: '#0c2a2a', 'koyu-metin': '#d7eadc', 'koyu-soluk': '#8db3a5',
@@ -45,15 +33,15 @@ kurumsal({
       'font-baslik': "'Syne', system-ui, sans-serif", 'font-govde': "'Schibsted Grotesk', system-ui, sans-serif",
       'baslik-agirlik': '800', 'baslik-genislik': '100%', 'baslik-harf': '-0.035em', 'baslik-satir': '0.98',
       radius: '3px', 'radius-buyuk': '6px',
-      h1: 'clamp(40px, 6.4vw, 104px)', h2: 'clamp(32px, 4.4vw, 62px)',
+      h1: 'clamp(40px, 5vw, 80px)', h2: 'clamp(32px, 4.4vw, 62px)',
     },
   },
   sayfalar: [
-    { id: 'anasayfa', baslik: 'Ana Sayfa', bolumler: ['patlatma', 'hizmetOzet', 'rakamlar', 'ozet', 'anlasmaOzet', 'yorumlar', 'cta'] },
-    { id: 'kurumsal', baslik: 'Kurumsal', bolumler: ['hakkimizda', 'vizyon', 'kalite', 'galeri', 'cta'] },
-    { id: 'urunler', baslik: 'Ürün Grupları', menu: 'Ürünler', bolumler: ['hizmetler', 'markalar', 'cta'] },
-    { id: 'parca', baslik: 'Parça Bul', bolumler: ['patlatma', 'surec', 'sss'] },
-    { id: 'servis', baslik: 'Servis ve Filo', bolumler: ['anlasmalar', 'surec', 'cta'] },
+    { id: 'anasayfa', baslik: 'Ana Sayfa', bolumler: ['hero', 'hizmetOzet', 'ozet', 'rakamlar', 'konum', 'yorumlar', 'cta'] },
+    { id: 'hizmetler', baslik: 'Hizmetler', bolumler: ['hizmetler', 'surec', 'cta'] },
+    { id: 'hakkinda', baslik: 'Hakkında', bolumler: ['hakkimizda', 'bilgiler', 'markalar', 'galeri', 'cta'] },
+    { id: 'parca', baslik: 'Parça Bul', bolumler: ['patlatma', 'sss', 'cta'] },
+    { id: 'servis', baslik: 'Servis ve Filo', bolumler: ['anlasmalar', 'cta'] },
     { id: 'iletisim', baslik: 'İletişim', bolumler: ['iletisim'] },
   ],
   ekstralar: { patlatma },
@@ -61,11 +49,10 @@ kurumsal({
     '@context': 'https://schema.org',
     '@type': 'AutoPartsStore',
     name: d.isletme.ad,
-    description: d.isletme.slogan,
+    description: d.isletme.tanim,
     telephone: d.iletisim.telefon,
     foundingDate: String(d.isletme.kurulus),
     address: { '@type': 'PostalAddress', streetAddress: d.iletisim.adres, addressLocality: 'Etimesgut', addressRegion: 'Ankara', addressCountry: 'TR' },
-    ...(d.puan && { aggregateRating: { '@type': 'AggregateRating', ratingValue: d.puan.ortalama, reviewCount: d.puan.adet } }),
   }),
   aksiyon: (d) => [
     { href: `tel:${d.iletisim.telefon.replace(/[^\d+]/g, '')}`, ikon: icons.phone, etiket: 'Ara' },
@@ -73,14 +60,3 @@ kurumsal({
     { href: `https://wa.me/${d.iletisim.whatsapp}`, dis: true, ikon: icons.whatsapp, etiket: 'WhatsApp' },
   ],
 });
-
-// Motorun hizmet sayfasındaki "Bu hizmet için teklif isteyin" bağlantısı parça deposuna uymuyor:
-// sayfa her çizildiğinde metni "Bu gruptan parça sorun" yap (motorda bu metin için seçenek yok).
-{
-  const fix = () => document.querySelectorAll('.k-hizmet .k-link').forEach((a) => {
-    const t = a.firstChild;
-    if (t && t.nodeType === 3 && /Bu hizmet için/.test(t.textContent)) t.textContent = 'Bu gruptan parça sorun ';
-  });
-  new MutationObserver(fix).observe(document.body, { childList: true, subtree: true });
-  fix();
-}
