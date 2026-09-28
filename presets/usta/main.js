@@ -2,80 +2,68 @@ import raw from '../../data/usta.json';
 import '../../shared/base.css';
 import './style.css';
 import {
-  boot, initSmoothScroll, gsap, ScrollTrigger, reducedMotion,
-  telHref, waHref, mapsHref, mapsEmbed, openStatus, groupedHours, icons,
+  boot, initSmoothScroll, gsap, ScrollTrigger, reducedMotion, autoHideHeader, esc, asset,
+  telHref, waHref, mapsHref, mapsEmbed, saatListesi, gunDurumu, kisaAdres, acikGunSayisi, yilEki, icons,
 } from '../../shared/core.js';
 import { SplitText } from 'gsap/SplitText';
 import { DrawSVGPlugin } from 'gsap/DrawSVGPlugin';
-import { seatSVG, applySeat, MALZEMELER, RENKLER, IPLIKLER, DESENLER } from './seat.js';
 
+// Usta: klasik aile. Petrol yeşili deri, krem iplik. İmza: sayfa boyunca dikilen iplik; künyeden
+// başlar, İletişim'deki düğmelerin altında düğümlenir. Tarihçe, tasarım aracı ve marka şeridi çıktı.
 gsap.registerPlugin(SplitText, DrawSVGPlugin);
 
 const d = boot(raw);
 const $ = (s, el = document) => el.querySelector(s);
 const $$ = (s, el = document) => [...el.querySelectorAll(s)];
-const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
-const fmt = (n) => n.toLocaleString('tr-TR');
 const buYil = new Date().getFullYear();
 const kurulus = d.isletme.kurulus;
-const yas = buYil - kurulus;
-
-// Türkçe ayrılma eki: 1987'den, 1990'dan, 2004'ten, 1996'dan…
-function ablative(n) {
-  const birler = ['', 'den', 'den', 'ten', 'ten', 'ten', 'dan', 'den', 'den', 'dan'];
-  const onlar = ['', 'dan', 'den', 'dan', 'tan', 'den', 'tan', 'ten', 'den', 'dan'];
-  const s = n % 10 ? birler[n % 10] : (n % 100) ? onlar[Math.floor(n / 10) % 10] : 'den';
-  return `${n}'${s}`;
-}
-const beri = `${ablative(kurulus)} beri`;
+const yas = Math.max(1, buYil - kurulus);
+const acikGun = acikGunSayisi(d.saatler);
+const st = gunDurumu(d.saatler);
+const ad = esc(d.isletme.ad);
+const tel = esc(d.iletisim.telefon);
 
 // --- Render ----------------------------------------------------------------
 
 $('[data-bind="ad"]').textContent = d.isletme.ad;
 const topCall = $('[data-tel]');
 topCall.href = telHref(d);
-topCall.innerHTML = `${icons.phone}<span>${esc(d.iletisim.telefon)}</span>`;
+topCall.setAttribute('aria-label', `Ara: ${d.iletisim.telefon}`);
+topCall.innerHTML = `${icons.phone}<span>${tel}</span>`;
 
-const btnCall = (cls = '') => `<a class="btn btn--thread ${cls}" href="${telHref(d)}">${icons.phone}<span>Hemen ara</span></a>`;
-const btnWa = (cls = '', msg) => `<a class="btn btn--ghost ${cls}" href="${waHref(d, msg)}" target="_blank" rel="noopener">${icons.whatsapp}<span>WhatsApp'tan yaz</span></a>`;
+const durum = (cls = '', kunye = false) =>
+  `<span class="status ${cls} ${st.open ? 'is-open' : ''}"><i></i>${esc(kunye ? st.kunye : st.metin)}</span>`;
 
 $('#hero').innerHTML = `
-  <div class="hero__media"><img src="${import.meta.env.BASE_URL}img/usta/hero-koltuk.jpg" alt="Kontrast dikişli siyah deri koltuk" fetchpriority="high"></div>
+  <div class="hero__media"><img src="${asset('/img/usta/hero-koltuk.jpg')}" alt="Kontrast dikişli siyah deri koltuk" fetchpriority="high" width="1600" height="1067"></div>
   <div class="hero__inner">
-    <p class="hero__kicker">Şaşmaz Oto Sanayi'nde ${beri}</p>
-    <h1 class="hero__title">${esc(d.isletme.slogan)}</h1>
-    <p class="hero__sub">Koltuk, tavan, direksiyon, kapı döşemesi. Babadan oğula ${yas} yıldır aynı tezgâhta.</p>
-    <div class="hero__actions">${btnCall()}${btnWa()}</div>
-  </div>
-  <p class="hero__hint" aria-hidden="true">Kaydırın, iğne dikmeye başlasın</p>`;
-
-$('#hakkimizda').innerHTML = `
-  <div class="about__stamp" aria-hidden="true">
-    <svg viewBox="0 0 200 200">
-      <defs><path id="stamp-c" d="M100,100 m-74,0 a74,74 0 1,1 148,0 a74,74 0 1,1 -148,0"/></defs>
-      <circle cx="100" cy="100" r="96" class="stamp__ring"/>
-      <circle cx="100" cy="100" r="88" class="stamp__ring stamp__ring--dash"/>
-      <text><textPath href="#stamp-c" textLength="464">El işçiliği ✦ Şaşmaz ✦ ${beri} ✦</textPath></text>
-      <text x="100" y="94" class="stamp__year" text-anchor="middle">${kurulus}</text>
-      <text x="100" y="122" class="stamp__small" text-anchor="middle">kuruluş</text>
-    </svg>
-  </div>
-  <p class="about__lead">${esc(d.isletme.hakkinda)}</p>
-  <p class="about__note">${esc(d.garanti)}</p>`;
+    <h1 class="hero__title" id="hero-title">${ad}</h1>
+    <p class="hero__what">${esc(d.isletme.tanim)}</p>
+    <dl class="kunye">
+      <div><dt>Adres</dt><dd>${esc(kisaAdres(d.iletisim.adres))}</dd></div>
+      <div><dt>Bugün</dt><dd>${durum('', true)}</dd></div>
+      <div><dt>Telefon</dt><dd><a href="${telHref(d)}">${tel}</a></dd></div>
+    </dl>
+    <div class="hero__actions">
+      <a class="btn btn--thread" href="${telHref(d)}">${icons.phone}<span>Ara</span></a>
+      <a class="btn btn--ghost" href="${waHref(d)}" target="_blank" rel="noopener">${icons.whatsapp}<span>WhatsApp</span></a>
+      <a class="btn btn--ghost" href="${mapsHref(d)}" target="_blank" rel="noopener">${icons.pin}<span>Yol tarifi</span></a>
+    </div>
+  </div>`;
 
 $('#hizmetler').innerHTML = `
   <header class="sec-head">
-    <h2>Neler yapıyoruz</h2>
-    <p>Aracın içinde elimizin değmediği yer kalmıyor. Fiyatı işe başlamadan söylüyoruz.</p>
+    <h2 id="hizmetler-h">Hizmetler</h2>
+    <p>Süreler yaklaşıktır, araca ve koltuğun durumuna göre değişebilir. Fiyat ve randevu için arayın.</p>
   </header>
   <div class="services__grid">
     <div class="services__frame" aria-hidden="true">
-      ${d.hizmetler.map((h, i) => `<img src="${h.gorsel}" alt="" loading="lazy" class="${i === 0 ? 'is-on' : ''}">`).join('')}
+      ${d.hizmetler.map((h, i) => `<img src="${h.gorsel}" alt="" loading="lazy" decoding="async" class="${i === 0 ? 'is-on' : ''}">`).join('')}
     </div>
     <ul class="services__list">
       ${d.hizmetler.map((h, i) => `
         <li class="svc${i === 0 ? ' is-on' : ''}" data-i="${i}">
-          <img class="svc__img" src="${h.gorsel}" alt="" loading="lazy">
+          <img class="svc__img" src="${h.gorsel}" alt="" loading="lazy" decoding="async">
           <h3>${esc(h.baslik)}</h3>
           <p>${esc(h.aciklama)}</p>
           <span class="svc__time">${esc(h.sure)}</span>
@@ -83,203 +71,125 @@ $('#hizmetler').innerHTML = `
     </ul>
   </div>`;
 
-// Tarihçe: ilk kayıt kuruluş yılı olur, kuruluştan önceki kayıtlar düşer.
-const tarihce = d.tarihce
-  .map((t, i) => ({ ...t, yil: i === 0 ? kurulus : t.yil }))
-  .filter((t, i) => i === 0 || t.yil === null || t.yil > kurulus);
-$('#tarihce').innerHTML = `
-  <div class="timeline__pin">
-    <header class="timeline__head">
-      <h2>Babadan oğula ${yas} yıl</h2>
-      <p>Tek makineyle açılan dükkândan bugüne.</p>
-    </header>
-    <div class="timeline__track">
-      ${tarihce.map((t) => `
-        <article class="era">
-          <div class="era__photo">
-            <img class="era__old" src="${t.gorsel}" alt="" loading="lazy">
-            <img class="era__new" src="${t.gorsel}" alt="${esc(t.baslik)}" loading="lazy">
-          </div>
-          <p class="era__year">${t.yil ?? buYil}</p>
-          <h3>${esc(t.baslik)}</h3>
-          <p class="era__text">${esc(t.metin)}</p>
-        </article>`).join('')}
+const olgular = [
+  { deger: yas, sonek: ' yıl', etiket: "Şaşmaz Oto Sanayi Sitesi'nde" },
+  { deger: acikGun, sonek: ' gün', etiket: 'haftada açık' },
+];
+$('#hakkinda').innerHTML = `
+  <div class="about__grid">
+    <div class="about__stamp" aria-hidden="true">
+      <svg viewBox="0 0 200 200">
+        <defs><path id="stamp-c" d="M100,100 m-74,0 a74,74 0 1,1 148,0 a74,74 0 1,1 -148,0"/></defs>
+        <circle cx="100" cy="100" r="96" class="stamp__ring"/>
+        <circle cx="100" cy="100" r="88" class="stamp__ring stamp__ring--dash"/>
+        <text><textPath href="#stamp-c" textLength="464">Şaşmaz Oto Sanayi ✦ ${esc(yilEki(kurulus))} beri ✦</textPath></text>
+        <text x="100" y="94" class="stamp__year" text-anchor="middle">${kurulus}</text>
+        <text x="100" y="122" class="stamp__small" text-anchor="middle">kuruluş</text>
+      </svg>
     </div>
-    <div class="tape" aria-hidden="true"><div class="tape__strip"></div></div>
-  </div>`;
-
-const stats = [{ deger: yas, sonek: ' yıl', etiket: 'aynı tezgâhta' }, ...d.istatistikler];
-$('#rakamlar').innerHTML = `
-  <div class="patch__leather">
-    <ul class="patch__stats">
-      ${stats.map((s) => `
-        <li><strong data-count="${s.deger}" data-suffix="${esc(s.sonek || '')}">${fmt(s.deger)}${esc(s.sonek || '')}</strong><span>${esc(s.etiket)}</span></li>`).join('')}
-    </ul>
-  </div>`;
-
-const opt = (name, list, checked, swatch) => list.map((o) => `
-  <label class="chip">
-    <input type="radio" name="${name}" value="${o.id}" ${o.id === checked ? 'checked' : ''}>
-    <span class="chip__face">${swatch(o)}<span>${o.ad}</span></span>
-  </label>`).join('');
-
-$('#tasarla').innerHTML = `
-  <header class="sec-head">
-    <h2>Koltuğunuzu burada tasarlayın</h2>
-    <p>Malzemeyi, rengi ve ipliği seçin. Beğendiğiniz tasarımı WhatsApp'tan gönderin, aynısını dikelim.</p>
-  </header>
-  <div class="studio__grid">
-    <div class="studio__stage">${seatSVG()}</div>
-    <form class="studio__form" aria-label="Koltuk tasarımı">
-      <fieldset><legend>Malzeme</legend><div class="chips">${opt('malzeme', MALZEMELER, 'deri', (o) => `<i class="sw sw--${o.id}"></i>`)}</div></fieldset>
-      <fieldset><legend>Renk</legend><div class="chips chips--color">${opt('renk', RENKLER, 'konyak', (o) => `<i class="sw" style="--c:${o.hex}"></i>`)}</div></fieldset>
-      <fieldset><legend>İplik</legend><div class="chips">${opt('iplik', IPLIKLER, 'beyaz', (o) => `<i class="sw sw--thread" style="--c:${o.hex ?? 'transparent'}"></i>`)}</div></fieldset>
-      <fieldset><legend>Desen</legend><div class="chips">${opt('desen', DESENLER, 'kapitone', (o) => `<i class="sw sw--${o.id}"></i>`)}</div></fieldset>
-      <p class="studio__summary" aria-live="polite"></p>
-      <a class="btn btn--thread studio__send" target="_blank" rel="noopener">${icons.whatsapp}<span>Bu tasarımı gönder</span></a>
-    </form>
-  </div>`;
-
-$('#atolye').innerHTML = `
-  <header class="sec-head">
-    <h2>İşin inceliği</h2>
-    <p>Kalıp, kesim, dikiş, restorasyon: döşemenin her aşamasından kareler.</p>
-  </header>
-  <div class="works__grid">
-    ${d.galeri.map((g) => `<figure class="work"><img src="${g.src}" alt="${esc(g.alt)}" loading="lazy"></figure>`).join('')}
+    <div class="about__text">
+      <h2 id="hakkinda-h">Hakkında</h2>
+      <p class="about__lead">${ad} ${esc(yilEki(kurulus))} beri Şaşmaz Oto Sanayi Sitesi'nde. ${esc(d.isletme.hakkinda)}</p>
+      <dl class="facts">
+        ${(d.bilgiler || []).map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join('')}
+        ${d.markalar?.length ? `<div><dt>Sık gelen markalar</dt><dd>${d.markalar.map(esc).join(', ')}</dd></div>` : ''}
+      </dl>
+    </div>
   </div>
-  <div class="brands">
-    <h3 class="brands__title">Hangi marka olursa olsun</h3>
-    <div class="brands__rail"><div class="brands__run">${[...d.markalar, ...d.markalar].map((m) => `<span>${esc(m)}</span>`).join('')}</div></div>
+  <div class="patch">
+    <div class="patch__leather">
+      <ul class="patch__stats">
+        ${olgular.map((s) => `
+          <li><strong data-count="${s.deger}" data-suffix="${esc(s.sonek)}">${s.deger}${esc(s.sonek)}</strong><span>${esc(s.etiket)}</span></li>`).join('')}
+      </ul>
+    </div>
   </div>`;
+
+$('#saatler').innerHTML = `
+  <div class="visit__info">
+    <h2 id="saatler-h">Çalışma saatleri ve konum</h2>
+    ${durum('status--big')}
+    <dl class="hours">${saatListesi(d.saatler).map(([g, s]) => `<div><dt>${esc(g)}</dt><dd>${esc(s)}</dd></div>`).join('')}</dl>
+    <address>${esc(d.iletisim.adres)}</address>
+    <div class="visit__actions">
+      <a class="btn btn--thread" href="${mapsHref(d)}" target="_blank" rel="noopener">${icons.pin}<span>Yol tarifi</span></a>
+      <a class="btn btn--ghost" href="${telHref(d)}">${icons.phone}<span>${tel}</span></a>
+    </div>
+  </div>
+  <div class="visit__map" data-src="${esc(mapsEmbed(d))}"></div>`;
 
 const stars = (n) => Array.from({ length: 5 }, (_, i) => `<span class="${i < n ? 'on' : ''}">${icons.star}</span>`).join('');
 $('#yorumlar').innerHTML = `
   <header class="reviews__head">
-    <p class="reviews__tag">Örnek yorumlar</p>
-    <p class="reviews__score"><strong>${d.puan.ortalama.toLocaleString('tr-TR')}</strong><span class="stars" aria-label="5 üzerinden ${d.puan.ortalama}">${stars(5)}</span></p>
-    <h2>Müşterilerimiz ne diyor</h2>
+    <h2 id="yorumlar-h">Örnek yorumlar</h2>
+    <p>Buradaki yorumlar örnektir, yerlerine işletmenin gerçek yorumları konur.</p>
   </header>
   <ul class="reviews__list">
     ${d.yorumlar.map((y) => `
       <li class="review">
-        <span class="stars" aria-label="5 üzerinden ${y.puan}">${stars(y.puan)}</span>
+        <span class="stars" role="img" aria-label="5 üzerinden ${y.puan}">${stars(y.puan)}</span>
         <blockquote>${esc(y.metin)}</blockquote>
         <p class="review__who"><b>${esc(y.ad)}</b> ${esc(y.arac)}</p>
       </li>`).join('')}
   </ul>`;
 
-const durum = openStatus(d.saatler);
 $('#iletisim').innerHTML = `
-  <div class="visit__info">
-    <h2>Dükkâna uğrayın</h2>
-    <p class="status ${durum.open ? 'is-open' : ''}"><i></i>${durum.text}</p>
-    <dl class="hours">${groupedHours(d.saatler).map(([g, s]) => `<div><dt>${g}</dt><dd>${s}</dd></div>`).join('')}</dl>
-    <address>${esc(d.iletisim.adres)}</address>
-    <div class="visit__actions">
-      <a class="btn btn--thread" href="${mapsHref(d)}" target="_blank" rel="noopener">${icons.pin}<span>Yol tarifi al</span></a>
-      <a class="btn btn--ghost" href="${telHref(d)}">${icons.phone}<span>${esc(d.iletisim.telefon)}</span></a>
-    </div>
+  <h2 class="finale__title" id="iletisim-h">İletişim</h2>
+  <p class="finale__sub">Fiyat ve randevu için arayın ya da WhatsApp'tan yazın. Koltuğun fotoğrafı da gönderilebilir.</p>
+  <div class="finale__actions">
+    <a class="btn btn--thread btn--big" href="${telHref(d)}">${icons.phone}<span>${tel}</span></a>
+    <a class="btn btn--ghost btn--big" href="${waHref(d)}" target="_blank" rel="noopener">${icons.whatsapp}<span>WhatsApp</span></a>
   </div>
-  <div class="visit__map" data-src="${mapsEmbed(d)}"></div>`;
-
-$('#randevu').innerHTML = `
-  <h2 class="finale__title">Koltuğunuzu getirin, gerisini bize bırakın.</h2>
-  <p class="finale__sub">Fotoğrafını WhatsApp'tan atın, aynı gün fiyat verelim.</p>
-  <div class="finale__actions">${btnCall('btn--big')}${btnWa('btn--big', `Merhaba ${d.isletme.ad}, koltuklarımın fotoğrafını gönderiyorum. Fiyat alabilir miyim?`)}</div>`;
+  <p class="finale__note">${esc(d.iletisim.adres)}<br>${esc(st.metin)}</p>`;
 
 $('.foot').innerHTML = `
-  <p class="foot__name">${esc(d.isletme.ad)}</p>
-  <p>${esc(d.iletisim.adres)}</p>
-  <p><a class="foot__tel" href="${telHref(d)}">${icons.phone}<span>${esc(d.iletisim.telefon)}</span></a></p>
-  <p class="foot__copy">© ${buYil} ${esc(d.isletme.ad)}. ${beri} Şaşmaz'da. Fotoğraflar: Pexels · 3D görseller temsilîdir · Yorumlar örnektir.</p>`;
+  <p class="foot__name">${ad}</p>
+  <p>${esc(d.isletme.tanim)}<br>${esc(d.iletisim.adres)}</p>
+  <p><a class="foot__tel" href="${telHref(d)}">${icons.phone}<span>${tel}</span></a></p>
+  <p class="foot__copy">© ${buYil} ${ad}. Pexels'ten alınan fotoğraflar temsilîdir. Yorumlar örnektir.</p>`;
 
-// --- Koltuk tasarlama --------------------------------------------------------
-
-const form = $('.studio__form');
-const seat = $('.seat');
-const sendBtn = $('.studio__send');
-function updateSeat(animate) {
-  const v = Object.fromEntries(new FormData(form));
-  applySeat(seat, v);
-  const ad = (list, id) => list.find((x) => x.id === id).ad.toLocaleLowerCase('tr-TR');
-  const iplik = v.iplik === 'ton' ? 'ton sür ton iplik' : `${ad(IPLIKLER, v.iplik)} iplik`;
-  const ozet = `${RENKLER.find((x) => x.id === v.renk).ad} ${ad(MALZEMELER, v.malzeme)}, ${iplik}, ${ad(DESENLER, v.desen)} desen.`;
-  $('.studio__summary').textContent = ozet;
-  sendBtn.href = waHref(d, `Merhaba ${d.isletme.ad}, sitenizde şu koltuk tasarımını yaptım: ${ozet} Aracım: `);
-  if (animate && !reducedMotion) {
-    gsap.fromTo(seat, { scale: 0.97, rotate: -1.2 }, { scale: 1, rotate: 0, duration: 0.7, ease: 'elastic.out(1, 0.5)' });
-    gsap.fromTo($$('.thread', seat), { strokeDashoffset: 40 }, { strokeDashoffset: 0, duration: 0.9, ease: 'power2.out' });
-  }
-}
-form.addEventListener('change', () => updateSeat(true));
-updateSeat(false);
-
-// --- Üst şerit: kaydırınca zemin kazanır -------------------------------------
+// --- Üst şerit ---------------------------------------------------------------
 
 const top = $('.top');
 ScrollTrigger.create({ start: 80, end: 'max', onToggle: (self) => top.classList.toggle('is-solid', self.isActive) });
+let unhide = null;
+const phoneMq = matchMedia('(max-width: 899px)');
+const syncHeader = () => {
+  if (phoneMq.matches && !unhide) unhide = autoHideHeader(top, { offset: 120 });
+  else if (!phoneMq.matches && unhide) { unhide(); unhide = null; }
+};
+syncHeader();
+phoneMq.addEventListener('change', syncHeader);
 
-// --- Harita: görününce yükle -------------------------------------------------
+// --- Harita: yaklaşınca yükle -------------------------------------------------
 
 const mapBox = $('.visit__map');
 new IntersectionObserver((entries, io) => {
   if (!entries[0].isIntersecting) return;
-  mapBox.innerHTML = `<iframe src="${mapBox.dataset.src}" title="Harita: ${esc(d.iletisim.adres)}" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>`;
+  mapBox.innerHTML = `<iframe src="${mapBox.dataset.src}" title="${ad} konumu" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>`;
   io.disconnect();
 }, { rootMargin: '600px' }).observe(mapBox);
 
 // --- Hareket -----------------------------------------------------------------
 
 initSmoothScroll();
-const mm = gsap.matchMedia();
 
 if (!reducedMotion) {
-  // Açılış: başlık satır satır, deri gibi aşağıdan yukarı
+  // Açılış: künye bir kez gelir (kaydırmayı kilitlemez).
+  gsap.timeline({ defaults: { ease: 'power3.out' } })
+    .from('.hero__media img', { scale: 1.12, duration: 1.8, ease: 'power2.out' }, 0)
+    .from('.hero__inner > *', { autoAlpha: 0, y: 18, duration: 0.6, stagger: 0.06, clearProps: 'all' }, 0.1);
+  gsap.to('.hero__media img', { yPercent: 10, ease: 'none', scrollTrigger: { trigger: '#hero', start: 'top top', end: 'bottom top', scrub: true } });
+
   document.fonts.ready.then(() => {
-    const split = SplitText.create('.hero__title', { type: 'lines', mask: 'lines' });
-    gsap.timeline({ defaults: { ease: 'power4.out' } })
-      .from('.hero__media img', { scale: 1.18, duration: 2.2, ease: 'power2.out' }, 0)
-      .from(split.lines, { yPercent: 110, duration: 1.1, stagger: 0.09 }, 0.2)
-      .from(['.hero__kicker', '.hero__sub', '.hero__actions', '.hero__hint'], { opacity: 0, y: 18, duration: 0.8, stagger: 0.08 }, 0.6);
-
-    // Hakkımızda: kelimeler okundukça koyulaşır
+    // Hakkında: kelimeler okundukça koyulaşır
     const lead = SplitText.create('.about__lead', { type: 'words' });
-    gsap.fromTo(lead.words, { opacity: 0.16 }, {
+    gsap.fromTo(lead.words, { opacity: 0.2 }, {
       opacity: 1, stagger: 0.04, ease: 'none',
-      scrollTrigger: { trigger: '.about__lead', start: 'top 80%', end: 'bottom 45%', scrub: true },
+      scrollTrigger: { trigger: '.about__lead', start: 'top 82%', end: 'bottom 50%', scrub: true },
     });
   });
-
-  gsap.to('.hero__media img', { yPercent: 12, ease: 'none', scrollTrigger: { trigger: '#hero', start: 'top top', end: 'bottom top', scrub: true } });
-  gsap.to('.about__stamp svg', { rotate: 220, ease: 'none', scrollTrigger: { trigger: '#hakkimizda', start: 'top bottom', end: 'bottom top', scrub: true } });
-
-  // Tarihçe: yatay kayan, eski fotoğraflar renklenir
-  mm.add('(min-width: 0px)', () => {
-    const track = $('.timeline__track');
-    const distance = () => track.scrollWidth - innerWidth + parseFloat(getComputedStyle(track).paddingLeft);
-    const move = gsap.to(track, {
-      x: () => -distance(), ease: 'none',
-      scrollTrigger: {
-        trigger: '#tarihce', pin: '.timeline__pin', start: 'top top',
-        end: () => `+=${distance()}`, scrub: 0.6, invalidateOnRefresh: true,
-      },
-    });
-    gsap.to('.tape__strip', {
-      x: () => -distance() * 0.5, ease: 'none',
-      scrollTrigger: { trigger: '#tarihce', start: 'top top', end: () => `+=${distance()}`, scrub: 0.6, invalidateOnRefresh: true },
-    });
-    $$('.era').forEach((era) => {
-      gsap.fromTo($('.era__new', era), { opacity: 0 }, {
-        opacity: 1, ease: 'none',
-        scrollTrigger: { trigger: era, containerAnimation: move, start: 'left 85%', end: 'center 50%', scrub: true },
-      });
-      gsap.fromTo($('.era__year', era), { xPercent: 30 }, {
-        xPercent: -10, ease: 'none',
-        scrollTrigger: { trigger: era, containerAnimation: move, start: 'left right', end: 'right left', scrub: true },
-      });
-    });
-  });
+  gsap.to('.about__stamp svg', { rotate: 200, ease: 'none', scrollTrigger: { trigger: '#hakkinda', start: 'top bottom', end: 'bottom top', scrub: true } });
 
   // Hizmetler: ekranın ortasındaki satır öne çıkar, görsel değişir
   const frames = $$('.services__frame img');
@@ -295,44 +205,32 @@ if (!reducedMotion) {
     });
   });
 
-  // Deri etiket: rakamlar sayar
+  // Deri etiket: iki olgu sayar
   $$('[data-count]').forEach((el) => {
     const end = Number(el.dataset.count);
     const obj = { v: 0 };
+    el.textContent = `0${el.dataset.suffix}`;
     gsap.to(obj, {
-      v: end, duration: 1.8, ease: 'power3.out',
-      scrollTrigger: { trigger: el, start: 'top 85%', once: true },
-      onUpdate: () => (el.textContent = fmt(Math.round(obj.v)) + el.dataset.suffix),
+      v: end, duration: 1.4, ease: 'power3.out',
+      scrollTrigger: { trigger: el, start: 'top 88%', toggleActions: 'play none none none' },
+      onUpdate: () => (el.textContent = Math.round(obj.v) + el.dataset.suffix),
     });
-  });
-
-  // Atölye: kareler içinde hafif paralaks
-  $$('.work img').forEach((img) => {
-    gsap.fromTo(img, { yPercent: -8 }, { yPercent: 8, ease: 'none', scrollTrigger: { trigger: img.parentElement, start: 'top bottom', end: 'bottom top', scrub: true } });
-  });
-
-  // Markalar: scroll hızına göre akan şerit
-  const run = $('.brands__run');
-  const loop = gsap.to(run, { xPercent: -50, duration: 28, ease: 'none', repeat: -1 });
-  ScrollTrigger.create({
-    trigger: '.brands', start: 'top bottom', end: 'bottom top',
-    onUpdate: (self) => gsap.to(loop, { timeScale: 1 + Math.min(Math.abs(self.getVelocity()) / 300, 6), duration: 0.2, overwrite: true, onComplete: () => gsap.to(loop, { timeScale: 1, duration: 1 }) }),
   });
 
   document.fonts.ready.then(() => requestAnimationFrame(buildSeams));
 }
 
-// --- İmza efekti: sayfa boyunca dikilen iplik ---------------------------------
+// --- İmza: sayfa boyunca dikilen iplik ---------------------------------------
 // Her bölümün kendi SVG'si var; uçları birbirine denk geldiği için tek bir dikiş gibi görünür.
 
-const SEAM_SECTIONS = ['#hero', '#hakkimizda', '#hizmetler', '#rakamlar', '#tasarla', '#atolye', '#yorumlar', '#iletisim', '#randevu'];
+const SEAM_SECTIONS = ['#hero', '#hizmetler', '#hakkinda', '#saatler', '#yorumlar', '#iletisim'];
 const NEEDLE = `
   <g class="needle"><g transform="scale(1.45)">
     <path d="M-58,-2.4 L-8,-1.3 L0,0 L-8,1.3 L-58,2.4 Q-63,0 -58,-2.4 Z" fill="url(#needle-steel)"/>
     <ellipse cx="-52" cy="0" rx="3.6" ry="0.9" fill="#071a1c"/>
   </g></g>`;
 let seamTriggers = [];
-let lastWidth = 0;
+let lastKey = 0;
 
 function seamPath(x0, y0, x1, y1, knot) {
   const h = y1 - y0;
@@ -340,19 +238,18 @@ function seamPath(x0, y0, x1, y1, knot) {
   return `M${x0},${y0} C${x0},${y0 + h * 0.42} ${x1},${y1 - h * 0.42} ${x1},${y1}`;
 }
 
-// Bölüm boyu sonradan değişirse (geç yüklenen görsel, yazı tipi) dikiş yeniden çizilir; yalnız genişlik değil, boylar da anahtar.
+// Bölüm boyu sonradan değişirse (geç yüklenen görsel, yazı tipi) dikiş yeniden çizilir.
 const seamKey = () => innerWidth + ':' + SEAM_SECTIONS.map((sel) => $(sel)?.offsetHeight ?? 0).join(',');
 function buildSeams() {
   const key = seamKey();
-  if (key === lastWidth && seamTriggers.length) return;
-  lastWidth = key;
+  if (key === lastKey && seamTriggers.length) return;
+  lastKey = key;
   seamTriggers.forEach((t) => t.kill());
   seamTriggers = [];
   $$('.seam').forEach((s) => s.remove());
 
-  // Dikiş sağ kenar boşluğundan iner, hafifçe salınır: metnin üstünden hiç geçmez.
+  // Dikiş sağ kenar boşluğundan iner, hafifçe salınır: metnin üstünden geçmez.
   const pad = Math.min(72, Math.max(20, innerWidth * 0.05));
-  // Konumlar sayfa koordinatında tutulur: bazı bölümler 1320 px ile sınırlı ve ortalı, bazıları tam genişlikte.
   const pageW = document.documentElement.clientWidth;
   const gutterX = (i) => pageW - pad * (i % 2 ? 0.62 : 0.4);
   let prevX = null;
@@ -367,9 +264,10 @@ function buildSeams() {
     const x0 = (first ? gutterX(1) : prevX) - left;
     const y0 = first ? h * 0.2 : 0;
     const x1 = last ? w * 0.5 : gutterX(i) - left;
-    const y1 = last ? $('.finale__actions').offsetTop + $('.finale__actions').offsetHeight + 44 : h;
+    const acts = $('.finale__actions');
+    const y1 = last ? acts.offsetTop + acts.offsetHeight + 44 : h;
     prevX = x1 + left;
-    const d = seamPath(x0, y0, x1, y1, last);
+    const path = seamPath(x0, y0, x1, y1, last);
 
     const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     svg.classList.add('seam');
@@ -377,16 +275,16 @@ function buildSeams() {
     svg.innerHTML = `
       <defs>
         <mask id="seam-m${i}" maskUnits="userSpaceOnUse" x="0" y="0" width="${w}" height="${h}">
-          <path class="seam__reveal" d="${d}"/>
+          <path class="seam__reveal" d="${path}"/>
         </mask>
         <linearGradient id="needle-steel${i}" x1="0" y1="-1" x2="0" y2="1" gradientUnits="objectBoundingBox">
           <stop offset="0" stop-color="#f4f5f7"/><stop offset=".5" stop-color="#9aa0a8"/><stop offset="1" stop-color="#4c5057"/>
         </linearGradient>
       </defs>
-      <path class="seam__guide" d="${d}"/>
+      <path class="seam__guide" d="${path}"/>
       <g mask="url(#seam-m${i})">
-        <path class="seam__holes" d="${d}"/>
-        <path class="seam__thread" d="${d}"/>
+        <path class="seam__holes" d="${path}"/>
+        <path class="seam__thread" d="${path}"/>
       </g>
       ${last ? `<circle class="seam__knot" cx="${x1}" cy="${y1}" r="7"/>` : ''}
       ${NEEDLE.replace('needle-steel', `needle-steel${i}`)}`;

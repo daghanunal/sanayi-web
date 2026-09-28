@@ -1,6 +1,6 @@
 // Sektöre özel modül: filo koltuk yenileme teklif formu.
 // Araç tipi, adet, koltuk sayısı, malzeme ve kapsam → koltuk planı (üstten görünüş), tahmini süre, WhatsApp teklif mesajı.
-// Fiyat yazılmaz; süre, atölyenin "bir hafta sonunda kırk koltuk" kapasitesinden kabaca hesaplanır.
+// Fiyat yazılmaz; süre, günlük koltuk sayısından kabaca hesaplanır.
 import { esc, waHref, gsap, reducedMotion } from '../../shared/core.js';
 
 const TIPLER = [
@@ -9,7 +9,7 @@ const TIPLER = [
   { id: 'otobus', ad: 'Otobüs', not: 'Şehirler arası, şehir içi', koltuk: 46, sol: 2, sag: 2 },
 ];
 const MALZEMELER = [
-  { id: 'suni', ad: 'Suni deri', not: 'Silinir, servis için en pratik', cls: 'm-suni' },
+  { id: 'suni', ad: 'Suni deri', not: 'Silinerek temizlenir', cls: 'm-suni' },
   { id: 'kumas', ad: 'Otobüs kumaşı', not: 'Desenli, nefes alır', cls: 'm-kumas' },
   { id: 'kombin', ad: 'Kumaş + suni deri', not: 'Oturak kumaş, yanaklar deri', cls: 'm-kombin' },
 ];
@@ -26,9 +26,9 @@ export const filoKoltuk = {
       <section class="k-bolum fk" aria-labelledby="fk-baslik">
         <div class="k-kap">
           <div class="fk__bas">
-            <p class="fk__ust">Filo koltuk yenileme</p>
-            <h2 class="k-h2" id="fk-baslik" data-bol>Filonuzun koltuklarını planlayalım</h2>
-            <p class="k-lead">Araç tipini, sayısını ve malzemeyi seçin. Kaç koltuk yenileneceğini ve işin kabaca kaç hafta sonu süreceğini görün, teklif talebinizi hazır mesajla gönderin.</p>
+            <p class="fk__ust">Servis, minibüs ve otobüs</p>
+            <h2 class="k-h2" id="fk-baslik" data-bol>Filo koltuk planı</h2>
+            <p class="k-lead">Araç tipi, araç sayısı ve malzeme seçilince yenilenecek koltuk sayısı ve işin yaklaşık süresi görünür. Plan hazır mesaj olarak WhatsApp'tan gönderilebilir.</p>
           </div>
           <div class="fk__ic">
             <form class="fk__form" onsubmit="return false">
@@ -46,7 +46,7 @@ export const filoKoltuk = {
               </div>
               <fieldset class="fk__alan"><legend>Malzeme</legend><div class="fk__secim">${secim('malzeme', MALZEMELER, 'suni')}</div></fieldset>
               <fieldset class="fk__alan"><legend>Kapsam</legend><div class="fk__secim">${secim('kapsam', KAPSAM, 'kilif')}</div></fieldset>
-              <label class="fk__onay"><input type="checkbox" name="haftasonu" checked><span>Hafta sonu çalışın, araçlar hafta içi yolda kalsın</span></label>
+              <label class="fk__onay"><input type="checkbox" name="haftasonu" checked><span>Hafta sonu çalışılsın, araçlar hafta içi yolda kalsın</span></label>
             </form>
             <div class="fk__sonuc">
               <div class="fk__plan" aria-hidden="true">
@@ -56,11 +56,11 @@ export const filoKoltuk = {
               <div class="fk__ozet">
                 <dl class="fk__rakam">
                   <div><dt>Yenilenecek koltuk</dt><dd data-o="toplam">102</dd></div>
-                  <div><dt>Tahmini süre</dt><dd data-o="sure">3</dd><dd class="fk__birim" data-o="birim">hafta sonu</dd></div>
+                  <div><dt>Yaklaşık süre</dt><dd data-o="sure">3</dd><dd class="fk__birim" data-o="birim">hafta sonu</dd></div>
                 </dl>
                 <p class="fk__not" data-o="aciklama"></p>
-                <a class="k-btn fk__gonder" target="_blank" rel="noopener">Bu plan için teklif isteyin</a>
-                <p class="fk__kucuk">Kesin süreyi ve fiyatı bir aracı görüp yazılı veririz. Şoför koltuğu hesaba dahildir.</p>
+                <a class="k-btn fk__gonder" target="_blank" rel="noopener">Bu planı WhatsApp'tan gönder</a>
+                <p class="fk__kucuk">Süre yaklaşıktır. Kesin süre ve fiyat bir araç görüldükten sonra yazılı verilir. Şoför koltuğu hesaba dahildir.</p>
               </div>
             </div>
           </div>
@@ -121,8 +121,8 @@ export const filoKoltuk = {
       o('sure').textContent = sure;
       o('birim').textContent = haftasonu ? 'hafta sonu' : 'iş günü';
       o('aciklama').textContent = haftasonu
-        ? `Cuma akşamı teslim alır, pazartesi sabahı teslim ederiz. Her hafta sonu yaklaşık ${kapsam.gunluk * 2} koltuk.`
-        : `Araçları parti parti alırız; günde yaklaşık ${kapsam.gunluk} koltuk.`;
+        ? `Araçlar cuma akşamı alınıp pazartesi sabahı teslim edilir. Bir hafta sonunda yaklaşık ${kapsam.gunluk * 2} koltuk yenilenir.`
+        : `Araçlar gruplar hâlinde alınır, günde yaklaşık ${kapsam.gunluk} koltuk yenilenir.`;
 
       const imza = `${tip.id}-${n}-${malzeme.id}`;
       if (imza !== onceki) {
@@ -131,7 +131,7 @@ export const filoKoltuk = {
         onceki = imza;
       }
       const mesaj = [
-        `Merhaba ${d.isletme.ad}, filo koltuk yenileme için teklif istiyoruz.`,
+        `Merhaba ${d.isletme.ad}, filo koltuk yenileme için bilgi almak istiyoruz.`,
         `Araç tipi: ${tip.ad}`,
         `Araç sayısı: ${adet}`,
         `Araç başına koltuk: ${n}+1`,
@@ -159,18 +159,18 @@ export const filoKoltuk = {
 // Kütüphanedeki koltuğun (lib3d seat) patlatılmış Cycles render'ı + yukarıdan aşağı katman listesi.
 // Görsel temsilîdir ve öyle etiketlenir.
 const KATMANLAR = [
-  ['Baş dayama', 'Kılıfı söküp aynı kalıpla yeniden dikeriz; çökmüş süngeri ölçüsünde yenileriz.'],
-  ['Sırt', 'Yanak süngerleri ve sırt panosu elden geçer. Dikiş aralığını ve iplik rengini baştan birlikte seçeriz.'],
-  ['Oturak', 'En çok yıpranan katman. Çöken sünger ölçüye göre değişir; eski süngerin üstüne kılıf geçirmeyiz.'],
-  ['Yan kapak ve ısıtma', 'Plastik kapaklar sökülüp temizlenir. Isıtma pedi isteyene bu aşamada, kılıfın altına yerleşir.'],
-  ['İskelet ve ray', 'Kaynak, yay ve ray kilitleri kontrol edilir; gıcırtı ve boşluk giderilir.'],
+  ['Baş dayama', 'Kılıf sökülüp aynı kalıpla yeniden dikilir, çökmüş sünger ölçüsüne göre yenilenir.'],
+  ['Sırt', 'Yanak süngerleri ve sırt panosu elden geçer. Dikiş aralığı ve iplik rengi araç sahibiyle birlikte seçilir.'],
+  ['Oturak', 'En çok yıpranan katmandır. Çöken sünger ölçüsüne göre değiştirilir, yeni kılıf yeni süngerin üstüne giydirilir.'],
+  ['Yan kapak ve ısıtma', 'Plastik kapaklar sökülüp temizlenir. Isıtma pedi istenirse bu aşamada kılıfın altına yerleştirilir.'],
+  ['İskelet ve ray', 'Kaynak, yay ve ray kilitleri kontrol edilir, gıcırtı ve boşluk giderilir.'],
 ];
 const ok = `<svg class="k-ok" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 
 export const katmanlar = {
   render() {
     const img = `${import.meta.env.BASE_URL}img/kurumsal-doseme/koltuk-3d.jpg`;
-    const konu = encodeURIComponent('Koltuk döşeme teklifi');
+    const konu = encodeURIComponent('Fiyat bilgisi');
     return `
       <section class="k-bolum kt" aria-labelledby="kt-baslik">
         <div class="k-kap kt__ic">
@@ -179,25 +179,25 @@ export const katmanlar = {
             <figcaption>Temsilî 3D çizim</figcaption>
           </figure>
           <div class="kt__metin">
-            <p class="kt__ust">Koltuğun katmanları</p>
-            <h2 class="k-h2" id="kt-baslik" data-bol>Koltuğu söker, katman katman yeniden kurarız.</h2>
-            <p class="k-lead">Yeni kılıfı eskisinin üstüne geçirmeyiz. Koltuk araçtan sökülür, tezgâhta parçalarına ayrılır; her katman ayrı elden geçer ve aynı kalıpla yeniden bir araya gelir.</p>
+            <p class="kt__ust">Koltuk döşeme</p>
+            <h2 class="k-h2" id="kt-baslik" data-bol>Koltuğun katmanları</h2>
+            <p class="k-lead">Koltuk araçtan sökülüp tezgâhta parçalarına ayrılır. Her katman ayrı elden geçer, sonra aynı kalıpla yeniden bir araya getirilir.</p>
             <ol class="kt__liste" data-sira>
               ${KATMANLAR.map(([a, b], i) => `<li><span class="kt__no">${String(i + 1).padStart(2, '0')}</span><div><h3>${esc(a)}</h3><p>${esc(b)}</p></div></li>`).join('')}
             </ol>
-            <a class="k-link kt__link" href="#/iletisim?konu=${konu}" data-rota="iletisim?konu=${konu}">Koltuk döşeme için yazın ${ok}</a>
+            <a class="k-link kt__link" href="#/iletisim?konu=${konu}" data-rota="iletisim?konu=${konu}">Koltuk döşeme için bilgi alın ${ok}</a>
           </div>
         </div>
       </section>`;
   },
 };
 
-// JSON-LD: örnek yorum puanı yapılandırılmış veriye girmesin.
+// JSON-LD: örnek yorum puanı yapılandırılmış veriye girmesin; açıklama tanımdan (slogan okunmaz).
 export const ldVerisi = (d) => ({
   '@context': 'https://schema.org',
   '@type': 'AutoRepair',
   name: d.isletme.ad,
-  description: d.isletme.slogan,
+  description: d.isletme.tanim || d.isletme.sektor,
   telephone: d.iletisim.telefon,
   foundingDate: String(d.isletme.kurulus),
   address: { '@type': 'PostalAddress', streetAddress: d.iletisim.adres, addressLocality: 'Etimesgut', addressRegion: 'Ankara', addressCountry: 'TR' },

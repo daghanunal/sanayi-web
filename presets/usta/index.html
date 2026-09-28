@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#071a1c" />
   <title>Oto Döşeme | Şaşmaz, Ankara</title>
-  <meta name="description" content="" />
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230f3a3e'/%3E%3Cpath d='M6 22 Q16 4 26 22' fill='none' stroke='%23efdcb4' stroke-width='2.6' stroke-dasharray='3.5 2.5' stroke-linecap='round'/%3E%3C/svg%3E" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -17,24 +16,21 @@
     <a class="top__brand" href="#hero" data-bind="ad"></a>
     <nav class="top__nav" aria-label="Bölümler">
       <a href="#hizmetler">Hizmetler</a>
-      <a href="#tarihce">Hikâyemiz</a>
-      <a href="#tasarla">Koltuğunu tasarla</a>
-      <a href="#iletisim">Ulaşım</a>
+      <a href="#hakkinda">Hakkında</a>
+      <a href="#saatler">Saatler ve konum</a>
+      <a href="#iletisim">İletişim</a>
     </nav>
     <a class="top__call" data-tel></a>
   </header>
 
   <main>
-    <section class="hero" id="hero"></section>
-    <section class="about" id="hakkimizda"></section>
-    <section class="services" id="hizmetler"></section>
-    <section class="timeline" id="tarihce"></section>
-    <section class="patch" id="rakamlar"></section>
-    <section class="studio" id="tasarla"></section>
-    <section class="works" id="atolye"></section>
-    <section class="reviews" id="yorumlar"></section>
-    <section class="visit" id="iletisim"></section>
-    <section class="finale" id="randevu"></section>
+    <!-- Künye: ad, iş, adres, bugünkü saatler. Dikiş ipliği buradan başlayıp İletişim'deki düğmelerde düğümlenir. -->
+    <section class="hero" id="hero" aria-labelledby="hero-title"></section>
+    <section class="services" id="hizmetler" aria-labelledby="hizmetler-h"></section>
+    <section class="about" id="hakkinda" aria-labelledby="hakkinda-h"></section>
+    <section class="visit" id="saatler" aria-labelledby="saatler-h"></section>
+    <section class="reviews" id="yorumlar" aria-labelledby="yorumlar-h"></section>
+    <section class="finale" id="iletisim" aria-labelledby="iletisim-h"></section>
   </main>
 
   <footer class="foot"></footer>

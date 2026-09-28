@@ -1,8 +1,8 @@
 // Sektör modülleri — "Pepita" yönü:
 // (1) icMekan: aracın üstten görünüşü; parçaya dokun, sorununu seç, iş listesi + tahmini süre WhatsApp'a hazır mesaj.
-// (2) pepita: kaydırdıkça karo karo örülen pepita (kaz ayağı) alanı ve üstünde dönen "sorun → çözüm" etiketi.
-// (3) mesai: kumaş etiketi biçiminde çalışma saatleri, canlı açık/kapalı, yol tarifi, yaklaşınca yüklenen harita.
-import { esc, waHref, mapsHref, mapsEmbed, openStatus, groupedHours, GUNLER, icons, gsap, reducedMotion } from '../../shared/core.js';
+// (2) pepita: kaydırdıkça karo karo örülen pepita (kaz ayağı) alanı; üstündeki etikette hizmet adları sırayla döner.
+// (3) mesai: kumaş etiketi biçiminde "Çalışma saatleri ve konum" (motorun konum bölümünün yerine).
+import { esc, waHref, mapsHref, mapsEmbed, gunDurumu, saatListesi, GUNLER, icons, gsap, reducedMotion } from '../../shared/core.js';
 
 // --- (1) İç mekân haritası -------------------------------------------------------------
 
@@ -86,7 +86,7 @@ const SURE = (t) => {
   if (t <= 0.5) return 'Aynı gün';
   const hi = Math.ceil(t);
   const lo = Math.max(1, Math.floor(t));
-  return lo === hi ? `${hi} gün` : `${lo}-${hi} gün`;
+  return lo === hi ? `${hi} gün` : `${lo}–${hi} gün`;
 };
 
 export const icMekan = {
@@ -95,14 +95,14 @@ export const icMekan = {
       <section class="k-bolum im" aria-labelledby="im-baslik">
         <div class="k-kap">
           <div class="im__bas">
-            <p class="pp-ust"><span class="pp-ust__kare" aria-hidden="true"></span>İç mekân haritası</p>
-            <h2 class="k-h2" id="im-baslik" data-bol>Neresi dert? Dokunun, gösterin.</h2>
-            <p class="k-lead">Aracın üstten görünüşünde sorunlu parçaya dokunun, ne olduğunu seçin. İş listesi ve tahmini süre kendiliğinden çıkar; tek tuşla bize gönderin.</p>
+            <p class="pp-ust"><span class="pp-ust__kare" aria-hidden="true"></span>Koltuk, tavan, kapı, direksiyon</p>
+            <h2 class="k-h2" id="im-baslik" data-bol>İç mekân haritası</h2>
+            <p class="k-lead">Aracın üstten görünüşünde sorunlu parça ve sorunun ne olduğu seçilir. İş listesi ve yaklaşık süre kendiliğinden çıkar, liste WhatsApp'tan gönderilebilir.</p>
           </div>
           <div class="im__ic">
             <div class="im__sahne">
               ${ARAC_SVG}
-              <p class="im__ipucu" aria-hidden="true">Parçaya dokunun</p>
+              <p class="im__ipucu" aria-hidden="true">Parça seçin</p>
             </div>
             <div class="im__panel">
               <div class="im__duzen" aria-live="polite">
@@ -116,11 +116,11 @@ export const icMekan = {
                 <div class="im__fis-bas"><strong>İş listesi</strong><span data-o="adet">0 parça</span></div>
                 <ol class="im__liste" data-o="liste"></ol>
                 <dl class="im__toplam">
-                  <div><dt>Tahmini süre</dt><dd data-o="sure">—</dd></div>
-                  <div><dt>Fiyat</dt><dd class="im__fiyat">Aracı görünce yazılı</dd></div>
+                  <div><dt>Yaklaşık süre</dt><dd data-o="sure">—</dd></div>
+                  <div><dt>Fiyat</dt><dd class="im__fiyat">Araç görülünce yazılı verilir</dd></div>
                 </dl>
                 <a class="k-btn im__gonder" target="_blank" rel="noopener">${icons.whatsapp}<span>Bu listeyi gönder</span></a>
-                <p class="im__kucuk">Süre, atölyedeki ortalama işçiliğe göre kabaca hesaplanır. Kesin günü ve fiyatı aracı gördükten sonra yazılı veririz.</p>
+                <p class="im__kucuk">Süre, atölyedeki ortalama işçiliğe göre kabaca hesaplanır. Kesin gün ve fiyat araç görüldükten sonra yazılı verilir.</p>
               </div>
             </div>
           </div>
@@ -182,7 +182,7 @@ export const icMekan = {
         `Merhaba ${d.isletme.ad}, aracımın iç döşemesi için fiyat almak istiyorum.`,
         ...satirlar.map((r, i) => `${i + 1}. ${r.x.ad}: ${r.sorun.join(', ') || 'bakılsın'}`),
         `Malzeme: ${malzeme()}`,
-        `Tahmini süre (sitedeki hesap): ${SURE(t)}`,
+        `Yaklaşık süre (sitedeki hesap): ${SURE(t)}`,
       ].join('\n');
       gonder.href = waHref(d, mesaj);
       gonder.classList.toggle('is-pasif', !secim.size);
@@ -236,37 +236,33 @@ export const icMekan = {
       const parcalar = svg.querySelectorAll('.im-p:not(.im-p--tavan) .im-s');
       gsap.from(parcalar, {
         scale: 0.3, opacity: 0, transformOrigin: 'center', transformBox: 'fill-box', duration: 0.6, stagger: 0.05, ease: 'back.out(2)',
-        scrollTrigger: { trigger: svg, start: 'top 80%', once: true },
+        scrollTrigger: { trigger: svg, start: 'top 80%', toggleActions: 'play none none none' },
       });
-      gsap.from(svg.querySelector('.im-govde'), { opacity: 0, y: 30, duration: 0.8, ease: 'power3.out', scrollTrigger: { trigger: svg, start: 'top 85%', once: true } });
+      gsap.from(svg.querySelector('.im-govde'), { opacity: 0, y: 30, duration: 0.8, ease: 'power3.out', scrollTrigger: { trigger: svg, start: 'top 85%', toggleActions: 'play none none none' } });
     }
   },
 };
 
 // --- (2) Pepita alanı ------------------------------------------------------------------
 
-const CUMLELER = [
-  ['Yırtıldıysa', 'dikeriz.'],
-  ['Çöktüyse', 'doldururuz.'],
-  ['Sarktıysa', 'gereriz.'],
-  ['Solduysa', 'yenileriz.'],
-];
-
 export const pepita = {
-  render() {
+  render(d) {
+    const adlar = (d.hizmetler || []).map((h) => h.baslik).slice(0, 6);
+    if (!adlar.length) return '';
     return `
-      <section class="pp" aria-label="Döşemede ne yapıyoruz">
+      <section class="pp" aria-label="Hizmetler">
         <div class="pp__alan" aria-hidden="true"></div>
         <div class="pp__etiket">
-          <p class="pp__kucuk">Şaşmaz · el dikişi</p>
+          <p class="pp__kucuk">Şaşmaz Oto Sanayi Sitesi</p>
           <p class="pp__cumle" aria-live="off">
-            ${CUMLELER.map(([a, b], i) => `<span class="pp__satir${i === 0 ? ' is-on' : ''}"><span>${esc(a)}</span> <em>${esc(b)}</em></span>`).join('')}
+            ${adlar.map((a, i) => `<span class="pp__satir${i === 0 ? ' is-on' : ''}"${i ? ' aria-hidden="true"' : ''}><span>${esc(a)}</span></span>`).join('')}
           </p>
         </div>
       </section>`;
   },
   mount(el) {
     const alan = el.querySelector('.pp__alan');
+    if (!alan) return;
     const kur = () => {
       const b = alan.getBoundingClientRect();
       const hucre = innerWidth < 700 ? 56 : 72;
@@ -294,7 +290,7 @@ export const pepita = {
       scrollTrigger: { trigger: el, start: 'top bottom', end: 'bottom top', scrub: true },
     });
 
-    // Cümleler sırayla döner; bölüm ekrandayken.
+    // Hizmet adları sırayla döner; bölüm ekrandayken.
     let i = 0;
     const dongu = gsap.timeline({ repeat: -1, paused: true });
     satirlar.forEach((_, k) => {
@@ -315,23 +311,24 @@ export const pepita = {
 // --- (3) Mesai etiketi ----------------------------------------------------------------
 
 export const mesai = {
+  konumYerine: true,
   render(d) {
     if (!d.saatler) return '';
-    const st = openStatus(d.saatler);
+    const st = gunDurumu(d.saatler);
     const bugun = new Date().getDay();
     return `
       <section class="k-bolum ms" aria-labelledby="ms-baslik">
         <div class="k-kap ms__ic">
           <div class="ms__etiket">
             <p class="ms__ad">${esc(d.isletme.ad)}</p>
-            <p class="ms__durum ${st.open ? 'is-acik' : ''}"><span></span>${esc(st.text)}</p>
-            <h2 class="ms__baslik" id="ms-baslik">Çalışma saatleri</h2>
-            <dl class="ms__saat">${groupedHours(d.saatler).map(([g, s]) => `<div><dt>${esc(g)}</dt><dd>${esc(s)}</dd></div>`).join('')}</dl>
+            <h2 class="ms__baslik" id="ms-baslik">Çalışma saatleri ve konum</h2>
+            <p class="ms__durum ${st.open ? 'is-acik' : ''}"><span></span>${esc(st.metin)}</p>
+            <dl class="ms__saat">${saatListesi(d.saatler).map(([g, s]) => `<div><dt>${esc(g)}</dt><dd>${esc(s)}</dd></div>`).join('')}</dl>
             <p class="ms__bugun">Bugün ${esc(GUNLER[bugun])}</p>
-            <p class="ms__alt">El dikişi · Şaşmaz · Ankara</p>
+            <p class="ms__alt">Şaşmaz Oto Sanayi Sitesi · Etimesgut</p>
           </div>
           <div class="ms__yer">
-            <p class="pp-ust"><span class="pp-ust__kare" aria-hidden="true"></span>Atölye</p>
+            <p class="pp-ust"><span class="pp-ust__kare" aria-hidden="true"></span>Adres</p>
             <p class="ms__adres">${esc(d.iletisim.adres)}</p>
             <div class="k-butonlar">
               <a class="k-btn" href="${mapsHref(d)}" target="_blank" rel="noopener">${icons.pin}<span>Yol tarifi</span></a>
@@ -354,12 +351,12 @@ export const mesai = {
   },
 };
 
-// JSON-LD: örnek yorum puanı yapılandırılmış veriye girmesin.
+// JSON-LD: örnek yorum puanı yapılandırılmış veriye girmesin; açıklama tanımdan (slogan okunmaz).
 export const ldVerisi = (d) => ({
   '@context': 'https://schema.org',
   '@type': 'AutoRepair',
   name: d.isletme.ad,
-  description: d.isletme.slogan,
+  description: d.isletme.tanim || d.isletme.sektor,
   telephone: d.iletisim.telefon,
   foundingDate: String(d.isletme.kurulus),
   address: { '@type': 'PostalAddress', streetAddress: d.iletisim.adres, addressLocality: 'Etimesgut', addressRegion: 'Ankara', addressCountry: 'TR' },

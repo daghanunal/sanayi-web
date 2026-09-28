@@ -107,9 +107,9 @@ body { background: var(--k-zemin); overflow-x: clip; }
 }
 .pp__kucuk { font-weight: 700; font-size: 13px; letter-spacing: .14em; text-transform: uppercase; color: var(--pp-krem); }
 /* Pay dev yazının boyuna göre: gövde boyundaki .16em, geniş ekranda dev satırın glif kutusunu küçük etikete bindiriyor, "dikeriz."i kırpıyordu. */
-.pp__cumle { display: grid; margin-top: 10px; overflow: hidden; font-size: clamp(50px, 8.4vw, 120px); padding-block: .2em .3em; }
+.pp__cumle { display: grid; margin-top: 22px; overflow: hidden; font-size: clamp(42px, 6.6vw, 96px); padding-block: .2em .3em; }
 .pp__satir {
-  grid-area: 1 / 1; font-family: var(--k-font-baslik); font-weight: 900; line-height: 1; font-size: 1em;
+  grid-area: 1 / 1; font-family: var(--k-font-baslik); font-weight: 900; line-height: .95; font-size: 1em; text-wrap: balance;
   letter-spacing: -.01em; visibility: hidden; opacity: 0; display: block; padding-block: .06em .02em;
 }
 .pp__satir > span, .pp__satir em { display: block; }

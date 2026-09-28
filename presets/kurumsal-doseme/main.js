@@ -7,15 +7,6 @@ import './style.css';
 
 const v = derinBirlestir(ana, ek);
 
-// ?kurulus= motorda yalnızca isletme.kurulus'u değiştirir; tarihçeyi burada süzeriz:
-// ilk kayıt kuruluş yılı olur, ondan önceki ya da aynı yıldaki kayıtlar düşer.
-const pk = Number(new URLSearchParams(location.search).get('kurulus'));
-const kurulus = pk || v.isletme.kurulus;
-v.tarihce = v.tarihce
-  .map((t, i) => ({ ...t, yil: i === 0 ? kurulus : t.yil }))
-  .filter((t, i) => i === 0 || t.yil === null || t.yil > kurulus)
-  .map((t) => ({ ...t, yil: t.yil ?? 'Bugün' }));
-
 const B = import.meta.env.BASE_URL;
 kurumsal({
   veri: v,
@@ -26,10 +17,10 @@ kurumsal({
     heroGorsel: `${B}img/usta/t-2003.jpg`,
     heroAlt: 'Yeniden döşenmiş deri servis aracı koltukları',
     logoAlt: 'Oto döşeme · filo koltuk yenileme',
-    altNot: 'Fotoğraflar temsilîdir (Pexels). 3D koltuk çizimi temsilîdir.',
+    kunye: true,
+    altNot: "Pexels'ten alınan fotoğraflar ve 3D koltuk çizimi temsilîdir. Yorumlar örnektir.",
     baslikEki: 'Oto döşeme ve filo koltuk yenileme | Şaşmaz, Ankara',
-    teklifEtiketi: 'Teklif isteyin',
-    hizmetEtiketi: 'Hizmetlerimiz',
+    teklifEtiketi: 'İletişim',
     css: {
       zemin: '#f3f0e9', yuzey: '#e6e2d7', metin: '#15202e', soluk: '#515c6b', cizgi: 'rgb(21 32 46 / .16)',
       vurgu: '#1e3354', 'vurgu-metin': '#f3f0e9', koyu: '#101b2c', 'koyu-metin': '#ece7db', 'koyu-soluk': '#a9b2be',
@@ -40,11 +31,10 @@ kurumsal({
     },
   },
   sayfalar: [
-    { id: 'anasayfa', baslik: 'Ana Sayfa', bolumler: ['hero', 'ozet', 'katmanlar', 'hizmetOzet', 'rakamlar', 'anlasmaOzet', 'filoKoltuk', 'yorumlar', 'cta'] },
-    { id: 'kurumsal', baslik: 'Kurumsal', bolumler: ['hakkimizda', 'tarihce', 'vizyon', 'kalite', 'kariyer', 'cta'] },
+    { id: 'anasayfa', baslik: 'Ana Sayfa', bolumler: ['hero', 'hizmetOzet', 'ozet', 'rakamlar', 'konum', 'yorumlar', 'cta'] },
     { id: 'hizmetler', baslik: 'Hizmetler', bolumler: ['hizmetler', 'katmanlar', 'surec', 'cta'] },
-    { id: 'filo', baslik: 'Filo ve Kurumsal', bolumler: ['filoKoltuk', 'anlasmalar', 'sss', 'cta'] },
-    { id: 'referanslar', baslik: 'Referanslar', bolumler: ['galeri', 'yorumlar', 'markalar', 'cta'] },
+    { id: 'hakkinda', baslik: 'Hakkında', bolumler: ['hakkimizda', 'bilgiler', 'galeri', 'markalar', 'kariyer', 'cta'] },
+    { id: 'kurumsal-musteriler', baslik: 'Filo ve kurumsal araçlar', menu: 'Filo', bolumler: ['filoKoltuk', 'anlasmalar', 'sss', 'cta'] },
     { id: 'iletisim', baslik: 'İletişim', bolumler: ['iletisim'] },
   ],
   ekstralar: { filoKoltuk, katmanlar },
