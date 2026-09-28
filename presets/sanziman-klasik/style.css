@@ -428,3 +428,34 @@ a { color: inherit; }
   .tab__ind, .svc::before { transition: none; }
   .sivi__wave, .bub { animation: none; }
 }
+
+/* ------------------------------------------------------------------ TABLET (iPad)
+   Masaüstü hero'da da yazılar pinli sahnenin akışında (üst blok + alt kart): kısa yatay ekranda
+   başlık ile yağ kartı çakışmaz. Yağ çubuğu başlık şeridinin altında başlar. */
+.top__nav a { display: inline-flex; align-items: center; min-height: 44px; }
+.top__call { min-height: 44px; }
+@media (min-width: 600px) {
+  .hero__name { padding-bottom: .1em; }
+  .stat__val { padding-bottom: .1em; }
+}
+/* Dikey tablet: telefon düzeni daha geniş kenar boşluğuyla; butonlar yağ çubuğunun altına uzanmaz */
+@media (min-width: 600px) and (max-width: 899px) {
+  :root { --g: 36px; }
+  .hero__cta { margin-right: 0; max-width: 560px; }
+  .hero__slogan { font-size: 18px; }
+}
+@media (min-width: 900px) {
+  .hero__pin { display: flex; flex-direction: column; box-sizing: border-box; padding: 118px var(--g) 56px; }
+  .hero__copy, .hero__foot { position: relative; z-index: 2; left: auto; right: auto; top: auto; bottom: auto; }
+  .hero__foot { margin-top: auto; }
+  .stick { top: 72px; }
+  .stick__rod { top: 38px; }
+  .tp__kod { bottom: 24px; }
+}
+@media (min-width: 900px) and (max-height: 940px) {
+  .hero__pin { padding-top: 100px; padding-bottom: 36px; }
+  .hero__name { font-size: clamp(56px, min(8.4vw, 13svh), 132px); }
+  .hero__slogan { margin-top: 18px; }
+  .gcard__title { font-size: 34px; }
+  .gcard__text { font-size: 16px; }
+}

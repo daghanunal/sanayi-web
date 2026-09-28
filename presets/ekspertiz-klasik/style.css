@@ -411,3 +411,26 @@ body { background: var(--papir); color: var(--ink); font: 400 17px/1.55 var(--bo
   .hero__cta .btn--ghost { flex: 0 0 auto; }
 }
 @media (max-width: 899px) { .hero__hint { display: none; } }
+
+/* --- Tablet (iPad) ---
+   Yatay ekranda hero yazısı sahnenin akışında (sol alt) ve rapor kâğıdının solunda biter; başlık kısa ekrana göre küçülür.
+   Satır kutusu taşmasına karşı büyük rakam/başlık altına em boşluk. */
+.top__nav a { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; min-width: 44px; }
+@media (min-width: 600px) {
+  .hero__name { padding-bottom: .1em; }
+  .stat__val { padding-bottom: .12em; }
+}
+@media (min-width: 900px) {
+  .hero__pin { display: flex; flex-direction: column; justify-content: flex-end; padding: 0 var(--pad) 72px; }
+  .hero__copy { position: relative; left: auto; right: auto; bottom: auto; z-index: 1;
+    width: min(54vw, 760px, calc(100vw - min(540px, 39vw) - 3 * var(--pad) - 24px)); }
+  .hero__name { font-size: clamp(64px, min(9.4vw, 15svh), 168px); }
+  .hero__name.is-long { font-size: clamp(56px, min(8vw, 13svh), 138px); }
+  .hero__name.is-xlong { font-size: clamp(44px, min(6.4vw, 10svh), 110px); }
+  .hero__hint { left: var(--pad); bottom: 24px; }
+}
+.top__nav a, .top__call { white-space: nowrap; }
+@media (min-width: 900px) and (max-width: 1099px) {
+  .top__nav { gap: 14px; }
+  .top__nav a:nth-child(2) { display: none; }
+}

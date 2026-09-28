@@ -526,3 +526,17 @@ main, .foot { position: relative; z-index: 1; }
 .is-static .hint, .is-static .tags { display: none; }
 .is-static .stage { position: fixed; }
 .tag.is-left { flex-direction: row-reverse; padding: 5px 8px 5px 10px; }
+
+/* --- Tablet (iPad) başlığı: marka adı sığsın, durum hero'da zaten yazıyor, arama tuşu simge --- */
+@media (min-width: 760px) and (max-width: 1099px) {
+  .top { gap: 12px; }
+  .top__brand { flex: none; min-width: 0; max-width: 34vw; }
+  .top__status { display: none; }
+  .top__call { width: 44px; height: 44px; padding: 0; justify-content: center; flex: none; }
+  .top__num { display: none; }
+  .rail .rail__i { padding: 0 10px; gap: 5px; }
+}
+@media (min-width: 760px) and (max-width: 899px) {
+  .rail .rail__i { padding: 0 8px; font-size: 11px; }
+}
+@media (min-width: 760px) { .hud__val { margin-top: 10px; } }

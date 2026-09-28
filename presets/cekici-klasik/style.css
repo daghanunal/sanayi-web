@@ -432,3 +432,13 @@ body {
 }
 .adim .bubble { color: var(--murekkep); margin-top: 0; max-width: 420px; }
 .adim .bubble--siz { margin-left: auto; }
+
+/* ---- Tablet (iPad) ----
+   Saira'nın satır kutusu yazı boyunun ~1,58 katı; .86 satır aralığında komşu yazılara ~.36em taşar.
+   Büyük boylarda boşlukları em ile aç (telefon düzeni değişmez). */
+.top__nav a { display: inline-flex; align-items: center; min-height: 44px; }
+@media (min-width: 600px) {
+  .hero__title { padding-top: .2em; padding-bottom: .16em; }
+  .stat__v { padding-bottom: .14em; }
+  .final__title { padding-top: .22em; padding-bottom: .2em; }
+}

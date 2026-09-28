@@ -24,6 +24,8 @@ const smooth = (t) => t * t * (3 - 2 * t);
 const nf = (n, digits = 0) => n.toLocaleString('tr-TR', { minimumFractionDigits: digits, maximumFractionDigits: digits });
 const weak = (navigator.hardwareConcurrency || 8) <= 4 || (navigator.deviceMemory || 8) <= 4;
 const mobile = () => innerWidth < 760;
+// Dikey tablet kadrajı telefonunkine yakın: kamera telefon pozlarını kullanır (yazı üstte, arsa altta)
+const portrait = () => mobile() || (innerWidth < 1000 && innerHeight > innerWidth * 1.15);
 const lite = weak || innerWidth < 760;
 const up = (s) => s.toLocaleUpperCase('tr');
 const V = (x, y, z) => new THREE.Vector3(x, y, z);
@@ -213,7 +215,7 @@ function cardUI() {
 }
 
 const pose = (name) => {
-  const a = POSE[name][mobile() ? 1 : 0];
+  const a = POSE[name][portrait() ? 1 : 0];
   return { pos: V(a[0], a[1], a[2]), look: V(a[3], a[4], a[5]), fov: a[6] };
 };
 function filmPose(p) {
@@ -248,7 +250,7 @@ function filmState(p, time) {
 }
 
 function finaleState(q, time) {
-  const m = mobile();
+  const m = portrait();
   const a = -0.5 + q * 0.95 + Math.sin(time * 0.15) * 0.03;
   const r = m ? 44 : 31;
   return {
@@ -290,32 +292,55 @@ const TAGS = [
 const tagsBox = $('[data-tags]');
 tagsBox.innerHTML = TAGS.map((g) => `<p class="tag${g.acc ? ' tag--acc' : ''}" data-tag><i></i><span></span></p>`).join('');
 const tagEls = $$('[data-tag]');
+// Etiketlerin çarpmaması gereken arayüz katmanları (başlık, açık kart, antet, pafta listesi)
+const tagTablet = () => !mobile() && (innerWidth < 1100 || matchMedia('(pointer: coarse)').matches);
+function tagObstacles() {
+  const out = [];
+  const add = (el) => {
+    if (!el) return;
+    const cs = getComputedStyle(el);
+    if (cs.display === 'none' || cs.visibility === 'hidden' || +cs.opacity < 0.05) return;
+    const r = el.getBoundingClientRect();
+    if (r.width > 1 && r.bottom > 0 && r.top < innerHeight) out.push({ l: r.left - 8, t: r.top - 8, r: r.right + 8, b: r.bottom + 8 });
+  };
+  add(topEl);
+  cards.forEach((c, i) => { if ((cardState[i]?.v || 0) > 0.02) add(c); });
+  add(antet);
+  add(sheetsBox);
+  return out;
+}
+const hitR = (a, b) => a.l < b.r && a.r > b.l && a.t < b.b && a.b > b.t;
 function drawTags(p) {
-  // Telefonda aynı anda en çok iki etiket (vurgulu olanlar önce): sahne okunaklı kalsın
-  const m = mobile();
-  let room = m ? 2 : 99;
-  const order = m ? TAGS.map((g, i) => i).sort((x, y) => (TAGS[y].acc ? 1 : 0) - (TAGS[x].acc ? 1 : 0)) : TAGS.map((g, i) => i);
+  // Telefonda ve tablette aynı anda en çok iki etiket (vurgulu olanlar önce): sahne okunaklı kalsın.
+  // Etiket bir arayüz katmanına ya da başka bir etikete değecekse o kare gösterilmez.
+  const m = mobile(), tab = tagTablet(), pm = portrait();
+  let room = m || tab ? 2 : 99;
+  const order = m || tab ? TAGS.map((g, i) => i).sort((x, y) => (TAGS[y].acc ? 1 : 0) - (TAGS[x].acc ? 1 : 0)) : TAGS.map((g, i) => i);
+  const obst = tagObstacles();
+  const placed = [];
   order.forEach((i) => {
     const g = TAGS[i];
     const el = tagEls[i];
     const [a, b] = g.r;
     let v = seg(p, a, a + 0.012) * (1 - seg(p, b - 0.012, b));
-    if (v > 0.01 && !(g.desk && m)) { if (room > 0) room--; else v = 0; }
-    if (v <= 0.01 || (g.desk && m)) {
-      if (el.style.visibility !== 'hidden') el.style.visibility = 'hidden';
-      return;
-    }
+    const hide = () => { if (el.style.visibility !== 'hidden') el.style.visibility = 'hidden'; };
+    if (v <= 0.01 || (g.desk && pm) || room <= 0) { hide(); return; }
     const s = S.toScreen(g.at);
-    if (s.behind) { el.style.visibility = 'hidden'; return; }
+    if (s.behind) { hide(); return; }
     const txt = typeof g.t === 'function' ? g.t(p) : g.t;
-    if (el._t !== txt) { el.lastChild.textContent = txt; el._t = txt; }
-    el.style.visibility = 'visible';
-    el.style.opacity = v;
-    if (el._t !== txt || !el._w) el._w = el.lastChild.offsetWidth || txt.length * 7.2 + 16;
+    if (el._t !== txt) { el.lastChild.textContent = txt; el._t = txt; el._w = 0; }
+    if (!el._w) el._w = el.lastChild.offsetWidth || txt.length * 7.2 + 16;
     // Nokta ekran dışındaysa etiketi kenara yasla, noktayı gizle
     const edge = s.x < 10 || s.x > innerWidth - 10;
     const x = clamp(s.x, 10, innerWidth - 10);
     const flip = g.left ? x - el._w - 12 > 8 : x + el._w + 12 > innerWidth - 8;
+    const lx = edge ? (flip ? x - el._w : x) : flip ? x - 10 - el._w : x + 10;
+    const box = { l: Math.min(lx, x - 5), r: Math.max(lx + el._w, x + 5), t: s.y - 34, b: s.y + 5 };
+    if (obst.some((o) => hitR(box, o)) || placed.some((o) => hitR(box, o))) { hide(); return; }
+    placed.push({ l: box.l - 6, r: box.r + 6, t: box.t - 6, b: box.b + 6 });
+    room--;
+    el.style.visibility = 'visible';
+    el.style.opacity = v;
     if (el._f !== flip) { el.classList.toggle('is-flip', flip); el._f = flip; }
     if (el._e !== edge) { el.classList.toggle('is-edge', edge); el._e = edge; }
     el.style.transform = `translate3d(${x.toFixed(1)}px, ${s.y.toFixed(1)}px, 0)`;

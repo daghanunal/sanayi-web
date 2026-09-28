@@ -426,6 +426,8 @@ const tagsBox = $('[data-tags]');
 tagsBox.innerHTML = flagged.filter((p) => TAG_AT[p.id]).map((p) => `<span class="tag" style="--c:${esc(d.siniflar[p.sinif].renk)}"><i></i>${esc(p.ad)}<b>${p.sinif === 3 ? esc(d.siniflar[3].ad) : `${p.mikron} µm`}</b></span>`).join('');
 const tagEls = $$('.tag', tagsBox);
 const tagPanels = flagged.filter((p) => TAG_AT[p.id]);
+const tagCard = tagsBox.parentElement.querySelector('[data-card]') || tagsBox;
+const tagTop = $('.top');
 
 function setOn(els, fn) { els.forEach((el, i) => el.classList.toggle('is-on', fn(i))); }
 let lastPanel = '';
@@ -478,6 +480,12 @@ function placeTags(on) {
   if (on !== tagsOn) { tagsOn = on; tagsBox.classList.toggle('is-on', on); }
   if (!on) return;
   const c = S.project(V(0, 0.9, 0));
+  // Etiket rapor kartına, üst çubuğa ya da başka bir etikete değiyorsa o kare gizlenir (tablette kart dar ekranı paylaşır)
+  const pad = (r, k) => ({ l: r.left - k, t: r.top - k, r: r.right + k, b: r.bottom + k });
+  const obst = [pad(tagCard.getBoundingClientRect(), 8), pad(tagTop.getBoundingClientRect(), 6)];
+  const placed = [];
+  const cap = innerWidth < 1100 || matchMedia('(pointer: coarse)').matches ? 3 : 99;
+  const hit = (a, b) => a.l < b.r && a.r > b.l && a.t < b.b && a.b > b.t;
   tagPanels.forEach((p, i) => {
     const s = S.project(TAG_AT[p.id]);
     const el = tagEls[i];
@@ -485,6 +493,11 @@ function placeTags(on) {
     const left = s.x < c.x;
     el.classList.toggle('is-left', left);
     const x = clamp(left ? s.x - w : s.x, 12, innerWidth - w - 12);
+    const box = { l: x, r: x + w, t: s.y - 15, b: s.y + 15 };
+    const off = placed.length >= cap || obst.some((o) => hit(box, o)) || placed.some((o) => hit(box, o));
+    el.style.visibility = off ? 'hidden' : '';
+    if (off) return;
+    placed.push(pad({ left: box.l, top: box.t, right: box.r, bottom: box.b }, 6));
     el.style.transform = `translate3d(${x.toFixed(1)}px, ${s.y.toFixed(1)}px, 0)`;
   });
 }

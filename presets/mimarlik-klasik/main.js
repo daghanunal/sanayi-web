@@ -376,8 +376,10 @@ if (!reducedMotion) {
     const next = odalar[i + 1];
     if (!next || !deck) return;
     gsap.timeline({ scrollTrigger: { trigger: next, start: 'top bottom', end: 'top 20%', scrub: true } })
-      .to($('.oda__card', o), { scale: 0.92, ease: 'none' }, 0)
-      .to($('.oda__dim', o), { opacity: 0.55, ease: 'none' }, 0);
+      .to($('.oda__card', o), { scale: 0.92, ease: 'none', duration: 1 }, 0)
+      .to($('.oda__dim', o), { opacity: 0.55, ease: 'none', duration: 1 }, 0)
+      // Sonraki kart tam oturunca alttaki kartın yazısı gizlenir (desteye binen yazılar üst üste görünmesin)
+      .to($('.oda__body', o), { autoAlpha: 0, ease: 'none', duration: 0.12 }, 0.86);
   });
   odalar.forEach((o) => gsap.fromTo($('.oda__img img', o), { scale: 1.18 }, { scale: 1, ease: 'none', scrollTrigger: { trigger: o, start: 'top bottom', end: 'top 25%', scrub: true } }));
 

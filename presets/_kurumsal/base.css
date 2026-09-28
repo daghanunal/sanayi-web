@@ -106,13 +106,13 @@ a:hover > .k-ok { transform: translateX(4px); }
 .k-nav { margin-left: auto; }
 .k-nav ul { display: flex; gap: 4px; }
 .k-nav a {
-  display: block; padding: 8px 12px; border-radius: var(--k-radius); color: var(--k-metin); text-decoration: none; font-size: 15px; font-weight: 500;
+  display: flex; align-items: center; min-height: 44px; padding: 8px 12px; /* iPad (dokunmatik, > 1080 px): nav bağlantısı ≥ 44 px */ border-radius: var(--k-radius); color: var(--k-metin); text-decoration: none; font-size: 15px; font-weight: 500;
   position: relative;
 }
 .k-nav a::after { content: ''; position: absolute; left: 12px; right: 12px; bottom: 3px; height: 2px; background: var(--k-vurgu); transform: scaleX(0); transform-origin: left; transition: transform .3s; }
 .k-nav a:hover::after, .k-nav a[aria-current]::after { transform: scaleX(1); }
 .k-ust__sag { display: flex; align-items: center; gap: 12px; }
-.k-ust__tel { display: flex; align-items: center; gap: 8px; color: var(--k-metin); text-decoration: none; font-weight: 600; font-size: 15px; white-space: nowrap; }
+.k-ust__tel { display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; min-width: 44px; color: var(--k-metin); text-decoration: none; font-weight: 600; font-size: 15px; white-space: nowrap; }
 .k-ust__tel svg { width: 18px; height: 18px; }
 .k-metin-dugme {
   min-width: 46px; height: 44px; border-radius: var(--k-radius); border: 1.5px solid var(--k-cizgi); background: transparent; cursor: pointer;
@@ -244,7 +244,10 @@ a:hover > .k-ok { transform: translateX(4px); }
 
 .k-rakamlar { background: var(--k-koyu); color: var(--k-koyu-metin); }
 .k-rakamlar__liste { display: grid; grid-template-columns: repeat(2, 1fr); gap: 36px 24px; }
-@media (min-width: 900px) { .k-rakamlar__liste { grid-template-columns: repeat(4, 1fr); } }
+@media (min-width: 900px) {
+  .k-rakamlar__liste { grid-template-columns: repeat(4, 1fr); }
+  .k-rakamlar dd { padding-bottom: .1em; } /* dört sütunda dev rakamın glif kutusu alttaki etikete binmesin (iPad yatay) */
+}
 .k-rakamlar dd { margin: 0; font-family: var(--k-font-baslik); font-weight: var(--k-baslik-agirlik); font-stretch: var(--k-baslik-genislik); font-size: clamp(40px, 5.5vw, 76px); line-height: 1; font-variant-numeric: tabular-nums; }
 .k-rakamlar dt { color: var(--k-koyu-soluk); margin-top: 10px; order: 2; }
 .k-rakamlar__liste > div { display: flex; flex-direction: column; border-top: 1px solid rgb(255 255 255 / .16); padding-top: 18px; }
@@ -389,8 +392,8 @@ html body .k-alt { margin-bottom: 0; }
 .k-alt__yasal { margin-top: 56px; padding-top: 24px; border-top: 1px solid rgb(255 255 255 / .14); display: flex; flex-wrap: wrap; gap: 8px 32px; justify-content: space-between; font-size: 14px; color: var(--k-koyu-soluk); }
 .k-alt__yasal a + a { margin-left: 20px; }
 .k-alt__not { flex-basis: 100%; }
-/* Telefonda footer bağlantıları ≥ 44 px dokunma hedefi (satır aralığı yerine yükseklikten). */
-@media (max-width: 899px) {
+/* Telefonda ve dokunmatik tablette footer bağlantıları ≥ 44 px dokunma hedefi (satır aralığı yerine yükseklikten). */
+@media (max-width: 899px), (pointer: coarse) {
   .k-alt ul { gap: 0; }
   .k-alt ul a, .k-alt__yasal a { display: inline-flex; align-items: center; min-height: 44px; min-width: 44px; }
   .k-alt__yasal { gap: 4px 24px; }
@@ -417,7 +420,9 @@ html body .k-alt { margin-bottom: 0; }
 .k-cerez p { flex: 1; color: var(--k-koyu-soluk); }
 .k-cerez a { color: var(--k-koyu-metin); text-decoration: underline; }
 .k-alt .k-cerez .k-btn { min-height: 44px; flex: none; }
-@media (min-width: 900px) {
+/* Dokunmatik tablette (iPad, pointer: coarse) şerit akışta kalır: sabit kart yatay iPad'de footer'ı ve metni örtüyordu. */
+@media (min-width: 900px) and (hover: hover) and (pointer: fine) {
+  .k-alt:has(> .k-cerez) { padding-bottom: calc(var(--bar-reserve, 20px) + 110px); } /* sayfa sonunda kart yasal satırı örtmesin */
   .k-cerez {
     position: fixed; z-index: 91; right: 24px; bottom: max(24px, calc(var(--bar-space, 0px) + 4px)); left: auto;
     width: auto; max-width: 460px; margin: 0; padding: 14px 16px;

@@ -419,3 +419,13 @@ button.chip:not(.is-on):hover { border-color: var(--ink); }
   .marka__track { animation: none; }
   .cell { transition: none; }
 }
+
+/* --- Tablet (iPad): dokunma hedefleri ≥ 44 px; kısa yatay ekranda "İçeri buyurun" bloğu ve oda seçici ekrana sığar --- */
+.top__nav a { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; min-width: 44px; }
+.top__call { min-height: 44px; }
+@media (min-width: 900px) and (max-height: 860px) {
+  .hero__iceri { font-size: clamp(60px, min(8vw, 12svh), 120px); }
+  .hero__iceri-alt { margin-top: 14px; }
+  .hero__cta { margin-top: 18px; }
+  .program__form { position: static; }
+}
