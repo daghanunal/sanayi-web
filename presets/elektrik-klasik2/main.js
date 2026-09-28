@@ -1,21 +1,47 @@
 import '../../shared/base.css';
 import './style.css';
 import raw from '../../data/devre.json';
-import extra from '../../data/elektrik-klasik2.json';
 import {
-  boot, initSmoothScroll, reducedMotion, gsap, ScrollTrigger, asset,
-  telHref, waHref, mapsHref, mapsEmbed, openStatus, groupedHours, icons, esc,
+  boot, initSmoothScroll, reducedMotion, gsap, ScrollTrigger, asset, GUNLER,
+  telHref, waHref, mapsHref, mapsEmbed, groupedHours, icons, esc,
 } from '../../shared/core.js';
 
-// Klasik aile: WebGL yok. İmza anı hero'da: soket karmaşanın üstünden geçer, arkasında düzgün demet kalır.
+// Klasik aile: WebGL yok. Kimlik: sigorta renk kodlu kablo demeti; her hizmet bir hat.
 gsap.registerPlugin(ScrollTrigger);
-const d = boot({ ...raw, ...extra, preset: 'elektrik-klasik2' });
+const d = boot({ ...raw, preset: 'elektrik-klasik2' });
 const $ = (s, root = document) => root.querySelector(s);
 const $$ = (s, root = document) => [...root.querySelectorAll(s)];
 const root = document.documentElement;
 if (reducedMotion) root.classList.add('rm');
 
-// "2001'den", "1994'ten", "1990'dan": yılın okunuşuna göre ayrılma eki.
+// --- Künye yardımcıları --------------------------------------------------------
+const EK = { b: ['', 'de', 'de', 'te', 'te', 'te', 'da', 'de', 'de', 'da'], o: ['', 'da', 'de', 'da', 'ta', 'de'] };
+const saatEki = (t) => {
+  const [h, m] = t.split(':').map(Number);
+  const n = m || h;
+  return (n % 10 ? EK.b[n % 10] : EK.o[Math.floor(n / 10) % 10]) || 'da';
+};
+const saat = (s) => s.replace(/:/g, '.').replace(/\s*[-–]\s*/, '–');
+const dk = (t) => { const [h, m] = t.split(':').map(Number); return h * 60 + m; };
+function durum(saatler, now = new Date()) {
+  const g = now.getDay();
+  const bugun = saatler[g];
+  const simdi = now.getHours() * 60 + now.getMinutes();
+  if (bugun) {
+    const [ac, kapa] = bugun.split('-');
+    if (simdi >= dk(ac) && simdi < dk(kapa)) return { open: true, durum: 'Şu an açık', saat: `Bugün ${saat(bugun)}` };
+    if (simdi < dk(ac)) return { open: false, durum: 'Şu an kapalı', saat: `Bugün ${saat(bugun)}` };
+  }
+  for (let i = 1; i <= 7; i++) {
+    const s = saatler[(g + i) % 7];
+    if (!s) continue;
+    const ac = s.split('-')[0];
+    return { open: false, durum: bugun ? 'Şu an kapalı' : 'Bugün kapalı', saat: `${i === 1 ? 'Yarın' : GUNLER[(g + i) % 7]} ${saat(ac)}'${saatEki(ac)} açılır` };
+  }
+  return { open: false, durum: 'Kapalı', saat: '' };
+}
+const saatListesi = (s) => groupedHours(s).map(([g, h]) => [g.replace(' – ', '–'), h === 'Kapalı' ? h : saat(h)]);
+const kisaAdres = (a) => a.replace(/,\s*Etimesgut\s*\/\s*Ankara\s*$/i, '');
 function denEki(n) {
   const s = String(n);
   const son = { 1: "'den", 2: "'den", 3: "'ten", 4: "'ten", 5: "'ten", 6: "'dan", 7: "'den", 8: "'den", 9: "'dan" };
@@ -24,13 +50,15 @@ function denEki(n) {
   if (s.at(-2) !== '0') return s + onlar[s.at(-2)];
   return s + "'den";
 }
+$('meta[name="description"]')?.setAttribute('content', `${d.isletme.ad}: ${d.isletme.tanim}. ${d.iletisim.adres}. Telefon: ${d.iletisim.telefon}`);
 
 const ad = esc(d.isletme.ad);
 const tel = esc(d.iletisim.telefon);
-const yil = d.isletme.kurulus;
-const yas = new Date().getFullYear() - yil;
-const wa = (msg) => waHref(d, msg);
+const yas = new Date().getFullYear() - d.isletme.kurulus;
+const acikGun = d.saatler.filter(Boolean).length;
 const img = (p) => asset(p);
+const st = durum(d.saatler);
+const durumMetni = `${st.durum} · ${st.saat}`;
 
 // Bıçak sigorta renk kodu: amper → renk. Kablolar da bu renkleri taşır.
 const AMPER = {
@@ -40,7 +68,6 @@ const AMPER = {
 const PALET = ['#e2261c', '#1f5fd8', '#f2c200', '#1d9b4f', '#7b4b2a', '#d9a441', '#cfd2cc'];
 const renk = (a) => AMPER[a] || AMPER[10];
 const amp = (a) => String(a).replace('.', ',');
-
 const fuseSVG = (a) => {
   const [c, t] = renk(a);
   return `<svg class="fuse" viewBox="0 0 40 52" aria-hidden="true">
@@ -50,172 +77,40 @@ const fuseSVG = (a) => {
     <text x="20" y="26" text-anchor="middle" fill="${t}" font-size="${String(a).length > 2 ? 11 : 14}" font-weight="700" font-family="Spline Sans Mono, monospace">${amp(a)}</text>
   </svg>`;
 };
-
-const durum = openStatus(d.saatler);
+const stripe = `<div class="top__stripe" aria-hidden="true">${PALET.map((c) => `<i style="background:${c}"></i>`).join('')}</div>`;
 
 // --- Üst bar ------------------------------------------------------------------
 
 $('#top').innerHTML = `
   <div class="top__in">
     <a class="top__brand" href="#hero"><span class="top__mark" aria-hidden="true"><i></i><i></i><i></i></span><span>${ad}</span></a>
-    <p class="top__status ${durum.open ? 'is-open' : ''}"><i></i><span class="l">${esc(durum.text)}</span><span class="s">${durum.open ? 'Açık' : 'Kapalı'}</span></p>
-    <nav class="top__nav" aria-label="Bölümler"><a href="#hizmetler">Hizmetler</a><a href="#ariza-kodlari">Arıza kodları</a><a href="#dukkan">Konum</a></nav>
-    <a class="top__call" href="${telHref(d)}">${icons.phone}<span>${tel}</span></a>
+    <nav class="top__nav" aria-label="Bölümler"><a href="#hizmetler">Hizmetler</a><a href="#hakkinda">Hakkında</a><a href="#saatler">Saatler ve konum</a><a href="#iletisim">İletişim</a></nav>
+    <p class="top__status ${st.open ? 'is-open' : ''}"><i></i><span class="s">${st.open ? 'Açık' : 'Kapalı'}</span></p>
+    <a class="top__call" href="${telHref(d)}" aria-label="Ara: ${tel}">${icons.phone}<span>${tel}</span></a>
   </div>
-  <div class="top__stripe" aria-hidden="true">${PALET.map((c) => `<i style="background:${c}"></i>`).join('')}</div>`;
+  ${stripe}`;
 
-// --- Hero -----------------------------------------------------------------------
+// --- Hero: künye ---------------------------------------------------------------------
 
-const H = d.hero;
-const baslikHTML = (vurgu) => {
-  const t = esc(H.baslik);
-  const v = esc(H.vurgu || '');
-  return vurgu && v && t.includes(v) ? t.replace(v, `<em>${v}</em>`) : t;
-};
-const kopya = (ink) => `
-  <div class="hero__copy ${ink ? 'is-ink' : 'is-light'}" ${ink ? '' : 'aria-hidden="true"'}>
-    <p class="hero__eyebrow">${ad} · Şaşmaz Oto Sanayi · ${denEki(yil)} beri</p>
-    ${ink ? `<h1 class="hero__title" id="hero-title">${baslikHTML(true)}</h1>` : `<p class="hero__title">${baslikHTML(false)}</p>`}
-    <div class="harness" ${ink ? 'data-harness' : ''}>${ink ? '' : `<p class="hero__hint"><span class="hero__hintLine"></span>${esc(H.ipucu)}</p>`}</div>
-    <p class="hero__lead">${esc(H.cozum)}</p>
-    <div class="hero__ctaSpace" aria-hidden="true"></div>
-  </div>`;
-
-// İki kopya (karmaşa / temiz) üst üste durur; butonlar tek bir katmanda ikisinin de üstündedir,
-// böylece açılıştan itibaren her an dokunulabilir.
 $('#hero').innerHTML = `
   <div class="hero__stage">
-    <div class="hero__mess">
-      <picture><source media="(min-width: 900px)" srcset="${img('/img/elektrik-klasik2/karmasa-genis.jpg')}" width="2200" height="1364" /><img class="hero__img" src="${img('/img/elektrik-klasik2/karmasa.jpg')}" alt="Birbirine dolanmış renkli elektrik kabloları" width="1066" height="1600" fetchpriority="high" /></picture>
-      <div class="hero__shade" aria-hidden="true"></div>
-      <p class="hero__q" aria-hidden="true"><i></i><span data-t="Hangisi?"></span></p>
-      ${kopya(false)}
-    </div>
-    <div class="hero__clean">${kopya(true)}</div>
-    <div class="plug" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
-    <div class="hero__act">
+    <picture><source media="(min-width: 900px)" srcset="${img('/img/elektrik-klasik2/karmasa-genis.jpg')}" width="2200" height="1364" /><img class="hero__img" src="${img('/img/elektrik-klasik2/karmasa.jpg')}" alt="Motor bölmesinde renkli elektrik kabloları" width="1066" height="1600" fetchpriority="high" /></picture>
+    <div class="hero__shade" aria-hidden="true"></div>
+    <div class="wrap hero__copy">
+      <h1 class="hero__title" id="hero-title">${ad}</h1>
+      <p class="hero__what">${esc(d.isletme.tanim)}</p>
+      <dl class="kunye">
+        <div><dt>Adres</dt><dd>${esc(kisaAdres(d.iletisim.adres))}</dd></div>
+        <div><dt>Bugün</dt><dd class="state-line ${st.open ? 'is-open' : ''}"><i></i>${esc(st.durum)} · ${esc(st.saat.replace(/^Bugün /, ''))}</dd></div>
+        <div><dt>Telefon</dt><dd><a href="${telHref(d)}">${tel}</a></dd></div>
+      </dl>
       <div class="hero__cta">
-        <a class="btn btn--red" href="${telHref(d)}">${icons.phone}<span>Hemen ara</span></a>
-        <a class="btn btn--wa" href="${wa()}" target="_blank" rel="noopener">${icons.whatsapp}<span>WhatsApp</span></a>
+        <a class="btn btn--red" href="${telHref(d)}">${icons.phone}<span>Ara</span></a>
+        <a class="btn btn--white" href="${waHref(d)}" target="_blank" rel="noopener">${icons.whatsapp}<span>WhatsApp</span></a>
+        <a class="btn btn--glass" href="${mapsHref(d)}" target="_blank" rel="noopener">${icons.pin}<span>Yol tarifi</span></a>
       </div>
     </div>
-  </div>`;
-
-// Demet: her hizmet bir kablo, rengi sigortasının rengi.
-const HAT = d.hizmetler.map((h) => ({ ad: h.baslik, a: h.sigorta, c: renk(h.sigorta)[0], t: renk(h.sigorta)[1] }));
-const FAULT = Math.max(0, HAT.findIndex((h) => /kablo|tesisat/i.test(h.ad)));
-const harness = $('[data-harness]');
-
-function drawHarness() {
-  const W = harness.clientWidth;
-  const h = harness.clientHeight;
-  if (!W || !h) return;
-  const n = HAT.length;
-  const pad = Math.max(8, h * 0.07);
-  const lane = (i) => pad + (i * (h - pad * 2)) / (n - 1);
-  const cy = h / 2;
-  const tight = Math.min(6, h / 40);
-  const bx = Math.min(W * 0.2, 240);
-  const sw = Math.max(5, Math.min(9, h / 42));
-  const path = (i) => {
-    const y0 = cy + (i - (n - 1) / 2) * tight;
-    const y = lane(i);
-    return `M -20 ${y0} L ${bx * 0.28} ${y0} C ${bx * 0.62} ${y0}, ${bx * 0.55} ${y}, ${bx} ${y} L ${W + 30} ${y}`;
-  };
-  const wires = HAT.map((w, i) => {
-    const p = path(i);
-    const light = w.a === 25 || w.a === 20 || w.a === 5;
-    const stripe = w.a === 30 ? `<path d="${p}" stroke="#f2c200" stroke-width="${sw}" stroke-dasharray="14 18" fill="none"/>` : '';
-    return `<g class="wire ${i === FAULT ? 'is-fault' : ''}" style="--c:${w.c}">
-      <path d="${p}" stroke="${light ? '#8a8e88' : '#15171a'}" stroke-opacity=".55" stroke-width="${sw + 2.4}" fill="none"/>
-      <path d="${p}" stroke="${w.c}" stroke-width="${sw}" fill="none"/>
-      ${stripe}
-      <path d="${p}" stroke="#fff" stroke-opacity=".38" stroke-width="${Math.max(1.2, sw * 0.22)}" fill="none" transform="translate(0 ${-sw * 0.22})"/>
-    </g>`;
-  }).join('');
-  const tape = `<rect x="${bx * 0.02}" y="${cy - tight * 5}" width="${bx * 0.26}" height="${tight * 10}" rx="${tight * 1.6}" fill="#15171a"/>
-    ${[0.07, 0.14, 0.21].map((f) => `<rect x="${bx * f}" y="${cy - tight * 5}" width="1.5" height="${tight * 10}" fill="#3b3f44"/>`).join('')}`;
-  const fx = Math.min(W * 0.78, W - 60);
-  const fy = lane(FAULT);
-  const desk = innerWidth >= 900;
-  const th = desk ? 26 : 22; // etiket yüksekliği
-  const tags = HAT.map((w, i) => `<g class="htag ${i === FAULT ? 'is-fault' : ''}" transform="translate(${bx + 10} ${lane(i)})">
-      <rect class="htag__bg" x="0" y="${-th / 2}" height="${th}" rx="6"/>
-      <rect class="htag__amp" x="3" y="${-th / 2 + 3}" height="${th - 6}" rx="4" fill="${w.c}"/>
-      <text class="htag__a" x="8" y="0.5" fill="${w.t}">${amp(w.a)}A</text>
-      <text class="htag__n" y="0.5">${esc(w.ad)}</text>
-    </g>`).join('');
-  harness.innerHTML = `
-    <svg class="harness__svg" viewBox="0 0 ${W} ${h}" width="${W}" height="${h}" aria-hidden="true">${wires}${tape}
-      <g class="spark" transform="translate(${fx} ${fy})"><circle r="${sw * 2.6}" class="spark__ring"/><circle r="${sw * 0.9}" class="spark__dot"/></g>
-      <g class="htags">${tags}</g>
-      <g transform="translate(${fx + 8} ${fy + (desk ? 20 : 16)})"><g class="found">
-        <path class="found__tip" d="M -12 0 l 6 -6 l 6 6 z"/>
-        <rect class="found__bg" y="0" height="${desk ? 28 : 24}" rx="6"/>
-        <text class="found__t" y="${desk ? 14.5 : 12.5}">${esc(H.bulgu)}</text>
-      </g></g>
-    </svg>`;
-  // Yazı genişliğini ölç, kutuları ona göre kur.
-  harness.querySelectorAll('.htag').forEach((g) => {
-    const a = g.querySelector('.htag__a'), n = g.querySelector('.htag__n');
-    const aw = a.getComputedTextLength();
-    g.querySelector('.htag__amp').setAttribute('width', aw + 10);
-    n.setAttribute('x', aw + 20);
-    g.querySelector('.htag__bg').setAttribute('width', aw + 28 + n.getComputedTextLength());
-  });
-  {
-    const t = harness.querySelector('.found__t');
-    const tw = t.getComputedTextLength() + 20;
-    const bg = harness.querySelector('.found__bg');
-    bg.setAttribute('x', -tw); bg.setAttribute('width', tw);
-    t.setAttribute('x', -tw + 10);
-  }
-  const plug = $('.plug');
-  const r = harness.getBoundingClientRect();
-  const s = $('.hero__stage').getBoundingClientRect();
-  plug.style.top = `${r.top - s.top + pad - 14}px`;
-  plug.style.height = `${h - pad * 2 + 28}px`;
-}
-
-// --- Ölçü: hakkımızda + sayaçlar ---------------------------------------------------
-
-const stats = d.istatistikler.map((s) => ({ ...s, deger: s.kurulustanHesapla ? yas : s.deger }));
-const sayi = (n) => Number(n).toLocaleString('tr-TR');
-$('#hakkimizda').innerHTML = `
-  <div class="wrap olcu__grid">
-    <div class="olcu__text">
-      <p class="kicker rv"><i style="background:#1f5fd8"></i>Biz</p>
-      <h2 class="h2 rv">Parça atıp denemeyiz, <span class="u">sebebi buluruz.</span></h2>
-      <p class="olcu__lead rv">${esc(d.isletme.hakkinda)}</p>
-      <p class="olcu__garanti rv">${fuseSVG(10)}<span>${esc(d.garanti)} Değişen parçayı size geri veririz.</span></p>
-    </div>
-    <figure class="olcu__photo rv">
-      <img src="${img('/img/elektrik-klasik2/kaput-usta.jpg')}" alt="Kaputun altında kablo soketi kontrolü" width="1600" height="1066" loading="lazy" />
-      <figcaption>Önce ölçüm, sonra parça.</figcaption>
-    </figure>
-    <figure class="olcu__photo olcu__photo--s rv">
-      <img src="${img('/img/elektrik-klasik2/aku-takviye.jpg')}" alt="Motor bölmesinde akü ve kırmızı takviye kablosu" width="1600" height="1068" loading="lazy" />
-    </figure>
-  </div>
-  <ul class="wrap sleeves">
-    ${stats.map((s, i) => `
-      <li class="sleeve rv" style="--c:${PALET[i % PALET.length]}">
-        <span class="sleeve__wire" aria-hidden="true"></span>
-        <span class="sleeve__tube"><b data-count="${s.deger}">${sayi(s.deger)}</b></span>
-        <span class="sleeve__lbl">${esc(s.etiket)}</span>
-      </li>`).join('')}
-  </ul>`;
-
-// --- Sigorta bandı ------------------------------------------------------------
-
-$('#bant').innerHTML = `
-  <div class="bant__img"><img src="${img('/img/elektrik-klasik2/sigortalar.jpg')}" alt="Sıra sıra dizilmiş renkli bıçak sigortalar" width="1600" height="1066" loading="lazy" /></div>
-  <div class="wrap bant__box">
-    <div class="bant__card rv">
-      <h2 class="h2">${esc(d.bant.baslik)}</h2>
-      <p>${esc(d.bant.metin)}</p>
-      <ul class="bant__legend">${Object.keys(AMPER).map(Number).sort((a, b) => a - b).map((a) => `<li>${fuseSVG(a)}</li>`).join('')}</ul>
-    </div>
+    <ul class="hero__wires" aria-hidden="true">${d.hizmetler.map((h) => `<li style="--c:${renk(h.sigorta)[0]}"></li>`).join('')}</ul>
   </div>`;
 
 // --- Hizmetler: her hat bir iş -----------------------------------------------------
@@ -223,9 +118,9 @@ $('#bant').innerHTML = `
 $('#hizmetler').innerHTML = `
   <div class="wrap">
     <header class="head">
-      <p class="kicker rv"><i style="background:#e2261c"></i>Hizmetler</p>
-      <h2 class="h2 rv">Hangi hat arızalıysa, <span class="u">ondan başlarız.</span></h2>
-      <p class="head__p rv">Süreler ortalamadır. Aracı gördükten sonra netleşir, fiyatı işe başlamadan söyleriz.</p>
+      <p class="kicker rv" aria-hidden="true"><i style="background:#e2261c"></i></p>
+      <h2 class="h2 rv">Hizmetler</h2>
+      <p class="head__p rv">Süreler ortalamadır. Fiyat ve randevu için arayın.</p>
     </header>
     <ol class="lines">
       ${d.hizmetler.map((h, i) => `
@@ -236,69 +131,74 @@ $('#hizmetler').innerHTML = `
             <h3>${esc(h.baslik)}</h3>
             <p>${esc(h.aciklama)}</p>
           </div>
-          <p class="line__meta"><span>Süre <b>${esc(h.sure)}</b></span>
-            <a href="${wa(`Merhaba ${d.isletme.ad}, ${h.baslik} için bilgi almak istiyorum.`)}" target="_blank" rel="noopener">${icons.whatsapp}<span>Bu iş için sor</span></a></p>
+          <p class="line__meta"><span>Süre <b>${esc(h.sure)}</b></span></p>
           <i class="line__wire" aria-hidden="true"></i>
         </li>`).join('')}
     </ol>
   </div>`;
 
-// --- Arıza kodları: kablo etiketleri ----------------------------------------------------
+// --- Hakkında ---------------------------------------------------------------------
 
-$('#ariza-kodlari').innerHTML = `
-  <div class="wrap kod__grid">
-    <div class="kod__side">
-      <p class="kicker rv"><i style="background:#f2c200"></i>Arıza kodları</p>
-      <h2 class="h2 rv">${esc(d.kodlar.baslik)}</h2>
-      <p class="head__p rv">${esc(d.kodlar.metin)}</p>
-      <figure class="kod__photo rv"><img src="${img('/img/elektrik-klasik2/multimetre.jpg')}" alt="Tezgâhta ölçü aleti ve kırmızı ölçüm kabloları" width="1600" height="1201" loading="lazy" /></figure>
+$('#hakkinda').innerHTML = `
+  <div class="wrap olcu__grid">
+    <div class="olcu__text">
+      <p class="kicker rv" aria-hidden="true"><i style="background:#1f5fd8"></i></p>
+      <h2 class="h2 rv">Hakkında</h2>
+      <p class="olcu__lead rv">${denEki(d.isletme.kurulus)} beri Şaşmaz Oto Sanayi Sitesi'nde. ${esc(d.isletme.hakkinda)}</p>
+      <dl class="facts rv">
+        ${(d.bilgiler || []).map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join('')}
+        ${d.markalar?.length ? `<div><dt>Sık gelen markalar</dt><dd>${d.markalar.map(esc).join(', ')}</dd></div>` : ''}
+      </dl>
     </div>
-    <ul class="tags">
-      ${d.arizaKodlari.map((k, i) => `
-        <li class="tag rv" style="--c:${PALET[(i + 1) % 4]}">
-          <span class="tag__wire" aria-hidden="true"></span>
-          <p class="tag__code"><span>${esc(k.kod)}</span></p>
-          <dl>
-            <dt>Beyin ne yazdı</dt><dd>${esc(k.anlam)}</dd>
-            <dt>Ne çıktı</dt><dd class="ok">${esc(k.cozum)}</dd>
-          </dl>
-        </li>`).join('')}
-    </ul>
+    <figure class="olcu__photo rv">
+      <img src="${img('/img/elektrik-klasik2/kaput-usta.jpg')}" alt="Kaputun altında kablo soketi kontrolü" width="1600" height="1066" loading="lazy" decoding="async" />
+    </figure>
+    <figure class="olcu__photo olcu__photo--s rv">
+      <img src="${img('/img/elektrik-klasik2/aku-takviye.jpg')}" alt="Motor bölmesinde akü ve kırmızı takviye kablosu" width="1600" height="1068" loading="lazy" decoding="async" />
+    </figure>
+  </div>
+  <ul class="wrap sleeves">
+    <li class="sleeve rv" style="--c:${PALET[0]}">
+      <span class="sleeve__wire" aria-hidden="true"></span>
+      <span class="sleeve__tube"><b data-count="${yas}">${yas}</b><small>yıl</small></span>
+      <span class="sleeve__lbl">Şaşmaz Oto Sanayi Sitesi'nde</span>
+    </li>
+    <li class="sleeve rv" style="--c:${PALET[1]}">
+      <span class="sleeve__wire" aria-hidden="true"></span>
+      <span class="sleeve__tube"><b data-count="${acikGun}">${acikGun}</b><small>gün</small></span>
+      <span class="sleeve__lbl">haftada açık</span>
+    </li>
+  </ul>`;
+
+// --- Çalışma saatleri ve konum ---------------------------------------------------------
+
+$('#saatler').innerHTML = `
+  <div class="wrap dukkan__grid">
+    <div class="dukkan__info">
+      <p class="kicker rv" aria-hidden="true"><i style="background:#7b4b2a"></i></p>
+      <h2 class="h2 rv">Çalışma saatleri ve konum</h2>
+      <p class="state ${st.open ? 'is-open' : ''} rv"><i></i><span>${esc(durumMetni)}</span></p>
+      <table class="hours rv">
+        <caption class="sr-only">Çalışma saatleri</caption>
+        ${saatListesi(d.saatler).map(([g, s]) => `<tr><th scope="row">${esc(g)}</th><td>${esc(s)}</td></tr>`).join('')}
+      </table>
+      <p class="dukkan__adres rv">${esc(d.iletisim.adres)}</p>
+      <div class="dukkan__cta rv">
+        <a class="btn btn--red" href="${mapsHref(d)}" target="_blank" rel="noopener">${icons.pin}<span>Yol tarifi</span></a>
+        <a class="btn btn--line" href="${telHref(d)}">${icons.phone}<span>${tel}</span></a>
+      </div>
+    </div>
+    <div class="map rv" data-map><p>Harita</p></div>
   </div>`;
 
-// --- Süreç: demet inceldikçe iş biter --------------------------------------------------
+// --- Örnek yorumlar -------------------------------------------------------------------
 
-const SC = ['#e2261c', '#f2c200', '#1f5fd8', '#1d9b4f'];
-$('#surec').innerHTML = `
-  <div class="wrap surec__grid">
-    <header class="head">
-      <p class="kicker rv"><i style="background:#1d9b4f"></i>Nasıl çalışırız</p>
-      <h2 class="h2 rv">Dört tel, <span class="u">dört adım.</span></h2>
-      <p class="head__p rv">Her adım bir teli bağlar. Son tel bağlanmadan araç çıkmaz.</p>
-    </header>
-    <ol class="pins">
-      ${d.surec.map((s, k) => `
-        <li class="pin rv" style="--c:${SC[k % 4]}">
-          <span class="pin__rails" aria-hidden="true">
-            ${SC.map((c, j) => (j > k ? `<i class="v" style="--x:${j};background:${c}"></i>` : j === k ? `<i class="v v--end" style="--x:${j};background:${c}"></i><i class="h" style="--x:${j};background:${c}"></i>` : '')).join('')}
-          </span>
-          <span class="pin__ring" aria-hidden="true"></span>
-          <div class="pin__body"><p class="pin__no">Adım ${k + 1}</p><h3>${esc(s.baslik)}</h3><p>${esc(s.aciklama)}</p></div>
-        </li>`).join('')}
-    </ol>
-  </div>`;
-
-// --- Yorumlar ---------------------------------------------------------------------
-
-const P = d.puan;
-const yildiz = (n) => `<span class="stars" aria-label="${n} yıldız">${Array.from({ length: 5 }, (_, i) => `<i class="${i < n ? 'on' : ''}">${icons.star}</i>`).join('')}</span>`;
+const yildiz = (n) => `<span class="stars" role="img" aria-label="5 üzerinden ${n}">${Array.from({ length: 5 }, (_, i) => `<i class="${i < n ? 'on' : ''}">${icons.star}</i>`).join('')}</span>`;
 $('#yorumlar').innerHTML = `
   <div class="wrap yorum__head">
-    <div>
-      <p class="kicker rv"><i style="background:#d9a441"></i>Örnek yorumlar</p>
-      <h2 class="h2 rv">Lamba söndü, <span class="u">onlar yazdı.</span></h2>
-    </div>
-    <div class="score rv"><b>${String(P.ortalama).replace('.', ',')}</b><div>${yildiz(5)}<p>Örnek puan · ${sayi(P.adet)} değerlendirme</p></div></div>
+    <p class="kicker rv" aria-hidden="true"><i style="background:#d9a441"></i></p>
+    <h2 class="h2 rv">Örnek yorumlar</h2>
+    <p class="head__p rv">Tasarım örneğidir; işletmenin gerçek yorumları buraya gelir.</p>
   </div>
   <div class="yorum__track" data-lenis-prevent-touch>
     <ul class="yorum__list">
@@ -311,49 +211,25 @@ $('#yorumlar').innerHTML = `
     </ul>
   </div>`;
 
-// --- Markalar ------------------------------------------------------------------------
-
-const brandLine = d.markalar.map((m, i) => `<span>${esc(m)}</span><i style="background:${PALET[i % PALET.length]}"></i>`).join('');
-$('#markalar').innerHTML = `<p class="marka__t">Her marka, her model</p><div class="marq"><div class="marq__in">${brandLine}${brandLine}</div></div>`;
-
-// --- Dükkân ---------------------------------------------------------------------------
-
-$('#dukkan').innerHTML = `
-  <div class="wrap dukkan__grid">
-    <div class="dukkan__info">
-      <p class="kicker rv"><i style="background:#7b4b2a"></i>Dükkân</p>
-      <h2 class="h2 rv">Şaşmaz'dayız, <span class="u">aracı getirin.</span></h2>
-      <p class="state ${durum.open ? 'is-open' : ''} rv"><i></i><span>${esc(durum.text)}</span></p>
-      <table class="hours rv">
-        <caption class="sr-only">Çalışma saatleri</caption>
-        ${groupedHours(d.saatler).map(([g, s]) => `<tr><th scope="row">${esc(g)}</th><td>${esc(s)}</td></tr>`).join('')}
-      </table>
-      <p class="dukkan__adres rv">${esc(d.iletisim.adres)}</p>
-      <div class="dukkan__cta rv">
-        <a class="btn btn--red" href="${mapsHref(d)}" target="_blank" rel="noopener">${icons.pin}<span>Yol tarifi al</span></a>
-        <a class="btn btn--line" href="${telHref(d)}">${icons.phone}<span>${tel}</span></a>
-      </div>
-    </div>
-    <div class="map rv" data-map><p>Harita yükleniyor</p></div>
-  </div>`;
-
-// --- Final ------------------------------------------------------------------------------
+// --- İletişim ------------------------------------------------------------------------------
 
 $('#iletisim').innerHTML = `
-  <img class="final__img" src="${img('/img/elektrik-klasik2/kablolar.jpg')}" alt="" width="1800" height="1199" loading="lazy" />
+  <img class="final__img" src="${img('/img/elektrik-klasik2/kablolar.jpg')}" alt="" width="1800" height="1199" loading="lazy" decoding="async" />
   <div class="wrap final__in">
-    <h2 class="final__title rv">${esc(d.final.baslik)}</h2>
-    <p class="rv">${esc(d.final.metin)}</p>
+    <p class="kicker kicker--light rv" aria-hidden="true"><i style="background:#f2c200"></i></p>
+    <h2 class="final__title rv">İletişim</h2>
+    <p class="rv">Fiyat ve randevu için arayın ya da WhatsApp'tan yazın.</p>
     <div class="final__cta rv">
       <a class="btn btn--red btn--xl" href="${telHref(d)}">${icons.phone}<span>${tel}</span></a>
-      <a class="btn btn--white btn--xl" href="${wa()}" target="_blank" rel="noopener">${icons.whatsapp}<span>WhatsApp'tan yaz</span></a>
+      <a class="btn btn--white btn--xl" href="${waHref(d)}" target="_blank" rel="noopener">${icons.whatsapp}<span>WhatsApp</span></a>
     </div>
+    <p class="final__addr rv">${esc(d.iletisim.adres)}<br>${esc(durumMetni)}</p>
   </div>`;
 
 $('#foot').innerHTML = `
-  <div class="top__stripe" aria-hidden="true">${PALET.map((c) => `<i style="background:${c}"></i>`).join('')}</div>
+  ${stripe}
   <div class="wrap foot__in">
-    <p class="foot__brand">${ad}</p>
+    <div><p class="foot__brand">${ad}</p><p class="foot__what">${esc(d.isletme.tanim)}</p></div>
     <p>${esc(d.iletisim.adres)}<br><a href="${telHref(d)}">${tel}</a></p>
     <p class="foot__small">© ${new Date().getFullYear()} ${ad}. Fotoğraflar: Pexels, temsilîdir. Yorumlar örnektir.</p>
   </div>`;
@@ -369,45 +245,13 @@ new IntersectionObserver((entries, io) => {
 
 // --- Hareket -----------------------------------------------------------------------------
 
-drawHarness();
-let rw = innerWidth;
-addEventListener('resize', () => {
-  if (Math.abs(innerWidth - rw) < 2 && innerWidth < 900) return; // mobil adres çubuğu
-  rw = innerWidth;
-  drawHarness();
-  ScrollTrigger.refresh();
-});
-document.fonts?.ready.then(() => { drawHarness(); ScrollTrigger.refresh(); });
-
-const hero = $('#hero');
 if (reducedMotion) {
-  hero.classList.add('is-found', 'is-done');
   $$('.rv').forEach((e) => e.classList.add('in'));
 } else {
   initSmoothScroll();
-
-  // İmza: temiz panel soldan sağa açılır (clip-path; panel tam ekran kalır), soket panelin kenarını taşır.
-  const stageW = () => $('.hero__stage').clientWidth;
-  const tl = gsap.timeline({
-    defaults: { ease: 'none' },
-    scrollTrigger: {
-      trigger: hero, start: 'top top', end: '+=170%', pin: '.hero__stage', scrub: 0.5, invalidateOnRefresh: true,
-      onUpdate: (st) => {
-        hero.classList.toggle('is-found', st.progress > 0.8);
-        hero.classList.toggle('is-done', st.progress > 0.9);
-      },
-    },
-  });
-  tl.fromTo('.hero__clean', { clipPath: 'inset(0% 100% 0% 0%)' }, { clipPath: 'inset(0% 0% 0% 0%)', duration: 0.72 }, 0)
-    .fromTo('.plug', { x: 0 }, { x: () => stageW(), duration: 0.72 }, 0)
-    .fromTo('.hero__img', { scale: 1.14 }, { scale: 1, duration: 0.72 }, 0)
-    .fromTo('.hero__hint', { autoAlpha: 1 }, { autoAlpha: 0, duration: 0.08 }, 0.02)
-    .to('.plug', { x: () => stageW() - $('.plug').offsetWidth * 0.5 - 6, duration: 0.08, ease: 'power2.out' }, 0.72)
-    .to({}, { duration: 0.2 });
-
-  // Açılışta soket kenardan hafifçe görünür, "çek beni" der.
-  gsap.fromTo('.plug', { xPercent: -60 }, { xPercent: 0, duration: 0.9, ease: 'power3.out', delay: 0.3 });
-  gsap.fromTo('.hero__mess .hero__eyebrow, .hero__mess .hero__title, .hero__mess .hero__lead', { y: 22, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.7, stagger: 0.07, ease: 'power3.out' });
+  // Açılış: künye satır satır gelir, hero'nun altındaki demet hatları soldan çekilir (bir kez, ~1 sn).
+  gsap.from('.hero__copy > *', { y: 20, autoAlpha: 0, duration: 0.6, stagger: 0.06, ease: 'power3.out', clearProps: 'all' });
+  gsap.from('.hero__wires li', { scaleX: 0, transformOrigin: 'left center', duration: 0.9, stagger: 0.05, ease: 'power3.inOut', delay: 0.15 });
 
   ScrollTrigger.batch('.rv', {
     start: 'top 88%',
@@ -422,18 +266,14 @@ if (reducedMotion) {
       trigger: el, start: 'top 90%', once: true,
       onEnter: () => {
         const o = { v: 0 };
-        gsap.to(o, { v: to, duration: 1.4, ease: 'power2.out', onUpdate: () => { el.textContent = sayi(Math.round(o.v)); } });
+        gsap.to(o, { v: to, duration: 1.2, ease: 'power2.out', onUpdate: () => { el.textContent = Math.round(o.v); } });
       },
     });
   });
 
-  // Sigorta bandı: hafif paralaks.
-  gsap.fromTo('.bant__img img', { yPercent: -8 }, {
-    yPercent: 8, ease: 'none',
-    scrollTrigger: { trigger: '#bant', start: 'top bottom', end: 'bottom top', scrub: true },
-  });
   gsap.fromTo('.final__img', { yPercent: -6, scale: 1.1 }, {
     yPercent: 6, scale: 1.1, ease: 'none',
     scrollTrigger: { trigger: '#iletisim', start: 'top bottom', end: 'bottom top', scrub: true },
   });
+  addEventListener('load', () => ScrollTrigger.refresh());
 }

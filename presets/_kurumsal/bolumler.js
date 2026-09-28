@@ -141,15 +141,17 @@ export const BOLUMLER = {
   },
 
   ozet: {
-    render(d) {
+    render(d, ctx = {}) {
       const o = k(d).ozet || {};
+      // Bağlantı kurumsal/hakkında sayfasına gider (varyant sayfayı "hakkinda" diye adlandırmış olabilir).
+      const sf = ctx.sayfalar?.find((x) => x.id === 'kurumsal') || ctx.sayfalar?.find((x) => x.id === 'hakkinda') || { id: 'kurumsal', baslik: 'Kurumsal' };
       return `
         <section class="k-bolum k-ozet">
           <div class="k-kap k-iki">
             <div>${baslik(o.baslik || 'Hakkımızda')}</div>
             <div>
               <p class="k-buyuk-metin">${esc(o.metin || d.isletme.hakkinda)}</p>
-              ${rota('kurumsal', `Kurumsal ${ok}`, 'k-link')}
+              ${rota(sf.id, `${sf.menu || sf.baslik} ${ok}`, 'k-link')}
             </div>
           </div>
         </section>`;

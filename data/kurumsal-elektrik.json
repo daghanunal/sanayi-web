@@ -46,31 +46,31 @@
       "kod": "P0300",
       "anlam": "Rastgele silindir ateşleme hatası",
       "aciliyet": "hemen",
-      "not": "Motor tekler. Lamba yanıp sönüyorsa katalizör zarar görebilir; zorlamadan getirin."
+      "not": "Motor tekler. Lamba yanıp sönüyorsa katalizör zarar görebilir; araç zorlanmamalı."
     },
     {
       "kod": "P0301",
       "anlam": "1. silindirde ateşleme hatası",
       "aciliyet": "hemen",
-      "not": "Genelde bobin, buji ya da enjektör. Motor tekler, uzun süre sürmeyin."
+      "not": "Genelde bobin, buji ya da enjektör. Motor tekler, uzun süre kullanılmamalı."
     },
     {
       "kod": "P0302",
       "anlam": "2. silindirde ateşleme hatası",
       "aciliyet": "hemen",
-      "not": "Genelde bobin, buji ya da enjektör. Motor tekler, uzun süre sürmeyin."
+      "not": "Genelde bobin, buji ya da enjektör. Motor tekler, uzun süre kullanılmamalı."
     },
     {
       "kod": "P0303",
       "anlam": "3. silindirde ateşleme hatası",
       "aciliyet": "hemen",
-      "not": "Genelde bobin, buji ya da enjektör. Motor tekler, uzun süre sürmeyin."
+      "not": "Genelde bobin, buji ya da enjektör. Motor tekler, uzun süre kullanılmamalı."
     },
     {
       "kod": "P0304",
       "anlam": "4. silindirde ateşleme hatası",
       "aciliyet": "hemen",
-      "not": "Genelde bobin, buji ya da enjektör. Motor tekler, uzun süre sürmeyin."
+      "not": "Genelde bobin, buji ya da enjektör. Motor tekler, uzun süre kullanılmamalı."
     },
     {
       "kod": "P0335",
@@ -100,7 +100,7 @@
       "kod": "P0420",
       "anlam": "Katalizör verimi eşik değerin altında",
       "aciliyet": "izle",
-      "not": "Muayenede sorun çıkarır. Önce oksijen sensörlerini ölçeriz; katalizör her zaman bozuk değildir."
+      "not": "Muayenede sorun çıkarır. Önce oksijen sensörleri ölçülür; katalizör her zaman bozuk değildir."
     },
     {
       "kod": "P0442",
@@ -112,7 +112,7 @@
       "kod": "P0455",
       "anlam": "Yakıt buharı sisteminde büyük kaçak",
       "aciliyet": "izle",
-      "not": "Önce yakıt kapağının tam kapandığına bakın."
+      "not": "Önce yakıt kapağının tam kapandığı kontrol edilir."
     },
     {
       "kod": "P0500",
@@ -124,13 +124,13 @@
       "kod": "P0562",
       "anlam": "Sistem voltajı düşük",
       "aciliyet": "yakinda",
-      "not": "Akü ya da şarj dinamosu. Araç yolda kalabilir; şarj voltajını ölçelim."
+      "not": "Akü ya da şarj dinamosu. Araç yolda kalabilir; şarj voltajı ölçülür."
     },
     {
       "kod": "P0606",
       "anlam": "Motor beyni (ECU) iç işlemci hatası",
       "aciliyet": "yakinda",
-      "not": "Önce besleme ve şaseyi ölçeriz; beyin çoğu zaman tamirle kurtulur."
+      "not": "Önce besleme ve şase ölçülür; beyin çoğu zaman onarılabilir."
     },
     {
       "kod": "P0700",
@@ -182,210 +182,177 @@
     }
   ],
   "kurumsal": {
-    "hero": {
-      "baslik": "Arızayı ölçeriz, tahmin etmeyiz.",
-      "metin": "Filo, servis ve kiralama araçları için arıza tespit, beyin onarımı, akü-şarj ve hibrit batarya testi. Her aracın hata kodu geçmişini kayıtta tutar, ne yaptığımızı raporlarız.",
-      "birincil": "Filo teklifi isteyin",
-      "ikincil": "Arıza kodu sorgula",
-      "ikincilRota": "ariza-kodu"
-    },
+    "hizmetOzetBaslik": "Hizmetler",
     "ozet": {
-      "baslik": "Cihazla başlar, kabloyla biter",
-      "metin": "Önce cihaza bağlar, canlı veriyi okuruz. Sonra kabloyu tek tek takip eder, arızanın asıl yerini buluruz. Parça değiştirmeden önce ölçüm sonucunu size gösteririz."
+      "baslik": "Hakkında",
+      "metin": "Şaşmaz Oto Sanayi Sitesi'nde oto elektrik, elektronik ve arıza tespiti. Bireysel araçların yanında şirket, servis ve kiralama araçları. Benzinli, dizel ve hibrit binek araçlar, hafif ticari araçlar."
     },
-    "hizmetOzetBaslik": "Oto elektrik ve elektronik",
-    "anlasmaBaslik": "Kurumsal müşterilerimiz için",
-    "anlasmaMetin": "Şirket araçlarınızın elektrik ve elektronik arızaları için tek muhatap, araç bazında arıza kaydı ve dönemlik fatura.",
+    "konumBaslik": "Çalışma saatleri ve konum",
+    "yorumBaslik": "Örnek yorumlar",
+    "cta": {
+      "baslik": "İletişim",
+      "metin": "Fiyat ve randevu için arayın ya da formdan yazın.",
+      "buton": "İletişim formu"
+    },
+    "hizmetLink": "Bu hizmet için bilgi alın",
+    "surecBaslik": "Çalışma sırası",
+    "anlasmaBaslik": "Filo ve kurumsal araçlar",
+    "anlasmaMetin": "Şirket, servis ve kiralama araçlarının elektrik ve elektronik arızaları için araç bazında kayıt ve dönemlik fatura.",
     "anlasmalar": [
       {
-        "baslik": "Filo arıza tespit anlaşması",
-        "kisa": "Araç bazında hata kodu geçmişi, öncelikli giriş.",
-        "metin": "Filonuzdaki araçların hata kodlarını her girişte okur, kayda alırız. Aynı arızanın tekrar edip etmediğini görür, kalıcı çözümü öneririz. Arızalı araç sıraya girmeden atölyeye alınır.",
+        "baslik": "Filo arıza tespiti",
+        "kisa": "Araç bazında hata kodu ve onarım geçmişi.",
+        "metin": "Her girişte aracın bütün beyinlerindeki hata kodları okunur ve kayda alınır. Tekrarlayan arızalar araç geçmişinden izlenir.",
         "maddeler": [
           "Araç bazında hata kodu ve onarım geçmişi",
-          "Arızalı araç için öncelikli giriş",
           "Ölçüm sonuçlarıyla yazılı rapor",
           "Dönemlik tek fatura ve iş dökümü"
         ],
-        "buton": "Filo görüşmesi talep edin"
+        "buton": "Filo için bilgi alın"
       },
       {
-        "baslik": "Akü ve şarj kontrol günleri",
-        "kisa": "Kış öncesi toplu akü, marş ve şarj testi.",
-        "metin": "Kış gelmeden şirket araçlarınızın akü, marş ve şarj sistemini toplu olarak test eder, zayıf aküleri raporlarız. Soğuk sabahta yolda kalan araç sayısını azaltır.",
+        "baslik": "Kış öncesi akü ve şarj kontrolü",
+        "kisa": "Toplu akü, marş ve şarj testi.",
+        "metin": "Şirket araçlarının akü, marş ve şarj sistemi toplu olarak test edilir, zayıf aküler araç araç raporlanır.",
         "maddeler": [
           "Akü sağlık testi ve rapor",
           "Şarj voltajı ve kaçak akım ölçümü",
           "Araçların boş olduğu saatlere planlama"
         ],
-        "buton": "Kontrol günü planlayın"
+        "buton": "Kontrol günü için bilgi alın"
       },
       {
-        "baslik": "Hibrit ve elektrikli filolar",
+        "baslik": "Hibrit filolar",
         "kisa": "Yüksek voltaj batarya testi ve hücre dengeleme.",
-        "metin": "Hibrit araç kullanan filolar için yüksek voltaj batarya testi, hücre dengeleme ve soğutma sistemi kontrolü yaparız. Test sonuçlarını hücre bazında raporlarız.",
+        "metin": "Hibrit araçlarda yüksek voltaj batarya testi, hücre dengeleme ve batarya soğutma kontrolü. Sonuçlar hücre bazında raporlanır.",
         "maddeler": [
           "Hücre bazında batarya testi",
           "Soğutma fanı ve kanal temizliği",
           "Yazılı test raporu"
         ],
-        "buton": "Görüşme talep edin"
+        "buton": "Hibrit filo için bilgi alın"
       }
     ],
-    "anlasmaNotu": "Anlaşma koşulları araç sayısına ve tiplerine göre belirlenir; teklifimizi yazılı olarak iletiriz.",
+    "anlasmaNotu": "Koşullar araç sayısına ve tipine göre belirlenir; teklif yazılı iletilir.",
     "hakkimizda": {
-      "baslik": "Biz kimiz",
+      "baslik": "Hakkında",
       "paragraflar": [
-        "Şaşmaz Oto Sanayi Sitesi'ndeki atölyemizde oto elektrik, elektronik ve arıza tespit işleri yapıyoruz. Bireysel müşterilerimizin yanında şirket, servis ve kiralama araçlarına da bakıyoruz.",
-        "Tek işimiz arızanın asıl sebebini bulmak. Tahmin edip parça değiştirmeyiz; cihazla okur, ölçü aletiyle doğrular, ne olduğunu size gösteririz. Değişen parçayı size geri veririz."
+        "Şaşmaz Oto Sanayi Sitesi'nde oto elektrik, elektronik ve arıza tespiti atölyesi. Bireysel araçların yanında şirket, servis ve kiralama araçlarına bakılır.",
+        "Arıza tespit cihazı, osiloskop, akü test cihazı ve beyin test tezgâhı atölyede bulunur. Arıza tespiti için randevusuz gelinebilir; beyin onarımı ve hibrit batarya testi randevuyla yapılır."
       ],
       "gorsel": "/img/kurumsal-elektrik/tablet.jpg",
       "gorselAlt": "Araç içinde arıza tespit tabletiyle canlı veri okuma"
     },
-    "misyon": "Arızayı ilk seferde doğru bulmak, gereksiz parça değiştirmeden aracı yola döndürmek.",
-    "vizyon": "Ankara'da elektrik ve elektronik arızada filo sahiplerinin ilk aradığı, ölçerek ve kayıtlı çalışan servis olmak.",
-    "degerler": [
-      {
-        "baslik": "Ölçerek teşhis",
-        "metin": "Cihaz ve ölçü aletiyle doğrulamadan parça değiştirmeyiz."
-      },
-      {
-        "baslik": "Önce onarım",
-        "metin": "Beyin ve dinamo gibi parçaları mümkünse değiştirmeden onarırız."
-      },
-      {
-        "baslik": "Kayıtlı iş",
-        "metin": "Her aracın hata kodu ve onarım geçmişini saklarız."
-      },
-      {
-        "baslik": "Açık fiyat",
-        "metin": "İşe başlamadan ne yapılacağını ve fiyatını söyleriz."
-      }
-    ],
-    "kalite": {
-      "baslik": "Kalite anlayışımız",
-      "metin": "Her araçta aynı iş akışı: kabulde hata kodu okuma, ölçümle doğrulama, yazılı teklif, onay, onarım, kod silme ve yol testi.",
-      "maddeler": [
-        "Kabulde tüm beyinlerin hata kodları okunur ve kaydedilir.",
-        "Arıza ölçü aletiyle doğrulanmadan parça değiştirilmez.",
-        "Onarımdan sonra kodlar silinir, yol testiyle tekrar kontrol edilir.",
-        "Değişen parça müşteriye teslim edilir."
-      ]
-    },
+    "markaBaslik": "Sık gelen markalar",
     "kariyer": {
-      "baslik": "Ekibimize katılın",
-      "metin": "Oto elektrik ve elektronikte deneyimli usta ve mesleği öğrenmek isteyen çırak arkadaşlarla tanışmak isteriz. Kısa bir tanıtımla bize yazın."
+      "baslik": "Kariyer",
+      "metin": "Oto elektrik ve elektronikte deneyimli usta ve mesleği öğrenmek isteyen çırak başvuruları alınır. Kısa bir tanıtım yeterlidir."
     },
     "sss": [
       {
-        "soru": "Motor arıza lambası yanıyor, araçla gelebilir miyim?",
-        "cevap": "Lamba sabit yanıyorsa ve araç normal çekiyorsa sakin sürüşle gelebilirsiniz. Lamba yanıp sönüyorsa ya da motor tekliyorsa zorlamayın, bizi arayın."
+        "soru": "Motor arıza lambası yanıyor, araçla gelinebilir mi?",
+        "cevap": "Lamba sabit yanıyor ve araç normal çekiyorsa sakin sürüşle gelinebilir. Lamba yanıp sönüyorsa ya da motor tekliyorsa araç zorlanmamalı."
       },
       {
-        "soru": "Kodu kendim okuttum, yine de cihaz gerekir mi?",
-        "cevap": "Evet. Kod arızanın yerini değil hangi sistemde olduğunu söyler. Canlı veri ve ölçümle asıl sebebi buluruz."
+        "soru": "Kod telefon uygulamasıyla okutuldu, yine de cihaz gerekir mi?",
+        "cevap": "Evet. Kod arızanın hangi sistemde olduğunu gösterir, sebebini değil. Sebep canlı veri ve ölçümle bulunur."
       },
       {
         "soru": "Arıza tespiti ne kadar sürer?",
-        "cevap": "Çoğu araçta 30 dakika. Aralıklı arızalarda aracı bir gün tutup yol testiyle izlememiz gerekebilir."
+        "cevap": "Çoğu araçta 30 dakika. Aralıklı arızalarda araç bir gün tutulup yol testiyle izlenebilir."
       },
       {
-        "soru": "Beyin değişmeden tamir olur mu?",
-        "cevap": "Çoğu arızada olur. Önce besleme ve şaseyi ölçeriz; beyin gerçekten arızalıysa onarır, gerekirse kodlarız."
+        "soru": "Beyin değiştirilmeden onarılabilir mi?",
+        "cevap": "Çoğu arızada evet. Önce besleme ve şase ölçülür; beyin arızalıysa tezgâhta onarılır, gerekirse kodlanır."
       },
       {
-        "soru": "Kodu sildirince sorun çözülür mü?",
-        "cevap": "Hayır. Sebep giderilmezse kod geri gelir. Silme işini onarımdan ve yol testinden sonra yaparız."
+        "soru": "Kod silinince sorun çözülür mü?",
+        "cevap": "Hayır. Sebep giderilmezse kod geri gelir. Kodlar onarımdan ve yol testinden sonra silinir."
       }
     ],
-    "sssBaslik": "Arıza lambası ve kodlar hakkında",
+    "sssBaslik": "Arıza lambası ve kodlar",
     "galeriBaslik": "Oto elektrik işleri",
     "sayfalar": {
-      "kurumsal": {
-        "baslik": "Kurumsal",
-        "metin": "Kim olduğumuz, nasıl çalıştığımız ve neye önem verdiğimiz.",
+      "hakkinda": {
+        "baslik": "Hakkında",
+        "metin": "Şaşmaz Oto Sanayi Sitesi'nde oto elektrik ve arıza tespiti.",
         "gorsel": "/img/kurumsal-elektrik/beyin.jpg"
       },
       "hizmetler": {
-        "baslik": "Hizmetlerimiz",
-        "metin": "Arıza tespitten hibrit batarya testine, her iş için ortalama süre."
+        "baslik": "Hizmetler",
+        "metin": "Süreler ortalamadır. Fiyat ve randevu için arayın."
       },
       "ariza-kodu": {
         "baslik": "Arıza kodu sorgulama",
-        "metin": "Cihazın ya da uygulamanın okuduğu kodu yazın; ne anlama geldiğini sade Türkçeyle görün."
+        "metin": "Cihazın ya da uygulamanın okuduğu kod yazılınca anlamı ve aciliyeti görünür."
       },
       "kurumsal-musteriler": {
-        "baslik": "Filo ve kurumsal müşteriler",
-        "metin": "Şirket araçlarınız için arıza kaydı, öncelikli servis ve dönemlik fatura.",
+        "baslik": "Filo ve kurumsal araçlar",
+        "metin": "Şirket araçları için arıza kaydı ve dönemlik fatura.",
         "gorsel": "/img/kurumsal-elektrik/filo.jpg"
       },
       "iletisim": {
         "baslik": "İletişim",
-        "metin": "Filo teklifi, randevu ya da bir arıza kodu için yazın; aynı gün dönüş yapalım."
+        "metin": "Fiyat ve randevu için arayın ya da formdan yazın."
       }
     },
     "konular": [
       "Arıza / hata kodu",
-      "Filo anlaşması",
-      "Fiyat teklifi",
       "Randevu",
+      "Fiyat bilgisi",
+      "Filo ve kurumsal",
       "Genel bilgi"
     ],
-    "cta": {
-      "baslik": "Lamba yanıyorsa ölçelim",
-      "metin": "Kodu ve aracınızı yazın; ne olabileceğini ve tespitin ne kadar süreceğini söyleyelim.",
-      "buton": "Bize yazın"
-    },
-    "yorumBaslik": "Örnek müşteri yorumları"
+    "formBaslik": "Mesaj gönderin"
   },
   "hizmetler": [
     {
-      "baslik": "Arıza tespit",
-      "aciklama": "OBD cihazıyla hata kodlarını okur, canlı veriyle arızanın yerini buluruz.",
+      "baslik": "Arıza tespiti",
+      "kisa": "Hata kodu ve canlı veri okuma, ölçümle doğrulama.",
+      "aciklama": "OBD cihazıyla hata kodları ve canlı veri okunur, arızanın yeri ölçümle belirlenir.",
       "sure": "30 dk",
-      "sigorta": 10,
       "gorsel": "/img/kurumsal-elektrik/teshis-motor.jpg"
     },
     {
-      "baslik": "Beyin (ECU) tamiri",
-      "aciklama": "Motor, şanzıman ve ABS beyinlerini değiştirmeden onarır, gerekirse kodlarız.",
-      "sure": "1-3 gün",
-      "sigorta": 30,
+      "baslik": "Beyin (ECU) onarımı",
+      "kisa": "Motor, şanzıman ve ABS beyinleri; test, onarım, kodlama.",
+      "aciklama": "Motor, şanzıman ve ABS beyinleri tezgâhta test edilir ve onarılır. Gerekirse yazılım yüklenir ve kodlama yapılır.",
+      "sure": "1–3 gün",
       "gorsel": "/img/kurumsal-elektrik/beyin.jpg"
     },
     {
-      "baslik": "Akü, marş, şarj dinamosu",
-      "aciklama": "Akü testi, marş motoru ve alternatör sargı, kömür, konjektör işleri.",
+      "baslik": "Akü, marş ve şarj dinamosu",
+      "kisa": "Akü testi, marş motoru ve şarj dinamosu onarımı.",
+      "aciklama": "Akü yük testi, marş anındaki voltaj düşüşü ve şarj voltajı ölçülür. Marş motoru ve şarj dinamosunda sargı, kömür ve konjektör onarımı.",
       "sure": "Aynı gün",
-      "sigorta": 20,
       "gorsel": "/img/kurumsal-elektrik/aku-3d.jpg"
     },
     {
       "baslik": "Klima elektriği",
-      "aciklama": "Kompresör kavraması, fan, sensör ve klima paneli arızaları.",
+      "kisa": "Kompresör kavraması, fan, sensör ve klima paneli.",
+      "aciklama": "Kompresör kavraması, fan, basınç sensörü ve klima paneli arızaları. Gaz dolumundan önce elektrik devresi ölçülür.",
       "sure": "Aynı gün",
-      "sigorta": 15,
       "gorsel": "/img/kurumsal-elektrik/motor.jpg"
     },
     {
       "baslik": "Far ve aydınlatma",
-      "aciklama": "Far ayarı, xenon ve LED dönüşümü, stop ve sinyal arızaları.",
-      "sure": "1-2 saat",
-      "sigorta": 5,
+      "kisa": "Far ayarı, xenon ve LED dönüşümü, stop ve sinyal.",
+      "aciklama": "Far ayarı, xenon ve LED dönüşümü, stop, sinyal ve iç aydınlatma arızaları. Dönüşümden sonra far perdede ayarlanır.",
+      "sure": "1–2 saat",
       "gorsel": "/img/kurumsal-elektrik/far.jpg"
     },
     {
-      "baslik": "Hibrit araç bakımı",
-      "aciklama": "Yüksek voltaj batarya testi, hücre dengeleme ve soğutma kontrolü.",
+      "baslik": "Hibrit araç elektriği",
+      "kisa": "Yüksek voltaj batarya testi ve hücre dengeleme.",
+      "aciklama": "Yüksek voltaj batarya testi, hücre dengeleme ve batarya soğutma kontrolü. Test sonucu hücre hücre raporlanır.",
       "sure": "1 gün",
-      "sigorta": 25,
       "gorsel": "/img/kurumsal-elektrik/hibrit.jpg"
     },
     {
       "baslik": "Tesisat ve kablo onarımı",
-      "aciklama": "Yanık, kemirilmiş ya da oksitlenmiş kablo demetini yeniden çekeriz.",
-      "sure": "1-2 gün",
-      "sigorta": 7.5,
+      "kisa": "Yanık, kemirilmiş ya da oksitli kablo demeti.",
+      "aciklama": "Yanık, kemirilmiş ya da oksitlenmiş kablo demeti yenilenir. Ek yerleri lehimlenir, makaronla kaplanır.",
+      "sure": "1–2 gün",
       "gorsel": "/img/kurumsal-elektrik/oksit.jpg"
     }
   ],

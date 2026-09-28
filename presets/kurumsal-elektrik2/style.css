@@ -57,6 +57,11 @@ body { overflow-x: clip; }
   .k-hero__metin > .k-hero__ust, .k-hero__metin > .k-hero__baslik { grid-column: 1 / -1; }
   .k-hero__metin > .k-lead { grid-column: 1; margin-top: 30px; }
   .k-hero__metin > .k-butonlar { grid-column: 2; justify-content: flex-end; }
+  /* Künye: ad tam genişlikte; altında solda iş tanımı ve butonlar, sağda adres / bugün / telefon. */
+  .k-hero--kunye .k-hero__metin { grid-template-columns: 6fr 5fr; align-items: start; }
+  .k-hero--kunye .k-hero__metin > .k-hero__tanim { grid-column: 1; margin-top: 22px; font-size: clamp(20px, 1.8vw, 26px); font-weight: 600; }
+  .k-hero--kunye .k-hero__metin > .k-kunye { grid-column: 2; grid-row: 2 / span 2; margin: 22px 0 0; }
+  .k-hero--kunye .k-hero__metin > .k-butonlar { grid-column: 1; grid-row: 3; justify-content: flex-start; margin-top: 26px; }
 }
 [data-hero='yazi'] .k-hero__gorsel {
   aspect-ratio: 21 / 8; border-radius: 0; background: var(--k-koyu); --kirik: clamp(22px, 4vw, 58px);
@@ -274,3 +279,6 @@ body:not(.k-ana) .k-blok[data-bolum='farPerdesi'] .fp { margin-top: 32px; }
 
 /* Telefonda ilk galeri karesi de kare: satırın tamamına uzayıp kendi yazısını alt satırın altına itmesin. */
 @media (max-width: 899px) { .k-galeri__liste li:first-child figure { aspect-ratio: 1; height: auto; min-height: 0; } }
+
+.k-kunye { border-top: 2.5px solid var(--k-metin); }
+.k-kunye dt { font-family: var(--mono); font-size: 11px; letter-spacing: .05em; }

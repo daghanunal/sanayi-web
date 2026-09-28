@@ -2,11 +2,16 @@
   "preset": "devre",
   "isletme": {
     "ad": "Volt Oto Elektrik",
-    "sektor": "Oto Elektrik ve Arıza Tespit",
-    "slogan": "Yanan lambayı söndürmeden aracı teslim etmeyiz.",
+    "sektor": "Oto Elektrik ve Arıza Tespiti",
+    "tanim": "Oto elektrik ve arıza tespiti",
     "kurulus": 2001,
-    "hakkinda": "Oto elektrikte tek işimiz arızanın asıl sebebini bulmak. Tahmin etmeyiz, ölçeriz: önce cihaza bağlarız, sonra kabloyu tek tek takip ederiz. Parça değiştirmeden önce ne olduğunu size gösterir, fiyatı baştan söyleriz."
+    "hakkinda": "Benzinli, dizel ve hibrit binek araçlarda elektrik ve elektronik arızalar: arıza tespiti, beyin (ECU) onarımı, akü, marş ve şarj sistemleri, klima elektriği, aydınlatma ve tesisat."
   },
+  "bilgiler": [
+    ["Araçlar", "Benzinli, dizel, LPG'li ve hibrit binek araçlar, hafif ticari araçlar"],
+    ["Donanım", "Arıza tespit cihazı, osiloskop, akü test cihazı, beyin test tezgâhı"],
+    ["Randevu", "Arıza tespiti için randevusuz; beyin onarımı ve hibrit batarya testi randevuyla"]
+  ],
   "iletisim": {
     "telefon": "0532 555 12 34",
     "whatsapp": "905325551234",
@@ -15,31 +20,65 @@
   },
   "saatler": [null, "08:30-19:00", "08:30-19:00", "08:30-19:00", "08:30-19:00", "08:30-19:00", "09:00-17:00"],
   "hizmetler": [
-    { "baslik": "Arıza tespit", "aciklama": "OBD cihazıyla hata kodlarını okur, canlı veriyle arızanın yerini buluruz.", "sure": "30 dk", "sigorta": 10 },
-    { "baslik": "Beyin (ECU) tamiri", "aciklama": "Motor, şanzıman ve ABS beyinlerini değiştirmeden onarır, gerekirse kodlarız.", "sure": "1-3 gün", "sigorta": 30 },
-    { "baslik": "Akü, marş, şarj dinamosu", "aciklama": "Akü testi, marş motoru ve alternatör sargı, kömür, konjektör işleri.", "sure": "Aynı gün", "sigorta": 20 },
-    { "baslik": "Klima elektriği", "aciklama": "Kompresör kavraması, fan, sensör ve klima paneli arızaları.", "sure": "Aynı gün", "sigorta": 15 },
-    { "baslik": "Far ve aydınlatma", "aciklama": "Far ayarı, xenon ve LED dönüşümü, stop ve sinyal arızaları.", "sure": "1-2 saat", "sigorta": 5 },
-    { "baslik": "Hibrit araç bakımı", "aciklama": "Yüksek voltaj batarya testi, hücre dengeleme ve soğutma kontrolü.", "sure": "1 gün", "sigorta": 25 },
-    { "baslik": "Tesisat ve kablo onarımı", "aciklama": "Yanık, kemirilmiş ya da oksitlenmiş kablo demetini yeniden çekeriz.", "sure": "1-2 gün", "sigorta": 7.5 }
-  ],
-  "arizaKodlari": [
-    { "kod": "P0300", "anlam": "Rastgele silindir ateşleme hatası", "cozum": "Bobin ve buji ölçüldü, 3. bobin değişti." },
-    { "kod": "P0171", "anlam": "Motor fakir karışımla çalışıyor", "cozum": "Hava akış sensörü temizlendi, vakum kaçağı kapatıldı." },
-    { "kod": "U0100", "anlam": "Motor beyniyle haberleşme yok", "cozum": "CAN hattındaki oksitli soket yenilendi." },
-    { "kod": "P0562", "anlam": "Sistem voltajı düşük", "cozum": "Şarj dinamosu konjektörü değişti, 14,2 V ölçüldü." }
+    {
+      "baslik": "Arıza tespiti",
+      "kisa": "Hata kodu ve canlı veri okuma, ölçümle doğrulama.",
+      "aciklama": "OBD cihazıyla hata kodları ve canlı veri okunur, arızanın yeri ölçümle belirlenir.",
+      "sure": "30 dk",
+      "sigorta": 10
+    },
+    {
+      "baslik": "Beyin (ECU) onarımı",
+      "kisa": "Motor, şanzıman ve ABS beyinleri; test, onarım, kodlama.",
+      "aciklama": "Motor, şanzıman ve ABS beyinleri tezgâhta test edilir ve onarılır. Gerekirse yazılım yüklenir ve kodlama yapılır.",
+      "sure": "1–3 gün",
+      "sigorta": 30
+    },
+    {
+      "baslik": "Akü, marş ve şarj dinamosu",
+      "kisa": "Akü testi, marş motoru ve şarj dinamosu onarımı.",
+      "aciklama": "Akü yük testi, marş anındaki voltaj düşüşü ve şarj voltajı ölçülür. Marş motoru ve şarj dinamosunda sargı, kömür ve konjektör onarımı.",
+      "sure": "Aynı gün",
+      "sigorta": 20
+    },
+    {
+      "baslik": "Klima elektriği",
+      "kisa": "Kompresör kavraması, fan, sensör ve klima paneli.",
+      "aciklama": "Kompresör kavraması, fan, basınç sensörü ve klima paneli arızaları. Gaz dolumundan önce elektrik devresi ölçülür.",
+      "sure": "Aynı gün",
+      "sigorta": 15
+    },
+    {
+      "baslik": "Far ve aydınlatma",
+      "kisa": "Far ayarı, xenon ve LED dönüşümü, stop ve sinyal.",
+      "aciklama": "Far ayarı, xenon ve LED dönüşümü, stop, sinyal ve iç aydınlatma arızaları. Dönüşümden sonra far perdede ayarlanır.",
+      "sure": "1–2 saat",
+      "sigorta": 5
+    },
+    {
+      "baslik": "Hibrit araç elektriği",
+      "kisa": "Yüksek voltaj batarya testi ve hücre dengeleme.",
+      "aciklama": "Yüksek voltaj batarya testi, hücre dengeleme ve batarya soğutma kontrolü. Test sonucu hücre hücre raporlanır.",
+      "sure": "1 gün",
+      "sigorta": 25
+    },
+    {
+      "baslik": "Tesisat ve kablo onarımı",
+      "kisa": "Yanık, kemirilmiş ya da oksitli kablo demeti.",
+      "aciklama": "Yanık, kemirilmiş ya da oksitlenmiş kablo demeti yenilenir. Ek yerleri lehimlenir, makaronla kaplanır.",
+      "sure": "1–2 gün",
+      "sigorta": 7.5
+    }
   ],
   "surec": [
-    { "baslik": "Arıza tespit", "aciklama": "Cihaza bağlar, hata kodlarını ve canlı veriyi okuruz. Tespit 30 dakika sürer." },
-    { "baslik": "Teklif", "aciklama": "Ne bozuk, ne kadar tutar, ne zaman biter: işe başlamadan önce söyleriz." },
-    { "baslik": "Onarım", "aciklama": "Onayınızla onarırız. Değişen parçayı size geri veririz." },
-    { "baslik": "Test ve teslim", "aciklama": "Hata kodlarını silip yol testi yaparız. Lamba yanmıyorsa teslim ederiz." }
+    { "baslik": "Arıza tespiti", "aciklama": "Hata kodları ve canlı veri okunur, arıza ölçümle doğrulanır." },
+    { "baslik": "Onay", "aciklama": "Yapılacak iş ve teslim zamanı araç sahibinin onayına sunulur." },
+    { "baslik": "Onarım", "aciklama": "Onaylanan iş yapılır, değişen parça araç sahibine teslim edilir." },
+    { "baslik": "Test ve teslim", "aciklama": "Hata kodları silinir, araç yol testinden sonra teslim edilir." }
   ],
   "istatistikler": [
-    { "deger": 25, "sonek": "", "etiket": "yıllık tecrübe", "birim": "YIL", "kurulustanHesapla": true },
-    { "deger": 18400, "sonek": "", "etiket": "arızası çözülen araç", "birim": "ARAÇ" },
-    { "deger": 30, "sonek": "", "etiket": "dakikada arıza tespit", "birim": "DK" },
-    { "deger": 1, "sonek": "", "etiket": "yıl işçilik garantisi", "birim": "YIL" }
+    { "deger": 25, "etiket": "yıldır Şaşmaz Oto Sanayi'nde", "birim": "YIL", "kurulustanHesapla": true },
+    { "deger": 6, "etiket": "gün açık", "birim": "GÜN", "saatlerdenHesapla": true }
   ],
   "markalar": ["Renault", "Fiat", "Volkswagen", "Ford", "Toyota", "Hyundai", "Opel", "Peugeot", "Honda", "Dacia"],
   "galeri": [
@@ -48,13 +87,11 @@
     { "src": "/img/devre/far.jpg", "alt": "Karanlıkta yanan LED far" },
     { "src": "/img/devre/motor.jpg", "alt": "Kaputu açık araç, motor bölmesi" }
   ],
-  "puan": { "ortalama": 4.9, "adet": 187 },
   "yorumlar": [
-    { "ad": "Serkan A.", "puan": 5, "metin": "Üç ayrı yerde çözülemeyen şarj arızasını yarım saatte buldular. Sorun dinamoda değil, toprak kablosundaymış.", "arac": "2014 Megane" },
-    { "ad": "Hülya T.", "puan": 5, "metin": "Motor arıza lambası yanıyordu. Ne yapacaklarını ve fiyatını baştan söylediler, aynı gün teslim ettiler.", "arac": "2018 Egea" },
-    { "ad": "Murat Ö.", "puan": 5, "metin": "Beyni değiştirmek yerine tamir ettiler, bayinin söylediği paranın üçte biri tuttu.", "arac": "2012 Passat" },
-    { "ad": "Emre Y.", "puan": 4, "metin": "Hibrit batarya uyarısı için geldim, hücre testini ekranda tek tek gösterdiler. İşini bilen yer.", "arac": "2017 C-HR" },
-    { "ad": "Gökhan D.", "puan": 5, "metin": "Farı LED'e çevirdiler, ayarını da yaptılar. Karşıdan gelen artık selektör yapmıyor.", "arac": "2016 Focus" }
-  ],
-  "garanti": "Yapılan işçiliğe 1 yıl garanti."
+    { "ad": "Serkan A.", "puan": 5, "metin": "Şarj lambası yanıyordu. Sorun dinamoda değil, toprak kablosundaymış; kablo yenilendi, aynı gün teslim aldım.", "arac": "2014 Renault Megane" },
+    { "ad": "Hülya T.", "puan": 5, "metin": "Motor arıza lambası için gittim. Kodu okuyup bobinleri ölçtüler, üçüncü bobin değişti. Bir saat sürdü.", "arac": "2018 Fiat Egea" },
+    { "ad": "Murat Ö.", "puan": 5, "metin": "Motor beyni arıza vermişti. Beyin değiştirilmeden tamir edildi, iki gün sonra aracı aldım.", "arac": "2012 Volkswagen Passat" },
+    { "ad": "Emre Y.", "puan": 4, "metin": "Hibrit batarya uyarısı için geldim. Hücre testinin sonucunu ekranda tek tek gösterdiler, iki hücre dengelendi.", "arac": "2017 Toyota C-HR" },
+    { "ad": "Gökhan D.", "puan": 5, "metin": "Farlar LED'e çevrildi, ardından perdede ayarı yapıldı. Karşıdan gelenler artık selektör yapmıyor.", "arac": "2016 Ford Focus" }
+  ]
 }

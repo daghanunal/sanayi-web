@@ -1,116 +1,157 @@
 {
   "hizmetler": [
-    { "baslik": "Arıza tespit", "kisa": "Cihaza bağlar, hata kodunu ve canlı veriyi okuruz.", "aciklama": "OBD cihazıyla hata kodlarını okur, canlı veriyle arızanın yerini buluruz. Kod sadece hangi sistemde olduğunu söyler; asıl sebebi ölçü aletiyle doğrularız.", "sure": "30 dk", "sigorta": 10, "gorsel": "/img/kurumsal-elektrik2/lambalar.jpg" },
-    { "baslik": "Far ayarı ve aydınlatma", "kisa": "Far ayarı, xenon ve LED dönüşümü, stop ve sinyal.", "aciklama": "Farı perdeye tutar, kesme çizgisini doğru yüksekliğe indiririz. Xenon ve LED dönüşümünden sonra ayar yapılmazsa karşıdan gelenin gözünü alır; dönüşümle birlikte ayarı da yaparız.", "sure": "1-2 saat", "sigorta": 5, "gorsel": "/img/kurumsal-elektrik2/led-far.jpg" },
-    { "baslik": "Akü, marş, şarj dinamosu", "kisa": "Akü testi, marş motoru ve alternatör onarımı.", "aciklama": "Akü sağlık testi, marşta voltaj düşüşü ve şarj voltajı ölçümü. Marş motoru ve alternatörde sargı, kömür, konjektör işlerini atölyede yaparız.", "sure": "Aynı gün", "sigorta": 20, "gorsel": "/img/kurumsal-elektrik2/aku-kablo.jpg" },
-    { "baslik": "Beyin (ECU) tamiri", "kisa": "Motor, şanzıman ve ABS beyinleri, değiştirmeden onarım.", "aciklama": "Motor, şanzıman ve ABS beyinlerini değiştirmeden onarır, gerekirse kodlarız. Önce besleme ve şaseyi ölçeriz; beynin gerçekten arızalı olduğunu görmeden sökmeyiz.", "sure": "1-3 gün", "sigorta": 30, "gorsel": "/img/kurumsal-elektrik2/beyin.jpg" },
-    { "baslik": "Klima elektriği", "kisa": "Kompresör kavraması, fan, sensör, klima paneli.", "aciklama": "Kompresör kavraması, fan, sensör ve klima paneli arızaları. Gaz dolumundan önce elektrik tarafının sağlam olduğunu ölçeriz.", "sure": "Aynı gün", "sigorta": 15 },
-    { "baslik": "Hibrit araç bakımı", "kisa": "Yüksek voltaj batarya testi ve hücre dengeleme.", "aciklama": "Yüksek voltaj batarya testi, hücre dengeleme ve soğutma kontrolü. Test sonucunu hücre hücre ekranda gösteririz.", "sure": "1 gün", "sigorta": 25 },
-    { "baslik": "Tesisat ve kablo onarımı", "kisa": "Yanık, kemirilmiş ya da oksitli kablo demeti.", "aciklama": "Yanık, fare kemirmiş ya da oksitlenmiş kablo demetini yeniden çekeriz. Ek yerlerini lehimler, makaronla kapatırız; bantla geçiştirmeyiz.", "sure": "1-2 gün", "sigorta": 7.5, "gorsel": "/img/kurumsal-elektrik2/kaput.jpg" }
+    {
+      "baslik": "Arıza tespiti",
+      "kisa": "Hata kodu ve canlı veri okuma, ölçümle doğrulama.",
+      "aciklama": "OBD cihazıyla hata kodları ve canlı veri okunur, arızanın yeri ölçümle belirlenir.",
+      "sure": "30 dk",
+      "gorsel": "/img/kurumsal-elektrik2/lambalar.jpg"
+    },
+    {
+      "baslik": "Far ve aydınlatma",
+      "kisa": "Far ayarı, xenon ve LED dönüşümü, stop ve sinyal.",
+      "aciklama": "Far ayarı, xenon ve LED dönüşümü, stop, sinyal ve iç aydınlatma arızaları. Dönüşümden sonra far perdede ayarlanır.",
+      "sure": "1–2 saat",
+      "gorsel": "/img/kurumsal-elektrik2/led-far.jpg"
+    },
+    {
+      "baslik": "Akü, marş ve şarj dinamosu",
+      "kisa": "Akü testi, marş motoru ve şarj dinamosu onarımı.",
+      "aciklama": "Akü yük testi, marş anındaki voltaj düşüşü ve şarj voltajı ölçülür. Marş motoru ve şarj dinamosunda sargı, kömür ve konjektör onarımı.",
+      "sure": "Aynı gün",
+      "gorsel": "/img/kurumsal-elektrik2/aku-kablo.jpg"
+    },
+    {
+      "baslik": "Beyin (ECU) onarımı",
+      "kisa": "Motor, şanzıman ve ABS beyinleri; test, onarım, kodlama.",
+      "aciklama": "Motor, şanzıman ve ABS beyinleri tezgâhta test edilir ve onarılır. Gerekirse yazılım yüklenir ve kodlama yapılır.",
+      "sure": "1–3 gün",
+      "gorsel": "/img/kurumsal-elektrik2/beyin.jpg"
+    },
+    {
+      "baslik": "Klima elektriği",
+      "kisa": "Kompresör kavraması, fan, sensör ve klima paneli.",
+      "aciklama": "Kompresör kavraması, fan, basınç sensörü ve klima paneli arızaları. Gaz dolumundan önce elektrik devresi ölçülür.",
+      "sure": "Aynı gün"
+    },
+    {
+      "baslik": "Hibrit araç elektriği",
+      "kisa": "Yüksek voltaj batarya testi ve hücre dengeleme.",
+      "aciklama": "Yüksek voltaj batarya testi, hücre dengeleme ve batarya soğutma kontrolü. Test sonucu hücre hücre raporlanır.",
+      "sure": "1 gün"
+    },
+    {
+      "baslik": "Tesisat ve kablo onarımı",
+      "kisa": "Yanık, kemirilmiş ya da oksitli kablo demeti.",
+      "aciklama": "Yanık, kemirilmiş ya da oksitlenmiş kablo demeti yenilenir. Ek yerleri lehimlenir, makaronla kaplanır.",
+      "sure": "1–2 gün",
+      "gorsel": "/img/kurumsal-elektrik2/kaput.jpg"
+    }
   ],
   "galeri": [
-    { "src": "/img/kurumsal-elektrik2/kaput.jpg", "alt": "Kaputu açık araçta fenerle kablo takibi" },
-    { "src": "/img/kurumsal-elektrik2/far-aksam.jpg", "alt": "Akşam kaldırım kenarında farları yanan araç" },
-    { "src": "/img/kurumsal-elektrik2/led-far.jpg", "alt": "Gündüz farı yanan LED far yakından" },
-    { "src": "/img/kurumsal-elektrik2/eller.jpg", "alt": "Far arkasındaki soket ve kabloya uzanan eller" },
-    { "src": "/img/kurumsal-elektrik2/aku-kablo.jpg", "alt": "Takviye kablosu bağlı akü ve sigorta kutusu" },
-    { "src": "/img/kurumsal-elektrik2/uyari.jpg", "alt": "Göstergede yanan sarı uyarı lambası" }
+    {
+      "src": "/img/kurumsal-elektrik2/kaput.jpg",
+      "alt": "Kaputu açık araçta fenerle kablo takibi"
+    },
+    {
+      "src": "/img/kurumsal-elektrik2/far-aksam.jpg",
+      "alt": "Akşam kaldırım kenarında farları yanan araç"
+    },
+    {
+      "src": "/img/kurumsal-elektrik2/led-far.jpg",
+      "alt": "Gündüz farı yanan LED far yakından"
+    },
+    {
+      "src": "/img/kurumsal-elektrik2/eller.jpg",
+      "alt": "Far arkasındaki soket ve kabloya uzanan eller"
+    },
+    {
+      "src": "/img/kurumsal-elektrik2/aku-kablo.jpg",
+      "alt": "Takviye kablosu bağlı akü ve sigorta kutusu"
+    },
+    {
+      "src": "/img/kurumsal-elektrik2/uyari.jpg",
+      "alt": "Göstergede yanan sarı uyarı lambası"
+    }
   ],
   "kurumsal": {
-    "hero": {
-      "baslik": "Marş basar, far yanar, lamba söner.",
-      "metin": "Akü ve şarjdan beyin onarımına, far ayarından hibrit batarya testine: aracın elektrik tarafı tek adreste. Tahmin etmeyiz, ölçeriz; fiyatı işe başlamadan söyleriz.",
-      "birincil": "Randevu isteyin",
-      "ikincil": "Farınızı deneyin",
-      "ikincilRota": "far-ayari"
-    },
+    "hizmetOzetBaslik": "Hizmetler",
     "ozet": {
-      "baslik": "Işık doğru yere düşsün",
-      "metin": "Yanan lamba, basmayan marş, gözü alan far. Hepsinin sebebi bir kabloda, bir sokette ya da bir ayarda saklı. Cihazla bulur, ölçü aletiyle doğrular, size gösterdikten sonra onarırız."
+      "baslik": "Hakkında",
+      "metin": "Şaşmaz Oto Sanayi Sitesi'nde oto elektrik atölyesi. Far ayarı ve aydınlatma, akü, marş ve şarj sistemleri, beyin onarımı ve arıza tespiti. Benzinli, dizel ve hibrit binek araçlar."
     },
-    "hizmetOzetBaslik": "Aracın elektrik tarafı, baştan sona",
-    "anlasmaBaslik": "Şirket araçları için tek muhatap",
-    "anlasmaMetin": "Filo, servis ve kiralama araçlarının elektrik arızaları için araç bazında kayıt, öncelikli giriş ve dönemlik fatura.",
-    "anlasmalar": [
-      {
-        "baslik": "Filo arıza tespit anlaşması",
-        "kisa": "Araç bazında hata kodu geçmişi, öncelikli giriş.",
-        "metin": "Filonuzdaki araçların hata kodlarını her girişte okur, kayda alırız. Aynı arıza tekrar ediyorsa görür, kalıcı çözümü öneririz. Arızalı araç sıra beklemeden atölyeye alınır.",
-        "maddeler": ["Araç bazında hata kodu ve onarım geçmişi", "Arızalı araç için öncelikli giriş", "Ölçüm sonuçlarıyla yazılı rapor", "Dönemlik tek fatura ve iş dökümü"],
-        "buton": "Filo görüşmesi isteyin"
-      },
-      {
-        "baslik": "Kış öncesi akü ve far günü",
-        "kisa": "Toplu akü, şarj testi ve far ayarı.",
-        "metin": "Kış gelmeden şirket araçlarınızın akü, marş ve şarj sistemini toplu test eder, farlarını perdeye tutarız. Zayıf aküleri ve ayarı bozuk farları araç araç raporlarız.",
-        "maddeler": ["Akü sağlık testi ve rapor", "Şarj voltajı ve kaçak akım ölçümü", "Far perdesiyle ayar kontrolü", "Araçların boş olduğu saatlere planlama"],
-        "buton": "Kontrol günü planlayın"
-      },
-      {
-        "baslik": "Hibrit ve elektrikli filolar",
-        "kisa": "Yüksek voltaj batarya testi, hücre dengeleme.",
-        "metin": "Hibrit kullanan filolar için yüksek voltaj batarya testi, hücre dengeleme ve soğutma sistemi kontrolü yaparız. Sonuçları hücre bazında raporlarız.",
-        "maddeler": ["Hücre bazında batarya testi", "Soğutma fanı ve kanal temizliği", "Yazılı test raporu"],
-        "buton": "Görüşme isteyin"
-      }
-    ],
-    "anlasmaNotu": "Anlaşma koşulları araç sayısına ve tipine göre belirlenir; teklifimizi yazılı iletiriz.",
+    "yorumBaslik": "Örnek yorumlar",
+    "surecBaslik": "Çalışma sırası",
+    "markaBaslik": "Sık gelen markalar",
+    "hizmetLink": "Bu hizmet için bilgi alın",
+    "cta": {
+      "baslik": "İletişim",
+      "metin": "Fiyat ve randevu için arayın ya da formdan yazın.",
+      "buton": "İletişim formu"
+    },
     "hakkimizda": {
-      "baslik": "Biz kimiz",
+      "baslik": "Hakkında",
       "paragraflar": [
-        "Şaşmaz Oto Sanayi Sitesi'ndeki atölyemizde oto elektrik, elektronik ve arıza tespit işleri yapıyoruz. Bireysel araçların yanında şirket, servis ve kiralama araçlarına da bakıyoruz.",
-        "Tek işimiz arızanın asıl sebebini bulmak. Tahmin edip parça değiştirmeyiz; cihazla okur, ölçü aletiyle doğrular, ne olduğunu size gösteririz. Değişen parçayı size geri veririz."
+        "Şaşmaz Oto Sanayi Sitesi'nde oto elektrik, elektronik ve arıza tespiti atölyesi. Far ayarı perdeyle, akü ve şarj sistemi test cihazıyla ölçülür.",
+        "Benzinli, dizel, LPG'li ve hibrit binek araçlar ile hafif ticari araçlara bakılır. Arıza tespiti için randevusuz gelinebilir; beyin onarımı ve hibrit batarya testi randevuyla yapılır."
       ],
       "gorsel": "/img/kurumsal-elektrik2/eller.jpg",
       "gorselAlt": "Far arkasındaki soket ve kabloya uzanan eller"
     },
-    "misyon": "Arızayı ilk seferde doğru bulmak, gereksiz parça değiştirmeden aracı yola döndürmek.",
-    "vizyon": "Ankara'da aracının elektriği bozulan herkesin aklına ilk gelen, ölçerek ve kayıtlı çalışan atölye olmak.",
-    "degerler": [
-      { "baslik": "Önce ölçü", "metin": "Ölçü aletiyle doğrulamadan parça değiştirmeyiz." },
-      { "baslik": "Önce onarım", "metin": "Beyin, marş ve dinamoyu mümkünse değiştirmeden onarırız." },
-      { "baslik": "Kayıtlı iş", "metin": "Her aracın hata kodu ve onarım geçmişini saklarız." },
-      { "baslik": "Açık fiyat", "metin": "İşe başlamadan ne yapılacağını ve fiyatını söyleriz." }
-    ],
-    "kalite": {
-      "baslik": "Her araçta aynı sıra",
-      "metin": "Kabulde hata kodu okuma, ölçümle doğrulama, yazılı teklif, onay, onarım, kod silme ve yol testi.",
-      "maddeler": [
-        "Kabulde tüm beyinlerin hata kodları okunur ve kaydedilir.",
-        "Arıza ölçü aletiyle doğrulanmadan parça değiştirilmez.",
-        "Far işlerinden sonra perdede ayar kontrol edilir.",
-        "Onarımdan sonra kodlar silinir, yol testiyle tekrar bakılır.",
-        "Değişen parça müşteriye teslim edilir."
-      ]
-    },
     "kariyer": {
-      "baslik": "Ekibimize katılın",
-      "metin": "Oto elektrik ve elektronikte deneyimli usta ve mesleği öğrenmek isteyen çırak arkadaşlarla tanışmak isteriz. Kısa bir tanıtımla bize yazın."
+      "baslik": "Kariyer",
+      "metin": "Oto elektrik ve elektronikte deneyimli usta ve mesleği öğrenmek isteyen çırak başvuruları alınır. Kısa bir tanıtım yeterlidir."
     },
     "sss": [
-      { "soru": "LED ampul taktım, far ayarı gerekir mi?", "cevap": "Çoğu zaman evet. LED ya da xenon ışığı farklı dağıtır; ayarsız kalırsa kesme çizgisi yukarı kayar ve karşıdan gelenin gözünü alır. Dönüşümden sonra farı perdeye tutarız." },
-      { "soru": "Farımın ayarsız olduğunu nasıl anlarım?", "cevap": "Karşıdan gelenler sık selektör yapıyorsa ya da kısa farda yolu çok yakından görüyorsanız ayar bozuktur. Düz bir duvara 10 metreden tutunca iki far aynı yüksekliğe düşmelidir." },
-      { "soru": "Far ayarı ne kadar sürer?", "cevap": "Ayar vidaları sağlamsa iki far birlikte yarım saati geçmez. Vida ya da ayar motoru kırıksa önce onu onarırız." },
-      { "soru": "Akü mü bitti, dinamo mu? Nasıl ayırt edilir?", "cevap": "Motor kapalıyken aküyü, çalışırken şarj voltajını ölçeriz. İkisini birlikte ölçmeden akü değiştirmek çoğu zaman boşa para demektir." },
-      { "soru": "Motor arıza lambası yanıyor, araçla gelebilir miyim?", "cevap": "Lamba sabit yanıyor ve araç normal çekiyorsa sakin sürüşle gelebilirsiniz. Lamba yanıp sönüyorsa ya da motor tekliyorsa zorlamayın, bizi arayın." }
+      {
+        "soru": "LED ampul takıldıktan sonra far ayarı gerekir mi?",
+        "cevap": "Çoğu zaman evet. LED ve xenon ışığı farklı dağıtır; ayarsız kalan farın kesme çizgisi yukarı kayar ve karşıdan gelen sürücünün gözünü alır."
+      },
+      {
+        "soru": "Farın ayarsız olduğu nasıl anlaşılır?",
+        "cevap": "Karşıdan gelenler sık selektör yapıyorsa ya da kısa far yolu çok yakından aydınlatıyorsa ayar bozuktur. Düz bir duvara 10 metreden tutulunca iki far aynı yüksekliğe düşmelidir."
+      },
+      {
+        "soru": "Far ayarı ne kadar sürer?",
+        "cevap": "Ayar vidaları sağlamsa iki far için yarım saat. Vida ya da ayar motoru kırıksa önce o onarılır."
+      },
+      {
+        "soru": "Akü mü bitti, dinamo mu, nasıl ayırt edilir?",
+        "cevap": "Motor kapalıyken akü voltajı, çalışırken şarj voltajı ölçülür. İkisi birlikte ölçülmeden akü değiştirmek çoğu zaman gereksizdir."
+      },
+      {
+        "soru": "Motor arıza lambası yanıyor, araçla gelinebilir mi?",
+        "cevap": "Lamba sabit yanıyor ve araç normal çekiyorsa sakin sürüşle gelinebilir. Lamba yanıp sönüyorsa ya da motor tekliyorsa araç zorlanmamalı."
+      }
     ],
-    "sssBaslik": "Far, akü ve lambalar hakkında",
+    "sssBaslik": "Far, akü ve uyarı lambaları",
     "galeriBaslik": "Far, akü ve kablo işleri",
-    "yorumBaslik": "Örnek müşteri yorumları",
-    "surecBaslik": "Kapıdan girişten teslime",
-    "markaBaslik": "Her gün baktığımız markalar",
     "sayfalar": {
-      "kurumsal": { "baslik": "Kurumsal", "metin": "Kim olduğumuz, nasıl çalıştığımız ve neye önem verdiğimiz.", "gorsel": "/img/kurumsal-elektrik2/far-aksam.jpg" },
-      "hizmetler": { "baslik": "Hizmetlerimiz", "metin": "Arıza tespitten hibrit batarya testine, her iş için ortalama süre." },
-      "far-ayari": { "baslik": "Far ayarı", "metin": "Kısa farın kesme çizgisi nereye düşmeli? Kaydırın, perdede görün." },
-      "kurumsal-musteriler": { "baslik": "Filo ve kurumsal", "metin": "Şirket araçlarınız için arıza kaydı, öncelikli servis ve dönemlik fatura.", "gorsel": "/img/kurumsal-elektrik2/filo.jpg" },
-      "iletisim": { "baslik": "İletişim", "metin": "Randevu, filo teklifi ya da bir arıza için yazın; aynı gün dönüş yapalım." }
+      "hakkinda": {
+        "baslik": "Hakkında",
+        "metin": "Şaşmaz Oto Sanayi Sitesi'nde oto elektrik, far ve akü.",
+        "gorsel": "/img/kurumsal-elektrik2/far-aksam.jpg"
+      },
+      "hizmetler": {
+        "baslik": "Hizmetler",
+        "metin": "Süreler ortalamadır. Fiyat ve randevu için arayın."
+      },
+      "far-ayari": {
+        "baslik": "Far ayarı",
+        "metin": "Kısa farın kesme çizgisinin 10 metredeki perdeye düştüğü yer."
+      },
+      "iletisim": {
+        "baslik": "İletişim",
+        "metin": "Fiyat ve randevu için arayın ya da formdan yazın."
+      }
     },
-    "konular": ["Arıza / hata kodu", "Far ayarı", "Akü ve şarj", "Filo anlaşması", "Randevu", "Genel bilgi"],
-    "cta": {
-      "baslik": "Lamba yanıyorsa, far gözü alıyorsa: getirin.",
-      "metin": "Aracınızı ve derdinizi yazın; tespitin ne kadar süreceğini ve ne zaman gelebileceğinizi söyleyelim.",
-      "buton": "Bize yazın"
-    }
+    "konular": [
+      "Far ayarı",
+      "Akü ve şarj",
+      "Arıza / hata kodu",
+      "Randevu",
+      "Genel bilgi"
+    ],
+    "formBaslik": "Mesaj gönderin"
   }
 }

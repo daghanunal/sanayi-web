@@ -41,6 +41,8 @@ tema: {
   logo, logoAcik,                        // isteğe bağlı görsel logo; logoAcik = koyu zeminde (tam hero, mobil menü)
   logoAlt,                               // metin logonun altındaki küçük satır
   yer,                                   // hero üst satırı: "Şaşmaz'da" → "…Şaşmaz'da 1996'dan beri."
+  kunye: true,                           // hero künye olur: ad (h1), isletme.tanim, Adres / Bugün / Telefon, Ara / WhatsApp / Yol tarifi;
+                                         // saatler "08.30–19.00" biçiminde; hero.baslik ve slogan okunmaz (İÇERİK-BRIEF)
   baslikEki, teklifEtiketi, hizmetEtiketi,
   metinBoyutu: true,                     // başlıkta A/A+ yazı boyutu düğmesi (tercih localStorage'da)
   altNot,                                // footer'da ek satır (ör. tasarım önerisi notu)
@@ -64,14 +66,15 @@ Varsayılan: `VARSAYILAN_SAYFALAR` (engine.js). Her sayfa `{ id, baslik, menu?, 
 | `hero` | `kurumsal.hero {baslik, metin, ust, birincil, ikincil, ikincilRota, bilgi: [[etiket, değer]]}` |
 | `ozet` | `kurumsal.ozet {baslik, metin}` |
 | `hizmetOzet` | `hizmetler[]` ilk 6 (`kisa` varsa o) |
-| `rakamlar` | `istatistikler[]` ("yıldır" içeren ya da `kurulustanHesapla` olan kuruluştan hesaplanır) |
+| `rakamlar` | `istatistikler[]` ("yıldır" içeren ya da `kurulustanHesapla` olan kuruluştan, `saatlerdenHesapla` olan haftalık açık gün sayısından hesaplanır) |
+| `konum` | Formsuz "Çalışma saatleri ve konum": `saatler`, `iletisim.adres`, harita (yaklaşınca), `kurumsal.konumBaslik` |
 | `anlasmaOzet`, `anlasmalar` | `kurumsal.anlasmalar[] {baslik, kisa, metin, maddeler, buton}`, `anlasmaNotu` |
 | `yorumlar`, `markalar`, `galeri` | `yorumlar[]`, `puan`, `markalar[]`, `galeri[]` |
 | `hakkimizda` | `kurumsal.hakkimizda {baslik, paragraflar[], gorsel}` |
 | `vizyon` | `kurumsal.misyon`, `kurumsal.vizyon`, `kurumsal.degerler[] {baslik, metin}` |
 | `kalite` | `kurumsal.kalite {baslik, metin, maddeler[]}`, `kurumsal.belgeler[]` ya da `belgeler[]`, `garanti` |
 | `tarihce` | `kurumsal.tarihce` ya da `tarihce` (`[[yıl, metin]]` ya da `{yil, baslik, metin}`) |
-| `hizmetler` | `hizmetler[] {baslik, aciklama, sure, gorsel, detay: [[etiket, değer]]}` |
+| `hizmetler` | `hizmetler[] {baslik, aciklama, sure, gorsel, detay: [[etiket, değer]]}`, bağlantı metni `kurumsal.hizmetLink` |
 | `surec` | `surec[]` (gerçekten sıralı adımlar; numaralı gösterilir) |
 | `sss` | `kurumsal.sss[] {soru, cevap}` |
 | `kariyer` | `kurumsal.kariyer {baslik, metin}` |

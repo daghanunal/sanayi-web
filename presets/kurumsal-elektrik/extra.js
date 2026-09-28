@@ -1,13 +1,13 @@
 // Sektöre özel modül: arıza kodu sorgulama. Kod yazılır → sade Türkçe anlamı, aciliyeti, kodun yapısı
-// (sistem / genel-özel / alt sistem) ve "bize getirin" WhatsApp mesajı. Liste: devre.json arizaKodlari + kodSozluk.
+// (sistem / genel-özel / alt sistem) ve hazır WhatsApp mesajı. Liste: kodSozluk.
 import { esc, waHref, telHref, icons, gsap, reducedMotion } from '../../shared/core.js';
 
 const SISTEM = { P: 'Motor ve şanzıman', B: 'Gövde ve kabin', C: 'Şasi: fren, direksiyon, süspansiyon', U: 'Beyinler arası haberleşme' };
 const P_ALT = { 0: 'Yakıt, hava ve emisyon', 1: 'Yakıt ve hava ölçümü', 2: 'Yakıt ve hava ölçümü (enjektör)', 3: 'Ateşleme sistemi', 4: 'Emisyon kontrolü', 5: 'Hız ve rölanti kontrolü', 6: 'Motor beyni ve çıkışları', 7: 'Şanzıman', 8: 'Şanzıman', 9: 'Şanzıman' };
 const ACILIYET = {
-  hemen: ['Hemen ilgilenin', 'Aracı zorlamayın, bizi arayın.'],
-  yakinda: ['Birkaç gün içinde getirin', 'Araç çoğu zaman yürür ama arıza büyüyebilir.'],
-  izle: ['Acil değil', 'İlk fırsatta bakalım, sürüşü genelde etkilemez.'],
+  hemen: ['Hemen bakılmalı', 'Araç zorlanmamalı.'],
+  yakinda: ['Birkaç gün içinde bakılmalı', 'Araç çoğu zaman yürür ama arıza büyüyebilir.'],
+  izle: ['Acil değil', 'Sürüşü genelde etkilemez; ilk bakımda kontrol edilir.'],
 };
 const SIK = ['P0420', 'P0300', 'P0171', 'P0562', 'U0100', 'P2002'];
 
@@ -30,9 +30,8 @@ export const arizaKodu = {
       <section class="k-bolum ak" aria-labelledby="ak-baslik">
         <div class="k-kap">
           <div class="ak__bas">
-            <p class="ak__etiket"><span class="ak__nokta"></span>Arıza kodu sorgulama</p>
-            <h2 class="k-h2" id="ak-baslik" data-bol>Lamba yandı, cihaz bir kod verdi. Ne demek?</h2>
-            <p class="k-lead">Kodu yazın; hangi sistemde, ne kadar acil ve ne olabileceğini sade Türkçeyle görün. Listemizde ${new Set([...(d.arizaKodlari || []), ...(d.kodSozluk || [])].map((x) => x.kod)).size} yaygın kod var.</p>
+            <h2 class="k-h2" id="ak-baslik" data-bol>Arıza kodu sorgulama</h2>
+            <p class="k-lead">Kod yazılınca hangi sisteme ait olduğu, anlamı ve aciliyeti görünür. Listede ${new Set([...(d.arizaKodlari || []), ...(d.kodSozluk || [])].map((x) => x.kod)).size} yaygın kod var.</p>
           </div>
           <div class="ak__ic">
             <div class="ak__sol">
@@ -87,13 +86,12 @@ export const arizaKodu = {
           <span class="ak__lamba">${lamba}</span>
           <div><p class="ak__kod">${esc(q)}</p><p class="ak__sistem">${esc(SISTEM[q[0]])}</p></div>
         </div>
-        ${x ? `<h3 class="ak__anlam">${esc(x.anlam)}</h3>` : `<h3 class="ak__anlam">Bu kod listemizde yok</h3>`}
+        ${x ? `<h3 class="ak__anlam">${esc(x.anlam)}</h3>` : `<h3 class="ak__anlam">Bu kod listede yok</h3>`}
         ${a ? `<p class="ak__aciliyet"><strong>${a[0]}.</strong> ${a[1]}</p>` : ''}
-        <p class="ak__not">${esc(x?.not || (q[1] === '1' ? 'Üreticiye özel kod: anlamı markaya göre değişir. Cihazla okuyup markanızın tablosundan bakalım.' : 'Kodu cihazla okuyup canlı veriyle asıl sebebi bulalım.'))}</p>
-        ${x?.cozum ? `<p class="ak__cozum"><span>Atölyemizde son çözüm</span>${esc(x.cozum)}</p>` : ''}
+        <p class="ak__not">${esc(x?.not || (q[1] === '1' ? 'Üreticiye özel kod: anlamı markaya göre değişir; markanın tablosundan bakılır.' : 'Asıl sebep cihazla okunan canlı veri ve ölçümle bulunur.'))}</p>
         <div class="k-butonlar">
-          <a class="k-btn" href="${waHref(d, mesaj)}" target="_blank" rel="noopener">${icons.whatsapp}<span>Bu kodla bize yazın</span></a>
-          <a class="k-btn k-btn--ikincil" href="${telHref(d)}">${icons.phone}<span>Arayın</span></a>
+          <a class="k-btn" href="${waHref(d, mesaj)}" target="_blank" rel="noopener">${icons.whatsapp}<span>Kodu WhatsApp'la gönder</span></a>
+          <a class="k-btn k-btn--ikincil" href="${telHref(d)}">${icons.phone}<span>Ara</span></a>
         </div>
         <p class="ak__uyari">Kod arızanın hangi sistemde olduğunu söyler, sebebini değil. Kesin teşhis cihaz ve ölçümle yapılır.</p>`;
       if (!reducedMotion && !ilk) {
@@ -120,26 +118,26 @@ const OLCUMLER = {
   kapali: {
     ad: 'Motor kapalı', ne: 'Araç en az bir saat durmuşken, kutup başlarından', min: 11, max: 13, adim: 0.05, ilk: 12.3,
     bolge: [[11, 12, 'kirmizi'], [12, 12.4, 'sari'], [12.4, 13, 'yesil']],
-    yorum: (v) => v >= 12.6 ? ['yesil', 'Akü dolu.', 'Marş sorunu varsa sebep akü değil; marş motoru, kablo ya da şaseye bakarız.']
-      : v >= 12.4 ? ['yesil', 'Yaklaşık %75 dolu.', 'Kullanılabilir. Kısa yolda kullanılan araçta şarj yetişmiyor olabilir; motor çalışırken de ölçelim.']
-      : v >= 12.2 ? ['sari', 'Yarı yarıya boş.', 'Şarj edip yük testine alırız. Soğuk sabahta marş zorlanabilir.']
-      : v >= 12.0 ? ['sari', 'Yaklaşık %25 dolu.', 'Kış sabahı marş basmayabilir. Önce şarj, sonra test; araç uyurken kaçak akım var mı ona da bakarız.']
-      : ['kirmizi', 'Akü boş ya da hücre arızalı.', 'Şarj etsek bile tutmayabilir. Test cihazına bağlayıp aküyü mü, şarjı mı suçlayacağımızı ölçüyle söyleriz.'],
+    yorum: (v) => v >= 12.6 ? ['yesil', 'Akü dolu.', 'Marş sorunu varsa sebep akü değil; marş motoru, kablo ya da şase kontrol edilir.']
+      : v >= 12.4 ? ['yesil', 'Yaklaşık %75 dolu.', 'Kullanılabilir. Kısa yolda kullanılan araçta şarj yetişmeyebilir; motor çalışırken de ölçülür.']
+      : v >= 12.2 ? ['sari', 'Yarı yarıya boş.', 'Şarj edilip yük testine alınır. Soğuk sabahta marş zorlanabilir.']
+      : v >= 12.0 ? ['sari', 'Yaklaşık %25 dolu.', 'Kış sabahı marş basmayabilir. Önce şarj, sonra test; araç dururken kaçak akım da ölçülür.']
+      : ['kirmizi', 'Akü boş ya da hücre arızalı.', 'Şarj edilse bile tutmayabilir. Sorunun akü mü, şarj mı olduğu test cihazıyla ölçülür.'],
   },
   mars: {
     ad: 'Marş anında', ne: 'Marşa basılırken voltajın düştüğü en alt değer', min: 8, max: 12, adim: 0.05, ilk: 10.2,
     bolge: [[8, 9.6, 'kirmizi'], [9.6, 10.5, 'sari'], [10.5, 12, 'yesil']],
     yorum: (v) => v >= 10.5 ? ['yesil', 'Akü marşı rahat çeviriyor.', 'Marş sırasında voltaj yeterince yüksek kalıyor.']
-      : v >= 9.6 ? ['sari', 'Sınırda.', 'Yazın çalışır, soğukta zorlanır. Akünün yük testine ve marş kablolarına bakalım.']
-      : ['kirmizi', 'Akü zayıf ya da marş fazla akım çekiyor.', 'Aküyü yük testine alır, marş motorunun çektiği akımı ölçeriz; hangisi olduğunu görmeden parça değiştirmeyiz.'],
+      : v >= 9.6 ? ['sari', 'Sınırda.', 'Yazın çalışır, soğukta zorlanır. Akü yük testi ve marş kabloları kontrol edilir.']
+      : ['kirmizi', 'Akü zayıf ya da marş fazla akım çekiyor.', 'Akü yük testine alınır, marş motorunun çektiği akım ölçülür.'],
   },
   calisiyor: {
     ad: 'Motor çalışırken', ne: 'Rölantide, far ve klima açıkken ve kapalıyken', min: 12, max: 15.6, adim: 0.05, ilk: 14.1,
     bolge: [[12, 13.2, 'kirmizi'], [13.2, 13.8, 'sari'], [13.8, 14.7, 'yesil'], [14.7, 15.6, 'kirmizi']],
-    yorum: (v) => v > 14.7 ? ['kirmizi', 'Aşırı şarj.', 'Konjektör (regülatör) voltajı tutmuyor; akü kaynar, ampuller ve beyinler zarar görebilir. Bekletmeden bakalım.']
-      : v >= 13.8 ? ['yesil', 'Şarj normal.', 'Dinamo aküyü dolduruyor. Akü yine de boşalıyorsa araç uyurken kaçak akım ararız.']
-      : v >= 13.2 ? ['sari', 'Şarj düşük.', 'Yük altında düşüyorsa kayış, kömür ya da konjektör. Far ve klima açıkken tekrar ölçeriz.']
-      : ['kirmizi', 'Şarj yok.', 'Akü tek başına araç çalıştırıyor, bir süre sonra biter. Dinamo, kömür, konjektör ve şarj kablosunu ölçeriz.'],
+    yorum: (v) => v > 14.7 ? ['kirmizi', 'Aşırı şarj.', 'Konjektör (regülatör) voltajı tutmuyor; akü kaynar, ampuller ve beyinler zarar görebilir. Beklemeden bakılmalı.']
+      : v >= 13.8 ? ['yesil', 'Şarj normal.', 'Dinamo aküyü dolduruyor. Akü yine de boşalıyorsa araç dururken kaçak akım ölçülür.']
+      : v >= 13.2 ? ['sari', 'Şarj düşük.', 'Yük altında düşüyorsa kayış, kömür ya da konjektör. Far ve klima açıkken tekrar ölçülür.']
+      : ['kirmizi', 'Şarj yok.', 'Akü aracı tek başına çalıştırıyor, bir süre sonra biter. Dinamo, kömür, konjektör ve şarj kablosu ölçülür.'],
   },
 };
 
@@ -151,9 +149,8 @@ export const akuTesti = {
       <section class="k-bolum at" aria-labelledby="at-baslik">
         <div class="k-kap at__ic">
           <div class="at__metin">
-            <p class="at__etiket"><span class="at__nokta"></span>Akü ve şarj ölçümü</p>
-            <h2 class="k-h2" id="at-baslik" data-bol>Akü mü bitti, dinamo mu? Voltmetre söyler.</h2>
-            <p class="k-lead">Akü değiştirmeden önce üç ölçü alırız. Ölçüm anını seçin, voltmetrede okunan değeri kaydırın; ne anlama geldiğini görün.</p>
+            <h2 class="k-h2" id="at-baslik" data-bol>Akü ve şarj ölçümü</h2>
+            <p class="k-lead">Akü, marş ve şarj sistemi üç ölçümle değerlendirilir. Ölçüm anı seçilip voltmetre değeri kaydırılınca anlamı görünür.</p>
             <div class="at__sekmeler" role="group" aria-label="Ölçüm anı">${sekmeler}</div>
             <div class="at__olcer">
               <p class="at__ne"></p>
@@ -164,7 +161,7 @@ export const akuTesti = {
             </div>
             <div class="at__yorum" id="at-yorum" aria-live="polite"><strong></strong><p></p></div>
             <div class="k-butonlar">
-              <a class="k-btn" href="${waHref(d, `Merhaba ${d.isletme.ad}, akü ve şarj kontrolü için ne zaman gelebilirim?\nAraç: `)}" target="_blank" rel="noopener">${icons.whatsapp}<span>Akü kontrolü için yazın</span></a>
+              <a class="k-btn" href="${waHref(d, `Merhaba ${d.isletme.ad}, akü ve şarj kontrolü için ne zaman gelebilirim?\nAraç: `)}" target="_blank" rel="noopener">${icons.whatsapp}<span>Akü kontrolü için WhatsApp</span></a>
             </div>
             <p class="at__not">Değerler 12 voltluk kurşun asit akü için yaklaşıktır. Kesin karar yük testi ve ölçümle verilir.</p>
           </div>

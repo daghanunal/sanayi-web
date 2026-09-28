@@ -88,6 +88,21 @@ const toMin = (hhmm) => {
   return h * 60 + m;
 };
 
+// Saate bulunma eki: okunuşun son sözcüğüne göre ünlü uyumu ve sertleşme ("17:00'de", "08:30'da", "15:45'te").
+const SAYI_SON = ['sıfır', 'bir', 'iki', 'üç', 'dört', 'beş', 'altı', 'yedi', 'sekiz', 'dokuz'];
+const ONLUK = ['', 'on', 'yirmi', 'otuz', 'kırk', 'elli'];
+function sonSozcuk(n) {
+  return n % 10 ? SAYI_SON[n % 10] : n ? ONLUK[Math.floor(n / 10)] : 'sıfır';
+}
+export function saatEki(hhmm) {
+  const [h, m] = hhmm.split(':').map(Number);
+  const w = m ? sonSozcuk(m) : sonSozcuk(h === 0 ? 0 : h);
+  const unlu = [...w].reverse().find((c) => 'aeıioöuü'.includes(c));
+  const ince = 'eiöü'.includes(unlu);
+  const sert = /[çfhkpsşt]$/.test(w);
+  return `'${sert ? 't' : 'd'}${ince ? 'e' : 'a'}`;
+}
+
 // saatler: 7 elemanlı dizi, 0 = Pazar. Her eleman "08:30-19:00" ya da null (kapalı).
 export function openStatus(saatler, now = new Date()) {
   const bugun = saatler[now.getDay()];
@@ -95,15 +110,15 @@ export function openStatus(saatler, now = new Date()) {
   if (bugun) {
     const [ac, kapa] = bugun.split('-');
     if (dakika >= toMin(ac) && dakika < toMin(kapa)) {
-      return { open: true, text: `Şu an açık, ${kapa}'da kapanıyor` };
+      return { open: true, text: `Şu an açık, ${kapa}${saatEki(kapa)} kapanıyor` };
     }
-    if (dakika < toMin(ac)) return { open: false, text: `Bugün ${ac}'da açılıyor` };
+    if (dakika < toMin(ac)) return { open: false, text: `Bugün ${ac}${saatEki(ac)} açılıyor` };
   }
   for (let i = 1; i <= 7; i++) {
     const gun = (now.getDay() + i) % 7;
     if (saatler[gun]) {
       const ac = saatler[gun].split('-')[0];
-      return { open: false, text: `${i === 1 ? 'Yarın' : GUNLER[gun]} ${ac}'da açılıyor` };
+      return { open: false, text: `${i === 1 ? 'Yarın' : GUNLER[gun]} ${ac}${saatEki(ac)} açılıyor` };
     }
   }
   return { open: false, text: 'Kapalı' };
@@ -338,7 +353,9 @@ export function autoHideHeader(el, { offset = 80, tolerance = 8 } = {}) {
 export function applyMeta(d) {
   const { isletme, iletisim } = d;
   document.title = `${isletme.ad} | ${isletme.sektor} | Şaşmaz, Ankara`;
-  const desc = `${isletme.ad}: ${isletme.slogan} ${iletisim.adres}. Telefon: ${iletisim.telefon}`;
+  // Slogan kullanılmaz (içerik kuralları): tanım → sektör. Eski verilerde slogan kalmış olsa da okunmaz.
+  const tanim = isletme.tanim || isletme.sektor;
+  const desc = `${isletme.ad}: ${tanim}. ${iletisim.adres}. Telefon: ${iletisim.telefon}`;
   let meta = document.querySelector('meta[name="description"]');
   if (!meta) {
     meta = document.createElement('meta');
@@ -353,7 +370,7 @@ export function applyMeta(d) {
     '@context': 'https://schema.org',
     '@type': 'AutoRepair',
     name: isletme.ad,
-    description: isletme.slogan,
+    description: tanim,
     telephone: iletisim.telefon,
     foundingDate: String(isletme.kurulus),
     address: {
