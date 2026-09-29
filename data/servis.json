@@ -1,0 +1,24 @@
+{
+  "preset": "servis",
+  "belirtiler": [
+    { "id": "fren", "metin": "Frenden ses geliyor", "parca": ["fren"] },
+    { "id": "titreme", "metin": "Direksiyon titriyor", "parca": ["lastik", "suspansiyon"] },
+    { "id": "tumsek", "metin": "Tümsekte ses var", "parca": ["suspansiyon"] },
+    { "id": "lamba", "metin": "Arıza lambası yandı", "parca": ["ariza", "motor"] },
+    { "id": "hararet", "metin": "Hararet yapıyor", "parca": ["sogutma"] },
+    { "id": "klima", "metin": "Klima serin üflemiyor", "parca": ["klima"] },
+    { "id": "mars", "metin": "Araç zor çalışıyor", "parca": ["aku"] },
+    { "id": "vites", "metin": "Vites zor geçiyor", "parca": ["sanziman"] },
+    { "id": "egzoz", "metin": "Egzozdan ses geliyor", "parca": ["egzoz"] },
+    { "id": "far", "metin": "Farlar zayıf yakıyor", "parca": ["far"] },
+    { "id": "bakim", "metin": "Bakım zamanı geldi", "parca": ["yag"] }
+  ],
+  "galeri": [
+    { "src": "/img/servis/lift.jpg", "alt": "Lifte kaldırılmış aracın altında kontrol", "baslik": "Lift ve alt takım kontrolü", "w": 1600, "h": 1066 },
+    { "src": "/img/servis/yag.jpg", "alt": "Motora yağ doldurulması", "baslik": "Yağ değişimi", "w": 933, "h": 1400 },
+    { "src": "/img/servis/fren.jpg", "alt": "Fren diski ve kaliper sökümü", "baslik": "Fren diski ve kaliper", "w": 1400, "h": 933 },
+    { "src": "/img/servis/motor.jpg", "alt": "Kaputu açık araçta motor kontrolü", "baslik": "Motor kontrolü", "w": 1400, "h": 788 },
+    { "src": "/img/servis/ariza.jpg", "alt": "Arıza tespit cihazıyla hata kodu okuma", "baslik": "Arıza tespiti", "w": 1600, "h": 1066 },
+    { "src": "/img/servis/lastik.jpg", "alt": "Lift yanında lastik değişimi", "baslik": "Lastik değişimi", "w": 1800, "h": 1200 }
+  ]
+}

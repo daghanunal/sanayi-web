@@ -174,7 +174,7 @@ export const PRESETS = [
 ];
 
 // Henüz yapılmamış ya da yayına alınmamış presetler burada gizlenir.
-export const HAZIR_OLMAYAN = new Set(['servis', 'lift', 'kaput', 'servis-defteri', 'pano', 'bakim-kinetik', 'kurumsal-bakim', 'kurumsal-bakim2']);
+export const HAZIR_OLMAYAN = new Set(['lift', 'kaput', 'servis-defteri', 'pano', 'bakim-kinetik', 'kurumsal-bakim', 'kurumsal-bakim2']);
 export const hazirPresetler = () => PRESETS.filter((p) => !HAZIR_OLMAYAN.has(p.id));
 
 export const presetById = (id) => PRESETS.find((p) => p.id === id);

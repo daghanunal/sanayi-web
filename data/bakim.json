@@ -1,0 +1,163 @@
+{
+  "preset": "bakim",
+  "isletme": {
+    "ad": "Akın Oto Servis",
+    "sektor": "Genel Bakım ve Onarım",
+    "tanim": "Genel bakım ve onarım",
+    "kurulus": 1999,
+    "hakkinda": "Benzinli, dizel, LPG'li ve hibrit binek araçlarla hafif ticari araçların bakım ve onarımı yapılır. Periyodik bakımdan motor, fren ve süspansiyon onarımına, arıza tespitinden klima ve akü işlerine kadar aracın mekanik ve elektrik işlerine bakılır."
+  },
+  "bilgiler": [
+    ["Araçlar", "Benzinli, dizel, LPG'li ve hibrit binek araçlar, hafif ticari araçlar"],
+    ["Donanım", "Arıza tespit cihazı, iki ve dört direkli lift, rot ayar cihazı, balans makinesi, klima gaz makinesi"],
+    ["Randevu", "Periyodik bakım randevuyla yapılır. Arıza için randevu gerekmez."],
+    ["Parça", "Orijinal ya da muadil parça seçimi araç sahibine bırakılır."],
+    ["Kayıt", "Yapılan her iş plakayla kaydedilir, sonraki bakımda bu kayda bakılır."]
+  ],
+  "iletisim": {
+    "telefon": "0532 555 40 22",
+    "whatsapp": "905325554022",
+    "adres": "Şaşmaz Oto Sanayi Sitesi, 7. Cadde No: 22, Etimesgut/Ankara",
+    "mapsQuery": "Şaşmaz Oto Sanayi Sitesi Etimesgut Ankara"
+  },
+  "saatler": [null, "08:30-19:00", "08:30-19:00", "08:30-19:00", "08:30-19:00", "08:30-19:00", "08:30-17:00"],
+  "gruplar": [
+    { "id": "bakim", "ad": "Bakım" },
+    { "id": "motor", "ad": "Motor ve şanzıman" },
+    { "id": "alt", "ad": "Fren ve alt takım" },
+    { "id": "elektrik", "ad": "Elektrik ve konfor" }
+  ],
+  "hizmetler": [
+    {
+      "grup": "bakim", "parca": "yag",
+      "baslik": "Periyodik bakım",
+      "kisa": "Yağ, filtreler ve genel kontrol",
+      "aciklama": "Motor yağı ve yağ filtresi değiştirilir; hava, polen ve yakıt filtreleri kilometresine göre yenilenir. Bakımdan sonra servis göstergesi sıfırlanır, yapılan işler bakım kaydına yazılır.",
+      "sure": "1–2 saat"
+    },
+    {
+      "grup": "bakim", "parca": "yag",
+      "baslik": "Yağ ve filtre değişimi",
+      "kisa": "Motor yağı, yağ ve hava filtresi",
+      "aciklama": "Motor yağı, aracın bakım kitapçığında yazan viskozite ve normda seçilir. Yağ filtresiyle birlikte hava ve polen filtresi de kontrol edilir.",
+      "sure": "45 dk"
+    },
+    {
+      "grup": "bakim", "parca": "arac",
+      "baslik": "Muayene öncesi kontrol",
+      "kisa": "Fren, far, lastik, egzoz ve alt takım",
+      "aciklama": "Fren, far, lastik, egzoz ve alt takım muayeneden önce kontrol edilir. Eksik görülen işler araç sahibine yazılı olarak bildirilir.",
+      "sure": "1 saat"
+    },
+    {
+      "grup": "motor", "parca": "motor",
+      "baslik": "Motor onarımı",
+      "kisa": "Conta, kayış, pompa ve enjektör",
+      "aciklama": "Hata kodları okunur, kompresyon ve yağ basıncı ölçülür. Conta, kayış, pompa ve enjektör arızaları giderilir."
+    },
+    {
+      "grup": "motor", "parca": "triger",
+      "baslik": "Triger seti değişimi",
+      "kisa": "Kayış ya da zincir, gergi, devirdaim",
+      "aciklama": "Triger kayışı ya da zinciri, gergi ve avara rulmanlarıyla birlikte değiştirilir. Devirdaim pompası da aynı işte kontrol edilir.",
+      "sure": "3–5 saat"
+    },
+    {
+      "grup": "motor", "parca": "sanziman",
+      "baslik": "Debriyaj ve şanzıman",
+      "kisa": "Debriyaj seti, volan, şanzıman yağı",
+      "aciklama": "Debriyaj seti ve volan değiştirilir, şanzıman yağı yenilenir. Otomatik şanzımanlarda arıza kaydı okunup adaptasyon yapılır."
+    },
+    {
+      "grup": "alt", "parca": "fren",
+      "baslik": "Fren sistemi",
+      "kisa": "Balata, disk, kampana, hidrolik",
+      "aciklama": "Balata, disk ve kampana ölçülerek değiştirilir. Fren hidroliği test cihazıyla kontrol edilip gerekirse yenilenir.",
+      "sure": "1–2 saat"
+    },
+    {
+      "grup": "alt", "parca": "suspansiyon",
+      "baslik": "Süspansiyon ve direksiyon",
+      "kisa": "Amortisör, salıncak, rotil, rot başı",
+      "aciklama": "Amortisör, salıncak, rotil ve rot başları kontrol edilir; ses ve boşluk yapan parça değiştirilir. İşten sonra rot ayarı yapılır."
+    },
+    {
+      "grup": "alt", "parca": "lastik",
+      "baslik": "Lastik ve rot-balans",
+      "kisa": "Lastik değişimi, balans, rot ayarı",
+      "aciklama": "Lastik değişimi, balans ve rot ayarı yapılır. Mevsim değişiminde lastiklerin diş derinliği ve basıncı kontrol edilir.",
+      "sure": "1 saat"
+    },
+    {
+      "grup": "alt", "parca": "egzoz",
+      "baslik": "Egzoz",
+      "kisa": "Susturucu, esnek boru, kaçak",
+      "aciklama": "Susturucu, esnek boru ve egzoz bağlantılarındaki kaçaklar giderilir. DPF ve katalitik konvertörün durumu ölçülerek kontrol edilir."
+    },
+    {
+      "grup": "elektrik", "parca": "ariza",
+      "baslik": "Arıza tespiti",
+      "kisa": "Hata kodu okuma ve ölçüm",
+      "aciklama": "Hata kodları ve canlı veriler cihazla okunur, arızanın yeri ölçülerek bulunur.",
+      "sure": "30 dk"
+    },
+    {
+      "grup": "elektrik", "parca": "aku",
+      "baslik": "Akü, marş ve şarj",
+      "kisa": "Akü testi, marş motoru, şarj dinamosu",
+      "aciklama": "Akü yük testine alınır, marş anındaki voltaj düşüşü ve şarj voltajı ölçülür. Zayıflamış akü, marş motoru ya da şarj dinamosu değiştirilir.",
+      "sure": "30 dk"
+    },
+    {
+      "grup": "elektrik", "parca": "klima",
+      "baslik": "Klima bakımı",
+      "kisa": "Gaz dolumu, polen filtresi, kaçak testi",
+      "aciklama": "Klima gazı boşaltılıp aracın etiketinde yazan miktarda tartılarak doldurulur, polen filtresi değiştirilir. Kaçak varsa yeri UV boyayla bulunur.",
+      "sure": "1 saat"
+    },
+    {
+      "grup": "elektrik", "parca": "sogutma",
+      "baslik": "Soğutma sistemi",
+      "kisa": "Radyatör, termostat, fan, antifriz",
+      "aciklama": "Radyatör, termostat, fan ve hortumlar kontrol edilir, antifrizin donma derecesi ölçülür. Hararet yapan araçta kaçağın yeri basınç testiyle bulunur."
+    },
+    {
+      "grup": "elektrik", "parca": "far",
+      "baslik": "Far ve aydınlatma",
+      "kisa": "Ampul değişimi, far ayarı",
+      "aciklama": "Far, stop ve sinyal ampulleri değiştirilir. Farlar değişimden sonra perdede ayarlanır.",
+      "sure": "30 dk"
+    }
+  ],
+  "periyodik": {
+    "not": "Aralıklar geneldir; aracın bakım kitapçığına ve kullanımına göre değişir.",
+    "adimlar": [
+      { "aralik": "Her 10–15 bin km", "isler": ["Motor yağı ve yağ filtresi", "Hava filtresi kontrolü", "Fren ve lastik kontrolü"] },
+      { "aralik": "Yılda bir ya da 15–20 bin km", "isler": ["Polen filtresi", "Klima kontrolü", "Akü testi"] },
+      { "aralik": "Her 30–40 bin km", "isler": ["Hava filtresi", "Yakıt filtresi (dizel)", "Bujiler (benzinli)"] },
+      { "aralik": "İki yılda bir", "isler": ["Fren hidroliği", "Antifriz kontrolü"] },
+      { "aralik": "60–120 bin km", "isler": ["Triger seti ve devirdaim pompası", "Şanzıman yağı"] }
+    ]
+  },
+  "surec": [
+    { "baslik": "Kabul", "aciklama": "Araç teslim alınırken şikâyet ve kilometre not edilir." },
+    { "baslik": "Kontrol", "aciklama": "Araç lifte alınır, arıza ölçülerek bulunur." },
+    { "baslik": "Bilgi", "aciklama": "Yapılacak iş, parça seçenekleri ve teslim zamanı araç sahibine söylenir." },
+    { "baslik": "Onarım", "aciklama": "Kabul edilen iş yapılır, değişen parça araç sahibine verilir." },
+    { "baslik": "Teslim", "aciklama": "Yol testinden sonra araç, yapılan işlerin listesiyle teslim edilir." }
+  ],
+  "istatistikler": [
+    { "deger": 27, "etiket": "yıldır Şaşmaz Oto Sanayi'nde", "sonek": "Şaşmaz Oto Sanayi Sitesi'nde", "birim": "YIL", "kurulustanHesapla": true },
+    { "deger": 6, "etiket": "gün açık", "sonek": "haftada açık", "birim": "GÜN", "saatlerdenHesapla": true }
+  ],
+  "markalar": ["Renault", "Fiat", "Volkswagen", "Ford", "Toyota", "Hyundai", "Opel", "Peugeot", "Citroën", "Dacia", "Honda", "Skoda"],
+  "galeri": [],
+  "yorumlar": [
+    { "ad": "Selin K.", "puan": 5, "metin": "Periyodik bakım için gittim. Yaptıkları işlerin listesini verdiler, bir sonraki bakımın kilometresini de yazdılar.", "arac": "2019 Renault Clio" },
+    { "ad": "Hakan D.", "puan": 5, "metin": "Frenden ses geliyordu. Balataları ve ön diskleri değiştirdiler, eski parçaları da gösterdiler.", "arac": "2016 Fiat Egea" },
+    { "ad": "Burak T.", "puan": 5, "metin": "Triger zamanı gelmişti. Devirdaimi de aynı işte değiştirdiler, akşam aracı aldım.", "arac": "2014 Volkswagen Golf" },
+    { "ad": "Zeynep A.", "puan": 5, "metin": "Klima serin üflemiyordu. Kaçağı UV boyayla buldular, conta değişti, gazı yeniden doldurdular.", "arac": "2018 Hyundai i20" },
+    { "ad": "Mehmet Ö.", "puan": 4, "metin": "Muayeneden önce kontrole götürdüm. Far ayarı ve bir rotil eksik çıktı, ikisini de aynı gün yaptılar.", "arac": "2015 Ford Focus" },
+    { "ad": "Cengiz Y.", "puan": 5, "metin": "Şirketin üç aracının bakımını burada yaptırıyoruz. Her aracın kaydı ayrı tutuluyor, sırası gelince haber veriyorlar.", "arac": "2020 Dacia Duster" }
+  ]
+}

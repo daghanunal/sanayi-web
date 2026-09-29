@@ -16,6 +16,7 @@ export const norm = (s) =>
   String(s ?? '').toLocaleLowerCase('tr').replace(/[ışğçöüâîû]/g, (c) => HARF[c])
     .normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, ' ').trim();
 export const EK = {
+  bakim: 'servis oto servis bakim periyodik tamir tamirci genel mekanik fren balata amortisor suspansiyon yag filtre triger',
   motor: 'motorcu mekanik mekanikci tamir tamirci bakim yag triger kafa conta araba',
   boya: 'boyaci kaporta kaportaci gocuk pasta cila seramik kaplama boyasiz dent',
   lastik: 'lastikci jant jantci rot balans rotbalans kis lastigi teker tekerlek',

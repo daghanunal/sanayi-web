@@ -1,0 +1,12 @@
+Tüm fotoğraflar Pexels lisansıyla (ücretsiz ticari kullanım, atıf gerekmez): https://www.pexels.com/license/
+Bu dosyalar projedeki başka preset klasörlerinden kopyalanmıştır (temizlenmiş sürümleri; kadraj ve boyut aynı).
+
+lift.jpg    https://www.pexels.com/photo/a-mechanic-inspecting-a-vehicle-8986070/ (Artem Podrez)      kaynak: public/img/ekspertiz-klasik/lift-suv.jpg
+yag.jpg     Pexels 13065700 (Daniel Andraski), yağ bidonundaki marka etiketi bulanıklaştırılmış       kaynak: public/img/garaj/yag.jpg
+fren.jpg    https://www.pexels.com/photo/a-close-up-shot-of-a-vehicle-disc-brake-6870299/              kaynak: public/img/depo/disk.jpg
+motor.jpg   https://www.pexels.com/photo/mechanic-looking-at-the-engine-of-the-car-8985452/ (Artem Podrez)  kaynak: public/img/klima-sinematik/atolye.jpg
+ariza.jpg   https://www.pexels.com/photo/person-holding-blue-diagnostic-tool-4116193/, üretici logosu kaldırılmış  kaynak: public/img/ekspertiz-klasik/obd-cihaz.jpg
+lastik.jpg  https://www.pexels.com/photo/6870331/                                                      kaynak: public/img/kurumsal-lastik/hero-lift.jpg
+
+3D sahne: lib3d varlıkları (garage, car_sedan, engine v2, gearbox, wheel, battery, ac_compressor, radiator, exhaust;
+projenin kendi Blender betikleri, marka yok) + Poly Haven "autoshop_01" HDRI (CC0). Amortisör ve salıncak kodla çizilir.
