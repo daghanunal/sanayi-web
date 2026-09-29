@@ -21,173 +21,172 @@
       "alt": "Aşınmış turbo gövdesine yakından bakış"
     },
     {
-      "src": "/img/kurumsal-turbo/turbo-3d.jpg",
-      "alt": "Revizyon sonrası turbo (3D görsel, temsilî)"
-    },
-    {
       "src": "/img/kurumsal-turbo/motor-turbo.jpg",
       "alt": "Turbolu benzinli motorun motor bölmesi"
-    },
-    {
-      "src": "/img/kurumsal-turbo/dizel-motor.jpg",
-      "alt": "Dizel motor üzerinde çalışan usta"
-    },
-    {
-      "src": "/img/kurumsal-turbo/tezgah-turbo.jpg",
-      "alt": "Tezgâhta bekleyen turbo"
     }
   ],
   "kurumsal": {
-    "hero": {
-      "baslik": "Turboyu değiştirmeden önce ölçtürün.",
-      "metin": "Gelen turboyu söker; milini, yataklarını ve çarklarını ölçeriz. Ölçüler karneye yazılır, size gösterilir. Fiyatı işe başlamadan söyleriz; sebebi bulmadan yeni turbo takmayız.",
-      "birincil": "Turbomu ölçtüreyim",
-      "ikincil": "Hizmetlerimiz",
-      "ikincilRota": "hizmetler"
+    "hizmetOzetBaslik": "Hizmetler",
+    "konumBaslik": "Çalışma saatleri ve konum",
+    "yorumBaslik": "Örnek yorumlar",
+    "surecBaslik": "Çalışma sırası",
+    "markaBaslik": "Bakım yapılan markalar",
+    "hizmetLink": "Bu hizmet için bilgi alın",
+    "karne": {
+      "baslik": "Revizyon karnesi",
+      "metin": "Sökülen turbonun ölçüleri revizyondan önce ve sonra alınıp karneye yazılır. Karne, turboyla birlikte araç sahibine verilir.",
+      "olculer": [
+        [
+          "Mil eksenel boşluğu",
+          "Milin ileri geri ne kadar oynadığı ölçülür. Yatak ve baskı yatağının aşınması buradan anlaşılır."
+        ],
+        [
+          "Mil radyal boşluğu",
+          "Milin yana ne kadar oynadığı ölçülür. Çarkın gövdeye sürtüp sürtmediği buradan anlaşılır."
+        ],
+        [
+          "Çark grubu balansı",
+          "Yüksek devirdeki dengesizlik ölçülür. Islık ve titreşimin sebebi çoğu zaman bozuk balanstır."
+        ],
+        [
+          "VNT kanat hareketi",
+          "Değişken kanatların takılmadan açılıp kapandığı kontrol edilir."
+        ],
+        [
+          "Yağ dönüş hattı",
+          "Hattın açık olup olmadığına bakılır. Tıkalı hat, yeni takılan turboyu da kısa sürede bozar."
+        ],
+        [
+          "Takviye basıncı",
+          "Montajdan sonra yol denemesinde basınç cihazla okunur."
+        ]
+      ],
+      "not": "Sınır değerler, turbonun modeline göre üretici kataloğundan kontrol edilir."
     },
-    "ozet": {
-      "baslik": "Yeni turbo takmak kolay; zor olan sebebi bulmak",
-      "metin": "Tıkalı bir yağ dönüş hattı, geç değişen yağ ya da kurum bağlamış bir VNT mekanizması. Biz önce sebebi buluruz; sebep ortadan kalkmadan revizyonlu turbo da yenisi de aynı yoldan gider."
+    "sebep": {
+      "baslik": "Turboyu bozan sebepler",
+      "metin": "Turbo çoğu zaman kendi kendine bozulmaz, sebep yağ ya da hava tarafındadır. Sebep giderilmeden takılan turbo aynı arızayı yeniden yapar.",
+      "liste": [
+        {
+          "baslik": "Yağsız kalma",
+          "metin": "Yağ seviyesi düşükken ya da motor soğukken yüklenince mil yatakları kısa sürede yanar.",
+          "kontrol": "Yağ basıncı ve besleme borusu"
+        },
+        {
+          "baslik": "Kirli yağ",
+          "metin": "Geç değiştirilen yağ ve filtre, yatakları aşındırır. Mil boşluğu büyür, çark gövdeye sürter.",
+          "kontrol": "Yağ, filtre, süzgeç ve banjo cıvataları"
+        },
+        {
+          "baslik": "Tıkalı dönüş hattı",
+          "metin": "Dönüş borusu ya da karter havalandırması tıkanınca yağ turboda kalır. Yağ keçelerden sızar, egzozdan mavi duman çıkar.",
+          "kontrol": "Dönüş hattı ve karter havalandırması"
+        },
+        {
+          "baslik": "Yabancı cisim",
+          "metin": "Hava filtresinden kaçan bir parça ya da motordan gelen bir kırıntı çark kanatlarını bozar. Islık sesi çoğu zaman buradan başlar.",
+          "kontrol": "Hava filtresi, emme hattı ve intercooler"
+        }
+      ]
     },
-    "hizmetOzetBaslik": "Tezgâhtaki işler",
-    "yorumBaslik": "Örnek yorumlar: turbosu açılanlar",
-    "surecBaslik": "Bir turbo tezgâhta nasıl ilerler",
-    "galeriBaslik": "Turbo işinden kareler",
-    "markaBaslik": "Revizyonunu yaptığımız turbo ve araç markaları",
-    "anlasmaBaslik": "Filolar ve sanayideki meslektaşlar",
-    "anlasmaMetin": "Aracı yoldan çekemeyen filolara ve turboyu söküp getiren servis ustalarına ayrı sıra açıyoruz.",
+    "anlasmaBaslik": "Filolar ve servisler",
+    "anlasmaMetin": "Sanayideki servislerin söküp getirdiği turbolar ve ticari araç filolarının işleri ayrı sırayla alınır.",
     "anlasmalar": [
       {
         "baslik": "Servislere tezgâh revizyonu",
-        "kisa": "Söktüğünüz turboyu getirin, ölçülmüş ve balanslanmış teslim alın.",
-        "metin": "Sanayideki servisler ve motor ustaları turboyu söküp getirir; biz tezgâhta revizyon ve balansı yapar, ölçüm sonuçlarıyla birlikte teslim ederiz. Montajı siz yaparsınız, yağ hattı için dikkat edilecekleri yazılı veririz.",
+        "kisa": "Sökülüp getirilen turboya revizyon ve balans.",
+        "metin": "Servislerin ve motor ustalarının söküp getirdiği turbonun revizyonu ve balansı tezgâhta yapılır. Turbo, ölçüm sonuçları ve montaj notuyla birlikte teslim edilir.",
         "maddeler": [
-          "Söküm yapılmış turboya aynı gün ölçüm",
+          "Sökülmüş turboya aynı gün ölçüm",
           "Ölçüm ve balans sonuçları yazılı",
-          "Montaj ve ilk çalıştırma notu",
+          "Yağ hattı ve ilk çalıştırma için montaj notu",
           "Toplu işte ayrı sıra"
         ],
-        "buton": "Servis olarak yazın"
+        "buton": "Servis olarak bilgi alın"
       },
       {
         "baslik": "Ticari araç ve filolar",
-        "kisa": "Kamyonet, panelvan, servis araçlarında aynı gün teşhis.",
-        "metin": "Yolda para kazanan araç atölyede beklememeli. Hafif ticari ve kamyonet dizel turbolarında aynı gün teşhis yapar, işin ne kadar süreceğini baştan söyleriz. Her aracın turbo geçmişini ayrı tutarız.",
+        "kisa": "Kamyonet, panelvan ve servis araçları.",
+        "metin": "Hafif ticari araçların ve kamyonetlerin dizel turbolarına aynı gün bakılır, işin ne kadar süreceği araç sahibine söylenir. Her aracın turbo ve yağ hattı geçmişi ayrı tutulur.",
         "maddeler": [
-          "Aynı gün teşhis",
-          "Süre ve fiyat işe başlamadan",
-          "Araç bazında turbo ve yağ hattı geçmişi",
-          "Aylık tek fatura ve döküm"
+          "Aynı gün kontrol",
+          "Araç başına turbo ve yağ hattı kaydı",
+          "Ay sonunda tek fatura ve araç bazında döküm"
         ],
-        "buton": "Filo için görüşelim"
+        "buton": "Filo için bilgi alın"
       }
     ],
-    "anlasmaNotu": "Koşullar araç sayısına ve iş tipine göre konuşulur; teklifimizi yazılı veririz.",
+    "anlasmaNotu": "Koşullar araç sayısına ve işin türüne göre konuşulur.",
     "hakkimizda": {
-      "baslik": "Yalnızca turbo",
+      "baslik": "Hakkında",
       "paragraflar": [
-        "Şaşmaz'da açtığımız dükkânda başka iş yapmadık: yalnızca turbo. Aynı işi yıllarca yapınca hangi arızanın nereden geldiğini, hangi motorun turbosu neden yorulduğunu ezbere bilir hale geliyorsunuz.",
-        "Tezgâhımızda sökülen her turbo ölçülür, ölçü sonucu size gösterilir. Revizyonla kurtarılabilecek turboyu değiştirtmeyiz; kurtarılamayacaksa bunu da açıkça söyleriz."
+        "Dükkânda yalnız turbo işi yapılır. Binek ve hafif ticari araçların dizel ve benzinli turboları sökülüp ölçülür, revizyonu ve balansı tezgâhta yapılır.",
+        "Sökülen her turbonun ölçüleri revizyondan önce ve sonra alınır, sonuçlar araç sahibine gösterilir. Revizyonla onarılamayacak turbonun değişmesi gerektiği de ölçüm sonucuyla birlikte söylenir."
       ],
       "gorsel": "/img/kurumsal-turbo/usta-portre.jpg",
       "gorselAlt": "Elinde turbo tutan usta"
     },
-    "misyon": "Turbonun neden bozulduğunu ölçerek bulmak, sebebi gidermeden turbo takmamak.",
-    "vizyon": "Şaşmaz'da turbo denince ilk açtırılan, en son değiştirilen yer olmak.",
-    "degerler": [
-      {
-        "baslik": "Önce sebep",
-        "metin": "Yağ hattı, filtre ve karter havalandırması kontrol edilmeden turbo takılmaz."
-      },
-      {
-        "baslik": "Ölçü ortada",
-        "metin": "Mil boşluğu ve balans sonuçları fotoğrafla size gönderilir."
-      },
-      {
-        "baslik": "Fiyat baştan",
-        "metin": "Söküm ve ölçümden sonra fiyatı söyleriz; onayınız olmadan başlamayız."
-      },
-      {
-        "baslik": "Eski parça sizin",
-        "metin": "Değişen yatak, segman ve contalar size gösterilir, isterseniz teslim edilir."
-      }
-    ],
-    "kalite": {
-      "baslik": "Bir turbo nasıl teslim edilir",
-      "metin": "Tezgâhtan çıkan her turbo aynı kontrol sırasından geçer.",
-      "maddeler": [
-        "Mil eksenel ve radyal boşluğu ölçülür, değerler kayda geçer.",
-        "Çark grubu balans cihazında yüksek devirde dengelenir.",
-        "VNT'li turbolarda kanat hareketi ve aktüatör konumu ayarlanır.",
-        "Yağ besleme ve dönüş hattı temizlenmeden ya da yenilenmeden montaj yapılmaz.",
-        "Montajdan sonra basınç değerleri ölçülür, yol denemesi yapılır."
-      ]
-    },
+    "sssBaslik": "Sık sorulan sorular",
     "sss": [
       {
-        "soru": "Turbo revizyonla kurtulur mu, değişmeli mi?",
-        "cevap": "Söküp ölçmeden söylemeyiz. Gövde ve çarklar sağlamsa revizyon yeterlidir; gövde çatlamış ya da çark gövdeye sürtüp yemişse bunu gösterir, değişim seçeneğini fiyatıyla söyleriz."
+        "soru": "Turbo revizyonla onarılır mı, değişmesi mi gerekir?",
+        "cevap": "Bu, turbo sökülüp ölçülünce anlaşılır. Gövde ve çarklar sağlamsa revizyon yeterlidir. Gövde çatlamışsa ya da çark gövdeye sürtüp aşınmışsa turbonun değişmesi gerekir."
       },
       {
-        "soru": "Fiyatı ne zaman öğrenirim?",
-        "cevap": "Söküm ve ölçümden sonra, işe başlamadan. Onayınız olmadan revizyona başlamayız."
+        "soru": "Islık sesi turbonun bozulduğunu mu gösterir?",
+        "cevap": "Her zaman değil. Islığın sebebi bozuk balans olabileceği gibi patlak bir hortum ya da intercooler kaçağı da olabilir. Kontrole motor çalıştırılıp dinlenerek başlanır."
       },
       {
-        "soru": "Turbom neden bozuldu?",
-        "cevap": "En sık sebepler yağsız kalma, kirli yağ, tıkalı dönüş hattı ve turboya kaçan yabancı cisimdir. Sebebi bulmadan turbo takarsak aynı arıza tekrar eder; bu yüzden hattı da kontrol ederiz."
+        "soru": "Araçtan sökülmüş turbo getirilebilir mi?",
+        "cevap": "Evet. Sökülüp getirilen turbo aynı gün ölçülür. Sanayideki servisler de turboyu bu şekilde getirir."
       },
       {
-        "soru": "Islık sesi turbonun gittiğini mi gösterir?",
-        "cevap": "Her zaman değil. Bazen balans bozukluğu, bazen de bir hortum ya da intercooler kaçağıdır. Motoru çalıştırıp dinleyerek başlarız."
-      },
-      {
-        "soru": "Söktüğüm turboyu getirsem bakar mısınız?",
-        "cevap": "Evet. Söküm yapılmış turboya aynı gün ölçüm yaparız; servis ustalarıyla da bu şekilde çalışıyoruz."
+        "soru": "Intercooler hortumunda yağ olması normal mi?",
+        "cevap": "Az miktarda yağ normaldir. Yağ çoksa kompresör tarafındaki segman ve karter havalandırması kontrol edilir."
       }
     ],
     "kariyer": {
-      "baslik": "Tezgâha usta ve çırak arıyoruz",
-      "metin": "Turbo, dizel motor ya da hassas ölçüm işinde tecrübesi olan usta veya mesleği öğrenmek isteyen çırak arkadaşlarla tanışmak isteriz. Kısa bir tanıtımla bize yazın."
+      "baslik": "Kariyer",
+      "metin": "Turbo, dizel motor ya da hassas ölçüm işinde tecrübeli usta ve mesleği öğrenmek isteyen çırak alınır. Başvuru telefonla ya da iletişim formundan yapılabilir."
     },
     "sayfalar": {
-      "kurumsal": {
-        "baslik": "Kurumsal",
-        "metin": "Kim olduğumuz, neden yalnızca turboyla uğraştığımız ve bir turboyu nasıl teslim ettiğimiz.",
+      "hizmetler": {
+        "baslik": "Hizmetler",
+        "metin": "Her iş için ortalama süre ve kapsam. Fiyat ve randevu için arayın."
+      },
+      "hakkinda": {
+        "baslik": "Hakkında",
         "gorsel": "/img/kurumsal-turbo/atolye.jpg"
       },
-      "hizmetler": {
-        "baslik": "Hizmetlerimiz",
-        "metin": "Revizyondan balansa, VNT ayarından yağ hattına; her iş için ortalama süre ve kapsam."
+      "turbo-arizalari": {
+        "baslik": "Turbo arızaları",
+        "metin": "Turboyu bozan sebepler ve sık sorulan sorular."
       },
       "kurumsal-musteriler": {
-        "baslik": "Filolar ve servisler",
-        "metin": "Sanayideki servislere tezgâh revizyonu, ticari araç ve filolara aynı gün teşhis.",
+        "baslik": "Filo ve servisler",
+        "metin": "Servislere tezgâh revizyonu, ticari araç filolarına aynı gün kontrol.",
         "gorsel": "/img/kurumsal-turbo/dizel-motor.jpg"
-      },
-      "referanslar": {
-        "baslik": "Turbo işinden kareler ve örnek yorumlar",
-        "metin": "Turbo işinden kareler, örnek yorumlar ve baktığımız markalar."
       },
       "iletisim": {
         "baslik": "İletişim",
-        "metin": "Şikâyeti yazın ya da turboyu getirin; aynı gün dönüş yapalım."
+        "metin": "Fiyat ve randevu için arayın ya da formdan yazın."
       }
     },
     "konular": [
-      "Turbo arızası / teşhis",
+      "Turbo arızası",
       "Turbo revizyonu",
       "Balans",
-      "VNT / aktüatör",
-      "Intercooler / yağ hattı",
+      "VNT ve aktüatör",
+      "Intercooler ve yağ hattı",
       "Servis olarak iş getirmek",
-      "Filo / ticari araç",
+      "Filo ve ticari araç",
       "Genel bilgi"
     ],
-    "formBaslik": "Bize yazın",
+    "formBaslik": "Mesaj gönderin",
     "cta": {
-      "baslik": "Değiştirmeden önce bir de bize açtırın.",
-      "metin": "Şikâyeti anlatın ya da turboyu getirin; neyin neden bozulduğunu gösterelim, fiyatı işe başlamadan söyleyelim.",
-      "buton": "Turbomu ölçtürmek istiyorum"
+      "baslik": "İletişim",
+      "metin": "Fiyat ve randevu için arayın ya da formdan yazın.",
+      "buton": "İletişim formu"
     }
   }
 }

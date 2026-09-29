@@ -5,6 +5,7 @@
 export const SATIS_WHATSAPP = '905555555555';
 
 export const SEKTORLER = [
+  { id: 'bakim', ad: 'Genel bakım ve onarım', ornek: 'Periyodik bakım, fren, süspansiyon, arıza' },
   { id: 'motor', ad: 'Motor ve mekanik', ornek: 'Motor, şanzıman, bakım' },
   { id: 'boya', ad: 'Boya ve kaporta', ornek: 'Boya, göçük, pasta-cila, seramik' },
   { id: 'lastik', ad: 'Lastik ve jant', ornek: 'Lastik, jant, rot-balans' },
@@ -161,10 +162,19 @@ export const PRESETS = [
   { id: 'kurumsal-mimarlik', grup: 'kurumsal', sektor: 'mimarlik', ad: 'Gün Işığı', icin: 'Mimarlık ofisi', renk: '#f2a30f' },
   { id: 'eczane', grup: 'ozel', sektor: 'eczane', ad: 'Eczane', icin: 'Mahalle eczanesi', renk: '#3fbf8a' },
   { id: 'alcibay', grup: 'ozel', sektor: 'alci', ad: 'Alçıbay', icin: 'Alçıbay için yeniden tasarım önerisi', renk: '#e8e4dc' },
+  // Genel bakım ve onarım (çok markalı servis): geniş hizmet kapsamı, premium set.
+  { id: 'servis', grup: 'sinematik', sektor: 'bakim', ad: 'Servis', icin: 'Genel bakım ve onarım, bol 3D', renk: '#2f7bff' },
+  { id: 'lift', grup: 'sinematik', sektor: 'bakim', ad: 'Lift', icin: 'Genel bakım ve onarım, etkileşimli 3D', renk: '#c6ff3d' },
+  { id: 'kaput', grup: 'sinematik', sektor: 'bakim', ad: 'Kaput', icin: 'Genel bakım ve onarım, az 3D', renk: '#e8b04a' },
+  { id: 'servis-defteri', grup: 'klasik', sektor: 'bakim', ad: 'Servis Defteri', icin: 'Genel bakım ve onarım', renk: '#b8452e' },
+  { id: 'pano', grup: 'klasik', sektor: 'bakim', ad: 'Pano', icin: 'Genel bakım ve onarım', renk: '#1e6b5a' },
+  { id: 'bakim-kinetik', grup: 'kinetik', sektor: 'bakim', ad: 'Kademe', icin: 'Genel bakım ve onarım', renk: '#ff3d6e' },
+  { id: 'kurumsal-bakim', grup: 'kurumsal', sektor: 'bakim', ad: 'Servis Merkezi', icin: 'Genel bakım ve onarım, kurumsal', renk: '#0f4c81' },
+  { id: 'kurumsal-bakim2', grup: 'kurumsal', sektor: 'bakim', ad: 'Bakım Planı', icin: 'Genel bakım, filo ve şirket araçları', renk: '#3a7d44' },
 ];
 
 // Henüz yapılmamış ya da yayına alınmamış presetler burada gizlenir.
-export const HAZIR_OLMAYAN = new Set([]);
+export const HAZIR_OLMAYAN = new Set(['servis', 'lift', 'kaput', 'servis-defteri', 'pano', 'bakim-kinetik', 'kurumsal-bakim', 'kurumsal-bakim2']);
 export const hazirPresetler = () => PRESETS.filter((p) => !HAZIR_OLMAYAN.has(p.id));
 
 export const presetById = (id) => PRESETS.find((p) => p.id === id);

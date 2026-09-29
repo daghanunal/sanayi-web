@@ -1,13 +1,11 @@
 // Sektör modülleri (kurumsal-radyator, "Bakır petek" yönü):
-// (1) petek: hero. Metnin yanında radyatörün önden teknik çizimi; açılışta ibre 112°C'de "hararet",
-//     fan devreye girer, su tüplerde akmaya başlar, sıcaklık 88°C'ye iner. Akış ve fan yalnızca CSS transform
+// (1) petek: künye. Metnin yanında radyatörün önden teknik çizimi; açılışta fan devreye girer, su tüplerde
+//     akmaya başlar, sıcak kırmızı soğuk maviye döner (süs; sayısal okuma yok). Akış ve fan CSS transform
 //     animasyonu; ekran dışında durur.
-// (2) devre: "Hararet haritası". Şikâyeti seç → soğutma devresi şemasında önce bakılacak parçalar numaralanır,
+// (2) devre: "Hararet haritası". Şikâyet seçilince soğutma devresi şemasında önce bakılacak parçalar numaralanır,
 //     ibre bölgesi ve sebepler listelenir, ilgili hizmet için hazır konu ile iletişime gider.
 // (3) vasita: binek ve ağır vasıta için iki büyük fotoğraf panosu.
-// (4) atolye: canlı açık/kapalı, haftalık saatler (bugün işaretli), adres, yaklaşınca yüklenen harita.
-import { esc, telHref, mapsHref, mapsEmbed, openStatus, groupedHours, GUNLER, icons, gsap, reducedMotion } from '../../shared/core.js';
-import { yilEki, BOLUMLER } from '../_kurumsal/bolumler.js';
+import { esc, telHref, waHref, mapsHref, gunDurumu, kisaAdres, icons, gsap, reducedMotion } from '../../shared/core.js';
 
 const ok = `<svg class="k-ok" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 const rota = (id, metin, cls = 'k-btn') => `<a class="${cls}" href="#/${id}" data-rota="${id}">${metin}</a>`;
@@ -62,8 +60,8 @@ const radyatorSvg = () => {
     <circle class="pk-kapak" cx="110" cy="386" r="7"/>
     <!-- etiketler -->
     <g class="pk-etiket">
-      <text x="512" y="76">GİRİŞ</text><text class="pk-etiket__d" x="512" y="94" data-giris>118°</text>
-      <text x="-36" y="318">ÇIKIŞ</text><text class="pk-etiket__d" x="-36" y="336" data-cikis>104°</text>
+      <text x="500" y="84">Sıcak su</text>
+      <text x="-36" y="326">Soğuk su</text>
     </g>
   </svg>`;
 };
@@ -73,80 +71,52 @@ const fanSvg = `<svg viewBox="-24 -24 48 48" aria-hidden="true"><circle r="22" f
   .join('')}<circle r="4" fill="currentColor"/></svg>`;
 
 export const petek = {
-  render(d, { tema }) {
-    const h = d.kurumsal?.hero || {};
-    const st = d.saatler ? openStatus(d.saatler) : null;
-    const bilgi = [
-      ['Şaşmaz\'da', `${yilEki(d.isletme.kurulus)} beri`],
-      st ? ['Bugün', st.text] : null,
-      d.garanti ? ['Garanti', d.garanti.replace(/\.$/, '')] : null,
-      ['Telefon', d.iletisim.telefon],
-    ].filter(Boolean);
+  render(d) {
+    const b = d.saatler ? gunDurumu(d.saatler) : null;
     return `
-      <section class="k-hero pk" aria-label="Giriş">
+      <section class="k-hero k-hero--kunye pk" aria-label="Künye">
         <div class="k-kap k-hero__ic pk__ic">
           <div class="k-hero__metin">
-            <p class="pk__ust"><span class="pk__isik ${st?.open ? 'is-acik' : ''}"></span>${esc(d.isletme.sektor)}</p>
-            <h1 class="k-h1 k-hero__baslik" data-bol>${esc(h.baslik || d.isletme.slogan)}</h1>
-            <p class="k-lead">${esc(h.metin || d.isletme.hakkinda)}</p>
+            <h1 class="k-h1 k-hero__baslik" data-bol>${esc(d.isletme.ad)}</h1>
+            <p class="k-lead k-hero__tanim">${esc(d.isletme.tanim || d.isletme.sektor)}</p>
+            <dl class="k-kunye">
+              <div><dt>Adres</dt><dd>${esc(kisaAdres(d.iletisim.adres))}</dd></div>
+              ${b ? `<div><dt>Bugün</dt><dd><span class="k-durum ${b.open ? 'is-acik' : ''}"><span></span>${esc(b.kunye)}</span></dd></div>` : ''}
+              <div><dt>Telefon</dt><dd><a href="${telHref(d)}">${esc(d.iletisim.telefon)}</a></dd></div>
+            </dl>
             <div class="k-butonlar">
-              ${rota('iletisim', `${esc(h.birincil || 'Arızayı yazın')} ${ok}`)}
-              <a class="k-btn k-btn--ikincil" href="#/hizmetler" data-rota="hizmetler">${esc(h.ikincil || 'Hizmetlerimiz')}</a>
+              <a class="k-btn" href="${telHref(d)}">${icons.phone}<span>Ara</span></a>
+              ${d.iletisim.whatsapp ? `<a class="k-btn k-btn--ikincil" href="${waHref(d)}" target="_blank" rel="noopener">${icons.whatsapp}<span>WhatsApp</span></a>` : ''}
+              <a class="k-btn k-btn--ikincil" href="${mapsHref(d)}" target="_blank" rel="noopener">${icons.pin}<span>Yol tarifi</span></a>
             </div>
           </div>
-          <figure class="pk-panel" aria-label="Radyatörün önden çizimi: sıcak su üst tanktan girer, peteklerden inerken soğur">
+          <figure class="pk-panel is-hararet" aria-label="Radyatörün önden çizimi: sıcak su üst tanktan girer, peteklerden inerken soğur">
             <div class="pk-panel__ust">
               <span>Soğutma devresi</span>
               <span class="pk-fan" data-fan>${fanSvg}<em>Fan</em></span>
             </div>
             ${radyatorSvg()}
-            <div class="pk-okuma">
-              <p class="pk-okuma__d"><b data-derece>112</b><span>°C</span></p>
-              <p class="pk-okuma__durum" data-durum>Hararet</p>
-            </div>
-            <div class="pk-skala" aria-hidden="true">
-              <div class="pk-skala__bar"><i data-im></i></div>
-              <div class="pk-skala__et"><span>C</span><span>90</span><span>H</span></div>
-            </div>
             <img class="pk-foto" src="${B}img/sektor-radyator/hararet-gostergesi.jpg" alt="Gösterge panelinde hararet göstergesi" fetchpriority="high">
           </figure>
         </div>
-        <div class="k-kap"><dl class="k-hero__bilgi pk__bilgi">${bilgi.map(([a, b]) => `<div><dt>${esc(a)}</dt><dd>${esc(b)}</dd></div>`).join('')}</dl></div>
       </section>`;
   },
   mount(el) {
     const panel = el.querySelector('.pk-panel');
-    const derece = el.querySelector('[data-derece]');
-    const durum = el.querySelector('[data-durum]');
-    const im = el.querySelector('[data-im]');
     const sicak = el.querySelector('.pk-sicak');
-    const giris = el.querySelector('[data-giris]');
-    const cikis = el.querySelector('[data-cikis]');
-    const yaz = (t) => {
-      derece.textContent = Math.round(t);
-      im.style.left = `${Math.min(100, Math.max(0, ((t - 50) / 80) * 100))}%`;
-      const p = Math.min(1, Math.max(0, (t - 88) / 24)); // 1 = hararet
-      sicak.style.opacity = p.toFixed(3);
-      giris.textContent = `${Math.round(t + 4)}°`;
-      cikis.textContent = `${Math.round(t - 6 - (1 - p) * 10)}°`;
-      const h = t > 100;
-      if (panel.classList.contains('is-hararet') !== h) {
-        panel.classList.toggle('is-hararet', h);
-        durum.textContent = h ? 'Hararet' : 'Normal';
-      }
-    };
     gorunurken(panel);
     if (reducedMotion) {
       panel.classList.add('is-fan', 'is-akis');
-      yaz(88);
+      panel.classList.remove('is-hararet');
+      sicak.style.opacity = '0';
       return;
     }
-    const o = { t: 112 };
-    yaz(o.t);
-    gsap.timeline({ delay: 1.1 })
+    // Açılış (~2 sn, bir kez): fan devreye girer, su akmaya başlar, sıcak kırmızı söner.
+    gsap.timeline({ delay: 0.9 })
       .add(() => panel.classList.add('is-fan'))
-      .add(() => panel.classList.add('is-akis'), 0.5)
-      .to(o, { t: 88, duration: 2.6, ease: 'power2.inOut', onUpdate: () => yaz(o.t) }, 0.3)
+      .add(() => panel.classList.add('is-akis'), 0.4)
+      .fromTo(sicak, { opacity: 1 }, { opacity: 0, duration: 2, ease: 'power2.inOut' }, 0.3)
+      .add(() => panel.classList.remove('is-hararet'), 1.4)
       .fromTo(el.querySelector('.pk-foto'), { yPercent: 30, opacity: 0, rotation: 6 }, { yPercent: 0, opacity: 1, rotation: -4, duration: 1, ease: 'back.out(1.6)' }, 0);
     gsap.from(panel, { clipPath: 'inset(0 0 100% 0 round 16px)', duration: 1.1, ease: 'power3.inOut', delay: 0.2 });
   },
@@ -260,15 +230,15 @@ const devreSvg = () => `
 
 export const devre = {
   render(d) {
+    const x = d.kurumsal?.hararet || {};
     return `
       <section class="k-bolum dv" id="hararet-haritasi">
         <div class="k-kap">
           <div class="dv__bas">
-            <p class="pk-etk"><span></span>Hararet haritası</p>
-            <h2 class="k-h2" data-bol>Ne zaman ısınıyor? Söyleyin, nereye bakacağımızı gösterelim.</h2>
-            <p class="k-lead">Aşağıdan aracınızın yaptığını seçin. Şemada ilk bakacağımız parçalar sırayla numaralanır.</p>
+            <h2 class="k-h2" data-bol>${esc(x.baslik || 'Hararet haritası')}</h2>
+            ${x.metin ? `<p class="k-lead">${esc(x.metin)}</p>` : ''}
           </div>
-          <div class="dv__secim" role="group" aria-label="Şikâyet seçin" data-lenis-prevent>
+          <div class="dv__secim" role="group" aria-label="Şikâyet" data-lenis-prevent>
             ${SIKAYET.map((s, i) => `<button type="button" class="dv-cip" data-s="${s.id}" aria-pressed="${i === 0}">${esc(s.ad)}</button>`).join('')}
           </div>
           <div class="dv__ic">
@@ -278,7 +248,8 @@ export const devre = {
         </div>
       </section>`;
   },
-  mount(el) {
+  mount(el, d) {
+    const not = d.kurumsal?.hararet?.not || '';
     const sema = el.querySelector('.dv-sema');
     const sonuc = el.querySelector('.dv-sonuc');
     gorunurken(sema);
@@ -296,19 +267,19 @@ export const devre = {
       sema.classList.toggle('is-fan-dur', s.id === 'trafik' || s.id === 'agir');
       const bolge = s.bolge < 35 ? 'Soğuk tarafta' : s.bolge < 75 ? 'Ortada, su eksilince çıkıyor' : 'Hararet tarafında';
       sonuc.innerHTML = `
-        <p class="dv-sonuc__ust">Seçtiğiniz</p>
+        <p class="dv-sonuc__ust">Şikâyet</p>
         <h3 class="k-h3">${esc(s.ad)}</h3>
         <div class="dv-ibre">
           <div class="dv-ibre__bar"><i style="left:${s.bolge}%"></i></div>
           <div class="dv-ibre__et"><span>Soğuk</span><span>Normal</span><span>Hararet</span></div>
           <p>İbre genelde: <strong>${bolge}</strong></p>
         </div>
-        <p class="dv-sonuc__ust">Önce bunlara bakarız</p>
+        <p class="dv-sonuc__ust">İlk bakılacak parçalar</p>
         <ol class="dv-liste">
           ${s.p.map(([p, neden], i) => `<li><span class="dv-liste__no">${i + 1}</span><div><strong>${esc(PARCA[p].ad)}</strong><p>${esc(neden)}</p></div></li>`).join('')}
         </ol>
-        <p class="dv-not">Bunlar ilk bakacağımız yerler. Kesin sebebi basınç testiyle buluruz; sebep belli olmadan parça değiştirmeyiz.</p>
-        ${rota(konu(s.hizmet === 'Hararet arıza tespiti' ? 'Hararet yapıyor' : s.hizmet), `Bu arıza için yazın ${ok}`, 'k-btn')}`;
+        ${not ? `<p class="dv-not">${esc(not)}</p>` : ''}
+        ${rota(konu(s.hizmet === 'Hararet arıza tespiti' ? 'Hararet yapıyor' : s.hizmet), `Bu arıza için bilgi alın ${ok}`, 'k-btn')}`;
       if (anim && !reducedMotion) {
         gsap.fromTo(sonuc.querySelectorAll('.dv-liste li, .dv-ibre'), { y: 14, opacity: 0 }, { y: 0, opacity: 1, duration: 0.45, stagger: 0.06, ease: 'power2.out' });
         gsap.fromTo(el.querySelectorAll('.dv-no.is-acik'), { scale: 0, transformOrigin: 'center' }, { scale: 1, duration: 0.5, stagger: 0.08, ease: 'back.out(2.4)' });
@@ -322,76 +293,28 @@ export const devre = {
 // --- (3) Binek ve ağır vasıta ----------------------------------------------------------------------
 export const vasita = {
   render(d) {
-    const agir = (d.istatistikler || []).find((s) => /ağır/i.test(s.etiket));
+    const v = d.kurumsal?.vasita;
+    if (!v) return '';
     const kart = (x) => `
       <article class="pv-kart">
         <figure data-perde><img src="${x.img}" alt="${esc(x.alt)}" loading="lazy"></figure>
         <div class="pv-kart__ic">
-          <p class="pk-etk pk-etk--acik"><span></span>${x.etk}</p>
-          <h3 class="pv-kart__b">${x.baslik}</h3>
-          <p>${x.metin}</p>
-          <ul>${x.maddeler.map((m) => `<li>${m}</li>`).join('')}</ul>
-          ${rota(konu(x.konu), `${x.buton} ${ok}`, 'k-link pv-kart__link')}
+          <p class="pk-etk pk-etk--acik"><span></span>${esc(x.etk)}</p>
+          <h3 class="pv-kart__b">${esc(x.baslik)}</h3>
+          <p>${esc(x.metin)}</p>
+          <ul>${(x.maddeler || []).map((m) => `<li>${esc(m)}</li>`).join('')}</ul>
+          ${rota(konu(x.konu), `${esc(x.buton)} ${ok}`, 'k-link pv-kart__link')}
         </div>
-        ${x.rakam ? `<p class="pv-kart__rakam"><b>${x.rakam}</b><span>${x.rakamEt}</span></p>` : ''}
       </article>`;
     return `
       <section class="k-bolum pv">
         <div class="k-kap">
-          <div class="k-bolum__bas"><h2 class="k-h2" data-bol>Binekten çekiciye aynı tezgâh, aynı test.</h2></div>
+          <div class="k-bolum__bas"><h2 class="k-h2" data-bol>${esc(v.baslik || 'Binek ve ağır vasıta')}</h2></div>
           <div class="pv__ic">
-            ${kart({ img: `${B}img/sektor-radyator/teshis.jpg`, alt: 'Usta kaputu açık araçta soğutma sistemini kontrol ediyor', etk: 'Binek · hafif ticari', baslik: 'Otomobil, minibüs, panelvan', metin: 'Radyatör, fan, termostat ve hortum işleri çoğu zaman aynı gün biter.', maddeler: ['Basınç ve kapak testi', 'Plastik tanklı radyatörde tank ve conta', 'Klima kondenseri'], konu: 'Radyatör tamiri / değişimi', buton: 'Aracım için yazın' })}
-            ${kart({ img: `${B}img/sektor-radyator/tir-usta.jpg`, alt: 'Loş atölyede çekicinin yanında çalışan usta', etk: 'Ağır vasıta', baslik: 'Kamyon, çekici, otobüs, iş makinesi', metin: 'Büyük radyatörler sökülür; petek ve tank ayrı ayrı onarılır.', maddeler: ['Petek toplama ve yeni petek', 'Intercooler ve yağ soğutucusu', 'Yatış süresi baştan'], konu: 'Ağır vasıta radyatörü', buton: 'Ağır vasıtam için yazın', rakam: agir ? `${agir.deger.toLocaleString('tr-TR')}${esc(agir.sonek || '')}` : '', rakamEt: agir ? esc(agir.etiket) : '' })}
+            ${kart({ ...v.binek, img: `${B}img/sektor-radyator/teshis.jpg`, alt: 'Usta kaputu açık araçta soğutma sistemini kontrol ediyor', etk: 'Binek ve hafif ticari', konu: 'Radyatör tamiri ve değişimi', buton: 'Bilgi alın' })}
+            ${kart({ ...v.agir, img: `${B}img/sektor-radyator/tir-usta.jpg`, alt: 'Loş atölyede çekicinin yanında çalışan usta', etk: 'Ağır vasıta', konu: 'Ağır vasıta radyatörü', buton: 'Bilgi alın' })}
           </div>
         </div>
       </section>`;
-  },
-};
-
-// --- (4) Atölye: saatler + harita ------------------------------------------------------------------
-export const atolye = {
-  render(d) {
-    if (!d.saatler) return '';
-    const st = openStatus(d.saatler);
-    const bugun = new Date().getDay();
-    const sira = [1, 2, 3, 4, 5, 6, 0];
-    return `
-      <section class="k-bolum pa">
-        <div class="k-kap pa__ic">
-          <div class="pa__sol">
-            <p class="pk-etk pk-etk--acik"><span></span>Atölye</p>
-            <p class="pa__durum ${st.open ? 'is-acik' : ''}"><i></i>${esc(st.text)}</p>
-            <h2 class="k-h2" data-bol>Şaşmaz Oto Sanayi'deyiz.</h2>
-            <p class="pa__adres">${esc(d.iletisim.adres)}</p>
-            <div class="k-butonlar">
-              <a class="k-btn" href="${mapsHref(d)}" target="_blank" rel="noopener">${icons.pin}<span>Yol tarifi</span></a>
-              <a class="k-btn k-btn--ikincil" href="${telHref(d)}">${icons.phone}<span>${esc(d.iletisim.telefon)}</span></a>
-            </div>
-            <ul class="pa__gunler">
-              ${sira.map((g) => `<li class="${g === bugun ? 'is-bugun' : ''} ${d.saatler[g] ? '' : 'is-kapali'}"><span>${GUNLER[g]}</span><b>${d.saatler[g] ? d.saatler[g].replace('-', ' – ') : 'Kapalı'}</b></li>`).join('')}
-            </ul>
-            <p class="pa__ozet">${groupedHours(d.saatler).map(([g, s]) => `${g}: ${s}`).join(' · ')}</p>
-          </div>
-          <div class="pa__harita" data-harita><p>Harita yaklaşınca yüklenir</p></div>
-        </div>
-      </section>`;
-  },
-  mount(el, d) {
-    const kutu = el.querySelector('[data-harita]');
-    const io = new IntersectionObserver((e) => {
-      if (!e[0].isIntersecting) return;
-      kutu.innerHTML = `<iframe title="Konum haritası" src="${mapsEmbed(d)}" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>`;
-      io.disconnect();
-    }, { rootMargin: '300px' });
-    io.observe(kutu);
-  },
-};
-
-// --- Yorumlar: motorun bölümü, puanı açıkça "örnek" diye yazar -----------------------------------
-export const yorumlar = {
-  render(d, ctx, sorgu) {
-    return BOLUMLER.yorumlar.render(d, ctx, sorgu)
-      .replace('değerlendirme</span>', 'örnek değerlendirme</span>')
-      .replace('<ul class="k-yorumlar__liste"', '<p class="k-not">Bu yorumlar tasarım örneğidir; işletmenin kendi yorumlarıyla değiştirilir.</p><ul class="k-yorumlar__liste"');
   },
 };
