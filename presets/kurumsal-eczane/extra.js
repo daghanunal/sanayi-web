@@ -1,27 +1,11 @@
 // Sektör modülleri (kurumsal-eczane, "Kurumsal Nöbet"):
-// (1) hero: motorun hero'su + görselin üstünde canlı "şu an açık mıyız" kartı.
-// (2) etiket: İMZA. Eczacının kutunun üstüne yazdığı kullanım etiketi. Zaman (sabah/öğle/akşam/gece), aç-tok ve süre
+// (1) etiket: eczacının kutunun üstüne yazdığı kullanım etiketi. Zaman (sabah/öğle/akşam/gece), aç-tok ve süre
 //     seçilir; kutudaki el yazısı etiket ve 24 saatlik gün şeridi değişir. Örnek etikettir; dozu hekim belirler.
-// (3) nobetDurum: açık/kapalı, saatler, nöbetçi eczane bağlantısı ve etiketli örnek nöbet takvimi.
-// (4) yorumlar: motorun yorumları, "örnek" etiketiyle.
-import { esc, openStatus, groupedHours, telHref, waHref, icons, gsap, reducedMotion } from '../../shared/core.js';
-import { BOLUMLER } from '../_kurumsal/bolumler.js';
+// (2) nobetBilgi: nöbetçi eczane bağlantısı ve "Örnek" etiketli nöbet takvimi. Saatler ve adres motorun `konum`
+//     bölümünde; bu modül saat göstermez.
+import { esc, waHref, icons, gsap, reducedMotion } from '../../shared/core.js';
 
-// --- (1) Hero ---------------------------------------------------------------------------------
-export const hero = {
-  render(d, ctx, sorgu) {
-    const st = openStatus(d.saatler);
-    const kart = `
-      <div class="ec-durum ${st.open ? 'is-acik' : 'is-kapali'}" aria-hidden="true">
-        <span class="ec-durum__lamba"></span>
-        <span class="ec-durum__metin"><b>${st.open ? 'Şu an açığız' : 'Şu an kapalıyız'}</b><small>${esc(st.text)}</small></span>
-      </div>
-      <span class="ec-temsili">3D görsel · temsilî</span>`;
-    return BOLUMLER.hero.render(d, ctx, sorgu).replace('</figure>', `${kart}</figure>`);
-  },
-};
-
-// --- (2) Kutu etiketi --------------------------------------------------------------------------
+// --- (1) Kutu etiketi --------------------------------------------------------------------------
 const ZAMAN = [
   { id: 'sabah', ad: 'Sabah', saat: 8 },
   { id: 'ogle', ad: 'Öğle', saat: 13 },
@@ -48,9 +32,8 @@ export const etiket = {
       <section class="k-bolum ec-etiket" aria-labelledby="ec-etiket-baslik">
         <div class="k-kap">
           <div class="ec-etiket__bas">
-            <p class="ec-ust">Kutunun üstüne yazarız</p>
-            <h2 class="k-h2" id="ec-etiket-baslik" data-bol>İlacınızı ne zaman alacağınız kutuda yazsın.</h2>
-            <p class="k-lead">İlacı verirken kullanımını anlatır, kutunun üstüne de yazarız. Aşağıda böyle bir etiketin nasıl göründüğünü deneyin.</p>
+            <h2 class="k-h2" id="ec-etiket-baslik" data-bol>İlaç kutusu etiketi</h2>
+            <p class="k-lead">İlacın kullanım saatleri ve aç-tok bilgisi teslim sırasında kutunun üstüne yazılır. Aşağıda örnek bir etiket var.</p>
           </div>
           <div class="ec-etiket__ic">
             <form class="ec-panel" aria-label="Örnek etiket seçenekleri" onsubmit="return false">
@@ -66,7 +49,7 @@ export const etiket = {
                 <legend>Ne kadar süre</legend>
                 <div class="ec-ciper" role="radiogroup" aria-label="Süre">${SURE.map((s, i) => cip('sure', s, i === 1)).join('')}</div>
               </fieldset>
-              <a class="k-btn ec-wa" data-ec-wa href="${waHref(d, 'Merhaba, ilacım için hatırlatma istiyorum.')}" target="_blank" rel="noopener">${icons.whatsapp}<span>Bitmeden hatırlatın</span></a>
+              <a class="k-btn ec-wa" data-ec-wa href="${waHref(d, 'Merhaba, ilacım için hatırlatma istiyorum.')}" target="_blank" rel="noopener">${icons.whatsapp}<span>Bitmeden hatırlatma</span></a>
             </form>
             <figure class="ec-sahne" aria-live="polite">
               <div class="ec-kutu" aria-hidden="true">
@@ -87,7 +70,7 @@ export const etiket = {
                   ${ZAMAN.map((z) => `<i class="ec-gun__doz" data-doz="${z.id}" style="--x:${z.saat / 24}"></i>`).join('')}
                 </div>
               </div>
-              <figcaption class="ec-sahne__not"><span class="ec-rozet">Örnek etiket</span> Dozu ve süreyi hekiminiz belirler; eczacımız kutuya yazar ve anlatır.</figcaption>
+              <figcaption class="ec-sahne__not"><span class="ec-rozet">Örnek etiket</span> Doz ve süre hekimin reçetesine göre yazılır.</figcaption>
             </figure>
           </div>
         </div>
@@ -128,13 +111,13 @@ export const etiket = {
   },
 };
 
-// --- (3) Nöbet ve saatler ------------------------------------------------------------------------
-function takvim() {
+// --- (2) Nöbet bilgisi ------------------------------------------------------------------------
+function takvim(d) {
   const now = new Date();
   const y = now.getFullYear(), m = now.getMonth();
   const gunSay = new Date(y, m + 1, 0).getDate();
   const bas = (new Date(y, m, 1).getDay() + 6) % 7;
-  const nobet = [6, 20];
+  const nobet = d.nobet?.ornekGunler || [];
   const ay = now.toLocaleDateString('tr-TR', { month: 'long' });
   const h = [];
   for (let i = 0; i < bas; i++) h.push('<li class="is-bos"></li>');
@@ -151,39 +134,22 @@ function takvim() {
     </figure>`;
 }
 
-export const nobetDurum = {
+export const nobetBilgi = {
   render(d) {
-    const st = openStatus(d.saatler);
     const n = d.nobet || {};
+    const kaynak = n.kaynak || 'Ankara Eczacı Odası';
     return `
       <section class="k-bolum nobet" aria-labelledby="nobet-baslik">
         <div class="k-kap nobet__ic">
-          <div class="nobet__durum ${st.open ? 'is-acik' : 'is-kapali'}">
-            <span class="nobet__lamba" aria-hidden="true"></span>
-            <h2 class="nobet__baslik" id="nobet-baslik">${st.open ? 'Şu an açığız' : 'Şu an kapalıyız'}</h2>
-            <p class="nobet__metin">${esc(st.text)}</p>
-            <a class="k-btn k-btn--ikincil" href="${telHref(d)}">${icons.phone}<span>${esc(d.iletisim.telefon)}</span></a>
-          </div>
-          <div class="nobet__saat">
-            <h3 class="k-h3">Çalışma saatleri</h3>
-            <dl>${groupedHours(d.saatler).map(([g, s]) => `<div><dt>${esc(g)}</dt><dd>${esc(s)}</dd></div>`).join('')}</dl>
+          <div class="nobet__durum is-kapali">
+            <h2 class="nobet__baslik" id="nobet-baslik">Nöbetçi eczane</h2>
+            <p class="nobet__metin">Eczane kapalıyken ilaç gerekirse o gece nöbet tutan eczaneler ${esc(kaynak)}'nın güncel listesinden bulunur. Nöbetçi olunan geceler eczanenin kapısında da yazar.</p>
+            <a class="k-btn nobet__btn" href="${esc(n.url || 'https://www.aeo.org.tr/nobetci-eczaneler')}" target="_blank" rel="noopener">Bu gece nöbetçi eczaneler</a>
           </div>
           <div class="nobet__gece">
-            <h3 class="k-h3">Gece ilaç mı lazım?</h3>
-            <p>Kapalı olduğumuz saatlerde bu gece nöbetçi eczaneler için ${esc(n.kaynak || 'Ankara Eczacı Odası')} listesine bakın.</p>
-            <a class="k-btn nobet__btn" href="${esc(n.url || 'https://www.aeo.org.tr/nobetci-eczaneler')}" target="_blank" rel="noopener">Nöbetçi eczaneleri gör</a>
-            ${takvim()}
+            ${takvim(d)}
           </div>
         </div>
       </section>`;
-  },
-};
-
-// --- (4) Yorumlar: örnek olduğu açık ------------------------------------------------------------
-export const yorumlar = {
-  render(d, ctx, sorgu) {
-    return BOLUMLER.yorumlar.render(d, ctx, sorgu)
-      .replace(/<span>\d+ değerlendirme<\/span>/, '<span>örnek puan</span>')
-      .replace('<ul class="k-yorumlar__liste"', '<p class="k-not">Bu yorumlar tasarım örneğidir; eczanenin kendi yorumlarıyla değiştirilir.</p><ul class="k-yorumlar__liste"');
   },
 };

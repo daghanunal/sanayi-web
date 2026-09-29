@@ -2,25 +2,34 @@ import '../../shared/base.css';
 import ana from '../../data/eczane.json';
 import ek from '../../data/kurumsal-eczane.json';
 import { kurumsal, derinBirlestir } from '../_kurumsal/engine.js';
-import { hero, etiket, nobetDurum, yorumlar } from './extra.js';
+import { waHref } from '../../shared/core.js';
+import { etiket, nobetBilgi } from './extra.js';
 import './style.css';
 
 const GUN = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+const veri = derinBirlestir(ana, ek);
+
+// Çekirdeğin varsayılan WhatsApp metni oto sanayi içindir ("aracım için"): eczane metniyle değiştirilir.
+// (Motor ve çekirdekte veriden okunan bir WhatsApp metni alanı yok; rapor edildi.)
+document.addEventListener('click', (e) => {
+  const a = e.target.closest?.('a[href*="wa.me"]');
+  if (a && a.href.includes('arac%C4%B1m')) a.href = waHref(veri, veri.waMesaj || 'Merhaba, bilgi almak istiyorum.');
+}, true);
 
 kurumsal({
-  veri: derinBirlestir(ana, ek),
+  veri,
   tema: {
     hero: 'bolunmus',
     gecis: 'yan',
-    yer: "Etimesgut'ta",
+    yer: "Şaşmaz Mahallesi'nde",
     heroGorsel: `${import.meta.env.BASE_URL}img/kurumsal-eczane/recete-masa-3d.jpg`,
     heroAlt: 'Lacivert masada örnek e-reçete çıktısı, ilaç kutuları, blister ve krem tüpü (3D görsel)',
     logoAlt: 'Eczane',
     baslikEki: 'Eczane | Etimesgut, Ankara',
-    teklifEtiketi: 'Reçete gönder',
-    hizmetEtiketi: 'Hizmetlerimiz',
+    teklifEtiketi: 'İletişim',
+    hizmetEtiketi: 'Hizmetler',
     metinBoyutu: true,
-    altNot: 'Fotoğraflar temsilîdir (Pexels). 3D görseller temsilîdir. Yorumlar ve nöbet takvimi örnektir. Sitedeki bilgiler tanıtım amaçlıdır; ilaç kullanımıyla ilgili kararlarınız için hekiminize ve eczacınıza danışın.',
+    altNot: 'Fotoğraflar temsilîdir (Pexels). 3D görseller temsilîdir. Yorumlar ve nöbet takvimi örnektir. Sitedeki bilgiler tanıtım amaçlıdır; ilaç kullanımıyla ilgili kararlar için hekime ve eczacıya danışılmalıdır.',
     // "Kurumsal Nöbet" yönü: serin porselen zemin, eczane lacivert-mavisi, kırmızı yalnızca "E" işaretinde ve nöbette.
     css: {
       zemin: '#f5f7fa', yuzey: '#e8edf4', metin: '#0e1a2b', soluk: '#46546a', cizgi: 'rgb(14 26 43 / .15)',
@@ -32,19 +41,19 @@ kurumsal({
     },
   },
   sayfalar: [
-    { id: 'anasayfa', baslik: 'Ana Sayfa', bolumler: ['hero', 'nobetDurum', 'etiket', 'hizmetOzet', 'ozet', 'rakamlar', 'yorumlar', 'cta'] },
-    { id: 'kurumsal', baslik: 'Eczanemiz', bolumler: ['hakkimizda', 'vizyon', 'kalite', 'cta'] },
+    { id: 'anasayfa', baslik: 'Ana Sayfa', bolumler: ['hero', 'hizmetOzet', 'ozet', 'rakamlar', 'konum', 'nobetBilgi', 'yorumlar', 'cta'] },
     { id: 'hizmetler', baslik: 'Hizmetler', bolumler: ['hizmetler', 'etiket', 'surec', 'cta'] },
+    { id: 'hakkinda', baslik: 'Hakkında', bolumler: ['hakkimizda', 'bilgiler', 'cta'] },
     { id: 'kurumlar', baslik: 'Kurumlar', bolumler: ['anlasmalar', 'cta'] },
-    { id: 'sss', baslik: 'Sorular', bolumler: ['sss', 'yorumlar', 'cta'] },
-    { id: 'iletisim', baslik: 'İletişim', bolumler: ['nobetDurum', 'iletisim'] },
+    { id: 'sss', baslik: 'Sorular', bolumler: ['sss', 'cta'] },
+    { id: 'iletisim', baslik: 'İletişim', bolumler: ['iletisim', 'nobetBilgi'] },
   ],
-  ekstralar: { hero, etiket, nobetDurum, yorumlar },
+  ekstralar: { etiket, nobetBilgi },
   ld: (d) => ({
     '@context': 'https://schema.org',
     '@type': 'Pharmacy',
     name: d.isletme.ad,
-    description: d.isletme.slogan,
+    description: d.isletme.tanim,
     telephone: d.iletisim.telefon,
     foundingDate: String(d.isletme.kurulus),
     address: { '@type': 'PostalAddress', streetAddress: d.iletisim.adres, addressLocality: 'Etimesgut', addressRegion: 'Ankara', addressCountry: 'TR' },

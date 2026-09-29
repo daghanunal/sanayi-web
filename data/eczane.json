@@ -3,10 +3,15 @@
   "isletme": {
     "ad": "Şifa Eczanesi",
     "sektor": "Eczane",
-    "slogan": "Reçetenizi gönderin, siz gelmeden hazırlayalım.",
+    "tanim": "Eczane ve dermokozmetik",
     "kurulus": 1994,
-    "hakkinda": "Aynı köşede, aynı mahallede. İlacınızı verirken nasıl ve ne zaman kullanacağınızı da anlatırız. Aklınıza takılan bir şey olursa arayın; eczacımız telefonda da yanıtlar."
+    "hakkinda": "E-reçete ve kâğıt reçeteler karşılanır, ilacın nasıl kullanılacağı teslim sırasında anlatılır. Tansiyon ve şeker ölçümü yapılır; dermokozmetik, anne-bebek ve medikal ürünler de bulunur."
   },
+  "bilgiler": [
+    ["Reçete", "E-reçete ve kâğıt reçete karşılanır. Reçetenin fotoğrafı WhatsApp'tan da gönderilebilir."],
+    ["Ölçüm", "Tansiyon ve şeker ölçümü için randevu gerekmez."],
+    ["Nöbet", "Nöbet günleri her ay Ankara Eczacı Odası'nın çizelgesiyle belirlenir."]
+  ],
   "iletisim": {
     "telefon": "0312 555 12 34",
     "whatsapp": "905325551234",
@@ -24,121 +29,118 @@
   ],
   "nobet": {
     "url": "https://www.aeo.org.tr/nobetci-eczaneler",
-    "kaynak": "Ankara Eczacı Odası"
+    "kaynak": "Ankara Eczacı Odası",
+    "ornekGunler": [9, 23]
   },
+  "waMesaj": "Merhaba, bilgi almak istiyorum.",
   "hizmetler": [
     {
       "id": "recete",
-      "baslik": "Reçete hazırlama",
-      "aciklama": "Reçetenizin ya da e-reçete numaranızın fotoğrafını WhatsApp'tan gönderin. İlaçlarınızı kontrol edip hazırlarız, geldiğinizde sıra beklemezsiniz.",
+      "baslik": "Reçete",
+      "kisa": "E-reçete ve kâğıt reçete",
+      "aciklama": "E-reçete ve kâğıt reçeteler karşılanır. Reçetenin fotoğrafı WhatsApp'tan gönderilirse ilaçlar önceden hazırlanır.",
       "gorsel": "/img/eczane/ilaclar.jpg",
-      "mesaj": "Merhaba, reçetemi göndermek istiyorum."
-    },
-    {
-      "id": "olcum",
-      "baslik": "Tansiyon ve şeker ölçümü",
-      "aciklama": "Eczanede oturup dinlenin, ölçelim. Sonucu kâğıda yazıp veririz; kontrole giderken hekiminize gösterirsiniz.",
-      "gorsel": "/img/eczane/olcum.jpg"
+      "gorselAlt": "Avuçta ilaç kutuları ve blister",
+      "mesaj": "Merhaba, reçetemin fotoğrafını göndermek istiyorum."
     },
     {
       "id": "kullanim",
       "baslik": "İlaç kullanım bilgisi",
-      "aciklama": "Aç mı tok mu, hangi ilaçla birlikte alınmaz, unutursanız ne yapılır. Kutunun üstüne yazar, sözlü de anlatırız.",
-      "gorsel": "/img/eczane/kapsul.jpg"
+      "kisa": "Kullanım şekli ve saatleri",
+      "aciklama": "İlacın aç mı tok mu, günde kaç kez alınacağı teslim sırasında anlatılır. İstenirse kutunun üstüne de yazılır.",
+      "gorsel": "/img/eczane/kapsul.jpg",
+      "gorselAlt": "Eczacının avucunda beyaz tabletler"
+    },
+    {
+      "id": "olcum",
+      "baslik": "Tansiyon ve şeker ölçümü",
+      "kisa": "Sonuç tarihiyle yazılı verilir",
+      "aciklama": "Birkaç dakika dinlendikten sonra tansiyon ölçülür, sonuç tarihiyle birlikte kâğıda yazılıp verilir. Şeker ölçümü parmak ucundan yapılır.",
+      "sure": "5–10 dk",
+      "gorsel": "/img/eczane/olcum.jpg",
+      "gorselAlt": "Yaşlı bir adamın tansiyonu ölçülüyor"
     },
     {
       "id": "hatirlatma",
       "baslik": "Düzenli ilaç takibi",
-      "aciklama": "Her ay kullandığınız ilaçlar bitmeden önce WhatsApp'tan haber veririz. Reçetenizin yenilenme zamanını birlikte takip ederiz.",
+      "kisa": "İlaç bitmeden hatırlatma",
+      "aciklama": "Her ay kullanılan ilaçlar not edilir, bitmeye yakın WhatsApp'tan haber verilir.",
       "gorsel": "/img/eczane/uygulama.jpg",
+      "gorselAlt": "Haftalık ilaç kutusu tutan el",
       "mesaj": "Merhaba, düzenli kullandığım ilaçlar için hatırlatma istiyorum."
     },
     {
       "id": "dermo",
-      "baslik": "Cilt bakımı danışmanlığı",
-      "aciklama": "Cilt tipinize ve mevsime göre hangi ürünün uygun olduğunu anlatırız. Denemeden önce sorun.",
-      "gorsel": "/img/eczane/dermo.jpg"
+      "baslik": "Dermokozmetik",
+      "kisa": "Cilt bakımı ve güneş koruma",
+      "aciklama": "Güneş koruyucu, nemlendirici ve temizleyici ürünler bulunur. Ürün cilt tipine ve mevsime göre seçilir.",
+      "gorsel": "/img/eczane/dermo.jpg",
+      "gorselAlt": "Cilt bakım ürünleri yakın plan"
     },
     {
       "id": "bebek",
-      "baslik": "Anne ve bebek",
-      "aciklama": "Mama, bez, pişik kremi ve emzirme dönemi ürünleri. Yeni anne-babaların sorularına zaman ayırırız.",
-      "gorsel": "/img/eczane/bebek.jpg"
+      "baslik": "Anne ve bebek ürünleri",
+      "kisa": "Mama, bez ve bakım ürünleri",
+      "aciklama": "Mama, bez, biberon, pişik kremi ve emzirme dönemi ürünleri bulunur.",
+      "gorsel": "/img/eczane/bebek.jpg",
+      "gorselAlt": "Yeni doğan bebeğin elini tutan el"
     },
     {
       "id": "takviye",
-      "baslik": "Vitamin ve takviye danışmanlığı",
-      "aciklama": "Kullandığınız ilaçlarla birlikte alınıp alınamayacağını kontrol ederiz. Gerekmeyen ürünü önermeyiz.",
-      "gorsel": "/img/eczane/tezgah.jpg"
+      "baslik": "Vitamin ve takviye bilgisi",
+      "kisa": "İlaçlarla birlikte kullanım",
+      "aciklama": "Vitamin ya da besin takviyesinin kullanılan ilaçlarla birlikte alınıp alınamayacağına bakılır.",
+      "gorsel": "/img/eczane/tezgah.jpg",
+      "gorselAlt": "Eczane tezgâhı ve raflar"
+    },
+    {
+      "id": "medikal",
+      "baslik": "Medikal ürünler",
+      "kisa": "Ölçüm aletleri, bandaj, ortopedik ürünler",
+      "aciklama": "Tansiyon aleti, ateş ölçer, bandaj, korse ve ortopedik ürünler bulunur. Tansiyon aletinin kullanımı eczanede gösterilir.",
+      "gorsel": "/img/eczane/tansiyon.jpg",
+      "gorselAlt": "Tansiyon aleti yakın plan"
     }
   ],
   "surec": [
-    {
-      "baslik": "Fotoğrafını gönderin",
-      "aciklama": "Reçetenin ya da e-reçete numaranın fotoğrafını WhatsApp'tan atın."
-    },
-    {
-      "baslik": "Eczacımız hazırlasın",
-      "aciklama": "İlaçlar kontrol edilir, eksik varsa size yazarız."
-    },
-    {
-      "baslik": "Gelip teslim alın",
-      "aciklama": "Hazır olunca haber veririz. Kimliğinizle gelin, sıra beklemeden alın."
-    }
+    { "baslik": "Fotoğraf", "aciklama": "Reçetenin ya da e-reçete numarasının fotoğrafı WhatsApp'tan gönderilir." },
+    { "baslik": "Hazırlık", "aciklama": "İlaçlar hazırlanır. Eksik ilaç varsa ne zaman geleceği yazılır." },
+    { "baslik": "Teslim", "aciklama": "İlaçlar hazır olunca mesaj gider, reçete sahibinin kimliğiyle teslim alınır." }
   ],
   "istatistikler": [
-    {
-      "deger": 32,
-      "sonek": "",
-      "etiket": "yıldır aynı mahallede",
-      "kurulustanHesapla": true
-    },
-    {
-      "deger": 1,
-      "sonek": " fotoğraf",
-      "etiket": "reçete için yeterli, WhatsApp’tan"
-    },
-    {
-      "deger": 3,
-      "sonek": " adım",
-      "etiket": "gönder, hazırlansın, gel al"
-    },
-    {
-      "deger": 6,
-      "sonek": " gün",
-      "etiket": "haftada açık"
-    }
+    { "deger": 32, "etiket": "Şaşmaz Mahallesi'nde", "birim": "YIL", "sonek": " yıl", "kurulustanHesapla": true },
+    { "deger": 6, "etiket": "haftada açık", "birim": "GÜN", "sonek": " gün", "saatlerdenHesapla": true }
   ],
-  "puan": {
-    "ortalama": 4.9,
-    "adet": 187
-  },
   "yorumlar": [
     {
       "ad": "Ayşe D.",
       "puan": 5,
-      "metin": "Annemin reçetesini WhatsApp'tan attım, akşam uğradığımda poşette hazırdı. İlaçların saatini kutulara tek tek yazmışlar."
+      "konu": "Reçete",
+      "metin": "Annemin reçetesini WhatsApp'tan gönderdim, akşam uğradığımda ilaçları hazırlamışlardı. Her ilacın saatini kutusuna yazdılar."
     },
     {
       "ad": "Hakan T.",
       "puan": 5,
-      "metin": "Sanayideki dükkanımdan çıkıp beş dakikada alıyorum. Hiç sıra beklemedim."
+      "konu": "Reçete",
+      "metin": "İşten çıkarken uğrayıp alıyorum. Reçeteyi önceden gönderdiğim için beklemiyorum."
     },
     {
       "ad": "Zeynep K.",
       "puan": 5,
-      "metin": "Bebeğim için sorduğum her şeyi sabırla anlattılar. Gereksiz ürün önermediler."
+      "konu": "Anne ve bebek",
+      "metin": "Bebeğimin pişiği için gittim. Hangi kremi ne sıklıkla süreceğimi uzun uzun anlattılar."
     },
     {
       "ad": "Mustafa Y.",
       "puan": 4,
-      "metin": "Tansiyonumu ölçüp kâğıda yazdılar, doktora götürdüm. Cumartesi de açıklar, bu büyük kolaylık."
+      "konu": "Tansiyon ölçümü",
+      "metin": "Tansiyonumu ölçüp sonucu tarihiyle kâğıda yazdılar, kontrole giderken doktora gösterdim. Cumartesi de açıklar."
     },
     {
       "ad": "Elif S.",
       "puan": 5,
-      "metin": "Kullandığım ilaçla vitamin birlikte olur mu diye sordum, bilgisayardan kontrol edip açıkladılar."
+      "konu": "Vitamin",
+      "metin": "Kullandığım ilaçla vitamini birlikte alıp alamayacağımı sordum, bilgisayardan bakıp açıkladılar."
     }
-  ],
-  "garanti": "Eczanemizde her zaman bir eczacı bulunur."
+  ]
 }

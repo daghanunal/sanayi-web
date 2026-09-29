@@ -255,7 +255,8 @@ export function createGL(canvas, { lowEnd, urls }) {
   };
   let loaded = 0;
   const onTex = () => { loaded++; };
-  for (const [k, u, sizeKey] of [['tBrick', urls.brick, 'uBrickSize'], ['tRough', urls.rough, 'uRoughSize'], ['tFine', urls.fine, 'uFineSize']]) {
+  // Duvar dokuları yalnız duvar sahnesi istenirse (urls verilirse) yüklenir; künyede yalnız toz sahnesi çizilir.
+  if (urls) for (const [k, u, sizeKey] of [['tBrick', urls.brick, 'uBrickSize'], ['tRough', urls.rough, 'uRoughSize'], ['tFine', urls.fine, 'uFineSize']]) {
     const t = loader.load(u, (tex) => {
       duvarU[sizeKey].value.set(tex.image.width, tex.image.height);
       onTex();

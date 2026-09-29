@@ -399,7 +399,7 @@ export function createPills(canvas, { name, lowEnd, quality = 'hi', still = fals
     camera.aspect = W / H;
     // Masaüstünde sahne sağda (yazı solda), telefonda üstte (kart altta)
     if (desk) camera.setViewOffset(W, H, -W * 0.17, 0, W, H);
-    else camera.setViewOffset(W, H, 0, H * 0.2, W, H);
+    else camera.setViewOffset(W, H, 0, H * 0.25, W, H); // telefonda künye altta, tabela üstte kalır
     camera.updateProjectionMatrix();
   }
   resize();
@@ -418,7 +418,7 @@ export function createPills(canvas, { name, lowEnd, quality = 'hi', still = fals
     const toBlister = smooth(0.52, 0.72, f); // kapsüller blistere
     const flip = smooth(0.76, 0.88, f); // blister döner
     const exit = smooth(0.95, 1, f);
-    const fit = desk ? 1 : 0.52;
+    const fit = desk ? 1 : 0.4;
     const bFit = desk ? 0.76 : Math.min(0.66, (W / H) * 1.35);
     const oFit = desk ? 1 : 0.62;
 

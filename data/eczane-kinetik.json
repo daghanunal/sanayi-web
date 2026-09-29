@@ -1,18 +1,8 @@
 {
   "preset": "eczane-kinetik",
   "bantlar": [
-    ["Sabah", "Öğle", "Akşam", "Yatmadan önce"],
-    ["Aç karnına", "Tok karnına", "Bol suyla"],
-    ["Aynı saatte", "Unutursanız sorun", "Kutunun üstüne yazarız"]
-  ],
-  "kutu": {
-    "baslik": "Bitmeden haber veririz.",
-    "maddeler": [
-      "Her ay kullandığınız ilaçları not ederiz.",
-      "Bitmeye yakın WhatsApp'tan yazarız.",
-      "Reçetenin yenilenme zamanını birlikte takip ederiz."
-    ],
-    "balon": "Merhaba, düzenli aldığınız ilaçların bitmesine birkaç gün kaldı. Reçeteniz yenilendiyse hazırlayalım mı?"
-  },
-  "finalBaslik": "Reçetenizi gönderin, gelince hazır olsun."
+    ["Reçete", "İlaç kullanım bilgisi", "Tansiyon ölçümü"],
+    ["Dermokozmetik", "Anne ve bebek", "Medikal ürünler"],
+    ["E-reçete", "Şeker ölçümü", "Nöbet bilgisi"]
+  ]
 }

@@ -3,10 +3,10 @@
  "isletme": {
   "ad": "Alçıbay",
   "sektor": "Yapı alçıları ve alçı plaka",
-  "slogan": "Hızlı beyaz.",
+  "tanim": "Yapı alçısı ve alçı plaka üreticisi",
   "kurulus": 1992,
   "unvan": "GİPS Geliştirilmiş İnşaat Malzemeleri ve Perlitli Sıva Sanayi AŞ",
-  "hakkinda": "Alçıbay markasıyla yapı alçısı üreten GİPS AŞ 1992'de kuruldu. 2006-2008 arasında üretim kapasitesini önemli ölçüde artırdı. Bugün Ankara Bala ve Mersin Tarsus'taki iki fabrikasında toz alçı üretiyor, farklı alçı plaka modelleri de üretiyor ve yurt içi ile yurt dışı pazarlara satıyor."
+  "hakkinda": "GİPS AŞ, Alçıbay markasıyla yapı alçısı ve alçı plaka üretir. Toz alçı Ankara Bala ve Mersin Tarsus'taki iki fabrikada üretilir; ürünler yurt içinde ve yurt dışında satılır. 2006–2008 yıllarında üretim kapasitesi artırıldı."
  },
  "iletisim": {
   "telefon": "+90 312 287 70 00",
@@ -30,7 +30,7 @@
   },
   {
    "id": "bala",
-   "ad": "Ankara Fabrika",
+   "ad": "Ankara Fabrikası",
    "adres": "Durmetepe Mevki Çavuşluköyü",
    "il": "Bala / Ankara",
    "tel": "+90 312 887 91 00",
@@ -41,11 +41,11 @@
     592,
     275
    ],
-   "not": "Perlitli sıva, makine sıvası, saten perdah, yapıştırma, derz dolgu ve kartonpiyer alçısı."
+   "not": "Perlitli sıva, makine sıvası, saten perdah, yapıştırma, derz dolgu ve kartonpiyer alçısı üretilir."
   },
   {
    "id": "tarsus",
-   "ad": "Mersin Fabrika",
+   "ad": "Mersin Fabrikası",
    "adres": "Atalar Mah. Çiçekli Cad. No:106",
    "il": "Yenice / Tarsus / Mersin",
    "tel": "+90 324 651 29 39",
@@ -70,10 +70,9 @@
    "ad": "Perlitli Sıva Alçısı",
    "renk": "#009640",
    "torba": "/img/alcibay/torba-perlitli.webp",
-   "kisa": "Beton, gazbeton, tuğla vb. yüzeylerin ilk kat sıva alçısı.",
+   "kisa": "Beton, gazbeton ve tuğla yüzeylere ilk kat sıva olarak elle uygulanır.",
    "artilar": [
     "Hafif",
-    "Ekonomik",
     "Yanmaz (A1)",
     "Yüzey yapışması yüksek",
     "Yüksek mukavemet"
@@ -189,12 +188,10 @@
    "ad": "Saten Perdah Alçısı",
    "renk": "#c51939",
    "torba": "/img/alcibay/torba-saten.webp",
-   "kisa": "Pürüzsüz yüzeyler için son kat perdah alçısı. Boyaya hazır yüzey verir.",
+   "kisa": "Son kat perdah alçısıdır; pürüzsüz ve boyaya hazır yüzey verir.",
    "artilar": [
     "Boyaya hazır yüzey",
-    "Boyadan tasarruf",
-    "Kolay uygulanır",
-    "Ekonomik"
+    "Kolay uygulanır"
    ],
    "anahtar": [
     [
@@ -305,7 +302,7 @@
    "ad": "Makina Sıva Alçısı",
    "renk": "#db912a",
    "torba": "/img/alcibay/torba-makina.webp",
-   "kisa": "Makineyle uygulanan ilk kat sıva alçısı. Tek katta pürüzsüz yüzey, saten gerektirmez.",
+   "kisa": "Makineyle uygulanan ilk kat sıva alçısıdır. Tek katta pürüzsüz yüzey verir, saten gerektirmez.",
    "artilar": [
     "Tek katta pürüzsüz yüzey",
     "Saten gerektirmez",
@@ -430,7 +427,7 @@
    "ad": "Bereketli Makina Sıva Alçısı",
    "renk": "#1e2459",
    "torba": "/img/alcibay/torba-bereketli.webp",
-   "kisa": "Makineyle uygulanan sıva alçısı. Teknik bilgi için teknik danışmanlığımızı arayın.",
+   "kisa": "Makineyle uygulanan sıva alçısıdır. Teknik değerleri için merkez aranabilir.",
    "artilar": [],
    "anahtar": [],
    "kullanim": [],
@@ -442,7 +439,7 @@
    "ad": "Kartonpiyer Alçısı",
    "renk": "#0168a4",
    "torba": "/img/alcibay/torba-kartonpiyer.webp",
-   "kisa": "İç mekânda dekorasyon ve tadilat işleri için kalıp alçısı.",
+   "kisa": "İç mekânda dekorasyon ve tadilat işlerinde kalıba dökülerek kullanılır.",
    "artilar": [
     "Estetik",
     "Hafif",
@@ -543,11 +540,10 @@
    "ad": "Alçı Plaka Yapıştırma Alçısı",
    "renk": "#3a3d40",
    "torba": "/img/alcibay/torba-yapistirma.webp",
-   "kisa": "Beton, gazbeton, tuğla vb. yüzeylere alçı plaka yapıştırmak için.",
+   "kisa": "Beton, gazbeton ve tuğla yüzeylere alçı plaka yapıştırmakta kullanılır.",
    "artilar": [
     "Yüksek yapışma",
-    "Kolay uygulanır",
-    "Ekonomik"
+    "Kolay uygulanır"
    ],
    "anahtar": [
     [
@@ -613,10 +609,9 @@
    "ad": "Alçı Plaka Derz Dolgu Alçısı",
    "renk": "#007d9a",
    "torba": "/img/alcibay/torba-derz.webp",
-   "kisa": "Alçı plakaların ek yerlerini ve ara boşluklarını kapatmak için.",
+   "kisa": "Alçı plakaların ek yerlerini ve ara boşluklarını kapatmakta kullanılır.",
    "artilar": [
     "Kolay uygulanır",
-    "Ekonomik",
     "Uzun kullanım süresi"
    ],
    "anahtar": [
@@ -694,7 +689,7 @@
    "kartonAd": "gri karton",
    "gorsel": "/img/alcibay/panel-s.webp",
    "standart": "TS EN 520 + A1, Tip A",
-   "metin": "Yüzeyi düzgün, hafif standart plaka. Her iki yüzü, esneklik ve dayanım veren gri özel kartonla kaplı.",
+   "metin": "Yüzeyi düzgün, hafif standart plakadır. İki yüzü de esneklik ve dayanım veren gri özel kartonla kaplıdır.",
    "alanlar": "Asma tavan, bölme duvar, duvar giydirme, kuru sıva",
    "olculer": [
     [
@@ -751,7 +746,7 @@
    "kartonAd": "yeşil karton",
    "gorsel": "/img/alcibay/panel-w.webp",
    "standart": "TS EN 520 + A1, Tip H",
-   "metin": "Suyu itme özelliği olan plaka. Üzerine fayans ve seramik uygulanabilir.",
+   "metin": "Suyu iten plakadır. Üzerine fayans ve seramik uygulanabilir.",
    "alanlar": "Islak hacimler, bölme ve giydirme duvar, asma tavan, şaft duvarları, kuru sıva",
    "olculer": [
     [
@@ -801,7 +796,7 @@
    "kartonAd": "kırmızı karton",
    "gorsel": "/img/alcibay/panel-f.webp",
    "standart": "TS EN 520 + A1, Tip F",
-   "metin": "Cam elyaf katkılı, yangın dayanımı artırılmış plaka.",
+   "metin": "Cam elyaf katkılıdır, yangın dayanımı artırılmıştır.",
    "alanlar": "Bölme ve giydirme duvar, şaft duvarları, asma tavan, çelik yapılar",
    "olculer": [
     [
@@ -838,7 +833,7 @@
    "kartonAd": "kırmızı ve yeşil karton",
    "gorsel": "/img/alcibay/panel-wf.webp",
    "standart": "TS EN 520 + A1, Tip HF",
-   "metin": "Hem yangın hem su dayanımı artırılmış plaka. Üzerine fayans ve seramik uygulanabilir.",
+   "metin": "Hem yangın hem su dayanımı artırılmıştır. Üzerine fayans ve seramik uygulanabilir.",
    "alanlar": "Çelik yapılar, ıslak hacimler, bölme duvar, şaft duvarları, asma tavan",
    "olculer": [
     [
@@ -870,73 +865,53 @@
    "id": "el",
    "soru": "Duvarı elle sıvayacağım",
    "urun": "perlitli",
-   "not": "Tuğla, beton, gazbeton üzerine ilk kat. Üstüne saten perdah."
+   "not": "Tuğla, beton ve gazbeton üzerine ilk kat olarak uygulanır. Üstüne saten perdah çekilir."
   },
   {
    "id": "makine",
    "soru": "Makineyle sıva atacağım",
    "urun": "makina",
-   "not": "Tek katta pürüzsüz yüzey; saten perdah gerekmez."
+   "not": "Tek katta pürüzsüz yüzey verir, saten perdah gerekmez."
   },
   {
    "id": "perdah",
    "soru": "Boyaya hazır son kat istiyorum",
    "urun": "saten",
-   "not": "Sıva ya da alçı plaka üzerine ince son kat."
+   "not": "Sıva ya da alçı plaka üzerine ince son kat olarak uygulanır."
   },
   {
    "id": "dekor",
    "soru": "Kartonpiyer, kalıp işi yapacağım",
    "urun": "kartonpiyer",
-   "not": "Kalıba dökülen dekorasyon alçısı."
+   "not": "Kalıba dökülerek kartonpiyer ve süs yapılır."
   },
   {
    "id": "yapistir",
    "soru": "Duvara alçı plaka yapıştıracağım",
    "urun": "yapistirma",
-   "not": "Beton, gazbeton, tuğla üzerine."
+   "not": "Beton, gazbeton ve tuğla yüzeylere plaka yapıştırılır."
   },
   {
    "id": "derz",
    "soru": "Plaka eklerini kapatacağım",
    "urun": "derz",
-   "not": "Derz bandıyla birlikte."
+   "not": "Derz bandıyla birlikte kullanılır."
   },
   {
    "id": "plaka",
    "soru": "Bölme duvar, asma tavan kuracağım",
    "panel": true,
-   "not": "Ortama göre plaka seçin."
+   "not": "Plaka tipi ortama göre seçilir."
   }
  ],
  "tarihce": [
   [
-   "M.Ö. 9000",
-   "Çatalhöyük'te kireçle karıştırılarak ilk kez kullanıldı."
-  ],
-  [
-   "M.Ö. 7000",
-   "Sümer ve Asur kentlerinde yapılarda ve yollarda."
-  ],
-  [
-   "M.Ö. 2800",
-   "Mısır'da, Giza Piramidi'nin iç duvar sıvasında."
-  ],
-  [
-   "M.Ö. 350-40",
-   "Yunan ve Roma'da duvar ve ahşap tavan sıvasında."
-  ],
-  [
-   "M.S. 1200",
-   "Fransa'da ulusal malzeme ilan edildi."
-  ],
-  [
-   "19. yüzyıl",
-   "Alçı duvar levhası üretimi başladı."
-  ],
-  [
    "1992",
    "Alçıbay kuruldu."
+  ],
+  [
+   "2006–2008",
+   "Üretim kapasitesi artırıldı."
   ],
   [
    "2008",
@@ -954,6 +929,7 @@
  "kimya": {
   "jips": "CaSO₄·2H₂O",
   "alci": "CaSO₄·½H₂O",
-  "metin": "Alçının hammaddesi jipstir. Jips, kristal suyunun yaklaşık yarım molekülü kalacak şekilde ısıtılıp öğütülür; su ile karışınca yeniden katılaşır ve bağlayıcı olur. Priz alıp kuruduktan sonra boyut değiştirmez."
- }
+  "metin": "Alçının hammaddesi jipstir. Jips, kristal suyunun yaklaşık yarısı kalacak şekilde ısıtılıp öğütülür; alçı suyla karışınca yeniden katılaşır ve bağlayıcı olur."
+ },
+ "belgeBaslik": "Belgeler ve standartlar"
 }

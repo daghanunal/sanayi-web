@@ -1,9 +1,9 @@
 // Perdah: Alçıbay için klasik (WebGL'siz) yeniden tasarım önerisi.
-// İmza: hero'da tuğla duvar, scroll ile mala darbeleriyle sıvanıp pürüzsüz duvara dönüşür (SVG maske + DrawSVG).
+// Künyenin arkasında tuğla duvar açılışta bir kez, mala darbeleriyle sıvanır (SVG maske + DrawSVG, ~1,6 sn, pinsiz).
 import '../../shared/base.css';
 import './style.css';
 import raw from '../../data/alcibay.json';
-import { boot, initSmoothScroll, esc, asset, icons, gsap, ScrollTrigger, reducedMotion, vitrinModu } from '../../shared/core.js';
+import { boot, initSmoothScroll, esc, asset, icons, gsap, ScrollTrigger, reducedMotion, vitrinModu, yilEki } from '../../shared/core.js';
 import { DrawSVGPlugin } from 'gsap/DrawSVGPlugin';
 
 gsap.registerPlugin(DrawSVGPlugin);
@@ -11,8 +11,8 @@ gsap.registerPlugin(DrawSVGPlugin);
 const d = boot(raw);
 const { isletme: is, konumlar, urunler, paneller, isler, tarihce, belgeler } = d;
 const merkez = konumlar[0];
+merkez.tel = d.iletisim.telefon; // ?tel= ile gelen numara merkez telefonunun yerine geçer
 const fabrikalar = konumlar.filter((k) => k.kapasite);
-const kapasite = fabrikalar.reduce((a, k) => a + k.kapasite, 0);
 const yil = new Date().getFullYear() - is.kurulus;
 const nf = new Intl.NumberFormat('tr-TR');
 const urun = (id) => urunler.find((u) => u.id === id);
@@ -49,7 +49,7 @@ ld.textContent = JSON.stringify({
 });
 document.head.append(ld);
 document.title = `${is.ad} | Yapı alçıları ve alçı plaka | Ankara`;
-$('meta[name="description"]').content = `${is.ad}: ${is.kurulus}'den beri yapı alçısı ve alçı plaka. Bala ve Tarsus fabrikaları, günde ${nf.format(kapasite)} ton.`;
+$('meta[name="description"]').content = `${is.ad}: ${is.tanim}. Merkez Çankaya/Ankara; fabrikalar Bala/Ankara ve Tarsus/Mersin. Telefon: ${merkez.tel}`;
 
 // Mobil çubuk: WhatsApp yok; üreticiye uygun kısayollar. Vitrin modunda seçim çubuğu kalır.
 if (!vitrinModu()) {
@@ -59,7 +59,7 @@ if (!vitrinModu()) {
   bar.setAttribute('aria-label', 'Hızlı erişim');
   bar.innerHTML = `
     <a href="${telHref(merkez.tel)}" class="action-bar__btn">${icons.phone}<span>Ara</span></a>
-    <a href="#bul" class="action-bar__btn action-bar__btn--main">${ICON_MALA}<span>Ürün bul</span></a>
+    <a href="#urunler" class="action-bar__btn action-bar__btn--main">${ICON_MALA}<span>Ürünler</span></a>
     <a href="${gmaps(merkez.mapsQuery)}" class="action-bar__btn" target="_blank" rel="noopener">${icons.pin}<span>Yol tarifi</span></a>`;
   document.body.append(bar);
 }
@@ -73,7 +73,7 @@ $('#ust').innerHTML = `
     <span class="wm">${esc(is.ad)}<small>yapı alçısı</small></span>
   </a>
   <nav class="ust__nav" aria-label="Bölümler">
-    <a href="#urunler">Alçılar</a><a href="#plaka">Alçı plaka</a><a href="#kurumsal">Kurumsal</a><a href="#fabrikalar">Fabrikalar</a>
+    <a href="#urunler">Ürünler</a><a href="#plaka">Alçı plaka</a><a href="#kurumsal">Hakkında</a><a href="#fabrikalar">Fabrikalar</a><a href="#iletisim">İletişim</a>
   </nav>
   <a class="ust__tel" href="${telHref(merkez.tel)}">${icons.phone}<span>${esc(telYaz(merkez.tel))}</span></a>`;
 
@@ -109,35 +109,29 @@ $('#giris').innerHTML = `
       <g mask="url(#sivaMaske)">
         <image href="${asset('/img/alcibay/duvar-doku.jpg')}" x="-40" y="-40" width="${SW + 80}" height="${SH + 80}" preserveAspectRatio="xMidYMid slice" filter="url(#sivaKenar)"/>
       </g>
-      <image class="giris__son" href="${asset('/img/alcibay/bos-mekan.jpg')}" x="0" y="0" width="${SW}" height="${SH}" preserveAspectRatio="xMidYMid slice" opacity="0"/>
     </svg>
     <div class="giris__mala">${ICON_MALA_BUYUK}</div>
   </div>
   <div class="giris__kart">
-    <p class="giris__ust">${esc(is.kurulus)}'den beri Ankara'da yapı alçısı</p>
-    <h1 class="giris__baslik" id="giris-baslik"><span data-evre="0">Duvar önce böyle.</span><span data-evre="1">Sonra bir kat sıva.</span><span data-evre="2">Perdahla pürüzsüz.</span></h1>
-    <p class="giris__metin">Sıvadan perdaha, kartonpiyerden alçı plakaya; Bala ve Tarsus'taki iki fabrikamızda günde ${nf.format(kapasite)} ton alçı üretiyoruz.</p>
+    <h1 class="giris__baslik" id="giris-baslik">${esc(is.ad)}</h1>
+    <p class="giris__tanim">${esc(is.tanim)}</p>
+    <dl class="kunye">
+      <div><dt>Merkez</dt><dd>${esc(merkez.adres)}, ${esc(merkez.il)}</dd></div>
+      <div><dt>Fabrikalar</dt><dd>${fabrikalar.map((k) => esc(k.il.split(' / ').slice(-2).join(' / '))).join(' · ')}</dd></div>
+      <div><dt>Telefon</dt><dd><a href="${telHref(merkez.tel)}">${esc(merkez.tel)}</a></dd></div>
+    </dl>
     <div class="giris__butonlar">
-      <a class="btn btn--turuncu" href="#bul">Doğru alçıyı bul</a>
-      <a class="btn btn--cizgi" href="${telHref(merkez.tel)}">${icons.phone}<span>Teknik danışmanlık</span></a>
+      <a class="btn btn--turuncu" href="${telHref(merkez.tel)}">${icons.phone}<span>Ara</span></a>
+      <a class="btn btn--cizgi" href="#urunler"><span>Ürünler</span></a>
+      <a class="btn btn--cizgi" href="${gmaps(merkez.mapsQuery)}" target="_blank" rel="noopener">${icons.pin}<span>Yol tarifi</span></a>
     </div>
-    <ol class="giris__adim" aria-hidden="true"><li class="is-aktif">Tuğla</li><li>Sıva</li><li>Perdah</li></ol>
   </div>`;
-
-$('#rakam').innerHTML = `
-  <ul class="rakam__liste">
-    <li><b data-say="${yil}">${yil}</b><span>yıldır üretimde</span></li>
-    <li><b data-say="${kapasite}">${nf.format(kapasite)}</b><span>ton/gün toplam kapasite</span></li>
-    <li><b data-say="${fabrikalar.length}">${fabrikalar.length}</b><span>fabrika: Bala ve Tarsus</span></li>
-    <li><b data-say="${urunler.length + paneller.length}">${urunler.length + paneller.length}</b><span>ürün: ${urunler.length} toz alçı, ${paneller.length} alçı plaka</span></li>
-  </ul>`;
 
 // --- Ürün bulucu -----------------------------------------------------------
 $('#bul').innerHTML = `
   <div class="bolum__bas">
-    <p class="bolum__no">Ürün bulucu</p>
-    <h2 class="bolum__baslik" id="bul-baslik">Ne yapacaksınız?</h2>
-    <p class="bolum__giris">İşi seçin, doğru torbayı ve teknik değerlerini gösterelim.</p>
+    <h2 class="bolum__baslik" id="bul-baslik">Ürün seçimi</h2>
+    <p class="bolum__giris">Yapılacak iş seçilince uygun ürün ve teknik değerleri görünür.</p>
   </div>
   <div class="bul">
     <div class="bul__isler" role="tablist" aria-label="Yapılacak iş">
@@ -148,7 +142,7 @@ $('#bul').innerHTML = `
 
 function anahtarlar(u, yokNotu = true) {
   if (u.anahtar.length) return `<dl class="anahtar">${u.anahtar.map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join('')}</dl>`;
-  return yokNotu ? '<p class="anahtar anahtar--yok">Teknik değerler için teknik danışmanlığımızı arayın.</p>' : '';
+  return yokNotu ? '<p class="anahtar anahtar--yok">Teknik değerleri için merkez aranabilir.</p>' : '';
 }
 
 function bulSonuc(id) {
@@ -169,7 +163,7 @@ function bulSonuc(id) {
       <article class="oneri" style="--u:${u.renk}">
         <img class="oneri__torba" src="${u.torba}" alt="${esc(u.ad)} torbası" width="600" height="800" loading="lazy">
         <div class="oneri__metin">
-          <p class="oneri__etiket">Önerimiz</p>
+          <p class="oneri__etiket">Uygun ürün</p>
           <h3>${esc(u.ad)}</h3>
           <p>${esc(x.not)}</p>
           ${anahtarlar(u)}
@@ -183,9 +177,9 @@ function bulSonuc(id) {
 // --- Ürün yelpazesi --------------------------------------------------------
 $('#urunler').innerHTML = `
   <div class="bolum__bas">
-    <p class="bolum__no">Toz alçılar</p>
-    <h2 class="bolum__baslik" id="urunler-baslik">Her kat için bir torba.</h2>
-    <p class="bolum__giris">Değerler üretici teknik föylerinden alınmıştır. Tamamı TS EN 13279-1 kapsamında.</p>
+    <p class="bolum__no">Yapı alçıları</p>
+    <h2 class="bolum__baslik" id="urunler-baslik">Ürünler</h2>
+    <p class="bolum__giris">Yedi yapı alçısı ve dört alçı plaka tipi üretilir. Değerler üreticinin teknik föylerinden alınmıştır.</p>
   </div>
   <ul class="urunler">
     ${urunler.map((u) => `
@@ -203,16 +197,15 @@ $('#urunler').innerHTML = `
 
 // --- Uygulama sırası (gerçek sıra: ilk kat → son kat → boya) --------------
 const sira = [
-  ['Tuğla, beton, gazbeton', 'Yüzey tozdan ve yağdan arındırılır, ıslatılır.', null],
+  ['Tuğla, beton, gazbeton', 'Yüzey toz ve yağdan temizlenip ıslatılır.', null],
   ['İlk kat: sıva', urun('perlitli').kisa, 'perlitli'],
   ['Son kat: perdah', urun('saten').kisa, 'saten'],
-  ['Boyaya hazır', 'Makine ile tek katta bitirmek isterseniz: ' + urun('makina').ad + '.', 'makina'],
+  ['Boyaya hazır', `Makineyle tek katta bitirmek için ${urun('makina').ad} kullanılır.`, 'makina'],
 ];
 $('#sira').innerHTML = `
   <div class="sira__foto"><img src="${asset('/img/alcibay/uygulama.jpg')}" alt="Usta mala ile duvara son kat alçı uyguluyor" width="1335" height="2000" loading="lazy"></div>
   <div class="sira__metin">
-    <p class="bolum__no">Uygulama sırası</p>
-    <h2 class="bolum__baslik" id="sira-baslik">Tuğladan boyaya dört adım.</h2>
+    <h2 class="bolum__baslik" id="sira-baslik">Uygulama sırası</h2>
     <ol class="sira__liste">
       ${sira.map(([b, m, id], i) => `
         <li>
@@ -225,9 +218,8 @@ $('#sira').innerHTML = `
 // --- Alçı plaka ------------------------------------------------------------
 $('#plaka').innerHTML = `
   <div class="bolum__bas">
-    <p class="bolum__no">Alçı plaka</p>
-    <h2 class="bolum__baslik" id="plaka-baslik">Kartonun rengi ortamı söyler.</h2>
-    <p class="bolum__giris">Ekopan ailesi TS EN 520 + A1 standardında üretilir.</p>
+    <h2 class="bolum__baslik" id="plaka-baslik">Alçı plaka</h2>
+    <p class="bolum__giris">Ekopan plakalar TS EN 520 + A1 standardında üretilir. Kartonun rengi plakanın tipini gösterir: gri standart, yeşil suya, kırmızı yangına dayanımlı.</p>
   </div>
   <div class="plaka">
     <div class="plaka__sekmeler" role="tablist" aria-label="Alçı plaka türü">
@@ -258,20 +250,24 @@ function panelDetay(id) {
   if (!reducedMotion) gsap.fromTo('#plaka-detay > *', { autoAlpha: 0, y: 10 }, { autoAlpha: 1, y: 0, duration: 0.4, stagger: 0.06, ease: 'power2.out' });
 }
 
-// --- Kurumsal --------------------------------------------------------------
+// --- Hakkında (olgular alcibay.com'dan) -----------------------------------------
 $('#kurumsal').innerHTML = `
   <div class="kurumsal__ust">
     <div>
-      <p class="bolum__no">Kurumsal</p>
-      <h2 class="bolum__baslik" id="kurumsal-baslik">${esc(is.kurulus)}'den beri hızlı beyaz.</h2>
+      <h2 class="bolum__baslik" id="kurumsal-baslik">Hakkında</h2>
     </div>
     <div class="kurumsal__metin">
-      <p>${esc(is.hakkinda)}</p>
+      <p>${esc(is.ad)} ${esc(yilEki(is.kurulus))} beri yapı alçısı üretiyor. ${esc(is.hakkinda)}</p>
       <p class="kurumsal__unvan">${esc(is.unvan)}</p>
     </div>
   </div>
-  <ol class="tarih" data-lenis-prevent aria-label="Alçının tarihi">
-    ${tarihce.map(([y, m]) => `<li class="${/^(19|20)\d\d$/.test(y) ? 'tarih--biz' : ''}"><b>${esc(y)}</b><span>${esc(m)}</span></li>`).join('')}
+  <ul class="rakam__liste" aria-label="Rakamlarla">
+    <li><b data-say="${yil}">${yil}</b><span>yıldır üretimde</span></li>
+    ${fabrikalar.map((k) => `<li><b data-say="${k.kapasite}">${nf.format(k.kapasite)}</b><span>ton/gün, ${esc(k.il.split(' / ').slice(-2)[0])} fabrikası</span></li>`).join('')}
+    <li><b data-say="${urunler.length}">${urunler.length}</b><span>toz alçı, ${paneller.length} alçı plaka tipi</span></li>
+  </ul>
+  <ol class="tarih" aria-label="Tarihçe">
+    ${tarihce.map(([y, m]) => `<li class="tarih--biz"><b>${esc(y)}</b><span>${esc(m)}</span></li>`).join('')}
   </ol>
   <div class="belgeler">
     <h3>Belgeler ve standartlar</h3>
@@ -283,8 +279,7 @@ const bala = konumlar.find((k) => k.id === 'bala');
 const tarsus = konumlar.find((k) => k.id === 'tarsus');
 $('#fabrikalar').innerHTML = `
   <div class="bolum__bas">
-    <p class="bolum__no">Üretim</p>
-    <h2 class="bolum__baslik" id="fabrikalar-baslik">İki fabrika, günde ${nf.format(kapasite)} ton.</h2>
+    <h2 class="bolum__baslik" id="fabrikalar-baslik">Merkez ve fabrikalar</h2>
   </div>
   <div class="fab">
     <figure class="fab__harita">
@@ -301,7 +296,7 @@ $('#fabrikalar').innerHTML = `
       ${konumlar.map((k) => `
         <li class="yer">
           <h3>${esc(k.ad)}</h3>
-          ${k.kapasite ? `<p class="yer__kap"><b>${nf.format(k.kapasite)}</b> ton/gün${k.acilis ? `, ${k.acilis}'den beri` : ''}</p>` : '<p class="yer__kap">Genel müdürlük ve satış</p>'}
+          ${k.kapasite ? `<p class="yer__kap"><b>${nf.format(k.kapasite)}</b> ton/gün${k.acilis ? `, ${k.acilis}'den beri` : ''}</p>` : '<p class="yer__kap">Merkez ofis</p>'}
           <p>${esc(k.adres)}<br>${esc(k.il)}</p>
           ${k.not ? `<p class="yer__not">${esc(k.not)}</p>` : ''}
           <p class="yer__tel"><a href="${telHref(k.tel)}">${esc(k.tel)}</a><span>Faks ${esc(k.faks)}</span></p>
@@ -317,18 +312,20 @@ $('#fabrikalar').innerHTML = `
 // --- Final + footer --------------------------------------------------------
 $('#iletisim').innerHTML = `
   <div class="final__ic">
-    <h2 class="final__baslik" id="iletisim-baslik">Şantiyeniz için doğru alçıyı birlikte seçelim.</h2>
-    <p>Teknik danışmanlık hattımız sarfiyat, uygulama ve depolama sorularınızı yanıtlar.</p>
-    <a class="btn btn--turuncu btn--buyuk" href="${telHref(merkez.tel)}">${icons.phone}<span>${esc(merkez.tel)}</span></a>
-    <ul class="final__guv">${d.guvenlik.map((g) => `<li>${esc(g)}</li>`).join('')}</ul>
-    <p class="final__saklama">${esc(d.saklama)}</p>
+    <h2 class="final__baslik" id="iletisim-baslik">İletişim</h2>
+    <p>Ürün, sarfiyat ve fiyat bilgisi için merkezi arayın.</p>
+    <div class="final__butonlar">
+      <a class="btn btn--turuncu btn--buyuk" href="${telHref(merkez.tel)}">${icons.phone}<span>${esc(merkez.tel)}</span></a>
+      <a class="btn btn--cizgi-acik btn--buyuk" href="${gmaps(merkez.mapsQuery)}" target="_blank" rel="noopener">${icons.pin}<span>Yol tarifi</span></a>
+    </div>
+    <p class="final__adres">${esc(merkez.adres)}, ${esc(merkez.il)} · Faks ${esc(merkez.faks)}</p>
   </div>`;
 
 $('#alt').innerHTML = `
   <div class="alt__ic">
     <p class="wm wm--acik">${esc(is.ad)}<small>yapı alçısı</small></p>
     <p>${esc(is.unvan)}<br>${esc(merkez.adres)}, ${esc(merkez.il)}</p>
-    <p class="alt__not">Bu sayfa Alçıbay için hazırlanmış bir tasarım önerisidir. Ürün bilgileri, adresler ve kapasiteler alcibay.com'dan alınmıştır; uygulama değerleri şantiye koşullarına göre değişebilir. Fotoğraflar temsilîdir (Pexels). Torba ve plaka görselleri temsilî 3D çizimlerdir; gerçek ambalaj farklıdır.</p>
+    <p class="alt__not">Bu sayfa Alçıbay için hazırlanmış bir tasarım önerisidir. Ürün bilgileri, adresler, kapasiteler ve belge listesi alcibay.com'dan alınmıştır; uygulama değerleri şantiye koşullarına göre değişebilir. Fotoğraflar temsilîdir (Pexels). Torba ve plaka görselleri temsilî 3D çizimlerdir; gerçek ambalaj farklıdır.</p>
     <p class="alt__telif">© ${new Date().getFullYear()} ${esc(is.ad)}</p>
   </div>`;
 
@@ -352,7 +349,7 @@ function foyAc(id) {
       <h3>Depolama</h3><p>${esc(d.saklama)}</p>
       <div class="foy__alt">
         <button type="button" class="btn btn--koyu btn--kucuk" data-yazdir>Yazdır</button>
-        <a class="btn btn--cizgi btn--kucuk" href="${telHref(merkez.tel)}">${icons.phone}<span>Teknik danışmanlık</span></a>
+        <a class="btn btn--cizgi btn--kucuk" href="${telHref(merkez.tel)}">${icons.phone}<span>Merkezi arayın</span></a>
       </div>
     </div>`;
   foy.showModal();
@@ -420,68 +417,40 @@ new IntersectionObserver((entries, io) => {
 ScrollTrigger.create({ start: 'top -40', onToggle: (s) => $('#ust').classList.toggle('is-dolu', s.isActive) });
 
 const darbeler = gsap.utils.toArray('.giris__darbe');
-const evreler = gsap.utils.toArray('.giris__baslik [data-evre]');
-const adimlar = gsap.utils.toArray('.giris__adim li');
-const evre = (n) => {
-  evreler.forEach((el, i) => el.classList.toggle('is-aktif', i === n));
-  adimlar.forEach((el, i) => el.classList.toggle('is-aktif', i <= n));
-};
+const tetik = (trigger, start = 'top 85%') => ({ trigger, start, toggleActions: 'play none none none' });
 
 if (reducedMotion) {
   gsap.set(darbeler, { drawSVG: '100%' });
-  gsap.set('.giris__son', { opacity: 1 });
   gsap.set('.giris__mala', { autoAlpha: 0 });
-  evre(2);
   document.querySelectorAll('[data-say]').forEach((el) => (el.textContent = nf.format(+el.dataset.say)));
 } else {
   gsap.set(darbeler, { drawSVG: '0%' });
-  evre(0);
 
-  // İmza: mala her darbede duvarı bir şerit sıvar; en sonda perdahlı pürüzsüz mekân belirir.
+  // Açılış: mala her darbede duvarı bir şerit sıvar (bir kez, ~1,6 sn; kaydırmayı kilitlemez).
   const mala = $('.giris__mala');
   const svg = $('.giris__svg');
   const uzunluk = darbeler.map((p) => p.getTotalLength());
   const malaKonum = (i, t) => {
-    // Path noktasını sahne koordinatına çevirir (slice ölçeği ve kaymasıyla).
     const p = darbeler[i].getPointAtLength(uzunluk[i] * t);
     const m = svg.getScreenCTM();
     const r = $('.giris__sahne').getBoundingClientRect();
     return { x: m.a * p.x + m.e - r.left, y: m.d * p.y + m.f - r.top };
   };
-  gsap.set(mala, { xPercent: -30, yPercent: -62 });
+  gsap.set(mala, { xPercent: -30, yPercent: -62, autoAlpha: 0 });
   const durum = { t: 0 };
-  const tl = gsap.timeline({
-    defaults: { ease: 'none' },
-    scrollTrigger: {
-      trigger: '#giris',
-      start: 'top top',
-      end: '+=220%',
-      pin: true,
-      scrub: 0.6,
-      onUpdate: (s) => {
-        const p = s.progress;
-        evre(p < 0.12 ? 0 : p < 0.8 ? 1 : 2);
-      },
-    },
-  });
-  const pay = 0.8 / darbeler.length;
-  darbeler.forEach((path, i) => {
-    tl.to(path, { drawSVG: '100%', duration: pay }, 0.08 + i * pay);
-  });
+  const pay = 1.5 / darbeler.length;
+  const tl = gsap.timeline({ defaults: { ease: 'none' }, delay: 0.2 });
+  darbeler.forEach((path, i) => tl.to(path, { drawSVG: '100%', duration: pay }, i * pay));
   tl.to(durum, {
-    t: darbeler.length,
-    duration: pay * darbeler.length,
+    t: darbeler.length - 0.001, duration: pay * darbeler.length,
     onUpdate: () => {
       const i = Math.min(darbeler.length - 1, Math.floor(durum.t));
       const { x, y } = malaKonum(i, durum.t - i);
-      const yon = i % 2 === 0 ? 1 : -1;
-      gsap.set(mala, { x, y, scaleX: yon, autoAlpha: 1 });
+      gsap.set(mala, { x, y, scaleX: i % 2 === 0 ? 1 : -1, autoAlpha: 1 });
     },
-  }, 0.08);
-  tl.to('.giris__son', { opacity: 1, duration: 0.12 }, 0.86);
-  tl.to(mala, { autoAlpha: 0, duration: 0.05 }, 0.88);
-  tl.to({}, { duration: 0.04 });
-  gsap.set(mala, { autoAlpha: 0 });
+  }, 0);
+  tl.to(mala, { autoAlpha: 0, duration: 0.2 });
+  gsap.from('.giris__kart > *', { autoAlpha: 0, y: 14, duration: 0.5, stagger: 0.06, ease: 'power3.out', delay: 0.1 });
 
   // Rakamlar sayar.
   document.querySelectorAll('[data-say]').forEach((el) => {
@@ -489,21 +458,19 @@ if (reducedMotion) {
     const o = { v: 0 };
     gsap.to(o, {
       v: hedef, duration: 1.4, ease: 'power2.out',
-      scrollTrigger: { trigger: el, start: 'top 88%', once: true },
+      scrollTrigger: tetik(el, 'top 90%'),
       onUpdate: () => (el.textContent = nf.format(Math.round(o.v))),
     });
   });
 
   // Bölüm başlıklarının altında mala izi gibi bir çizgi çekilir.
   document.querySelectorAll('.bolum__baslik').forEach((el) => {
-    gsap.fromTo(el, { '--iz': 0 }, { '--iz': 1, duration: 0.9, ease: 'power3.out', scrollTrigger: { trigger: el, start: 'top 85%', once: true } });
+    gsap.fromTo(el, { '--iz': 0 }, { '--iz': 1, duration: 0.9, ease: 'power3.out', scrollTrigger: tetik(el) });
   });
 
   // Ürün kartları: torbalar sırayla rafa oturur.
-  ScrollTrigger.batch('.urun', {
-    start: 'top 88%',
-    once: true,
-    onEnter: (els) => gsap.fromTo(els.map((e) => e.querySelector('img')), { yPercent: 16, autoAlpha: 0 }, { yPercent: 0, autoAlpha: 1, duration: 0.6, stagger: 0.08, ease: 'power3.out' }),
+  gsap.utils.toArray('.urun').forEach((u) => {
+    gsap.fromTo(u.querySelector('img'), { yPercent: 16, autoAlpha: 0 }, { yPercent: 0, autoAlpha: 1, duration: 0.6, ease: 'power3.out', scrollTrigger: tetik(u, 'top 90%') });
   });
 
   // Uygulama sırası: fotoğraf içeride yavaş kayar, adımlar sırayla koyulaşır.
@@ -514,11 +481,11 @@ if (reducedMotion) {
 
   // Harita: rota çizilir, noktalar belirir.
   gsap.set('.harita__yol', { drawSVG: '0%' });
-  gsap.timeline({ scrollTrigger: { trigger: '.fab__harita', start: 'top 75%', once: true } })
+  gsap.timeline({ scrollTrigger: tetik('.fab__harita', 'top 80%') })
     .fromTo('.harita__tr', { opacity: 0 }, { opacity: 1, duration: 0.6 })
     .fromTo('.harita__nokta', { scale: 0, transformOrigin: 'center' }, { scale: 1, duration: 0.4, stagger: 0.12, ease: 'back.out(2)' }, '-=0.2')
     .to('.harita__yol', { drawSVG: '100%', duration: 1, ease: 'power2.inOut' });
 }
 
-// Görseller yüklenince pin mesafeleri yeniden hesaplanır.
+// Görseller yüklenince tetikleyici konumları yeniden hesaplanır.
 addEventListener('load', () => ScrollTrigger.refresh());

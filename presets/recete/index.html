@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#e8eee7" />
   <title>Eczane | Etimesgut, Ankara</title>
-  <meta name="description" content="Mahalle eczanesi: reçetenizin fotoğrafını WhatsApp'tan gönderin, siz gelmeden hazırlayalım. Hizmetler, çalışma saatleri, nöbetçi eczane bağlantısı ve yol tarifi." />
+  <meta name="description" content="Eczane: hizmetler, çalışma saatleri, nöbetçi eczane bağlantısı, adres ve yol tarifi." />
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Crect width=%2232%22 height=%2232%22 rx=%226%22 fill=%22%23fff%22/%3E%3Cpath d=%22M10 7h12v4h-8v3h7v4h-7v3h8v4H10z%22 fill=%22%23d0121b%22/%3E%3C/svg%3E" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -23,10 +23,10 @@
       <span class="mark" aria-hidden="true">E</span><span data-bind="ad"></span>
     </a>
     <nav class="top__nav" aria-label="Bölümler">
-      <a href="#recete">Reçete gönder</a>
       <a href="#hizmetler">Hizmetler</a>
-      <a href="#nobet">Nöbetçi eczane</a>
-      <a href="#ulasim">Ulaşım</a>
+      <a href="#hakkinda">Hakkında</a>
+      <a href="#saatler">Saatler ve konum</a>
+      <a href="#iletisim">İletişim</a>
     </nav>
     <p class="top__status" data-status></p>
     <button type="button" class="top__size" id="yazi" aria-pressed="false">
@@ -36,7 +36,7 @@
   </header>
 
   <main id="main">
-    <!-- Hero: ışığı yanan eczane tabelası -->
+    <!-- Künye: ışığı yanan eczane tabelası + 3D poşet -->
     <section class="hero" aria-labelledby="hero-baslik">
       <div class="hero__text">
         <div class="sign" aria-hidden="true">
@@ -54,91 +54,45 @@
           <rect class="sign__pole" x="112" y="240" width="16" height="36" rx="3" />
         </svg>
         </div>
-        <p class="hero__since" data-since></p>
-        <h1 id="hero-baslik" class="hero__title" data-slogan></h1>
-        <p class="hero__lead" data-hakkinda></p>
+        <h1 id="hero-baslik" class="hero__title" data-bind="ad"></h1>
+        <p class="hero__what" data-tanim></p>
+        <dl class="kunye" data-kunye></dl>
         <div class="hero__cta" data-hero-cta></div>
-        <p class="hero__status" data-status></p>
       </div>
       <figure class="hero__fig">
         <img class="hero__img" src="/img/recete/poset-3d.jpg" alt="Tezgâhta eczane poşeti, ilaç kutuları, blister ve krem tüpü (3D görsel)" width="1600" height="1200" fetchpriority="high" />
-
-        <figcaption class="hero__cap"><span class="hero__cap-dot" aria-hidden="true"></span>Hazır reçete poşette, adınızla bekler</figcaption>
+        <figcaption class="hero__cap">3D görsel, temsilî</figcaption>
       </figure>
-    </section>
-
-    <!-- İmza: reçeteden poşete -->
-    <section class="flow" id="recete" aria-labelledby="flow-baslik">
-      <div class="flow__pin">
-        <header class="flow__head">
-          <h2 id="flow-baslik">Reçeteniz, siz gelmeden hazır.</h2>
-          <p>Üç adımda: fotoğrafını gönderin, eczacımız hazırlasın, gelip alın.</p>
-        </header>
-        <div class="flow__stage" aria-hidden="true">
-          <div class="rx">
-            <p class="rx__top"><span class="mark mark--s">E</span><span>E-Reçete</span></p>
-            <p class="rx__no">Reçete no <b>2K7M4QX</b></p>
-            <ul class="rx__lines">
-              <li><i></i><span></span></li>
-              <li><i></i><span></span></li>
-              <li><i></i><span></span></li>
-            </ul>
-            <p class="rx__sent">Gönderildi</p>
-          </div>
-          <div class="boxes">
-          <div class="box box--1"><span class="box__label">Sabah 1, akşam 1<br><small>tok karnına</small></span></div>
-          <div class="box box--2"><span class="box__label">Günde 1<br><small>yatmadan önce</small></span></div>
-          <div class="box box--3"><span class="box__label">Gerekirse<br><small>günde en çok 3</small></span></div>
-          </div>
-          <div class="bag">
-            <div class="bag__back"></div>
-            <div class="bag__front">
-              <span class="mark">E</span>
-              <b data-bind="ad"></b>
-              <span class="bag__ready">Reçeteniz hazır</span>
-              <span class="bag__date" data-today></span>
-            </div>
-          </div>
-        </div>
-        <ol class="flow__steps" data-steps></ol>
-        <div class="flow__cta" data-flow-cta></div>
-      </div>
-    </section>
-
-    <section class="stats" aria-label="Rakamlarla">
-      <ul class="stats__list" data-stats></ul>
     </section>
 
     <section class="services" id="hizmetler" aria-labelledby="hizmet-baslik">
       <header class="sec-head">
-        <h2 id="hizmet-baslik">Eczanede neler yapıyoruz</h2>
-        <p>İlacınızı vermekle kalmıyoruz. Sorunuz olursa eczacımız tezgâhta, telefonda ve WhatsApp'ta.</p>
+        <h2 id="hizmet-baslik">Hizmetler</h2>
+        <p>Ürün ve ilaç bilgisi için arayın ya da WhatsApp'tan yazın.</p>
       </header>
       <ul class="services__list" data-services></ul>
-    </section>
-
-    <section class="nobet" id="nobet" aria-labelledby="nobet-baslik">
-      <div class="nobet__card">
-        <p class="nobet__tag">Nöbetçi eczane</p>
-        <h2 id="nobet-baslik">Gece ilaç lazım olursa</h2>
-        <p data-nobet-text></p>
-        <a class="btn btn--ink" data-nobet-link target="_blank" rel="noopener">Bu gece nöbetçi eczaneleri görün</a>
-        <p class="nobet__src" data-nobet-src></p>
+      <div class="send" aria-labelledby="send-baslik">
+        <div class="send__head">
+          <h3 id="send-baslik">Reçeteyi önceden gönderme</h3>
+          <p>Reçete WhatsApp'tan gönderilirse ilaçlar gelmeden hazırlanır.</p>
+        </div>
+        <ol class="send__steps" data-steps></ol>
+        <div class="send__cta" data-send-cta></div>
       </div>
     </section>
 
-    <section class="reviews" aria-labelledby="yorum-baslik">
-      <header class="sec-head">
-        <p class="etiket">Örnek yorumlar</p>
-        <h2 id="yorum-baslik">Mahalleden yorumlar</h2>
-        <p class="score" data-score></p>
-      </header>
-      <ul class="reviews__list" data-reviews></ul>
+    <section class="about" id="hakkinda" aria-labelledby="hakkinda-baslik">
+      <div class="about__text">
+        <h2 id="hakkinda-baslik">Hakkında</h2>
+        <p class="about__lead" data-hakkinda></p>
+        <dl class="facts" data-facts></dl>
+      </div>
+      <ul class="stats__list" data-stats aria-label="Rakamlarla"></ul>
     </section>
 
-    <section class="visit" id="ulasim" aria-labelledby="ulasim-baslik">
+    <section class="visit" id="saatler" aria-labelledby="saatler-baslik">
       <div class="visit__info">
-        <h2 id="ulasim-baslik">Açık olduğumuz saatler</h2>
+        <h2 id="saatler-baslik">Çalışma saatleri ve konum</h2>
         <p class="visit__status" data-status></p>
         <table class="hours" data-hours></table>
         <h3>Adres</h3>
@@ -149,20 +103,37 @@
         </div>
       </div>
       <div class="visit__map" data-map><a class="visit__map-link" data-maps target="_blank" rel="noopener">Haritada aç</a></div>
+      <div class="nobet" id="nobet" aria-labelledby="nobet-baslik">
+        <p class="nobet__tag" aria-hidden="true">Nöbetçi eczane</p>
+        <h3 id="nobet-baslik">Kapalı saatlerde</h3>
+        <p class="nobet__metin" data-nobet-text></p>
+        <a class="btn btn--red" data-nobet-link target="_blank" rel="noopener">Bu gece nöbetçi eczaneler</a>
+        <p class="nobet__ornek" data-nobet-ornek></p>
+      </div>
     </section>
 
-    <section class="final" aria-labelledby="final-baslik">
-      <h2 id="final-baslik">Reçetenizi gönderin, gelmeden hazır olsun.</h2>
-      <p data-garanti></p>
+    <section class="reviews" id="yorumlar" aria-labelledby="yorum-baslik">
+      <header class="sec-head">
+        <h2 id="yorum-baslik">Örnek yorumlar</h2>
+        <p>Buradaki yorumlar örnektir, yerlerine eczanenin gerçek yorumları konur.</p>
+      </header>
+      <ul class="reviews__list" data-reviews></ul>
+    </section>
+
+    <section class="final" id="iletisim" aria-labelledby="final-baslik">
+      <h2 id="final-baslik">İletişim</h2>
+      <p>Reçete, ölçüm ve ürün bilgisi için arayın ya da WhatsApp'tan yazın.</p>
       <div class="final__cta" data-final-cta></div>
+      <p class="final__note"><span data-address></span><br><span data-status-text></span></p>
     </section>
   </main>
 
   <footer class="foot">
     <p class="foot__brand"><span class="mark mark--s" aria-hidden="true">E</span><b data-bind="ad"></b></p>
+    <p data-tanim></p>
     <p data-address></p>
     <p><a data-tel-plain></a></p>
-    <p class="foot__note">Bu sitedeki bilgiler tanıtım amaçlıdır. İlaç kullanımıyla ilgili kararlarınızı hekiminize ve eczacınıza danışın.</p>
+    <p class="foot__note">Bu sitedeki bilgiler tanıtım amaçlıdır. İlaç kullanımıyla ilgili kararlar için hekime ve eczacıya danışılmalıdır.</p>
     <p class="foot__small">© <span data-year></span> <span data-bind="ad"></span>. Fotoğraflar temsilîdir (Pexels). 3D görseller temsilîdir. Yorumlar örnektir.</p>
   </footer>
 

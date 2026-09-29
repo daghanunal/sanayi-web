@@ -1,18 +1,17 @@
 // Priz: Alçıbay için kinetik (WebGL'siz) yeniden tasarım önerisi.
-// İmza: "Priz saati". Kaydırdıkça dev bir dakika sayacı 0'dan 70'e ilerler; her alçının kullanım
-// süresinde zemin torbanın rengine boyanır, ürün adının harfleri toz gibi dağınıkken yerine oturur (priz alır).
+// Künyede firmanın adı harf harf toz gibi yağar; ürün adları şerit hâlinde akar, kullanım süreleri
+// kaydırdıkça dolan çubuklarla gösterilir. Pinli hikâye yok.
 import '../../shared/base.css';
 import './style.css';
 import raw from '../../data/alcibay.json';
 import {
-  boot, initSmoothScroll, esc, asset, icons, gsap, ScrollTrigger, reducedMotion, vitrinModu, mapsEmbed,
+  boot, initSmoothScroll, esc, asset, icons, gsap, ScrollTrigger, reducedMotion, vitrinModu, mapsEmbed, yilEki,
 } from '../../shared/core.js';
 
 const d = boot(raw);
-const { isletme: is, konumlar, urunler, paneller, isler, tarihce, belgeler, kimya } = d;
+const { isletme: is, konumlar, urunler, paneller, isler, tarihce, belgeler } = d;
 const merkez = konumlar[0];
 const fabrikalar = konumlar.filter((k) => k.kapasite);
-const kapasite = fabrikalar.reduce((a, k) => a + k.kapasite, 0);
 const yil = new Date().getFullYear() - is.kurulus;
 const nf = new Intl.NumberFormat('tr-TR');
 const $ = (s, r = document) => r.querySelector(s);
@@ -25,14 +24,8 @@ const gmaps = (q) => `https://www.google.com/maps/search/?api=1&query=${encodeUR
 const upper = (s) => s.toLocaleUpperCase('tr-TR');
 const mobile = matchMedia('(max-width: 759px)').matches;
 // Kart yığını (sticky) yalnız geniş ve yeterince yüksek ekranda; CSS ile aynı koşul
-const yiginMod = matchMedia('(min-width: 960px) and (min-height: 700px)').matches;
-// Yıla doğru ayrılma eki: 1992'den, 1985'ten, 1990'dan
-const yilDen = (n) => {
-  const y = String(n);
-  if (/000$/.test(y) || /00$/.test(y)) return `${y}’den`;
-  if (y.endsWith('0')) return `${y}’${{ 1: 'dan', 2: 'den', 3: 'dan', 4: 'tan', 5: 'den', 6: 'tan', 7: 'ten', 8: 'den', 9: 'dan' }[y.at(-2)]}`;
-  return `${y}’${{ 1: 'den', 2: 'den', 3: 'ten', 4: 'ten', 5: 'ten', 6: 'dan', 7: 'den', 8: 'den', 9: 'dan' }[y.at(-1)]}`;
-};
+const yiginMod = false; // Yapışkan kart yığını kaldırıldı (kısa yatay iPad'de kart ekranın %60'ını kaplıyordu)
+const yilDen = yilEki; // 1992'den (çekirdek)
 
 // Rengin üstüne beyaz mı koyu mu yazı gelsin
 const acikMi = (hex) => {
@@ -66,7 +59,7 @@ ld.textContent = JSON.stringify({
 });
 document.head.append(ld);
 document.title = `${is.ad} | Yapı alçıları ve alçı plaka | Ankara`;
-$('meta[name="description"]').content = `${is.ad}: ${yilDen(is.kurulus)} beri yapı alçısı ve alçı plaka. Bala ve Tarsus fabrikalarında günde ${nf.format(kapasite)} ton.`;
+$('meta[name="description"]').content = `${is.ad}: ${is.tanim}. Merkez Çankaya/Ankara; fabrikalar Bala/Ankara ve Tarsus/Mersin. Telefon: ${tel}`;
 
 // Mobil çubuk: WhatsApp hattı yok; üreticiye uygun kısayollar. Vitrin modunda seçim çubuğu kalır.
 if (!vitrinModu()) {
@@ -76,7 +69,7 @@ if (!vitrinModu()) {
   bar.setAttribute('aria-label', 'Hızlı erişim');
   bar.innerHTML = `
     <a href="${telHref(tel)}" class="action-bar__btn">${icons.phone}<span>Ara</span></a>
-    <a href="#is" class="action-bar__btn action-bar__btn--main">${ICON_BUL}<span>Torbanı bul</span></a>
+    <a href="#urunler" class="action-bar__btn action-bar__btn--main">${ICON_BUL}<span>Ürünler</span></a>
     <a href="${gmaps(merkez.mapsQuery)}" class="action-bar__btn" target="_blank" rel="noopener">${icons.pin}<span>Yol tarifi</span></a>`;
   document.body.append(bar);
 }
@@ -87,30 +80,30 @@ const logo = `<span class="ust__ad">${esc(is.ad)}</span>`;
 $('#ust').innerHTML = `
   <a class="ust__logo" href="#giris" aria-label="${esc(is.ad)} ana sayfa">${logo}</a>
   <nav class="ust__nav" aria-label="Bölümler">
-    <a href="#priz">Priz saati</a><a href="#is">Torba bul</a><a href="#plaka">Alçı plaka</a><a href="#fabrikalar">Fabrikalar</a>
+    <a href="#urunler">Ürünler</a><a href="#plaka">Alçı plaka</a><a href="#hakkinda">Hakkında</a><a href="#fabrikalar">Fabrikalar</a><a href="#iletisim">İletişim</a>
   </nav>
-  <span class="ust__dk" aria-hidden="true"><svg viewBox="0 0 36 36"><circle cx="18" cy="18" r="15" class="ust__dk-iz"/><circle cx="18" cy="18" r="15" class="ust__dk-dolu" pathLength="100"/></svg><b data-ust-dk>0</b><small>dk</small></span>
   <a class="ust__tel" href="${telHref(tel)}">${icons.phone}<span>${esc(telYaz(tel))}</span></a>`;
 
-// --- Hero: slogan harf harf toz gibi yağar -------------------------------------
-const sloganKelime = is.slogan.split(/\s+/).filter(Boolean);
+// --- Künye: firmanın adı harf harf toz gibi yağar ------------------------------------
 $('#giris').innerHTML = `
   <div class="hero__ic">
-    <p class="hero__ust"><span>${is.kurulus}</span><span>Bala · Tarsus</span><span>${nf.format(kapasite)} ton/gün</span></p>
-    <h1 class="hero__baslik" id="hero-baslik" aria-label="${esc(is.slogan)}">
-      ${sloganKelime.map((k) => `<span class="hero__satir" aria-hidden="true">${harfler(k)}</span>`).join('')}
+    <h1 class="hero__baslik" id="hero-baslik" aria-label="${esc(is.ad)}">
+      <span class="hero__satir" aria-hidden="true">${harfler(is.ad)}</span>
     </h1>
     <figure class="hero__foto"><img src="${asset('/img/alcibay/uygulama.jpg')}" alt="Çelik mala ile duvara son kat alçı çekiliyor" width="1333" height="2000" fetchpriority="high"></figure>
     <div class="hero__alt">
-      <p class="hero__metin">${esc(is.ad)}: ${yilDen(is.kurulus)} beri yapı alçısı. Sıvadan perdaha, kartonpiyerden alçı plakaya, duvarın her katı için bir torba.</p>
+      <p class="hero__tanim">${esc(is.tanim)}</p>
+      <dl class="kunye">
+        <div><dt>Merkez</dt><dd>${esc(merkez.adres)}, ${esc(merkez.il)}</dd></div>
+        <div><dt>Fabrikalar</dt><dd>${fabrikalar.map((k) => esc(k.il.split(' / ').slice(-2).join(' / '))).join(' · ')}</dd></div>
+        <div><dt>Telefon</dt><dd><a href="${telHref(tel)}">${esc(tel)}</a></dd></div>
+      </dl>
       <div class="hero__btn">
-        <a class="btn btn--beyaz" href="#is">${ICON_BUL}<span>Hangi torba?</span></a>
-        <a class="btn btn--cizgi" href="${telHref(tel)}">${icons.phone}<span>Teknik danışmanlık</span></a>
+        <a class="btn btn--beyaz" href="${telHref(tel)}">${icons.phone}<span>Ara</span></a>
+        <a class="btn btn--cizgi" href="#urunler"><span>Ürünler</span></a>
+        <a class="btn btn--cizgi" href="${gmaps(merkez.mapsQuery)}" target="_blank" rel="noopener">${icons.pin}<span>Yol tarifi</span></a>
       </div>
     </div>
-    <p class="hero__formul" aria-label="Karışım: 10 kilogram alçıya 6 litre su">
-      <b>10</b><small>kg alçı</small><i>+</i><b>6</b><small>l su</small><i>=</i><b class="hero__formul-son">duvar</b>
-    </p>
   </div>`;
 
 // --- Şerit: yedi torba, yedi renk ----------------------------------------------
@@ -118,83 +111,18 @@ const seritIc = urunler.map((u) => `<span class="serit__k" style="--c:${u.renk}"
 $('.serit').innerHTML = `<div class="serit__yol" aria-hidden="true">${seritIc}${seritIc}</div>
   <p class="sr-only">${urunler.map((u) => esc(u.ad)).join(', ')}</p>`;
 
-// --- Rakamlar ---------------------------------------------------------------------
-const rakamlar = [
-  { v: kapasite, e: 'ton alçı, günde', a: fabrikalar.map((f) => `${f.id === 'bala' ? 'Bala' : f.id === 'tarsus' ? 'Tarsus' : f.ad} ${nf.format(f.kapasite)}`).join(' + ') },
-  { v: yil, e: 'yıl', a: `${yilDen(is.kurulus)} beri` },
-  { v: urunler.length, e: 'toz alçı', a: 'sıva, perdah, kalıp, yapıştırma, derz' },
-  { v: paneller.length, e: 'alçı plaka tipi', a: 'Ekopan S, W, F, W&F' },
-];
-$('#rakam').innerHTML = `<dl class="rakam__liste">${rakamlar
-  .map((r) => `<div class="rakam__k"><dd><span class="rakam__v" data-v="${r.v}">${nf.format(r.v)}</span></dd><dt><b>${esc(r.e)}</b><span>${esc(r.a)}</span></dt></div>`)
-  .join('')}</dl>`;
-
-// --- İmza: Priz saati -------------------------------------------------------------
 const dakika = (u) => {
-  const s = u.anahtar.find(([k]) => /kullanım süresi/i.test(k))?.[1] || '';
-  return parseInt(s.replace(/\D+/g, ' ').trim(), 10) || 0;
+  const x = u.anahtar.find(([k]) => /kullanım süresi/i.test(k))?.[1] || '';
+  return parseInt(x.replace(/\D+/g, ' ').trim(), 10) || 0;
 };
 const prizler = urunler.filter((u) => dakika(u)).sort((a, b) => dakika(a) - dakika(b));
 const maxDk = Math.max(...prizler.map(dakika));
-const cevre = 2 * Math.PI * 46;
-const kisaAd = (u) => u.ad.replace(/ Alçısı$/, '').replace(/^Alçı Plaka /, '');
-const gruplar = [];
-prizler.forEach((u) => {
-  const dk = dakika(u);
-  let g = gruplar.find((x) => x.dk === dk);
-  if (!g) gruplar.push((g = { dk, adlar: [] }));
-  g.adlar.push(kisaAd(u));
-});
-const grupNo = (u) => gruplar.findIndex((g) => g.dk === dakika(u));
-// Pin 3 ekranı geçmesin diye priz saati iki kısa sahneye bölünür: hızlı prizli ve uzun süreli alçılar.
-const yarim = Math.ceil(prizler.length / 2);
-const prizParca = [
-  { id: 'priz', list: prizler.slice(0, yarim), etiket: 'Priz saati · hızlı alçılar', baslik: 'Suyu kattınız. Saat işliyor.' },
-  { id: 'priz2', list: prizler.slice(yarim), etiket: 'Priz saati · uzun süre', baslik: 'Geniş yüzeyde acele yok.' },
-];
-const prizHtml = ({ id, list, etiket, baslik }) => `
-  <div class="priz__pin">
-    <header class="priz__bas">
-      <p class="etiket">${etiket}</p>
-      <h2 id="${id}-baslik">${baslik}</h2>
-    </header>
-    <div class="priz__saat" aria-hidden="true">
-      <svg viewBox="0 0 100 100" class="priz__kadran">
-        <circle cx="50" cy="50" r="46" class="priz__iz"/>
-        <circle cx="50" cy="50" r="46" class="priz__dolu" style="stroke-dasharray:${cevre};stroke-dashoffset:${cevre}"/>
-        ${Array.from({ length: 14 }, (_, i) => `<line x1="50" y1="2" x2="50" y2="${i % 7 === 0 ? 9 : 6}" transform="rotate(${(i * 360) / 14} 50 50)"/>`).join('')}
-      </svg>
-      <p class="priz__dk"><span data-dk>0</span><small>dk</small></p>
-    </div>
-    <div class="priz__sahne">
-      ${list
-        .map(
-          (u, i) => `
-      <article class="pz" data-i="${i}" style="--c:${u.renk}">
-        <img class="pz__torba" src="${asset(u.torba)}" alt="${esc(u.ad)} torbası" width="600" height="800" loading="${i ? 'lazy' : 'eager'}">
-        <div class="pz__yazi">
-          <p class="pz__ust">en az ${dakika(u)} dakika kullanım</p>
-          <h3 class="pz__ad" aria-label="${esc(u.ad)}">${u.ad
-            .split(' ')
-            .map((k) => `<span class="pz__kel" aria-hidden="true">${harfler(k, 'ph')}</span>`)
-            .join(' ')}</h3>
-          <p class="pz__kisa">${esc(u.kisa)}</p>
-        </div>
-      </article>`
-        )
-        .join('')}
-    </div>
-    <ol class="priz__cizelge" aria-label="Kullanım süreleri">
-      ${gruplar.map((g) => `<li style="--x:${(g.dk / maxDk) * 100}%"><span>${g.dk}</span><em>${g.adlar.map(esc).join(' · ')}</em></li>`).join('')}
-    </ol>
-  </div>`;
-prizParca.forEach((p) => { const el = document.getElementById(p.id); if (el) el.innerHTML = prizHtml(p); });
 
 // --- Ne yapacaksınız? -------------------------------------------------------------
 $('#is').innerHTML = `
   <div class="kap">
-    <p class="etiket">Torba bulucu</p>
-    <h2 id="is-baslik" class="dev">Ne yapa&shy;caksınız?</h2>
+    <h2 id="is-baslik" class="dev">Ürün seçimi</h2>
+    <p class="is__giris">Yapılacak iş seçilince uygun ürün ve teknik değerleri açılır.</p>
     <ul class="is__liste">
       ${isler
         .map((x, i) => {
@@ -204,7 +132,7 @@ $('#is').innerHTML = `
             ? `<div class="is__cevap-ic">
                 <img src="${asset(u.torba)}" alt="" width="600" height="800" loading="lazy">
                 <div>
-                  <p class="is__oner">Önerimiz</p>
+                  <p class="is__oner">Uygun ürün</p>
                   <h3>${esc(u.ad)}</h3>
                   <p>${esc(x.not)}</p>
                   ${u.anahtar.length ? `<dl class="deger">${u.anahtar.map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join('')}</dl>` : ''}
@@ -213,9 +141,9 @@ $('#is').innerHTML = `
               </div>`
             : `<div class="is__cevap-ic is__cevap-ic--plaka">
                 <div>
-                  <p class="is__oner">Önerimiz</p>
+                  <p class="is__oner">Uygun ürün</p>
                   <h3>Ekopan alçı plaka</h3>
-                  <p>${esc(x.not)} Kartonun rengi ortamı söyler:</p>
+                  <p>${esc(x.not)} Kartonun rengi plakanın tipini gösterir:</p>
                   <ul class="mini-plaka">${paneller.map((p) => `<li><i style="background:${p.karton.length > 1 ? `linear-gradient(90deg,${p.karton[0]} 50%,${p.karton[1]} 50%)` : p.karton[0]}"></i>${esc(p.ad)} <span>${esc(p.tanim)}</span></li>`).join('')}</ul>
                   <a class="btn btn--kucuk" href="#plaka">Plakalara git</a>
                 </div>
@@ -254,9 +182,9 @@ $$('.is__soru').forEach((b) =>
 $('#urunler').innerHTML = `
   <div class="kap">
     <div class="bolum-bas">
-      <p class="etiket">Yedi torba</p>
-      <h2 id="urunler-baslik" class="dev">Her katın bir rengi var.</h2>
-      <p>Torbanın rengi içindekini söyler. Karta dokunun, teknik föy açılsın.</p>
+      <p class="etiket">Yapı alçıları</p>
+      <h2 id="urunler-baslik" class="dev">Ürünler</h2>
+      <p>Yedi yapı alçısı ve dört alçı plaka tipi üretilir. Karta dokununca teknik föy açılır.</p>
     </div>
     <ul class="torbalar">
       ${urunler
@@ -266,7 +194,7 @@ $('#urunler').innerHTML = `
           <img src="${asset(u.torba)}" alt="" width="600" height="800" loading="lazy">
           <span class="torba__ad">${esc(u.ad)}</span>
           <span class="torba__kisa">${esc(u.kisa)}</span>
-          <span class="torba__dk">${dakika(u) ? `${dakika(u)} dk` : 'Bilgi için arayın'}</span>
+          <span class="torba__dk">${dakika(u) ? `Kullanım süresi en az ${dakika(u)} dk` : 'Teknik bilgi için arayın'}</span>
         </button>
       </li>`
         )
@@ -274,12 +202,22 @@ $('#urunler').innerHTML = `
     </ul>
   </div>`;
 
+// Kullanım süreleri (teknik föylerden): çubuklar kaydırınca dolar
+$('#urunler .kap').insertAdjacentHTML('beforeend', `
+  <div class="sure">
+    <h3 class="sure__bas">Kullanım süreleri</h3>
+    <p class="sure__not">Su katıldıktan sonra harcın en az ne kadar süre kullanılabileceği, ürün föylerine göre.</p>
+    <ol class="sure__liste">
+      ${prizler.map((u) => `<li style="--c:${u.renk};--x:${dakika(u) / maxDk}"><span class="sure__ad">${esc(u.ad)}</span><span class="sure__cubuk"><i></i></span><b>${dakika(u)} dk</b></li>`).join('')}
+    </ol>
+  </div>`);
+
 // --- Alçı plaka: üst üste binen kartlar ----------------------------------------
 $('#plaka').innerHTML = `
   <div class="kap">
     <div class="bolum-bas">
       <p class="etiket">Ekopan · TS EN 520</p>
-      <h2 id="plaka-baslik" class="dev">Kartonun rengi, duvarın işi.</h2>
+      <h2 id="plaka-baslik" class="dev">Alçı plaka</h2>
     </div>
   </div>
   <div class="yigin">
@@ -309,40 +247,40 @@ $('#plaka').innerHTML = `
       .join('')}
   </div>`;
 
-// --- Kimya: yarım molekül su ------------------------------------------------------
-$('#kimya').innerHTML = `
-  <div class="kimya__pin">
-    <img class="kimya__doku" src="${asset('/img/alcibay/duvar-doku.jpg')}" alt="" loading="lazy">
-    <div class="kimya__ic">
-      <p class="etiket">Taştan gelir, taşa döner</p>
-      <h2 id="kimya-baslik" class="sr-only">Alçının kimyası</h2>
-      <p class="formul" aria-label="Jips ${esc(kimya.jips)}, alçı ${esc(kimya.alci)}">
-        <span aria-hidden="true">CaSO<sub>4</sub>·</span><span class="formul__kutu" aria-hidden="true"><span class="formul__y" data-f="0">2</span><span class="formul__y" data-f="1">½</span></span><span aria-hidden="true">H<sub>2</sub>O</span>
-      </p>
-      <ol class="asama">
-        <li data-a="0"><b>Jips</b><span>Ocaktan çıkan taş. Kristalinde iki molekül su.</span></li>
-        <li data-a="1"><b>Isıt, öğüt</b><span>Suyun yarım molekülü kalır; beyaz toz olur. Torbadaki budur.</span></li>
-        <li data-a="2"><b>Su kat</b><span>Karışınca yeniden taşlaşır, bağlar. Kuruduktan sonra boyut değiştirmez.</span></li>
-      </ol>
-      <p class="kimya__metin">${esc(kimya.metin)}</p>
+// --- Hakkında ---------------------------------------------------------------------
+const rakamlar = [
+  ...fabrikalar.map((f) => ({ v: f.kapasite, e: 'ton/gün', a: `${f.il.split(' / ').slice(-2)[0]} fabrikası${f.acilis ? `, ${f.acilis}'den beri` : ''}` })),
+  { v: yil, e: 'yıl', a: `${yilDen(is.kurulus)} beri` },
+  { v: urunler.length, e: 'toz alçı', a: `ve ${paneller.length} alçı plaka tipi` },
+];
+$('#hakkinda').innerHTML = `
+  <div class="kap">
+    <div class="bolum-bas">
+      <h2 id="hakkinda-baslik" class="dev">Hakkında</h2>
+      <p class="hakkinda__metin">${esc(is.ad)} ${yilDen(is.kurulus)} beri yapı alçısı üretiyor. ${esc(is.hakkinda)}</p>
+      <p class="hakkinda__unvan">${esc(is.unvan)}</p>
+    </div>
+  </div>
+  <dl class="rakam__liste">${rakamlar
+    .map((r) => `<div class="rakam__k"><dd><span class="rakam__v" data-v="${r.v}">${nf.format(r.v)}</span></dd><dt><b>${esc(r.e)}</b><span>${esc(r.a)}</span></dt></div>`)
+    .join('')}</dl>
+  <div class="kap hakkinda__alt">
+    <div>
+      <h3 class="hakkinda__h3">Tarihçe</h3>
+      <ol class="tarih__liste">${tarihce.map(([y, t]) => `<li><b>${esc(y)}</b><span>${esc(t)}</span></li>`).join('')}</ol>
+    </div>
+    <div>
+      <h3 class="hakkinda__h3">Belgeler ve standartlar</h3>
+      <ul class="belge" aria-label="Belgeler">${belgeler.map((b) => `<li>${esc(b)}</li>`).join('')}</ul>
     </div>
   </div>`;
-
-// --- Tarihçe: kaydırdıkça akan yıllar ------------------------------------------
-$('#tarih').innerHTML = `
-  <div class="kap"><p class="etiket">11.000 yıllık malzeme</p><h2 id="tarih-baslik" class="dev">Çatalhöyük’ten Bala’ya.</h2></div>
-  <div class="tarih__cerceve"><ol class="tarih__yol">
-    ${tarihce.map(([y, t], i) => `<li class="${/^(19|20)\d\d$/.test(y) ? 'bizim' : ''}"><b>${esc(y)}</b><span>${esc(t)}</span></li>`).join('')}
-  </ol></div>
-  <div class="kap"><ul class="belge" aria-label="Belgeler">${belgeler.map((b) => `<li>${esc(b)}</li>`).join('')}</ul></div>`;
 
 // --- Fabrikalar ---------------------------------------------------------------
 const [vx, vy, vw, vh] = d.harita.viewBox.split(' ').map(Number);
 $('#fabrikalar').innerHTML = `
   <div class="kap">
     <div class="bolum-bas">
-      <p class="etiket">Merkez + iki fabrika</p>
-      <h2 id="yer-baslik" class="dev">Günde ${nf.format(kapasite)} ton, iki fırından.</h2>
+      <h2 id="yer-baslik" class="dev">Merkez ve fabrikalar</h2>
     </div>
     <figure class="harita">
       <svg viewBox="${vx} ${vy} ${vw} ${vh}" role="img" aria-label="Türkiye haritasında Alçıbay konumları">
@@ -382,17 +320,17 @@ new IntersectionObserver(
   { rootMargin: '600px' }
 ).observe(mapEl);
 
-// --- Final ----------------------------------------------------------------------
+// --- İletişim -------------------------------------------------------------------
 $('#iletisim').innerHTML = `
   <div class="kap final__ic">
-    <p class="etiket">Teknik danışmanlık</p>
-    <h2 id="final-baslik" class="final__baslik"><span>Doğru torba,</span> <span>tek telefon.</span></h2>
-    <p class="final__metin">Sarfiyat, uygulama, depolama. Şantiyeniz için hangi alçının kaç torba gerektiğini birlikte hesaplayalım.</p>
+    <h2 id="final-baslik" class="final__baslik"><span>İletişim</span></h2>
+    <p class="final__metin">Ürün, sarfiyat ve fiyat bilgisi için merkezi arayın.</p>
     <a class="final__tel" href="${telHref(tel)}">${icons.phone}<span>${esc(tel)}</span></a>
     <div class="hero__btn">
-      <a class="btn btn--beyaz" href="${gmaps(merkez.mapsQuery)}" target="_blank" rel="noopener">${icons.pin}<span>Merkeze yol tarifi</span></a>
-      <a class="btn btn--cizgi" href="#is">${ICON_BUL}<span>Torbanı bul</span></a>
+      <a class="btn btn--beyaz" href="${gmaps(merkez.mapsQuery)}" target="_blank" rel="noopener">${icons.pin}<span>Yol tarifi</span></a>
+      <a class="btn btn--cizgi" href="#urunler"><span>Ürünler</span></a>
     </div>
+    <p class="final__adres">${esc(merkez.adres)}, ${esc(merkez.il)} · Faks ${esc(merkez.faks)}</p>
   </div>`;
 
 $('#alt').innerHTML = `
@@ -404,10 +342,9 @@ $('#alt').innerHTML = `
     </div>
     <div>
       <p class="alt__bas">Depolama</p><p>${esc(d.saklama)}</p>
-      <p class="alt__bas">Güvenlik</p><p>${d.guvenlik.map(esc).join(' ')}</p>
     </div>
   </div>
-  <p class="kap alt__not">Bu sayfa ${esc(is.ad)} için hazırlanmış bir tasarım önerisidir. Ürün bilgileri, adresler ve kapasiteler alcibay.com’da yayımlanan bilgilerdir; uygulama değerleri şantiye koşullarına göre değişebilir. Fotoğraflar temsilîdir (Pexels). Torba ve plaka görselleri temsilî 3D çizimlerdir; gerçek ambalaj farklıdır.</p>`;
+  <p class="kap alt__not">Bu sayfa ${esc(is.ad)} için hazırlanmış bir tasarım önerisidir. Ürün bilgileri, adresler, kapasiteler ve belge listesi alcibay.com'da yayımlanan bilgilerdir; uygulama değerleri şantiye koşullarına göre değişebilir. Fotoğraflar temsilîdir (Pexels). Torba ve plaka görselleri temsilî 3D çizimlerdir; gerçek ambalaj farklıdır.</p>`;
 
 // --- Teknik föy ----------------------------------------------------------------------
 const foy = $('#foy');
@@ -424,8 +361,8 @@ function foyAc(id) {
     ${u.artilar.length ? `<ul class="foy__arti">${u.artilar.map((a) => `<li>${esc(a)}</li>`).join('')}</ul>` : ''}
     ${u.kullanim.length ? `<h4>Uygulama</h4><ol class="foy__adim">${u.kullanim.map((a) => `<li>${esc(a)}</li>`).join('')}</ol>` : ''}
     ${u.dikkat.length ? `<h4>Dikkat</h4><ul class="foy__dikkat">${u.dikkat.map((a) => `<li>${esc(a)}</li>`).join('')}</ul>` : ''}
-    ${u.teknik.length ? `<h4>Teknik değerler</h4><dl class="foy__tek">${u.teknik.map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join('')}</dl>` : `<p>Bu ürünün teknik bilgisi için teknik danışmanlığımızı arayın.</p>`}
-    <a class="btn btn--renk" href="${telHref(tel)}">${icons.phone}<span>Teknik danışmanlık: ${esc(telYaz(tel))}</span></a>`;
+    ${u.teknik.length ? `<h4>Teknik değerler</h4><dl class="foy__tek">${u.teknik.map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join('')}</dl>` : `<p>Bu ürünün teknik değerleri için merkez aranabilir.</p>`}
+    <a class="btn btn--renk" href="${telHref(tel)}">${icons.phone}<span>Merkezi arayın: ${esc(telYaz(tel))}</span></a>`;
   foy.showModal();
   document.documentElement.classList.add('foy-acik');
   window.__lenis?.stop();
@@ -456,9 +393,10 @@ function sayac(el) {
   gsap.to(o, { n: v, duration: 1.6, ease: 'power3.out', onUpdate: () => (el.textContent = nf.format(Math.round(o.n))) });
 }
 
+const tetik = (trigger, start = 'top 85%') => ({ trigger, start, toggleActions: 'play none none none' });
+
 if (reducedMotion) {
   document.documentElement.classList.add('rm');
-  $$('.pz')[0]?.classList.add('is-aktif');
 } else {
   // Hero: harfler tozdan düşer, sonra kaydırınca dağılır
   const hh = $$('.hero__baslik .h');
@@ -473,7 +411,7 @@ if (reducedMotion) {
     stagger: { each: 0.045, from: 'random' },
     delay: 0.15,
   });
-  gsap.from('.hero__ust span, .hero__alt, .hero__formul > *', { y: 20, opacity: 0, duration: 0.7, stagger: 0.06, delay: 0.6, ease: 'power3.out' });
+  gsap.from('.hero__tanim, .kunye > div, .hero__btn', { y: 20, autoAlpha: 0, duration: 0.6, stagger: 0.06, delay: 0.3, ease: 'power3.out' });
   gsap.from('.hero__foto', { clipPath: 'inset(100% 0 0 0 round 22px)', duration: 1.2, ease: 'expo.out', delay: 0.3 });
   // fromTo + immediateRender:false: başa dönünce harfler giriş animasyonunun ara hâline değil, yerine döner
   gsap.fromTo(hh, { yPercent: 0, rotate: 0 }, {
@@ -501,13 +439,14 @@ if (reducedMotion) {
   });
 
   // Rakamlar
-  $$('.rakam__v').forEach((el) =>
-    ScrollTrigger.create({ trigger: el, start: 'top 88%', once: true, onEnter: () => sayac(el) })
-  );
-  gsap.from('.rakam__k', { y: 60, opacity: 0, stagger: 0.08, duration: 0.8, ease: 'power3.out', scrollTrigger: { trigger: '#rakam', start: 'top 80%' } });
+  $$('.rakam__v').forEach((el) => {
+    el.textContent = '0';
+    ScrollTrigger.create({ ...tetik(el, 'top 90%'), onEnter: () => sayac(el) });
+  });
+  gsap.from('.rakam__k', { y: 60, autoAlpha: 0, stagger: 0.08, duration: 0.8, ease: 'power3.out', scrollTrigger: tetik('.rakam__liste', 'top 85%') });
 
-  // --- Priz saati (iki kısa sahne, her biri ≤ 3 ekran) --------------------------------
-  prizParca.forEach((parca, pi) => prizSahne(document.getElementById(parca.id), parca.list, pi));
+  // Kullanım süreleri: çubuklar dolar
+  gsap.fromTo('.sure__cubuk i', { scaleX: 0 }, { scaleX: 1, duration: 1.1, stagger: 0.08, ease: 'power3.out', transformOrigin: 'left', scrollTrigger: tetik('.sure__liste', 'top 85%') });
 
   // İşler: satırlar iki yönden kayar
   $$('.is__k').forEach((el, i) => {
@@ -516,17 +455,17 @@ if (reducedMotion) {
 
   // Dev başlıklar: harfler aşağıdan dalga
   $$('.dev').forEach((h) => {
-    gsap.from(h, { yPercent: 40, opacity: 0, skewY: 6, duration: 0.9, ease: 'expo.out', scrollTrigger: { trigger: h, start: 'top 88%' } });
+    gsap.from(h, { yPercent: 40, autoAlpha: 0, skewY: 6, duration: 0.9, ease: 'expo.out', scrollTrigger: tetik(h, 'top 90%') });
   });
 
   // Torbalar: yağarak düşer
-  gsap.from('.torba', { y: 80, rotate: (i) => (i % 2 ? 6 : -6), opacity: 0, duration: 0.8, stagger: 0.07, ease: 'back.out(1.3)', scrollTrigger: { trigger: '.torbalar', start: 'top 85%' } });
+  gsap.from('.torba', { y: 80, rotate: (i) => (i % 2 ? 6 : -6), autoAlpha: 0, duration: 0.8, stagger: 0.07, ease: 'back.out(1.3)', scrollTrigger: tetik('.torbalar') });
 
   // Plaka yığını: alttaki kart küçülür
   const kart = $$('.kart');
   kart.forEach((k, i) => {
     if (!yiginMod) {
-      gsap.from($('.kart__ic', k), { y: 90, rotate: i % 2 ? 3 : -3, opacity: 0, duration: 0.9, ease: 'expo.out', scrollTrigger: { trigger: k, start: 'top 88%' } });
+      gsap.from($('.kart__ic', k), { y: 90, rotate: i % 2 ? 3 : -3, autoAlpha: 0, duration: 0.9, ease: 'expo.out', scrollTrigger: tetik(k, 'top 90%') });
       return;
     }
     if (i === kart.length - 1) return;
@@ -537,106 +476,15 @@ if (reducedMotion) {
     gsap.to(k, { autoAlpha: 0, ease: 'none', scrollTrigger: { trigger: kart[i + 1], start: () => `top ${90 + (i + 1) * 18 + 60}px`, end: () => `top ${90 + (i + 1) * 18 + 2}px`, scrub: true, invalidateOnRefresh: true } });
   });
 
-  // Kimya: 2 → ½ → 2
-  const y = $$('.formul__y');
-  const as = $$('.asama li');
-  const ktl = gsap.timeline({ scrollTrigger: { trigger: '#kimya', start: 'top top', end: '+=160%', pin: '.kimya__pin', scrub: 0.5 } });
-  gsap.set(y[1], { yPercent: 100, opacity: 0 });
-  ktl
-    .fromTo(as[0], { '--on': 0 }, { '--on': 1, duration: 0.3 })
-    .to(y[0], { yPercent: -100, opacity: 0, duration: 0.4 }, 1)
-    .fromTo('.formul__kutu', { width: '0.62em' }, { width: '0.98em', duration: 0.4 }, 1)
-    .to('.formul__kutu', { width: '0.62em', duration: 0.4 }, 2)
-    .to(y[1], { yPercent: 0, opacity: 1, duration: 0.4 }, 1)
-    .to('.formul', { color: '#1f33d6', duration: 0.4 }, 1)
-    .fromTo(as[1], { '--on': 0 }, { '--on': 1, duration: 0.3 }, 1.1)
-    .to(y[1], { yPercent: -100, opacity: 0, duration: 0.4 }, 2)
-    .fromTo(y[0], { yPercent: 100 }, { yPercent: 0, opacity: 1, duration: 0.4, immediateRender: false }, 2)
-    .to('.formul', { color: '#141414', duration: 0.4 }, 2)
-    .fromTo(as[2], { '--on': 0 }, { '--on': 1, duration: 0.3 }, 2.1)
-    .to({}, { duration: 0.4 });
-  gsap.to('.kimya__doku', { scale: 1.15, ease: 'none', scrollTrigger: { trigger: '#kimya', start: 'top top', end: '+=160%', scrub: true } });
-
-  // Tarihçe: yıllar yatay akar
-  const yolT = $('.tarih__yol');
-  gsap.fromTo(yolT, { x: () => innerWidth * 0.3 }, {
-    x: () => -(yolT.scrollWidth - innerWidth * 0.7),
-    ease: 'none',
-    scrollTrigger: { trigger: '.tarih__cerceve', start: 'top bottom', end: 'bottom top', scrub: 0.4, invalidateOnRefresh: true },
-  });
-
   // Harita: kıyı çizgisi çizilir, noktalar belirir
   const hp = $('.harita__yol');
   const L = hp.getTotalLength?.() || 8000;
   gsap.fromTo(hp, { strokeDasharray: L, strokeDashoffset: L }, { strokeDashoffset: 0, ease: 'none', scrollTrigger: { trigger: '.harita', start: 'top 85%', end: 'bottom 60%', scrub: 0.5 } });
-  gsap.from('.harita__n', { scale: 0, transformOrigin: '50% 50%', stagger: 0.15, duration: 0.6, ease: 'back.out(2)', scrollTrigger: { trigger: '.harita', start: 'top 60%' } });
+  gsap.from('.harita__n', { scale: 0, transformOrigin: '50% 50%', stagger: 0.15, duration: 0.6, ease: 'back.out(2)', scrollTrigger: tetik('.harita', 'top 70%') });
 
   // Final başlık
-  gsap.from('.final__baslik span', { yPercent: 110, rotate: 4, duration: 1, stagger: 0.1, ease: 'expo.out', scrollTrigger: { trigger: '#iletisim', start: 'top 70%' } });
+  gsap.from('.final__baslik span', { yPercent: 110, rotate: 4, duration: 1, stagger: 0.1, ease: 'expo.out', scrollTrigger: tetik('#iletisim', 'top 75%') });
 
   // Font yüklenince ölçüler değişir
   document.fonts?.ready.then(() => ScrollTrigger.refresh());
-}
-
-function prizSahne(sec, list, pi) {
-  if (!sec || !list.length) return;
-  const rnd = gsap.utils.random;
-  const pin = sec.querySelector('.priz__pin');
-  const kartlar = [...sec.querySelectorAll('.pz')];
-  const dkEl = sec.querySelector('[data-dk]');
-  const dolu = sec.querySelector('.priz__dolu');
-  const noktalar = [...sec.querySelectorAll('.priz__cizelge li')];
-  const onceki = pi ? prizler[prizler.indexOf(list[0]) - 1] : null;
-  const saat = { dk: onceki ? dakika(onceki) : 0 };
-  // Telefonda kadran başlığın içinde (tek üst öğe): aynı değer oraya da yazılır
-  const ustDk = document.querySelector('[data-ust-dk]');
-  const ustDolu = document.querySelector('.ust__dk-dolu');
-  const yaz = () => {
-    const v = Math.round(saat.dk);
-    dkEl.textContent = v;
-    if (ustDk) ustDk.textContent = v;
-    if (ustDolu) ustDolu.style.strokeDashoffset = 100 - (saat.dk / maxDk) * 100;
-  };
-  yaz();
-  ScrollTrigger.create({ trigger: sec, start: 'top 60%', end: 'bottom 40%', onToggle: (st) => { sec.classList.toggle('is-aktif', st.isActive); document.documentElement.classList.toggle('in-priz', !!document.querySelector('.priz.is-aktif')); if (st.isActive) yaz(); } });
-  if (onceki) {
-    gsap.set(dolu, { strokeDashoffset: cevre * (1 - saat.dk / maxDk) });
-    noktalar.forEach((n, i) => i <= grupNo(onceki) && gsap.set(n, { '--on': 1 }));
-    gsap.set(pin, { backgroundColor: onceki.renk, color: acikMi(onceki.renk) ? '#141414' : '#ffffff' });
-  }
-  const dagit = () => ({
-    x: () => rnd(-1, 1) * (mobile ? 120 : 260),
-    y: () => rnd(-1, 1) * (mobile ? 140 : 220),
-    rotate: () => rnd(-160, 160),
-    scale: () => rnd(0.2, 0.7),
-    opacity: 0,
-  });
-  const adim = mobile ? 0.9 : 0.8;
-  const tl = gsap.timeline({
-    defaults: { ease: 'none' },
-    scrollTrigger: { trigger: sec, start: 'top 70%', end: () => `+=${list.length * innerHeight * adim + innerHeight * 0.7}`, scrub: 0.6, invalidateOnRefresh: true },
-  });
-  ScrollTrigger.create({ trigger: sec, start: 'top top', end: () => `+=${list.length * innerHeight * adim}`, pin, anticipatePin: 1, invalidateOnRefresh: true });
-  gsap.set(kartlar, { autoAlpha: 0 });
-  list.forEach((u, i) => {
-    const k = kartlar[i];
-    const ph = [...k.querySelectorAll('.ph')];
-    const t = i;
-    tl.to(pin, { backgroundColor: u.renk, color: acikMi(u.renk) ? '#141414' : '#ffffff', duration: 0.25 }, t);
-    tl.to(saat, { dk: dakika(u), duration: 0.5, onUpdate: yaz }, t);
-    tl.to(dolu, { strokeDashoffset: cevre * (1 - dakika(u) / maxDk), duration: 0.5 }, t);
-    const prev = i ? list[i - 1] : onceki;
-    if (!prev || grupNo(prev) !== grupNo(u)) tl.fromTo(noktalar[grupNo(u)], { '--on': 0 }, { '--on': 1, duration: 0.2 }, t + 0.3);
-    tl.set(k, { autoAlpha: 1 }, t);
-    tl.fromTo(ph, dagit(), { x: 0, y: 0, rotate: 0, scale: 1, opacity: 1, duration: 0.4, stagger: { each: 0.008, from: 'random' }, ease: 'power2.out' }, t);
-    tl.fromTo(k.querySelector('.pz__torba'), { yPercent: 60, rotate: -14, opacity: 0 }, { yPercent: 0, rotate: 0, opacity: 1, duration: 0.5, ease: 'back.out(1.4)' }, t);
-    tl.fromTo(k.querySelectorAll('.pz__ust, .pz__kisa'), { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.3 }, t + 0.35);
-    if (i < list.length - 1) {
-      tl.to(ph, { yPercent: 120, opacity: 0, duration: 0.25, stagger: { each: 0.006 } }, t + 0.85);
-      tl.to(k.querySelector('.pz__torba'), { yPercent: -40, rotate: 10, opacity: 0, duration: 0.25 }, t + 0.85);
-      tl.to(k.querySelectorAll('.pz__ust, .pz__kisa'), { opacity: 0, duration: 0.15 }, t + 0.85);
-      tl.set(k, { autoAlpha: 0 }, t + 1);
-    }
-  });
-  tl.to({}, { duration: 0.4 });
 }
