@@ -1,51 +1,22 @@
 // Sektör modülleri (kurumsal-ekspertiz, "Askı etiketi"):
-// (1) hero: dev büyük harfli başlık + şasi fotoğrafına asılı sarı kontrol kartı. Kart iple sallanarak gelir,
-//     satırlar kalemle tek tek işaretlenir, sonunda "kontrol edildi" mührü basılır. Altta kayan kontrol şeridi.
+// (1) etiketHero: künye. Ekspertiz sonrası aynaya asılan sarı kart burada işletmenin künyesini taşır
+//     (adres, bugün, telefon). Kart açılışta ipiyle bir kez sallanarak gelir (~1,2 sn).
 // (2) rontgen: yandan araç çizimi üstünde sürüklenen tarama merceği. Mercek altında seçilen katman (kaporta,
-//     şasi, motor/OBD, yürüyen aksam) görünür; geçtiği kontrol noktaları bulunur ve kartta anlatılır.
-// (3) randevu: bugün açık mı + saatler + WhatsApp randevu hazırlayıcı (alıcı/satıcı, marka, yıl) + yaklaşınca harita.
-import { esc, waHref, telHref, mapsHref, mapsEmbed, openStatus, groupedHours, GUNLER, icons, gsap, ScrollTrigger, reducedMotion } from '../../shared/core.js';
+//     şasi, motor ve OBD, yürüyen aksam) görünür; geçtiği kontrol noktası kartta anlatılır. Hizmetler sayfasında.
+import { esc, waHref, telHref, mapsHref, gunDurumu, kisaAdres, icons, gsap, reducedMotion } from '../../shared/core.js';
 import { yilEki } from '../_kurumsal/bolumler.js';
 
-const ok = `<svg class="k-ok" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
-const bugunTarih = () => new Date().toLocaleDateString('tr-TR', { day: '2-digit', month: '2-digit', year: 'numeric' });
-const randevuRota = `iletisim?konu=${encodeURIComponent('Ekspertiz randevusu')}`;
+// --- (1) Künye: askı etiketi ---------------------------------------------------------------------
 
-// Kart işaretleri: kalemle atılmış gibi (stroke çizimi).
-const ISARET = {
-  iyi: '<path d="M4 12.5l5 5L20 6"/>',
-  uyari: '<path d="M12 4v10"/><path d="M12 19.2v.4"/>',
-  bilgi: '<path d="M5 12h14"/>',
-};
-
-// --- (1) Hero ----------------------------------------------------------------------------------
-const KART = [
-  { ad: 'Boya kalınlığı', sonuc: '2 panel boyalı', tur: 'uyari' },
-  { ad: 'Şasi ve podye', sonuc: 'Temiz', tur: 'iyi' },
-  { ad: 'OBD tarama', sonuc: '1 silinmiş kod', tur: 'uyari' },
-  { ad: 'Motor', sonuc: 'Temiz', tur: 'iyi' },
-  { ad: 'Fren, aksam', sonuc: 'Balata %30', tur: 'bilgi' },
-  { ad: 'Yol testi', sonuc: 'Temiz', tur: 'iyi' },
-];
-const SERIT = ['Boya kalınlığı', 'Şasi ve podye', 'OBD arıza taraması', 'Motor ve mekanik', 'Yürüyen aksam', 'Dinamometre', 'Yol testi', 'Fotoğraflı rapor'];
-
-export const hero = {
+export const etiketHero = {
   render(d, { tema }) {
-    const h = d.kurumsal?.hero || {};
-    const st = d.saatler ? openStatus(d.saatler) : null;
-    const bilgi = [
-      ['Kuruluş', `${yilEki(d.isletme.kurulus)} beri`],
-      st ? ['Bugün', st.text] : null,
-      ['Rapor', 'Aynı gün, basılı ve PDF'],
-      ['Telefon', d.iletisim.telefon],
-    ].filter(Boolean);
-    const serit = SERIT.map((s) => `<span>${esc(s)}</span><i aria-hidden="true"></i>`).join('');
+    const b = d.saatler ? gunDurumu(d.saatler) : null;
     return `
-      <section class="k-hero et-hero" aria-label="Giriş">
+      <section class="k-hero k-hero--kunye et-hero" aria-label="Künye">
         <div class="k-kap et-hero__ic">
-          <div class="et-hero__bas">
-            <p class="k-hero__ust et-etiket"><span class="et-led ${st?.open ? 'is-acik' : ''}" aria-hidden="true"></span>${esc(h.ust || d.isletme.sektor)}</p>
-            <h1 class="k-h1 k-hero__baslik" data-bol>${esc(h.baslik || d.isletme.slogan)}</h1>
+          <div class="k-hero__metin et-hero__bas">
+            <h1 class="k-h1 k-hero__baslik" data-bol>${esc(d.isletme.ad)}</h1>
+            <p class="k-lead k-hero__tanim">${esc(d.isletme.tanim || d.isletme.sektor)}</p>
           </div>
           <div class="et-hero__sahne">
             <figure class="et-hero__foto" data-perde>
@@ -53,65 +24,32 @@ export const hero = {
             </figure>
             <span class="et-cubuk" aria-hidden="true"></span>
             <div class="et-aski">
-              <article class="et-kart" aria-label="Örnek ekspertiz kontrol kartı">
-                <span class="et-ip" aria-hidden="true"></span>
+              <article class="et-kart">
                 <span class="et-delik" aria-hidden="true"></span>
-                <header class="et-kart__bas">
-                  <p class="et-kart__tur">Ekspertiz</p>
-                  <p class="et-kart__no">Kontrol kartı · ${bugunTarih()}</p>
-                </header>
-                <ol class="et-kart__liste">
-                  ${KART.map((r) => `<li class="et-sat et-sat--${r.tur}"><span class="et-kutu"><svg viewBox="0 0 24 24" aria-hidden="true">${ISARET[r.tur]}</svg></span><span class="et-sat__ad">${esc(r.ad)}</span><span class="et-sat__sonuc">${esc(r.sonuc)}</span></li>`).join('')}
-                </ol>
-                <p class="et-kart__alt">${esc(d.isletme.ad)}</p>
-                <span class="et-muhur" aria-hidden="true">Kontrol<br>edildi</span>
+                <p class="et-kart__tur">Künye</p>
+                <dl class="k-kunye et-kunye">
+                  <div><dt>Adres</dt><dd>${esc(kisaAdres(d.iletisim.adres))}</dd></div>
+                  ${b ? `<div><dt>Bugün</dt><dd><span class="k-durum ${b.open ? 'is-acik' : ''}"><span></span>${esc(b.kunye)}</span></dd></div>` : ''}
+                  <div><dt>Telefon</dt><dd><a href="${telHref(d)}">${esc(d.iletisim.telefon)}</a></dd></div>
+                </dl>
+                <p class="et-kart__alt">Şaşmaz Oto Sanayi Sitesi · ${esc(yilEki(d.isletme.kurulus))} beri</p>
               </article>
             </div>
           </div>
-          <div class="et-hero__alt">
-            <p class="k-lead">${esc(h.metin || d.isletme.hakkinda)}</p>
-            <div class="k-butonlar">
-              <a class="k-btn" href="#/${randevuRota}" data-rota="${randevuRota}">${esc(h.birincil || 'Randevu alın')} ${ok}</a>
-              <a class="k-btn k-btn--ikincil" href="#/${h.ikincilRota || 'hizmetler'}" data-rota="${h.ikincilRota || 'hizmetler'}">${esc(h.ikincil || 'Hizmetler')}</a>
-            </div>
+          <div class="k-butonlar et-hero__alt">
+            <a class="k-btn" href="${telHref(d)}">${icons.phone}<span>Ara</span></a>
+            ${d.iletisim.whatsapp ? `<a class="k-btn k-btn--ikincil" href="${waHref(d, `Merhaba ${d.isletme.ad}, bir araç için ekspertiz randevusu almak istiyorum.`)}" target="_blank" rel="noopener">${icons.whatsapp}<span>WhatsApp</span></a>` : ''}
+            <a class="k-btn k-btn--ikincil" href="${mapsHref(d)}" target="_blank" rel="noopener">${icons.pin}<span>Yol tarifi</span></a>
           </div>
         </div>
-        <div class="k-kap"><dl class="k-hero__bilgi et-hero__bilgi">${bilgi.map(([e, v]) => `<div><dt>${esc(e)}</dt><dd>${esc(v)}</dd></div>`).join('')}</dl></div>
-        <div class="et-serit" aria-hidden="true"><div class="et-serit__ic">${serit}${serit}</div></div>
       </section>`;
   },
   mount(el) {
-    const kart = el.querySelector('.et-kart');
-    const aski = el.querySelector('.et-aski');
-    const satirlar = [...el.querySelectorAll('.et-sat')];
-    const muhur = el.querySelector('.et-muhur');
-    const serit = el.querySelector('.et-serit');
-    const io = new IntersectionObserver(([e]) => {
-      el.classList.toggle('is-gorunur', e.isIntersecting);
-      if (sallanti) e.isIntersecting ? sallanti.resume() : sallanti.pause();
-    });
-    io.observe(el);
-    let sallanti = null;
-    if (reducedMotion) {
-      satirlar.forEach((s) => s.classList.add('is-bitti'));
-      muhur.classList.add('is-basildi');
-      return;
-    }
-    // Kart ipiyle birlikte askıdan sallanarak gelir; satırlar sırayla işaretlenir, sonunda mühür.
-    const tl = gsap.timeline({ delay: 0.55 });
-    tl.fromTo(kart, { rotation: -38, y: -60, opacity: 0 }, { rotation: 0, y: 0, opacity: 1, duration: 2.1, ease: 'elastic.out(1, 0.32)' }, 0);
-    satirlar.forEach((s, i) => tl.add(() => s.classList.add('is-bitti'), 0.9 + i * 0.26));
-    const son = 0.9 + satirlar.length * 0.26 + 0.15;
-    tl.fromTo(muhur, { scale: 2.6, opacity: 0, rotation: 6 }, { scale: 1, opacity: 1, rotation: -11, duration: 0.32, ease: 'power4.in', onComplete: () => muhur.classList.add('is-basildi') }, son);
-    tl.fromTo(kart, { rotation: 0 }, { rotation: 2.6, duration: 0.14, yoyo: true, repeat: 1, ease: 'power2.out', immediateRender: false }, son + 0.32);
-    tl.add(() => {
-      sallanti = gsap.fromTo(kart, { rotation: 0 }, { rotation: 1.8, duration: 2.6, ease: 'sine.inOut', yoyo: true, repeat: -1 });
-      if (!el.classList.contains('is-gorunur')) sallanti.pause();
-    });
-    // Aşağı kaydırınca kart rüzgâr almış gibi hafifçe geriye yatar.
-    gsap.to(aski, { rotation: -7, ease: 'none', scrollTrigger: { trigger: el, start: 'top top', end: 'bottom top', scrub: 0.6 } });
-    if (serit) serit.classList.add('is-hazir');
-    ScrollTrigger.refresh();
+    if (reducedMotion) return;
+    // Kart ipiyle birlikte askıdan bir kez sallanarak gelir; kaydırmaya bağlı hareket yok.
+    gsap.fromTo(el.querySelector('.et-kart'),
+      { rotation: -16, y: -24, autoAlpha: 0 },
+      { rotation: 0, y: 0, autoAlpha: 1, duration: 1.2, ease: 'elastic.out(1, 0.45)', delay: 0.3, clearProps: 'transform,opacity,visibility' });
   },
 };
 
@@ -123,39 +61,39 @@ const teker = (x) => `<circle cx="${x}" cy="228" r="40"/><circle cx="${x}" cy="2
 
 const KATMANLAR = [
   {
-    id: 'kaporta', ad: 'Kaporta ve boya', arac: 'Boya kalınlık cihazı, ışık',
+    id: 'kaporta', ad: 'Kaporta ve boya', arac: 'Boya kalınlık ölçer, ışık',
     noktalar: [
-      { x: 150, y: 160, ad: 'Motor kaputu', metin: 'Her panel birkaç noktadan ölçülür, değer mikron olarak rapora yazılır. Değişmiş kaput fabrika boyalı gelebilir; menteşe cıvatalarında söküm izi aranır.' },
-      { x: 345, y: 186, ad: 'Ön kapı', metin: 'Kapı kenarı, fitil altı ve menteşeler kontrol edilir. Lokal boyada aynı panelin noktaları arasında fark çıkar.' },
-      { x: 470, y: 88, ad: 'Tavan', metin: 'Tavanda boya ya da dikiş bozukluğu ağır hasarın izidir. Tavan ölçümü atlanmaz, cam fitilleri de incelenir.' },
-      { x: 690, y: 170, ad: 'Arka çamurluk', metin: 'Macunlu onarımda değer belirgin yükselir. Işık altında dalga, renk ve parlaklık farkına bakılır.' },
+      { x: 150, y: 160, ad: 'Motor kaputu', metin: 'Her parça birkaç noktadan ölçülür, değer mikron olarak rapora yazılır. Değişen kaput fabrika boyalı gelebilir; bu yüzden menteşe cıvatalarında söküm izine de bakılır.' },
+      { x: 345, y: 186, ad: 'Ön kapı', metin: 'Kapı kenarı, fitil altı ve menteşeler kontrol edilir. Lokal boyada aynı parçanın noktaları arasında fark çıkar.' },
+      { x: 470, y: 88, ad: 'Tavan', metin: 'Tavandaki boya ya da dikiş bozukluğu ağır bir hasarın izi olabilir. Tavan da ölçülür, cam fitilleri incelenir.' },
+      { x: 690, y: 170, ad: 'Arka çamurluk', metin: 'Macunlu onarımda ölçülen değer belirgin yükselir. Işık altında dalga, renk ve parlaklık farkına bakılır.' },
     ],
   },
   {
     id: 'sasi', ad: 'Şasi', arac: 'Lift, el feneri',
     noktalar: [
-      { x: 84, y: 205, ad: 'Ön şasi ucu', metin: 'Önden darbe almış araçta ilk bakılan yer. Çekme, kaynak ve ezilme izi lift üstünde aranır.' },
-      { x: 300, y: 222, ad: 'Podye', metin: 'Araç lifte kaldırılır, podye boyunca el feneriyle bakılır. Kaynak dikişi, macun ve kabarma rapora geçer.' },
-      { x: 445, y: 130, ad: 'Orta direk', metin: 'Direklerde kesme ya da kaynak izi ciddi hasarı gösterir. Kapı fitili aralanarak direk yüzeyi kontrol edilir.' },
-      { x: 704, y: 196, ad: 'Bagaj havuzu', metin: 'Arkadan darbenin izi havuzda kalır. Stepne çıkarılır; havuz, arka panel ve şasi uçları incelenir.' },
+      { x: 84, y: 205, ad: 'Ön şasi ucu', metin: 'Önden darbe almış araçta ilk bakılan yerdir. Çekme, kaynak ve ezilme izi lift üstünde aranır.' },
+      { x: 300, y: 222, ad: 'Podye', metin: 'Araç lifte kaldırılıp podye boyunca el feneriyle bakılır. Kaynak dikişi, macun ve kabarma rapora yazılır.' },
+      { x: 445, y: 130, ad: 'Orta direk', metin: 'Direklerdeki kesme ya da kaynak izi ciddi bir hasarı gösterir. Kapı fitili aralanarak direk yüzeyi kontrol edilir.' },
+      { x: 704, y: 196, ad: 'Bagaj havuzu', metin: 'Arkadan alınan darbenin izi havuzda kalır. Stepne çıkarılıp havuz, arka panel ve şasi uçları incelenir.' },
     ],
   },
   {
     id: 'motor', ad: 'Motor ve OBD', arac: 'Arıza tespit cihazı',
     noktalar: [
-      { x: 126, y: 190, ad: 'Motor', metin: 'Motor soğukken çalıştırılır. Üfleme, yağ kaçağı, antifriz durumu, kayış ve bağlantılar kontrol edilir.' },
+      { x: 126, y: 190, ad: 'Motor', metin: 'Motor soğukken çalıştırılır. Üflemeye, yağ kaçağına, antifrize, kayışlara ve bağlantılara bakılır.' },
       { x: 232, y: 196, ad: 'Şanzıman', metin: 'Vites geçişleri dinamometrede ve yolda denenir. Silinmiş şanzıman arızaları taramada ortaya çıkar.' },
-      { x: 318, y: 196, ad: 'OBD soketi', metin: 'Motor, şanzıman, ABS, hava yastığı ve konfor modüllerinden kayıtlı ve silinmiş hata kodları okunur.' },
-      { x: 92, y: 168, ad: 'Akü ve şarj', metin: 'Akü ve şarj gerilimi ölçülür. Pek çok elektronik arıza zayıf aküyle başlar; değer rapora yazılır.' },
+      { x: 318, y: 196, ad: 'OBD soketi', metin: 'Motor, şanzıman, ABS, hava yastığı ve konfor beyinlerindeki kayıtlı ve silinmiş hata kodları okunur.' },
+      { x: 92, y: 168, ad: 'Akü ve şarj', metin: 'Akü ve şarj voltajı ölçülür. Elektronik arızaların çoğu zayıf aküyle başladığı için değer rapora yazılır.' },
     ],
   },
   {
     id: 'aksam', ad: 'Yürüyen aksam', arac: 'Lift, dinamometre',
     noktalar: [
-      { x: 185, y: 228, ad: 'Ön fren', metin: 'Disk ve balata aşınması ölçülür, kalan ömrü yüzde olarak rapora yazılır.' },
-      { x: 262, y: 244, ad: 'Rotil ve salıncak', metin: 'Lift üstünde boşluk, burç yırtığı ve aks körükleri tek tek kontrol edilir.' },
-      { x: 618, y: 184, ad: 'Amortisör', metin: 'Sızıntı ve yağlanmaya bakılır. Yolda ses, yol tutuş ve savrulma gözlenir.' },
-      { x: 618, y: 266, ad: 'Lastikler', metin: 'Dört lastiğin diş derinliği ayrı ölçülür, üretim tarihi okunur ve rapora yazılır.' },
+      { x: 185, y: 228, ad: 'Ön fren', metin: 'Disk ve balata aşınması ölçülür, sonuç rapora yazılır.' },
+      { x: 262, y: 244, ad: 'Rotil ve salıncak', metin: 'Lift üstünde boşluklara, burç yırtıklarına ve aks körüklerine tek tek bakılır.' },
+      { x: 618, y: 184, ad: 'Amortisör', metin: 'Sızıntıya ve yağlanmaya bakılır. Yol testinde ses, yol tutuş ve savrulma dinlenir.' },
+      { x: 618, y: 266, ad: 'Lastikler', metin: 'Dört lastiğin diş derinliği ayrı ölçülür, üretim tarihi okunup rapora yazılır.' },
     ],
   },
 ];
@@ -233,16 +171,15 @@ export const rontgen = {
       <section class="k-bolum rt" aria-labelledby="rt-baslik">
         <div class="k-kap">
           <div class="rt__bas">
-            <p class="et-etiket et-etiket--acik">Lift, cihaz ve yol testi</p>
-            <h2 class="k-h2" id="rt-baslik" data-bol>İlan fotoğrafının göstermediği yer.</h2>
-            <p class="k-lead">Merceği aracın üstünde sürükleyin. Altında ne kontrol ettiğimizi görürsünüz; katmanı değiştirin, başka yere bakın.</p>
+            <h2 class="k-h2" id="rt-baslik" data-bol>Kontrol noktaları</h2>
+            <p class="k-lead">Mercek sürüklendikçe altındaki katman görünür. Katman değişince başka bir bölümün kontrol noktaları açılır.</p>
           </div>
           <div class="rt__katmanlar" role="tablist" aria-label="Kontrol katmanı">
             ${KATMANLAR.map((k, i) => `<button type="button" role="tab" class="rt__katman" data-k="${k.id}" aria-selected="${i === 1}"><span>${esc(k.ad)}</span><b>${k.noktalar.length}</b></button>`).join('')}
           </div>
           <div class="rt__sahne">
             <div class="rt__cizim">
-              <p class="rt__okuma" aria-hidden="true"><span data-arac></span><span data-konum>Mercek</span></p>
+              <p class="rt__okuma" aria-hidden="true"><span data-arac></span></p>
               ${aracSvg()}
               <label class="rt__kaydir"><span class="sr-only">Merceği kaydır</span><input type="range" min="60" max="740" step="1" value="400" data-kaydir></label>
             </div>
@@ -251,7 +188,7 @@ export const rontgen = {
         </div>
       </section>`;
   },
-  mount(el, d) {
+  mount(el) {
     const svg = el.querySelector('.rt-svg');
     const mercek = svg.querySelector('.rt-mercek-rect');
     const kl = svg.querySelector('.rt-kenar__l');
@@ -260,7 +197,6 @@ export const rontgen = {
     const kaydir = el.querySelector('[data-kaydir]');
     const kart = el.querySelector('.rt__kart');
     const aracYazi = el.querySelector('[data-arac]');
-    const konum = el.querySelector('[data-konum]');
     const sekmeler = [...el.querySelectorAll('.rt__katman')];
     const noktaEl = [...svg.querySelectorAll('.rt-nokta')];
     const W = 180;
@@ -274,16 +210,14 @@ export const rontgen = {
     const kartYaz = () => {
       const n = katman.noktalar[aktif];
       if (!n) {
-        kart.innerHTML = `<p class="rt__kart-ust">${esc(katman.ad)}</p><h3 class="rt__kart-baslik">Merceği sürükleyin</h3><p class="rt__kart-metin">Bu katmanda ${katman.noktalar.length} kontrol noktası var. Mercek üstünden geçtikçe işaretlenir.</p>`;
+        kart.innerHTML = `<p class="rt__kart-ust">${esc(katman.arac)}</p><h3 class="rt__kart-baslik">${esc(katman.ad)}</h3><p class="rt__kart-metin">Bu katmanda ${katman.noktalar.length} kontrol noktası var. Mercek üstünden geçtikçe işaretlenir.</p>`;
         return;
       }
-      const mesaj = `Merhaba ${d.isletme.ad}, almayı düşündüğüm bir araç için ekspertiz randevusu istiyorum.`;
       kart.innerHTML = `
         <p class="rt__kart-ust">${esc(katman.ad)} · ${aktif + 1}/${katman.noktalar.length}</p>
         <h3 class="rt__kart-baslik">${esc(n.ad)}</h3>
         <p class="rt__kart-metin">${esc(n.metin)}</p>
-        <ul class="rt__noktalar">${katman.noktalar.map((x, i) => `<li><button type="button" data-git="${i}" class="${bulunan.has(i) ? 'is-bulundu' : ''}" aria-current="${i === aktif}">${i + 1}<span>${esc(x.ad)}</span></button></li>`).join('')}</ul>
-        <a class="k-btn k-btn--kucuk rt__wa" href="${waHref(d, mesaj)}" target="_blank" rel="noopener">${icons.whatsapp}<span>Aracımı getireyim</span></a>`;
+        <ul class="rt__noktalar">${katman.noktalar.map((x, i) => `<li><button type="button" data-git="${i}" class="${bulunan.has(i) ? 'is-bulundu' : ''}" aria-current="${i === aktif}">${i + 1}<span>${esc(x.ad)}</span></button></li>`).join('')}</ul>`;
       if (!reducedMotion) gsap.fromTo(kart.children, { y: 10, opacity: 0 }, { y: 0, opacity: 1, duration: 0.35, stagger: 0.03, ease: 'power2.out', overwrite: true });
     };
 
@@ -295,7 +229,6 @@ export const rontgen = {
       kr.setAttribute('x1', sol + W); kr.setAttribute('x2', sol + W);
       tutamak.setAttribute('transform', `translate(${x} 56)`);
       if (document.activeElement !== kaydir) kaydir.value = Math.round(x);
-      konum.textContent = `${Math.round((x / 800) * 100)}%`;
       // Mercek altındaki noktalar bulunur; merkeze en yakın bulunan nokta karta gelir.
       let en = -1;
       let enMesafe = Infinity;
@@ -304,8 +237,7 @@ export const rontgen = {
         if (m < W / 2) {
           if (!bulunan.has(i)) {
             bulunan.add(i);
-            const g = noktaEl.find((e) => e.dataset.k === katman.id && Number(e.dataset.i) === i);
-            g?.classList.add('is-bulundu');
+            noktaEl.find((e) => e.dataset.k === katman.id && Number(e.dataset.i) === i)?.classList.add('is-bulundu');
           }
           if (m < enMesafe) { enMesafe = m; en = i; }
         }
@@ -333,7 +265,7 @@ export const rontgen = {
     const tara = () => {
       tw?.kill();
       if (reducedMotion) {
-        katman.noktalar.forEach((n, i) => { s.x = n.x; ciz(); });
+        katman.noktalar.forEach((n) => { s.x = n.x; ciz(); });
         s.x = katman.noktalar[0].x; aktif = -1; ciz();
         return;
       }
@@ -354,7 +286,6 @@ export const rontgen = {
       tw?.kill();
       svg.setPointerCapture?.(e.pointerId);
       git(svgX(e), 0.35);
-      el.classList.add('is-surukledi');
     });
     svg.addEventListener('pointermove', (e) => {
       if (!surukle) return;
@@ -365,7 +296,7 @@ export const rontgen = {
     const birak = () => (surukle = false);
     svg.addEventListener('pointerup', birak);
     svg.addEventListener('pointercancel', birak);
-    kaydir.addEventListener('input', () => { tw?.kill(); s.x = Number(kaydir.value); ciz(); el.classList.add('is-surukledi'); });
+    kaydir.addEventListener('input', () => { tw?.kill(); s.x = Number(kaydir.value); ciz(); });
 
     sekmeler.forEach((b) => b.addEventListener('click', () => {
       katmanKur(KATMANLAR.find((k) => k.id === b.dataset.k));
@@ -386,79 +317,6 @@ export const rontgen = {
       tara();
     }, { threshold: 0.45 });
     io.observe(svg);
-  },
-};
-
-// --- (3) Randevu: saatler + randevu hazırlayıcı + harita --------------------------------------
-export const randevu = {
-  render(d) {
-    if (!d.saatler) return '';
-    const st = openStatus(d.saatler);
-    const bugun = new Date().getDay();
-    const bugunSaat = d.saatler[bugun];
-    const markalar = d.markalar || [];
-    return `
-      <section class="k-bolum rv" aria-labelledby="rv-baslik">
-        <div class="k-kap rv__ic">
-          <div class="rv__sol">
-            <p class="et-etiket">Randevu ve konum</p>
-            <h2 class="k-h2" id="rv-baslik" data-bol>Alıcı ve satıcıyla aynı saatte buluşalım.</h2>
-            <div class="rv__durum ${st.open ? 'is-acik' : ''}">
-              <span class="et-led ${st.open ? 'is-acik' : ''}" aria-hidden="true"></span>
-              <div><b>${esc(st.text)}</b><small>Bugün ${GUNLER[bugun]}${bugunSaat ? `, ${esc(bugunSaat.replace('-', ' – '))}` : ', kapalı'}</small></div>
-            </div>
-            <dl class="rv__saatler">${groupedHours(d.saatler).map(([g, s]) => `<div><dt>${esc(g)}</dt><dd>${esc(s)}</dd></div>`).join('')}</dl>
-            <p class="rv__adres">${esc(d.iletisim.adres)}</p>
-            <div class="k-butonlar">
-              <a class="k-btn k-btn--kucuk rv__yol" href="${mapsHref(d)}" target="_blank" rel="noopener">${icons.pin}<span>Yol tarifi</span></a>
-              <a class="k-btn k-btn--kucuk k-btn--ikincil" href="${telHref(d)}">${icons.phone}<span>${esc(d.iletisim.telefon)}</span></a>
-            </div>
-          </div>
-          <div class="rv__sag">
-            <form class="rv__form" aria-label="WhatsApp randevu mesajı hazırla">
-              <span class="rv__delik" aria-hidden="true"></span>
-              <p class="rv__form-bas">Randevu kartı</p>
-              <fieldset class="rv__rol"><legend>Siz</legend>
-                <label><input type="radio" name="rol" value="almayı düşündüğüm" checked><span>Alıcıyım</span></label>
-                <label><input type="radio" name="rol" value="satacağım"><span>Satıcıyım</span></label>
-                <label><input type="radio" name="rol" value="galerimize alacağımız"><span>Galeri</span></label>
-              </fieldset>
-              <div class="rv__iki">
-                <label><span>Marka</span><select name="marka">${markalar.map((m) => `<option>${esc(m)}</option>`).join('')}<option>Diğer</option></select></label>
-                <label><span>Model yılı</span><input name="yil" inputmode="numeric" maxlength="4" placeholder="2018"></label>
-              </div>
-              <label class="rv__gun"><span>Ne zaman</span><select name="gun"><option>Bugün</option><option>Yarın</option><option>Bu hafta içinde</option></select></label>
-              <p class="rv__onizleme" data-onizleme></p>
-              <a class="k-btn rv__gonder" href="#" target="_blank" rel="noopener" data-gonder>${icons.whatsapp}<span>WhatsApp'tan gönder</span></a>
-            </form>
-            <div class="rv__harita" data-q="${esc(mapsEmbed(d))}"><p>Harita yaklaşınca yüklenir</p></div>
-          </div>
-        </div>
-      </section>`;
-  },
-  mount(el, d) {
-    const form = el.querySelector('.rv__form');
-    const on = el.querySelector('[data-onizleme]');
-    const gonder = el.querySelector('[data-gonder]');
-    const yaz = () => {
-      const f = new FormData(form);
-      const yil = String(f.get('yil') || '').replace(/\D/g, '').slice(0, 4);
-      const marka = f.get('marka') === 'Diğer' ? '' : `${f.get('marka')} `;
-      const metin = `Merhaba ${d.isletme.ad}, ${f.get('rol')} ${yil ? `${yil} model ` : ''}${marka}araç için ${String(f.get('gun')).toLocaleLowerCase('tr-TR')} ekspertiz randevusu istiyorum. Uygun saatiniz var mı?`;
-      on.textContent = metin;
-      gonder.href = waHref(d, metin);
-    };
-    form.addEventListener('input', yaz);
-    form.addEventListener('change', yaz);
-    form.addEventListener('submit', (e) => e.preventDefault());
-    yaz();
-
-    const h = el.querySelector('.rv__harita');
-    const io = new IntersectionObserver((e) => {
-      if (!e[0].isIntersecting) return;
-      h.innerHTML = `<iframe title="Konum haritası" src="${h.dataset.q}" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>`;
-      io.disconnect();
-    }, { rootMargin: '300px' });
-    io.observe(h);
+    return () => { io.disconnect(); tw?.kill(); };
   },
 };
