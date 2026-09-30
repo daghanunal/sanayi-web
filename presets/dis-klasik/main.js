@@ -1,69 +1,80 @@
 // Ayna (klasik aile, diş kliniği): koyu şişe yeşili, nane yeşili vurgu, soğuk beyaz kâğıt.
 // Fotoğraf ağırlıklı, WebGL yok.
-// İmza anı hero'da: diş aynası. Kaydırdıkça ayna 32 dişlik şemanın üstünden sırayla geçer (18 → 28,
-// 38 → 48). Aynanın içinden klinik fotoğrafı net ve renkli görünür (clip-path), geçtiği diş işaretlenir,
-// ortadaki sayaç 00'dan 32'ye çıkar. Muayene bitince ayna büyüyüp bütün ekranı kaplar.
+// Künye hero'da; yanında 32 dişlik şema ve diş aynası. Ayna açılışta bir kez alt çenede birkaç diş
+// ilerler, kaydırdıkça (pin yok) yoluna devam eder. Aynanın içinden klinik fotoğrafı net ve renkli görünür.
+// Sayaç ya da "muayene edildi" göstergesi yok.
 import sektor from '../../data/sektor-dis.json';
 import '../../shared/base.css';
 import './style.css';
 import {
-  boot, initSmoothScroll, reducedMotion, telHref, waHref, mapsHref, mapsEmbed,
-  openStatus, groupedHours, icons, esc, gsap, ScrollTrigger,
+  boot, initSmoothScroll, reducedMotion, telHref, waHref, mapsHref, mapsEmbed, autoHideHeader,
+  saatListesi, gunDurumu, kisaAdres, acikGunSayisi, yilEki, icons, esc, gsap, ScrollTrigger,
 } from '../../shared/core.js';
 
 ScrollTrigger.config({ ignoreMobileResize: true });
 
 const d = boot(sektor);
-// Klinik Şaşmaz sanayisinde değil: başlıkta semti yaz
-document.title = `${d.isletme.ad} | ${d.isletme.sektor} | Etimesgut, Ankara`;
 const $ = (s, root = document) => root.querySelector(s);
 const $$ = (s, root = document) => [...root.querySelectorAll(s)];
-const nf = (n, dig = 0) => Number(n).toLocaleString('tr-TR', { minimumFractionDigits: dig, maximumFractionDigits: dig });
 const SVGNS = 'http://www.w3.org/2000/svg';
 icons.check = `<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5 9.5 18 20 6"/></svg>`;
-icons.arrow = `<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>`;
 
-// Klinik için WhatsApp mesajları (ortak varsayılan mesaj araç içindir)
-const waGenel = waHref(d, `Merhaba ${d.isletme.ad}, muayene için randevu almak istiyorum.`);
-const cocukSvc = d.hizmetler.find((h) => h.id === 'cocuk');
-const waCocuk = waHref(d, cocukSvc?.mesaj || `Merhaba ${d.isletme.ad}, çocuğum için randevu almak istiyorum.`);
-const barWa = $('.action-bar__btn--main');
-if (barWa) barWa.href = waGenel;
+// Klinik için WhatsApp mesajı (çekirdeğin varsayılan mesajı araç içindir): alt çubuk dahil.
+const waGenel = waHref(d, d.waMesaj || 'Merhaba, muayene için randevu almak istiyorum.');
+$$('.action-bar a[href*="wa.me"]').forEach((a) => (a.href = waGenel));
 
-function ablative(n) {
-  const units = ['', 'den', 'den', 'ten', 'ten', 'ten', 'dan', 'den', 'den', 'dan'];
-  const tens = ['', 'dan', 'den', 'dan', 'tan', 'den', 'tan', 'ten', 'den', 'dan'];
-  const u = n % 10, t = Math.floor(n / 10) % 10;
-  return `${n}'${u ? units[u] : t ? tens[t] : 'den'}`;
-}
+// --- Arama motoru: diş kliniği --------------------------------------------------------
+(function dentistLd() {
+  $$('script[type="application/ld+json"]').forEach((x) => x.textContent.includes('"AutoRepair"') && x.remove());
+  const GUN = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  const ld = document.createElement('script');
+  ld.type = 'application/ld+json';
+  ld.textContent = JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'Dentist',
+    name: d.isletme.ad,
+    description: d.isletme.tanim,
+    telephone: d.iletisim.telefon,
+    foundingDate: String(d.isletme.kurulus),
+    address: { '@type': 'PostalAddress', streetAddress: d.iletisim.adres, addressLocality: 'Etimesgut', addressRegion: 'Ankara', addressCountry: 'TR' },
+    openingHoursSpecification: d.saatler
+      .map((x, i) => (x ? { '@type': 'OpeningHoursSpecification', dayOfWeek: `https://schema.org/${GUN[i]}`, opens: x.split('-')[0], closes: x.split('-')[1] } : null))
+      .filter(Boolean),
+  });
+  document.head.append(ld);
+  // Klinik Şaşmaz sanayisinde değil: başlıkta semti yaz
+  document.title = `${d.isletme.ad} | ${d.isletme.sektor} | Etimesgut, Ankara`;
+})();
 
 // --- Bağlamalar ---------------------------------------------------------------
 const binds = {
-  ad: d.isletme.ad, slogan: d.isletme.slogan, hakkinda: d.isletme.hakkinda,
-  telefon: d.iletisim.telefon, adres: d.iletisim.adres, garanti: d.garanti,
+  ad: d.isletme.ad, tanim: d.isletme.tanim, telefon: d.iletisim.telefon,
+  adres: d.iletisim.adres, kisaAdres: kisaAdres(d.iletisim.adres),
 };
 $$('[data-bind]').forEach((el) => (el.textContent = binds[el.dataset.bind] ?? ''));
 $$('[data-icon]').forEach((el) => el.insertAdjacentHTML('afterbegin', icons[el.dataset.icon] || ''));
 $$('[data-tel]').forEach((a) => (a.href = telHref(d)));
 $$('[data-wa-randevu]').forEach((a) => (a.href = waGenel));
-$$('[data-wa-cocuk]').forEach((a) => (a.href = waCocuk));
 $$('[data-maps]').forEach((a) => (a.href = mapsHref(d)));
 if (d.isletme.ad.length > 16) $('.hero__name').classList.add('is-long');
 if (d.isletme.ad.length > 26) $('.hero__name').classList.add('is-xlong');
 $('.top__brand').setAttribute('aria-label', `${d.isletme.ad}, sayfa başı`);
-$('[data-since]').textContent = `Etimesgut · ${ablative(d.isletme.kurulus)} beri`;
-$('[data-cocuk]').textContent = cocukSvc?.aciklama ?? '';
+$('[data-hizmet-not]').textContent = d.hizmetNot || '';
 $('[data-year]').textContent = new Date().getFullYear();
-const yil = new Date().getFullYear() - d.isletme.kurulus;
 
-const status = openStatus(d.saatler);
-$('[data-status]').textContent = status.text;
-$('[data-status-big]').textContent = status.text;
-document.documentElement.classList.toggle('is-open', status.open);
+function refreshStatus() {
+  const st = gunDurumu(d.saatler);
+  document.documentElement.classList.toggle('is-open', st.open);
+  $$('[data-status]').forEach((el) => {
+    const long = el.querySelector('[data-long]');
+    if (long) long.textContent = 'kunye' in el.dataset ? st.kunye : st.metin;
+  });
+}
+refreshStatus();
+setInterval(refreshStatus, 60_000);
 
 // --- Hero: diş şeması ---------------------------------------------------------------
 // FDI numaralandırma. k: 0 = orta kesici … 7 = yirmilik
-const ADLAR = ['orta kesici', 'yan kesici', 'köpek dişi', '1. küçük azı', '2. küçük azı', '1. büyük azı', '2. büyük azı', 'yirmilik'];
 const GEN = [34, 29, 33, 34, 34, 46, 45, 41]; // yay boyunca genişlik
 const DER = [44, 40, 48, 42, 42, 50, 48, 44]; // derinlik
 const R = 318, GAP = 7;
@@ -140,31 +151,27 @@ const svg = $('[data-arch]');
 const net = $('.hero__img--net');
 const ring = $('[data-ring]');
 const handle = $('[data-handle]');
-const mirror = $('[data-mirror]');
-const countEl = $('[data-tooth-count]');
-const nameEl = $('[data-tooth-name]');
 const LENS = 96;
 ring.setAttribute('r', LENS);
 const narrow = matchMedia('(max-width: 899px)').matches;
 const VB = narrow ? { x: 112, y: 112, w: 776 } : { x: 88, y: 88, w: 824 };
 svg.setAttribute('viewBox', `${VB.x} ${VB.y} ${VB.w} ${VB.w}`);
 
-let map = { s: 1, ox: 0, oy: 0, far: 1000 };
+let map = { s: 1, ox: 0, oy: 0 };
 function measure() {
   const sr = stage.getBoundingClientRect();
   const ar = svg.getBoundingClientRect();
-  const s = Math.min(ar.width, ar.height) / VB.w;
+  const sc = Math.min(ar.width, ar.height) / VB.w;
   map = {
-    s,
-    ox: ar.left - sr.left + (ar.width - VB.w * s) / 2 - VB.x * s,
-    oy: ar.top - sr.top + (ar.height - VB.w * s) / 2 - VB.y * s,
-    w: sr.width, h: sr.height,
+    s: sc,
+    ox: ar.left - sr.left + (ar.width - VB.w * sc) / 2 - VB.x * sc,
+    oy: ar.top - sr.top + (ar.height - VB.w * sc) / 2 - VB.y * sc,
   };
 }
 
-let done = -1;
+// Aynanın yolu: p 0 = 18, p 1 = 48 (üst çene soldan sağa, alt çene sağdan sola).
 let cur = 0;
-function setExam(p, grow = 0) {
+function setMirror(p) {
   cur = p;
   const q = Math.min(Math.max(p, 0), 1) * 31;
   const i = Math.floor(q), f = q - i;
@@ -172,87 +179,63 @@ function setExam(p, grow = 0) {
   const x = a.x + (b.x - a.x) * f;
   const y = a.y + (b.y - a.y) * f;
   // Sap: aynadan ağız dışına doğru
-  const vx = x - 500, vy = y - 500, L = Math.hypot(vx, vy) || 1;
-  const hx = x + (vx / L) * (LENS + 4), hy = y + (vy / L) * (LENS + 4);
-  const ex = x + (vx / L) * (LENS + 190), ey = y + (vy / L) * (LENS + 190);
+  const vx = x - 500, vy = y - 500, len = Math.hypot(vx, vy) || 1;
+  const hx = x + (vx / len) * (LENS + 4), hy = y + (vy / len) * (LENS + 4);
+  const ex = x + (vx / len) * (LENS + 190), ey = y + (vy / len) * (LENS + 190);
   ring.setAttribute('cx', x.toFixed(1));
   ring.setAttribute('cy', y.toFixed(1));
   handle.setAttribute('x1', hx.toFixed(1)); handle.setAttribute('y1', hy.toFixed(1));
   handle.setAttribute('x2', ex.toFixed(1)); handle.setAttribute('y2', ey.toFixed(1));
   // Ayna içi: net fotoğraf
   const px = map.ox + x * map.s, py = map.oy + y * map.s;
-  const far = Math.hypot(Math.max(px, map.w - px), Math.max(py, map.h - py));
-  const r0 = LENS * map.s;
-  const r = r0 + (far - r0) * gsap.parseEase('power2.in')(grow);
-  net.style.clipPath = `circle(${r.toFixed(1)}px at ${px.toFixed(1)}px ${py.toFixed(1)}px)`;
-  const n = p <= 0 ? -1 : Math.min(31, Math.round(q));
-  if (n !== done) {
-    teeth.forEach((th, k) => {
-      const on = k <= n;
-      if (th.on !== on) { th.on = on; th.el.classList.toggle('is-ok', on); th.num.classList.toggle('is-ok', on); }
-    });
-    done = n;
-    countEl.textContent = String(n + 1).padStart(2, '0');
-    const th = teeth[Math.max(n, 0)];
-    nameEl.textContent = n < 0 ? 'diş tek tek' : `${th.no} · ${ADLAR[th.k]}`;
-  }
+  net.style.clipPath = `circle(${(LENS * map.s).toFixed(1)}px at ${px.toFixed(1)}px ${py.toFixed(1)}px)`;
+  // Aynanın altındaki diş vurgulanır (yalnız o an; sayaç yok).
+  const n = Math.round(q);
+  teeth.forEach((th, k) => {
+    const on = k === n;
+    if (th.on !== on) { th.on = on; th.el.classList.toggle('is-ok', on); th.num.classList.toggle('is-ok', on); }
+  });
 }
 
 measure();
+const yol = { a: 0, b: 0 };
+// Alt çenede: sap aşağı baktığı için üst çubuğa uzanmaz. 38'den başlar, 35'e gelir, kaydırdıkça 42'ye ilerler.
+const mirrorAt = () => setMirror(0.5 + 0.1 * yol.a + 0.17 * yol.b);
 if (reducedMotion) {
-  setExam(1, 0);
-  hero.classList.add('is-static');
+  yol.a = 1;
+  mirrorAt();
 } else {
-  setExam(0, 0);
-  const small = matchMedia('(max-width: 899px)').matches;
-  const tl = gsap.timeline({
-    defaults: { ease: 'none' },
-    scrollTrigger: {
-      trigger: hero, start: 'top top', end: () => `+=${innerHeight * (small ? 1.9 : 2.2)}`,
-      pin: '.hero__pin', scrub: 0.5, anticipatePin: 1,
-    },
-  });
-  const m = { p: 0, g: 0 };
-  const upd = () => setExam(m.p, m.g);
-  tl.to(m, { p: 1, duration: 0.78, onUpdate: upd }, 0)
-    .to('.hero__hint', { opacity: 0, duration: 0.06 }, 0)
-    .to(m, { g: 1, duration: 0.22, onUpdate: upd }, 0.78)
-    .fromTo(['.arch', '.count'], { scale: 1 }, { scale: 1.08, duration: 0.14, immediateRender: false }, 0.8)
-    // Kadran ve ad tamamen kaybolduktan sonra son söz gelir (iki yazı üst üste binmesin; görünmez katman dokunma yutmasın)
-    .fromTo('.hero__dial', { autoAlpha: 1 }, { autoAlpha: 0, duration: 0.1, immediateRender: false }, 0.8)
-    .to('.hero__veil', { opacity: 1, duration: 0.12 }, 0.88)
-    .fromTo('.hero__copy', { autoAlpha: 1, y: 0 }, { autoAlpha: 0, y: -20, duration: 0.08, immediateRender: false }, 0.82)
-    .fromTo('.hero__end', { autoAlpha: 0, y: 30 }, { autoAlpha: 1, y: 0, duration: 0.08 }, 0.91);
-
-  // Açılış
-  gsap.from('.hero__name', { y: 40, opacity: 0, duration: 0.9, ease: 'power3.out', delay: 0.05 });
-  gsap.from(['.hero__since', '.hero__foot > *', '.hero__hint'], { y: 16, opacity: 0, duration: 0.7, stagger: 0.08, ease: 'power2.out', delay: 0.2 });
-  gsap.from('.tooth', { opacity: 0, duration: 0.4, stagger: { each: 0.025, from: 'center' }, ease: 'power1.out', delay: 0.15 });
-  gsap.from('[data-teeth]', { scale: 0.9, duration: 1.1, ease: 'power3.out', delay: 0.1, transformOrigin: '50% 50%' });
-  gsap.from('.mirror', { opacity: 0, duration: 0.6, delay: 0.7 });
-  gsap.from('.count', { opacity: 0, scale: 0.85, duration: 0.8, ease: 'power3.out', delay: 0.4 });
+  mirrorAt();
+  // Açılış: ayna bir kez birkaç diş ilerler (≈1,4 sn), kaydırma kilitlenmez.
+  gsap.to(yol, { a: 1, duration: 1.4, ease: 'power2.inOut', delay: 0.35, onUpdate: mirrorAt });
+  gsap.to(yol, { b: 1, ease: 'none', onUpdate: mirrorAt, scrollTrigger: { trigger: hero, start: 'top top', end: 'bottom top', scrub: 0.5 } });
+  gsap.from('.hero__copy > *', { y: 18, autoAlpha: 0, duration: 0.7, stagger: 0.06, ease: 'power3.out', delay: 0.05, clearProps: 'opacity,visibility,transform' });
+  gsap.from('.tooth', { opacity: 0, duration: 0.4, stagger: { each: 0.02, from: 'center' }, ease: 'power1.out', delay: 0.1 });
+  gsap.from('.mirror', { opacity: 0, duration: 0.5, delay: 0.3 });
 }
-addEventListener('resize', () => { measure(); setExam(cur, 0); });
-new IntersectionObserver(([e]) => hero.classList.toggle('is-off', !e.isIntersecting)).observe($('.hero__pin'));
+addEventListener('resize', () => { measure(); setMirror(cur); });
 
-// --- İlke + rakamlar -----------------------------------------------------------
-const stats = d.istatistikler.map((s) => ({ ...s, deger: s.kurulustanHesapla ? yil : s.deger }));
-$('[data-stats]').innerHTML = stats.map((s) => `
-  <li class="stat">
-    <p class="stat__val"><span data-count="${Number(s.deger)}">${reducedMotion ? nf(s.deger) : '0'}</span><small>${esc(s.sonek)}</small></p>
-    <p class="stat__lbl">${esc(s.etiket)}</p>
-  </li>`).join('');
+// --- Hakkında ------------------------------------------------------------------
+const yil = new Date().getFullYear() - d.isletme.kurulus;
+const yer = d.isletme.yer || "Etimesgut'ta";
+$('[data-hakkinda]').textContent = `${d.isletme.ad} ${yilEki(d.isletme.kurulus)} beri ${yer}. ${d.isletme.hakkinda}`;
+$('[data-facts]').innerHTML = (d.bilgiler || []).map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join('');
+// Rakamlar yalnız olgu: kuruluştan geçen yıl, haftada açık gün.
+$('[data-stats]').innerHTML = [
+  { n: yil, u: ' yıl', l: yer },
+  { n: acikGunSayisi(d.saatler), u: ' gün', l: 'haftada açık' },
+].map((x) => `<li class="stat"><p class="stat__val"><span>${x.n}</span><small>${esc(x.u)}</small></p><p class="stat__lbl">${esc(x.l)}</p></li>`).join('');
 
-// --- Tedaviler ---------------------------------------------------------------
+// --- Hizmetler ---------------------------------------------------------------
 const local = (src) => String(src || '').replace('/sektor-dis/', '/dis-klasik/');
 $('[data-services]').innerHTML = d.hizmetler.map((h, i) => `
   <li class="svc" data-i="${i}">
     <img class="svc__img" src="${esc(local(h.gorsel))}" alt="" loading="lazy" decoding="async" />
     <div class="svc__body">
-      <p class="svc__top mono"><span>${String(i + 1).padStart(2, '0')}</span><span><span class="sr-only">Süre: </span>${esc(h.sure)}</span></p>
+      <p class="svc__top mono"><span>${String(i + 1).padStart(2, '0')}</span><span>${h.sure ? `<span class="sr-only">Süre: </span>${esc(h.sure)}` : ''}</span></p>
       <h3 class="svc__name">${esc(h.baslik)}</h3>
       <p class="svc__desc">${esc(h.aciklama)}</p>
-      ${h.mesaj ? `<a class="svc__wa" href="${esc(waHref(d, h.mesaj))}" target="_blank" rel="noopener">${icons.whatsapp}Bunun için yaz</a>` : ''}
+      ${h.mesaj ? `<a class="svc__wa" href="${esc(waHref(d, h.mesaj))}" target="_blank" rel="noopener">${icons.whatsapp}WhatsApp'tan randevu</a>` : ''}
     </div>
   </li>`).join('');
 const tedPhoto = $('[data-ted-photo]');
@@ -266,7 +249,7 @@ function tedSet(i) {
   tedCur = i;
   tedImgs.forEach((im, k) => im.classList.toggle('is-on', k === i));
   $$('.svc').forEach((s, k) => s.classList.toggle('is-on', k === i));
-  tedCap.textContent = `${String(i + 1).padStart(2, '0')} / ${String(d.hizmetler.length).padStart(2, '0')} · ${d.hizmetler[i].sure}`;
+  tedCap.textContent = d.hizmetler[i].baslik;
 }
 tedSet(0);
 const tedList = $('[data-services]');
@@ -290,41 +273,27 @@ if (!narrow) {
   onX();
 }
 
-// --- Süreç --------------------------------------------------------------------
-$('[data-steps]').innerHTML = d.surec.map((s, i) => `
-  <li class="step">
-    <span class="step__no" aria-hidden="true"><span>${i + 1}</span>${icons.check}</span>
-    <div>
-      <h3 class="step__title">${esc(s.baslik)}</h3>
-      <p class="step__text">${esc(s.aciklama)}</p>
-    </div>
-  </li>`).join('');
-
 // --- Galeri ------------------------------------------------------------------
 const gal = ['muayenehane', 'alet-seti', 'ekip', 'implant', 'klinik', 'aletler'];
 const galItems = gal.map((k) => d.galeri.find((g) => g.src.includes(`/${k}.jpg`))).filter(Boolean);
 $('[data-gallery]').innerHTML = galItems.map((g, i) => `
   <figure class="shot shot--${i + 1}"><img src="${esc(local(g.src))}" alt="${esc(g.alt)}" loading="lazy" decoding="async" /><figcaption>${esc(g.alt)}</figcaption></figure>`).join('');
 
-// --- Yorumlar ----------------------------------------------------------------
+// --- Örnek yorumlar ------------------------------------------------------------
 const stars = (n) => Array.from({ length: 5 }, (_, i) => `<span class="${i < n ? '' : 'off'}">${icons.star}</span>`).join('');
-$('[data-score]').textContent = nf(d.puan.ortalama, 1);
-$('[data-stars]').innerHTML = stars(Math.round(d.puan.ortalama));
-$('[data-stars]').setAttribute('aria-label', `5 üzerinden ${nf(d.puan.ortalama, 1)}`);
-$('[data-review-count]').textContent = 'Temsilî puan · yorumlar örnektir';
 $('[data-reviews]').innerHTML = d.yorumlar.map((y) => `
   <li class="rev">
-    <p class="rev__stars" aria-label="${Number(y.puan)} yıldız">${stars(y.puan)}</p>
+    <p class="rev__stars" role="img" aria-label="5 üzerinden ${Number(y.puan)}">${stars(y.puan)}</p>
     <p class="rev__text">${esc(y.metin)}</p>
-    <p class="rev__who"><span class="rev__ini" aria-hidden="true">${esc(String(y.ad).charAt(0))}</span><strong>${esc(y.ad)}</strong></p>
+    <p class="rev__who"><span class="rev__ini" aria-hidden="true">${esc(String(y.ad).charAt(0))}</span><strong>${esc(y.ad)}</strong>${y.arac ? `<span class="rev__konu">${esc(y.arac)}</span>` : ''}</p>
   </li>`).join('');
 
-// --- Saatler -----------------------------------------------------------------
+// --- Çalışma saatleri -------------------------------------------------------------
 const GUN = ['Pazar', 'Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi'];
 const order = [1, 2, 3, 4, 5, 6, 0];
 const today = order.indexOf(new Date().getDay());
-$('[data-hours]').innerHTML = groupedHours(d.saatler).map(([days, val]) => {
-  const r = days.split(' – ');
+$('[data-hours]').innerHTML = saatListesi(d.saatler).map(([days, val]) => {
+  const r = days.split('–');
   const a = order.indexOf(GUN.indexOf(r[0])), b = order.indexOf(GUN.indexOf(r.at(-1)));
   return `<div class="${today >= a && today <= b ? 'is-today' : ''}"><dt>${esc(days)}</dt><dd class="mono">${esc(val)}</dd></div>`;
 }).join('');
@@ -341,28 +310,18 @@ const top = $('.top');
 const solid = () => top.classList.toggle('is-solid', scrollY > innerHeight * 0.5);
 addEventListener('scroll', solid, { passive: true });
 solid();
+if (narrow) autoHideHeader(top, { offset: 120 });
 
-// --- Bölüm hareketleri --------------------------------------------------------
+// --- Bölüm hareketleri (sakin: bir kez, küçük kayma) ------------------------------
 if (!reducedMotion) {
   initSmoothScroll();
 
-  $$('.h2, .ilke__t').forEach((h) => gsap.from(h, { y: 34, opacity: 0, duration: 0.8, ease: 'power3.out', scrollTrigger: { trigger: h, start: 'top 88%' } }));
-  $$('[data-count]').forEach((el) => {
-    const to = Number(el.dataset.count);
-    const o = { v: 0 };
-    gsap.to(o, { v: to, duration: 1.4, ease: 'power2.out', scrollTrigger: { trigger: el, start: 'top 92%' }, onUpdate: () => (el.textContent = nf(o.v)) });
-  });
-  gsap.from('.stat', { y: 24, opacity: 0, duration: 0.6, stagger: 0.08, ease: 'power2.out', scrollTrigger: { trigger: '.stats', start: 'top 90%' } });
-  gsap.from('.svc', { [narrow ? 'x' : 'y']: 40, opacity: 0, duration: 0.6, stagger: 0.04, ease: 'power2.out', scrollTrigger: { trigger: '.ted__list', start: 'top 85%' } });
-  gsap.fromTo('.surec__photo img', { scale: 1.18 }, { scale: 1, ease: 'none', scrollTrigger: { trigger: '.surec', start: 'top bottom', end: 'center center', scrub: true } });
-  $$('.step').forEach((s) => ScrollTrigger.create({ trigger: s, start: 'top 80%', once: true, onEnter: () => s.classList.add('is-done') }));
-  gsap.fromTo('.ilk__photo', { clipPath: 'inset(12% 12% 12% 12% round 40px)' }, { clipPath: 'inset(0% 0% 0% 0% round 28px)', ease: 'none', scrollTrigger: { trigger: '.ilk', start: 'top 85%', end: 'top 25%', scrub: 0.4 } });
-  gsap.from('.ilk__list li', { x: -24, opacity: 0, duration: 0.55, stagger: 0.08, ease: 'power2.out', scrollTrigger: { trigger: '.ilk__list', start: 'top 88%' } });
-  $$('.shot').forEach((s) => gsap.fromTo(s, { clipPath: 'circle(0% at 50% 50%)' }, { clipPath: 'circle(75% at 50% 50%)', duration: 1, ease: 'power2.out', scrollTrigger: { trigger: s, start: 'top 90%' } }));
-  gsap.from('.rev', { y: 28, opacity: 0, duration: 0.6, stagger: 0.07, ease: 'power2.out', scrollTrigger: { trigger: '.yorum__list', start: 'top 88%' } });
+  $$('.h2').forEach((h) => gsap.from(h, { y: 28, opacity: 0, duration: 0.7, ease: 'power3.out', scrollTrigger: { trigger: h, start: 'top 90%' } }));
+  gsap.from('.svc', { [narrow ? 'x' : 'y']: 36, opacity: 0, duration: 0.6, stagger: 0.04, ease: 'power2.out', scrollTrigger: { trigger: '.ted__list', start: 'top 88%' } });
+  gsap.fromTo('.surec__photo img', { scale: 1.14 }, { scale: 1, ease: 'none', scrollTrigger: { trigger: '.surec', start: 'top bottom', end: 'center center', scrub: true } });
+  $$('.shot').forEach((x) => gsap.fromTo(x, { clipPath: 'circle(0% at 50% 50%)' }, { clipPath: 'circle(75% at 50% 50%)', duration: 1, ease: 'power2.out', scrollTrigger: { trigger: x, start: 'top 92%' } }));
+  gsap.from('.rev', { y: 24, opacity: 0, duration: 0.6, stagger: 0.07, ease: 'power2.out', scrollTrigger: { trigger: '.yorum__list', start: 'top 90%' } });
   gsap.fromTo('.final__lens', { clipPath: 'circle(14% at 50% 45%)' }, { clipPath: 'circle(80% at 50% 45%)', ease: 'none', scrollTrigger: { trigger: '.final', start: 'top 90%', end: 'center 55%', scrub: 0.4 } });
-} else {
-  $$('.step').forEach((s) => s.classList.add('is-done'));
 }
 
-addEventListener('load', () => { measure(); setExam(cur, 0); ScrollTrigger.refresh(); });
+addEventListener('load', () => { measure(); setMirror(cur); ScrollTrigger.refresh(); });

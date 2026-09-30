@@ -1,12 +1,12 @@
 // Kurumsal veteriner — "Pati karnesi" yönü.
-// karneHero:  karşı karşıya bakan köpek ve kedi portresi, önlerinde açık bir aşı karnesi; klinik mührü basılır.
+// karneHero:  künye (ad, tanım, adres, bugün, telefon; Ara / WhatsApp / Yol tarifi). Yanında karşı karşıya
+//             bakan köpek ve kedi portresi, önlerinde açık bir aşı karnesi; açılışta klinik mührü bir kez basılır.
 // asiKarnesi: imza modülü. Tür + ad + doğum tarihi → örnek aşı takvimi karne sayfasına dökülür, yaş çizgisinde
 //             pati izleri yürür, sıradaki aşıya mühür vurulur; takvim hazır mesajla WhatsApp'a gider.
 //             Teşhis ve ilaç adı yok; "kesin takvimi hekim belirler" der.
 // hizmetOzet: 8 hizmet, yuvarlak fotoğraf + süre etiketiyle satır listesi.
-// hizmetler:  motor bölümü, "teklif" dilini randevu diline çevirir.
-import { esc, telHref, waHref, openStatus, icons, gsap, reducedMotion } from '../../shared/core.js';
-import { BOLUMLER, yilEki } from '../_kurumsal/bolumler.js';
+import { esc, telHref, waHref, mapsHref, gunDurumu, kisaAdres, icons, gsap, reducedMotion } from '../../shared/core.js';
+import { yilEki, tanimMetni } from '../_kurumsal/bolumler.js';
 
 const ok = `<svg class="k-ok" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 const rota = (id, metin, cls = 'k-btn') => `<a class="${cls}" href="#/${id}" data-rota="${id}">${metin}</a>`;
@@ -38,28 +38,25 @@ function muhur(d, ust, alt, cls = '') {
 
 export const karneHero = {
   render(d) {
-    const h = d.kurumsal?.hero || {};
-    const st = d.saatler ? openStatus(d.saatler) : null;
+    const b = d.saatler ? gunDurumu(d.saatler) : null;
     const bugun = gunBasi(new Date());
     const sonraki = new Date(+bugun + 21 * GUN);
-    const bilgi = [
-      ['Kuruluş', String(d.isletme.kurulus)],
-      st ? ['Bugün', st.text] : null,
-      ['Randevu', d.iletisim.telefon],
-    ]
-      .filter(Boolean)
-      .map(([e, v]) => `<div><dt>${esc(e)}</dt><dd>${esc(v)}</dd></div>`)
-      .join('');
+    const wa = waHref(d, d.waMesaj || 'Merhaba, randevu almak istiyorum.');
     return `
-      <section class="k-hero kh" aria-label="Giriş">
+      <section class="k-hero k-hero--kunye kh" aria-label="Künye">
         <div class="k-kap kh__ic">
           <div class="kh__metin">
-            <p class="kh__ust"><span class="kh__durum ${st?.open ? 'is-acik' : ''}"><i></i>${esc(st ? st.text : d.isletme.sektor)}</span><span>${esc(h.ust || d.isletme.sektor)}</span></p>
-            <h1 class="k-h1 k-hero__baslik" data-bol>${esc(h.baslik || d.isletme.slogan)}</h1>
-            <p class="k-lead">${esc(h.metin || d.isletme.hakkinda)}</p>
+            <h1 class="k-h1 k-hero__baslik" data-bol>${esc(d.isletme.ad)}</h1>
+            <p class="k-lead k-hero__tanim">${esc(tanimMetni(d))}</p>
+            <dl class="k-kunye">
+              <div><dt>Adres</dt><dd>${esc(kisaAdres(d.iletisim.adres))}</dd></div>
+              ${b ? `<div><dt>Bugün</dt><dd><span class="k-durum ${b.open ? 'is-acik' : ''}"><span></span>${esc(b.kunye)}</span></dd></div>` : ''}
+              <div><dt>Telefon</dt><dd><a href="${telHref(d)}">${esc(d.iletisim.telefon)}</a></dd></div>
+            </dl>
             <div class="k-butonlar">
-              ${rota('iletisim', `${esc(h.birincil || 'Randevu alın')} ${ok}`)}
-              ${rota(h.ikincilRota || 'asi-karnesi', `${pati}<span>${esc(h.ikincil || 'Aşı takvimi')}</span>`, 'k-btn k-btn--ikincil')}
+              <a class="k-btn" href="${telHref(d)}">${icons.phone}<span>Ara</span></a>
+              ${d.iletisim.whatsapp ? `<a class="k-btn k-btn--ikincil" href="${wa}" target="_blank" rel="noopener">${icons.whatsapp}<span>WhatsApp</span></a>` : ''}
+              <a class="k-btn k-btn--ikincil" href="${mapsHref(d)}" target="_blank" rel="noopener">${icons.pin}<span>Yol tarifi</span></a>
             </div>
           </div>
           <div class="kh__sahne" aria-hidden="true">
@@ -79,25 +76,24 @@ export const karneHero = {
           </div>
         </div>
         <div class="k-kap">
-          <a class="kh__acil" href="${telHref(d)}"><span class="kh__acil-nokta"></span><span><strong>Acil bir durum mu var?</strong> Yola çıkmadan önce arayın, ilk yapılacakları telefonda söyleyelim.</span><span class="kh__acil-tel">${icons.phone}${esc(d.iletisim.telefon)}</span></a>
-          <dl class="k-hero__bilgi">${bilgi}</dl>
+          <a class="kh__acil" href="${telHref(d)}"><span class="kh__acil-nokta"></span><span><strong>Acil durumda</strong> yola çıkmadan önce arayın, ilk yapılacaklar telefonda anlatılır.</span><span class="kh__acil-tel">${icons.phone}${esc(d.iletisim.telefon)}</span></a>
         </div>
       </section>`;
   },
   mount(el) {
     if (reducedMotion) return;
-    const tl = gsap.timeline({ delay: 0.25 });
-    tl.from(el.querySelectorAll('.kh__foto'), { clipPath: 'inset(100% 0 0 0 round 999px)', duration: 1.1, stagger: 0.12, ease: 'power3.inOut' })
-      .from(el.querySelectorAll('.kh__foto img'), { scale: 1.25, duration: 1.4, stagger: 0.12, ease: 'power3.out' }, 0)
-      .from(el.querySelector('.kh__karne'), { y: 60, rotate: 0, opacity: 0, duration: 0.9, ease: 'back.out(1.4)' }, 0.55)
-      .from(el.querySelectorAll('.kh__satirlar li'), { x: -14, opacity: 0, duration: 0.4, stagger: 0.08 }, 0.9)
-      .from(el.querySelectorAll('.kh__tik'), { scale: 0, duration: 0.35, stagger: 0.1, ease: 'back.out(3)' }, 1.05)
-      .fromTo(el.querySelector('.kh__muhur'), { scale: 2.2, opacity: 0, rotate: -40 }, { scale: 1, opacity: 1, rotate: -14, duration: 0.42, ease: 'power4.in' }, 1.45)
-      .add(() => el.querySelector('.kh__karne')?.classList.add('is-basildi'), 1.85)
-      .from(el.querySelectorAll('.kh__iz'), { scale: 0, opacity: 0, duration: 0.4, stagger: 0.18, ease: 'back.out(2)' }, 1.6);
-    // Portreler kaydırdıkça zıt yönlere kayar.
+    // Açılış (≈1,8 sn, kaydırmayı kilitlemez): portreler açılır, karne yerleşir, mühür bir kez basılır.
+    const tl = gsap.timeline({ delay: 0.15 });
+    tl.from(el.querySelectorAll('.kh__foto'), { clipPath: 'inset(100% 0 0 0 round 999px)', duration: 0.9, stagger: 0.1, ease: 'power3.inOut' })
+      .from(el.querySelectorAll('.kh__foto img'), { scale: 1.2, duration: 1.1, stagger: 0.1, ease: 'power3.out' }, 0)
+      .from(el.querySelector('.kh__karne'), { y: 40, opacity: 0, duration: 0.7, ease: 'power3.out' }, 0.45)
+      .from(el.querySelectorAll('.kh__tik'), { scale: 0, duration: 0.3, stagger: 0.08, ease: 'back.out(3)' }, 0.8)
+      .fromTo(el.querySelector('.kh__muhur'), { scale: 2, opacity: 0, rotate: -40 }, { scale: 1, opacity: 1, rotate: -14, duration: 0.38, ease: 'power4.in' }, 1.1)
+      .add(() => el.querySelector('.kh__karne')?.classList.add('is-basildi'), 1.48)
+      .from(el.querySelectorAll('.kh__iz'), { scale: 0, opacity: 0, duration: 0.35, stagger: 0.12, ease: 'back.out(2)' }, 1.2);
+    // Portreler kaydırdıkça zıt yönlere hafifçe kayar.
     el.querySelectorAll('[data-kh-y]').forEach((f) =>
-      gsap.to(f, { yPercent: 8 * Number(f.dataset.khY), ease: 'none', scrollTrigger: { trigger: el, start: 'top top', end: 'bottom top', scrub: true } })
+      gsap.to(f, { yPercent: 6 * Number(f.dataset.khY), ease: 'none', scrollTrigger: { trigger: el, start: 'top top', end: 'bottom top', scrub: true } })
     );
   },
 };
@@ -111,7 +107,7 @@ export const hizmetOzet = {
     return `
       <section class="k-bolum ho">
         <div class="k-kap">
-          <div class="k-bolum__bas"><h2 class="k-h2" data-bol>${esc(d.kurumsal?.hizmetOzetBaslik || 'Hizmetlerimiz')}</h2>${rota('hizmetler', `Tüm ayrıntılar ${ok}`, 'k-link')}</div>
+          <div class="k-bolum__bas"><h2 class="k-h2" data-bol>Hizmetler</h2>${rota('hizmetler', `Tümü ${ok}`, 'k-link')}</div>
           <ul class="ho__liste" data-sira>
             ${list
               .map(
@@ -127,14 +123,6 @@ export const hizmetOzet = {
           </ul>
         </div>
       </section>`;
-  },
-};
-
-// --- Hizmetler: randevu dili -------------------------------------------------------------
-
-export const hizmetler = {
-  render(d, ctx, sorgu) {
-    return BOLUMLER.hizmetler.render(d, ctx, sorgu).replaceAll('Bu hizmet için teklif isteyin', 'Bu hizmet için randevu isteyin');
   },
 };
 
@@ -180,17 +168,17 @@ export function takvim(tur, dogum, bugun = gunBasi(new Date())) {
   while (gun(yil) < -3) yil = new Date(yil.getFullYear() + 1, yil.getMonth(), yil.getDate());
   const yetiskin = gun(seriSon) < -60;
   let satirlar = yetiskin
-    ? [{ ad: 'Yavru aşı serisi', not: `${kisaTarih(seri[0].tarih)} – ${kisaTarih(seriSon)} arası. Karnede eksik varsa muayenede tamamlarız.`, tarih: seriSon, seriMi: true }]
+    ? [{ ad: 'Yavru aşı serisi', not: `${kisaTarih(seri[0].tarih)}–${kisaTarih(seriSon)} arası. Karnede eksik aşı varsa muayenede tamamlanır.`, tarih: seriSon, seriMi: true }]
     : seri;
-  satirlar = [...satirlar, { ad: 'Yıllık tekrar', not: 'Karma ve kuduz aşısının tekrarı, öncesinde genel muayene', tarih: yil }];
+  satirlar = [...satirlar, { ad: 'Yıllık tekrar', not: 'Karma ve kuduz aşısının tekrarı; öncesinde genel muayene yapılır', tarih: yil }];
   if (yetiskin) {
     // Düzenli kontroller: doğumdan itibaren belirli aralıklarla, bugünden sonraki ilk tarih.
     const sonraki = (aralik) => {
       const k = Math.ceil(((+bugun - 3 * GUN) - +dogum) / (aralik * GUN));
       return new Date(+dogum + Math.max(1, k) * aralik * GUN);
     };
-    satirlar.push({ ad: 'İç ve dış parazit kontrolü', not: 'Üç ayda bir; tüy, deri ve dışkı kontrolü', tarih: sonraki(91) });
-    if (bugun - dogum > 7 * 365 * GUN) satirlar.push({ ad: 'Kan tahlili ve genel kontrol', not: 'Yaşlı dostlarda altı ayda bir önerilir', tarih: sonraki(182) });
+    satirlar.push({ ad: 'İç ve dış parazit kontrolü', not: 'Genellikle üç ayda bir; tüy, deri ve dışkı kontrolü', tarih: sonraki(91) });
+    if (bugun - dogum > 7 * 365 * GUN) satirlar.push({ ad: 'Kan tahlili ve genel kontrol', not: 'Yaşlı hayvanlarda genellikle altı ayda bir önerilir', tarih: sonraki(182) });
     const [ilk, ...kalan] = satirlar;
     satirlar = [ilk, ...kalan.sort((a, b) => a.tarih - b.tarih)];
   }
@@ -215,9 +203,9 @@ function karneIc(d, s) {
   const bugun = gunBasi(new Date());
   const ad = s.ad || (s.tur === 'kedi' ? 'Kediniz' : 'Köpeğiniz');
   if (!s.dogum || s.dogum > bugun) {
-    return `<div class="ak__bos">${pati}<p>${s.dogum ? 'Doğum tarihi bugünden sonra olamaz.' : 'Doğum tarihini girin, takvim karneye dökülsün.'}</p></div>`;
+    return `<div class="ak__bos">${pati}<p>${s.dogum ? 'Doğum tarihi bugünden sonra olamaz.' : 'Doğum tarihi girilince takvim karneye yazılır.'}</p></div>`;
   }
-  if (bugun - s.dogum > 25 * 365 * GUN) return `<div class="ak__bos">${pati}<p>Doğum tarihini kontrol edin.</p></div>`;
+  if (bugun - s.dogum > 25 * 365 * GUN) return `<div class="ak__bos">${pati}<p>Doğum tarihi kontrol edilmeli.</p></div>`;
   const t = takvim(s.tur, s.dogum, bugun);
   // Çizelge eşit aralıklı: her durak bir iz; "bugün" komşu iki durak arasına orantılı yerleşir.
   const n = t.satirlar.length;
@@ -288,13 +276,13 @@ export const asiKarnesi = {
         <div class="k-kap">
           <div class="ak__bas">
             <p class="ak__etiket">${pati}Aşı karnesi</p>
-            <h2 class="k-h2" data-bol>Karnesini şimdiden görün</h2>
-            <p class="k-lead">Türünü ve doğum tarihini girin; örnek aşı takvimi karneye dökülsün, sıradaki tarihi mühürleyelim. Kesin takvimi hekimimiz muayeneden sonra belirler.</p>
+            <h2 class="k-h2" data-bol>Örnek aşı takvimi</h2>
+            <p class="k-lead">Tür ve doğum tarihi girilince genel bir aşı takvimi karneye yazılır, sıradaki tarih mühürle işaretlenir. Kesin takvimi veteriner hekim muayeneden sonra belirler.</p>
           </div>
           <div class="ak__ic">
             <form class="ak__panel" novalidate>
               <fieldset class="ak__tur">
-                <legend>Dostunuz</legend>
+                <legend>Tür</legend>
                 ${Object.entries(TUR)
                   .map(
                     ([id, t]) => `<label class="ak__tur-sec"><input type="radio" name="tur" value="${id}"${id === s.tur ? ' checked' : ''}><span class="ak__tur-foto"><img src="${img(t.foto)}" alt="" loading="lazy"></span><span class="ak__tur-ad">${t.ad}</span></label>`
@@ -303,7 +291,7 @@ export const asiKarnesi = {
               </fieldset>
               <label class="ak__alan"><span>Adı <em>(isteğe bağlı)</em></span><input name="ad" maxlength="20" autocomplete="off" placeholder="${s.tur === 'kedi' ? 'Duman' : 'Karamel'}"></label>
               <label class="ak__alan"><span>Doğum tarihi</span><input name="dogum" type="date" value="${isoTarih(s.dogum)}" max="${isoTarih(bugun)}"></label>
-              <p class="ak__ipucu">Tam bilmiyorsanız yaklaşık bir tarih girin. Sahiplendiğiniz dostun yaşını muayenede dişlerinden de tahmin ederiz.</p>
+              <p class="ak__ipucu">Tarih tam bilinmiyorsa yaklaşık bir tarih girilebilir. Sahiplenilen hayvanın yaşı muayenede dişlerinden de tahmin edilir.</p>
               <div class="ak__hizli" role="group" aria-label="Hızlı yaş seçimi">
                 <button type="button" data-hafta="7">7 haftalık</button><button type="button" data-hafta="14">3 aylık</button><button type="button" data-hafta="106">2 yaşında</button>
               </div>
@@ -312,12 +300,12 @@ export const asiKarnesi = {
               <header class="ak__karne-bas"><span>Aşı karnesi</span><span class="ak__karne-ad">${esc(d.isletme.ad)}</span></header>
               <div class="ak__govde" aria-live="polite">${karneIc(d, s)}</div>
               <footer class="ak__butonlar">
-                <a class="k-btn ak__wa" href="${waHref(d, mesaj(d, s))}" target="_blank" rel="noopener">${icons.whatsapp}<span>Bu takvimle randevu iste</span></a>
+                <a class="k-btn ak__wa" href="${waHref(d, mesaj(d, s))}" target="_blank" rel="noopener">${icons.whatsapp}<span>WhatsApp'tan randevu</span></a>
                 <a class="k-btn k-btn--ikincil" href="${telHref(d)}">${icons.phone}<span>Ara</span></a>
               </footer>
             </article>
           </div>
-          <p class="k-not ak__not">Bu genel bir örnek takvimdir; teşhis ya da tedavi önerisi değildir. Aşıdan önce hayvanınızı muayene eder, takvimi yaşına, sağlığına ve yaşam koşullarına göre birlikte belirleriz.</p>
+          <p class="k-not ak__not">Bu genel bir örnek takvimdir; teşhis ya da tedavi önerisi değildir. Aşıdan önce muayene yapılır, takvimi hayvanın yaşına, sağlığına ve yaşam koşullarına göre veteriner hekim belirler.</p>
         </div>
       </section>`;
   },
@@ -385,20 +373,5 @@ export const asiKarnesi = {
       }, { rootMargin: '0px 0px -18% 0px' });
       io.observe(el.querySelector('.ak__ic'));
     }
-  },
-};
-
-// Özet bölümündeki "Kurumsal" bağlantısı bu sitede "Kliniğimiz" sayfasına gidiyor; adını ona göre yaz.
-export const ozet = {
-  ...BOLUMLER.ozet,
-  render: (d, ctx, sorgu) => BOLUMLER.ozet.render(d, ctx, sorgu).replace('>Kurumsal ', '>Kliniğimiz '),
-};
-
-// --- Yorumlar: örnek olduğu açık -------------------------------------------------------------
-export const yorumlar = {
-  render(d, ctx, sorgu) {
-    return BOLUMLER.yorumlar.render(d, ctx, sorgu)
-      .replace(/<span>\d+ değerlendirme<\/span>/, '<span>örnek puan</span>')
-      .replace('<ul class="k-yorumlar__liste"', '<p class="k-not">Bu yorumlar tasarım örneğidir; kliniğin kendi yorumlarıyla değiştirilir.</p><ul class="k-yorumlar__liste"');
   },
 };

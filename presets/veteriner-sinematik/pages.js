@@ -2,6 +2,7 @@
 //  base: kâğıt, güvenlik deseni, başlıklar, fotoğraflar (opak)
 //  ink : hekimin mavi tükenmez kalemle yazdıkları (yalnızca alfa kullanılır, kaydırdıkça "yazılır")
 // Mantıksal ölçü 1000 x 1400; tuval çözünürlüğü dışarıdan verilir.
+import { yilEki } from '../../shared/core.js';
 
 export const PW = 1000, PH = 1400;
 export const C = {
@@ -47,19 +48,6 @@ function tick(x, px, py, s = 34) {
   x.moveTo(px - s * 0.45, py);
   x.quadraticCurveTo(px - s * 0.2, py + s * 0.25, px - s * 0.08, py + s * 0.42);
   x.quadraticCurveTo(px + s * 0.2, py - s * 0.3, px + s * 0.62, py - s * 0.6);
-  x.stroke();
-  x.restore();
-}
-function scribbleCircle(x, cx, cy, rx, ry) {
-  x.save();
-  x.strokeStyle = '#fff'; x.lineWidth = 6; x.lineCap = 'round';
-  x.beginPath();
-  for (let i = 0; i <= 80; i++) {
-    const a = -0.4 + (i / 80) * Math.PI * 2.15;
-    const k = 1 + Math.sin(i * 0.7) * 0.02 + i * 0.0006;
-    const px = cx + Math.cos(a) * rx * k, py = cy + Math.sin(a) * ry * k;
-    i ? x.lineTo(px, py) : x.moveTo(px, py);
-  }
   x.stroke();
   x.restore();
 }
@@ -190,10 +178,11 @@ function box(b, px, py, s = 44) {
 
 // --- Sayfalar -------------------------------------------------------------
 
-export function buildPages(d, img, res, onStep) {
+// Kapak ve ilk açılan iki sayfa (kimlik, muayene). upto ile daha azı çizilebilir.
+export function buildPages(d, img, res, onStep, upto = Infinity) {
   const pages = [];
   const layout = { stamps: [], tags: {} };
-  const add = (fn) => { const [bc, b] = mk(res); const [kc, k] = mk(res); fn(b, k); pages.push({ base: bc, ink: kc }); onStep?.(pages.length); };
+  const add = (fn) => { if (pages.length >= upto) return; const [bc, b] = mk(res); const [kc, k] = mk(res); fn(b, k); pages.push({ base: bc, ink: kc }); onStep?.(pages.length); };
   const byId = Object.fromEntries(d.hizmetler.map((h) => [h.id, h]));
   const yil = d.isletme.kurulus;
 
@@ -231,7 +220,7 @@ export function buildPages(d, img, res, onStep) {
     field(b, k, 'Karne açılışı', 600, 'İlk muayenede', 490, 440, 44);
     field(b, k, 'Klinik', 850, d.isletme.ad, 70, PW - 140, 48);
     field(b, k, 'Telefon', 970, d.iletisim.telefon, 70, 420);
-    field(b, k, 'Hizmette', 970, `${yil}'den beri`, 530, 400);
+    field(b, k, 'Hizmette', 970, `${yilEki(yil)} beri`, 530, 400);
     b.fillStyle = C.mute; b.font = F.body(30, 500);
     wrap(b, 'Muayene, aşı ve tahliller bu karneye ve klinik kaydına birlikte işlenir.', 70, 1150, PW - 140, 42, 3);
     drawPaw(b, 880, 1290, 70, 'rgba(143,127,240,.35)');
@@ -257,209 +246,9 @@ export function buildPages(d, img, res, onStep) {
     layout.tags.muayene = [0.5, 0.42];
   });
 
-  // 3: Aşı takvimi (mühürler buraya basılır)
-  add((b, k) => {
-    paper(b, d, 3, 3);
-    const h = byId.asi;
-    heading(b, '03', h.sure, h.baslik);
-    const top = 380;
-    b.fillStyle = C.indigo; rr(b, 70, top, PW - 140, 70, 14); b.fill();
-    b.fillStyle = '#f5e7b8'; b.font = F.mono(26, 700);
-    b.fillText('AŞI', 96, top + 46); b.fillText('TARİH', 400, top + 46); b.fillText('MÜHÜR', 690, top + 46);
-    d.asiSatirlari.forEach((t, i) => {
-      const py = top + 90 + i * 220;
-      b.fillStyle = i % 2 ? 'rgba(179,166,255,.12)' : 'rgba(67,214,176,.10)';
-      b.fillRect(70, py, PW - 140, 210);
-      b.strokeStyle = C.line; b.lineWidth = 2; b.strokeRect(70, py, PW - 140, 210);
-      b.beginPath(); b.moveTo(370, py); b.lineTo(370, py + 210); b.moveTo(640, py); b.lineTo(640, py + 210); b.stroke();
-      b.fillStyle = C.indigo; b.font = F.body(36, 700); wrap(b, t, 96, py + 90, 250, 44, 2);
-      hand(k, ['Muayene ile', 'Hekim yazar', 'Her yıl'][i] ?? '', 390, py + 100, 40, -0.03);
-      hand(k, '__ / __ / ____', 390, py + 160, 36, 0);
-      layout.stamps.push({ side: 3, u: 0.775, v: 1 - (py + 105) / 1400, r: 0.14, cell: i % 3, rot: [-0.3, 0.22, -0.08][i] });
-    });
-    b.fillStyle = C.mute; b.font = F.body(28, 500);
-    wrap(b, 'Aşıdan önce kısa bir muayene yapılır; sonraki tarih karneye yazılır.', 70, 1180, PW - 140, 40, 3);
-    layout.tags.asi = [0.77, 0.6];
-  });
-
-  // 4: Hatırlatma
-  add((b, k) => {
-    paper(b, d, 4, 4);
-    heading(b, '04', 'WhatsApp hatırlatma', 'Sonraki aşı');
-    b.fillStyle = C.mute; b.font = F.mono(26, 700); b.fillText('TARİH', 90, 400);
-    hand(k, 'Günü gelince', 90, 500, 74, -0.04);
-    hand(k, 'haber verilecek!', 110, 590, 74, -0.04);
-    scribbleCircle(k, 420, 520, 380, 130);
-    // Telefon balonu
-    b.save(); b.translate(150, 720);
-    b.fillStyle = '#1b1450'; rr(b, 0, 0, 700, 520, 44); b.fill();
-    b.fillStyle = '#2a2168'; rr(b, 24, 24, 652, 80, 22); b.fill();
-    b.fillStyle = C.mint; b.beginPath(); b.arc(78, 64, 26, 0, Math.PI * 2); b.fill();
-    drawPaw(b, 78, 66, 30, '#1b1450');
-    b.fillStyle = '#fff'; b.font = F.body(30, 700); b.fillText(d.isletme.ad.slice(0, 26), 120, 74);
-    b.fillStyle = '#e8fff7'; rr(b, 40, 140, 540, 220, 26); b.fill();
-    b.fillStyle = C.indigo; b.font = F.body(32, 600);
-    wrap(b, 'Merhaba, dostunuzun aşı günü yaklaştı. Size uygun saati yazar mısınız?', 70, 200, 480, 44, 4);
-    b.fillStyle = '#43d6b0'; rr(b, 250, 390, 330, 90, 26); b.fill();
-    b.fillStyle = C.indigo; b.font = F.body(32, 700); b.fillText('Yarın 10:30 olur', 280, 447);
-    b.restore();
-    layout.tags.hatirlatma = [0.5, 0.35];
-  });
-
-  // 5: Laboratuvar
-  add((b, k) => {
-    paper(b, d, 5, 5);
-    const h = byId.laboratuvar;
-    heading(b, '05', h.sure, 'Tahlil');
-    photo(b, img.kan, 90, 360, 360, 470, -0.03);
-    const bars = [['Hemogram', 0.72], ['Biyokimya', 0.58], ['Karaciğer', 0.64], ['Böbrek', 0.5]];
-    bars.forEach(([t, v], i) => {
-      const py = 400 + i * 108;
-      b.fillStyle = C.indigo; b.font = F.body(30, 700); b.fillText(t, 520, py);
-      b.fillStyle = 'rgba(27,20,80,.1)'; rr(b, 520, py + 18, 380, 26, 13); b.fill();
-      b.fillStyle = i % 2 ? C.lilac : C.mint; rr(b, 520, py + 18, 380 * v, 26, 13); b.fill();
-    });
-    b.fillStyle = C.mute; b.font = F.mono(24, 700); b.fillText('KLİNİKTEKİ CİHAZDA', 520, 850);
-    field(b, k, 'Sonuç', 930, 'Aynı ziyarette', 70, PW - 140, 58);
-    field(b, k, 'Dış laboratuvar', 1060, "WhatsApp'tan iletilir", 70, PW - 140, 50);
-    hand(k, 'Sonuçları birlikte okuruz.', 80, 1290, 44, -0.02);
-    layout.tags.laboratuvar = [0.25, 0.6];
-  });
-
-  // 6: Kısırlaştırma
-  add((b, k) => {
-    paper(b, d, 6, 6);
-    const h = byId.kisirlastirma;
-    heading(b, '06', 'Yarım gün', h.baslik);
-    const steps = d.kisirAdimlari;
-    const x0 = 170;
-    b.strokeStyle = C.lilac; b.lineWidth = 6; b.setLineDash([2, 16]); b.lineCap = 'round';
-    b.beginPath(); b.moveTo(x0, 420); b.lineTo(x0, 420 + (steps.length - 1) * 150); b.stroke(); b.setLineDash([]);
-    steps.forEach((t, i) => {
-      const py = 420 + i * 150;
-      b.fillStyle = i === 2 ? C.pink : C.indigo; b.beginPath(); b.arc(x0, py, 40, 0, Math.PI * 2); b.fill();
-      b.fillStyle = '#fff'; b.font = F.disp(40); b.textAlign = 'center'; b.fillText(String(i + 1), x0, py + 14); b.textAlign = 'left';
-      b.fillStyle = C.indigo; b.font = F.body(42, 700); b.fillText(t, 250, py + 14);
-      tick(k, 880, py - 4, 44);
-    });
-    hand(k, 'Evde bakım notu yazılı verildi.', 80, 1230, 46, -0.02);
-    underline(k, 80, 700, 1248);
-    layout.tags.kisirlastirma = [0.55, 0.955];
-  });
-
-  // 7: Diş taşı
-  add((b, k) => {
-    paper(b, d, 7, 7);
-    const h = byId.dis;
-    heading(b, '07', h.sure, h.baslik);
-    photo(b, img.agiz, 90, 360, 820, 380, 0.012);
-    // Köpek diş şeması (üst çene yayı)
-    const cx = 500, cy = 1265;
-    b.strokeStyle = C.line; b.lineWidth = 3;
-    b.beginPath(); b.ellipse(cx, cy, 360, 290, 0, Math.PI, Math.PI * 2); b.stroke();
-    for (let i = 0; i < 20; i++) {
-      const a = Math.PI + (i + 0.5) / 20 * Math.PI;
-      const px = cx + Math.cos(a) * 360, py = cy + Math.sin(a) * 290;
-      const big = i === 3 || i === 16;
-      b.fillStyle = '#fff'; b.strokeStyle = C.indigo; b.lineWidth = 3;
-      b.beginPath(); b.ellipse(px, py, big ? 22 : 16, big ? 30 : 20, a + Math.PI / 2, 0, Math.PI * 2); b.fill(); b.stroke();
-      if ([6, 7, 12, 13].includes(i)) { k.fillStyle = '#fff'; k.beginPath(); k.arc(px, py, 12, 0, Math.PI * 2); k.fill(); }
-    }
-    b.fillStyle = C.mute; b.font = F.mono(24, 700); b.textAlign = 'center'; b.fillText('ÜST ÇENE', cx, cy - 40); b.textAlign = 'left';
-    hand(k, 'Ağız muayenesi yapıldı.', 110, 830, 50, -0.03);
-    hand(k, 'Temizlik sedasyon altında.', 110, 910, 50, -0.03);
-    layout.tags.dis = [0.5, 0.25];
-  });
-
-  // 8: Bakım
-  add((b, k) => {
-    paper(b, d, 8, 8);
-    const h = byId.bakim;
-    heading(b, '08', h.sure, 'Bakım');
-    photo(b, img.sefkat, 540, 360, 360, 480, 0.04);
-    d.bakimListesi.forEach((t, i) => {
-      const py = 390 + i * 120;
-      box(b, 80, py, 50);
-      b.fillStyle = C.indigo; b.font = F.body(34, 600); wrap(b, t, 150, py + 38, 340, 40, 2);
-      tick(k, 104, py + 24, 42);
-    });
-    field(b, k, 'Yaşlı ve huzursuz dostlar', 930, 'Acele etmeden, birkaç aşamada', 70, PW - 140, 46);
-    hand(k, 'Hiç zorlamadan.', 90, 1200, 60, -0.04);
-    drawPaw(b, 820, 1210, 110, 'rgba(67,214,176,.45)');
-    layout.tags.bakim = [0.72, 0.62];
-  });
-
-  // 9: Acil
-  add((b, k) => {
-    paper(b, d, 9, 9);
-    b.fillStyle = C.red; rr(b, 70, 140, PW - 140, 470, 34); b.fill();
-    b.fillStyle = '#fff'; b.font = F.mono(30, 700); b.fillText('09 · ACİL DURUM', 110, 215);
-    fitDisp(b, 'Önce arayın.', 100, PW - 240); b.fillText('Önce arayın.', 110, 340);
-    fitDisp(b, d.iletisim.telefon, 90, PW - 240); b.fillText(d.iletisim.telefon, 110, 480);
-    b.font = F.body(30, 600); b.fillText('Hekimimiz telefonda ilk yapılacakları söyler.', 110, 560);
-    d.acilListesi.forEach((t, i) => {
-      const py = 700 + i * 104;
-      b.fillStyle = C.red; b.beginPath(); b.arc(100, py - 12, 14, 0, Math.PI * 2); b.fill();
-      b.fillStyle = C.indigo; b.font = F.body(42, 700); b.fillText(t, 140, py);
-    });
-    hand(k, 'Yola çıkmadan önce ara!', 90, 1290, 58, -0.03);
-    underline(k, 90, 700, 1306);
-    layout.tags.acil = [0.5, 0.84];
-  });
-
-  // 10: Randevu (arka kapak içi)
-  add((b, k) => {
-    paper(b, d, 10, 10);
-    heading(b, '10', 'Randevu', 'Sıradaki sayfa');
-    b.fillStyle = C.mute; b.font = F.mono(24, 700); b.fillText('ÇALIŞMA SAATLERİ', 70, 390);
-    const g = d.__saatler || [];
-    g.forEach(([gun, saat], i) => {
-      const py = 460 + i * 86;
-      b.fillStyle = C.indigo; b.font = F.body(36, 700); b.fillText(gun, 70, py);
-      b.textAlign = 'right'; b.fillStyle = saat === 'Kapalı' ? C.red : C.mintDk; b.fillText(saat, PW - 70, py); b.textAlign = 'left';
-      b.fillStyle = C.line; b.fillRect(70, py + 26, PW - 140, 2);
-    });
-    const yy = 460 + g.length * 86 + 60;
-    field(b, k, 'Telefon', yy, d.iletisim.telefon, 70, PW - 140, 60);
-    b.fillStyle = C.mute; b.font = F.mono(24, 700); b.fillText('ADRES', 70, yy + 170);
-    b.fillStyle = C.indigo; b.font = F.body(32, 600); wrap(b, d.iletisim.adres, 70, yy + 220, PW - 140, 44, 3);
-    hand(k, 'Görüşmek üzere!', 540, 1310, 56, -0.05);
-    layout.tags.randevu = [0.5, 0.86];
-  });
+  // 3–10: açılış sahnesinde görünmeyen sayfalar çizilmez (karne yalnız ilk açılışta gösterilir).
 
   return { pages, layout };
-}
-
-// Mühür atlası: 3 hücre (aşı yapıldı, tekrar, yıllık)
-export function stampAtlas(res = 384) {
-  const c = document.createElement('canvas');
-  c.width = res * 3; c.height = res;
-  const x = c.getContext('2d');
-  const labels = [['AŞI', 'YAPILDI'], ['TEKRAR', 'DOZU'], ['YILLIK', 'KONTROL']];
-  labels.forEach(([a, b2], i) => {
-    x.save();
-    x.translate(res * i + res / 2, res / 2);
-    const s = res / 400;
-    x.scale(s, s);
-    x.strokeStyle = '#fff'; x.fillStyle = '#fff';
-    x.lineWidth = 14; x.beginPath(); x.arc(0, 0, 180, 0, Math.PI * 2); x.stroke();
-    x.lineWidth = 5; x.beginPath(); x.arc(0, 0, 150, 0, Math.PI * 2); x.stroke();
-    fitDisp(x, a, 64, 230); x.textAlign = 'center'; x.fillText(a, 0, -40);
-    x.font = F.mono(40, 700); x.fillText(b2, 0, 100);
-    drawPaw(x, 0, 30, 60, '#fff');
-    // yıldızlar
-    for (const sx of [-110, 110]) { x.beginPath(); x.arc(sx, 30, 9, 0, Math.PI * 2); x.fill(); }
-    x.restore();
-  });
-  // eskitme: rastgele boşluklar
-  x.globalCompositeOperation = 'destination-out';
-  let r = 777;
-  for (let i = 0; i < 1400; i++) {
-    r = (r * 16807) % 2147483647;
-    x.globalAlpha = 0.3 + (r % 100) / 160;
-    x.beginPath(); x.arc(r % c.width, (r >> 4) % c.height, 1 + (r % 5), 0, Math.PI * 2); x.fill();
-  }
-  return c;
 }
 
 export function pawSprite(res = 128) {

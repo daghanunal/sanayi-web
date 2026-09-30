@@ -1,16 +1,18 @@
+// Karne (sinematik aile, veteriner kliniği): gece çivitisi zemin, nane ve pembe vurgu, el yazısı.
+// 3D yalnız açılışta: künyenin yanında (telefonda üstünde) sağlık karnesi bir kez masaya iner ve kapağı
+// açılır; kimlik ve muayene sayfalarındaki el yazısı yazılır. Kaydırma kilitlenmez, perde yok.
+// Bölüm ekrandan çıkınca çizim durur. Gerisi normal site bölümleri.
 import temel from '../../data/sektor-veteriner.json';
 import ek from '../../data/veteriner-sinematik.json';
 import '../../shared/base.css';
 import './style.css';
 import {
-  boot, initSmoothScroll, reducedMotion, telHref, waHref, mapsHref, mapsEmbed,
-  openStatus, groupedHours, icons, esc, asset, gsap, ScrollTrigger, setStoryMode, vitrinModu,
+  boot, initSmoothScroll, reducedMotion, telHref, waHref, mapsHref, mapsEmbed, autoHideHeader,
+  saatListesi, gunDurumu, kisaAdres, acikGunSayisi, yilEki, icons, esc, asset, gsap, ScrollTrigger,
 } from '../../shared/core.js';
-import { SplitText } from 'gsap/SplitText';
 import { createScene, W } from './scene.js';
-import { buildPages, stampAtlas, pawSprite } from './pages.js';
+import { buildPages, pawSprite } from './pages.js';
 
-gsap.registerPlugin(SplitText);
 ScrollTrigger.config({ ignoreMobileResize: true });
 
 const d = boot({ ...temel, ...ek, preset: 'veteriner-sinematik' });
@@ -20,133 +22,111 @@ const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
 const seg = (p, a, b) => clamp((p - a) / (b - a));
 const L = (a, b, t) => a + (b - a) * t;
 const sm = (t) => { t = clamp(t); return t * t * (3 - 2 * t); };
-const bump = (p, a, b, e = 0.2) => { const w = (b - a) * e; return seg(p, a, a + w) * (1 - seg(p, b - w, b)); };
-const nf = (n, digits = 0) => n.toLocaleString('tr-TR', { minimumFractionDigits: digits, maximumFractionDigits: digits });
 const weak = (navigator.hardwareConcurrency || 8) <= 4 || (navigator.deviceMemory || 8) <= 4;
 const mobile = () => innerWidth < 760;
 const lite = weak || innerWidth < 760;
 const lower = (s) => s.toLocaleLowerCase('tr');
 const IMG = (n) => asset(`/img/sektor-veteriner/${n}.jpg`);
+const waGenel = d.waMesaj || 'Merhaba, randevu almak istiyorum.';
 
-function ablative(n) {
-  const units = ['', 'den', 'den', 'ten', 'ten', 'ten', 'dan', 'den', 'den', 'dan'];
-  const tens = ['', 'dan', 'den', 'dan', 'tan', 'den', 'tan', 'ten', 'den', 'dan'];
-  const u = n % 10, t = Math.floor(n / 10) % 10;
-  return `${n}'${u ? units[u] : t ? tens[t] : 'den'}`;
-}
-const waMsg = (m) => waHref(d, m ? m.replace(/^Merhaba,/, `Merhaba ${d.isletme.ad},`) : undefined);
+// Çekirdeğin varsayılan WhatsApp metni oto sanayi içindir; alt çubukta klinik metni kullanılır.
+$$('.action-bar a[href*="wa.me"]').forEach((a) => (a.href = waHref(d, waGenel)));
+
+// --- Arama motoru: veteriner kliniği ------------------------------------------------
+(function vetLd() {
+  $$('script[type="application/ld+json"]').forEach((s) => s.textContent.includes('"AutoRepair"') && s.remove());
+  const GUN = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  const ld = document.createElement('script');
+  ld.type = 'application/ld+json';
+  ld.textContent = JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'VeterinaryCare',
+    name: d.isletme.ad,
+    description: d.isletme.tanim,
+    telephone: d.iletisim.telefon,
+    foundingDate: String(d.isletme.kurulus),
+    address: { '@type': 'PostalAddress', streetAddress: d.iletisim.adres, addressLocality: 'Etimesgut', addressRegion: 'Ankara', addressCountry: 'TR' },
+    openingHoursSpecification: d.saatler
+      .map((s, i) => (s ? { '@type': 'OpeningHoursSpecification', dayOfWeek: `https://schema.org/${GUN[i]}`, opens: s.split('-')[0], closes: s.split('-')[1] } : null))
+      .filter(Boolean),
+  });
+  document.head.append(ld);
+  document.title = `${d.isletme.ad} | Veteriner Kliniği | Etimesgut, Ankara`;
+})();
 
 // --- İçerik ------------------------------------------------------------------
 
-const binds = { ad: d.isletme.ad, telefon: d.iletisim.telefon, adres: d.iletisim.adres };
+const binds = {
+  ad: d.isletme.ad, tanim: d.isletme.tanim, telefon: d.iletisim.telefon,
+  adres: d.iletisim.adres, kisaAdres: kisaAdres(d.iletisim.adres),
+};
 $$('[data-bind]').forEach((el) => (el.textContent = binds[el.dataset.bind] ?? ''));
 $$('[data-tel]').forEach((a) => (a.href = telHref(d)));
-const waGenel = waHref(d, `Merhaba ${d.isletme.ad}, randevu almak istiyorum.`);
-$$('[data-wa]').forEach((a) => (a.href = waGenel));
+$$('[data-wa]').forEach((a) => (a.href = waHref(d, waGenel)));
 $$('[data-maps]').forEach((a) => (a.href = mapsHref(d)));
 $$('[data-icon]').forEach((el) => (el.innerHTML = icons[el.dataset.icon]));
+$('[data-year]').textContent = new Date().getFullYear();
+if (d.isletme.ad.length > 22) $('.hero__title').classList.add('is-long');
 
-const yil = new Date().getFullYear() - d.isletme.kurulus;
-$('[data-since]').textContent = `Etimesgut · ${ablative(d.isletme.kurulus)} beri`;
-const heroTitle = $('[data-hero-title]');
-heroTitle.textContent = d.isletme.ad;
-if (d.isletme.ad.length > 22) heroTitle.classList.add("is-long");
-$('[data-slogan]').textContent = d.isletme.slogan;
-$('[data-intro-name]').textContent = d.isletme.ad;
-
-const status = openStatus(d.saatler);
-$$('[data-status]').forEach((el) => {
-  el.textContent = status.open ? 'Klinik açık' : 'Klinik kapalı';
-  el.title = status.text;
-  el.classList.toggle('is-open', status.open);
-});
-$('[data-status-big]').textContent = status.text;
-$('[data-status-big]').classList.toggle('is-open', status.open);
-
-// Film kartları
-const byId = Object.fromEntries(d.hizmetler.map((h) => [h.id, h]));
-const FILM = d.film.map((f) => {
-  const h = f.hizmet ? byId[f.hizmet] : null;
-  return {
-    ...f,
-    baslik: f.baslik || h?.baslik || '',
-    metin: f.metin || h?.aciklama || '',
-    sure: h?.sure || '',
-    wa: waMsg(f.mesaj || h?.mesaj || `Merhaba, ${lower(h?.baslik || f.durak)} için bilgi almak istiyorum.`),
-    cta: f.id === 'acil' ? 'Hemen arayın' : f.id === 'hatirlatma' ? 'Listeye ekleyin' : f.id === 'karne' ? 'Karne açtırın' : 'WhatsApp\'tan sorun',
-  };
-});
-$('[data-rail]').innerHTML = FILM.map((a) => `<li data-rail-i><b>${esc(a.no)}</b><span>${esc(a.durak)}</span></li>`).join('');
-const cardHtml = (a) => `
-  <article class="card${a.id === 'acil' ? ' card--acil' : ''}" data-card="${esc(a.id)}">
-    <p class="card__no"><b>${esc(a.no)}</b><span>${esc(a.durak)}</span>${a.sure ? `<em>${esc(a.sure)}</em>` : ''}</p>
-    <h2 class="card__title">${esc(a.baslik)}</h2>
-    <p class="card__text">${esc(a.metin)}</p>
-    ${a.id === 'acil'
-      ? `<a class="card__wa card__wa--tel" href="${esc(telHref(d))}">${icons.phone}<span>${esc(d.iletisim.telefon)}</span></a>`
-      : `<a class="card__wa" href="${esc(a.wa)}" target="_blank" rel="noopener">${icons.whatsapp}<span>${esc(a.cta)}</span></a>`}
-  </article>`;
-// Her bölüm (iki sayfa) önce kısa bir "sayfa çevriliyor" arası, sonra iki durak
-$('[data-stops]').innerHTML = FILM.map((a, i) => `
-  ${i % 2 === 0 ? `<div class="fgap" data-gap="${i / 2}"><p class="flipnote"><small>${i ? 'Sayfa çevriliyor' : 'Kapak açılıyor'}</small><b>${esc(a.no)}–${esc(FILM[i + 1]?.no || '')}</b><span>${esc(a.durak)}${FILM[i + 1] ? ` · ${esc(FILM[i + 1].durak)}` : ''}</span></p></div>` : ''}
-  <div class="stop" data-stop="${i}">${cardHtml(a)}</div>`).join('');
-
-// Hakkımızda + rakamlar
-const aboutText = $('[data-about-text]');
-aboutText.innerHTML = d.isletme.hakkinda.split(' ').map((w) => `<span>${esc(w)} </span>`).join('');
-const stats = d.istatistikler.map((s) => ({ ...s, deger: s.kurulustanHesapla ? yil : s.deger }));
-$('[data-stats]').innerHTML = stats.map((s) => `
-  <li class="stat"><p class="stat__num"><b data-count="${s.deger}">0</b>${esc(s.sonek)}</p><p class="stat__lbl">${esc(s.etiket)}</p></li>`).join('');
+function refreshStatus() {
+  const s = gunDurumu(d.saatler);
+  $$('[data-status]').forEach((el) => {
+    el.classList.toggle('is-open', s.open);
+    const long = el.querySelector('[data-long]');
+    if (long) long.textContent = 'kunye' in el.dataset ? s.kunye : s.metin;
+  });
+  const top = $('[data-top-status]');
+  top.textContent = s.open ? 'Açık' : 'Kapalı';
+  top.classList.toggle('is-open', s.open);
+}
+refreshStatus();
+setInterval(refreshStatus, 60_000);
 
 // Hizmetler: karne sekmeleri
 const TABC = ['mint', 'lilac', 'pink', 'butter'];
 $('[data-services]').innerHTML = d.hizmetler.map((s, i) => `
   <article class="svc__card svc__card--${TABC[i % 4]}${s.id === 'acil' ? ' is-acil' : ''}">
-    <p class="svc__tab"><b>${String(i + 1).padStart(2, '0')}</b>${esc(s.baslik)}</p>
+    <p class="svc__tab"><b>${String(i + 1).padStart(2, '0')}</b>${esc(s.kisa || s.baslik)}</p>
     <div class="svc__inner">
-      ${s.gorsel ? `<figure class="svc__img"><img src="${esc(s.gorsel)}" alt="" loading="lazy" width="800" height="600" /></figure>` : ''}
+      ${s.gorsel ? `<figure class="svc__img"><img src="${esc(s.gorsel)}" alt="${esc(s.gorselAlt || '')}" loading="lazy" decoding="async" width="800" height="600" /></figure>` : ''}
       <div class="svc__body">
         <h3 class="svc__name">${esc(s.baslik)}</h3>
         <p class="svc__desc">${esc(s.aciklama)}</p>
-        <p class="svc__foot"><span class="svc__time">${esc(s.sure)}</span>
+        <p class="svc__foot">${s.sure ? `<span class="svc__time"><span class="sr-only">Süre: </span>${esc(s.sure)}</span>` : '<span></span>'}
           ${s.id === 'acil'
             ? `<a href="${esc(telHref(d))}">${icons.phone}<span>Ara</span></a>`
-            : `<a href="${esc(waMsg(s.mesaj || `Merhaba, ${lower(s.baslik)} için bilgi almak istiyorum.`))}" target="_blank" rel="noopener">${icons.whatsapp}<span>Sor</span></a>`}</p>
+            : `<a href="${esc(waHref(d, s.mesaj || `Merhaba, ${lower(s.baslik)} için bilgi almak istiyorum.`))}" target="_blank" rel="noopener">${icons.whatsapp}<span>Bilgi alın</span></a>`}</p>
       </div>
     </div>
   </article>`).join('');
 
-// Süreç, galeri, türler
-$('[data-steps]').innerHTML = d.surec.map((s, i) => `
-  <li class="step"><span class="step__n">${i + 1}</span><div><h3>${esc(s.baslik)}</h3><p>${esc(s.aciklama)}</p></div></li>`).join('');
-$('[data-garanti]').textContent = d.garanti;
-$('[data-gallery]').innerHTML = d.galeri.map((g, i) => `
-  <figure class="pol" style="--r:${[-3, 2, -1.5, 3, -2.5, 1][i % 6]}deg"><img src="${esc(g.src)}" alt="${esc(g.alt)}" loading="lazy" width="900" height="700" /><figcaption>${esc(g.alt)}</figcaption></figure>`).join('');
-const who = d.markalar.map((m) => `<span>${esc(m)}</span><i aria-hidden="true">${pawSvg()}</i>`).join('');
-$('[data-who]').innerHTML = `<div>${who}</div><div aria-hidden="true">${who}</div>`;
-function pawSvg() {
-  return '<svg viewBox="0 0 32 32"><ellipse cx="16" cy="20" rx="7" ry="6"/><ellipse cx="7.5" cy="13" rx="2.7" ry="3.5"/><ellipse cx="12.8" cy="8.6" rx="2.7" ry="3.5"/><ellipse cx="19.2" cy="8.6" rx="2.7" ry="3.5"/><ellipse cx="24.5" cy="13" rx="2.7" ry="3.5"/></svg>';
-}
+// Hakkında + rakamlar (yalnız olgular: kuruluştan geçen yıl, haftada açık gün)
+const yil = new Date().getFullYear() - d.isletme.kurulus;
+const yer = d.isletme.yer || "Etimesgut'ta";
+$('[data-about-text]').textContent = `${d.isletme.ad} ${yilEki(d.isletme.kurulus)} beri ${yer}. ${d.isletme.hakkinda}`;
+$('[data-facts]').innerHTML = (d.bilgiler || []).map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join('');
+$('[data-stats]').innerHTML = [
+  { n: yil, u: ' yıl', l: yer },
+  { n: acikGunSayisi(d.saatler), u: ' gün', l: 'haftada açık' },
+].map((s) => `<li class="stat"><p class="stat__num"><b>${s.n}</b>${esc(s.u)}</p><p class="stat__lbl">${esc(s.l)}</p></li>`).join('');
 
-// Yorumlar
-$('[data-puan]').textContent = nf(d.puan.ortalama, 1);
-$('[data-stars]').innerHTML = icons.star.repeat(5);
-$('[data-puan-adet]').innerHTML = '<span class="ornek">Örnek yorumlar</span> Puan ve yorumlar tanıtım içindir.';
+// Galeri
+$('[data-gallery]').innerHTML = d.galeri.slice(0, 10).map((g, i) => `
+  <figure class="pol" style="--r:${[-3, 2, -1.5, 3, -2.5, 1][i % 6]}deg"><img src="${esc(g.src)}" alt="${esc(g.alt)}" loading="lazy" decoding="async" width="900" height="700" /><figcaption>${esc(g.alt)}</figcaption></figure>`).join('');
+
+// Örnek yorumlar
+const stars = (n) => Array.from({ length: 5 }, (_, i) => `<span class="${i < n ? '' : 'off'}">${icons.star}</span>`).join('');
 $('[data-reviews]').innerHTML = d.yorumlar.map((y) => `
   <figure class="rev">
     <p class="rev__pet">${esc(y.arac || '')}</p>
-    <p class="rev__stars" aria-label="${y.puan} yıldız">${icons.star.repeat(y.puan)}</p>
+    <p class="rev__stars" role="img" aria-label="5 üzerinden ${Number(y.puan)}">${stars(y.puan)}</p>
     <blockquote>${esc(y.metin)}</blockquote>
     <figcaption>${esc(y.ad)}</figcaption>
   </figure>`).join('');
 
-// Saatler, final, footer
-const saatGrup = groupedHours(d.saatler);
-$('[data-hours]').innerHTML = saatGrup
+// Saatler
+$('[data-hours]').innerHTML = saatListesi(d.saatler)
   .map(([g, h]) => `<div class="${h === 'Kapalı' ? 'is-closed' : ''}"><dt>${esc(g)}</dt><dd>${esc(h)}</dd></div>`).join('');
-$('[data-final-title]').textContent = d.finalBaslik;
-$('[data-year]').textContent = `© ${new Date().getFullYear()} ${d.isletme.ad}`;
-$('[data-final-paws]').innerHTML = Array.from({ length: 10 }, (_, i) => `<i style="--i:${i}">${pawSvg()}</i>`).join('');
 
 const mapBox = $('[data-map]');
 new IntersectionObserver((entries, obs) => {
@@ -155,366 +135,65 @@ new IntersectionObserver((entries, obs) => {
   obs.disconnect();
 }, { rootMargin: '600px' }).observe(mapBox);
 
-// --- Hatırlatma karnesi (imza bölümü) -----------------------------------------
+// --- Başlık çubuğu ---------------------------------------------------------------
+const topEl = $('[data-top]');
+ScrollTrigger.create({ start: 60, end: 'max', onToggle: (s) => topEl.classList.toggle('is-solid', s.isActive) });
+if (matchMedia('(max-width: 899px)').matches) autoHideHeader(topEl, { offset: 140 });
 
-(function remind() {
-  const H = d.hatirlatici;
-  $('[data-remind-title]').textContent = H.baslik;
-  $('[data-remind-text]').textContent = H.metin;
-  $('[data-mini-clinic]').textContent = d.isletme.ad;
-  const form = $('[data-remind-form]');
-  const photo = $('[data-mini-photo]');
-  const wa = $('[data-remind-wa]');
-  const AYLAR = ['Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran', 'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık'];
-  const PH = { Kedi: IMG('kedi'), Köpek: IMG('kopek-portre'), Diğer: IMG('kedi-portre') };
-  let lastTur = '';
-  function update(pop) {
-    const f = new FormData(form);
-    const tur = f.get('tur') || 'Kedi', yas = f.get('yas') || 'Yavru';
-    const ad = String(f.get('ad') || '').trim();
-    const son = String(f.get('son') || '');
-    let sonTxt = 'Bilinmiyor';
-    if (/^\d{4}-\d{2}$/.test(son)) sonTxt = `${AYLAR[Number(son.slice(5)) - 1]} ${son.slice(0, 4)}`;
-    $('[data-mini-ad]').textContent = ad || '...';
-    $('[data-mini-tur]').textContent = tur;
-    $('[data-mini-yas]').textContent = yas;
-    $('[data-mini-son]').textContent = sonTxt;
-    if (tur !== lastTur) {
-      photo.style.backgroundImage = `url("${PH[tur]}")`;
-      lastTur = tur;
-    }
-    const sahip = { Kedi: 'kedim', Köpek: 'köpeğim' }[tur] || 'evcil hayvanım';
-    const kim = ad ? `${sahip} ${ad}` : sahip;
-    const msg = `Merhaba ${d.isletme.ad}, ${kim} için aşı takibini sizde başlatmak istiyorum. Yaşı: ${lower(yas)}. Son aşı: ${lower(sonTxt)}.`;
-    wa.href = waHref(d, msg);
-    if (pop && !reducedMotion) gsap.fromTo('[data-mini-stamp]', { scale: 1.6, opacity: 0, rotate: -30 }, { scale: 1, opacity: 1, rotate: -12, duration: 0.45, ease: 'back.out(2.5)' });
-  }
-  form.addEventListener('input', () => update(false));
-  form.addEventListener('change', () => update(true));
-  update(false);
-})();
+// --- Sahne: yalnız açılışta ------------------------------------------------------
 
-// --- Sahne ---------------------------------------------------------------
-
+const hero = $('.hero');
 const canvas = $('[data-stage]');
-const S = createScene(canvas, { lite });
-if (import.meta.env.DEV) window.__tj = S;
-let ready = false;
+let S = null;
+try {
+  S = createScene(canvas, { lite });
+} catch {
+  document.documentElement.classList.add('no-gl');
+}
 
-// Bölüm aralıkları (film ilerlemesi)
-const R = { hero: [0, 0.06], c1: [0.06, 0.24], c2: [0.24, 0.42], c3: [0.42, 0.6], c4: [0.6, 0.78], c5: [0.78, 0.92], over: [0.92, 1] };
-const CH = ['c1', 'c2', 'c3', 'c4', 'c5'];
-const K_FLIP = [0.02, 0.28], K_L = [0.28, 0.64], K_R = [0.64, 1];
-const CARD_R = FILM.map((_, i) => {
-  const [a, b] = R[CH[Math.floor(i / 2)]];
-  const [ka, kb] = i % 2 ? K_R : K_L;
-  return [L(a, b, ka), L(a, b, kb)];
-});
-const kOf = (p, id) => seg(p, R[id][0], R[id][1]);
-
-// Kamera: [tx, tz, dist, el, az, fov, sx, sy]
-function camFor(p, time) {
+// Açılış ilerlemesi t: 0 kapalı karne havada → 0,45 masaya iner → 0,8 kapak açık → 1 el yazısı yazıldı.
+const intro = { t: reducedMotion ? 1 : 0 };
+function camFor(open, time) {
   const m = mobile();
   const port = innerHeight > innerWidth * 1.15;
-  const idle = Math.sin(time * 0.35) * 0.02;
-  // Dikey tablet (iPad dikey): iki sayfa da ekrana sığar, karne üstte, kart altta.
-  if (!m && port) {
-    const HERO_T = [0, 0.0, 4.3, 0.55, 0.0, 34, 0, 0.17];
-    const FLIP_T = (x) => [x * 0.3, 0.02, 4.9, 1.02, 0, 34, 0, -0.11];
-    const PAGE_T = (x) => [x * 0.1, 0.04, 4.8, 1.1, x * -0.1, 34, 0, -0.11];
-    const OVER_T = [0, 0.08, 5.6, 0.9, 0.2, 34, 0, 0.1];
-    return camPath(p, time, HERO_T, FLIP_T, PAGE_T, OVER_T, false, idle);
+  const sway = reducedMotion ? 0 : Math.sin(time * 0.3) * 0.035;
+  // [tx, tz, dist, el, az, fov, sx, sy]
+  let A, B;
+  if (m) {
+    A = [0, 0.05, 4.1, 0.62, 0, 40, 0, 0.02];
+    B = [0, 0.02, 4.3, 1.08, 0.12, 40, 0, 0.02];
+  } else if (port) {
+    A = [0, 0, 3.9, 0.6, 0, 34, 0, 0.02];
+    B = [0, 0.02, 4.4, 1.05, 0.12, 34, 0, 0.02];
+  } else {
+    // Masaüstü: künye solda, karne sağ yarıda.
+    const kd = Math.max(1, 1.6 / (innerWidth / innerHeight));
+    A = [0, 0, 3.4 * kd, 0.55, 0, 34, 0.2, 0.02];
+    B = [0, 0.02, 4.2 * kd, 1.0, 0.16, 34, 0.22, 0.0];
   }
-  const HERO = m
-    ? [0, 0.05, 4.9, 0.62, 0.0, 40, 0, 0.2]
-    : [0, 0.0, 3.3, 0.55, 0.0, 34, 0.17, 0.02];
-  const FLIP = m ? (x) => [x, 0, 4.5, 1.18, 0, 40, 0, -0.19] : (x) => [x, 0.02, 3.7, 1.02, 0, 34, 0.15, 0.0];
-  const PAGE = m ? (x) => [x, 0.02, port ? 3.95 : 4.1, 1.22, x * -0.05, 40, 0, -0.2] : (x) => [x * 0.1, 0.04, 3.5, 1.1, x * -0.1, 34, 0.165, 0.0];
-  const OVER = m ? [0, 0.1, 6.2, 1.0, 0.18, 40, 0, -0.08] : [0, 0.08, 4.5, 0.9, 0.2, 34, 0.18, 0.0];
-  if (m) return camPath(p, time, HERO, FLIP, PAGE, OVER, m, idle);
-  // Dar yatay ekran (iPad yatay 4:3 / 1180×820): karne sağdan taşmasın, kartla daha az çakışsın.
-  const kd = Math.max(1, 1.55 / (innerWidth / innerHeight));
-  const far = (A) => A.map((v, j) => (j === 2 ? v * kd : v));
-  return camPath(p, time, far(HERO), (x) => far(FLIP(x)), (x) => far(PAGE(x)), far(OVER), m, idle);
-}
-
-function camPath(p, time, HERO, FLIP, PAGE, OVER, m, idle) {
-  if (p < R.c1[0]) return HERO;
-  const lerpA = (A, B, t) => A.map((v, j) => L(v, B[j], sm(t)));
-  if (p < R.hero[1] + 0.001) return HERO;
-  for (let c = 0; c < 5; c++) {
-    const id = CH[c];
-    if (p >= R[id][0] && p < R[id][1]) {
-      const k = kOf(p, id);
-      const prev = c === 0 ? HERO : PAGE(0.5);
-      const fk = seg(k, 0, 0.28);
-      // Mobil: çevrilen yaprağı takip et (sağdan sola)
-      const flipPose = m ? FLIP(L(0.5, -0.5, sm(seg(k, 0.06, 0.3)))) : FLIP(0);
-      if (k < 0.28) return lerpA(prev, flipPose, seg(fk, 0, 0.6));
-      if (k < 0.64) return lerpA(flipPose, PAGE(-0.5), seg(k, 0.28, 0.4));
-      return lerpA(PAGE(-0.5), PAGE(0.5), seg(k, 0.64, 0.78));
-    }
-  }
-  const out = lerpA(PAGE(0.5), OVER, seg(kOf(p, 'over'), 0, 0.5));
-  out[4] += idle;
+  const out = A.map((v, j) => L(v, B[j], sm(open)));
+  out[4] += sway;
   return out;
 }
-
-const STAMP_T0 = 0.33, STAMP_DT = 0.085;
-function filmState(p, time) {
-  const cam = camFor(p, time);
-  const m = mobile();
-  // Kahraman: karne havada süzülür, sonra masaya yatar
-  const land = sm(seg(p, 0.025, 0.085));
+function heroState(t, time) {
+  const land = sm(seg(t, 0, 0.45));
+  const open = sm(seg(t, 0.38, 0.8));
   const bob = Math.sin(time * 0.9) * 0.025 * (1 - land);
-  const flip = [0, 0, 0, 0, 0];
-  CH.forEach((id, c) => (flip[c] = sm(seg(kOf(p, id), K_FLIP[0], K_FLIP[1]))));
-  const open = flip[0];
+  const cam = camFor(open, time);
   const ink = new Array(11).fill(0);
-  CH.forEach((id, c) => {
-    const k = kOf(p, id);
-    ink[c * 2 + 1] = seg(k, 0.3, 0.56);
-    ink[c * 2 + 2] = seg(k, 0.66, 0.9);
-  });
-  // Mühür
-  const k2 = kOf(p, 'c2');
-  const stamps = [0, 0, 0];
-  let tool = 0, toolAt = 0, toolH = 0.16, tilt = 0;
-  if (k2 > 0.28 && k2 < 0.7) {
-    tool = sm(seg(k2, 0.29, 0.34)) * (1 - sm(seg(k2, 0.6, 0.66)));
-    for (let i = 0; i < 3; i++) {
-      const q = seg(k2, STAMP_T0 + i * STAMP_DT, STAMP_T0 + (i + 1) * STAMP_DT);
-      if (k2 >= STAMP_T0 + i * STAMP_DT) {
-        toolAt = i === 0 ? 0 : i - 1 + sm(seg(q, 0, 0.35));
-        const down = sm(seg(q, 0.35, 0.5)), upq = sm(seg(q, 0.62, 0.9));
-        toolH = L(L(0.16, 0, down), 0.16, upq);
-        tilt = Math.sin(q * Math.PI * 2) * 0.08 * (1 - down + upq);
-      }
-    }
-    if (k2 > STAMP_T0 + 3 * STAMP_DT) { toolAt = 2; toolH = L(0.16, 0.5, seg(k2, STAMP_T0 + 3 * STAMP_DT, 0.66)); }
-  }
-  for (let i = 0; i < 3; i++) stamps[i] = seg(k2, STAMP_T0 + i * STAMP_DT + STAMP_DT * 0.5, STAMP_T0 + i * STAMP_DT + STAMP_DT * 0.62);
-  if (p >= R.c3[0]) stamps.fill(1);
-  const k5 = kOf(p, 'c5');
+  ink[1] = seg(t, 0.6, 0.9);
+  ink[2] = seg(t, 0.72, 1);
+  const m = mobile();
   return {
     tx: cam[0], ty: 0, tz: cam[1], dist: cam[2], el: cam[3], az: cam[4], fov: cam[5], sx: cam[6], sy: cam[7],
     bx: -W / 2 * (1 - open), by: L(m ? 0.25 : 0.3, 0, land) + bob, bz: 0,
     rx: L(m ? 0.72 : 0.62, 0, land) + Math.sin(time * 0.7) * 0.03 * (1 - land),
     ry: L(-0.38 + Math.sin(time * 0.4) * 0.12, 0, land),
     rz: L(m ? 0.12 : 0.16, 0, land),
-    flip, curl: 0.9, ink, stamps, tool, toolAt, toolH, toolTilt: tilt,
-    glow: bump(k5, 0.28, 0.64, 0.2),
-    paws: seg(kOf(p, 'over'), 0.12, 0.85),
+    flip: [open, 0, 0, 0, 0], curl: 0.9, ink, stamps: [0, 0, 0], tool: 0, toolAt: 0, toolH: 0.16, toolTilt: 0,
+    glow: 0, paws: 0,
   };
 }
-
-// --- Film UI -------------------------------------------------------------
-
-const film = $('[data-film]');
-const cards = $$('[data-card]');
-const railItems = $$('[data-rail-i]');
-const rail = $('[data-rail]');
-const hint = $('[data-hint]');
-const tag = $('[data-tag]');
-const tagText = $('span', tag);
-let tagLayout = {};
-
-function vis(el, v) {
-  el.style.opacity = v;
-  el.style.visibility = v > 0.01 ? 'visible' : 'hidden';
-}
-
-// Etiket kutusu (nokta üstte, yazı ortalı) kart ya da üst başlıkla kesişiyor mu?
-function tagHits(pt, card) {
-  const w = tagText.offsetWidth + 16, h = tagText.offsetHeight + 16;
-  const box = { l: pt.x - w / 2, r: pt.x + w / 2, t: pt.y - 16 - h, b: pt.y + 12 };
-  const hit = (r) => box.l < r.right && box.r > r.left && box.t < r.bottom && box.b > r.top;
-  const top = $('[data-top]').getBoundingClientRect();
-  // Üst bölgeye (ekranın ilk %20'si) de girmesin: başlıkla ikinci bir üst şerit gibi durur.
-  return hit(card.getBoundingClientRect()) || box.t < Math.max(top.bottom + 4, innerHeight * 0.2);
-}
-
-function filmUI(p) {
-  hint.style.opacity = 1 - seg(p, 0.0, 0.02);
-  let active = -1, activeV = 1;
-  cards.forEach((card, i) => {
-    const [a, b] = CARD_R[i];
-    if (p >= a && p < b) active = i;
-  });
-  // Masaüstü: altta sayfa rayı (telefonda kart zaten "02 Muayene" yazıyor)
-  const railOn = mobile() ? 0 : seg(p, 0.06, 0.08) * (1 - seg(p, 0.915, 0.925));
-  vis(rail, railOn);
-  railItems.forEach((li, i) => {
-    li.classList.toggle('is-active', i === active);
-    li.classList.toggle('is-done', p >= CARD_R[i][1]);
-  });
-  // Sayfaya iğnelenen etiket (yalnız masaüstü; telefonda kartla çakışmasın)
-  if (ready && active >= 0 && !mobile()) {
-    const f = FILM[active];
-    const at = tagLayout[f.id] || [0.5, 0.5];
-    const pt = S.project(active + 1, at[0], at[1]);
-    const [a, b] = CARD_R[active];
-    let tv = bump(p, a, b, 0.25) * activeV;
-    if (tagText.textContent !== f.etiket) tagText.textContent = f.etiket;
-    tag.classList.toggle('is-acil', f.id === 'acil');
-    // Etiket kartın ya da üst başlığın üstüne binerse gösterme (iPad'de sahne kadrajı daralır).
-    if (tv > 0.01 && tagHits(pt, cards[active])) tv = 0;
-    vis(tag, tv);
-    tag.style.transform = `translate3d(${pt.x.toFixed(1)}px, ${pt.y.toFixed(1)}px, 0)`;
-  } else vis(tag, 0);
-}
-
-// Kaydırma konumu → film ilerlemesi (0..1). Kart yapışık kaldıkça kendi aralığında ilerler; aralarda sayfa çevrilir.
-let anchors = [[0, 0], [1, 1]];
-function measureFilm() {
-  const vh = innerHeight;
-  const top0 = film.getBoundingClientRect().top + scrollY;
-  const list = [[0, 0]];
-  const push = (y, v) => { const prev = list[list.length - 1][0]; list.push([Math.max(prev + 1, y), v]); };
-  $$('[data-stop]').forEach((st, i) => {
-    const c = Math.floor(i / 2);
-    if (i % 2 === 0) {
-      const gap = $(`[data-gap="${c}"]`);
-      push(top0 + gap.offsetTop - vh * 0.6, R[CH[c]][0]);
-    }
-    push(top0 + st.offsetTop - vh * 0.55, CARD_R[i][0] + 0.002);
-    push(top0 + st.offsetTop + st.offsetHeight - vh * 0.98, CARD_R[i][1] - 0.002);
-  });
-  const over = $('.stop--over');
-  push(top0 + over.offsetTop - vh * 0.5, 0.935);
-  push(top0 + over.offsetTop + over.offsetHeight - vh * 0.9, 0.995);
-  push(top0 + film.offsetHeight - vh * 0.4, 1);
-  anchors = list;
-}
-function progressAt(y) {
-  if (y <= anchors[0][0]) return anchors[0][1];
-  for (let i = 1; i < anchors.length; i++) {
-    if (y <= anchors[i][0]) {
-      const [y0, v0] = anchors[i - 1];
-      const [y1, v1] = anchors[i];
-      return v0 + ((y - y0) / (y1 - y0)) * (v1 - v0);
-    }
-  }
-  return 1;
-}
-
-// --- Başlangıç -------------------------------------------------------------
-
-const split = new SplitText(heroTitle, { type: 'words,chars', wordsClass: 'word', charsClass: 'ch' });
-
-let lenis = null;
-let filmP = 0, filmTarget = 0, canvasFade = 1;
-
-function setupScroll() {
-  lenis = initSmoothScroll();
-  lenis?.stop();
-  ScrollTrigger.create({
-    trigger: film, start: 'top top', end: 'bottom top',
-    onRefresh: measureFilm,
-    onUpdate: () => (filmTarget = progressAt(scrollY)),
-  });
-  // Duraklar boyunca hikâye modu (telefon): alt çubuk iner, kart onun boşluğuna oturur
-  const stopsEl = $('[data-stops]');
-  ScrollTrigger.create({
-    trigger: stopsEl, start: 'top 70%', end: () => `bottom ${Math.round(innerHeight * 0.9)}px`,
-    onToggle: (st) => setStoryMode(st.isActive ? true : null),
-  });
-  // Kartlar: durağa girerken belirir, durak biterken söner (görünmezken dokunmayı almaz)
-  cards.forEach((card) => {
-    const stop = card.parentElement;
-    if (reducedMotion) return;
-    gsap.fromTo(card, { autoAlpha: 0, y: 34 }, { autoAlpha: 1, y: 0, ease: 'power2.out', scrollTrigger: { trigger: stop, start: 'top 92%', end: 'top 55%', scrub: 0.4 } });
-    gsap.to(card, { autoAlpha: 0, y: -24, ease: 'power1.in', immediateRender: false, scrollTrigger: { trigger: stop, start: 'bottom 98%', end: 'bottom 72%', scrub: 0.4 } });
-  });
-  ScrollTrigger.create({
-    trigger: film, start: 'bottom bottom', end: 'bottom 35%',
-    onUpdate: (self) => (canvasFade = 1 - self.progress),
-  });
-  ScrollTrigger.create({
-    trigger: '[data-about]', start: 'top 70px', endTrigger: '.foot', end: 'bottom top',
-    onToggle: (self) => $('[data-top]').classList.toggle('is-solid', self.isActive),
-  });
-  contentMotion();
-}
-
-function contentMotion() {
-  $$('[data-rise]').forEach((el) => {
-    const s = new SplitText(el, { type: 'lines', linesClass: 'ln', mask: 'lines' });
-    gsap.fromTo(s.lines, { yPercent: 110 }, {
-      yPercent: 0, duration: 1, stagger: 0.08, ease: 'expo.out',
-      scrollTrigger: { trigger: el, start: 'top 88%', once: true },
-    });
-  });
-  const words = $$('span', aboutText);
-  gsap.fromTo(words, { opacity: 0.14 }, {
-    opacity: 1, stagger: 0.05, ease: 'none',
-    scrollTrigger: { trigger: aboutText, start: 'top 85%', end: 'bottom 55%', scrub: true },
-  });
-  $$('[data-count]').forEach((el) => {
-    const n = Number(el.dataset.count);
-    const o = { v: 0 };
-    gsap.to(o, {
-      v: n, duration: 1.6, ease: 'power2.out',
-      scrollTrigger: { trigger: el, start: 'top 90%', once: true },
-      onUpdate: () => (el.textContent = nf(Math.round(o.v))),
-    });
-  });
-  // Hizmet sekmeleri: kart destesi gibi açılır
-  $$('.svc__card').forEach((el, i) => {
-    gsap.fromTo(el, { y: 80, rotate: i % 2 ? 3 : -3, opacity: 0 }, {
-      y: 0, rotate: 0, opacity: 1, duration: 0.9, ease: 'expo.out',
-      scrollTrigger: { trigger: el, start: 'top 92%', once: true },
-    });
-  });
-  gsap.fromTo('.remind__card .mini', { rotate: -8, y: 60 }, {
-    rotate: 3, y: 0, ease: 'none',
-    scrollTrigger: { trigger: '.remind', start: 'top bottom', end: 'center center', scrub: true },
-  });
-  $$('.step').forEach((el) => {
-    gsap.fromTo(el, { x: -30, opacity: 0 }, { x: 0, opacity: 1, duration: 0.8, ease: 'expo.out', scrollTrigger: { trigger: el, start: 'top 90%', once: true } });
-  });
-  // Galeri: sayfa kaydıkça yatay kayar
-  const track = $('[data-gallery]');
-  gsap.fromTo(track, { x: () => innerWidth * 0.1 }, {
-    x: () => -(track.scrollWidth - innerWidth * 0.9), ease: 'none',
-    scrollTrigger: { trigger: '.gallery', start: 'top bottom', end: 'bottom top', scrub: true, invalidateOnRefresh: true },
-  });
-  $$('.rev').forEach((el, i) => {
-    gsap.fromTo(el, { y: 50, rotate: i % 2 ? 2 : -2, opacity: 0 }, { y: 0, rotate: i % 2 ? 1 : -1, opacity: 1, duration: 0.9, ease: 'expo.out', scrollTrigger: { trigger: el, start: 'top 92%', once: true } });
-  });
-  // Final: pati izleri yürür
-  gsap.fromTo('.finale__paws i', { opacity: 0, scale: 0.4 }, {
-    opacity: 1, scale: 1, stagger: 0.12, ease: 'back.out(2)',
-    scrollTrigger: { trigger: '[data-finale]', start: 'top 75%', end: 'center center', scrub: true },
-  });
-}
-
-// --- Döngü ---------------------------------------------------------------
-
-let visible = true;
-new IntersectionObserver((e) => (visible = e[0].isIntersecting), { rootMargin: '100px' }).observe(film);
-addEventListener('resize', () => S.resize());
-
-let frame = 0;
-function tick(time) {
-  if (reducedMotion) filmP = filmTarget;
-  else filmP += (filmTarget - filmP) * 0.14;
-  if (Math.abs(filmTarget - filmP) < 0.00005) filmP = filmTarget;
-  canvas.style.opacity = canvasFade;
-  canvas.style.visibility = canvasFade > 0.01 ? 'visible' : 'hidden';
-  if (visible && canvasFade > 0.01) {
-    const st = filmState(filmP, time);
-    S.render(st, time);
-    filmUI(filmP);
-  } else vis(tag, 0);
-  frame++;
-}
-
-// --- Açılış + dokular ----------------------------------------------------
-
-const intro = $('[data-intro]');
-const pctEl = $('[data-intro-pct]');
-let introDone = false;
 
 function loadImg(src) {
   return new Promise((res) => {
@@ -527,81 +206,71 @@ function loadImg(src) {
 }
 async function fontsReady() {
   const list = ['400 40px "Paytone One"', '600 40px "Parkinsans"', '700 40px "Parkinsans"', '700 40px "Kalam"', '700 40px "Courier Prime"'];
-  const t = new Promise((r) => setTimeout(r, 3500));
+  const t = new Promise((r) => setTimeout(r, 3000));
   await Promise.race([Promise.all(list.map((f) => document.fonts.load(f, 'ğşİıöçü'))), t]).catch(() => {});
 }
-
+// Yalnız kapak ve ilk açılan iki sayfa (kimlik, muayene) çizilir.
 async function buildTextures() {
-  const [imgs] = await Promise.all([
-    Promise.all(['kedi', 'steteskop', 'kan-ornegi', 'agiz-kontrol', 'sefkat'].map((n) => loadImg(IMG(n)))),
-    fontsReady(),
-  ]);
-  const [kedi, steteskop, kan, agiz, sefkat] = imgs;
-  const res = lite ? 720 : 1024;
-  d.__saatler = saatGrup;
-  const total = 11;
-  let shown = 0;
-  const setPct = (n) => {
-    const v = Math.round((n / total) * 100);
-    gsap.to({ v: shown }, { v, duration: 0.3, onUpdate() { pctEl.textContent = Math.round(this.targets()[0].v); } });
-    shown = v;
-  };
-  // Sayfaları tek tek çiz; aralarda tarayıcıya nefes aldır
-  const { pages, layout } = await new Promise((resolve) => {
-    const out = buildPages(d, { kedi, steteskop, kan, agiz, sefkat }, res, (n) => setPct(n * 0.5));
-    resolve(out);
-  });
+  const [imgs] = await Promise.all([Promise.all(['kedi', 'steteskop'].map((n) => loadImg(IMG(n)))), fontsReady()]);
+  const [kedi, steteskop] = imgs;
+  const { pages } = buildPages(d, { kedi, steteskop }, lite ? 720 : 1024, null, 3);
   for (let i = 0; i < pages.length; i++) {
     S.setPage(i, pages[i]);
-    setPct(5.5 + (i + 1) * 0.5);
     await new Promise((r) => setTimeout(r, 0));
   }
-  S.setStampAtlas(stampAtlas(lite ? 256 : 384));
   S.setPaw(pawSprite());
-  S.setStamps(layout.stamps);
-  tagLayout = layout.tags;
-  ready = true;
 }
 
-function playIntro() {
-  if (reducedMotion) return Promise.resolve();
-  const tl = gsap.timeline();
-  tl.fromTo('[data-intro-stamp]', { scale: 2.6, opacity: 0, rotate: -40 }, { scale: 1, opacity: 1, rotate: -12, duration: 0.55, ease: 'power4.in' }, 0.25)
-    .fromTo('[data-intro-splat]', { scale: 0.4, opacity: 0.9 }, { scale: 2.4, opacity: 0, duration: 0.8, ease: 'expo.out' }, 0.8)
-    .fromTo('[data-intro-stamp]', { y: 0 }, { y: 6, duration: 0.08, yoyo: true, repeat: 1 }, 0.8)
-    .fromTo('.intro__name, .intro__count', { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: 0.6, stagger: 0.08, ease: 'expo.out' }, 0.9);
-  return new Promise((r) => tl.eventCallback('onComplete', r));
+let visible = true;
+let running = false;
+function tick(time) {
+  if (!visible || document.hidden) return;
+  S.render(heroState(intro.t, time), time);
+}
+function sync() {
+  const on = visible && !document.hidden;
+  if (on && !running) { gsap.ticker.add(tick); running = true; }
+  else if (!on && running) { gsap.ticker.remove(tick); running = false; }
 }
 
-function heroIn() {
-  if (reducedMotion) return;
-  gsap.fromTo(split.chars, { yPercent: 120, rotate: 8 }, { yPercent: 0, rotate: 0, duration: 1.1, stagger: 0.025, ease: 'expo.out' });
-  gsap.fromTo('.hero__since, .hero__slogan, .hero__cta, .top, .hint', { y: 24, opacity: 0 }, { y: 0, opacity: 1, duration: 0.9, stagger: 0.06, ease: 'expo.out', delay: 0.25 });
-}
-
-function endIntro() {
-  if (introDone) return;
-  introDone = true;
-  document.body.classList.remove('is-loading');
-  intro.style.pointerEvents = 'none'; // kapanırken (0,9 sn) ilk dokunuş alttaki butona gitsin
-  gsap.to(intro, {
-    clipPath: 'circle(0% at 50% 50%)', duration: reducedMotion ? 0.01 : 0.9, ease: 'expo.inOut',
-    onComplete: () => intro.remove(),
+if (S) {
+  gsap.set(canvas, { autoAlpha: 0 });
+  new IntersectionObserver((e) => { visible = e[0].isIntersecting; sync(); }).observe(hero);
+  document.addEventListener('visibilitychange', sync);
+  let rt = 0;
+  addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() => S.resize(), 120); });
+  Promise.race([buildTextures(), new Promise((r) => setTimeout(r, 2500))]).then(() => {
+    S.resize();
+    sync();
+    gsap.to(canvas, { autoAlpha: 1, duration: 0.6, ease: 'power2.out' });
+    if (!reducedMotion) gsap.to(intro, { t: 1, duration: 2.6, ease: 'power1.inOut', delay: 0.1 });
+    // Kaydırdıkça sahne hafifçe kararır.
+    ScrollTrigger.create({
+      trigger: hero, start: 'top top', end: 'bottom top',
+      onUpdate: (s) => (canvas.style.opacity = String(1 - s.progress * 0.6)),
+    });
   });
-  lenis?.start();
-  heroIn();
 }
-intro.addEventListener('pointerdown', () => endIntro());
-addEventListener('wheel', () => endIntro(), { once: true, passive: true });
-addEventListener('touchmove', () => endIntro(), { once: true, passive: true });
 
-setupScroll();
-if (vitrinModu()) endIntro(); // vitrinde perde yok
-gsap.ticker.add((t) => tick(t));
-const minWait = new Promise((r) => setTimeout(r, reducedMotion ? 0 : 1500));
-Promise.all([playIntro(), buildTextures(), minWait]).then(() => {
-  pctEl.textContent = '100';
-  setTimeout(endIntro, reducedMotion ? 0 : 250);
-});
-// Güvenlik: bir şey takılırsa yine de aç
-setTimeout(() => { if (!introDone) endIntro(); }, 2400);
+// --- Metin hareketleri (sakin: bir kez, küçük kayma) ---------------------------------
+initSmoothScroll();
+if (!reducedMotion) {
+  gsap.from('.hero__inner > *', { y: 18, autoAlpha: 0, duration: 0.7, stagger: 0.06, ease: 'power3.out', delay: 0.05, clearProps: 'opacity,visibility,transform' });
+  $$('.sec-title').forEach((el) => gsap.from(el, { y: 28, opacity: 0, duration: 0.7, ease: 'power3.out', scrollTrigger: { trigger: el, start: 'top 90%' } }));
+  $$('.svc__card').forEach((el) => {
+    gsap.fromTo(el, { y: 40, opacity: 0 }, {
+      y: 0, opacity: 1, duration: 0.8, ease: 'expo.out',
+      scrollTrigger: { trigger: el, start: 'top 94%', toggleActions: 'play none none none' },
+    });
+  });
+  // Galeri: sayfa kaydıkça yatay kayar
+  const track = $('[data-gallery]');
+  gsap.fromTo(track, { x: () => innerWidth * 0.05 }, {
+    x: () => -(track.scrollWidth - innerWidth * 0.95), ease: 'none',
+    scrollTrigger: { trigger: '.gallery', start: 'top bottom', end: 'bottom top', scrub: true, invalidateOnRefresh: true },
+  });
+  $$('.rev').forEach((el, i) => {
+    gsap.fromTo(el, { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: 0.8, ease: 'expo.out', delay: (i % 3) * 0.06, scrollTrigger: { trigger: el, start: 'top 94%', toggleActions: 'play none none none' } });
+  });
+}
+addEventListener('load', () => ScrollTrigger.refresh());

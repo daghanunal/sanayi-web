@@ -47,18 +47,9 @@
 .kh__ic { display: grid; gap: 40px; align-items: center; }
 @media (max-width: 959px) {
   .kh__ic { gap: 0; grid-template-columns: minmax(0, 1fr); }
-  .kh__metin { display: contents; }
-  .kh__ust { order: 1; }
-  .kh .k-hero__baslik { order: 2; }
-  .kh__sahne { order: 4; margin-top: 26px; width: 100%; aspect-ratio: auto; height: min(104vw, 420px); }
-  .kh .k-lead { order: 5; margin-top: 26px; }
-  .kh .k-butonlar { order: 3; margin-top: 22px; }
+  .kh__sahne { margin-top: 26px; width: 100%; aspect-ratio: auto; height: min(96vw, 400px); }
 }
 @media (min-width: 960px) { .kh__ic { grid-template-columns: 1fr 1fr; gap: 56px; } }
-.kh__ust { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin-bottom: 22px; color: var(--k-soluk); font-family: var(--pv-mono); font-size: 13px; text-transform: uppercase; letter-spacing: .04em; }
-.kh__durum { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; border-radius: 999px; background: var(--k-koyu); color: var(--k-koyu-metin); text-transform: none; letter-spacing: 0; font-family: var(--k-font-govde); font-weight: 600; font-size: 13.5px; }
-.kh__durum i { width: 8px; height: 8px; border-radius: 50%; background: var(--pv-mercan); }
-.kh__durum.is-acik i { background: #5fd49a; box-shadow: 0 0 0 4px rgb(95 212 154 / .22); }
 .kh .k-hero__baslik { max-width: 13ch; font-size: clamp(42px, 5.6vw, 88px); }
 @media (max-width: 899px) { .kh .k-hero__baslik { font-size: min(12vw, 60px); } }
 
@@ -103,7 +94,6 @@
 .kh__acil-tel { grid-column: 2; display: inline-flex; align-items: center; gap: 8px; font-weight: 700; color: #fff; font-size: 18px; font-variant-numeric: tabular-nums; }
 .kh__acil-tel svg { width: 18px; height: 18px; }
 @media (min-width: 760px) { .kh__acil { grid-template-columns: auto 1fr auto; } .kh__acil-tel { grid-column: 3; padding: 10px 18px; background: var(--pv-mercan); border-radius: 999px; } }
-.kh .k-hero__bilgi { margin-top: 28px; }
 @keyframes pv-nabiz { 70% { box-shadow: 0 0 0 12px rgb(226 85 63 / 0); } 100% { box-shadow: 0 0 0 0 rgb(226 85 63 / 0); } }
 @keyframes pv-sars { 30% { translate: 0 3px; } 60% { translate: 0 -1px; } }
 

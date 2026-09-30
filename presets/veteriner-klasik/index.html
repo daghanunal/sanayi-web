@@ -17,54 +17,43 @@
     <a href="#top" class="top__brand"><span class="top__mark" aria-hidden="true"><i></i><i></i></span><span data-bind="ad"></span></a>
     <nav class="top__nav" aria-label="Sayfa bölümleri">
       <a href="#hizmetler">Hizmetler</a>
-      <a href="#rehber">Ne zaman gelmeli?</a>
-      <a href="#acil">Acil</a>
-      <a href="#yorumlar">Yorumlar</a>
-      <a href="#konum">Konum</a>
+      <a href="#hakkinda">Hakkında</a>
+      <a href="#saatler">Saatler ve konum</a>
+      <a href="#iletisim">İletişim</a>
     </nav>
     <a class="top__call" data-tel><span data-icon="phone"></span><span data-bind="telefon"></span></a>
   </header>
 
   <main>
-    <!-- İMZA: burun buruna. Açılışta köpek soldan, kedi sağdan yalnızca burnunu uzatır.
-         Kaydırdıkça ikisi ortaya doğru yaklaşır, burunları ortadaki çizgide buluşur;
-         çizgi kedi ve köpek randevularını ayıran çizgiye dönüşür. -->
-    <section class="hero" id="top" aria-label="Giriş">
+    <!-- Künye. İki yanda köpek ve kedi yalnızca burnunu uzatır; açılışta bir kez içeri kayarlar,
+         kaydırdıkça burunları ortadaki çizgiye biraz daha yaklaşır. Pin yok. -->
+    <section class="hero" id="top" aria-labelledby="hero-title">
       <div class="hero__pin">
         <div class="yuz yuz--sol" aria-hidden="true"><div class="yuz__kay"><img class="yuz__img" src="/img/veteriner-klasik/kopek.jpg" alt="" fetchpriority="high" decoding="async" /></div></div>
         <div class="yuz yuz--sag" aria-hidden="true"><div class="yuz__kay"><img class="yuz__img" src="/img/veteriner-klasik/kedi.jpg" alt="" fetchpriority="high" decoding="async" /></div></div>
 
-        <div class="duvar" aria-hidden="true">
-          <span class="duvar__cizgi"></span>
-          <span class="duvar__etiket duvar__etiket--sol" data-h="sol"></span>
-          <span class="duvar__etiket duvar__etiket--sag" data-h="sag"></span>
-        </div>
-
         <div class="hero__copy">
-          <p class="hero__ust" data-since></p>
-          <h1 class="hero__name" data-bind="ad"></h1>
-          <p class="hero__slogan" data-bind="slogan"></p>
+          <h1 class="hero__name" id="hero-title" data-bind="ad"></h1>
+          <p class="hero__tanim" data-bind="tanim"></p>
+          <dl class="kunye">
+            <div><dt>Adres</dt><dd data-bind="kisaAdres"></dd></div>
+            <div><dt>Bugün</dt><dd class="durum" data-status data-kunye><i></i><span data-long></span></dd></div>
+            <div><dt>Telefon</dt><dd><a data-tel data-bind="telefon"></a></dd></div>
+          </dl>
           <div class="hero__cta">
-            <a class="btn btn--tan" data-tel><span data-icon="phone"></span>Randevu için ara</a>
+            <a class="btn btn--tan" data-tel><span data-icon="phone"></span>Ara</a>
             <a class="btn btn--line" data-wa target="_blank" rel="noopener"><span data-icon="whatsapp"></span>WhatsApp</a>
+            <a class="btn btn--line" data-maps target="_blank" rel="noopener"><span data-icon="pin"></span>Yol tarifi</a>
           </div>
-          <p class="hero__durum" data-status></p>
         </div>
-
-        <div class="hero__son">
-          <p class="hero__sonbaslik" data-h="sonBaslik"></p>
-          <p class="hero__sonmetin" data-h="sonMetin"></p>
-        </div>
-        <p class="hero__ipucu" aria-hidden="true"><span></span><b data-h="ipucu"></b></p>
       </div>
     </section>
 
     <!-- Hizmetler -->
     <section class="hiz" id="hizmetler" aria-labelledby="hiz-h">
       <div class="hiz__head">
-        <p class="eyebrow">Muayeneden laboratuvara</p>
-        <h2 class="h2" id="hiz-h">Klinikte <em>neler yapıyoruz?</em></h2>
-        <p class="lead">Süreler ortalamadır. Ücreti işe başlamadan söyleriz; muayenede ek bir şey gerekirse önce size danışırız.</p>
+        <h2 class="h2" id="hiz-h">Hizmetler</h2>
+        <p class="lead">Süreler yaklaşıktır, hayvana göre değişebilir. Fiyat ve randevu için arayın.</p>
       </div>
       <div class="hiz__body">
         <figure class="hiz__foto" aria-hidden="true" data-svc-photo></figure>
@@ -72,11 +61,11 @@
       </div>
     </section>
 
-    <!-- İmza bölümü: tür + yaş rehberi -->
-    <section class="reh" id="rehber" aria-labelledby="reh-h">
+    <!-- Yaşa göre kontroller: tür + yaş seçimi, genel bilgi -->
+    <section class="reh" id="kontroller" aria-labelledby="reh-h">
       <div class="reh__head">
-        <p class="eyebrow">Ne zaman gelmeli?</p>
-        <h2 class="h2" id="reh-h">Dostunuzu seçin, <em>ne zaman getireceğinizi söyleyelim.</em></h2>
+        <h2 class="h2" id="reh-h">Yaşa göre kontroller</h2>
+        <p class="lead" data-rehber-not></p>
       </div>
       <div class="reh__box">
         <div class="reh__sec">
@@ -87,104 +76,69 @@
       </div>
     </section>
 
-    <!-- Rakamlar -->
-    <section class="rakam" aria-label="Rakamlarla klinik">
-      <ul class="rakam__list" data-stats></ul>
-    </section>
-
-    <!-- Süreç -->
-    <section class="sur" id="surec" aria-labelledby="sur-h">
-      <div class="sur__head">
-        <p class="eyebrow">Kapıdan çıkışa</p>
-        <h2 class="h2" id="sur-h">Acele etmeden, <em>anlatarak.</em></h2>
-        <p class="lead" data-bind="garanti"></p>
-      </div>
-      <ol class="sur__list" data-steps></ol>
-    </section>
-
-    <!-- Acil -->
-    <section class="acil" id="acil" aria-labelledby="acil-h">
-      <div class="acil__in">
-        <p class="acil__ust">Acil durumda</p>
-        <h2 class="acil__baslik" id="acil-h">Yola çıkmadan <em>önce arayın.</em></h2>
-        <p class="acil__metin" data-acil-metin></p>
-        <ul class="acil__list" data-acil></ul>
-        <a class="acil__tel" data-tel><span data-icon="phone"></span><span data-bind="telefon"></span></a>
-      </div>
-    </section>
-
-    <!-- Klinik -->
-    <section class="kli" aria-labelledby="kli-h">
+    <!-- Hakkında -->
+    <section class="kli" id="hakkinda" aria-labelledby="kli-h">
       <figure class="kli__foto"><img src="/img/veteriner-klasik/hekim-kopek.jpg" alt="Muayene masasında yaşlı köpekle veteriner hekim" loading="lazy" decoding="async" /></figure>
       <div class="kli__copy">
-        <p class="eyebrow" data-years></p>
-        <h2 class="h2" id="kli-h">Ne bulduysak <em>size anlatırız.</em></h2>
-        <p class="lead" data-bind="hakkinda"></p>
+        <h2 class="h2" id="kli-h">Hakkında</h2>
+        <p class="lead" data-hakkinda></p>
+        <dl class="facts" data-facts></dl>
+        <ul class="rakam__list" data-stats></ul>
       </div>
     </section>
 
     <!-- Galeri -->
-    <section class="gal" aria-label="Klinikten kareler">
+    <section class="gal" aria-label="Klinikten fotoğraflar">
       <div class="gal__track" data-gallery></div>
     </section>
 
-    <!-- Yorumlar -->
+    <!-- Çalışma saatleri ve konum -->
+    <section class="kon" id="saatler" aria-labelledby="kon-h">
+      <div class="kon__info">
+        <h2 class="h2" id="kon-h">Çalışma saatleri ve konum</h2>
+        <p class="kon__durum durum" data-status><i></i><span data-long></span></p>
+        <dl class="saat" data-hours></dl>
+        <p class="kon__adres" data-bind="adres"></p>
+        <div class="kon__btns">
+          <a class="btn btn--ink" data-maps target="_blank" rel="noopener"><span data-icon="pin"></span>Yol tarifi</a>
+          <a class="btn btn--line" data-tel><span data-icon="phone"></span><span data-bind="telefon"></span></a>
+        </div>
+      </div>
+      <div class="kon__map" data-map><span>Harita</span></div>
+    </section>
+
+    <!-- Örnek yorumlar -->
     <section class="yor" id="yorumlar" aria-labelledby="yor-h">
       <div class="yor__head">
-        <h2 class="h2" id="yor-h">Sahipleri <em>anlatıyor.</em></h2>
-        <div class="puan">
-          <p class="puan__num" data-score></p>
-          <div>
-            <p class="puan__stars" data-stars></p>
-            <p class="puan__count" data-review-count></p>
-          </div>
-        </div>
+        <h2 class="h2" id="yor-h">Örnek yorumlar</h2>
+        <p class="lead">Buradaki yorumlar örnektir, yerlerine kliniğin gerçek yorumları konur.</p>
       </div>
       <ul class="yor__list" data-reviews></ul>
     </section>
 
-    <!-- Türler -->
-    <section class="tur-bant" aria-label="Baktığımız hayvanlar">
-      <div class="tur-bant__track" data-brands></div>
-    </section>
-
-    <!-- Saatler + konum -->
-    <section class="kon" id="konum" aria-labelledby="kon-h">
-      <div class="kon__info">
-        <p class="eyebrow">Elvankent, Etimesgut</p>
-        <h2 class="h2" id="kon-h">Kliniğe <em>nasıl gelinir?</em></h2>
-        <p class="kon__durum" data-status-big></p>
-        <dl class="saat" data-hours></dl>
-        <p class="kon__adres" data-bind="adres"></p>
-        <div class="kon__btns">
-          <a class="btn btn--ink" data-maps target="_blank" rel="noopener"><span data-icon="pin"></span>Yol tarifi al</a>
-          <a class="btn btn--line" data-tel><span data-icon="phone"></span>Ara</a>
-        </div>
-      </div>
-      <div class="kon__map" data-map><span>Harita yükleniyor</span></div>
-    </section>
-
-    <!-- Final -->
-    <section class="fin" aria-labelledby="fin-h">
+    <!-- İletişim -->
+    <section class="fin" id="iletisim" aria-labelledby="fin-h">
       <div class="fin__yuzler" aria-hidden="true">
         <img src="/img/veteriner-klasik/tekir.jpg" alt="" loading="lazy" decoding="async" />
       </div>
       <div class="fin__in">
-        <p class="eyebrow" data-fin-status></p>
-        <h2 class="fin__baslik" id="fin-h" data-final></h2>
+        <h2 class="fin__baslik" id="fin-h">İletişim</h2>
+        <p class="lead fin__lead">Fiyat ve randevu için arayın ya da WhatsApp'tan yazın.</p>
         <div class="fin__btns">
-          <a class="btn btn--tan btn--big" data-tel><span data-icon="phone"></span>Hemen ara</a>
-          <a class="btn btn--ink btn--big" data-wa target="_blank" rel="noopener"><span data-icon="whatsapp"></span>WhatsApp'tan yaz</a>
+          <a class="btn btn--tan btn--big" data-tel><span data-icon="phone"></span><span data-bind="telefon"></span></a>
+          <a class="btn btn--ink btn--big" data-wa target="_blank" rel="noopener"><span data-icon="whatsapp"></span>WhatsApp</a>
         </div>
+        <p class="fin__not"><span data-bind="adres"></span><br /><span data-status><span data-long></span></span></p>
       </div>
     </section>
   </main>
 
   <footer class="foot">
     <p class="foot__name" data-bind="ad"></p>
+    <p data-bind="tanim"></p>
     <p data-bind="adres"></p>
     <p><a data-tel data-bind="telefon"></a></p>
-    <p class="foot__small">© <span data-year></span> <span data-bind="ad"></span>. Fotoğraflar temsilîdir (Pexels). Yorumlar örnektir.</p>
+    <p class="foot__small">© <span data-year></span> <span data-bind="ad"></span>. Fotoğraflar temsilîdir (Pexels). Yorumlar örnektir. Sayfadaki bilgiler genel bilgilendirme içindir; tedavi ve aşı kararını veteriner hekim muayeneden sonra verir.</p>
   </footer>
 
   <script type="module" src="./main.js"></script>

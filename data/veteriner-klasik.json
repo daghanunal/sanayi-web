@@ -1,118 +1,62 @@
 {
   "preset": "veteriner-klasik",
-  "hero": {
-    "ust": "Kedi ve köpek kliniği",
-    "ipucu": "Kaydırın, tanışsınlar",
-    "sol": "Köpek saati",
-    "sag": "Kedi saati",
-    "sonBaslik": "Burun buruna. Ama ayrı saatlerde.",
-    "sonMetin": "Kedi köpek kokusundan, köpek kedi sesinden gerilmesin diye randevuları türüne göre ayrı saatlere koyarız; bekleme sırasında karşılaşmazlar."
-  },
+  "rehberNot": "Genel bilgidir. Aşı ve kontrol takvimini veteriner hekim muayeneden sonra belirler.",
   "rehber": {
     "kopek": {
-      "ad": "Köpeğim var",
+      "ad": "Köpek",
       "tekil": "köpeğim",
       "gorsel": "/img/veteriner-klasik/kopek.jpg",
       "yaslar": {
         "yavru": {
           "etiket": "Yavru",
-          "aralik": "0-1 yaş",
-          "gelis": "Sahiplendiğiniz hafta bir tanışma muayenesi. Aşılar takvime göre birkaç hafta arayla yapılır.",
-          "liste": [
-            "Genel muayene ve kilo",
-            "Aşı takviminin başlatılması",
-            "İç ve dış parazit kontrolü",
-            "Beslenme ve tuvalet soruları"
-          ],
-          "dikkat": "İshal, kusma ya da halsizlik yavruda çabuk ağırlaşabilir. Beklemeden arayın."
+          "aralik": "0–1 yaş",
+          "gelis": "Sahiplenildiği hafta ilk muayene yapılır. Aşılar, hekimin belirlediği takvime göre birkaç hafta arayla yapılır.",
+          "liste": ["Genel muayene ve kilo", "Aşı takviminin başlaması", "İç ve dış parazit kontrolü", "Beslenme ve tuvalet alışkanlığı"],
+          "dikkat": "İshal, kusma ya da halsizlik yavru köpekte çabuk ağırlaşabilir, beklemeden arayın."
         },
         "yetiskin": {
           "etiket": "Yetişkin",
-          "aralik": "1-7 yaş",
-          "gelis": "Yılda bir genel kontrol ve aşı tekrarı. Aynı ziyarette diş ve kulağa da bakarız.",
-          "liste": [
-            "Yıllık muayene ve aşı",
-            "Diş ve diş eti kontrolü",
-            "Tırnak, kulak ve deri",
-            "Kısırlaştırma ön görüşmesi"
-          ],
-          "dikkat": "Topallama, iştahsızlık, karında şişlik ya da tekrarlayan kusma varsa bekletmeyin."
+          "aralik": "1–7 yaş",
+          "gelis": "Yılda bir genel kontrol ve aşı tekrarı yapılır. Aynı ziyarette dişlere ve kulaklara da bakılır.",
+          "liste": ["Yıllık muayene ve aşı", "Diş ve diş eti kontrolü", "Tırnak, kulak ve deri", "Kısırlaştırma ön görüşmesi"],
+          "dikkat": "Topallama, iştahsızlık, karında şişlik ya da tekrarlayan kusma varsa beklemeden arayın."
         },
         "yasli": {
           "etiket": "Yaşlı",
           "aralik": "7 yaş üstü",
-          "gelis": "Yılda iki kontrol öneririz. Kan tahlili ile iç organlara da bakarız.",
-          "liste": [
-            "Kan tahlili ile organ kontrolü",
-            "Eklem ve hareket kontrolü",
-            "Diş taşı kontrolü",
-            "Kilo ve iştah takibi"
-          ],
-          "dikkat": "Çok su içme, sık idrara çıkma ya da kilo kaybını yaşa bağlamayın. Muayene edelim."
+          "gelis": "Genellikle yılda iki kontrol önerilir. Kan tahliliyle iç organların durumuna bakılır.",
+          "liste": ["Kan tahlili", "Eklem ve hareket kontrolü", "Diş taşı kontrolü", "Kilo ve iştah takibi"],
+          "dikkat": "Çok su içme, sık idrara çıkma ya da kilo kaybı yaşlılığa bağlanmamalı, muayene gerekir."
         }
       }
     },
     "kedi": {
-      "ad": "Kedim var",
+      "ad": "Kedi",
       "tekil": "kedim",
       "gorsel": "/img/veteriner-klasik/kedi.jpg",
       "yaslar": {
         "yavru": {
           "etiket": "Yavru",
-          "aralik": "0-1 yaş",
-          "gelis": "Eve geldiği hafta bir tanışma muayenesi. Aşılar takvime göre birkaç hafta arayla yapılır.",
-          "liste": [
-            "Genel muayene ve kilo",
-            "Aşı takviminin başlatılması",
-            "Parazit kontrolü",
-            "Kum, mama ve oyun soruları"
-          ],
-          "dikkat": "Yemeyi bırakan yavru kediyi bir günden fazla bekletmeyin, arayın."
+          "aralik": "0–1 yaş",
+          "gelis": "Eve geldiği hafta ilk muayene yapılır. Aşılar, hekimin belirlediği takvime göre birkaç hafta arayla yapılır.",
+          "liste": ["Genel muayene ve kilo", "Aşı takviminin başlaması", "Parazit kontrolü", "Kum, mama ve oyun alışkanlığı"],
+          "dikkat": "Yemeyi bırakan yavru kedi bir günden fazla bekletilmemeli, kliniği arayın."
         },
         "yetiskin": {
           "etiket": "Yetişkin",
-          "aralik": "1-8 yaş",
-          "gelis": "Yılda bir kontrol ve aşı tekrarı. Hiç dışarı çıkmayan ev kedileri de dahil.",
-          "liste": [
-            "Yıllık muayene ve aşı",
-            "Diş ve ağız kontrolü",
-            "Tüy, deri ve kulak",
-            "Kısırlaştırma ön görüşmesi"
-          ],
-          "dikkat": "Kuma sık gidip az yapan ya da hiç yapamayan erkek kedi acildir. Hemen arayın."
+          "aralik": "1–8 yaş",
+          "gelis": "Yılda bir kontrol ve aşı tekrarı yapılır. Hiç dışarı çıkmayan ev kedileri için de aynısı geçerlidir.",
+          "liste": ["Yıllık muayene ve aşı", "Diş ve ağız kontrolü", "Tüy, deri ve kulak", "Kısırlaştırma ön görüşmesi"],
+          "dikkat": "Kuma sık gidip az yapan ya da hiç yapamayan erkek kedi acil durumdur, beklemeden arayın."
         },
         "yasli": {
           "etiket": "Yaşlı",
           "aralik": "8 yaş üstü",
-          "gelis": "Yılda iki kontrol ve kan tahlili öneririz. Kediler rahatsızlığı saklar, erken bakmak işe yarar.",
-          "liste": [
-            "Kan tahlili ile böbrek değerleri",
-            "Kilo ve iştah takibi",
-            "Diş ve ağız kontrolü",
-            "Eklem ve hareket kontrolü"
-          ],
-          "dikkat": "Hızlı kilo kaybı, çok su içme ya da sürekli saklanma varsa bekletmeyin."
+          "gelis": "Genellikle yılda iki kontrol ve kan tahlili önerilir. Kediler rahatsızlığını saklayabildiği için düzenli kontrol önemlidir.",
+          "liste": ["Kan tahliliyle böbrek değerleri", "Kilo ve iştah takibi", "Diş ve ağız kontrolü", "Eklem ve hareket kontrolü"],
+          "dikkat": "Hızlı kilo kaybı, çok su içme ya da sürekli saklanma varsa beklemeden arayın."
         }
       }
     }
-  },
-  "acilIsaretler": [
-    "Zehirlenme şüphesi",
-    "Kanama",
-    "Nefes darlığı",
-    "Trafik kazası",
-    "Doğum güçlüğü",
-    "İdrar yapamama"
-  ],
-  "finalBaslik": "Arayın, uygun saati birlikte bulalım.",
-  "acilMetin": "Aşağıdakilerden biri varsa beklemeyin. Telefonda durumu kısaca anlatın; yolda ne yapacağınızı, yanınıza ne alacağınızı söyleriz. Siz gelene kadar masa hazır olur.",
-  "markalar": [
-    "Kedi",
-    "Köpek",
-    "Yavru kedi",
-    "Yavru köpek",
-    "Yaşlı kedi",
-    "Yaşlı köpek",
-    "Sokaktan sahiplenilenler"
-  ]
+  }
 }

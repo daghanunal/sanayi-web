@@ -1,13 +1,12 @@
 // Kurumsal diş kliniği — "Diş haritası" yönü.
-// arkHero:     kemer pencereli fotoğraf; üst çenenin 16 dişi pencerenin üstüne dizilir, biri pembe yanar.
+// arkHero:     künye (ad, tanım, adres, bugün, telefon; Ara / WhatsApp / Yol tarifi). Yanında kemer pencereli
+//              fotoğraf; üst çenenin 16 dişi pencerenin üstüne açılışta bir kez dizilir, biri pembe yanar.
 // disHaritasi: imza modülü. Yetişkin (FDI 11–48) / çocuk (51–85) çene haritası; dişe dokun, şikâyeti seç,
-//              randevu mesajı hazır (WhatsApp / Ara). Teşhis koymaz; "muayenede neye bakarız" der.
-// hizmetler:   motor bölümü, yalnızca "teklif" dilini randevu diline çevirir.
-import { esc, telHref, waHref, openStatus, icons, gsap, reducedMotion } from '../../shared/core.js';
-import { BOLUMLER, yilEki } from '../_kurumsal/bolumler.js';
+//              randevu mesajı hazır (WhatsApp / Ara). Teşhis koymaz; muayenede nelere bakıldığını söyler.
+import { esc, telHref, waHref, mapsHref, gunDurumu, kisaAdres, icons, gsap, reducedMotion } from '../../shared/core.js';
+import { tanimMetni } from '../_kurumsal/bolumler.js';
 
 const ok = `<svg class="k-ok" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
-const rota = (id, metin, cls = 'k-btn') => `<a class="${cls}" href="#/${id}" data-rota="${id}">${metin}</a>`;
 const R = Math.PI / 180;
 
 // --- Diş verisi --------------------------------------------------------------------------
@@ -80,17 +79,17 @@ function disSekli(t, cls = 'dh__dis') {
 }
 
 // --- Şikâyetler -------------------------------------------------------------------------
-// "bak": muayenede neye bakarız (teşhis değil). "ilgili": hizmet id'leri.
+// "bak": muayenede nelere bakılır (teşhis değil). "ilgili": hizmet id'leri.
 const SIKAYET = [
-  { id: 'agri', ad: 'Ağrıyor', cumle: 'ağrı var', bak: 'Ağrının çürükten mi, sinirden mi, diş etinden mi geldiğini muayene ve röntgenle ayırırız. Görmeden bir şey söylemeyiz.', ilgili: ['muayene', 'dolgu', 'kanal'] },
-  { id: 'hassas', ad: 'Sıcak-soğuk hassasiyeti', cumle: 'sıcak-soğuk hassasiyeti var', bak: 'Diş yüzeyinde aşınma, çürük ya da çekilmiş diş eti olup olmadığına bakarız.', ilgili: ['muayene', 'dolgu', 'temizlik'] },
-  { id: 'kirik', ad: 'Kırıldı / çatladı', cumle: 'kırılma ya da çatlak var', bak: 'Kırığın ne kadar derine indiğini röntgenle görürüz; dişi korumak için hangi seçeneklerin olduğunu anlatırız.', ilgili: ['dolgu', 'kanal', 'protez'] },
-  { id: 'dolgu', ad: 'Dolgu düştü', cumle: 'dolgu düştü', bak: 'Dolgunun altında yeni çürük olup olmadığını kontrol eder, dişi yeniden kapatmak için seçenekleri konuşuruz.', ilgili: ['dolgu', 'muayene'] },
-  { id: 'dis-eti', ad: 'Diş eti kanıyor / şişti', cumle: 'diş eti kanaması ya da şişlik var', bak: 'Diş taşı, diş eti cebi ve apse ihtimaline bakarız. Şişlik yüzünüze yayılıyorsa beklemeden arayın.', ilgili: ['temizlik', 'muayene'] },
-  { id: 'eksik', ad: 'Diş eksik', cumle: 'diş eksikliği var', bak: 'Boşluğun çevresindeki dişlere ve kemiğe röntgenle bakar, implant, köprü ya da protez seçeneklerini anlatırız.', ilgili: ['implant', 'protez'] },
-  { id: 'sallaniyor', ad: 'Sallanıyor', cumle: 'sallanma var', bak: 'Diş etinin ve kemiğin durumuna bakarız. Çocuklarda süt dişinin sallanması çoğu zaman değişimin habercisidir.', ilgili: ['muayene', 'temizlik', 'cocuk'] },
-  { id: 'capraz', ad: 'Çapraşık / kapanış', cumle: 'çapraşıklık ya da kapanış sorunu var', bak: 'Dişlerin dizilişini ve çenelerin kapanışını değerlendirir, tel ve şeffaf plak seçeneklerini anlatırız.', ilgili: ['ortodonti', 'muayene'] },
-  { id: 'kontrol', ad: 'Sadece kontrol', cumle: 'kontrol ettirmek istiyorum', bak: 'Genel ağız muayenesi yapar, gerekiyorsa röntgen çeker ve diş taşı durumunu söyleriz.', ilgili: ['muayene', 'temizlik'] },
+  { id: 'agri', ad: 'Ağrıyor', cumle: 'ağrı var', bak: 'Ağrının çürükten mi, sinirden mi, diş etinden mi geldiği muayene ve röntgenle ayırt edilir.', ilgili: ['muayene', 'dolgu', 'kanal'] },
+  { id: 'hassas', ad: 'Sıcak-soğuk hassasiyeti', cumle: 'sıcak-soğuk hassasiyeti var', bak: 'Diş yüzeyinde aşınma, çürük ya da diş eti çekilmesi olup olmadığına bakılır.', ilgili: ['muayene', 'dolgu', 'temizlik'] },
+  { id: 'kirik', ad: 'Kırıldı / çatladı', cumle: 'kırılma ya da çatlak var', bak: 'Kırığın ne kadar derine indiği röntgenle görülür, dişi korumak için seçenekler anlatılır.', ilgili: ['dolgu', 'kanal', 'protez'] },
+  { id: 'dolgu', ad: 'Dolgu düştü', cumle: 'dolgu düştü', bak: 'Dolgunun altında yeni çürük olup olmadığı kontrol edilir, dişi yeniden kapatma seçenekleri konuşulur.', ilgili: ['dolgu', 'muayene'] },
+  { id: 'dis-eti', ad: 'Diş eti kanıyor / şişti', cumle: 'diş eti kanaması ya da şişlik var', bak: 'Diş taşı, diş eti cebi ve apse ihtimaline bakılır. Şişlik yüze yayılıyorsa beklemeden arayın.', ilgili: ['temizlik', 'muayene'] },
+  { id: 'eksik', ad: 'Diş eksik', cumle: 'diş eksikliği var', bak: 'Boşluğun çevresindeki dişlere ve kemiğe röntgenle bakılır; implant, köprü ya da protez seçenekleri anlatılır.', ilgili: ['implant', 'protez'] },
+  { id: 'sallaniyor', ad: 'Sallanıyor', cumle: 'sallanma var', bak: 'Diş etinin ve kemiğin durumuna bakılır. Çocuklarda süt dişinin sallanması çoğu zaman diş değişiminin işaretidir.', ilgili: ['muayene', 'temizlik', 'cocuk'] },
+  { id: 'capraz', ad: 'Çapraşık / kapanış', cumle: 'çapraşıklık ya da kapanış sorunu var', bak: 'Dişlerin dizilişi ve çenelerin kapanışı değerlendirilir, tel ve şeffaf plak seçenekleri anlatılır.', ilgili: ['ortodonti', 'muayene'] },
+  { id: 'kontrol', ad: 'Sadece kontrol', cumle: 'kontrol ettirmek istiyorum', bak: 'Genel ağız muayenesi yapılıp gerekirse röntgen çekilir; diş taşının durumu da söylenir.', ilgili: ['muayene', 'temizlik'] },
 ];
 
 // Seçilen dişleri okunur bir cümleye çevirir: "sol alt 1. büyük azı (36) ve sağ üst köpek dişi (13)".
@@ -120,51 +119,47 @@ function mesajYaz(d, disler, sikayetler, cocuk) {
 
 export const arkHero = {
   render(d, { tema }) {
-    const h = d.kurumsal?.hero || {};
-    const st = d.saatler ? openStatus(d.saatler) : null;
+    const b = d.saatler ? gunDurumu(d.saatler) : null;
+    const wa = waHref(d, d.waMesaj || 'Merhaba, muayene için randevu almak istiyorum.');
     // Kemer: 460 birimlik kutuda pencere yarıçapı 170, diş halkası 200; üst yarım daire boyunca 16 diş.
     const disler = [
       ...yay({ cx: 230, cy: 232, rx: 200, ry: 200, bas: 270, yon: -1, acik: 86, set: YETISKIN, bolge: 1, olcek: 4 }),
       ...yay({ cx: 230, cy: 232, rx: 200, ry: 200, bas: 270, yon: 1, acik: 86, set: YETISKIN, bolge: 2, olcek: 4 }),
     ];
-    const bilgi = [
-      ['Kuruluş', String(d.isletme.kurulus)],
-      st ? ['Bugün', st.text] : null,
-      ['Randevu', d.iletisim.telefon],
-    ]
-      .filter(Boolean)
-      .map(([e, v]) => `<div><dt>${esc(e)}</dt><dd>${esc(v)}</dd></div>`)
-      .join('');
     return `
-      <section class="k-hero ah" aria-label="Giriş">
+      <section class="k-hero k-hero--kunye ah" aria-label="Künye">
         <div class="k-kap k-hero__ic">
           <div class="k-hero__metin">
-            <p class="k-hero__ust"><span class="ah__rozet">${esc(d.isletme.sektor)}</span> ${esc(tema.yer)} ${esc(yilEki(d.isletme.kurulus))} beri</p>
-            <h1 class="k-h1 k-hero__baslik" data-bol>${esc(h.baslik || d.isletme.slogan)}</h1>
-            <p class="k-lead">${esc(h.metin || d.isletme.hakkinda)}</p>
+            <h1 class="k-h1 k-hero__baslik" data-bol>${esc(d.isletme.ad)}</h1>
+            <p class="k-lead k-hero__tanim">${esc(tanimMetni(d))}</p>
+            <dl class="k-kunye">
+              <div><dt>Adres</dt><dd>${esc(kisaAdres(d.iletisim.adres))}</dd></div>
+              ${b ? `<div><dt>Bugün</dt><dd><span class="k-durum ${b.open ? 'is-acik' : ''}"><span></span>${esc(b.kunye)}</span></dd></div>` : ''}
+              <div><dt>Telefon</dt><dd><a href="${telHref(d)}">${esc(d.iletisim.telefon)}</a></dd></div>
+            </dl>
             <div class="k-butonlar">
-              ${rota('iletisim', `${esc(h.birincil || 'Randevu isteyin')} ${ok}`)}
-              ${rota(h.ikincilRota || 'dis-haritasi', `<span class="ah__mini" aria-hidden="true"></span>${esc(h.ikincil || 'Diş haritası')}`, 'k-btn k-btn--ikincil')}
+              <a class="k-btn" href="${telHref(d)}">${icons.phone}<span>Ara</span></a>
+              ${d.iletisim.whatsapp ? `<a class="k-btn k-btn--ikincil" href="${wa}" target="_blank" rel="noopener">${icons.whatsapp}<span>WhatsApp</span></a>` : ''}
+              <a class="k-btn k-btn--ikincil" href="${mapsHref(d)}" target="_blank" rel="noopener">${icons.pin}<span>Yol tarifi</span></a>
             </div>
           </div>
           <div class="ah__kemer">
             <svg class="ah__disler" viewBox="0 0 460 250" aria-hidden="true">${disler.map((t) => disSekli(t, `ah__dis${t.fdi === '16' ? ' is-yan' : ''}`)).join('')}</svg>
             <figure class="ah__pencere" data-perde><div class="ah__pencere-ic" data-paralaks><img src="${tema.heroGorsel}" alt="${esc(tema.heroAlt || '')}" fetchpriority="high"></div></figure>
-            <a class="ah__etiket" href="#/dis-haritasi" data-rota="dis-haritasi"><b>16</b><span>Sağ üst 1. büyük azı<small>Dişinizi haritada işaretleyin</small></span></a>
+            <a class="ah__etiket" href="#/dis-haritasi" data-rota="dis-haritasi"><b>16</b><span>Diş haritası<small>Diş numarasıyla randevu mesajı</small></span></a>
           </div>
         </div>
-        <div class="k-kap"><dl class="k-hero__bilgi">${bilgi}</dl></div>
       </section>`;
   },
   mount(el) {
     if (reducedMotion) return;
     const disler = el.querySelectorAll('.ah__dis');
-    // Ortadan (kesicilerden) dışa doğru dizilsin: 11/21 önce, 18/28 en son.
+    // Ortadan (kesicilerden) dışa doğru bir kez dizilir: 11/21 önce, 18/28 en son (≈1,2 sn).
     const sirali = [...disler].sort((a, b) => Math.abs(7.5 - [...disler].indexOf(a)) - Math.abs(7.5 - [...disler].indexOf(b)));
     gsap.set(disler, { transformBox: 'fill-box', transformOrigin: '50% 50%' });
-    const tl = gsap.timeline({ delay: 0.55 });
-    tl.from(sirali, { scale: 0, opacity: 0, duration: 0.5, stagger: 0.045, ease: 'back.out(2.4)' })
-      .from(el.querySelector('.ah__etiket'), { y: 18, opacity: 0, duration: 0.6, ease: 'power3.out' }, '-=0.25');
+    const tl = gsap.timeline({ delay: 0.45 });
+    tl.from(sirali, { scale: 0, opacity: 0, duration: 0.45, stagger: 0.04, ease: 'back.out(2.4)' })
+      .from(el.querySelector('.ah__etiket'), { y: 16, opacity: 0, duration: 0.5, ease: 'power3.out' }, '-=0.25');
   },
 };
 
@@ -177,9 +172,8 @@ export const disHaritasi = {
       <section class="k-bolum dh" aria-labelledby="dh-baslik">
         <div class="k-kap">
           <div class="dh__bas">
-            <p class="dh__ust"><span></span>Diş haritası</p>
-            <h2 class="k-h2" id="dh-baslik" data-bol>Hangi dişiniz? Dokunun, gerisini biz yazalım.</h2>
-            <p class="k-lead">Dişi işaretleyin, ne olduğunu seçin; randevu mesajınız hazır olsun. Harita teşhis koymaz, ne olduğunu muayenede birlikte görürüz.</p>
+            <h2 class="k-h2" id="dh-baslik" data-bol>Diş ve şikâyet seçimi</h2>
+            <p class="k-lead">Diş işaretlenip şikâyet seçilince randevu mesajı hazırlanır. Harita teşhis koymaz; ne olduğu muayenede görülür.</p>
           </div>
           <div class="dh__ic">
             <div class="dh__harita">
@@ -200,14 +194,14 @@ export const disHaritasi = {
                 </svg>
               </div>
               <button type="button" class="dh__devam" hidden><span class="dh__devam-n">0</span><span>diş seçildi · şikâyeti seçin</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v13M6 13l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-              <p class="dh__ipucu">Ekranda sol taraf sizin sağınızdır; aynaya bakar gibi değil, karşınızdaki hekim gibi görürsünüz.</p>
+              <p class="dh__ipucu">Ekrandaki sol taraf hastanın sağıdır; harita, karşıdaki hekimin gördüğü gibi çizilmiştir.</p>
             </div>
             <div class="dh__panel">
               <div class="dh__adim">
                 <p class="dh__adim-no">1</p>
                 <div>
                   <h3 class="k-h3">Seçilen dişler</h3>
-                  <ul class="dh__secili" aria-live="polite"><li class="dh__bos">Henüz diş seçmediniz. Emin değilseniz boş bırakın.</li></ul>
+                  <ul class="dh__secili" aria-live="polite"><li class="dh__bos">Henüz diş seçilmedi. Emin değilseniz boş bırakabilirsiniz.</li></ul>
                 </div>
               </div>
               <div class="dh__adim">
@@ -220,16 +214,16 @@ export const disHaritasi = {
                 </div>
               </div>
               <div class="dh__bak" hidden>
-                <p class="dh__bak-bas">Muayenede neye bakarız</p>
+                <p class="dh__bak-bas">Muayenede bakılanlar</p>
                 <p class="dh__bak-metin"></p>
                 <ul class="dh__ilgili"></ul>
               </div>
               <div class="dh__mesaj">
-                <p class="dh__mesaj-bas">Randevu mesajınız</p>
+                <p class="dh__mesaj-bas">Randevu mesajı</p>
                 <blockquote class="dh__balon"></blockquote>
                 <div class="k-butonlar">
                   <a class="k-btn dh__wa" href="${waHref(d, mesajYaz(d, [], [], false))}" target="_blank" rel="noopener">${icons.whatsapp}<span>WhatsApp'tan gönder</span></a>
-                  <a class="k-btn k-btn--ikincil" href="${telHref(d)}">${icons.phone}<span>Arayın</span></a>
+                  <a class="k-btn k-btn--ikincil" href="${telHref(d)}">${icons.phone}<span>Ara</span></a>
                 </div>
               </div>
             </div>
@@ -285,7 +279,7 @@ export const disHaritasi = {
         ? disler
             .map((t) => `<li><button type="button" data-kaldir="${t.fdi}" aria-label="${esc(`${t.fdi} dişini kaldır`)}"><b>${t.fdi}</b>${esc(disAdi(t))}<span aria-hidden="true">×</span></button></li>`)
             .join('')
-        : `<li class="dh__bos">Henüz diş seçmediniz. Emin değilseniz boş bırakın.</li>`;
+        : `<li class="dh__bos">Henüz diş seçilmedi. Emin değilseniz boş bırakabilirsiniz.</li>`;
       // Yirmilik seçildiyse çekim tedavisini de öner.
       const son = durum.sikayet.at(-1);
       const s = SIKAYET.find((x) => x.id === son);
@@ -389,22 +383,8 @@ export const disHaritasi = {
         duration: 0.5,
         ease: 'back.out(2)',
         stagger: (i) => (i % 8) * 0.05 + Math.floor(i / 8) * 0.03,
-        scrollTrigger: { trigger: svg, start: 'top 80%', once: true },
+        scrollTrigger: { trigger: svg, start: 'top 80%', toggleActions: 'play none none none' },
       });
     }
-  },
-};
-
-// --- Motor bölümü: tedaviler (teklif → randevu dili) ---------------------------------------
-
-export const hizmetler = {
-  render(d, ctx, sorgu) {
-    return BOLUMLER.hizmetler.render(d, ctx, sorgu).replaceAll('Bu hizmet için teklif isteyin', 'Bu tedavi için randevu isteyin');
-  },
-};
-
-export const ozet = {
-  render(d, ctx, sorgu) {
-    return BOLUMLER.ozet.render(d, ctx, sorgu).replace('>Kurumsal <', '>Kliniğimizi tanıyın <');
   },
 };

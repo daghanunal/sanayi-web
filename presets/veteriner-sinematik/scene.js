@@ -415,7 +415,8 @@ export function createScene(canvas, { lite }) {
   // --- Boyut --------------------------------------------------------------
   let vw = 1, vh = 1;
   function resize() {
-    vw = innerWidth; vh = innerHeight;
+    // Tuval kahraman bölümünün içinde: ölçü tuvalin kendisinden.
+    vw = canvas.clientWidth || innerWidth; vh = canvas.clientHeight || innerHeight;
     renderer.setSize(vw, vh, false);
     camera.aspect = vw / vh;
     dustMat.uniforms.uPx.value = vh * DPR * 0.02;
