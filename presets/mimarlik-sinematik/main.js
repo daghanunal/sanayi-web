@@ -1,637 +1,297 @@
+// Mimarlık sinematik: ozalit mavisi pafta, beyaz çizgi, fosforlu kalem sarısı-yeşili; kodla çizilmiş temsilî konut.
+// Akış: künye → Hizmetler (+ çalışma sırası) → Hakkında → Çalışma saatleri ve konum → Örnek yorumlar → İletişim.
+// 3D yalnız künyede: açılışta paftadan katlar bir kez yükselir, çizgi akşam ışığında yapıya dönüşür;
+// kaydırdıkça kamera yapının çevresinde döner, künye ekrandan çıkınca çizim durur.
 import sektor from '../../data/sektor-mimarlik.json';
 import ek from '../../data/mimarlik-sinematik.json';
 import '../../shared/base.css';
 import './style.css';
 import {
-  boot, initSmoothScroll, reducedMotion, telHref, waHref, mapsHref, mapsEmbed,
-  openStatus, groupedHours, icons, esc, gsap, ScrollTrigger, setStoryMode,
+  boot, initSmoothScroll, reducedMotion, telHref, waHref, mapsHref, mapsEmbed, icons, esc, gsap, ScrollTrigger,
+  saatListesi, gunDurumu, kisaAdres, acikGunSayisi, yilEki, GUNLER, autoHideHeader,
 } from '../../shared/core.js';
 import { SplitText } from 'gsap/SplitText';
-import { DrawSVGPlugin } from 'gsap/DrawSVGPlugin';
 import * as THREE from 'three';
-import { createScene, PLOT, FLOORS, HMAX } from './scene.js';
+import { createScene } from './scene.js';
 
-gsap.registerPlugin(SplitText, DrawSVGPlugin);
+gsap.registerPlugin(SplitText);
 ScrollTrigger.config({ ignoreMobileResize: true });
 
 const d = boot({ ...sektor, ...ek, preset: 'mimarlik-sinematik' });
 const $ = (s, root = document) => root.querySelector(s);
 const $$ = (s, root = document) => [...root.querySelectorAll(s)];
 const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
-const seg = (p, a, b) => clamp((p - a) / (b - a));
-const L = (a, b, t) => a + (b - a) * t;
 const smooth = (t) => t * t * (3 - 2 * t);
-const nf = (n, digits = 0) => n.toLocaleString('tr-TR', { minimumFractionDigits: digits, maximumFractionDigits: digits });
 const weak = (navigator.hardwareConcurrency || 8) <= 4 || (navigator.deviceMemory || 8) <= 4;
 const mobile = () => innerWidth < 760;
-// Dikey tablet kadrajı telefonunkine yakın: kamera telefon pozlarını kullanır (yazı üstte, arsa altta)
+// Dikey tablet kadrajı telefonunkine yakın: yazı üstte, yapı altta
 const portrait = () => mobile() || (innerWidth < 1000 && innerHeight > innerWidth * 1.15);
 const lite = weak || innerWidth < 760;
-const up = (s) => s.toLocaleUpperCase('tr');
 const V = (x, y, z) => new THREE.Vector3(x, y, z);
 
-// "2009'dan", "1995'ten"
-function ablative(n) {
-  const units = ['', 'den', 'den', 'ten', 'ten', 'ten', 'dan', 'den', 'den', 'dan'];
-  const tens = ['', 'dan', 'den', 'dan', 'tan', 'den', 'tan', 'ten', 'den', 'dan'];
-  const u = n % 10, t = Math.floor(n / 10) % 10;
-  return `${n}'${u ? units[u] : t ? tens[t] : 'den'}`;
+const ad = esc(d.isletme.ad);
+const tel = esc(d.iletisim.telefon);
+const kurulus = d.isletme.kurulus;
+const yas = Math.max(1, new Date().getFullYear() - kurulus);
+const st = gunDurumu(d.saatler);
+const waGenel = d.waMesaj || 'Merhaba, proje için görüşme randevusu almak istiyorum.';
+
+// Çekirdeğin varsayılan WhatsApp metni oto sanayi içindir; alt çubukta ofisin metni kullanılır.
+$$('.action-bar a[href*="wa.me"]').forEach((a) => (a.href = waHref(d, waGenel)));
+
+// --- Arama motoru: mimarlık ofisi (ProfessionalService) -------------------------------
+$$('script[type="application/ld+json"]').forEach((s) => s.textContent.includes('"AutoRepair"') && s.remove());
+const ld = $('script[type="application/ld+json"]');
+if (ld) {
+  const gunEn = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  ld.textContent = JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'ProfessionalService',
+    name: d.isletme.ad,
+    description: d.isletme.tanim,
+    telephone: d.iletisim.telefon,
+    foundingDate: String(kurulus),
+    address: { '@type': 'PostalAddress', streetAddress: d.iletisim.adres, addressLocality: 'Etimesgut', addressRegion: 'Ankara', addressCountry: 'TR' },
+    openingHoursSpecification: d.saatler
+      .map((s, i) => (s ? { '@type': 'OpeningHoursSpecification', dayOfWeek: `https://schema.org/${gunEn[i]}`, opens: s.split('-')[0], closes: s.split('-')[1] } : null))
+      .filter(Boolean),
+  });
 }
+document.title = `${d.isletme.ad} | Mimarlık ofisi | Etimesgut, Ankara`;
 
-// --- İçerik ------------------------------------------------------------------
+const btn = (cls, href, ikon, label, dis) =>
+  `<a class="btn ${cls}" href="${href}"${dis ? ' target="_blank" rel="noopener"' : ''}>${ikon}<span>${label}</span></a>`;
+const liste = saatListesi(d.saatler);
+const sira = [1, 2, 3, 4, 5, 6, 0];
+const bugunG = sira.indexOf(new Date().getDay());
+const bugunMu = (gunler) => {
+  const [a, b] = gunler.split('–');
+  const ia = sira.indexOf(GUNLER.indexOf(a));
+  const ib = b ? sira.indexOf(GUNLER.indexOf(b)) : ia;
+  return bugunG >= ia && bugunG <= ib;
+};
 
-const binds = { ad: d.isletme.ad, slogan: d.isletme.slogan, telefon: d.iletisim.telefon, adres: d.iletisim.adres };
-$$('[data-bind]').forEach((el) => (el.textContent = binds[el.dataset.bind] ?? ''));
-$$('[data-tel]').forEach((a) => (a.href = telHref(d)));
-$$('[data-wa]').forEach((a) => (a.href = waHref(d, `Merhaba ${d.isletme.ad}, bir proje için görüşmek istiyorum.`)));
-$$('[data-maps]').forEach((a) => (a.href = mapsHref(d)));
-$$('[data-icon]').forEach((el) => (el.innerHTML = icons[el.dataset.icon]));
-$('[data-wa-arsa]').href = waHref(d, `Merhaba ${d.isletme.ad}, arsam / yapım için proje düşünüyorum. Yeri: `);
-$('[data-brand]').setAttribute('aria-label', `${d.isletme.ad}, sayfa başı`);
+// --- Başlık ----------------------------------------------------------------------
+$('#ust').innerHTML = `
+  <a class="top__brand" href="#basla" aria-label="${ad}, sayfa başı"><span class="top__mark" aria-hidden="true"></span><span>${ad}</span></a>
+  <nav class="top__nav" aria-label="Bölümler">
+    <a href="#hizmetler">Hizmetler</a>
+    <a href="#hakkinda">Hakkında</a>
+    <a href="#saatler">Saatler ve konum</a>
+    <a href="#iletisim">İletişim</a>
+  </nav>
+  <p class="top__status${st.open ? ' is-open' : ''}">${st.open ? 'Açık' : 'Kapalı'}</p>
+  <a class="top__call" href="${telHref(d)}">${icons.phone}<span>${tel}</span></a>`;
 
-const yil = new Date().getFullYear() - d.isletme.kurulus;
-$('[data-kicker]').textContent = `${d.isletme.sektor} · Etimesgut · ${ablative(d.isletme.kurulus)} beri`;
-const heroTitle = $('[data-hero-title]');
-heroTitle.textContent = d.isletme.ad;
-heroTitle.classList.toggle('is-long', d.isletme.ad.length > 18);
-$('[data-intro-name]').textContent = d.isletme.ad;
+// --- Künye -----------------------------------------------------------------------
+$('#kunye').innerHTML = `
+  <h1 class="hero__title${d.isletme.ad.length > 18 ? ' is-long' : ''}" id="hero-ad">${ad}</h1>
+  <p class="hero__what">${esc(d.isletme.tanim)}</p>
+  <dl class="kunye">
+    <div><dt>Adres</dt><dd>${esc(kisaAdres(d.iletisim.adres))}</dd></div>
+    <div><dt>Bugün</dt><dd class="live${st.open ? ' is-open' : ''}">${esc(st.kunye)}</dd></div>
+    <div><dt>Telefon</dt><dd><a href="${telHref(d)}">${tel}</a></dd></div>
+  </dl>
+  <div class="hero__cta">
+    ${btn('btn--acc', telHref(d), icons.phone, 'Ara')}
+    ${btn('btn--line', waHref(d, waGenel), icons.whatsapp, 'WhatsApp', true)}
+    ${btn('btn--line', mapsHref(d), icons.pin, 'Yol tarifi', true)}
+  </div>`;
 
-const status = openStatus(d.saatler);
-$$('[data-status]').forEach((el) => {
-  el.textContent = status.open ? 'Ofis açık' : 'Ofis kapalı';
-  el.title = status.text;
-  el.classList.toggle('is-open', status.open);
-});
-$('[data-status-big]').textContent = status.text;
-$('[data-status-big]').classList.toggle('is-open', status.open);
+// --- Hizmetler: satır + (masaüstünde) yapışkan görsel çerçevesi ---------------------------
+$('#hizmetler').innerHTML = `
+  <header class="sec-head">
+    <h2 class="sec-title" id="svc-h">Hizmetler</h2>
+    <p class="sec-sub">Süreler ortalamadır, projenin büyüklüğüne göre değişir. Ücret bilgisi ve görüşme randevusu için arayın. Görseller temsilîdir.</p>
+  </header>
+  <ol class="svc">
+    <li class="svc__frame" aria-hidden="true">${d.hizmetler.map((s, i) => `<img src="${esc(s.gorsel)}" alt="" loading="lazy" decoding="async" data-svc-img="${i}" />`).join('')}<span class="svc__frame-no" data-svc-no>01 · Temsilî</span></li>
+    ${d.hizmetler.map((s, i) => `
+    <li class="svc__row" data-svc="${i}">
+      <p class="svc__no">${String(i + 1).padStart(2, '0')}</p>
+      <h3 class="svc__name">${esc(s.baslik)}</h3>
+      <p class="svc__desc">${esc(s.aciklama)}</p>
+      ${s.sure ? `<p class="svc__time"><span>Süre</span>${esc(s.sure)}</p>` : ''}
+      <figure class="svc__img"><img src="${esc(s.gorsel)}" alt="${esc(s.gorselAlt || '')}" loading="lazy" decoding="async" /><figcaption>Temsilî</figcaption></figure>
+    </li>`).join('')}
+  </ol>`;
 
-// Film kartları ve pafta listesi
-const FILM = d.film;
-$('[data-sheets]').innerHTML = FILM.map((f) => `<li data-sheet><b>${esc(f.pafta)}</b><span>${esc(f.paftaAd)}</span></li>`).join('');
-$('[data-cards]').innerHTML = FILM.map((f) => `
-  <div class="stop" data-stop>
-  <article class="card" data-card="${esc(f.id)}">
-    <p class="card__sheet"><span>Pafta ${esc(f.pafta)}</span><span>${esc(f.durak)}</span></p>
-    <h2 class="card__title">${esc(f.baslik)}</h2>
-    <p class="card__text">${esc(f.metin)}</p>
-    <a class="card__wa" href="${esc(waHref(d, `Merhaba ${d.isletme.ad}, ${f.hizmet.toLocaleLowerCase('tr')} için bilgi almak istiyorum.`))}" target="_blank" rel="noopener">${icons.whatsapp}<span>${esc(f.hizmet)} için sorun</span></a>
-  </article>
-  </div>`).join('');
-$('[data-ov-kicker]').textContent = d.filmSon.ust;
-$('[data-ov-title]').textContent = d.filmSon.baslik;
+// --- Çalışma sırası -----------------------------------------------------------------
+$('.steps').innerHTML = `
+  <header class="sec-head"><h2 class="sec-title" id="steps-h">Çalışma sırası</h2></header>
+  <ol class="steps__list">
+    ${d.surec.map((s, i) => `<li class="step"><p class="step__n">${String(i + 1).padStart(2, '0')}</p><div><h3>${esc(s.baslik)}</h3><p>${esc(s.aciklama)}</p></div></li>`).join('')}
+  </ol>`;
 
-// Hakkımızda + rakamlar
-const aboutText = $('[data-about-text]');
-aboutText.innerHTML = d.isletme.hakkinda.split(' ').map((w) => `<span>${esc(w)} </span>`).join('');
-const stats = d.istatistikler.map((s) => ({ ...s, deger: s.kurulustanHesapla ? yil : s.deger }));
-$('[data-stats]').innerHTML = stats.map((s) => `
-  <li class="stat"><p class="stat__num"><b data-count="${Number(s.deger)}">0</b><small>${esc(s.sonek)}</small></p><p class="stat__lbl">${esc(s.etiket)}</p></li>`).join('');
+// --- Hakkında ----------------------------------------------------------------------
+const acikGun = acikGunSayisi(d.saatler);
+const foto = d.galeri.find((g) => g.src.includes('/cizim-masasi.')) || d.galeri[0];
+$('#hakkinda').innerHTML = `
+  <div class="about__head"><h2 class="sec-title" id="about-h">Hakkında</h2></div>
+  <div class="about__body">
+    <p class="about__text">${ad} ${esc(yilEki(kurulus))} beri Etimesgut'ta. ${esc(d.isletme.hakkinda)}</p>
+    ${d.bilgiler?.length ? `<dl class="facts">${d.bilgiler.map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join('')}</dl>` : ''}
+  </div>
+  <ul class="stats" aria-label="Rakamlarla">
+    <li class="stat"><p class="stat__num"><b data-count="${yas}">${yas}</b><small> yıl</small></p><p class="stat__lbl">Etimesgut'ta</p></li>
+    <li class="stat"><p class="stat__num"><b data-count="${acikGun}">${acikGun}</b><small> gün</small></p><p class="stat__lbl">haftada açık</p></li>
+  </ul>
+  <figure class="about__img"><img src="${esc(foto.src)}" alt="${esc(foto.alt)} (temsilî)" loading="lazy" decoding="async" width="2000" height="1333" /><figcaption>Temsilî</figcaption></figure>`;
 
-// Hizmetler: satır + (masaüstünde) yapışkan görsel çerçevesi
-$('[data-services]').innerHTML = `
-  <li class="svc__frame" aria-hidden="true">${d.hizmetler.map((s, i) => `<img src="${esc(s.gorsel)}" alt="" loading="lazy" data-svc-img="${i}" />`).join('')}<span class="svc__frame-no" data-svc-no>P-01</span></li>
-  ${d.hizmetler.map((s, i) => `
-  <li class="svc__row" data-svc="${i}">
-    <p class="svc__no">P-${String(i + 1).padStart(2, '0')}</p>
-    <h3 class="svc__name">${esc(s.baslik)}</h3>
-    <p class="svc__desc">${esc(s.aciklama)}</p>
-    <p class="svc__time"><span>Süre</span>${esc(s.sure)}</p>
-    <figure class="svc__img"><img src="${esc(s.gorsel)}" alt="${esc(s.baslik)}" loading="lazy" /></figure>
-  </li>`).join('')}`;
+// --- Çalışma saatleri ve konum ---------------------------------------------------------
+$('#saatler').innerHTML = `
+  <div class="shop__info">
+    <h2 class="sec-title" id="shop-h">Çalışma saatleri ve konum</h2>
+    <p class="shop__status${st.open ? ' is-open' : ''}">${esc(st.metin)}</p>
+    <dl class="shop__hours">
+      ${liste.map(([g, s]) => `<div class="${s === 'Kapalı' ? 'is-closed ' : ''}${bugunMu(g) ? 'is-today' : ''}"><dt>${esc(g)}</dt><dd>${esc(s)}</dd></div>`).join('')}
+    </dl>
+    <p class="shop__addr">${esc(d.iletisim.adres)}</p>
+    <div class="shop__cta">
+      ${btn('btn--ink', mapsHref(d), icons.pin, 'Yol tarifi', true)}
+      ${btn('btn--inkline', telHref(d), icons.phone, tel)}
+    </div>
+  </div>
+  <div class="shop__map" id="map"></div>`;
 
-// Süreç
-$('[data-steps]').innerHTML = d.surec.map((s, i) => `
-  <li class="step"><p class="step__n">${String(i + 1).padStart(2, '0')}</p><div><h3>${esc(s.baslik)}</h3><p>${esc(s.aciklama)}</p></div></li>`).join('');
+// --- Örnek yorumlar ---------------------------------------------------------------------
+$('#yorumlar').innerHTML = `
+  <header class="reviews__head">
+    <h2 class="sec-title" id="rev-h">Örnek yorumlar</h2>
+    <p class="sec-sub">Buradaki yorumlar örnektir, yerlerine ofisin gerçek yorumları konur.</p>
+  </header>
+  <div class="reviews__rail" data-lenis-prevent-touch><div class="reviews__track">
+    ${d.yorumlar.map((y) => `
+      <figure class="rev">
+        <p class="rev__stars" role="img" aria-label="5 üzerinden ${Number(y.puan)}">${icons.star.repeat(Number(y.puan) || 0)}</p>
+        <blockquote>${esc(y.metin)}</blockquote>
+        <figcaption><b>${esc(y.ad)}</b>${y.konu ? `<span>${esc(y.konu)}</span>` : ''}</figcaption>
+      </figure>`).join('')}
+  </div></div>`;
 
-// Galeri
-$('[data-gallery]').innerHTML = d.galeri.map((g, i) => `
-  <figure class="gal gal--${i % 3}"><img src="${esc(g.src)}" alt="${esc(g.alt)}" loading="lazy" /><figcaption>${String(i + 1).padStart(2, '0')} · ${esc(g.alt)}</figcaption></figure>`).join('');
+// --- İletişim ------------------------------------------------------------------------
+$('#iletisim').innerHTML = `
+  <div class="finale__in">
+    <h2 class="finale__title" id="fin-h">İletişim</h2>
+    <p class="finale__sub">Görüşme randevusu için arayın ya da WhatsApp'tan yazın. İlk görüşmeye tapu ya da ada-parsel numarası, varsa imar durum belgesi getirilir.</p>
+    <dl class="finale__list">
+      <div><dt>Telefon</dt><dd><a href="${telHref(d)}">${tel}</a></dd></div>
+      <div><dt>Adres</dt><dd>${esc(d.iletisim.adres)}</dd></div>
+      <div><dt>Bugün</dt><dd>${esc(st.metin)}</dd></div>
+    </dl>
+    <div class="finale__cta">
+      ${btn('btn--acc btn--xl', telHref(d), icons.phone, 'Ara')}
+      ${btn('btn--line btn--xl', waHref(d, waGenel), icons.whatsapp, 'WhatsApp', true)}
+    </div>
+  </div>`;
 
-// Yazılımlar
-const chunk = `<span class="marquee__chunk">${d.markalar.map((m) => `<span>${esc(m)}</span>`).join('')}</span>`;
-$('[data-marquee]').innerHTML = `<div class="marquee__inner">${chunk}${chunk}</div>`;
-
-// Yorumlar
-$('[data-puan]').textContent = nf(d.puan.ortalama, 1);
-$('[data-stars]').innerHTML = icons.star.repeat(5);
-$('[data-puan-adet]').textContent = 'Temsilî puan · yorumlar örnektir';
-$('[data-rev-track]').innerHTML = d.yorumlar.map((y) => `
-  <figure class="rev">
-    <p class="rev__stars" aria-label="${Number(y.puan)} yıldız">${icons.star.repeat(Number(y.puan) || 0)}</p>
-    <blockquote>${esc(y.metin)}</blockquote>
-    <figcaption><b>${esc(y.ad)}</b><span>${esc(y.arac)}</span></figcaption>
-  </figure>`).join('');
-
-// Saatler, final, footer
-$('[data-hours]').innerHTML = groupedHours(d.saatler)
-  .map(([g, h]) => `<div class="${h === 'Kapalı' ? 'is-closed' : ''}"><dt>${esc(g)}</dt><dd>${esc(h)}</dd></div>`).join('');
-$('[data-final-title]').textContent = d.finalBaslik;
-$('[data-garanti]').textContent = d.garanti;
-$('[data-year]').textContent = `© ${new Date().getFullYear()} ${d.isletme.ad}`;
+$('#foot').innerHTML = `
+  <p>© ${new Date().getFullYear()} ${ad} · ${esc(d.isletme.tanim)}</p>
+  <p>${esc(d.iletisim.adres)} · <a href="${telHref(d)}">${tel}</a></p>
+  <p class="foot__small">Fotoğraflar ve proje görselleri temsilîdir (Pexels). 3D görsel temsilîdir; konut modeli bu site için kodla çizildi. Yorumlar örnektir.</p>`;
 
 // Harita: yaklaşınca yüklenir
-const mapBox = $('[data-map]');
+const mapBox = $('#map');
 new IntersectionObserver((entries, obs) => {
   if (!entries[0].isIntersecting) return;
-  mapBox.innerHTML = `<iframe title="${esc(d.isletme.ad)} konumu" src="${esc(mapsEmbed(d))}" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>`;
+  mapBox.innerHTML = `<iframe title="${ad} konumu" src="${esc(mapsEmbed(d))}" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>`;
   obs.disconnect();
 }, { rootMargin: '600px' }).observe(mapBox);
 
-// --- Sahne ---------------------------------------------------------------
-
-const canvas = $('[data-stage]');
-const S = createScene(canvas, { lite });
-if (import.meta.env.DEV) window.__mim = { S, get p() { return filmP; } };
-
-// Kamera pozları: [masaüstü, mobil]
-const POSE = {
-  plan: [[-8, 46, 6, -8, 0, 0.5, 40], [0, 64, -3, 0, 0, -8.2, 46]],
-  arsa: [[5, 32, 21, 2.5, 0, 0, 40], [0, 50, 22, 0, 0, -4, 48]],
-  arsa2: [[-1, 29, 23, 3, 0, 0, 40], [3, 48, 24, 0, 0, -4, 48]],
-  avan: [[23, 15, 23, 1, 3, 0, 36], [26, 25, 36, 0.5, 4.5, -4, 44]],
-  avan2: [[27, 11, 11, 1, 3.6, 0, 36], [31, 20, 24, 0.5, 5, -4, 44]],
-  ruhsat: [[8, 6.5, 31, -2.5, 5, 0, 34], [5, 11, 55, 0.5, 7.5, 0, 42]],
-  ruhsat2: [[-4, 6, 32, -2.5, 5, 0, 34], [-4, 11, 55, 0.5, 7.5, 0, 42]],
-  kesit: [[19, 7, 19, -2.5, 4, -1, 38], [21, 11, 30, 0, 6.5, -1, 46]],
-  kesit2: [[11, 6, 22, -2.5, 3.6, -1, 38], [12, 10, 33, 0, 6.5, -1, 46]],
-  render: [[-22, 6.5, 20, -1.5, 4, 0, 36], [-28, 10, 40, 0, 6.5, 0, 44]],
-  render2: [[22, 5, 20, -1.5, 4, 0, 36], [24, 9, 33, 0, 7, 0, 44]],
-  ev1: [[15, 6.5, 21, 0.5, 3.4, -1, 40], [8, 7.5, 23, -0.8, 4.6, -1, 54]],
-  ev2: [[-13, 5.5, 20, -2.5, 3.2, -1, 40], [-7, 6.5, 22, -1.5, 4.4, -1, 54]],
-  gece: [[17, 5, 24, -1.5, 4.2, 0, 38], [26, 8, 46, 0.5, 6.5, 0, 46]],
-  gece2: [[-15, 4.5, 26, -1.5, 4.2, 0, 38], [-22, 7, 46, 0.5, 6.5, 0, 46]],
-};
-const KF = [
-  [0, 'plan'], [0.05, 'plan'], [0.11, 'arsa'], [0.19, 'arsa2'], [0.235, 'avan'], [0.32, 'avan2'],
-  [0.36, 'ruhsat'], [0.45, 'ruhsat2'], [0.49, 'kesit'], [0.575, 'kesit2'], [0.615, 'render'], [0.71, 'render2'],
-  [0.765, 'ev1'], [0.835, 'ev2'], [0.885, 'gece'], [1, 'gece2'],
-];
-const CARD_RANGES = [[0.085, 0.2], [0.205, 0.33], [0.335, 0.46], [0.465, 0.59], [0.595, 0.72], [0.735, 0.85]];
-
-// Kurgu 0..1 "sanal" film zamanında yazıldı (KF, CARD_RANGES, etiketler). Gerçek kaydırma DOM'dan ölçülen
-// duraklara eşlenir: durak i bir önceki kartın çekildiği yerde başlar ve sanal aralığına oturur.
-let WARP = [[0, 0], [1, 1]];
-let cardGeo = [];
-function measureFilm() {
-  const filmEl = $('[data-film]');
-  const vh = innerHeight;
-  const total = Math.max(1, filmEl.offsetHeight - vh);
-  const ft = filmEl.getBoundingClientRect().top;
-  const top = (el) => el.getBoundingClientRect().top - ft;
-  const stops = $$('[data-stop]');
-  const r = (y) => clamp(y / total);
-  const w = [[0, 0]];
-  stops.forEach((el, i) => { if (i > 0) w.push([r(top(el) - vh), CARD_RANGES[i][0] - 0.005]); });
-  w.push([r(top($('[data-over-sec]')) - vh * 0.8), 0.86], [1, 1]);
-  WARP = w;
-  const sy = scrollY;
-  cardGeo = stops.map((el) => ({ top: el.getBoundingClientRect().top + sy, h: el.offsetHeight, pad: parseFloat(getComputedStyle(el).paddingTop) || 0 }));
+// --- Sahne: yalnız künyede ------------------------------------------------------------------
+const canvas = $('.stage');
+let S = null;
+try {
+  S = createScene(canvas, { lite });
+} catch {
+  document.documentElement.classList.add('no-gl');
 }
-function warp(x) {
-  let i = 0;
-  while (i < WARP.length - 2 && x > WARP[i + 1][0]) i++;
-  const [a, va] = WARP[i], [b, vb] = WARP[i + 1];
-  return L(va, vb, seg(x, a, b));
-}
-// Kart görünürlüğü doğrudan kaydırma konumundan (hızlı atlamada eski kart ekranda kalmasın)
-const cardState = [];
-function cardUI() {
-  const y = scrollY, vh = innerHeight;
-  cards.forEach((card, i) => {
-    const g = cardGeo[i];
-    if (!g) return;
-    const a0 = g.top + g.pad * 0.6 - vh, a1 = g.top + g.pad - vh * 0.8;
-    const b0 = g.top + g.h - vh, b1 = b0 + vh * 0.28;
-    const vin = clamp((y - a0) / Math.max(1, a1 - a0)), vout = clamp((y - b0) / Math.max(1, b1 - b0));
-    const v = +(smooth(vin) * (1 - vout)).toFixed(3);
-    const ty = +((1 - vin) * 30 - vout * 24).toFixed(1);
-    const st = cardState[i] || (cardState[i] = {});
-    if (st.v === v && st.ty === ty) return;
-    st.v = v; st.ty = ty;
-    show(card, v);
-    card.style.transform = `translate3d(0, ${ty}px, 0)`;
-    card.style.setProperty('--draw', clamp(vin * 1.1).toFixed(3));
-  });
-}
-
-const pose = (name) => {
-  const a = POSE[name][portrait() ? 1 : 0];
-  return { pos: V(a[0], a[1], a[2]), look: V(a[3], a[4], a[5]), fov: a[6] };
-};
-function filmPose(p) {
-  let i = 0;
-  while (i < KF.length - 2 && p > KF[i + 1][0]) i++;
-  const a = KF[i], b = KF[i + 1];
-  const t = smooth(seg(p, a[0], b[0]));
-  const A = pose(a[1]), B = pose(b[1]);
-  return { pos: A.pos.lerp(B.pos, t), look: A.look.lerp(B.look, t), fov: L(A.fov, B.fov, t) };
-}
-
-function filmState(p, time) {
-  const ps = filmPose(p);
-  const outside = 1;
-  ps.pos.x += Math.sin(time * 0.25) * 0.25 * clamp(outside);
-  ps.pos.y += Math.sin(time * 0.35) * 0.12 * clamp(outside);
-  const cutIn = smooth(seg(p, 0.475, 0.53)), cutOut = smooth(seg(p, 0.56, 0.595));
-  const cutOn = seg(p, 0.465, 0.485) * (1 - seg(p, 0.575, 0.6));
-  const inside = smooth(seg(p, 0.725, 0.765)) * (1 - smooth(seg(p, 0.845, 0.875)));
-  return {
-    ...ps,
-    grow: [smooth(seg(p, 0.205, 0.245)), smooth(seg(p, 0.235, 0.275)), smooth(seg(p, 0.265, 0.305))],
-    setback: seg(p, 0.095, 0.13) * (1 - seg(p, 0.31, 0.345)),
-    hmax: seg(p, 0.345, 0.375) * (1 - seg(p, 0.45, 0.475)),
-    cut: cutOn > 0 ? L(8.5, 0.35, cutIn - cutOut) : inside > 0.001 ? L(9, 2.1, inside) : 50,
-    cutOn,
-    real: smooth(seg(p, 0.585, 0.64)),
-    sunA: L(-0.2, 3.0, seg(p, 0.6, 0.74)),
-    inside,
-    night: smooth(seg(p, 0.83, 0.885)),
-  };
-}
-
-function finaleState(q, time) {
+// Kamera yapının çevresinde bir yay üstünde döner. Masaüstünde bakış noktası sola kaydırılır: yapı sağda, künye solda.
+// Telefonda yapı yazının altında kalır (bakış noktası yukarıda).
+const sahne = { grow: reducedMotion ? 1 : 0, real: reducedMotion ? 1 : 0, q: 0 };
+function state(time) {
   const m = portrait();
-  const a = -0.5 + q * 0.95 + Math.sin(time * 0.15) * 0.03;
-  const r = m ? 44 : 31;
-  return {
-    pos: V(Math.sin(a) * r, m ? 9 : 6, Math.cos(a) * r), look: V(-1, m ? -3 : 5.5, 0), fov: m ? 46 : 38,
-    grow: [1, 1, 1], setback: 0, hmax: 0, cut: 50, cutOn: 0, real: 1, sunA: 3, inside: 0, night: 1,
-  };
-}
-
-// --- Ölçü etiketleri: 3D noktalara yapışan küçük notlar -------------------------
-
-const sunClock = (p) => {
-  const h = L(7.5, 19.5, seg(p, 0.6, 0.74));
-  return `Güneş ${String(Math.floor(h)).padStart(2, '0')}:${String(Math.floor((h % 1) * 6) * 10).padStart(2, '0')}`;
-};
-const TAGS = [
-  { r: [0.1, 0.2], at: V(0, 0, PLOT.z1), t: 'Parsel cephesi 24,00 m' },
-  { r: [0.1, 0.2], at: V(PLOT.x1, 0, 0), t: '18,00 m' },
-  { r: [0.12, 0.2], at: V(0, 0, 6.5), t: 'Ön çekme 5,00 m', acc: 1 },
-  { r: [0.13, 0.2], at: V(-10.5, 0, -1), t: 'Yan çekme 3,00 m', acc: 1 },
-  { r: [0.215, 0.33], at: V(-4.6, 0.8, 0.4), t: 'Salon · güneye bakar' },
-  { r: [0.225, 0.33], at: V(3.3, 1.2, -2.7), t: 'Mutfak' },
-  { r: [0.26, 0.33], at: V(6.6, 3.4, 3.9), t: 'Konsol 3,00 m', acc: 1 },
-  { r: [0.29, 0.33], at: V(-3.5, 9.6, 1), t: 'Çatı terası' },
-  { r: [0.345, 0.46], at: V(5.2, 0, 3.1), t: '±0,00' },
-  { r: [0.345, 0.46], at: V(8.2, FLOORS[1].y, 3.9), t: '+3,30' },
-  { r: [0.345, 0.46], at: V(8.2, FLOORS[2].y, 3.9), t: '+6,60' },
-  { r: [0.345, 0.46], at: V(0.2, FLOORS[2].y + FLOORS[2].h, 1.2), t: '+9,60' },
-  { r: [0.36, 0.46], at: V(9, HMAX, 4), t: 'Hmaks 10,50', acc: 1 },
-  { r: [0.5, 0.585], at: V(-5, 3.3, 0.4), t: 'Döşeme 25 cm' },
-  { r: [0.51, 0.585], at: V(-6.1, 1.6, 0.4), t: 'Merdiven 11 basamak' },
-  { r: [0.52, 0.585], at: V(2, 5, 0.4), t: 'Kesit A–A', acc: 1 },
-  { r: [0.61, 0.72], at: V(3, 10.2, 1), t: sunClock, acc: 1 },
-  { r: [0.76, 0.845], at: V(0, 2.1, 0.75), t: 'Sarkıt aydınlatma', desk: 1, left: 1 },
-  { r: [0.765, 0.845], at: V(3.4, 1.25, -2.7), t: 'Ada tezgâh, meşe', acc: 1 },
-  { r: [0.775, 0.845], at: V(5.6, 4.1, -2.4), t: 'Yatak odası' },
-  { r: [0.785, 0.845], at: V(-5, 0.8, 0.8), t: 'Köşe koltuk, 3,00 m' },
-  { r: [0.795, 0.845], at: V(-3.5, 4.4, -3.2), t: 'Çalışma nişi' },
-];
-const tagsBox = $('[data-tags]');
-tagsBox.innerHTML = TAGS.map((g) => `<p class="tag${g.acc ? ' tag--acc' : ''}" data-tag><i></i><span></span></p>`).join('');
-const tagEls = $$('[data-tag]');
-// Etiketlerin çarpmaması gereken arayüz katmanları (başlık, açık kart, antet, pafta listesi)
-const tagTablet = () => !mobile() && (innerWidth < 1100 || matchMedia('(pointer: coarse)').matches);
-function tagObstacles() {
-  const out = [];
-  const add = (el) => {
-    if (!el) return;
-    const cs = getComputedStyle(el);
-    if (cs.display === 'none' || cs.visibility === 'hidden' || +cs.opacity < 0.05) return;
-    const r = el.getBoundingClientRect();
-    if (r.width > 1 && r.bottom > 0 && r.top < innerHeight) out.push({ l: r.left - 8, t: r.top - 8, r: r.right + 8, b: r.bottom + 8 });
-  };
-  add(topEl);
-  cards.forEach((c, i) => { if ((cardState[i]?.v || 0) > 0.02) add(c); });
-  add(antet);
-  add(sheetsBox);
-  return out;
-}
-const hitR = (a, b) => a.l < b.r && a.r > b.l && a.t < b.b && a.b > b.t;
-function drawTags(p) {
-  // Telefonda ve tablette aynı anda en çok iki etiket (vurgulu olanlar önce): sahne okunaklı kalsın.
-  // Etiket bir arayüz katmanına ya da başka bir etikete değecekse o kare gösterilmez.
-  const m = mobile(), tab = tagTablet(), pm = portrait();
-  let room = m || tab ? 2 : 99;
-  const order = m || tab ? TAGS.map((g, i) => i).sort((x, y) => (TAGS[y].acc ? 1 : 0) - (TAGS[x].acc ? 1 : 0)) : TAGS.map((g, i) => i);
-  const obst = tagObstacles();
-  const placed = [];
-  order.forEach((i) => {
-    const g = TAGS[i];
-    const el = tagEls[i];
-    const [a, b] = g.r;
-    let v = seg(p, a, a + 0.012) * (1 - seg(p, b - 0.012, b));
-    const hide = () => { if (el.style.visibility !== 'hidden') el.style.visibility = 'hidden'; };
-    if (v <= 0.01 || (g.desk && pm) || room <= 0) { hide(); return; }
-    const s = S.toScreen(g.at);
-    if (s.behind) { hide(); return; }
-    const txt = typeof g.t === 'function' ? g.t(p) : g.t;
-    if (el._t !== txt) { el.lastChild.textContent = txt; el._t = txt; el._w = 0; }
-    if (!el._w) el._w = el.lastChild.offsetWidth || txt.length * 7.2 + 16;
-    // Nokta ekran dışındaysa etiketi kenara yasla, noktayı gizle
-    const edge = s.x < 10 || s.x > innerWidth - 10;
-    const x = clamp(s.x, 10, innerWidth - 10);
-    const flip = g.left ? x - el._w - 12 > 8 : x + el._w + 12 > innerWidth - 8;
-    const lx = edge ? (flip ? x - el._w : x) : flip ? x - 10 - el._w : x + 10;
-    const box = { l: Math.min(lx, x - 5), r: Math.max(lx + el._w, x + 5), t: s.y - 34, b: s.y + 5 };
-    if (obst.some((o) => hitR(box, o)) || placed.some((o) => hitR(box, o))) { hide(); return; }
-    placed.push({ l: box.l - 6, r: box.r + 6, t: box.t - 6, b: box.b + 6 });
-    room--;
-    el.style.visibility = 'visible';
-    el.style.opacity = v;
-    if (el._f !== flip) { el.classList.toggle('is-flip', flip); el._f = flip; }
-    if (el._e !== edge) { el.classList.toggle('is-edge', edge); el._e = edge; }
-    el.style.transform = `translate3d(${x.toFixed(1)}px, ${s.y.toFixed(1)}px, 0)`;
-  });
-}
-
-// --- Film arayüzü -----------------------------------------------------------------
-
-const film = $('[data-film]');
-const cards = $$('[data-card]');
-const topEl = $('[data-top]');
-const tsNo = $('[data-ts-no]'), tsName = $('[data-ts-name]');
-let topSheetOn = false;
-const inFilmNow = () => (filmST ? filmST.progress < 1 : true);
-const sheets = $$('[data-sheet]');
-const sheetsBox = $('[data-sheets]');
-const antet = $('[data-antet]');
-const aNo = $('[data-a-no]'), aScale = $('[data-a-scale]'), aName = $('[data-a-name]');
-const compass = $('[data-compass]');
-const hint = $('[data-hint]');
-let lastSheet = -2;
-
-function show(el, v) {
-  el.style.opacity = v;
-  el.style.visibility = v > 0.01 ? 'visible' : 'hidden';
-}
-
-function filmUI(p) {
-  hint.style.opacity = 1 - seg(p, 0, 0.03);
-  let active = -1;
-  CARD_RANGES.forEach(([a, b], i) => { if (p >= a && p < b) active = i; });
-  const inStops = inFilmNow() && p > 0.06 && p < 0.865;
-  if (inStops !== topSheetOn) { topEl.classList.toggle('is-sheet', inStops); topSheetOn = inStops; }
-  show(sheetsBox, filmActive ? seg(p, 0.07, 0.09) * (1 - seg(p, 0.86, 0.88)) : 0);
-  show(antet, filmActive ? seg(p, 0.06, 0.09) * (1 - seg(p, 0.965, 0.99)) : 0);
-  if (active !== lastSheet) {
-    sheets.forEach((li, i) => {
-      li.classList.toggle('is-active', i === active);
-      li.classList.toggle('is-done', active > i || (active === -1 && p > 0.85));
-    });
-    const f = active >= 0 ? FILM[active] : p > 0.85 ? { pafta: '07', olcek: 'Akşam', paftaAd: 'Akşam görünüşü' } : { pafta: '00', olcek: '1/500', paftaAd: 'Vaziyet planı' };
-    aNo.textContent = f.pafta;
-    aScale.textContent = f.olcek;
-    aName.textContent = f.paftaAd;
-    tsNo.textContent = `Pafta ${f.pafta}`;
-    tsName.textContent = f.olcek;
-    antet.classList.remove('is-flash');
-    void antet.offsetWidth;
-    antet.classList.add('is-flash');
-    lastSheet = active;
+  const a = 0.62 + sahne.q * 0.75 + (reducedMotion ? 0 : Math.sin(time * 0.12) * 0.03);
+  const r = m ? 44 : 40;
+  const look = m ? V(0, 9.5, 0) : V(0, 4.2, 0);
+  const pos = V(Math.sin(a) * r, m ? 12 : 9, Math.cos(a) * r);
+  if (!m) {
+    // Ekranın sağ yarısına it: bakış noktasını kameranın soluna kaydır.
+    const f = look.clone().sub(pos).setY(0).normalize();
+    const left = V(f.z, 0, -f.x);
+    look.addScaledVector(left, 12);
   }
-  compass.style.transform = `rotate(${(S.azimuth() * 180) / Math.PI}deg)`;
-
-  document.documentElement.classList.toggle('is-real', p > 0.6 && p < 0.84);
+  const g = sahne.grow;
+  return {
+    pos, look, fov: m ? 46 : 38,
+    grow: [smooth(clamp(g * 3)), smooth(clamp(g * 3 - 1)), smooth(clamp(g * 3 - 2))],
+    setback: 0, hmax: 0, cut: 50, cutOn: 0,
+    real: sahne.real, sunA: 3, inside: 0, night: sahne.real * 0.92,
+  };
+}
+let heroVisible = true;
+function tick(now) {
+  if (S && heroVisible && !document.hidden) S.update(state(now / 1000), now);
+  requestAnimationFrame(tick);
+}
+if (S) {
+  addEventListener('resize', () => S.resize());
+  new IntersectionObserver((e) => (heroVisible = e[0].isIntersecting)).observe(canvas);
+  S.compile();
+  S.update(state(0));
 }
 
-// --- Başlangıç -------------------------------------------------------------
+// --- Başlık çubuğu ve hareket ---------------------------------------------------------------
+const top = $('#ust');
+const solid = () => top.classList.toggle('is-light', scrollY > $('#basla').offsetHeight - 60);
+addEventListener('scroll', solid, { passive: true });
+solid();
+if (innerWidth < 900) autoHideHeader(top, { offset: 140 });
 
-const split = new SplitText(heroTitle, { type: 'words,chars', wordsClass: 'word', charsClass: 'ch' });
+if (reducedMotion) {
+  document.documentElement.classList.add('is-static');
+  $$('.step').forEach((s) => s.classList.add('is-lit'));
+  $$('.svc__row').forEach((r) => r.classList.add('is-on'));
+  $('[data-svc-img="0"]')?.classList.add('is-on');
+} else {
+  initSmoothScroll();
+  requestAnimationFrame(tick);
 
-let lenis = null;
-let filmP = 0, filmTarget = 0, finaleQ = 0;
-let filmActive = true, finaleActive = false, canvasFinale = 0, filmFade = 1;
-let filmST = null, finaleST = null;
-let vel = 0;
-
-function setupScroll() {
-  lenis = initSmoothScroll();
-  lenis?.stop();
-  lenis?.on('scroll', (e) => (vel = Math.min(1, Math.abs(e.velocity) / 40)));
-  ScrollTrigger.addEventListener('refresh', measureFilm);
-  measureFilm();
-  filmST = ScrollTrigger.create({ trigger: film, start: 'top top', end: 'bottom bottom', onUpdate: (s) => (filmTarget = warp(s.progress)) });
-  // Duraklar boyunca hikâye modu: alt çubuk iner, kart onun boşluğuna oturur
+  // Açılış: katlar paftadan yükselir (~1,2 sn), ardından çizgi akşam ışığında yapıya döner. Kaydırma kilitlenmez.
+  gsap.fromTo(canvas, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.6, ease: 'power2.out' });
+  gsap.to(sahne, { grow: 1, duration: 1.3, ease: 'power2.inOut', delay: 0.2 });
+  gsap.to(sahne, { real: 1, duration: 1.2, ease: 'power2.inOut', delay: 1.3 });
+  gsap.from('#kunye > *', { y: 18, autoAlpha: 0, duration: 0.6, stagger: 0.06, ease: 'power3.out', delay: 0.1, clearProps: 'all' });
   ScrollTrigger.create({
-    trigger: '[data-cards]', start: 'top 70%', end: () => `bottom ${Math.round(innerHeight * 0.9)}px`,
-    onToggle: (st) => setStoryMode(st.isActive ? true : null),
+    trigger: '#basla', start: 'top top', end: 'bottom top',
+    onUpdate: (s) => { sahne.q = s.progress; canvas.style.opacity = String(1 - s.progress * 0.6); },
   });
-  gsap.fromTo('[data-overview] > *', { autoAlpha: 0, y: 26 }, {
-    autoAlpha: 1, y: 0, stagger: 0.1, duration: 1, ease: 'expo.out',
-    scrollTrigger: { trigger: '[data-over-sec]', start: 'top 45%', toggleActions: 'play none none reverse' },
-  });
-  ScrollTrigger.create({ trigger: film, start: 'bottom bottom', end: 'bottom 30%', onUpdate: (s) => (filmFade = 1 - s.progress) });
-  finaleST = ScrollTrigger.create({ trigger: '[data-finale]', start: 'top bottom', end: 'bottom bottom', onUpdate: (s) => (finaleQ = s.progress) });
-  ScrollTrigger.create({ trigger: '[data-finale]', start: 'top bottom', end: 'top 25%', onUpdate: (s) => (canvasFinale = s.progress) });
-  ScrollTrigger.create({
-    trigger: '[data-finale]', start: 'bottom bottom', end: 'max',
-    onToggle: (s) => $('[data-top]').classList.toggle('is-ink', s.isActive),
-  });
-  ScrollTrigger.create({
-    trigger: '[data-about]', start: 'top 64px', endTrigger: '[data-finale]', end: 'top 64px',
-    onToggle: (s) => $('[data-top]').classList.toggle('is-light', s.isActive),
-  });
-  contentMotion();
-}
 
-function contentMotion() {
-  // Başlıklar: kelimeler çizgiden yükselir, fosforlu kalem altını boyar
-  $$('[data-rise]').forEach((el) => {
+  // Başlıklar: satırlar çizgiden yükselir (bir kez)
+  $$('.sec-title').forEach((el) => {
     const s = new SplitText(el, { type: 'lines', linesClass: 'rl', mask: 'lines' });
-    gsap.fromTo(s.lines, { yPercent: 105 }, {
-      yPercent: 0, duration: 1, stagger: 0.08, ease: 'power4.out',
-      scrollTrigger: { trigger: el, start: 'top 86%', once: true },
-    });
-    const mk = $('mark', el);
-    if (mk) gsap.fromTo(mk, { '--hl': 0 }, { '--hl': 1, duration: 0.9, ease: 'power2.inOut', delay: 0.5, scrollTrigger: { trigger: el, start: 'top 80%', once: true } });
-  });
-  const words = $$('span', aboutText);
-  gsap.fromTo(words, { opacity: 0.18 }, {
-    opacity: 1, stagger: 0.05, ease: 'none',
-    scrollTrigger: { trigger: aboutText, start: 'top 85%', end: 'bottom 50%', scrub: true },
-  });
-  gsap.fromTo('.about__img img', { scale: 1.18 }, {
-    scale: 1, ease: 'none',
-    scrollTrigger: { trigger: '.about__img', start: 'top bottom', end: 'bottom top', scrub: true },
-  });
-  gsap.fromTo('.about__img', { clipPath: 'inset(0 0 100% 0)' }, {
-    clipPath: 'inset(0 0 0% 0)', duration: 1.3, ease: 'power3.inOut',
-    scrollTrigger: { trigger: '.about__img', start: 'top 85%', once: true },
-  });
-  $$('[data-count]').forEach((el) => {
-    const target = Number(el.dataset.count);
-    const o = { v: 0 };
-    gsap.to(o, {
-      v: target, duration: 1.8, ease: 'power3.out',
-      onUpdate: () => (el.textContent = nf(Math.round(o.v))),
-      scrollTrigger: { trigger: el, start: 'top 90%', once: true },
-    });
+    gsap.fromTo(s.lines, { yPercent: 105 }, { yPercent: 0, duration: 0.9, stagger: 0.08, ease: 'power4.out', scrollTrigger: { trigger: el, start: 'top 88%', toggleActions: 'play none none none' } });
   });
   // Hizmetler: satır ortaya geldiğinde çerçevedeki görsel değişir
   const frameImgs = $$('[data-svc-img]');
   const frameNo = $('[data-svc-no]');
   const setSvc = (i) => {
     frameImgs.forEach((im, k) => im.classList.toggle('is-on', k === i));
-    frameNo.textContent = `P-${String(i + 1).padStart(2, '0')}`;
+    frameNo.textContent = `${String(i + 1).padStart(2, '0')} · Temsilî`;
   };
   setSvc(0);
   $$('.svc__row').forEach((row, i) => {
     ScrollTrigger.create({ trigger: row, start: 'top 55%', end: 'bottom 55%', onToggle: (s) => { row.classList.toggle('is-on', s.isActive); if (s.isActive) setSvc(i); } });
-    gsap.fromTo($('.svc__img', row), { clipPath: 'inset(0 100% 0 0)' }, {
-      clipPath: 'inset(0 0% 0 0)', duration: 1.1, ease: 'power3.inOut',
-      scrollTrigger: { trigger: $('.svc__img', row), start: 'top 88%', once: true },
-    });
   });
-  // Süreç: ölçü çizgisi dolar
-  gsap.fromTo('.steps__list', { '--fill': 0 }, {
-    '--fill': 1, ease: 'none',
-    scrollTrigger: { trigger: '.steps__list', start: 'top 70%', end: 'bottom 60%', scrub: true },
+  $$('.step').forEach((s) => ScrollTrigger.create({ trigger: s, start: 'top 75%', onEnter: () => s.classList.add('is-lit'), onLeaveBack: () => s.classList.remove('is-lit') }));
+  gsap.fromTo('.steps__list', { '--fill': 0 }, { '--fill': 1, ease: 'none', scrollTrigger: { trigger: '.steps__list', start: 'top 70%', end: 'bottom 60%', scrub: true } });
+  gsap.fromTo('.about__img img', { scale: 1.15 }, { scale: 1, ease: 'none', scrollTrigger: { trigger: '.about__img', start: 'top bottom', end: 'bottom top', scrub: true } });
+  $$('[data-count]').forEach((el) => {
+    const target = Number(el.dataset.count);
+    const o = { v: 0 };
+    el.textContent = '0';
+    gsap.to(o, { v: target, duration: 1.2, ease: 'power3.out', onUpdate: () => (el.textContent = Math.round(o.v)), scrollTrigger: { trigger: el, start: 'top 92%', toggleActions: 'play none none none' } });
   });
-  $$('.step').forEach((s) => ScrollTrigger.create({ trigger: s, start: 'top 66%', onEnter: () => s.classList.add('is-lit'), onLeaveBack: () => s.classList.remove('is-lit') }));
-  // Galeri kaydırmayla yana akar
-  const gt = $('[data-gallery]');
-  gsap.fromTo(gt, { x: () => (mobile() ? 0 : innerWidth * 0.1) }, {
-    x: () => -Math.max(0, gt.scrollWidth - innerWidth) + (mobile() ? 0 : innerWidth * 0.05),
-    ease: 'none',
-    scrollTrigger: { trigger: '.gallery', start: 'top bottom', end: 'bottom top', scrub: true, invalidateOnRefresh: true },
-  });
-  // Güvence: damga basılır
-  gsap.fromTo('.promise__stamp', { scale: 2.2, opacity: 0, rotate: -24 }, {
-    scale: 1, opacity: 1, rotate: -9, duration: 0.5, ease: 'back.out(2)',
-    scrollTrigger: { trigger: '.promise', start: 'top 75%', once: true },
-  });
-  const puanEl = $('[data-puan]');
-  const po = { v: 0 };
-  gsap.to(po, {
-    v: d.puan.ortalama, duration: 1.4, ease: 'power2.out',
-    onUpdate: () => (puanEl.textContent = nf(po.v, 1)),
-    scrollTrigger: { trigger: '.reviews', start: 'top 80%', once: true },
-  });
-  gsap.fromTo('.rev', { y: 40, opacity: 0 }, {
-    y: 0, opacity: 1, stagger: 0.08, duration: 0.8, ease: 'power3.out',
-    scrollTrigger: { trigger: '.reviews__rail', start: 'top 85%', once: true },
-  });
-  const fsplit = new SplitText('[data-final-title]', { type: 'lines', linesClass: 'rl', mask: 'lines' });
-  gsap.fromTo(fsplit.lines, { yPercent: 105 }, {
-    yPercent: 0, duration: 1.1, stagger: 0.1, ease: 'power4.out',
-    scrollTrigger: { trigger: '[data-finale]', start: 'top 40%', once: true },
-  });
-}
-
-// Yazılım şeridi: kaydırma hızına göre hızlanır
-const mq = $('.marquee__inner');
-let mqX = 0;
-let mqVisible = false;
-new IntersectionObserver((e) => (mqVisible = e[0].isIntersecting)).observe($('.soft'));
-
-let lastT = performance.now();
-function tick(now) {
-  const dt = Math.min(0.05, (now - lastT) / 1000);
-  lastT = now;
-  const time = now / 1000;
-  vel *= 0.92;
-
-  if (filmST) {
-    filmActive = filmST.progress < 1 || filmFade > 0.001;
-    finaleActive = finaleST.progress > 0;
-  }
-  filmP += (filmTarget - filmP) * (1 - Math.exp(-dt * 6));
-  const inFilm = filmST ? filmST.progress < 1 : true;
-  if (inFilm || filmP < 0.999 || topSheetOn) filmUI(filmP);
-  if (inFilm || cardState.some((c) => c.v > 0)) cardUI();
-
-  if (finaleActive && canvasFinale > 0.001) {
-    canvas.style.opacity = canvasFinale;
-    canvas.style.visibility = 'visible';
-    S.update(finaleState(finaleQ, time), now);
-    tagsBox.style.visibility = 'hidden';
-  } else if (filmActive && filmFade > 0.001) {
-    canvas.style.opacity = filmFade;
-    canvas.style.visibility = 'visible';
-    S.update(filmState(filmP, time), now);
-    tagsBox.style.visibility = 'visible';
-    drawTags(filmP);
-  } else if (canvas.style.visibility !== 'hidden') {
-    canvas.style.visibility = 'hidden';
-  }
-
-  if (mqVisible) {
-    const w = mq.scrollWidth / 2;
-    mqX -= (40 + vel * 700) * dt;
-    if (mqX < -w) mqX += w;
-    mq.style.transform = `translate3d(${mqX}px,0,0)`;
-  }
-  requestAnimationFrame(tick);
-}
-
-addEventListener('resize', () => S.resize());
-
-// --- Açılış: kat planı çizilir, ölçek büyür, pafta sahneye açılır --------------
-
-function heroIn() {
-  gsap.timeline()
-    .fromTo(split.chars, { yPercent: 110, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 1.1, stagger: 0.03, ease: 'power4.out' }, 0)
-    .fromTo('.hero__title', { '--dim': 0 }, { '--dim': 1, duration: 1.1, ease: 'power3.inOut' }, 0.3)
-    .fromTo(['.hero__kicker', '.hero__slogan', '.hero__cta'], { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.8, stagger: 0.08, ease: 'power3.out' }, 0.45);
-}
-
-function runIntro() {
-  const intro = $('[data-intro]');
-  const paths = $$('.ip', intro);
-  const scaleEl = $('[data-intro-scale]');
-  const dimEl = $('[data-intro-dim]');
-  let done = false;
-  const tl = gsap.timeline();
-  gsap.set(paths, { drawSVG: '0%' });
-  tl.to(paths, { drawSVG: '100%', duration: 0.7, stagger: 0.09, ease: 'power2.inOut' }, 0.1);
-  tl.fromTo('[data-intro-name]', { yPercent: 100, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 0.7, ease: 'power3.out' }, 0.3);
-  const o = { v: 1000 };
-  tl.to(o, { v: 200, duration: 1.1, ease: 'power2.inOut', onUpdate: () => {
-    scaleEl.textContent = `1/${Math.round(o.v / 50) * 50}`;
-    dimEl.textContent = nf(12 * (o.v / 1000) * 5, 2);
-  } }, 0.2);
-  tl.call(() => {
-    S.compile();
-    S.update(filmState(0, performance.now() / 1000), performance.now());
-  }, [], 0.3);
-  tl.add(finish, 1.4);
-  function finish() {
-    if (done) return;
-    done = true;
-    tl.kill();
-    gsap.set(paths, { drawSVG: '100%' });
-    // Kaydırma ve dokunma hemen serbest; perde yalnızca görsel olarak söner
-    intro.style.pointerEvents = 'none';
-    lenis?.start();
-    gsap.timeline({ onComplete: () => intro.remove() })
-      .to('.intro__sheet', { scale: 1.6, opacity: 0, duration: 0.6, ease: 'power3.in' }, 0)
-      .to(intro, { opacity: 0, duration: 0.4, ease: 'power1.out' }, 0.35)
-      .call(heroIn, [], 0.4);
-    document.body.classList.remove('is-loading');
-  }
-  intro.addEventListener('pointerdown', finish, { once: true });
-  addEventListener('keydown', finish, { once: true });
-}
-
-// --- Hareket azaltma -----------------------------------------------------------
-
-if (reducedMotion) {
-  document.documentElement.classList.add('is-static');
-  $('[data-intro]').remove();
-  document.body.classList.remove('is-loading');
-  S.compile();
-  const still = () => S.update(filmState(0.02, 0), performance.now());
-  still();
-  addEventListener('resize', still);
-  $$('[data-count]').forEach((el) => (el.textContent = nf(Number(el.dataset.count))));
-  $$('.step').forEach((s) => s.classList.add('is-lit'));
-  $('.steps__list').style.setProperty('--fill', 1);
-  $$('mark').forEach((m) => m.style.setProperty('--hl', 1));
-} else {
-  setupScroll();
-  runIntro();
-  requestAnimationFrame(tick);
+  gsap.fromTo('.rev', { y: 30, opacity: 0 }, { y: 0, opacity: 1, stagger: 0.06, duration: 0.7, ease: 'power3.out', scrollTrigger: { trigger: '.reviews__rail', start: 'top 88%', toggleActions: 'play none none none' } });
+  addEventListener('load', () => ScrollTrigger.refresh());
 }

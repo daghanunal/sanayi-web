@@ -1,14 +1,12 @@
-// Kurumsal mimarlık — "Gün Işığı" yönü.
-// gunesHero:  imza anı. Beyaz, yüksek tavanlı bir salon fotoğrafı bir gün ışığı etüdüne dönüşür: üstte güneşin
-//             yay çizdiği gök yarım dairesi, altında saat kaydırıcısı. Sayfa açılınca güneş sabah 06:00'dan
-//             öğleden sonraya yürür; oda sabah turuncusundan öğle beyazına, akşam kızıllığına ve alacakaranlık
-//             mavisine geçer, gölge yönü ve boyu güneşle döner. Kaydırıcıyla ya da fotoğrafta parmakla sürükleyerek
-//             günün her saatini deneyebilirsiniz. Okumalar: saat, güneş yüksekliği, yön, gölge boyu.
+// Kurumsal mimarlık: "Gün Işığı" yönü.
+// gunesHero:  künye. Solda işletmenin adı, tanımı, adres, bugün ve telefon; Ara / WhatsApp / Yol tarifi.
+//             Sağda gün ışığı etüdü: yüksek tavanlı bir salon fotoğrafı (temsilî), üstte güneşin yay çizdiği gök
+//             yarım dairesi, altında saat kaydırıcısı. Açılışta güneş sabahtan öğleden sonraya bir kez yürür;
+//             kaydırıcıyla ya da fotoğrafta yatay sürükleyerek günün her saati denenir.
 // katKesit:   hizmet özeti bir yapı kesiti gibi: her hizmet bir kat, solunda kot (+21,00 … ±0,00), içinde
 //             pencereden görünen küçük fotoğraf; altta taralı zemin.
 // imarHesap:  TAKS/KAKS ile izometrik kütle; kütle güneşe göre zemine gölge düşürür.
-import { esc, telHref, waHref, openStatus, icons, gsap, ScrollTrigger, reducedMotion } from '../../shared/core.js';
-import { yilEki } from '../_kurumsal/bolumler.js';
+import { esc, telHref, waHref, mapsHref, gunDurumu, kisaAdres, icons, gsap, ScrollTrigger, reducedMotion } from '../../shared/core.js';
 
 const ok = `<svg class="k-ok" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 const rota = (id, metin, cls = 'k-btn') => `<a class="${cls}" href="#/${id}" data-rota="${id}">${metin}</a>`;
@@ -37,8 +35,8 @@ export function gunes(f) {
 
 export const gunesHero = {
   render(d, { tema }) {
-    const h = d.kurumsal?.hero || {};
-    const st = d.saatler ? openStatus(d.saatler) : null;
+    const b = d.saatler ? gunDurumu(d.saatler) : null;
+    const wa = d.waMesaj || 'Merhaba, proje için görüşme randevusu almak istiyorum.';
     const saatler = [6, 9, 12, 15, 18];
     const tik = saatler
       .map((s) => {
@@ -49,20 +47,21 @@ export const gunesHero = {
       })
       .join('');
     return `
-      <section class="k-hero gh" aria-label="Giriş">
+      <section class="k-hero k-hero--kunye gh" aria-label="Künye">
         <div class="k-kap gh__ic">
           <div class="gh__metin">
-            <p class="gh__ust"><span class="gh__ust-isaret" aria-hidden="true"></span>${esc(d.isletme.sektor)} · ${esc(tema.yer || 'Etimesgut')}${d.isletme.kurulus ? ` · ${esc(yilEki(d.isletme.kurulus))} beri` : ''}</p>
-            <h1 class="k-h1 gh__baslik" data-bol>${esc(h.baslik || d.isletme.slogan)}</h1>
-            <p class="k-lead gh__lead">${esc(h.metin || d.isletme.hakkinda)}</p>
+            <h1 class="k-h1 gh__baslik" data-bol>${esc(d.isletme.ad)}</h1>
+            <p class="k-lead gh__lead">${esc(d.isletme.tanim || d.isletme.sektor)}</p>
+            <dl class="k-kunye">
+              <div><dt>Adres</dt><dd>${esc(kisaAdres(d.iletisim.adres))}</dd></div>
+              ${b ? `<div><dt>Bugün</dt><dd><span class="k-durum ${b.open ? 'is-acik' : ''}"><span></span>${esc(b.kunye)}</span></dd></div>` : ''}
+              <div><dt>Telefon</dt><dd><a href="${telHref(d)}">${esc(d.iletisim.telefon)}</a></dd></div>
+            </dl>
             <div class="k-butonlar">
-              ${rota('iletisim', `<span>${esc(h.birincil || 'Ön görüşme isteyin')}</span>${ok}`)}
-              ${rota(h.ikincilRota || 'imar', `${ikonGonye}<span>${esc(h.ikincil || 'İmar ön hesabı')}</span>`, 'k-btn k-btn--ikincil')}
+              <a class="k-btn" href="${telHref(d)}">${icons.phone}<span>Ara</span></a>
+              <a class="k-btn k-btn--ikincil" href="${waHref(d, wa)}" target="_blank" rel="noopener">${icons.whatsapp}<span>WhatsApp</span></a>
+              <a class="k-btn k-btn--ikincil" href="${mapsHref(d)}" target="_blank" rel="noopener">${icons.pin}<span>Yol tarifi</span></a>
             </div>
-            <ul class="gh__bilgi">
-              ${st ? `<li class="gh__durum${st.open ? ' is-acik' : ''}"><i aria-hidden="true"></i>${esc(st.text)}</li>` : ''}
-              <li><a href="${telHref(d)}">${icons.phone}<span>${esc(d.iletisim.telefon)}</span></a></li>
-            </ul>
           </div>
           <div class="gh__etut">
             <div class="gh__gok" aria-hidden="true">
@@ -82,10 +81,10 @@ export const gunesHero = {
               <span class="gh__huzme" aria-hidden="true"></span>
               <span class="gh__gece" aria-hidden="true"></span>
               <figcaption class="gh__okuma" aria-live="off">
-                <span class="gh__etiket">Gün ışığı etüdü</span>
+                <span class="gh__etiket">Gün ışığı etüdü · temsilî görsel</span>
                 <b class="gh__saat" data-g="saat">06:00</b>
               </figcaption>
-              <span class="gh__ipucu" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 8l-4 4 4 4M16 8l4 4-4 4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Günü sürükleyin</span>
+              <span class="gh__ipucu" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 8l-4 4 4 4M16 8l4 4-4 4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Saat için sürükleyin</span>
             </figure>
             <div class="gh__kontrol">
               <label class="gh__kaydir"><span class="sr-only">Saat</span>
@@ -177,8 +176,8 @@ export const gunesHero = {
     tl.fromTo(el.querySelector('.gh__gok svg'), { opacity: 0, y: 14 }, { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out' }, 0)
       .fromTo(foto, { clipPath: 'inset(100% 0 0 0)' }, { clipPath: 'inset(0% 0 0 0)', duration: 1.0, ease: 'power3.inOut', clearProps: 'clipPath' }, 0)
       .fromTo(el.querySelectorAll('.gh__degerler > div, .gh__kaydir'), { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.5, stagger: 0.07, ease: 'power2.out' }, 0.5)
-      .to(durum, { f: 0.8, duration: 3.6, ease: 'power2.inOut', onUpdate: () => { aralik.value = durum.f; uygula(durum.f); } }, 0.7)
-      .fromTo(el.querySelector('.gh__ipucu'), { opacity: 0, x: -8 }, { opacity: 1, x: 0, duration: 0.5 }, 3.4);
+      .to(durum, { f: 0.8, duration: 2.2, ease: 'power2.inOut', onUpdate: () => { aralik.value = durum.f; uygula(durum.f); } }, 0.7)
+      .fromTo(el.querySelector('.gh__ipucu'), { opacity: 0, x: -8 }, { opacity: 1, x: 0, duration: 0.5 }, 2.6);
   },
 };
 
@@ -198,10 +197,9 @@ export const katKesit = {
         <div class="k-kap">
           <div class="k-bolum__bas">
             <div>
-              <p class="kk__ust">Yapı kesiti · ${n} kat</p>
-              <h2 class="k-h2" data-bol>${esc(d.kurumsal?.hizmetOzetBaslik || 'Hizmetlerimiz')}</h2>
+              <h2 class="k-h2" data-bol>${esc(d.kurumsal?.hizmetOzetBaslik || 'Hizmetler')}</h2>
             </div>
-            ${rota('hizmetler', `Tüm hizmetler ${ok}`, 'k-link')}
+            ${rota('hizmetler', `Tümü ${ok}`, 'k-link')}
           </div>
           <div class="kk__bina">
             <div class="kk__cati" aria-hidden="true"><span></span></div>
@@ -219,7 +217,7 @@ export const katKesit = {
             </ol>
             <div class="kk__zemin" aria-hidden="true"><span>Zemin</span></div>
           </div>
-          <p class="kk__not">Hangi çizimlerin teslim edileceği ve fiyat, yer ziyaretinden sonra işe başlamadan yazılı verilir.</p>
+          <p class="kk__not">Teslim edilecek çizimler ve ücret, yer ziyaretinden sonra yazılı olarak bildirilir. Görseller temsilîdir.</p>
         </div>
       </section>`;
   },
@@ -242,10 +240,9 @@ export const imarHesap = {
         <div class="k-kap">
           ${ana ? `<div class="k-bolum__bas ih__bas">
             <div>
-              <p class="ih__ust">İmar ön hesabı</p>
-              <h2 class="k-h2" data-bol>Arsanıza ne sığar?</h2>
+              <h2 class="k-h2" data-bol>İmar ön hesabı</h2>
             </div>
-            <p class="ih__giris">Üç değer girin, kütle yükselsin. Kesin değerleri imar durum belgesinden birlikte okuruz.</p>
+            <p class="ih__giris">Arsa alanı, TAKS ve KAKS girilince taban alanı, toplam inşaat alanı ve yaklaşık kat sayısı hesaplanır. Kesin değerler imar durum belgesinde yazar.</p>
           </div>` : ''}
           <div class="ih__masa">
             <div class="ih__cizim">
@@ -262,10 +259,10 @@ export const imarHesap = {
                 <span class="ih__not" id="ih-arsa-n">Tapudaki yüzölçümü (m²)</span></label>
               <label class="ih__alan"><span class="ih__etiket">TAKS <output data-ih="taks-o"></output></span>
                 <input type="range" min="0.10" max="0.60" step="0.05" value="0.35" data-ih="taks" aria-describedby="ih-taks-n">
-                <span class="ih__not" id="ih-taks-n">Taban alanı katsayısı: arsanın ne kadarına oturulur</span></label>
+                <span class="ih__not" id="ih-taks-n">Taban alanı katsayısı, yapının arsada kaplayacağı payı gösterir</span></label>
               <label class="ih__alan"><span class="ih__etiket">KAKS / emsal <output data-ih="kaks-o"></output></span>
                 <input type="range" min="0.20" max="3.00" step="0.05" value="1.40" data-ih="kaks" aria-describedby="ih-kaks-n">
-                <span class="ih__not" id="ih-kaks-n">Kat alanı katsayısı: toplam ne kadar inşaat yapılır</span></label>
+                <span class="ih__not" id="ih-kaks-n">Kat alanı katsayısı, toplam inşaat alanını belirler</span></label>
               <dl class="ih__sonuc">
                 <div><dt>Taban alanı</dt><dd><span data-ih="taban">0</span><small>m²</small></dd></div>
                 <div><dt>Toplam inşaat alanı</dt><dd><span data-ih="toplam">0</span><small>m²</small></dd></div>
@@ -274,7 +271,7 @@ export const imarHesap = {
               </dl>
               <p class="ih__uyari">Ön hesaptır. Bodrum kat, çatı arası, balkon ve emsal dışı alanlar yönetmeliğe göre ayrıca hesaplanır; kesin değer imar durum belgesindedir.</p>
               <div class="k-butonlar">
-                <a class="k-btn" data-ih="wa" href="#" target="_blank" rel="noopener">${icons.whatsapp}<span>Bu arsayı konuşalım</span></a>
+                <a class="k-btn" data-ih="wa" href="#" target="_blank" rel="noopener">${icons.whatsapp}<span>Hesabı WhatsApp'tan gönder</span></a>
                 <a class="k-btn k-btn--ikincil" href="${telHref(d)}">${icons.phone}<span>${esc(d.iletisim.telefon)}</span></a>
               </div>
             </div>
@@ -368,7 +365,7 @@ export const imarHesap = {
         const i = girdi[k];
         i.style.setProperty('--dolu', `${((i.value - i.min) / (i.max - i.min)) * 100}%`);
       }
-      const mesaj = `Merhaba ${d.isletme.ad}, arsam için ön görüşme yapmak istiyorum.\nArsa alanı: ${sayi(r.arsa)} m²\nTAKS: ${sayi(r.taks, 2)} · KAKS: ${sayi(r.kaks, 2)}\nSitedeki ön hesap: taban ${sayi(r.taban)} m², toplam ${sayi(r.toplam)} m², yaklaşık ${q('kat').textContent} kat.`;
+      const mesaj = `Merhaba, arsam için görüşme randevusu almak istiyorum.\nArsa alanı: ${sayi(r.arsa)} m²\nTAKS: ${sayi(r.taks, 2)} · KAKS: ${sayi(r.kaks, 2)}\nSitedeki ön hesap: taban ${sayi(r.taban)} m², toplam ${sayi(r.toplam)} m², yaklaşık ${q('kat').textContent} kat.`;
       q('wa').href = waHref(d, mesaj);
       ciz(r);
     }
@@ -397,24 +394,16 @@ export const imarHesap = {
     guncelle();
     const katlar = g.querySelectorAll('.ih__kat');
     gsap.set(katlar, { opacity: 0, y: -30 });
+    let acildi = false;
     ScrollTrigger.create({
       trigger: el.querySelector('.ih__cizim'),
       start: 'top 75%',
-      once: true,
-      onEnter: () => gsap.to(g.querySelectorAll('.ih__kat'), { opacity: 1, y: 0, duration: 0.5, stagger: 0.09, ease: 'power3.out' }),
+      onEnter: () => {
+        if (acildi) return;
+        acildi = true;
+        gsap.to(g.querySelectorAll('.ih__kat'), { opacity: 1, y: 0, duration: 0.5, stagger: 0.09, ease: 'power3.out' });
+      },
     });
   },
 };
 
-// --- Sayfa başı sıfırlama ----------------------------------------------------------------
-// Motor yeni sayfanın "once" tetikleyicilerini kaydırma henüz eski sayfanın dibindeyken kuruyor; hepsi aynı anda
-// tetiklenip kendini silince ScrollTrigger.refresh döngüsü hata veriyor. Her sayfanın ilk bloğu olarak kaydırmayı
-// tetikleyiciler kurulmadan önce en üste alır.
-export const sifirla = {
-  render() { return '<span class="pf-sifir" aria-hidden="true"></span>'; },
-  mount(el, d, ctx) {
-    if (ctx.lenis) ctx.lenis.scrollTo(0, { immediate: true, force: true });
-    else scrollTo(0, 0);
-    if (window.scrollY) scrollTo(0, 0);
-  },
-};

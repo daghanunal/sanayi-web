@@ -53,18 +53,17 @@
 .kh { overflow: hidden; isolation: isolate; padding-bottom: 28px; }
 .kh__ic { display: grid; gap: 36px; align-items: end; }
 @media (min-width: 960px) { .kh__ic { grid-template-columns: .95fr 1.05fr; gap: 56px; } }
-.kh__ust { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; margin-bottom: 20px; font-size: 13px; font-weight: 600; letter-spacing: .07em; text-transform: uppercase; color: var(--k-soluk); }
-.kh__durum { display: inline-flex; align-items: center; gap: 7px; padding: 6px 13px 6px 9px; border-radius: 999px; background: var(--k-koyu); color: #fff; letter-spacing: .04em; }
-.kh__durum .alev { width: 14px; height: 18px; fill: #8aa197; }
-.kh__durum.is-acik .alev { fill: var(--cs-kor); }
 .alev__ic { fill: #ffd27a; }
 @media (prefers-reduced-motion: no-preference) { .is-acik .alev { animation: cs-titre 1.4s ease-in-out infinite alternate; transform-origin: 50% 100%; } }
 .kh__ad { font-size: clamp(64px, 9.4vw, 158px); line-height: .9; max-width: 8ch; letter-spacing: .005em; }
-.kh__slogan {
-  font-family: var(--cs-el); font-size: clamp(24px, 2.4vw, 34px); line-height: 1.15; color: var(--k-vurgu);
-  margin-top: 18px; max-width: 24ch; transform: rotate(-2deg); transform-origin: left center;
-}
-.kh .k-lead { margin-top: 16px; max-width: 46ch; }
+.kh .kh__tanim { margin-top: 16px; max-width: 46ch; }
+.kh .k-kunye { margin: 22px 0 24px; }
+.kh__saat { display: grid; gap: 2px; }
+.kh__saat li { display: flex; flex-wrap: wrap; justify-content: space-between; column-gap: 12px; font-weight: 500; color: var(--k-soluk); }
+.kh__saat b { color: var(--k-metin); font-weight: 700; font-variant-numeric: tabular-nums; }
+.kh__saat .is-bugun, .kh__saat .is-bugun b { color: var(--k-vurgu); }
+.os__not { position: relative; margin-top: 16px; color: #c3d8cf; font-size: 15px; }
+.os__saatler .is-bugun { color: var(--cs-kor); }
 
 .kh__kemerler { position: relative; display: grid; grid-template-columns: 1fr 1.35fr 1fr; gap: 12px; align-items: end; padding-bottom: 20px; }
 .kh__kemer {
@@ -88,18 +87,17 @@
 }
 .kh__sis { margin-top: 26px; height: 46px; overflow: hidden; }
 .kh__sis .sis { height: 100%; display: block; max-width: none; }
-.kh .k-hero__bilgi { margin-top: 18px; }
 
 @media (max-width: 959px) {
   .kh__ic { gap: 0; grid-template-columns: minmax(0, 1fr); }
   .kh__metin { display: contents; }
-  .kh__ust { order: 1; }
-  .kh__ad { order: 2; font-size: min(19vw, 104px); }
-  .kh__slogan { order: 3; }
-  .kh__kemerler { order: 4; margin-top: 30px; gap: 9px; }
-  .kh .k-lead { order: 5; margin-top: 26px; }
-  .kh .k-butonlar { order: 6; }
-  .kh .k-butonlar .k-btn { flex: 1 1 auto; }
+  .kh__ad { order: 1; font-size: min(19vw, 104px); }
+  .kh .kh__tanim { order: 2; }
+  .kh .k-kunye { order: 3; }
+  .kh .k-butonlar { order: 4; }
+  .kh__kemerler { order: 5; margin-top: 30px; gap: 9px; }
+  .kh .k-kunye > div { grid-template-columns: 72px 1fr; }
+  .kh__saat li { font-size: 14.5px; column-gap: 8px; }
   .kh__kemer { box-shadow: 0 0 0 4px var(--k-zemin), 0 0 0 6px var(--cs-koyu); }
 }
 
@@ -111,8 +109,6 @@
 .sis__biber { fill: #3f8a3a; stroke: #24561f; stroke-width: 2; }
 .sis__domates { fill: var(--cs-biber); stroke: #8e1d0f; stroke-width: 2; }
 .sis__sogan { fill: #efe3e9; stroke: #b98ea7; stroke-width: 2; }
-.sis-ayrac { height: 44px; overflow: hidden; margin-block: clamp(8px, 2vw, 24px); }
-.sis-ayrac .sis { height: 100%; display: block; max-width: none; }
 
 /* --- Menü panosu --- */
 .mp .k-kap { position: relative; }
@@ -123,7 +119,6 @@
   box-shadow: 0 40px 80px -50px rgb(13 59 51 / .7);
 }
 .mp__bas { display: grid; gap: 12px; padding-bottom: 28px; margin-bottom: 8px; border-bottom: 1px dashed rgb(255 255 255 / .25); }
-.mp__ust { color: var(--cs-kor); font-weight: 700; font-size: 13px; letter-spacing: .1em; text-transform: uppercase; }
 .mp__not { color: #a8c8bb; max-width: 54ch; }
 .mp__gruplar { display: grid; gap: 12px 56px; }
 @media (min-width: 1000px) { .mp__gruplar { grid-template-columns: 1fr 1fr 1fr; } }
@@ -166,7 +161,6 @@
 
 /* --- Sofra kur --- */
 .mk__bas { display: grid; gap: 4px; margin-bottom: 36px; }
-.mk__ust { color: var(--k-vurgu); font-weight: 700; font-size: 13px; letter-spacing: .1em; text-transform: uppercase; }
 .mk__ic { display: grid; gap: 28px; }
 @media (min-width: 1000px) { .mk__ic { grid-template-columns: 5fr 7fr; gap: 48px; align-items: start; } .mk__sahne { position: sticky; top: 84px; } }
 /* Kısa yatay ekranda (iPad) plan + adisyon ekranın yarısından uzun: yapışmasın. */
@@ -262,13 +256,7 @@
 .mk__butonlar { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
 .mk__butonlar .k-btn { flex: 1 1 auto; }
 .mk__gonder { background: #1f8f4e; border-color: #1f8f4e; }
-.mk__muhur {
-  position: absolute; right: 18px; top: -24px; z-index: 5; background: rgb(255 253 246 / .9); padding: 5px 10px; border: 3px solid var(--k-vurgu); border-radius: 8px; color: var(--k-vurgu);
-  font-family: var(--k-font-baslik); text-transform: uppercase; font-size: 17px; letter-spacing: .06em; rotate: -8deg; opacity: .95;
-  pointer-events: none; box-shadow: 0 4px 10px rgb(13 59 51 / .18);
-}
 @media (max-width: 599px) {
-  .mk__muhur { font-size: 14px; top: -20px; }
   .mk__plan { padding: 10px; border-radius: 16px 16px 0 0; }
 }
 
@@ -287,8 +275,7 @@
 .os__alev .alev { width: 100%; height: auto; fill: #5b7a6e; }
 .os__durum.is-acik .alev { fill: var(--cs-kor); }
 .os__durum.is-acik::before { content: ''; position: absolute; left: 50%; top: 26px; width: 220px; height: 220px; translate: -50% 0; border-radius: 50%; background: radial-gradient(circle, rgb(255 138 43 / .3), transparent 65%); }
-.os__ust { font-weight: 700; font-size: 13px; letter-spacing: .1em; text-transform: uppercase; color: var(--cs-kor); position: relative; margin-bottom: 12px; }
-.os__konum .os__ust { color: var(--k-vurgu); margin-bottom: 0; }
+.os__ust { font-weight: 700; font-size: 13px; letter-spacing: .1em; text-transform: uppercase; color: var(--k-vurgu); }
 .os__metin { color: #c3d8cf; margin-top: 12px; position: relative; }
 .os__saatler { display: grid; gap: 8px; margin-top: 26px; text-align: left; position: relative; }
 .os__saatler div { display: flex; justify-content: space-between; gap: 12px; padding-bottom: 8px; border-bottom: 1px dashed rgb(255 255 255 / .22); }

@@ -1,11 +1,5 @@
 {
   "preset": "mimarlik-klasik",
-  "hero": {
-    "ust": "Mimarlık ofisi · Etimesgut",
-    "ipucu": "Kaydırın, içeri buyurun",
-    "iceri": "İçeri buyurun.",
-    "iceriAlt": "Konut, ticari yapı, iç mekân ve restorasyon. Arsayı görmeden çizmeyiz, çizdiğimizi bırakıp gitmeyiz."
-  },
   "program": {
     "odalar": [
       {
@@ -70,8 +64,6 @@
       }
     ],
     "sirkulasyon": 0.28,
-    "not": "Bu kaba bir başlangıç. Duvarlar, antre ve koridor için net alana yaklaşık %28 eklendi. Gerçek plan arsanın yönüne, eğimine ve imar durumuna göre çizilir."
-  },
-  "finalBaslik": "Arsanızı birlikte gezelim.",
-  "finalAlt": "Tapu ya da imar durum belgesi elinizdeyse getirin; yoksa ada-parsel numarası yeter. Proje ücretini işe başlamadan, yazılı olarak söyleriz."
+    "not": "Kaba bir ön hesaptır. Duvarlar, antre ve koridor için net alana yaklaşık %28 eklenir. Gerçek plan arsanın yönüne, eğimine ve imar durumuna göre çizilir."
+  }
 }

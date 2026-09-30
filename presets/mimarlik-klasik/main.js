@@ -1,14 +1,14 @@
 // Eşik (klasik aile, mimarlık ofisi): koyu çam yeşili sıva duvar, kireç beyazı, pirinç.
 // Marcellus başlık + Gantari metin. Fotoğraf ağırlıklı, WebGL yok.
-// İmza anı hero'da: duvarda tek bir kemerli kapı boşluğu. Kaydırdıkça kapıya yürürüz; boşluk
-// büyüyüp ekranı doldurur, içerideki aydınlık oda "İçeri buyurun" diye karşılar.
+// Akış: künye → Hizmetler (+ çalışma sırası) → Hakkında → Çalışma saatleri ve konum → Örnek yorumlar → İletişim.
+// Künyede duvarda tek bir kemerli kapı boşluğu açılışta bir kez açılır; içeride aydınlık bir oda (temsilî) görünür.
 import sektor from '../../data/sektor-mimarlik.json';
 import extra from '../../data/mimarlik-klasik.json';
 import '../../shared/base.css';
 import './style.css';
 import {
-  boot, initSmoothScroll, reducedMotion, telHref, waHref, mapsHref, mapsEmbed,
-  openStatus, groupedHours, icons, esc, gsap, ScrollTrigger,
+  boot, asset, initSmoothScroll, reducedMotion, telHref, waHref, mapsHref, mapsEmbed, icons, esc, gsap, ScrollTrigger,
+  saatListesi, gunDurumu, kisaAdres, acikGunSayisi, yilEki, GUNLER, autoHideHeader,
 } from '../../shared/core.js';
 
 ScrollTrigger.config({ ignoreMobileResize: true });
@@ -19,152 +19,250 @@ const $$ = (s, root = document) => [...root.querySelectorAll(s)];
 const nf = (n, dig = 0) => Number(n).toLocaleString('tr-TR', { minimumFractionDigits: dig, maximumFractionDigits: dig });
 // Sektör görsellerinin bu preset için küçültülmüş WebP kopyaları
 const img = (src) => String(src).replace('/sektor-mimarlik/', '/mimarlik-klasik/').replace(/\.jpe?g$/, '.webp');
-const wa = (msg) => waHref(d, msg ?? `Merhaba ${d.isletme.ad}, bir proje için görüşmek istiyorum.`);
-const mq = matchMedia('(max-width: 899px)');
+const waGenel = d.waMesaj || 'Merhaba, proje için görüşme randevusu almak istiyorum.';
+const wa = (msg) => waHref(d, msg ?? waGenel);
 
-// --- Bağlamalar ---------------------------------------------------------------
-const binds = {
-  ad: d.isletme.ad, slogan: d.isletme.slogan, hakkinda: d.isletme.hakkinda,
-  telefon: d.iletisim.telefon, adres: d.iletisim.adres, garanti: d.garanti,
-};
-$$('[data-bind]').forEach((el) => (el.textContent = binds[el.dataset.bind] ?? ''));
-$$('[data-icon]').forEach((el) => el.insertAdjacentHTML('afterbegin', icons[el.dataset.icon] || ''));
-$$('[data-tel]').forEach((a) => (a.href = telHref(d)));
-$$('[data-wa]').forEach((a) => (a.href = wa()));
-$$('[data-maps]').forEach((a) => (a.href = mapsHref(d)));
-$('.top__brand').setAttribute('aria-label', `${d.isletme.ad}, sayfa başı`);
+const ad = esc(d.isletme.ad);
+const tel = esc(d.iletisim.telefon);
+const kurulus = d.isletme.kurulus;
+const yas = Math.max(1, new Date().getFullYear() - kurulus);
+const st0 = gunDurumu(d.saatler);
 if (d.isletme.ad.length > 15) document.documentElement.classList.add('is-long');
-const yil = new Date().getFullYear() - d.isletme.kurulus;
-$('[data-hero-ust]').textContent = d.hero.ust;
-$('[data-hero-ipucu]').textContent = d.hero.ipucu;
-$('[data-iceri]').textContent = d.hero.iceri;
-$('[data-iceri-alt]').textContent = d.hero.iceriAlt;
-$('[data-years]').innerHTML = `<span>${esc(d.isletme.kurulus)}</span>${esc(yil)} yıldır aynı kapı`;
-$('[data-years2]').innerHTML = `<span>${esc(yil)}</span>yıldır Etimesgut'ta`;
-$('[data-final]').textContent = d.finalBaslik;
-$('[data-final-alt]').textContent = d.finalAlt;
-$('[data-year]').textContent = new Date().getFullYear();
+document.documentElement.classList.toggle('is-open', st0.open);
 
-const status = openStatus(d.saatler);
-$('[data-status-big]').textContent = status.text;
-document.documentElement.classList.toggle('is-open', status.open);
+// Çekirdeğin varsayılan WhatsApp metni oto sanayi içindir; alt çubukta ofisin metni kullanılır.
+$$('.action-bar a[href*="wa.me"]').forEach((a) => (a.href = wa()));
 
-// --- Hero: kapı boşluğu -------------------------------------------------------
+// --- Arama motoru: mimarlık ofisi (ProfessionalService) -------------------------------
+$$('script[type="application/ld+json"]').forEach((s) => s.textContent.includes('"AutoRepair"') && s.remove());
+const ld = $('script[type="application/ld+json"]');
+if (ld) {
+  const gunEn = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  ld.textContent = JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'ProfessionalService',
+    name: d.isletme.ad,
+    description: d.isletme.tanim,
+    telephone: d.iletisim.telefon,
+    foundingDate: String(kurulus),
+    address: { '@type': 'PostalAddress', streetAddress: d.iletisim.adres, addressLocality: 'Etimesgut', addressRegion: 'Ankara', addressCountry: 'TR' },
+    openingHoursSpecification: d.saatler
+      .map((s, i) => (s ? { '@type': 'OpeningHoursSpecification', dayOfWeek: `https://schema.org/${gunEn[i]}`, opens: s.split('-')[0], closes: s.split('-')[1] } : null))
+      .filter(Boolean),
+  });
+}
+document.title = `${d.isletme.ad} | Mimarlık ofisi | Etimesgut, Ankara`;
+
+const btn = (cls, href, ikon, label, dis) =>
+  `<a class="btn ${cls}" href="${href}"${dis ? ' target="_blank" rel="noopener"' : ''}>${ikon}<span>${label}</span></a>`;
+const liste = saatListesi(d.saatler);
+const sira = [1, 2, 3, 4, 5, 6, 0];
+const bugunG = sira.indexOf(new Date().getDay());
+const bugunMu = (gunler) => {
+  const [a, b] = gunler.split('–');
+  const ia = sira.indexOf(GUNLER.indexOf(a));
+  const ib = b ? sira.indexOf(GUNLER.indexOf(b)) : ia;
+  return bugunG >= ia && bugunG <= ib;
+};
+const mark = '<span class="top__mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 21V9a5 5 0 0 1 10 0v12"/><path d="M3 21h18"/></svg></span>';
+
+// --- Başlık --------------------------------------------------------------------
+$('#ust').innerHTML = `
+  <a href="#top" class="top__brand" aria-label="${ad}, sayfa başı">${mark}<span>${ad}</span></a>
+  <nav class="top__nav" aria-label="Sayfa bölümleri">
+    <a href="#hizmetler">Hizmetler</a>
+    <a href="#hakkinda">Hakkında</a>
+    <a href="#saatler">Saatler ve konum</a>
+    <a href="#iletisim">İletişim</a>
+  </nav>
+  <a class="top__call" href="${telHref(d)}">${icons.phone}<span>${tel}</span></a>`;
+
+// --- Künye ---------------------------------------------------------------------
+$('#kunye').innerHTML = `
+  <h1 class="hero__ad" id="hero-ad">${ad}</h1>
+  <p class="hero__what">${esc(d.isletme.tanim)}</p>
+  <dl class="kunye">
+    <div><dt>Adres</dt><dd>${esc(kisaAdres(d.iletisim.adres))}</dd></div>
+    <div><dt>Bugün</dt><dd class="kunye__durum${st0.open ? ' is-open' : ''}">${esc(st0.kunye)}</dd></div>
+    <div><dt>Telefon</dt><dd><a href="${telHref(d)}">${tel}</a></dd></div>
+  </dl>
+  <div class="hero__cta">
+    ${btn('btn--brass', telHref(d), icons.phone, 'Ara')}
+    ${btn('btn--glass', wa(), icons.whatsapp, 'WhatsApp', true)}
+    ${btn('btn--glass', mapsHref(d), icons.pin, 'Yol tarifi', true)}
+  </div>`;
+
+// Kapı boşluğu
 const hero = $('.hero');
-const pin = $('.hero__pin');
-const wallSvg = $('[data-wall]');
+const wallSvg = $('.hero__wall');
 const wallPath = $('[data-wallpath]');
 const kasa = $('[data-kasa]');
 const floor = $('[data-floor]');
 const spill = $('[data-spill]');
-const photo = $('.hero__photo');
-const shade = $('.hero__shade');
-const copy = $('[data-copy]');
 const olcu = $('[data-olcu]');
-const hint = $('[data-hint]');
-const inner = $('[data-in]');
-
 let G = null;
 function measure() {
-  const vw = pin.clientWidth, vh = pin.clientHeight;
+  const vw = hero.clientWidth, vh = hero.clientHeight;
   const small = vw < 900;
-  let h = small ? Math.min(vh * 0.42, 380) : Math.min(vh * 0.6, 620);
+  let h = small ? Math.min(innerHeight * 0.4, 360) : Math.min(vh * 0.62, 620);
   let w = h / 2.1;
-  if (small) { w = Math.min(w, vw * 0.5); h = w * 2.1; }
-  const cx = small ? vw / 2 : vw * 0.7;
-  const fy = small ? vh - Math.max(118, vh * 0.15) : vh * 0.86; // zemin çizgisi = kapının altı
-  const ay = fy - h * 0.45; // büyütme merkezi (kapının içinde)
-  // Kapı ekranı tamamen örtene kadar gereken büyütme
-  const r = w / 2;
-  const need = Math.max(
-    cx / (w / 2), (vw - cx) / (w / 2),
-    ay / Math.max(1, h * 0.55 - r * 1.35), (vh - ay) / (h * 0.45),
-  );
-  G = { vw, vh, w, h, cx, fy, ay, sMax: need * 1.08, small };
+  if (small) { w = Math.min(w, vw * 0.46); h = w * 2.1; }
+  const cx = small ? vw / 2 : vw * 0.72;
+  const fy = small ? vh - 40 : vh * 0.86; // zemin çizgisi = kapının altı
+  G = { vw, vh, w, h, cx, fy };
   wallSvg.setAttribute('viewBox', `0 0 ${vw} ${vh}`);
   olcu.style.setProperty('--dx', `${cx}px`);
-  olcu.style.setProperty('--dy', `${fy + 14}px`);
+  olcu.style.setProperty('--dy', `${fy + 12}px`);
   olcu.style.setProperty('--dw', `${w}px`);
 }
-
-const S = { o: 0, p: 0 }; // o: kapının açılışı (0-1), p: yürüyüş (0-1)
+const S = { o: reducedMotion ? 1 : 0 }; // kapının açılışı (0-1)
 const f1 = (n) => n.toFixed(1);
 function draw() {
   if (!G) return;
-  const { vw, vh, w, h, cx, ay, sMax } = G;
-  const s = Math.pow(sMax, S.p);
-  const dw = w * s * (0.04 + 0.96 * S.o);
-  const dh = h * s;
-  const top = ay - h * 0.55 * s;
-  const bot = ay + h * 0.45 * s;
-  const L = cx - dw / 2, R = cx + dw / 2;
-  const r = dw / 2;
+  const { vw, vh, w, h, cx, fy } = G;
+  const dw = w * (0.04 + 0.96 * S.o);
+  const top = fy - h, bot = fy;
+  const L = cx - dw / 2, R = cx + dw / 2, r = dw / 2;
   const door = `M${f1(L)} ${f1(bot)}V${f1(top + r)}A${f1(r)} ${f1(r)} 0 0 1 ${f1(R)} ${f1(top + r)}V${f1(bot)}Z`;
   wallPath.setAttribute('d', `M-2 -2H${vw + 2}V${vh + 2}H-2Z${door}`);
   kasa.setAttribute('d', door);
-  const fl = Math.min(bot, vh + 4);
-  floor.setAttribute('d', `M0 ${f1(fl)}H${vw}`);
-  const depth = Math.min(dh * 0.5, vh * 0.35);
+  floor.setAttribute('d', `M0 ${f1(bot)}H${vw}`);
+  const depth = Math.min(h * 0.5, vh - bot + 40);
   spill.setAttribute('d', `M${f1(L)} ${f1(bot)}L${f1(R)} ${f1(bot)}L${f1(R + dw * 0.9)} ${f1(bot + depth)}L${f1(L - dw * 0.9)} ${f1(bot + depth)}Z`);
-  spill.style.opacity = String(S.o * (1 - Math.min(1, S.p * 2.2)));
-  kasa.style.opacity = String(1 - Math.min(1, S.p * 1.6));
-  photo.style.transform = `scale(${(1.34 - 0.34 * S.p).toFixed(4)})`;
-  const cp = Math.min(1, S.p / 0.34);
-  copy.style.transform = `translate3d(0,${f1(-cp * 60)}px,0) scale(${(1 + cp * 0.35).toFixed(3)})`;
-  copy.style.opacity = String(1 - cp);
-  olcu.style.opacity = String(S.o * (1 - Math.min(1, S.p * 4)));
-  hint.style.opacity = String(S.o * (1 - Math.min(1, S.p * 6)));
-  const ip = Math.max(0, (S.p - 0.78) / 0.22);
-  shade.style.opacity = String(0.15 + ip * 0.65);
-  inner.style.opacity = String(ip);
-  inner.style.transform = `translate3d(0,${f1((1 - ip) * 40)}px,0)`;
-  inner.style.visibility = ip > 0.01 ? 'visible' : 'hidden';
-  wallSvg.style.visibility = S.p > 0.995 ? 'hidden' : 'visible';
+  spill.style.opacity = String(S.o);
+  olcu.style.opacity = String(S.o);
 }
 measure();
-addEventListener('resize', () => { measure(); draw(); });
+draw();
+let rw = innerWidth;
+addEventListener('resize', () => {
+  if (innerWidth < 900 && Math.abs(innerWidth - rw) < 2) return; // mobil adres çubuğu
+  rw = innerWidth; measure(); draw();
+});
 
-if (reducedMotion) {
-  S.o = 1; S.p = 0;
-  document.documentElement.classList.add('is-rm');
-  copy.append($('.hero__cta'));
-  draw();
-} else {
-  draw();
-  gsap.timeline({ delay: 0.15, onUpdate: draw })
-    .to(S, { o: 1, duration: 1.3, ease: 'expo.inOut' }, 0.1)
-    .from('.hero__copy > *', { y: 26, opacity: 0, duration: 0.8, stagger: 0.09, ease: 'power3.out' }, 0);
-  gsap.timeline({
-    scrollTrigger: {
-      trigger: hero, start: 'top top', end: () => `+=${innerHeight * (G.small ? 1.25 : 1.5)}`,
-      pin, scrub: 0.5, anticipatePin: 1,
-      onUpdate: () => { if (S.o < 1) { gsap.killTweensOf(S, 'o'); S.o = 1; } },
-    },
-  }).to(S, { p: 1, duration: 1, ease: 'power1.in', onUpdate: draw })
-    .to({}, { duration: 0.25 });
-}
+// --- Hizmetler -------------------------------------------------------------------
+$('#hizmetler').innerHTML = `
+  <div class="odalar__head">
+    <h2 class="h2" id="oda-h">Hizmetler</h2>
+    <p class="lead">Süreler ortalamadır, projenin büyüklüğüne göre değişir. Ücret bilgisi ve görüşme randevusu için arayın.</p>
+  </div>
+  <ol class="odalar__list">
+    ${d.hizmetler.map((h, i) => `
+      <li class="oda">
+        <article class="oda__card">
+          <figure class="oda__img">${h.gorsel ? `<img src="${esc(img(h.gorsel))}" alt="${esc(h.gorselAlt || '')}" loading="lazy" decoding="async" /><figcaption>Temsilî</figcaption>` : ''}</figure>
+          <div class="oda__body">
+            <p class="oda__no"><span>${String(i + 1).padStart(2, '0')}</span></p>
+            <h3 class="oda__title">${esc(h.baslik)}</h3>
+            <p class="oda__desc">${esc(h.aciklama)}</p>
+            ${h.sure ? `<p class="oda__sure"><span>Süre</span>${esc(h.sure)}</p>` : ''}
+          </div>
+        </article>
+      </li>`).join('')}
+  </ol>`;
 
-// --- Hizmetler: oda kartları ---------------------------------------------------
-$('[data-services]').innerHTML = d.hizmetler.map((h, i) => `
-  <li class="oda" style="--i:${i}">
-    <article class="oda__card"><span class="oda__dim" aria-hidden="true"></span>
-      <figure class="oda__img">${h.gorsel ? `<img src="${esc(img(h.gorsel))}" alt="${esc(h.baslik)}" loading="lazy" decoding="async" />` : ''}</figure>
-      <div class="oda__body">
-        <p class="oda__no"><span>${String(i + 1).padStart(2, '0')}</span> / ${String(d.hizmetler.length).padStart(2, '0')}</p>
-        <h3 class="oda__title">${esc(h.baslik)}</h3>
-        <p class="oda__desc">${esc(h.aciklama)}</p>
-        ${h.sure ? `<p class="oda__sure"><span>Süre</span>${esc(h.sure)}</p>` : ''}
-      </div>
-    </article>
-  </li>`).join('');
+// --- Çalışma sırası -------------------------------------------------------------------
+$('.surec').innerHTML = `
+  <div class="surec__head"><h2 class="h2" id="surec-h">Çalışma sırası</h2></div>
+  <ol class="surec__list">
+    ${d.surec.map((s, i) => `
+      <li class="step">
+        <p class="step__no" aria-hidden="true">${String(i + 1).padStart(2, '0')}</p>
+        <div class="step__body">
+          <h3 class="step__title">${esc(s.baslik)}</h3>
+          <p class="step__text">${esc(s.aciklama)}</p>
+        </div>
+      </li>`).join('')}
+  </ol>`;
 
-// --- Rakamlar -----------------------------------------------------------------
-const stats = d.istatistikler.map((s) => ({ ...s, deger: s.kurulustanHesapla ? yil : s.deger }));
-$('[data-stats]').innerHTML = stats.map((s) => `
-  <li class="stat">
-    <p class="stat__val"><span data-count="${Number(s.deger)}">${nf(s.deger)}</span><small>${esc(s.sonek)}</small></p>
-    <p class="stat__lbl">${esc(s.etiket)}</p>
-  </li>`).join('');
+// --- Hakkında ---------------------------------------------------------------------
+const acikGun = acikGunSayisi(d.saatler);
+const GAL = ['maket-ahsap', 'cizim-masasi', 'maket', 'bilgisayar'];
+const galeri = GAL.map((k) => d.galeri.find((g) => g.src.includes(`/${k}.`))).filter(Boolean);
+$('#hakkinda').innerHTML = `
+  <div class="ofis__in">
+    <figure class="ofis__photo"><img src="${asset('/img/mimarlik-klasik/santiye-plan.webp')}" alt="Şantiyede basılı projeyi birlikte inceleyen ekip (temsilî)" loading="lazy" decoding="async" width="1050" height="1400" /></figure>
+    <div class="ofis__copy">
+      <h2 class="h2" id="ofis-h">Hakkında</h2>
+      <p class="lead">${ad} ${esc(yilEki(kurulus))} beri Etimesgut'ta. ${esc(d.isletme.hakkinda)}</p>
+      <ul class="rakam__list" aria-label="Rakamlarla">
+        <li class="stat"><p class="stat__val"><span data-count="${yas}">${yas}</span><small> yıl</small></p><p class="stat__lbl">Etimesgut'ta</p></li>
+        <li class="stat"><p class="stat__val"><span data-count="${acikGun}">${acikGun}</span><small> gün</small></p><p class="stat__lbl">haftada açık</p></li>
+      </ul>
+      ${d.bilgiler?.length ? `<dl class="facts">${d.bilgiler.map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join('')}</dl>` : ''}
+    </div>
+  </div>
+  ${galeri.length ? `
+  <div class="galeri">
+    <div class="galeri__grid">
+      ${galeri.map((g, i) => `<figure class="shot shot--${i}"><img src="${esc(img(g.src))}" alt="${esc(g.alt)}" loading="lazy" decoding="async" /><figcaption>${esc(g.alt)}</figcaption></figure>`).join('')}
+    </div>
+    <p class="galeri__note">Görseller temsilîdir; ofisin kendi projeleri görüşmede gösterilir.</p>
+  </div>` : ''}`;
+
+// --- Çalışma saatleri ve konum ---------------------------------------------------------
+$('#saatler').innerHTML = `
+  <div class="konum__info">
+    <h2 class="h2" id="konum-h">Çalışma saatleri ve konum</h2>
+    <p class="konum__status">${esc(st0.metin)}</p>
+    <dl class="hours">
+      ${liste.map(([g, s]) => `<div class="${bugunMu(g) ? 'is-today' : ''}"><dt>${esc(g)}</dt><dd>${esc(s)}</dd></div>`).join('')}
+    </dl>
+    <p class="konum__addr">${esc(d.iletisim.adres)}</p>
+    <div class="konum__btns">
+      ${btn('btn--pine', mapsHref(d), icons.pin, 'Yol tarifi', true)}
+      ${btn('btn--line', telHref(d), icons.phone, tel)}
+    </div>
+  </div>
+  <div class="konum__map" id="map"><span>Harita</span></div>`;
+
+// --- Örnek yorumlar ------------------------------------------------------------------
+const stars = (n) => Array.from({ length: 5 }, (_, i) => `<span class="${i < n ? '' : 'off'}">${icons.star}</span>`).join('');
+$('#yorumlar').innerHTML = `
+  <div class="yorum__head">
+    <h2 class="h2" id="yorum-h">Örnek yorumlar</h2>
+    <p class="yorum__not">Buradaki yorumlar örnektir, yerlerine ofisin gerçek yorumları konur.</p>
+  </div>
+  <ul class="yorum__list" data-lenis-prevent-touch>
+    ${d.yorumlar.map((y) => `
+      <li class="rev">
+        <p class="rev__stars" role="img" aria-label="5 üzerinden ${Number(y.puan)}">${stars(y.puan)}</p>
+        <p class="rev__text">${esc(y.metin)}</p>
+        <p class="rev__who"><strong>${esc(y.ad)}</strong>${y.konu ? `<span>${esc(y.konu)}</span>` : ''}</p>
+      </li>`).join('')}
+  </ul>`;
+
+// --- İletişim + ihtiyaç programı ----------------------------------------------------------
+$('#iletisim').innerHTML = `
+  <div class="program__head">
+    <h2 class="h2" id="iletisim-h">İletişim</h2>
+    <p class="lead">Görüşme randevusu için arayın ya da WhatsApp'tan yazın. Konut projelerinde oda listesi aşağıda hazırlanıp gönderilebilir.</p>
+    <dl class="iletisim__list">
+      <div><dt>Telefon</dt><dd><a href="${telHref(d)}">${tel}</a></dd></div>
+      <div><dt>Adres</dt><dd>${esc(d.iletisim.adres)}</dd></div>
+      <div><dt>Bugün</dt><dd>${esc(st0.metin)}</dd></div>
+    </dl>
+    <div class="iletisim__btns">
+      ${btn('btn--pine', telHref(d), icons.phone, 'Ara')}
+      ${btn('btn--wa', wa(), icons.whatsapp, 'WhatsApp', true)}
+    </div>
+  </div>
+  <div class="program__box">
+    <div class="program__form">
+      <h3 class="program__t">İhtiyaç programı</h3>
+      <p class="program__alt">Odalar seçildikçe yaklaşık brüt alan hesaplanır.</p>
+      <div class="program__chips" data-form></div>
+    </div>
+    <div class="program__res">
+      <div class="plan" data-plan aria-hidden="true"></div>
+      <dl class="program__sonuc">
+        <div><dt>Net alan</dt><dd data-r="net"></dd></div>
+        <div class="is-big"><dt>Brüt alan, yaklaşık</dt><dd data-r="brut"></dd></div>
+      </dl>
+      <p class="program__not" data-program-not></p>
+      <a class="btn btn--pine program__btn" data-program-wa target="_blank" rel="noopener">${icons.whatsapp}<span>Listeyi WhatsApp'tan gönder</span></a>
+    </div>
+  </div>`;
 
 // --- İhtiyaç programı ------------------------------------------------------------
 const P = d.program;
@@ -276,7 +374,7 @@ function program() {
   } else brutEl.textContent = `≈ ${nf(brut)} m²`;
   brutEl.dataset.v = brut;
   const liste = P.odalar.filter((o) => st[o.id]).map((o) => (o.adet != null ? `${st[o.id]} ${o.ad.toLocaleLowerCase('tr')}` : o.ad.toLocaleLowerCase('tr'))).join(', ');
-  $('[data-program-wa]').href = wa(`Merhaba ${d.isletme.ad}, yaklaşık ${nf(brut)} m² bir ev düşünüyoruz: ${liste}. Görüşmek isteriz.`);
+  $('[data-program-wa]').href = wa(`Merhaba, yaklaşık ${nf(brut)} m² bir ev için görüşmek istiyorum. Oda listesi: ${liste}.`);
 }
 let planLastW = 0;
 addEventListener('resize', () => { const w = plan.clientWidth; if (w !== planLastW) { planLastW = w; program(); } });
@@ -302,113 +400,57 @@ formBox.addEventListener('click', (e) => {
 program();
 document.fonts?.ready.then(() => program());
 
-// --- Süreç -------------------------------------------------------------------
-$('[data-steps]').innerHTML = d.surec.map((s, i) => `
-  <li class="step">
-    <p class="step__no" aria-hidden="true">${String(i + 1).padStart(2, '0')}</p>
-    <div class="step__body">
-      <h3 class="step__title">${esc(s.baslik)}</h3>
-      <p class="step__text">${esc(s.aciklama)}</p>
-    </div>
-  </li>`).join('');
+// --- Footer ----------------------------------------------------------------------------
+$('#foot').innerHTML = `
+  <div class="foot__in">
+    <p class="foot__ad">${ad}</p>
+    <p>${esc(d.isletme.tanim)} · ${esc(d.iletisim.adres)}</p>
+    <p><a href="${telHref(d)}">${tel}</a></p>
+  </div>
+  <p class="foot__small">© ${new Date().getFullYear()} ${ad}. Proje görselleri ve fotoğraflar temsilîdir (Pexels). Yorumlar örnektir.</p>`;
 
-// --- Galeri ------------------------------------------------------------------
-const gal = ['maket-ahsap', 'cizim-masasi', 'ticari-yapi', 'maket', 'bilgisayar', 'restorasyon', 'salon', '3d-yatak-odasi'];
-const galItems = gal.map((k) => d.galeri.find((g) => g.src.includes(`/${k}.jpg`))).filter(Boolean);
-$('[data-gallery]').innerHTML = galItems.map((g, i) => `
-  <figure class="shot shot--${i}"><img src="${esc(img(g.src))}" alt="${esc(g.alt)}" loading="lazy" decoding="async" /><figcaption>${esc(g.alt)}</figcaption></figure>`).join('');
-
-// --- Yorumlar ----------------------------------------------------------------
-const stars = (n) => Array.from({ length: 5 }, (_, i) => `<span class="${i < n ? '' : 'off'}">${icons.star}</span>`).join('');
-$('[data-score]').textContent = nf(d.puan.ortalama, 1);
-$('[data-stars]').innerHTML = stars(Math.round(d.puan.ortalama));
-$('[data-stars]').setAttribute('aria-label', `5 üzerinden ${nf(d.puan.ortalama, 1)}`);
-$('[data-review-count]').textContent = 'Temsilî puan · yorumlar örnektir';
-$('[data-reviews]').innerHTML = d.yorumlar.map((y) => `
-  <li class="rev">
-    <p class="rev__stars" aria-label="${Number(y.puan)} yıldız">${stars(y.puan)}</p>
-    <p class="rev__text">${esc(y.metin)}</p>
-    <p class="rev__who"><strong>${esc(y.ad)}</strong><span>${esc(y.arac)}</span></p>
-  </li>`).join('');
-
-// --- Programlar ---------------------------------------------------------------
-const row = d.markalar.map((m) => `<span>${esc(m)}</span><i aria-hidden="true"></i>`).join('');
-$('[data-brands]').innerHTML = `<div class="marka__row">${row}</div><div class="marka__row" aria-hidden="true">${row}</div>`;
-
-// --- Saatler -----------------------------------------------------------------
-const GUN = ['Pazar', 'Pazartesi', 'Salı', 'Çarşamba', 'Perşembe', 'Cuma', 'Cumartesi'];
-const order = [1, 2, 3, 4, 5, 6, 0];
-const t = order.indexOf(new Date().getDay());
-$('[data-hours]').innerHTML = groupedHours(d.saatler).map(([days, val]) => {
-  const r = days.split(' – ');
-  const a = order.indexOf(GUN.indexOf(r[0])), b = order.indexOf(GUN.indexOf(r.at(-1)));
-  return `<div class="${t >= a && t <= b ? 'is-today' : ''}"><dt>${esc(days)}</dt><dd>${esc(val)}</dd></div>`;
-}).join('');
-
-const mapBox = $('[data-map]');
+// Harita: yaklaşınca yüklenir
+const mapBox = $('#map');
 new IntersectionObserver((ents, io) => {
   if (!ents.some((e) => e.isIntersecting)) return;
   io.disconnect();
-  mapBox.innerHTML = `<iframe title="${esc(d.isletme.ad)} konumu" src="${esc(mapsEmbed(d))}" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>`;
+  mapBox.innerHTML = `<iframe title="${ad} konumu" src="${esc(mapsEmbed(d))}" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>`;
 }, { rootMargin: '600px 0px' }).observe(mapBox);
 
-// --- Header ------------------------------------------------------------------
-const top = $('.top');
-let solidOn = null;
-const solid = () => {
-  const on = scrollY > innerHeight * (mq.matches ? 1.3 : 1.55);
-  if (on !== solidOn) { solidOn = on; top.classList.toggle('is-solid', on); }
-};
+// --- Başlık çubuğu -----------------------------------------------------------------------
+const top = $('#ust');
+const solid = () => top.classList.toggle('is-solid', scrollY > hero.offsetHeight - 70);
 addEventListener('scroll', solid, { passive: true });
 solid();
+if (innerWidth < 900) autoHideHeader(top, { offset: 140 });
 
-// --- Bölüm hareketleri --------------------------------------------------------
+// --- Hareket (sakin: bir kez, küçük kayma) ---------------------------------------------------
 if (!reducedMotion) {
   initSmoothScroll();
+  // Açılış: kapı açılır (~1 sn), künye küçük kaymayla gelir.
+  gsap.timeline({ delay: 0.1 })
+    .to(S, { o: 1, duration: 1, ease: 'expo.inOut', onUpdate: draw }, 0)
+    .from('#kunye > *', { y: 20, autoAlpha: 0, duration: 0.6, stagger: 0.06, ease: 'power3.out', clearProps: 'all' }, 0);
+  gsap.fromTo('.hero__photo', { scale: 1.12 }, { scale: 1, ease: 'none', scrollTrigger: { trigger: hero, start: 'top top', end: 'bottom top', scrub: true } });
 
-  $$('.h2').forEach((h) => gsap.from(h, { y: 30, opacity: 0, duration: 0.8, ease: 'power3.out', scrollTrigger: { trigger: h, start: 'top 88%' } }));
-
-  // Oda kartları: bir sonraki kart üstüne binerken öncekini geri it
-  // Telefonda deste yok (kartlar alt alta akar): üst üste binen yazı ve 40%'tan uzun yapışkan kart olmasın
-  const odalar = $$('.oda');
-  const deck = matchMedia('(min-width: 900px)').matches;
-  odalar.forEach((o, i) => {
-    const next = odalar[i + 1];
-    if (!next || !deck) return;
-    gsap.timeline({ scrollTrigger: { trigger: next, start: 'top bottom', end: 'top 20%', scrub: true } })
-      .to($('.oda__card', o), { scale: 0.92, ease: 'none', duration: 1 }, 0)
-      .to($('.oda__dim', o), { opacity: 0.55, ease: 'none', duration: 1 }, 0)
-      // Sonraki kart tam oturunca alttaki kartın yazısı gizlenir (desteye binen yazılar üst üste görünmesin)
-      .to($('.oda__body', o), { autoAlpha: 0, ease: 'none', duration: 0.12 }, 0.86);
-  });
-  odalar.forEach((o) => gsap.fromTo($('.oda__img img', o), { scale: 1.18 }, { scale: 1, ease: 'none', scrollTrigger: { trigger: o, start: 'top bottom', end: 'top 25%', scrub: true } }));
-
+  $$('.h2').forEach((h) => gsap.from(h, { y: 26, opacity: 0, duration: 0.7, ease: 'power3.out', scrollTrigger: { trigger: h, start: 'top 90%' } }));
+  $$('.oda').forEach((o) => gsap.from(o, { y: 30, opacity: 0, duration: 0.7, ease: 'power3.out', scrollTrigger: { trigger: o, start: 'top 92%' } }));
   $$('.stat').forEach((s) => {
     const el = $('[data-count]', s);
     const to = Number(el.dataset.count);
     const o = { v: 0 };
     el.textContent = '0';
-    gsap.timeline({ scrollTrigger: { trigger: s, start: 'top 90%' } })
+    gsap.timeline({ scrollTrigger: { trigger: s, start: 'top 92%' } })
       .fromTo(s, { '--line': 0 }, { '--line': 1, duration: 0.9, ease: 'power3.inOut' }, 0)
-      .to(o, { v: to, duration: 1.5, ease: 'power2.out', onUpdate: () => (el.textContent = nf(o.v)) }, 0.1);
+      .to(o, { v: to, duration: 1.2, ease: 'power2.out', onUpdate: () => (el.textContent = nf(o.v)) }, 0.1);
   });
-
-  gsap.from('.program__box', { y: 40, opacity: 0, duration: 0.8, ease: 'power3.out', scrollTrigger: { trigger: '.program__box', start: 'top 88%' } });
-  gsap.from('.cell', { scale: 0.6, opacity: 0, duration: 0.6, stagger: 0.05, ease: 'back.out(1.6)', scrollTrigger: { trigger: '.plan', start: 'top 85%' }, clearProps: 'transform,opacity' });
-
-  gsap.fromTo('.ofis__photo', { clipPath: 'inset(100% 0 0 0 round 999px 999px 0 0)' }, { clipPath: 'inset(0% 0 0 0 round 999px 999px 0 0)', duration: 1.2, ease: 'power3.inOut', scrollTrigger: { trigger: '.ofis__photo', start: 'top 80%' } });
-  gsap.fromTo('.ofis__photo img', { yPercent: -6, scale: 1.14 }, { yPercent: 6, scale: 1.14, ease: 'none', scrollTrigger: { trigger: '.ofis', start: 'top bottom', end: 'bottom top', scrub: true } });
-
-  gsap.fromTo('.surec__list', { '--prog': 0 }, { '--prog': 1, ease: 'none', scrollTrigger: { trigger: '.surec__list', start: 'top 70%', end: 'bottom 65%', scrub: 0.4 } });
-  $$('.step').forEach((s) => ScrollTrigger.create({ trigger: s, start: 'top 72%', onEnter: () => s.classList.add('is-on'), onLeaveBack: () => s.classList.remove('is-on') }));
-
-  $$('.shot').forEach((s) => gsap.fromTo(s, { clipPath: 'inset(14% 8% 0% 8%)', y: 30 }, { clipPath: 'inset(0% 0% 0% 0%)', y: 0, duration: 1, ease: 'power3.out', scrollTrigger: { trigger: s, start: 'top 92%' } }));
-  gsap.from('.rev', { y: 28, opacity: 0, duration: 0.6, stagger: 0.07, ease: 'power2.out', scrollTrigger: { trigger: '.yorum__list', start: 'top 88%' } });
-  gsap.fromTo('.final__door', { clipPath: 'inset(40% 30% 0% 30% round 999px 999px 0 0)' }, { clipPath: 'inset(0% 0% 0% 0% round 999px 999px 0 0)', ease: 'none', scrollTrigger: { trigger: '.final', start: 'top 85%', end: 'center 60%', scrub: 0.5 } });
-  gsap.fromTo('.final__door img', { scale: 1.3 }, { scale: 1, ease: 'none', scrollTrigger: { trigger: '.final', start: 'top bottom', end: 'bottom bottom', scrub: true } });
+  $$('.step').forEach((s) => ScrollTrigger.create({ trigger: s, start: 'top 80%', onEnter: () => s.classList.add('is-on'), onLeaveBack: () => s.classList.remove('is-on') }));
+  gsap.fromTo('.ofis__photo', { clipPath: 'inset(100% 0 0 0 round 999px 999px 0 0)' }, { clipPath: 'inset(0% 0 0 0 round 999px 999px 0 0)', duration: 1.1, ease: 'power3.inOut', scrollTrigger: { trigger: '.ofis__photo', start: 'top 85%' } });
+  $$('.shot').forEach((s) => gsap.fromTo(s, { clipPath: 'inset(14% 8% 0% 8%)', y: 24 }, { clipPath: 'inset(0% 0% 0% 0%)', y: 0, duration: 0.9, ease: 'power3.out', scrollTrigger: { trigger: s, start: 'top 94%' } }));
+  gsap.from('.rev', { y: 24, opacity: 0, duration: 0.6, stagger: 0.06, ease: 'power2.out', scrollTrigger: { trigger: '.yorum__list', start: 'top 90%' } });
+  gsap.from('.program__box', { y: 30, opacity: 0, duration: 0.7, ease: 'power3.out', scrollTrigger: { trigger: '.program__box', start: 'top 90%' } });
 } else {
   $$('.step').forEach((s) => s.classList.add('is-on'));
-  $('.surec__list').style.setProperty('--prog', 1);
 }
 
 addEventListener('load', () => { measure(); draw(); ScrollTrigger.refresh(); });

@@ -3,50 +3,53 @@ import ana from '../../data/sektor-mimarlik.json';
 import ek from '../../data/kurumsal-mimarlik.json';
 import { kurumsal, derinBirlestir } from '../_kurumsal/engine.js';
 import { telHref, waHref, icons } from '../../shared/core.js';
-import { gunesHero, katKesit, imarHesap, ikonGonye, sifirla } from './extra.js';
+import { gunesHero, katKesit, imarHesap, ikonGonye } from './extra.js';
 import './style.css';
 
 // "Gün Işığı" yönü: mimarlık ofisi güneşle, ışıkla ve kütleyle anlatılır. Adaçayı sıva zemin, orman yeşili
 // koyu yüzeyler, öğle güneşi kehribarı vurgu. Syne başlık, Figtree gövde, JetBrains Mono okumalar.
-// İmza: hero'da gün ışığı etüdü (saat kaydırıcısıyla oda ışığı değişir); hizmetler bir yapı kesiti; imar hesabı.
+// Künyenin yanında gün ışığı etüdü (saat kaydırıcısıyla oda ışığı değişir); hizmet özeti bir yapı kesiti; imar ön hesabı.
 const GUN = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 const yerel = (p) => p.replace('/img/sektor-mimarlik/', '/img/kurumsal-mimarlik/');
 
-// Veri dosyasındaki hizmet sırasıyla: kısa metin, teslim edilenler.
-const EK = [
-  ['Müstakil ev, villa, apartman. Arsanın yönü ve eğimiyle kurulan plan.', [['Teslim', 'Avan proje + 3D'], ['Başlangıç', 'Yer ziyareti']]],
-  ['Ofis, mağaza, depo. Otopark ve yangın kaçışı ilk eskizde.', [['Teslim', 'Avan + yönetmelik kontrolü'], ['Başlangıç', 'İmar durumu']]],
-  ['Belediyeye giden dosya; düzeltme notlarını biz işleriz.', [['Teslim', 'Mimari proje + vaziyet'], ['Takip', 'Onaya kadar']]],
-  ['Şantiyenin okuyacağı ölçülü plan, kesit ve detay.', [['Teslim', 'Plan · kesit · detay'], ['Koordinasyon', 'Statik ve tesisat']]],
-  ['Mutfak, banyo, dolap, aydınlatma; malzeme tek dosyada.', [['Teslim', 'Çizim + malzeme listesi'], ['Ölçü', 'Yerinde alınır']]],
-  ['Rölöve, restitüsyon, restorasyon; kurul dosyası.', [['Teslim', 'Rölöve + proje'], ['Süreç', 'Koruma kurulu']]],
-  ['Gün ışığı ve akşam render, iç mekân görseli, maket.', [['Teslim', 'Render + isteğe maket'], ['Revizyon', 'Onaya kadar']]],
-  ['Duvar kaldırma, mutfak açma, çatı katı, balkon.', [['Teslim', 'Rölöve + tadilat projesi'], ['Başvuru', 'Belediye']]],
-];
+// Hizmet sayfasındaki ayrıntılar (hizmet kimliğine göre).
+const DETAY = {
+  konut: [['Teslim', 'Avan proje ve 3D görsel'], ['Başlangıç', 'Yer ziyareti']],
+  ticari: [['Teslim', 'Avan proje ve yönetmelik kontrolü'], ['Başlangıç', 'İmar durumu']],
+  ic: [['Teslim', 'Çizimler ve malzeme listesi'], ['Ölçü', 'Yerinde alınır']],
+  ruhsat: [['Teslim', 'Mimari proje ve vaziyet planı'], ['Takip', 'Onaya kadar']],
+  uygulama: [['Teslim', 'Plan, kesit ve detaylar'], ['Koordinasyon', 'Statik ve tesisat']],
+  takip: [['Ziyaret', 'Kaba inşaat ve ince işler'], ['Kontrol', 'Çizime uygunluk']],
+  tadilat: [['Teslim', 'Rölöve ve tadilat projesi'], ['Başvuru', 'Belediye']],
+  restorasyon: [['Teslim', 'Rölöve ve restorasyon projesi'], ['Süreç', 'Koruma kurulu']],
+  gorsel: [['Teslim', 'Render, istenirse maket'], ['Değişiklik', 'Onaya kadar']],
+};
 
 const veri = derinBirlestir(ana, ek);
-// Yorumlar örnektir: uydurma puan ve "N değerlendirme" sayısı gösterilmez.
-delete veri.puan;
-veri.hizmetler = ana.hizmetler.map((h, i) => {
-  const [kisa, detay] = EK[i] || ['', []];
-  return { ...h, kisa, detay, gorsel: yerel(h.gorsel), etiket: 'Süre' };
-});
+veri.hizmetler = ana.hizmetler.map((h) => ({ ...h, detay: DETAY[h.id] || [], gorsel: yerel(h.gorsel), etiket: 'Süre' }));
 veri.galeri = ana.galeri.map((x) => ({ ...x, src: yerel(x.src) }));
+const waGenel = veri.waMesaj || 'Merhaba, proje için görüşme randevusu almak istiyorum.';
+
+// Çekirdeğin varsayılan WhatsApp metni oto sanayi içindir ("aracım için"): ofisin metniyle değiştirilir.
+document.addEventListener('click', (e) => {
+  const a = e.target.closest?.('a[href*="wa.me"]');
+  if (a && a.href.includes('arac%C4%B1m')) a.href = waHref(veri, waGenel);
+}, true);
 
 kurumsal({
   veri,
   tema: {
     hero: 'bolunmus',
     gecis: 'perde',
-    yer: 'Etimesgut',
+    yer: "Etimesgut'ta",
     heroGorsel: `${import.meta.env.BASE_URL}img/kurumsal-mimarlik/ic-mekan.jpg`,
     heroAlt: 'Tül perdeli yüksek pencereden ışık alan, beyaz koltuklu yüksek tavanlı salon',
-    logoAlt: 'Mimarlık · İç mimarlık',
+    logoAlt: 'Mimarlık ofisi',
     baslikEki: 'Mimarlık ofisi | Etimesgut, Ankara',
-    teklifEtiketi: 'Ön görüşme',
+    teklifEtiketi: 'İletişim',
     hizmetEtiketi: 'Hizmetler',
     metinBoyutu: true,
-    altNot: 'Proje ücretini yer ziyaretinden sonra, işe başlamadan yazılı olarak söyleriz. Proje görselleri ve fotoğraflar temsilîdir (Pexels). Yorumlar örnektir.',
+    altNot: 'Proje görselleri ve fotoğraflar temsilîdir (Pexels). Yorumlar örnektir.',
     css: {
       zemin: '#e3e7de', yuzey: '#d3dacc', metin: '#16201b', soluk: '#526058', cizgi: 'rgb(22 32 27 / .15)',
       vurgu: '#f2a30f', 'vurgu-metin': '#16201b', koyu: '#14221b', 'koyu-metin': '#e8ece3', 'koyu-soluk': '#95a69b',
@@ -58,17 +61,16 @@ kurumsal({
     },
   },
   sayfalar: [
-    { id: 'anasayfa', baslik: 'Ana Sayfa', bolumler: ['sifirla', 'gunesHero', 'ozet', 'hizmetOzet', 'rakamlar', 'imarHesap', 'surec', 'yorumlar', 'markalar', 'cta'] },
-    { id: 'ofis', baslik: 'Ofis', bolumler: ['sifirla', 'hakkimizda', 'vizyon', 'kalite', 'galeri', 'cta'] },
-    { id: 'hizmetler', baslik: 'Hizmetler', bolumler: ['sifirla', 'hizmetler', 'surec', 'sss', 'cta'] },
-    { id: 'imar', baslik: 'İmar Hesabı', bolumler: ['sifirla', 'imarHesap', 'sss', 'cta'] },
-    { id: 'projeler', baslik: 'Projeler', bolumler: ['sifirla', 'galeri', 'yorumlar', 'markalar', 'cta'] },
-    { id: 'iletisim', baslik: 'İletişim', bolumler: ['sifirla', 'iletisim'] },
+    { id: 'anasayfa', baslik: 'Ana Sayfa', bolumler: ['gunesHero', 'hizmetOzet', 'ozet', 'rakamlar', 'konum', 'yorumlar', 'cta'] },
+    { id: 'hizmetler', baslik: 'Hizmetler', bolumler: ['hizmetler', 'surec', 'sss', 'cta'] },
+    { id: 'hakkinda', baslik: 'Hakkında', bolumler: ['hakkimizda', 'bilgiler', 'galeri', 'cta'] },
+    { id: 'imar', baslik: 'İmar ön hesabı', menu: 'İmar hesabı', bolumler: ['imarHesap', 'cta'] },
+    { id: 'iletisim', baslik: 'İletişim', bolumler: ['iletisim'] },
   ],
-  ekstralar: { sifirla, gunesHero, hizmetOzet: katKesit, imarHesap },
+  ekstralar: { gunesHero, hizmetOzet: katKesit, imarHesap },
   aksiyon: (d) => [
     { href: telHref(d), ikon: icons.phone, etiket: 'Ara' },
-    { href: waHref(d, `Merhaba ${d.isletme.ad}, bir proje için ön görüşme yapmak istiyorum.`), ikon: icons.whatsapp, etiket: 'WhatsApp', dis: true },
+    { href: waHref(d, waGenel), ikon: icons.whatsapp, etiket: 'WhatsApp', dis: true },
     { href: '#/imar', ikon: ikonGonye, etiket: 'İmar', rota: 'imar' },
   ],
   ld: (d) => ({
@@ -76,7 +78,7 @@ kurumsal({
     '@type': 'ProfessionalService',
     additionalType: 'https://schema.org/Architect',
     name: d.isletme.ad,
-    description: d.isletme.slogan,
+    description: d.isletme.tanim,
     telephone: d.iletisim.telefon,
     foundingDate: String(d.isletme.kurulus),
     address: { '@type': 'PostalAddress', streetAddress: d.iletisim.adres, addressLocality: 'Etimesgut', addressRegion: 'Ankara', addressCountry: 'TR' },

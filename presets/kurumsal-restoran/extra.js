@@ -1,15 +1,12 @@
-// Kurumsal restoran — "Çini sofra" yönü.
-// kemerHero: dev Anton başlık, üç kemer pencerede ocak / köz / meze; kemerlerin altında köz kıvılcımları,
-//            en altta sayfayı boydan boya geçen bir şiş (kaydırdıkça kayar).
-// menuPano:  lacivert çini çerçeveli menü panosu. Fiyat yok; her satırda "masaya geliş süresi". Masaüstünde
-//            satırın üstüne gelince kemer biçimli fotoğraf imleci takip eder.
-// masaKur:   imza modülü. Yer (tezgâh / salon / arka salon / paket), kişi, gün, saat, sebep seçilir; yukarıdan
-//            bakılan sofra planı canlı kurulur (sandalye, tabak, meze kâseleri), yanında el yazısı adisyon
-//            WhatsApp mesajına dönüşür.
-// ocakSaati: "Ocak şu an yanıyor / sönük" canlı durum, gruplu saatler, yaklaşınca yüklenen harita.
-// sis:       bölümler arası şiş ayracı.
-import { esc, telHref, waHref, mapsHref, mapsEmbed, openStatus, groupedHours, icons, gsap, reducedMotion, GUNLER } from '../../shared/core.js';
-import { BOLUMLER, yilEki } from '../_kurumsal/bolumler.js';
+// Kurumsal restoran: "Çini sofra" yönü.
+// kemerHero: künye. Dev Anton başlıkla işletmenin adı, tanımı, adres, bugün, saatler ve telefon; yanında üç kemer
+//            pencerede ocak / köz / meze fotoğrafı, en altta sayfayı boydan boya geçen bir şiş (kaydırdıkça kayar).
+// menuPano:  lacivert çini çerçeveli menü panosu. Fiyat yok; her satırda siparişten masaya bekleme süresi.
+//            Masaüstünde satırın üstüne gelince kemer biçimli fotoğraf imleci takip eder.
+// masaKur:   rezervasyon. Yer (tezgâh / salon / arka salon / paket), kişi, gün, saat, sebep seçilir; yukarıdan
+//            bakılan sofra planı kurulur (sandalye, tabak, meze kâseleri), yanındaki adisyon WhatsApp mesajına dönüşür.
+// ocakSaati: çalışma saatleri ve konum (bugünkü durum, gruplu saatler, yaklaşınca yüklenen harita).
+import { esc, telHref, waHref, mapsHref, mapsEmbed, gunDurumu, saatListesi, kisaAdres, icons, gsap, reducedMotion, GUNLER } from '../../shared/core.js';
 
 const ok = `<svg class="k-ok" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 const rota = (id, metin, cls = 'k-btn') => `<a class="${cls}" href="#/${id}" data-rota="${id}">${metin}</a>`;
@@ -38,30 +35,36 @@ function sisSvg(uzunluk = 1600, cls = '') {
 
 // --- Hero --------------------------------------------------------------------------------
 
+const waMesaj = (d) => d.waMesaj || 'Merhaba, masa ayırtmak istiyorum.';
+const sira = [1, 2, 3, 4, 5, 6, 0];
+const bugunMu = (gunler) => {
+  const g = sira.indexOf(new Date().getDay());
+  const [a, b] = gunler.split('–');
+  const ia = sira.indexOf(GUNLER.indexOf(a));
+  const ib = b ? sira.indexOf(GUNLER.indexOf(b)) : ia;
+  return g >= ia && g <= ib;
+};
+
 export const kemerHero = {
   render(d) {
-    const h = d.kurumsal?.hero || {};
-    const st = d.saatler ? openStatus(d.saatler) : null;
-    const bilgi = [
-      ['Ocak', d.isletme.kurulus ? `${yilEki(d.isletme.kurulus)} beri` : 'Etimesgut'],
-      st ? ['Bugün', st.text] : null,
-      ['Paket sipariş', d.iletisim.telefon],
-    ]
-      .filter(Boolean)
-      .map(([e, v]) => `<div><dt>${esc(e)}</dt><dd>${esc(v)}</dd></div>`)
-      .join('');
+    const b = d.saatler ? gunDurumu(d.saatler) : null;
     const kivilcim = Array.from({ length: 9 }, (_, i) => `<i style="--i:${i}"></i>`).join('');
     return `
-      <section class="k-hero kh" aria-label="Giriş">
+      <section class="k-hero k-hero--kunye kh" aria-label="Künye">
         <div class="k-kap kh__ic">
           <div class="kh__metin">
-            <p class="kh__ust"><span class="kh__durum ${st?.open ? 'is-acik' : ''}">${alev}${esc(st ? (st.open ? 'Ocak yanıyor' : 'Ocak sönük') : d.isletme.sektor)}</span><span>${esc(d.isletme.sektor)}</span></p>
             <h1 class="k-h1 kh__ad${d.isletme.ad.length > 16 ? ' kh__ad--uzun' : ''}" data-bol>${esc(d.isletme.ad)}</h1>
-            <p class="kh__slogan">${esc(d.isletme.slogan)}</p>
-            <p class="k-lead">${esc(h.metin || d.isletme.hakkinda)}</p>
+            <p class="k-lead kh__tanim">${esc(d.isletme.tanim || d.isletme.sektor)}</p>
+            <dl class="k-kunye">
+              <div><dt>Adres</dt><dd>${esc(kisaAdres(d.iletisim.adres))}</dd></div>
+              ${b ? `<div><dt>Bugün</dt><dd><span class="k-durum ${b.open ? 'is-acik' : ''}"><span></span>${esc(b.kunye)}</span></dd></div>` : ''}
+              ${d.saatler ? `<div><dt>Saatler</dt><dd><ul class="kh__saat">${saatListesi(d.saatler).map(([g, s]) => `<li${bugunMu(g) ? ' class="is-bugun"' : ''}><span>${esc(g)}</span> <b>${esc(s)}</b></li>`).join('')}</ul></dd></div>` : ''}
+              <div><dt>Telefon</dt><dd><a href="${telHref(d)}">${esc(d.iletisim.telefon)}</a></dd></div>
+            </dl>
             <div class="k-butonlar">
-              ${rota('rezervasyon', `${esc(h.birincil || 'Masa ayırtın')} ${ok}`)}
-              ${rota(h.ikincilRota || 'menu', esc(h.ikincil || 'Menü'), 'k-btn k-btn--ikincil')}
+              <a class="k-btn" href="${telHref(d)}">${icons.phone}<span>Ara</span></a>
+              <a class="k-btn k-btn--ikincil" href="${waHref(d, waMesaj(d))}" target="_blank" rel="noopener">${icons.whatsapp}<span>WhatsApp</span></a>
+              <a class="k-btn k-btn--ikincil" href="${mapsHref(d)}" target="_blank" rel="noopener">${icons.pin}<span>Yol tarifi</span></a>
             </div>
           </div>
           <div class="kh__kemerler" aria-hidden="true">
@@ -73,17 +76,15 @@ export const kemerHero = {
           </div>
         </div>
         <div class="kh__sis">${sisSvg(2200)}</div>
-        <div class="k-kap"><dl class="k-hero__bilgi">${bilgi}</dl></div>
       </section>`;
   },
   mount(el) {
     if (reducedMotion) return;
     const kemer = el.querySelectorAll('.kh__kemer');
     const tl = gsap.timeline({ delay: 0.2 });
-    tl.fromTo(kemer, { clipPath: 'inset(100% 0 0 0 round 999px 999px 0 0)' }, { clipPath: 'inset(0% 0 0 0 round 999px 999px 0 0)', duration: 1.15, stagger: 0.14, ease: 'power3.inOut' })
+    tl.fromTo(kemer, { clipPath: 'inset(100% 0 0 0 round 999px 999px 0 0)' }, { clipPath: 'inset(0% 0 0 0 round 999px 999px 0 0)', duration: 0.9, stagger: 0.1, ease: 'power3.inOut' })
       .from(el.querySelectorAll('.kh__foto img'), { scale: 1.3, duration: 1.5, stagger: 0.14, ease: 'power3.out' }, 0)
       .from(el.querySelector('.kh__cini'), { scaleX: 0, duration: 0.9, ease: 'power3.inOut' }, 0.5)
-      .from(el.querySelector('.kh__slogan'), { opacity: 0, rotate: -6, y: 12, duration: 0.7, ease: 'back.out(2)' }, 0.9)
       .from(el.querySelector('.kh__sis .sis'), { xPercent: -60, opacity: 0, duration: 1.3, ease: 'power3.out' }, 0.5);
     el.querySelectorAll('[data-kh-y]').forEach((f) =>
       gsap.to(f, { yPercent: -7 * Number(f.dataset.khY), ease: 'none', scrollTrigger: { trigger: el, start: 'top top', end: 'bottom top', scrub: true } })
@@ -99,7 +100,7 @@ export const kemerHero = {
 
 // --- Menü panosu -------------------------------------------------------------------------
 
-const GRUP_AD = { ocak: 'Ocaktan', sofra: 'Sofraya', hizmet: 'Siparişe ve davete' };
+const GRUP_AD = { ocak: 'Ocaktan', sofra: 'Meze, fırın ve tatlı' };
 
 export const menuPano = {
   render(d) {
@@ -113,9 +114,8 @@ export const menuPano = {
         <div class="k-kap">
           <div class="mp__pano">
             <header class="mp__bas">
-              <p class="mp__ust">Menü panosu · her gün</p>
-              <h2 class="k-h2" data-bol>${esc(d.kurumsal?.hizmetOzetBaslik || 'Ocaktan çıkanlar')}</h2>
-              <p class="mp__not">Panoda fiyat yok, süre var: siparişten masaya kaç dakika. Güncel fiyatı telefonda ya da masada söyleriz.</p>
+              <h2 class="k-h2" data-bol>${esc(d.kurumsal?.hizmetOzetBaslik || 'Menü')}</h2>
+              <p class="mp__not">Süre, siparişten masaya ortalama bekleme süresidir. Güncel fiyat için arayın.</p>
             </header>
             <div class="mp__gruplar">
               ${gruplar
@@ -139,7 +139,7 @@ export const menuPano = {
             </div>
             <div class="mp__alt">
               ${rota('menu', `Menünün tamamı ${ok}`, 'k-btn mp__btn')}
-              <a class="k-btn k-btn--ikincil mp__btn2" href="${waHref(d, `Merhaba ${d.isletme.ad}, paket sipariş vermek istiyorum.`)}" target="_blank" rel="noopener">${icons.whatsapp}<span>Paket sipariş</span></a>
+              <a class="k-btn k-btn--ikincil mp__btn2" href="${waHref(d, 'Merhaba, paket sipariş vermek istiyorum.')}" target="_blank" rel="noopener">${icons.whatsapp}<span>Paket sipariş</span></a>
             </div>
           </div>
           <div class="mp__onizleme" aria-hidden="true"><img alt=""></div>
@@ -172,12 +172,12 @@ export const menuPano = {
 // --- Sofra kur (imza) --------------------------------------------------------------------
 
 const YERLER = [
-  { id: 'tezgah', ad: 'Ocak tezgâhı', alt: '1-10 kişi', min: 1, max: 10, bas: 2 },
+  { id: 'tezgah', ad: 'Ocakbaşı tezgâhı', alt: '1-10 kişi', min: 1, max: 10, bas: 2 },
   { id: 'salon', ad: 'Salon', alt: '2-16 kişi', min: 2, max: 16, bas: 4 },
   { id: 'arka', ad: 'Arka salon', alt: '10-40 kişi', min: 10, max: 40, bas: 18 },
   { id: 'paket', ad: 'Paket sipariş', alt: '1-30 kişilik', min: 1, max: 30, bas: 3 },
 ];
-const SEBEPLER = ['Öğle yemeği', 'Aile yemeği', 'İş yemeği', 'Davet / organizasyon'];
+const SEBEPLER = ['Öğle yemeği', 'Aile yemeği', 'İş yemeği', 'Davet'];
 const TESLIM = ['Eve', 'İş yerine', 'Gelip alacağım'];
 const KISA_GUN = ['Paz', 'Pzt', 'Sal', 'Çar', 'Per', 'Cum', 'Cmt'];
 const AY = ['Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran', 'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık'];
@@ -219,7 +219,7 @@ function plan(yer, n) {
     const ara = Math.min(40, (W - 92) / Math.max(n - 1, 1));
     const xs = yay(W / 2 - (ara * (n - 1)) / 2, W / 2 + (ara * (n - 1)) / 2, Math.max(n, 1));
     xs.forEach((x, i) => { s += tabak(x, 114, i); s += koltuk(x, 168, i); });
-    s += `<text class="p-yazi" x="${W / 2}" y="222" text-anchor="middle">şiş közden doğrudan tabağa</text>`;
+    s += `<text class="p-yazi" x="${W / 2}" y="222" text-anchor="middle">ocakbaşı tezgâhı</text>`;
   } else if (yer === 'salon') {
     const masa = Math.ceil(n / 4);
     const kol = Math.min(masa, 2);
@@ -264,7 +264,7 @@ function plan(yer, n) {
         <text class="p-kutu-yazi" y="12" text-anchor="middle">${i % 3 === 2 ? 'LAVAŞ' : i % 3 === 1 ? 'KÖZLEME' : 'KEBAP'}</text>
       </g>`;
     }
-    s += `<text class="p-yazi" x="${W / 2}" y="292" text-anchor="middle">lavaş ayrı · közleme ayrı · ıslanmadan varır</text>`;
+    s += `<text class="p-yazi" x="${W / 2}" y="292" text-anchor="middle">lavaş ve közleme ayrı kapta</text>`;
   }
   return s;
 }
@@ -277,16 +277,15 @@ export const masaKur = {
       <section class="k-bolum mk" id="masa-kur">
         <div class="k-kap">
           <div class="mk__bas">
-            <p class="mk__ust">Rezervasyon · paket · grup</p>
-            <h2 class="k-h2" data-bol>Sofranızı buradan kurun</h2>
-            <p class="k-lead">Nerede oturacağınızı, kaç kişi olduğunuzu ve saati seçin. Masa planı önünüzde kurulsun, adisyonu biz WhatsApp'a hazırlayalım.</p>
+            <h2 class="k-h2" data-bol>Masa ayırtma</h2>
+            <p class="k-lead">Yer, kişi sayısı, gün ve saat seçilince masa planı gösterilir ve WhatsApp mesajı hazırlanır.</p>
           </div>
           <div class="mk__ic">
             <div class="mk__secim">
-              <fieldset class="mk__alan"><legend>Nerede?</legend>
+              <fieldset class="mk__alan"><legend>Yer</legend>
                 <div class="mk__yerler">${YERLER.map((y, i) => `<button type="button" class="mk__yer" data-yer="${y.id}" aria-pressed="${i === 0}"><b>${y.ad}</b><span>${y.alt}</span></button>`).join('')}</div>
               </fieldset>
-              <fieldset class="mk__alan"><legend><span data-kisi-etiket>Kaç kişi?</span></legend>
+              <fieldset class="mk__alan"><legend><span data-kisi-etiket>Kişi sayısı</span></legend>
                 <div class="mk__kisi">
                   <button type="button" class="mk__adim" data-adim="-1" aria-label="Bir kişi azalt">−</button>
                   <output class="mk__sayi" aria-live="polite"><span data-kisi>4</span><small>kişi</small></output>
@@ -294,15 +293,15 @@ export const masaKur = {
                   <input class="mk__kaydir" type="range" min="1" max="10" value="2" aria-label="Kişi sayısı">
                 </div>
               </fieldset>
-              <fieldset class="mk__alan"><legend>Hangi gün?</legend>
+              <fieldset class="mk__alan"><legend>Gün</legend>
                 <div class="mk__gunler" data-lenis-prevent>${g.map((x, i) => `<button type="button" class="mk__gun" data-gun="${i}" aria-pressed="${i === 0}"><span>${x.kisa}</span><b>${x.no}</b></button>`).join('')}</div>
               </fieldset>
               <fieldset class="mk__alan"><legend>Saat</legend><div class="mk__saatler" data-lenis-prevent></div></fieldset>
-              <fieldset class="mk__alan"><legend data-sebep-etiket>Ne için?</legend><div class="mk__sebepler"></div></fieldset>
+              <fieldset class="mk__alan"><legend data-sebep-etiket>Sebep</legend><div class="mk__sebepler"></div></fieldset>
             </div>
             <div class="mk__sahne">
               <div class="mk__plan">
-                <p class="mk__plan-bas"><span data-plan-ad>Ocak tezgâhı</span><span data-plan-sayi></span></p>
+                <p class="mk__plan-bas"><span data-plan-ad>Ocakbaşı tezgâhı</span><span data-plan-sayi></span></p>
                 <svg viewBox="0 0 440 300" role="img" aria-label="Seçtiğiniz masanın yukarıdan görünüşü"><defs>
                   <pattern id="mk-cini" width="40" height="40" patternUnits="userSpaceOnUse"><rect width="40" height="40" class="p-zemin"/><path class="p-desen" d="M20 4 L36 20 L20 36 L4 20 Z M20 12 L28 20 L20 28 L12 20 Z"/></pattern>
                 </defs><rect width="440" height="300" fill="url(#mk-cini)"/><g data-plan></g></svg>
@@ -310,13 +309,12 @@ export const masaKur = {
               <div class="mk__adisyon">
                 <p class="mk__adisyon-bas"><span>${esc(d.isletme.ad)}</span><span>Adisyon</span></p>
                 <ul class="mk__satirlar" data-adisyon></ul>
-                <label class="mk__not"><span>Not</span><input type="text" maxlength="120" placeholder="Acısız iki porsiyon, çocuk sandalyesi…" data-not></label>
+                <label class="mk__not"><span>Not</span><input type="text" maxlength="120" placeholder="Ör. çocuk sandalyesi" data-not></label>
                 <p class="mk__ipucu" data-ipucu hidden></p>
                 <div class="mk__butonlar">
-                  <a class="k-btn mk__gonder" href="#" target="_blank" rel="noopener" data-wa>${icons.whatsapp}<span data-wa-yazi>WhatsApp'tan ayırtın</span></a>
-                  <a class="k-btn k-btn--ikincil" href="${telHref(d)}">${icons.phone}<span>Arayın</span></a>
+                  <a class="k-btn mk__gonder" href="#" target="_blank" rel="noopener" data-wa>${icons.whatsapp}<span data-wa-yazi>WhatsApp'tan gönder</span></a>
+                  <a class="k-btn k-btn--ikincil" href="${telHref(d)}">${icons.phone}<span>Ara</span></a>
                 </div>
-                <span class="mk__muhur" aria-hidden="true">Ocak hazır</span>
               </div>
             </div>
           </div>
@@ -335,13 +333,13 @@ export const masaKur = {
     const saatleriKur = () => {
       const slot = g[durum.gun].slot;
       if (!slot.includes(durum.saat)) durum.saat = slot.find((s) => s >= '19:30') || slot[Math.floor(slot.length / 2)];
-      $('.mk__saatler').innerHTML = slot.map((s) => `<button type="button" class="mk__saat" data-saat="${s}" aria-pressed="${s === durum.saat}">${s}</button>`).join('');
+      $('.mk__saatler').innerHTML = slot.map((s) => `<button type="button" class="mk__saat" data-saat="${s}" aria-pressed="${s === durum.saat}">${s.replace(':', '.')}</button>`).join('');
     };
     const sebepleriKur = () => {
       const paket = durum.yer === 'paket';
       const l = paket ? TESLIM : SEBEPLER;
       if (!l.includes(durum.sebep)) durum.sebep = l[0];
-      $('[data-sebep-etiket]').textContent = paket ? 'Nereye?' : 'Ne için?';
+      $('[data-sebep-etiket]').textContent = paket ? 'Teslim' : 'Sebep';
       $('.mk__sebepler').innerHTML = l.map((s) => `<button type="button" class="mk__sebep" data-sebep="${esc(s)}" aria-pressed="${s === durum.sebep}">${esc(s)}</button>`).join('');
     };
 
@@ -351,7 +349,7 @@ export const masaKur = {
       kaydir.min = y.min; kaydir.max = y.max; kaydir.value = durum.kisi;
       kaydir.style.setProperty('--dolu', `${((durum.kisi - y.min) / (y.max - y.min)) * 100}%`);
       $('[data-kisi]').textContent = durum.kisi;
-      $('[data-kisi-etiket]').textContent = durum.yer === 'paket' ? 'Kaç kişilik?' : 'Kaç kişi?';
+      $('[data-kisi-etiket]').textContent = durum.yer === 'paket' ? 'Kaç kişilik' : 'Kişi sayısı';
       $('[data-plan-ad]').textContent = y.ad;
       $('[data-plan-sayi]').textContent = `${durum.kisi} ${durum.yer === 'paket' ? 'kişilik paket' : 'kişi'}`;
       el.querySelectorAll('[data-yer]').forEach((b) => b.setAttribute('aria-pressed', b.dataset.yer === durum.yer));
@@ -386,33 +384,31 @@ export const masaKur = {
         ['Yer', y.ad],
         [paket ? 'Porsiyon' : 'Kişi', `${durum.kisi} ${paket ? 'kişilik' : 'kişi'}`],
         ['Gün', gun.uzun],
-        [paket ? 'Teslim' : 'Saat', durum.saat],
+        [paket ? 'Teslim' : 'Saat', durum.saat.replace(':', '.')],
         [paket ? 'Nereye' : 'Sebep', durum.sebep],
       ];
       $('[data-adisyon]').innerHTML = satir.map(([a, b]) => `<li><span>${esc(a)}</span><b>${esc(b)}</b></li>`).join('');
       const not = $('[data-not]').value.trim();
       const mesaj = [
-        `Merhaba ${d.isletme.ad}, ${paket ? 'paket sipariş vermek' : 'rezervasyon yapmak'} istiyorum.`,
+        `Merhaba, ${paket ? 'paket sipariş vermek' : 'masa ayırtmak'} istiyorum.`,
         ...satir.map(([a, b]) => `${a}: ${b}`),
         not ? `Not: ${not}` : '',
       ].filter(Boolean).join('\n');
       $('[data-wa]').href = waHref(d, mesaj);
-      $('[data-wa-yazi]').textContent = paket ? "WhatsApp'tan sipariş verin" : "WhatsApp'tan ayırtın";
+      $('[data-wa-yazi]').textContent = "WhatsApp'tan gönder";
 
       // İpucu
       const gunFark = gun.i;
       const hs = gun.t.getDay() === 5 || gun.t.getDay() === 6;
       let ipucu = '';
-      if (!paket && durum.sebep === 'Davet / organizasyon' && gunFark < 3) ipucu = 'Davetleri 3-5 gün önceden konuşmak iyi olur. Yine de yazın, bakalım.';
-      else if (durum.yer === 'arka' && gunFark < 1) ipucu = 'Arka salon için 1-2 gün önceden haber verirseniz sofra kurulu bekler.';
-      else if (durum.yer === 'arka' && durum.kisi >= 40) ipucu = '40 kişiden kalabalıksanız arayın, birlikte bakalım.';
-      else if (durum.yer === 'tezgah' && hs && durum.saat >= '19:00') ipucu = 'Cuma ve cumartesi akşamı tezgâh erken dolar; iyi ki önceden yazıyorsunuz.';
-      else if (durum.yer === 'salon' && durum.kisi >= 16) ipucu = 'Daha kalabalıksanız arka salonu seçin.';
-      else if (paket && durum.sebep !== 'Gelip alacağım') ipucu = 'Adresinizi WhatsApp mesajına ekleyin; kaç dakikada varacağını hemen söyleriz.';
+      if (!paket && durum.sebep === 'Davet' && gunFark < 3) ipucu = 'Davetler 3–5 gün önceden konuşulur.';
+      else if (durum.yer === 'arka' && gunFark < 1) ipucu = 'Arka salon için 1–2 gün önceden haber verilir.';
+      else if (durum.yer === 'arka' && durum.kisi >= 40) ipucu = '40 kişiden kalabalık gruplar için telefonla bilgi alın.';
+      else if (durum.yer === 'tezgah' && hs && durum.saat >= '19:00') ipucu = 'Cuma ve cumartesi akşamları ocakbaşı tezgâhı erken dolar.';
+      else if (durum.yer === 'salon' && durum.kisi >= 16) ipucu = '16 kişiden kalabalık gruplar arka salona alınır.';
+      else if (paket && durum.sebep !== 'Gelip alacağım') ipucu = 'Adres mesaja eklenince varış süresi bildirilir.';
       const ip = $('[data-ipucu]');
       ip.hidden = !ipucu; ip.textContent = ipucu;
-      const muhur = $('.mk__muhur');
-      if (!reducedMotion) gsap.fromTo(muhur, { scale: 1.6, opacity: 0, rotate: -30 }, { scale: 1, opacity: 1, rotate: -12, duration: 0.35, ease: 'power4.in', overwrite: true });
     }
 
     el.addEventListener('click', (e) => {
@@ -452,8 +448,8 @@ export const masaKur = {
     ciz();
 
     if (!reducedMotion) {
-      gsap.from(el.querySelector('.mk__adisyon'), { y: 50, rotate: 4, opacity: 0, duration: 0.9, ease: 'back.out(1.3)', scrollTrigger: { trigger: el.querySelector('.mk__sahne'), start: 'top 80%', once: true } });
-      gsap.from(el.querySelectorAll('.mk__alan'), { y: 26, opacity: 0, duration: 0.6, stagger: 0.07, ease: 'power2.out', scrollTrigger: { trigger: el.querySelector('.mk__secim'), start: 'top 85%', once: true } });
+      gsap.from(el.querySelector('.mk__adisyon'), { y: 50, rotate: 4, opacity: 0, duration: 0.9, ease: 'back.out(1.3)', scrollTrigger: { trigger: el.querySelector('.mk__sahne'), start: 'top 80%', toggleActions: 'play none none none' } });
+      gsap.from(el.querySelectorAll('.mk__alan'), { y: 26, opacity: 0, duration: 0.6, stagger: 0.07, ease: 'power2.out', scrollTrigger: { trigger: el.querySelector('.mk__secim'), start: 'top 85%', toggleActions: 'play none none none' } });
     }
   },
 };
@@ -461,19 +457,19 @@ export const masaKur = {
 // --- Ocak saati: canlı durum + saatler + harita ---------------------------------------------
 
 export const ocakSaati = {
+  konumYerine: true,
   render(d) {
     if (!d.saatler) return '';
-    const st = openStatus(d.saatler);
-    const bugun = new Date().getDay();
+    const b = gunDurumu(d.saatler);
     return `
       <section class="k-bolum os">
         <div class="k-kap os__ic">
-          <div class="os__durum ${st.open ? 'is-acik' : ''}">
+          <div class="os__durum ${b.open ? 'is-acik' : ''}">
             <div class="os__alev">${alev}</div>
-            <p class="os__ust">Şu an</p>
-            <h2 class="k-h2" data-bol>${st.open ? 'Ocak yanıyor' : 'Ocak sönük'}</h2>
-            <p class="os__metin">${esc(st.text)}${/^bugün/i.test(st.text) ? '' : `. Bugün ${esc(GUNLER[bugun])}`}.</p>
-            <dl class="os__saatler">${groupedHours(d.saatler).map(([gun, s]) => `<div><dt>${esc(gun)}</dt><dd>${esc(s)}</dd></div>`).join('')}</dl>
+            <h2 class="k-h2" data-bol>Çalışma saatleri ve konum</h2>
+            <p class="os__metin">${esc(b.metin)}</p>
+            <dl class="os__saatler">${saatListesi(d.saatler).map(([gun, s]) => `<div${bugunMu(gun) ? ' class="is-bugun"' : ''}><dt>${esc(gun)}</dt><dd>${esc(s)}</dd></div>`).join('')}</dl>
+            <p class="os__not">Son sipariş kapanıştan yarım saat önce alınır.</p>
           </div>
           <div class="os__konum">
             <p class="os__ust">Adres</p>
@@ -482,7 +478,7 @@ export const ocakSaati = {
               <a class="k-btn" href="${mapsHref(d)}" target="_blank" rel="noopener">${icons.pin}<span>Yol tarifi</span></a>
               <a class="k-btn k-btn--ikincil" href="${telHref(d)}">${icons.phone}<span>${esc(d.iletisim.telefon)}</span></a>
             </div>
-            <div class="os__harita" data-harita><p>Harita yaklaşınca yüklenir</p></div>
+            <div class="os__harita" data-harita><p>Harita</p></div>
           </div>
         </div>
       </section>`;
@@ -499,22 +495,3 @@ export const ocakSaati = {
   },
 };
 
-// --- Şiş ayracı --------------------------------------------------------------------------
-
-export const sis = {
-  render() {
-    return `<div class="sis-ayrac" aria-hidden="true">${sisSvg(2400)}</div>`;
-  },
-  mount(el) {
-    if (reducedMotion) return;
-    gsap.fromTo(el.querySelector('.sis'), { x: -60 }, { x: -520, ease: 'none', scrollTrigger: { trigger: el, start: 'top bottom', end: 'bottom top', scrub: true } });
-  },
-};
-
-// --- Menü sayfası: motor bölümü, "teklif" yerine sipariş dili -----------------------------------
-
-export const hizmetler = {
-  render(d, ctx, sorgu) {
-    return BOLUMLER.hizmetler.render(d, ctx, sorgu).replaceAll('Bu hizmet için teklif isteyin', 'Bunun için yazın');
-  },
-};
