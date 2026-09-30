@@ -1,0 +1,14 @@
+{
+  "preset": "bakim-kinetik",
+  "yakitlar": [
+    { "id": "benzinli", "ad": "Benzinli", "mesaj": "benzinli" },
+    { "id": "dizel", "ad": "Dizel", "mesaj": "dizel" },
+    { "id": "lpg", "ad": "LPG'li", "mesaj": "LPG'li" },
+    { "id": "hibrit", "ad": "Hibrit", "mesaj": "hibrit" }
+  ],
+  "gorseller": {
+    "salon": { "src": "/img/bakim-kinetik/salon.jpg", "alt": "Aydınlık serviste lifte alınmış araç", "w": 1600, "h": 1066 },
+    "motor": { "src": "/img/bakim-kinetik/motor.jpg", "alt": "Kaputu açık araçta motor yağı doldurulması", "w": 1600, "h": 1066 },
+    "fren": { "src": "/img/bakim-kinetik/fren.jpg", "alt": "Tekerleği sökülmüş araçta fren diski ve kaliper", "w": 1600, "h": 1068 }
+  }
+}

@@ -1,0 +1,8 @@
+Tüm fotoğraflar Pexels lisansıyla (ücretsiz ticari kullanım, atıf gerekmez): https://www.pexels.com/license/
+
+filo.jpg    https://www.pexels.com/photo/white-vans-parked-on-gray-concrete-road-4620555/ (alt kısmı kırpıldı)
+            ızgaralardaki marka amblemleri bulanıklaştırıldı; plakalar kaynakta boş
+lift.jpg    https://www.pexels.com/photo/mechanic-working-under-car-in-repair-shop-32152037/
+            atık yağ bidonundaki İngilizce etiket ve dolap etiketleri bulanıklaştırıldı
+servis.jpg  https://www.pexels.com/photo/car-maintenance-in-a-modern-auto-repair-shop-32152039/
+            lift kolonundaki marka yazısı, etiketler, araç amblemi ve arkadaki plaka bulanıklaştırıldı

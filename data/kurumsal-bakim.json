@@ -1,0 +1,208 @@
+{
+  "preset": "kurumsal-bakim",
+  "galeri": [],
+  "istatistikler": [
+    {
+      "deger": 0,
+      "sonek": " yıl",
+      "etiket": "Şaşmaz Oto Sanayi Sitesi'nde",
+      "kurulustanHesapla": true
+    },
+    {
+      "deger": 0,
+      "sonek": " gün",
+      "etiket": "haftada açık",
+      "saatlerdenHesapla": true
+    }
+  ],
+  "kurumsal": {
+    "ozet": {
+      "baslik": "Hakkında",
+      "metin": "Şaşmaz Oto Sanayi Sitesi'nde binek ve hafif ticari araçların periyodik bakımı, mekanik ve elektrik onarımı yapılır. Periyodik bakım randevuyla yapılır, arıza tespiti için randevu gerekmez."
+    },
+    "konumBaslik": "Çalışma saatleri ve konum",
+    "yorumBaslik": "Örnek yorumlar",
+    "cta": {
+      "baslik": "İletişim",
+      "metin": "Fiyat ve randevu için arayın ya da formdan yazın.",
+      "buton": "İletişim formu"
+    },
+    "surecBaslik": "Çalışma sırası",
+    "bilgiBaslik": "Genel bilgiler",
+    "markaBaslik": "Bakım yapılan markalar",
+    "hakkimizda": {
+      "baslik": "Hakkında",
+      "paragraflar": [
+        "Serviste benzinli, dizel, LPG'li ve hibrit binek araçlarla hafif ticari araçların bakım ve onarımı yapılır. Periyodik bakımın yanı sıra motor, şanzıman, fren, süspansiyon, klima ve elektrik işlerine de bakılır.",
+        "İki ve dört direkli lift, arıza tespit cihazı, rot ayar cihazı, balans makinesi ve klima gaz makinesiyle çalışılır. Yapılan her iş plakayla kaydedilir, araç bir sonraki bakıma geldiğinde bu kayda bakılır."
+      ],
+      "gorsel": "/img/kurumsal-bakim/hakkinda.jpg",
+      "gorselAlt": "Lifte kaldırılmış araç ve arkada takım dolapları"
+    },
+    "kabul": [
+      [
+        "Periyodik bakım",
+        "Randevuyla"
+      ],
+      [
+        "Arıza tespiti",
+        "Randevu gerekmez"
+      ]
+    ],
+    "grupEk": {
+      "bakim": {
+        "metin": "Yağ ve filtreler kilometresine göre değiştirilir, araç muayeneden önce baştan sona kontrol edilir. Yapılan işler bakım kaydına yazılır.",
+        "gorsel": "/img/kurumsal-bakim/bakim.jpg",
+        "gorselAlt": "Kaputu açık araçta yağ seviyesi kontrolü",
+        "sikayet": [
+          [
+            "Servis uyarısı yandı",
+            "Periyodik bakım"
+          ],
+          [
+            "Yağ değişiminin kilometresi geldi",
+            "Yağ ve filtre değişimi"
+          ],
+          [
+            "Muayene tarihi yaklaştı",
+            "Muayene öncesi kontrol"
+          ]
+        ]
+      },
+      "motor": {
+        "metin": "Motor, triger, debriyaj ve şanzıman işleri yapılır. Arıza ölçülerek bulunur, onarımdan sonra araç yol testine çıkarılır.",
+        "gorsel": "/img/kurumsal-bakim/motor.jpg",
+        "gorselAlt": "Kaputu açık araçta motor kontrolü",
+        "sikayet": [
+          [
+            "Motor tekliyor ya da çekişten düştü",
+            "Motor onarımı"
+          ],
+          [
+            "Triger değişiminin zamanı geldi",
+            "Triger seti değişimi"
+          ],
+          [
+            "Vites zor geçiyor, debriyaj kaçırıyor",
+            "Debriyaj ve şanzıman"
+          ]
+        ]
+      },
+      "alt": {
+        "metin": "Fren, süspansiyon, lastik ve egzoz işlerine bakılır. Araç lifte alınıp kontrol edilir, iş bitince gerekiyorsa rot ayarı yapılır.",
+        "gorsel": "/img/kurumsal-bakim/alt.jpg",
+        "gorselAlt": "Lifteki araçta fren diski ve kaliper kontrolü",
+        "sikayet": [
+          [
+            "Frenden ses geliyor",
+            "Fren sistemi"
+          ],
+          [
+            "Tümsekte ses var",
+            "Süspansiyon ve direksiyon"
+          ],
+          [
+            "Direksiyon titriyor, araç bir yana çekiyor",
+            "Lastik ve rot-balans"
+          ],
+          [
+            "Egzozdan ses geliyor",
+            "Egzoz"
+          ]
+        ]
+      },
+      "elektrik": {
+        "metin": "Arıza tespiti, akü, klima, soğutma ve aydınlatma işleri yapılır. Hata kodları cihazla okunur, arızanın yeri ölçülerek bulunur.",
+        "gorsel": "/img/kurumsal-bakim/elektrik.jpg",
+        "gorselAlt": "Elinde arıza tespit tableti tutan usta",
+        "sikayet": [
+          [
+            "Arıza lambası yandı",
+            "Arıza tespiti"
+          ],
+          [
+            "Araç sabahları zor çalışıyor",
+            "Akü, marş ve şarj"
+          ],
+          [
+            "Klima serin üflemiyor",
+            "Klima bakımı"
+          ],
+          [
+            "Hararet yapıyor",
+            "Soğutma sistemi"
+          ],
+          [
+            "Farlar zayıf yakıyor",
+            "Far ve aydınlatma"
+          ]
+        ]
+      }
+    },
+    "randevu": {
+      "isler": [
+        "Periyodik bakım",
+        "Arıza tespiti",
+        "Fren sistemi",
+        "Muayene öncesi kontrol",
+        "Klima bakımı",
+        "Lastik ve rot-balans"
+      ],
+      "gunSayisi": 10,
+      "not": "Bu sayfa randevu kaydetmez. Seçilen gün ve saat, WhatsApp mesajı olarak gönderilir; randevu işletmenin yanıtıyla kesinleşir."
+    },
+    "sssBaslik": "Periyodik bakım",
+    "sss": [
+      {
+        "soru": "Periyodik bakım ne kadar sürer?",
+        "cevap": "Yağ ve filtre değişimiyle birlikte genel kontrol 1–2 saat sürer. Triger seti gibi ek bir iş çıkarsa yapılacak iş ve süresi araç sahibine söylenir."
+      },
+      {
+        "soru": "Bakım kitapçığı yoksa aralık nasıl belirlenir?",
+        "cevap": "Aracın markası, motoru ve kilometresine göre üreticinin önerdiği aralığa bakılır. Önceki bakımın kaydı varsa o da dikkate alınır."
+      },
+      {
+        "soru": "Hangi motor yağı kullanılır?",
+        "cevap": "Aracın bakım kitapçığında yazan viskozite ve normdaki yağ kullanılır. Orijinal ya da muadil parça seçimi araç sahibine bırakılır."
+      },
+      {
+        "soru": "Servis uyarısı sıfırlanır mı?",
+        "cevap": "Bakımdan sonra gösterge panelindeki servis uyarısı cihazla sıfırlanır, yapılan işler bakım kaydına yazılır."
+      },
+      {
+        "soru": "Randevu gerekiyor mu?",
+        "cevap": "Periyodik bakım randevuyla yapılır. Arıza tespiti için randevu gerekmez."
+      }
+    ],
+    "sayfalar": {
+      "hizmetler": {
+        "baslik": "Hizmetler",
+        "metin": "Dört grupta 15 hizmet. Süreler yaklaşıktır, araca göre değişir."
+      },
+      "periyodik-bakim": {
+        "baslik": "Periyodik bakım",
+        "metin": "Kilometre ve son bakımın zamanı girilince sıradaki bakımda yapılacak işler listelenir."
+      },
+      "randevu": {
+        "baslik": "Randevu",
+        "metin": "İş, gün ve saat seçilince randevu isteği WhatsApp mesajı olarak hazırlanır. Yalnız açık günler ve saatler listelenir."
+      },
+      "hakkinda": {
+        "baslik": "Hakkında",
+        "metin": "Şaşmaz Oto Sanayi Sitesi'nde genel bakım ve onarım"
+      },
+      "iletisim": {
+        "baslik": "İletişim",
+        "metin": "Fiyat ve randevu için arayın ya da formdan yazın."
+      }
+    },
+    "konular": [
+      "Randevu",
+      "Periyodik bakım",
+      "Arıza",
+      "Fiyat bilgisi",
+      "Genel bilgi"
+    ],
+    "formBaslik": "Mesaj gönderin"
+  }
+}

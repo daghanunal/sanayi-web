@@ -1,0 +1,11 @@
+Tüm fotoğraflar Pexels lisansıyla (ücretsiz ticari kullanım, atıf gerekmez): https://www.pexels.com/license/
+
+hero.jpg      https://www.pexels.com/photo/car-repair-and-maintenance-workshop-interior-33814734/
+              plaka, araç rozeti ve lift üzerindeki marka yazısı bulanıklaştırıldı
+bakim.jpg     https://www.pexels.com/photo/a-mechanic-fixing-a-car-8985707/ (kırpıldı)
+motor.jpg     https://www.pexels.com/photo/mechanic-working-with-car-engine-10490611/
+alt.jpg       https://www.pexels.com/photo/man-in-blue-uniform-fixing-the-car-s-brake-system-6870307/
+elektrik.jpg  https://www.pexels.com/photo/man-in-blue-coveralls-holding-an-automotive-diagnostic-tool-6870326/ (kırpıldı)
+              tabletteki üretici adı ve araç amblemi bulanıklaştırıldı
+hakkinda.jpg  https://www.pexels.com/photo/white-car-for-maintenance-check-up-8986130/
+              araç model yazısı, duvardaki marka afişi ve takım dolabı yazıları bulanıklaştırıldı

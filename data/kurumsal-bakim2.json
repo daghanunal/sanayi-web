@@ -1,0 +1,150 @@
+{
+  "preset": "kurumsal-bakim2",
+  "galeri": [],
+  "istatistikler": [
+    { "deger": 0, "sonek": " yıl", "etiket": "Şaşmaz Oto Sanayi Sitesi'nde", "kurulustanHesapla": true },
+    { "deger": 0, "sonek": " gün", "etiket": "haftada açık", "saatlerdenHesapla": true }
+  ],
+  "kurumsal": {
+    "hizmetOzetBaslik": "Hizmetler",
+    "ozet": {
+      "baslik": "Hakkında",
+      "metin": "Şaşmaz Oto Sanayi Sitesi'nde binek ve hafif ticari araçların bakım ve onarımı yapılır. Şahıs araçlarının yanı sıra şirket, servis ve kiralama araçları da gelir; her aracın bakım kaydı plakayla tutulur."
+    },
+    "konumBaslik": "Çalışma saatleri ve konum",
+    "yorumBaslik": "Örnek yorumlar",
+    "cta": {
+      "baslik": "İletişim",
+      "metin": "Filo bakım planı, fiyat ve randevu için arayın ya da formdan yazın.",
+      "buton": "İletişim formu"
+    },
+    "hizmetLink": "Bu hizmet için bilgi alın",
+    "surecBaslik": "Çalışma sırası",
+    "bilgiBaslik": "Genel bilgiler",
+    "markaBaslik": "Bakım yapılan markalar",
+    "anlasmaBaslik": "Kurumsal müşteriler",
+    "anlasmaMetin": "Şirket, servis ve kiralama araçlarının bakımı yıllık plana göre yapılır. Her aracın kaydı plakayla ayrı tutulur.",
+    "anlasmalar": [
+      {
+        "baslik": "Yıllık bakım planı",
+        "kisa": "Araç sayısı ve kilometreye göre bakım takvimi çıkarılır.",
+        "metin": "Filodaki araçların türüne, sayısına ve yıllık kilometresine göre on iki aylık bakım takvimi hazırlanır. Bakım günleri araçların boşta olduğu saatlere göre ayarlanır.",
+        "maddeler": ["Araç araç bakım ayları", "Ayı gelen araçların listesi", "İş saatlerine göre ayarlanan bakım günleri"],
+        "buton": "Plan için bilgi alın"
+      },
+      {
+        "baslik": "Plakaya göre bakım kaydı",
+        "kisa": "Yapılan işler ve değişen parçalar araç araç kaydedilir.",
+        "metin": "Her aracın yapılan işleri, değişen parçaları, kabul ve teslim kilometresi plakayla kaydedilir. Kayıt istendiğinde araç araç yazılı verilir.",
+        "maddeler": ["Plakaya göre iş ve parça kaydı", "Kabul ve teslim kilometresi", "Sıradaki bakımın kilometresi ve ayı"],
+        "buton": "Kayıt için bilgi alın"
+      },
+      {
+        "baslik": "Muayene ve mevsim kontrolleri",
+        "kisa": "Muayenesi yaklaşan araçlar önceden kontrol edilir.",
+        "metin": "Muayene tarihi yaklaşan araçlar muayeneden önce kontrol edilir. Kış gelmeden akü, antifriz ve lastik kontrolleri bütün araçlarda topluca yapılır.",
+        "maddeler": ["Muayene öncesi kontrol", "Kış öncesi akü ve antifriz kontrolü", "Mevsim lastiği değişimi ve rot-balans"],
+        "buton": "Kontrol günü için bilgi alın"
+      }
+    ],
+    "anlasmaNotu": "Koşullar araç sayısına ve türüne göre konuşulur. Fiyat bilgisi için arayın.",
+    "hakkimizda": {
+      "baslik": "Hakkında",
+      "paragraflar": [
+        "Serviste benzinli, dizel, LPG'li ve hibrit binek araçlarla hafif ticari araçların bakım ve onarımı yapılır. Şahıs araçlarının yanı sıra şirket, servis ve kiralama araçları da gelir.",
+        "Her aracın yapılan işleri ve değişen parçaları plakayla kaydedilir; araç bir sonraki bakıma geldiğinde bu kayda bakılır. Periyodik bakım randevuyla yapılır, arıza için randevu gerekmez."
+      ],
+      "gorsel": "/img/kurumsal-bakim2/servis.jpg",
+      "gorselAlt": "Lifte kaldırılmış kaputu açık araç ve atık yağ bidonu"
+    },
+    "sssBaslik": "Filo bakımı",
+    "sss": [
+      {
+        "soru": "Filo bakım planı nasıl hazırlanır?",
+        "cevap": "Araçların türü, sayısı, yıllık kilometresi ve son bakım tarihleri alınır, her araç için bakım ayları çıkarılır. Plan, araçların kullanımına göre birlikte gözden geçirilir."
+      },
+      {
+        "soru": "Hangi araçlara bakılır?",
+        "cevap": "Benzinli, dizel, LPG'li ve hibrit binek araçlarla hafif ticari araçlara bakılır."
+      },
+      {
+        "soru": "Bakım kayıtları nasıl verilir?",
+        "cevap": "Her aracın kaydı plakayla tutulur. Kayıt istendiğinde araç araç yazılı verilir."
+      },
+      {
+        "soru": "Parça seçimi kime bırakılır?",
+        "cevap": "Orijinal ya da muadil parça seçimi araç sahibine bırakılır. Seçim araç kaydına yazılır."
+      },
+      {
+        "soru": "Bakım günleri nasıl belirlenir?",
+        "cevap": "Periyodik bakım randevuyla yapılır. Günler ve saatler, araçların boşta olduğu zamanlara göre çalışma saatleri içinde ayarlanır."
+      }
+    ],
+    "filo": {
+      "turler": [
+        { "id": "binek-d", "ad": "Binek, dizel", "yakit": "dizel" },
+        { "id": "binek-b", "ad": "Binek, benzinli", "yakit": "benzinli" },
+        { "id": "binek-l", "ad": "Binek, LPG'li", "yakit": "lpg" },
+        { "id": "hibrit", "ad": "Binek, hibrit", "yakit": "hibrit" },
+        { "id": "ticari", "ad": "Hafif ticari, dizel", "yakit": "dizel" }
+      ],
+      "kmSecenek": [10000, 15000, 20000, 25000, 30000, 40000, 50000, 60000, 80000],
+      "aralikKm": 15000,
+      "aralikAy": 12,
+      "baslangic": [
+        { "id": "0", "ad": "Bu ay" },
+        { "id": "1", "ad": "Gelecek ay" }
+      ],
+      "ornek": [
+        { "tur": "binek-d", "adet": 8, "km": 30000 },
+        { "tur": "ticari", "adet": 3, "km": 50000 }
+      ],
+      "not": "Plan, genel bakım aralığına (15 bin km ya da yılda bir, hangisi önce gelirse) göre hesaplanır. Aralıklar geneldir; aracın bakım kitapçığına ve kullanımına göre değişir. Fiyat içermez."
+    },
+    "kayit": {
+      "alanlar": [
+        ["Plaka", "Kaydın anahtarı. Aynı aracın bütün işleri bu plaka altında toplanır."],
+        ["Araç", "Marka, model, model yılı ve motor tipi yazılır."],
+        ["Kabul", "Tarih, kilometre ve araç sahibinin şikâyeti not edilir."],
+        ["Yapılan işler", "Yapılan her iş ayrı satırda yazılır."],
+        ["Değişen parçalar", "Parçanın adı, orijinal ya da muadil olduğu yazılır. Eski parça araç sahibine verilir."],
+        ["Teslim", "Yol testinden sonra teslim kilometresi ve tarihi yazılır."],
+        ["Sıradaki bakım", "Bir sonraki bakımın kilometresi ve ayı yazılır."]
+      ],
+      "istekler": [
+        { "id": "son", "ad": "Son bakım kaydı", "mesaj": "son bakım kaydını" },
+        { "id": "tum", "ad": "Bütün kayıtlar", "mesaj": "bütün bakım kayıtlarını" },
+        { "id": "sira", "ad": "Sıradaki bakım", "mesaj": "sıradaki bakımının kilometresini ve ayını" }
+      ]
+    },
+    "sayfalar": {
+      "hizmetler": {
+        "baslik": "Hizmetler",
+        "metin": "Süreler yaklaşıktır, araca göre değişir. Fiyat ve randevu için arayın."
+      },
+      "filo-plani": {
+        "baslik": "Filo bakım planı",
+        "metin": "Araç türü, sayısı ve yıllık kilometre girilince on iki aylık bakım takvimi çıkar. Plan fiyat içermez."
+      },
+      "kurumsal-musteriler": {
+        "baslik": "Kurumsal müşteriler",
+        "metin": "Şirket, servis ve kiralama araçlarının bakımı yıllık plana göre yapılır.",
+        "gorsel": "/img/kurumsal-bakim2/filo.jpg"
+      },
+      "arac-kaydi": {
+        "baslik": "Araç kaydı",
+        "metin": "Her araç için tutulan bakım kaydının düzeni. Plaka yazılarak kayıt istenebilir."
+      },
+      "hakkinda": {
+        "baslik": "Hakkında",
+        "metin": "Şaşmaz Oto Sanayi Sitesi'nde genel bakım ve onarım"
+      },
+      "iletisim": {
+        "baslik": "İletişim",
+        "metin": "Filo bakım planı, fiyat ve randevu için arayın ya da formdan yazın."
+      }
+    },
+    "konular": ["Filo bakım planı", "Araç kaydı", "Randevu", "Fiyat bilgisi", "Genel bilgi"],
+    "formBaslik": "Mesaj gönderin"
+  }
+}
