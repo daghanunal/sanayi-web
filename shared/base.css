@@ -20,6 +20,13 @@ html.lenis, html.lenis body { height: auto; }
   position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
   overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
 }
+/* Yatay kaydırıcı (overflow-x: auto şerit, kart rayı): .sr-only mutlak konumlu olduğu için en yakın konumlu
+   ataya göre yerleşir. Kaydırıcı konumlu değilse ekran dışındaki öğedeki 1 px'lik kutu kaydırıcının kırpmasından
+   kaçar ve sayfayı yatay genişletir (h-overflow). Kaydırıcıya bu sınıfı ya da niteliği ver: kendisi ve öğeleri
+   konumlanır, .sr-only kaydırıcının içinde kalır. Ayrıntı: docs/phone-contract.md, kalıp 9. */
+/* :where → özgüllük 0: presetin kendi position kuralı (sticky, absolute) her zaman kazanır. */
+:where(.yatay-kaydirici, [data-yatay-kaydirici]),
+:where(.yatay-kaydirici, [data-yatay-kaydirici]) > * { position: relative; }
 
 /* Mobil aksiyon çubuğu: telefonda altta sabit, masaüstünde gizli. */
 .action-bar {

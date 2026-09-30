@@ -158,6 +158,20 @@ Perde en fazla ~1,5 sn; kaydırma kilidi (`lenis.stop()`, `overflow: hidden`) 3 
 kullanıcı dokununca/kaydırınca perde hemen kalkar. `prefers-reduced-motion` ve vitrin modunda
 perde gösterilmez.
 
+### 9. Yatay kaydırıcıda `.sr-only`
+
+`.sr-only` `position: absolute` olduğu için en yakın konumlu ataya göre yerleşir. Yatay kaydırıcı
+(`overflow-x: auto` şerit, kart rayı) ve öğeleri konumlu değilse, ekran dışındaki öğedeki 1 px'lik kutu
+kaydırıcının kırpmasından kaçar ve sayfayı yatay genişletir (`h-overflow`). Kaydırıcıya ortak sınıfı ya da
+niteliği ver (`shared/base.css`, özgüllük 0; presetin kendi `position` kuralı kazanır):
+
+```html
+<ul class="rail yatay-kaydirici"> <li>… <span class="sr-only">…</span></li> </ul>
+<!-- ya da --> <ul class="rail" data-yatay-kaydirici> … </ul>
+```
+
+Kaydırıcı zaten `position: relative | absolute | sticky` ise gerek yok.
+
 ## Kontrol listesi (preset başına)
 
 - [ ] Aynı anda en fazla 1 üst + 1 alt sabit öğe (ux-audit `stack`).
@@ -165,7 +179,7 @@ perde gösterilmez.
 - [ ] HUD etiketleri başlıkla çakışmıyor (`label-collision`, `text-covered-anchored`, `text-overlap`).
 - [ ] Görünmez katman yok (`tap-blocked-invisible`).
 - [ ] Pin ≤ 3 ekran (`pin-long`), giriş ≤ 3 sn (`intro-block`).
-- [ ] 360 px'te taşma/kırpılma yok (`h-overflow`, `text-offscreen`, `text-clipped`).
+- [ ] 360 px'te taşma/kırpılma yok (`h-overflow`, `text-offscreen`, `text-clipped`); yatay kaydırıcıda `.sr-only` varsa kaydırıcı konumlu (kalıp 9).
 - [ ] Konsol hatası ve 404 yok.
 
 ## Denetimi çalıştırmak

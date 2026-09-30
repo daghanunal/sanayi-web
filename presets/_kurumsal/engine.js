@@ -2,7 +2,7 @@
 // Varyant: kurumsal({ veri, tema, sayfalar, ekstralar, ld, aksiyon }) çağırır; gerisi burada.
 // Ayrıntılar: ./README.md
 import './base.css';
-import { boot, initSmoothScroll, reducedMotion, vitrinModu, icons, gsap, ScrollTrigger, autoHideHeader } from '../../shared/core.js';
+import { boot, initSmoothScroll, reducedMotion, vitrinModu, icons, gsap, ScrollTrigger, autoHideHeader, setBarMesaj } from '../../shared/core.js';
 import { SplitText } from 'gsap/SplitText';
 import { BOLUMLER, sayfaBasligi, yilEki, tanimMetni, duz } from './bolumler.js';
 
@@ -21,18 +21,24 @@ export const VARSAYILAN_SAYFALAR = [
 ];
 
 // "Çalışma saatleri ve konum" ana sayfada varsayılan: sayfa listesinde `konum` yoksa ana sayfaya,
-// "Örnek yorumlar"dan (yoksa CTA'dan) önce eklenir. Eklenmez: `tema.konum: false`; `konum` başka bir
-// sayfada; ana sayfada `iletisim` var; ana sayfada saatleri zaten gösteren bir varyant modülü var
-// (modül `konumYerine: true` der ya da kodu `saatler` verisini okur: mesai, saat, bugün, nöbet…).
-function konumEkle(sayfalar, bolumler, tema) {
-  if (tema.konum === false || !sayfalar.length) return sayfalar;
+// "Örnek yorumlar"dan (yoksa CTA'dan) önce eklenir. Eklenmez: `tema.konum: false`; veride `saatler` yok
+// (saatsiz veride `konum` sayfa listesine açıkça yazılır); `konum` başka bir sayfada; ana sayfada `iletisim`
+// var; ana sayfada saatleri zaten gösteren bir varyant modülü var (modül `konumYerine: true` der ya da kodu
+// `saatler` verisini okur: mesai, saat, bugün, nöbet…). Hero modülleri sayılmaz (künye bugünkü durumu
+// gösterir, saat tablosu değildir): ana sayfanın ilk bölümü ve adı "hero" ile biten modüller (hero, kabulHero…).
+// `konumYerine: false` modülün saatleri okusa da sayılmamasını açıkça ister.
+const heroMu = (id, i) => i === 0 || /hero$/i.test(id);
+function konumEkle(sayfalar, bolumler, tema, d) {
+  if (tema.konum === false || !sayfalar.length || !d.saatler) return sayfalar;
   if (sayfalar.some((s) => s.bolumler.includes('konum'))) return sayfalar;
   const [ana, ...diger] = sayfalar;
   if (ana.bolumler.includes('iletisim')) return sayfalar;
-  const saatModulu = ana.bolumler.some((id) => {
+  const saatModulu = ana.bolumler.some((id, i) => {
     const b = bolumler[id];
     if (!b || b === BOLUMLER[id]) return false;
-    return b.konumYerine || /saatler/.test(`${b.render}${b.mount || ''}`);
+    if (b.konumYerine === true) return true;
+    if (b.konumYerine === false || heroMu(id, i)) return false;
+    return /saatler/.test(`${b.render}${b.mount || ''}`);
   });
   if (saatModulu) return sayfalar;
   const liste = [...ana.bolumler];
@@ -83,7 +89,7 @@ export function kurumsal({ veri, tema = {}, sayfalar = VARSAYILAN_SAYFALAR, ekst
   const d = boot(veri);
   const bolumler = { ...BOLUMLER, ...ekstralar };
   const ctx = { d, tema, sayfalar, git, reducedMotion };
-  sayfalar = konumEkle(sayfalar, bolumler, tema);
+  sayfalar = konumEkle(sayfalar, bolumler, tema, d);
   ctx.sayfalar = sayfalar;
   sayfalar = bosSayfalariAyikla(sayfalar, bolumler, d, ctx);
   ctx.sayfalar = sayfalar;
@@ -93,8 +99,15 @@ export function kurumsal({ veri, tema = {}, sayfalar = VARSAYILAN_SAYFALAR, ekst
     document.querySelectorAll('script[type="application/ld+json"]').forEach((s) => s.remove());
     const s = document.createElement('script');
     s.type = 'application/ld+json';
-    s.textContent = JSON.stringify(ld(d));
+    const kayit = ld(d);
+    s.textContent = JSON.stringify(kayit);
     document.head.append(s);
+    // Verinin `schemaTur`'u yoksa türü `ld`'den al: oto dışı türde (Pharmacy, Dentist…) WhatsApp varsayılan metni
+    // tarafsız olur (künye düğmesi ve alt çubuk). `waMesaj` varsa o kullanılır; `aksiyon` çubuğu aşağıda yine ezer.
+    if (!d.schemaTur && kayit?.['@type']) {
+      d.schemaTur = kayit['@type'];
+      setBarMesaj(null);
+    }
   }
   if (tema.baslikEki) document.title = `${d.isletme.ad} | ${tema.baslikEki}`;
   // Meta açıklama çekirdekte (applyMeta) künyeden kurulur: ad, tanım (yoksa sektör), adres, telefon. Slogan okunmaz.

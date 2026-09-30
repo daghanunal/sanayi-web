@@ -80,6 +80,31 @@ function istatistikler(d, tema = {}) {
   ].filter(Boolean);
 }
 
+// Künye satırları: Adres, Bugün (saatler varsa), Telefon. Ek satırlar `kunyeSatirlari: [[etiket, değer]]`
+// (tema.kunyeSatirlari: dizi ya da (d) => dizi; yoksa kurumsal.kunyeSatirlari ya da kunyeSatirlari verisi).
+// Etiketi varsayılan bir satırla aynıysa ("Adres", "Bugün", "Telefon") o satırın değerini değiştirir, değer boşsa
+// (null, '') satırı kaldırır; diğerleri Telefon'dan önce sırayla eklenir (ör. ["Fabrikalar", "Çankırı · Tokat"]).
+function kunyeSatirlari(d, tema, b) {
+  const ts = tema?.kunyeSatirlari;
+  const ek = (typeof ts === 'function' ? ts(d) : ts) || k(d).kunyeSatirlari || d.kunyeSatirlari || [];
+  const satirlar = [
+    ['Adres', esc(kisaAdres(d.iletisim.adres))],
+    b ? ['Bugün', `<span class="k-durum ${b.open ? 'is-acik' : ''}"><span></span>${esc(b.kunye)}</span>`] : null,
+    ['Telefon', `<a href="${telHref(d)}">${esc(d.iletisim.telefon)}</a>`],
+  ].filter(Boolean);
+  for (const [e, v] of ek) {
+    const i = satirlar.findIndex(([x]) => x === e);
+    if (i >= 0) {
+      if (v == null || v === '') satirlar.splice(i, 1);
+      else satirlar[i] = [e, esc(v)];
+    } else if (v != null && v !== '') {
+      const tel = satirlar.findIndex(([x]) => x === 'Telefon');
+      satirlar.splice(tel >= 0 ? tel : satirlar.length, 0, [e, esc(v)]);
+    }
+  }
+  return satirlar.map(([e, v]) => `\n                <div><dt>${esc(e)}</dt><dd>${v}</dd></div>`).join('');
+}
+
 // --- Sayfa başlığı (ana sayfa dışındaki sayfalarda) ------------------------------------------
 
 export function sayfaBasligi(sayfa, d, ctx) {
@@ -112,11 +137,7 @@ export const BOLUMLER = {
             <div class="k-hero__metin">
               <h1 class="k-h1 k-hero__baslik" data-bol>${esc(d.isletme.ad)}</h1>
               <p class="k-lead k-hero__tanim">${esc(tanimMetni(d))}</p>
-              <dl class="k-kunye">
-                <div><dt>Adres</dt><dd>${esc(kisaAdres(d.iletisim.adres))}</dd></div>
-                ${b ? `<div><dt>Bugün</dt><dd><span class="k-durum ${b.open ? 'is-acik' : ''}"><span></span>${esc(b.kunye)}</span></dd></div>` : ''}
-                <div><dt>Telefon</dt><dd><a href="${telHref(d)}">${esc(d.iletisim.telefon)}</a></dd></div>
-              </dl>
+              <dl class="k-kunye">${kunyeSatirlari(d, tema, b)}</dl>
               <div class="k-butonlar">
                 <a class="k-btn" href="${telHref(d)}">${icons.phone}<span>Ara</span></a>
                 ${d.iletisim.whatsapp ? `<a class="k-btn k-btn--ikincil" href="${waHref(d)}" target="_blank" rel="noopener">${icons.whatsapp}<span>WhatsApp</span></a>` : ''}
@@ -362,10 +383,19 @@ export const BOLUMLER = {
     },
   },
 
+  // Hizmet başına bağlantı: varsayılan form ("Bu hizmet için bilgi alın" → #/iletisim?konu=…).
+  // `baglanti: 'tel'` telefon bağlantısı ("Bilgi için arayın", metin `kurumsal.hizmetTelLink`),
+  // `baglanti: 'yok'` ya da `formYok: true` bağlantısız. Hepsi için: `kurumsal.hizmetBaglanti`.
   hizmetler: {
     render(d) {
       const list = d.hizmetler || [];
       if (!list.length) return '';
+      const link = (h) => {
+        const tur = h.formYok === true ? 'yok' : h.baglanti || k(d).hizmetBaglanti || 'form';
+        if (tur === 'yok') return '';
+        if (tur === 'tel') return `<a class="k-link" href="${telHref(d)}">${esc(k(d).hizmetTelLink || 'Bilgi için arayın')} ${ok}</a>`;
+        return `<a class="k-link" href="#/iletisim?konu=${encodeURIComponent(h.baslik)}" data-rota="iletisim?konu=${encodeURIComponent(h.baslik)}">${esc(k(d).hizmetLink || 'Bu hizmet için bilgi alın')} ${ok}</a>`;
+      };
       return `
         <section class="k-bolum k-hizmetler">
           <div class="k-kap">
@@ -380,7 +410,7 @@ export const BOLUMLER = {
                     <div class="k-hizmet__govde">
                       <p class="k-metin">${esc(h.aciklama)}</p>
                       ${h.detay?.length ? `<dl class="k-detay">${h.detay.map(([a, b]) => `<div><dt>${esc(a)}</dt><dd>${esc(b)}</dd></div>`).join('')}</dl>` : ''}
-                      <a class="k-link" href="#/iletisim?konu=${encodeURIComponent(h.baslik)}" data-rota="iletisim?konu=${encodeURIComponent(h.baslik)}">${esc(k(d).hizmetLink || 'Bu hizmet için bilgi alın')} ${ok}</a>
+                      ${link(h)}
                     </div>
                     ${h.gorsel ? `<figure class="k-hizmet__gorsel" data-perde><img src="${h.gorsel}" alt="" loading="lazy"></figure>` : ''}
                     <span class="k-cizgi" data-cizgi></span>
@@ -491,20 +521,22 @@ export const BOLUMLER = {
     },
   },
 
-  // Çalışma saatleri ve konum (formsuz): ana sayfanın "saatler ve konum" bölümü.
+  // Çalışma saatleri ve konum (formsuz): ana sayfanın "saatler ve konum" bölümü. `saatler` yoksa yalnız adres,
+  // harita ve düğmeler ("Konum" başlığıyla). Motor bu bölümü ana sayfaya kendiliğinden yalnız saatler varken
+  // ekler (engine.js konumEkle); saatsiz veride sayfa listesine açıkça yazılır.
   konum: {
     render(d, { tema }) {
-      if (!d.saatler) return '';
-      const st = durumSatiri(d, tema);
+      if (!d.saatler && !d.iletisim?.adres) return '';
+      const st = d.saatler ? durumSatiri(d, tema) : null;
       return `
         <section class="k-bolum k-konum">
           <div class="k-kap k-iki">
             <div>
-              ${baslik(duz(k(d).konumBaslik, 'Çalışma saatleri ve konum'))}
-              <div class="k-saatler">
+              ${baslik(duz(k(d).konumBaslik, st ? 'Çalışma saatleri ve konum' : 'Konum'))}
+              ${st ? `<div class="k-saatler">
                 <p class="k-durum ${st.acik ? 'is-acik' : ''}"><span></span>${esc(st.metin)}</p>
                 <dl>${saatSatirlari(d, tema).map(([g, s]) => `<div><dt>${g}</dt><dd>${s}</dd></div>`).join('')}</dl>
-              </div>
+              </div>` : ''}
               <p class="k-metin k-konum__adres">${esc(d.iletisim.adres)}</p>
               <p class="k-butonlar">
                 <a class="k-btn" href="${mapsHref(d)}" target="_blank" rel="noopener">${icons.pin}<span>Yol tarifi</span></a>

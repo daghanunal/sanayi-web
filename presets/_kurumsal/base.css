@@ -88,7 +88,7 @@ a:hover > .k-ok { transform: translateX(4px); }
 .k-link {
   display: inline-flex; align-items: center; gap: 8px; margin-top: 22px; font-weight: 600;
   color: var(--k-metin); text-decoration: none; background: linear-gradient(currentColor, currentColor) 0 calc(50% + .8em) / 0 1.5px no-repeat;
-  transition: background-size .35s ease; min-height: 44px; /* dokunma hedefi ≥ 44 px; alt çizgi metnin hemen altında */
+  transition: background-size .35s ease; min-height: 44px; min-width: 44px; /* dokunma hedefi ≥ 44×44 px; alt çizgi metnin hemen altında */
 }
 .k-link:hover { background-size: 100% 1.5px; }
 

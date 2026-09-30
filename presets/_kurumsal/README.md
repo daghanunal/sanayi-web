@@ -29,9 +29,16 @@ da `undefined` göstermeden açılır. Kısaca:
   durumu ve telefonu, altında Ara / WhatsApp / Yol tarifi düğmelerini gösterir. `kurumsal.hero.baslik`, `metin`,
   `bilgi` ve `isletme.slogan` okunmaz. Eski hero yalnız `tema.kunye: false` ile döner (o da sloganı okumaz).
 - **"Çalışma saatleri ve konum" varsayılan.** Sayfa listesinde `konum` yoksa ana sayfaya, "Örnek yorumlar"dan (yoksa
-  CTA'dan) önce eklenir. Eklenmediği durumlar: `tema.konum: false`; `konum` başka bir sayfada; ana sayfada `iletisim`
-  var; ana sayfada saatleri gösteren bir varyant modülü var (modül `konumYerine: true` der ya da kodu `saatler`
-  verisini okur; mesai, saat, bugün, nöbet gibi modüller kendiliğinden sayılır).
+  CTA'dan) önce eklenir. Eklenmediği durumlar: `tema.konum: false`; veride `saatler` yok; `konum` başka bir sayfada;
+  ana sayfada `iletisim` var; ana sayfada saatleri gösteren bir varyant modülü var (modül `konumYerine: true` der ya
+  da kodu `saatler` verisini okur; mesai, saat, bugün, nöbet gibi modüller kendiliğinden sayılır). Hero modülleri
+  sayılmaz: ana sayfanın ilk bölümü ve adı `hero` ile biten modüller (`hero`, `kabulHero`, `karneHero`…) künyede
+  bugünkü durumu gösterse de saat tablosu sayılmaz. `konumYerine: false` bir modülü açıkça saymaz.
+- **Saatsiz konum.** `saatler` yoksa `konum` bölümü adres, harita ve Yol tarifi / telefon düğmeleriyle "Konum"
+  başlığıyla çıkar (üretici, ofis). Kendiliğinden eklenmez; sayfa listesine açıkça yazılır.
+- **24 saat.** Her gün `"00:00-24:00"` olan veride künye "Şu an açık · 24 saat", saat tablosu "Her gün · 24 saat"
+  yazar (çekirdek: `saatBicim`, `saatListesi`, `gunDurumu`, `openStatus`; `saat24`, `herGun24`). Varyantın elle
+  yazdığı 24 saat yaması gerekmez.
 - **Slogan ve övgü bölümleri boş döner:** `vizyon` (misyon, vizyon, değerler) hiçbir şey göstermez. `kalite`
   yalnız gerçek belgeleri (`kurumsal.belgeler` / `belgeler`) "Belgeler" başlığıyla gösterir; `kalite.metin`,
   `kalite.maddeler` ve `garanti` okunmaz. Bu bölümler sayfa listesinde kalsa da zararsızdır, ama silin.
@@ -65,7 +72,10 @@ da `undefined` göstermeden açılır. Kısaca:
 | `cta` | İletişim / "Bilgi için arayın ya da formdan yazın." / İletişim formu (sektöre göre `cta.metin`: "Fiyat ve randevu için arayın ya da formdan yazın.") |
 | `anlasmaOzet` başlığı / bağlantı | Kurumsal müşteriler / anlaşmaların bulunduğu sayfanın menü adı |
 | `anlasmalar` düğmesi | Bilgi alın |
-| `hizmetler` bağlantısı (`kurumsal.hizmetLink`) | Bu hizmet için bilgi alın |
+| `hizmetler` bağlantısı (`kurumsal.hizmetLink`) | Bu hizmet için bilgi alın (form) |
+| `hizmetler` telefon bağlantısı (`baglanti: 'tel'`, `kurumsal.hizmetTelLink`) | Bilgi için arayın |
+| `konum` başlığı, `saatler` yoksa | Konum |
+| WhatsApp metni (`waMesaj`) | oto: "Merhaba …, aracım için bilgi almak istiyorum."; `schemaTur` oto dışıysa "Merhaba …, bilgi almak istiyorum." |
 | `surec` başlığı | Çalışma sırası |
 | `galeri` / `markalar` / `tarihce` | Galeri / Markalar / Tarihçe |
 | `kariyer` başlığı / bağlantı | Kariyer / İş başvurusu |
@@ -99,6 +109,7 @@ tema: {
   kunye,                                 // varsayılan açık: hero künye olur (ad, tanım, Adres / Bugün / Telefon, Ara / WhatsApp / Yol tarifi);
                                          // saatler "08.30–19.00" biçiminde. false: eski hero ve eski saat biçimi
   konum,                                 // varsayılan açık: ana sayfaya "Çalışma saatleri ve konum" eklenir (yukarıda). false: eklenmez
+  kunyeSatirlari,                        // künyeye ek satırlar: [[etiket, değer]] ya da (d) => [[etiket, değer]] (aşağıda, `hero`)
   baslikEki, teklifEtiketi, hizmetEtiketi,
   metinBoyutu: true,                     // başlıkta A/A+ yazı boyutu düğmesi (tercih localStorage'da)
   altNot,                                // footer'da ek satır (ör. tasarım önerisi notu)
@@ -131,11 +142,11 @@ Her sayfa `{ id, baslik, menu?, bolumler: [...] }`. İlk sayfa ana sayfadır (sa
 
 | Bölüm | Veri |
 |---|---|
-| `hero` | Künye (varsayılan): `isletme.ad`, `isletme.tanim` (yoksa `sektor`), `iletisim.adres` (kısa), `saatler`, `iletisim.telefon`, `iletisim.whatsapp`. Eski hero (`tema.kunye: false`): `kurumsal.hero {baslik, metin, ust, birincil, ikincil, ikincilRota, bilgi}` |
+| `hero` | Künye (varsayılan): `isletme.ad`, `isletme.tanim` (yoksa `sektor`), `iletisim.adres` (kısa), `saatler`, `iletisim.telefon`, `iletisim.whatsapp` (metin `waMesaj`). Ek satırlar: `tema.kunyeSatirlari`, `kurumsal.kunyeSatirlari` ya da `kunyeSatirlari` = `[[etiket, değer]]`; Telefon'dan önce eklenir (ör. `["Fabrikalar", "Çankırı · Tokat"]`). Etiket "Adres", "Bugün" ya da "Telefon" ise o satırın değerini değiştirir, değer `null`/`''` ise satırı kaldırır (Telefon değiştirilirse düz metin olur). Eski hero (`tema.kunye: false`): `kurumsal.hero {baslik, metin, ust, birincil, ikincil, ikincilRota, bilgi}` |
 | `ozet` | `kurumsal.ozet {baslik, metin}` (metin yoksa `isletme.hakkinda`; ikisi de yoksa bölüm yok) |
 | `hizmetOzet` | `hizmetler[]` ilk 6 (`kisa` varsa o), başlık `kurumsal.hizmetOzetBaslik` |
 | `rakamlar` | `istatistikler[]`, yalnız olgular (yukarıda) |
-| `konum` | Formsuz "Çalışma saatleri ve konum": `saatler`, `iletisim.adres`, harita (yaklaşınca), `kurumsal.konumBaslik` |
+| `konum` | Formsuz "Çalışma saatleri ve konum": `saatler`, `iletisim.adres`, harita (yaklaşınca), `kurumsal.konumBaslik`. `saatler` yoksa yalnız adres, harita ve düğmeler, başlık "Konum" |
 | `bilgiler` | `bilgiler: [[etiket, değer]]` (ya da `kurumsal.bilgiler`), başlık `kurumsal.bilgiBaslik`. Araçlar, cihazlar, randevu gibi kısa olgular; `kalite` maddelerinin yerine |
 | `anlasmaOzet`, `anlasmalar` | `kurumsal.anlasmalar[] {baslik, kisa, metin, maddeler, buton}`, `anlasmaBaslik`, `anlasmaMetin`, `anlasmaNotu` |
 | `yorumlar`, `markalar`, `galeri` | `yorumlar[]`, `markalar[]` + `markaBaslik` (ör. "Bakım yapılan markalar"), `galeri[]` + `galeriBaslik` |
@@ -143,7 +154,7 @@ Her sayfa `{ id, baslik, menu?, bolumler: [...] }`. İlk sayfa ana sayfadır (sa
 | `vizyon` | **kaldırıldı**: hiçbir şey göstermez; `misyon`, `vizyon`, `degerler` veriden silinir |
 | `kalite` | yalnız `kurumsal.belgeler[]` ya da `belgeler[]` (gerçek belgeler), başlık `kurumsal.belgeBaslik`; `kalite {metin, maddeler}` ve `garanti` okunmaz |
 | `tarihce` | `kurumsal.tarihce` ya da `tarihce` (`[[yıl, metin]]` ya da `{yil, baslik, metin}`) |
-| `hizmetler` | `hizmetler[] {baslik, aciklama, sure, etiket, gorsel, detay: [[etiket, değer]]}`, bağlantı metni `kurumsal.hizmetLink` |
+| `hizmetler` | `hizmetler[] {baslik, aciklama, sure, etiket, gorsel, detay: [[etiket, değer]], baglanti, formYok}`, bağlantı metni `kurumsal.hizmetLink`. Hizmet başına bağlantı: varsayılan form (`#/iletisim?konu=…`); `baglanti: 'tel'` telefon ("Bilgi için arayın", `kurumsal.hizmetTelLink`); `baglanti: 'yok'` ya da `formYok: true` bağlantı yok. Hepsine birden: `kurumsal.hizmetBaglanti: 'tel' \| 'yok'` |
 | `surec` | `surec[]` (gerçekten sıralı adımlar; numaralı gösterilir), başlık `kurumsal.surecBaslik` |
 | `sss` | `kurumsal.sss[] {soru, cevap}`, `kurumsal.sssBaslik` |
 | `kariyer` | `kurumsal.kariyer {baslik, metin}` |
@@ -188,7 +199,9 @@ Hizmet ve anlaşma bağlantıları `#/iletisim?konu=...` ile konuyu seçili aça
 export const modulAdi = {
   render(d, ctx, sorgu) { return `<section class="k-bolum">…</section>`; }, // '' dönerse görünmez
   mount(el, d, ctx, sorgu) { … },  // sayfa her açıldığında; gsap.context içinde çalışır, sayfa değişince temizlenir
-  konumYerine: true,               // (isteğe bağlı) modül saatleri/konumu gösteriyor: motor ana sayfaya `konum` eklemez
+  konumYerine: true,               // (isteğe bağlı) modül saatleri/konumu gösteriyor: motor ana sayfaya `konum` eklemez.
+                                   // false: kodu `saatler` okusa da saat modülü sayılmaz (konum yine eklenir).
+                                   // Hero modülleri (ana sayfanın ilk bölümü, adı `hero` ile biten) zaten sayılmaz.
 };
 ```
 
@@ -202,7 +215,16 @@ sonraki tetikleyiciyi düşürür); yerine `toggleActions: 'play none none none'
 
 ## Diğer seçenekler
 
-- `ld: (d) => ({...})`: JSON-LD'yi değiştirir (eczane `Pharmacy`, üretici `Organization`).
+- **SEO ve WhatsApp, veriden (çekirdek, `shared/core.js`):**
+  - `schemaTur`: JSON-LD türü (`'Pharmacy'`, `'Dentist'`, `'VeterinaryCare'`, `'Restaurant'`, `'ProfessionalService'`,
+    `'Organization'` ya da dizi); yoksa `'AutoRepair'`. Oto dışı bir tür WhatsApp varsayılan metnini de tarafsız yapar.
+    Varyant `ld` verip veride `schemaTur` yoksa motor türü `ld(d)['@type']`'tan alır.
+  - `isletme.yer`: `"Çankaya, Ankara"` biçiminde; başlıkta ve JSON-LD adresinde (ilçe, il). Yoksa "Şaşmaz, Ankara" /
+    Etimesgut. Sondaki bulunma eki atılır (`"Atakent'te"` → "Atakent, Ankara").
+  - `saatler` JSON-LD'ye `openingHoursSpecification` olarak kendiliğinden yazılır (24 saat: 00:00–23:59).
+  - `waMesaj` (ya da `iletisim.waMesaj`): alt çubuk, künye ve `waHref(d)` varsayılan WhatsApp metni; `{ad}` işletme
+    adıyla değişir. Çalışırken değiştirmek: `setBarMesaj(metin)` (`null` varsayılana döner).
+- `ld: (d) => ({...})`: JSON-LD'yi tamamen değiştirir (tür için `schemaTur` yeterli; `ld` özel alanlar içindir, ör. üreticinin `location` listesi).
 - `aksiyon: (d) => [{ href, ikon, etiket, dis?, rota? }]`: mobil alt çubuğu değiştirir (vitrin modunda dokunmaz).
 - Rota bağlantısı: `<a href="#/iletisim" data-rota="iletisim">`. `data-rota` şart; çekirdeğin `#` tıklama
   dinleyicisinden önce yakalanır.
@@ -220,7 +242,7 @@ Motor sözleşmeyi kendisi uygular; varyantın bir şey yapması gerekmez:
   varyant `body`/`.k-alt` alt boşluğuna sabit sayı yazmasın.
 - **Mobil menü:** açıkken sayfa kaymaz (html+body overflow, Lenis durur), `#sayfa` ve footer `inert`, odak menüye
   geçer, kapanınca burger'a döner; alt boşluk `--bar-reserve`.
-- **Dokunma hedefleri ≥ 44 px:** `.k-logo`, `.k-link`, `.k-btn--kucuk`, `.k-metin-dugme`, telefonda footer ve
+- **Dokunma hedefleri ≥ 44 px:** `.k-logo`, `.k-link` (44×44), `.k-btn--kucuk`, `.k-metin-dugme`, telefonda footer ve
   kırıntı bağlantıları. Varyant modüllerindeki küçük düğmeler (sekme, çip, range, select) varyantın işidir.
 - **Rota değişimi:** sayfa önce başa kaydırılır, sonra kurulur (eski konumda oluşan `once` tetikleyicileri
   ScrollTrigger'ı çökertiyordu).

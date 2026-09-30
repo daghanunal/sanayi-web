@@ -2,15 +2,25 @@
 // mobil aksiyon çubuğu ve SEO meta. Her preset bunu kullanır; görünümü preset belirler.
 //
 // Künye yardımcıları (içerik brief'i; presetler kendi kopyasını yazmaz):
-//   saatBicim("08:30-19:00")  → "08.30–19.00"
+//   saatBicim("08:30-19:00")  → "08.30–19.00"          saatBicim("00:00-24:00") → "24 saat"
 //   saatListesi(d.saatler)    → [["Pazartesi–Cuma", "08.30–19.00"], …, ["Pazar", "Kapalı"]]
+//                               her gün 00:00-24:00 → [["Her gün", "24 saat"]]
 //   gunDurumu(d.saatler)      → { open, durum, saat, metin, kunye }
 //                               metin: "Şu an açık · Bugün 08.30–19.00" / "Bugün kapalı · Yarın 08.30'da açılır"
 //                               kunye: aynısı "Bugün " öneki olmadan (künyede "Bugün" etiketi zaten var)
+//                               her gün 24 saat: metin ve kunye "Şu an açık · 24 saat"
+//   saat24("00:00-24:00")     → true;  herGun24(d.saatler) → yedi günün hepsi 24 saat mi
 //   kisaAdres(d.iletisim.adres) → sondaki "İlçe/İl" atılır: "Şaşmaz Oto Sanayi Sitesi, 4. Cadde No: 38"
 //   acikGunSayisi(d.saatler)  → 6
 //   yilEki(2001)              → "2001'den"   (`${yilEki(kurulus)} beri`)
 //   saatEki("17:00")          → "'de"        (openStatus da bunu kullanır)
+//
+// WhatsApp metni (waHref, alt çubuk, kurumsal künye): d.waMesaj → d.iletisim.waMesaj → varsayılan.
+//   Varsayılan oto sanayi metnidir ("…aracım için bilgi almak istiyorum."); veri `schemaTur` ile oto dışı bir
+//   tür bildirirse (Pharmacy, Dentist, Restaurant…) tarafsız metin ("…bilgi almak istiyorum.").
+//   Metindeki {ad} işletme adıyla değişir (?ad= ile de çalışır). Çalışırken değiştirmek: setBarMesaj(metin).
+// SEO (applyMeta): d.schemaTur (varsayılan 'AutoRepair'), d.isletme.yer ("Çankaya, Ankara"; varsayılan
+//   "Şaşmaz, Ankara" / Etimesgut), saatler → openingHoursSpecification.
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Lenis from 'lenis';
@@ -78,10 +88,27 @@ export const esc = (s) =>
 
 export const telHref = (d) => `tel:${d.iletisim.telefon.replace(/[^\d+]/g, '')}`;
 
+// Veri oto sanayi dışı bir işletme mi? Yalnız `schemaTur` açıkça oto dışı bir tür söylüyorsa (Auto* dışında:
+// Pharmacy, Dentist, VeterinaryCare, Restaurant, ProfessionalService, Organization…). Alanı olmayan eski
+// veri oto sayılır; böylece mevcut oto presetlerinin metni değişmez.
+const otoDisi = (d) => {
+  const t = d?.schemaTur;
+  if (!t) return false;
+  return !(Array.isArray(t) ? t : [t]).some((x) => /^(Auto|Motorcycle|TireShop|GasStation)/.test(String(x)));
+};
+
+// Varsayılan WhatsApp metni (alt çubuk, künye, waHref(d)). Öncelik: d.waMesaj → d.iletisim.waMesaj →
+// oto sanayi metni (oto dışı veride tarafsız metin). {ad} işletme adıyla değişir.
+export const waMesaji = (d) => {
+  const m = d.waMesaj || d.iletisim?.waMesaj;
+  if (m) return String(m).replaceAll('{ad}', d.isletme.ad);
+  return otoDisi(d)
+    ? `Merhaba ${d.isletme.ad}, bilgi almak istiyorum.`
+    : `Merhaba ${d.isletme.ad}, aracım için bilgi almak istiyorum.`;
+};
+
 export const waHref = (d, mesaj) =>
-  `https://wa.me/${d.iletisim.whatsapp}?text=${encodeURIComponent(
-    mesaj ?? `Merhaba ${d.isletme.ad}, aracım için bilgi almak istiyorum.`
-  )}`;
+  `https://wa.me/${d.iletisim.whatsapp}?text=${encodeURIComponent(mesaj ?? waMesaji(d))}`;
 
 export const mapsHref = (d) =>
   `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(d.iletisim.mapsQuery || d.iletisim.adres)}`;
@@ -121,10 +148,16 @@ export function saatEki(hhmm) {
 // 2001 → "2001'den" (sayıyla birlikte döner: `${yilEki(d.isletme.kurulus)} beri`).
 export const yilEki = (n) => `${n}${sayiEki(sonSozcuk(Number(n)), true)}`;
 
+// 24 saat açık gün: "00:00-24:00" (boşluklu, "–" ya da "00.00-24.00" yazımı da olur).
+export const saat24 = (s) => /^\s*0?0[:.]00\s*[-–]\s*24[:.]00\s*$/.test(String(s ?? ''));
+// Yedi günün hepsi 24 saat mi (çekici, nöbetçi eczane…).
+export const herGun24 = (saatler) => Array.isArray(saatler) && saatler.length === 7 && saatler.every(saat24);
+
 // saatler: 7 elemanlı dizi, 0 = Pazar. Her eleman "08:30-19:00" ya da null (kapalı).
 export function openStatus(saatler, now = new Date()) {
   const bugun = saatler[now.getDay()];
   const dakika = now.getHours() * 60 + now.getMinutes();
+  if (saat24(bugun)) return { open: true, text: herGun24(saatler) ? 'Şu an açık, her gün 24 saat' : 'Şu an açık, bugün 24 saat' };
   if (bugun) {
     const [ac, kapa] = bugun.split('-');
     if (dakika >= toMin(ac) && dakika < toMin(kapa)) {
@@ -142,8 +175,10 @@ export function openStatus(saatler, now = new Date()) {
   return { open: false, text: 'Kapalı' };
 }
 
-// Ardışık aynı saatleri gruplar: [["Pazartesi – Cuma", "08:30-19:00"], ["Pazar", null]]
+// Ardışık aynı saatleri gruplar: [["Pazartesi – Cuma", "08:30 – 19:00"], ["Pazar", "Kapalı"]]
+// 24 saat açık günler "24 saat" yazılır; yedi gün 24 saatse tek satır: [["Her gün", "24 saat"]].
 export function groupedHours(saatler) {
+  if (herGun24(saatler)) return [['Her gün', '24 saat']];
   const order = [1, 2, 3, 4, 5, 6, 0];
   const groups = [];
   for (const g of order) {
@@ -153,7 +188,7 @@ export function groupedHours(saatler) {
   }
   return groups.map(({ days, value }) => [
     days.length > 1 ? `${GUNLER[days[0]]} – ${GUNLER[days.at(-1)]}` : GUNLER[days[0]],
-    value ? value.replace('-', ' – ') : 'Kapalı',
+    saat24(value) ? '24 saat' : value ? value.replace('-', ' – ') : 'Kapalı',
   ]);
 }
 
@@ -161,8 +196,8 @@ export function groupedHours(saatler) {
 // Saat biçimi "08.30–19.00", ek okunuşa göre (08.30'da, 17.00'de). openStatus/groupedHours eski
 // biçimi (08:30 – 19:00) kullanan presetler için aynen kalır.
 
-// "08:30-19:00" → "08.30–19.00"; tek saat de olur: "08:30" → "08.30".
-export const saatBicim = (s) => String(s).replace(/:/g, '.').replace(/\s*[-–]\s*/, '–');
+// "08:30-19:00" → "08.30–19.00"; tek saat de olur: "08:30" → "08.30". "00:00-24:00" → "24 saat".
+export const saatBicim = (s) => (saat24(s) ? '24 saat' : String(s).replace(/:/g, '.').replace(/\s*[-–]\s*/, '–'));
 
 // groupedHours'un künye biçimi: [["Pazartesi–Cuma", "08.30–19.00"], ["Pazar", "Kapalı"]]
 export const saatListesi = (saatler) =>
@@ -173,6 +208,8 @@ export const saatListesi = (saatler) =>
 //     saat: 'Bugün 08.30–19.00' | "Yarın 08.30'da açılır" | "Pazartesi 08.30'da açılır" | '',
 //     metin: 'Şu an açık · Bugün 08.30–19.00'   (saatler ve iletişim bölümü),
 //     kunye: 'Şu an açık · 08.30–19.00' }        (künyede "Bugün" etiketinin yanı)
+// 24 saat: her gün 24 saatse saat '24 saat' (metin = kunye = 'Şu an açık · 24 saat'); yalnız bugün
+// 24 saatse 'Bugün 24 saat'; ertesi açık gün 24 saatse "Yarın 24 saat açık".
 export function gunDurumu(saatler, now = new Date()) {
   const g = now.getDay();
   const bugun = saatler[g];
@@ -182,6 +219,7 @@ export function gunDurumu(saatler, now = new Date()) {
     metin: saat ? `${durum} · ${saat}` : durum,
     kunye: saat ? `${durum} · ${saat.replace(/^Bugün /, '')}` : durum,
   });
+  if (saat24(bugun)) return sonuc(true, 'Şu an açık', herGun24(saatler) ? '24 saat' : 'Bugün 24 saat');
   if (bugun) {
     const [ac, kapa] = bugun.split('-');
     if (simdi >= toMin(ac) && simdi < toMin(kapa)) return sonuc(true, 'Şu an açık', `Bugün ${saatBicim(bugun)}`);
@@ -191,7 +229,8 @@ export function gunDurumu(saatler, now = new Date()) {
     const s = saatler[(g + i) % 7];
     if (!s) continue;
     const ac = s.split('-')[0];
-    return sonuc(false, bugun ? 'Şu an kapalı' : 'Bugün kapalı', `${i === 1 ? 'Yarın' : GUNLER[(g + i) % 7]} ${saatBicim(ac)}${saatEki(ac)} açılır`);
+    const gunAdi = i === 1 ? 'Yarın' : GUNLER[(g + i) % 7];
+    return sonuc(false, bugun ? 'Şu an kapalı' : 'Bugün kapalı', saat24(s) ? `${gunAdi} 24 saat açık` : `${gunAdi} ${saatBicim(ac)}${saatEki(ac)} açılır`);
   }
   return sonuc(false, 'Kapalı', '');
 }
@@ -214,7 +253,10 @@ export const icons = {
 // --- Mobil aksiyon çubuğu -----------------------------------------------
 // Renkleri preset CSS değişkenleriyle ayarlar: --bar-bg, --bar-fg, --bar-accent, --bar-accent-fg
 
+let barVeri = null; // setBarMesaj varsayılan metne dönerken kullanır
+
 export function mountActionBar(d) {
+  barVeri = d;
   const bar = document.createElement('nav');
   bar.className = 'action-bar';
   bar.setAttribute('aria-label', 'Hızlı iletişim');
@@ -226,6 +268,22 @@ export function mountActionBar(d) {
   markBar('action');
   tuckWhenDuplicated(bar);
   return bar;
+}
+
+// Alt çubuğun WhatsApp metnini çalışırken değiştirir (ör. seçilen araç ya da hizmetle): setBarMesaj(metin).
+// setBarMesaj(null) varsayılana (d.waMesaj → oto metni) döner. Çubuk yoksa (vitrin modu) bir şey yapmaz.
+// Kurumsal `aksiyon` ile değiştirilmiş çubukta da wa.me bağlantısı varsa onu günceller. Dönen: güncellenen bağlantı sayısı.
+export function setBarMesaj(mesaj) {
+  const linkler = document.querySelectorAll('.action-bar a[href*="wa.me/"]');
+  for (const a of linkler) {
+    if (barVeri) a.href = waHref(barVeri, mesaj ?? undefined);
+    else {
+      const u = new URL(a.href);
+      u.searchParams.set('text', mesaj ?? '');
+      a.href = u.href;
+    }
+  }
+  return linkler.length;
 }
 
 // Aynı üç düğme (Ara + Yol tarifi) sayfada zaten görünüyorsa (künye, iletişim bölümü) alt çubuk saklanır;
@@ -443,9 +501,36 @@ export function autoHideHeader(el, { offset = 80, tolerance = 8 } = {}) {
 
 // --- SEO -----------------------------------------------------------------
 
+// schema.org gün adları (0 = Pazar, saatler dizisiyle aynı sıra).
+const GUN_EN = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+// Yer: d.isletme.yer "İlçe, İl" biçiminde ("Çankaya, Ankara"). Tek parça da olur ("Atakent'te" → "Atakent, Ankara";
+// sondaki bulunma eki atılır). Yoksa başlıkta "Şaşmaz, Ankara", adreste Etimesgut / Ankara.
+function yerBilgisi(isletme) {
+  const ham = String(isletme.yer || '').trim().replace(/[’']\s*[dt][ae]$/i, '');
+  if (!ham) return { baslik: 'Şaşmaz, Ankara', ilce: 'Etimesgut', il: 'Ankara' };
+  const parca = ham.split(',').map((x) => x.trim()).filter(Boolean);
+  const il = parca.length > 1 ? parca.at(-1) : 'Ankara';
+  return { baslik: parca.length > 1 ? ham : `${ham}, ${il}`, ilce: parca[0], il };
+}
+
+// saatler → OpeningHoursSpecification (24 saat: 00:00–23:59, schema.org önerisi).
+function acilisSaatleri(saatler) {
+  if (!Array.isArray(saatler) || saatler.length !== 7) return null;
+  const liste = saatler
+    .map((s, i) => {
+      if (!s) return null;
+      const [opens, closes] = saat24(s) ? ['00:00', '23:59'] : String(s).split('-').map((x) => x.trim());
+      return opens && closes ? { '@type': 'OpeningHoursSpecification', dayOfWeek: `https://schema.org/${GUN_EN[i]}`, opens, closes } : null;
+    })
+    .filter(Boolean);
+  return liste.length ? liste : null;
+}
+
 export function applyMeta(d) {
   const { isletme, iletisim } = d;
-  document.title = `${isletme.ad} | ${isletme.sektor} | Şaşmaz, Ankara`;
+  const yer = yerBilgisi(isletme);
+  document.title = `${isletme.ad} | ${isletme.sektor} | ${yer.baslik}`;
   // Slogan kullanılmaz (içerik kuralları): tanım → sektör. Eski verilerde slogan kalmış olsa da okunmaz.
   const tanim = isletme.tanim || isletme.sektor;
   const desc = `${isletme.ad}: ${tanim}. ${iletisim.adres}. Telefon: ${iletisim.telefon}`;
@@ -459,20 +544,24 @@ export function applyMeta(d) {
 
   const ld = document.createElement('script');
   ld.type = 'application/ld+json';
+  const saatler = acilisSaatleri(d.saatler);
   ld.textContent = JSON.stringify({
     '@context': 'https://schema.org',
-    '@type': 'AutoRepair',
+    // Tür: d.schemaTur ('Pharmacy', 'Dentist', 'VeterinaryCare', 'Restaurant', 'ProfessionalService',
+    // 'Organization', ya da dizi); yoksa oto sanayi ('AutoRepair').
+    '@type': d.schemaTur || 'AutoRepair',
     name: isletme.ad,
     description: tanim,
     telephone: iletisim.telefon,
-    foundingDate: String(isletme.kurulus),
+    ...(isletme.kurulus && { foundingDate: String(isletme.kurulus) }),
     address: {
       '@type': 'PostalAddress',
       streetAddress: iletisim.adres,
-      addressLocality: 'Etimesgut',
-      addressRegion: 'Ankara',
+      addressLocality: yer.ilce,
+      addressRegion: yer.il,
       addressCountry: 'TR',
     },
+    ...(saatler && { openingHoursSpecification: saatler }),
     // Demo yorumları örnektir; arama motoruna gerçek puan (aggregateRating) olarak yazılmaz.
     // Müşteriye özel sitede gerçek puan kaynağı eklenince burada `d.puan.gercek` ile açılabilir.
     ...(d.puan?.gercek && {
