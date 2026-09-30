@@ -1,0 +1,24 @@
+{
+  "preset": "kaput",
+  "_not": "Yalnız Kaput tasarımına özel alanlar. İşletme, hizmet, saat ve yorum verisi data/bakim.json'dan gelir.",
+  "grupGorsel": {
+    "bakim": { "src": "/img/kaput/bakim.jpg", "alt": "Kaputu açık bir aracın motor bölmesi ve aküsü", "oran": "3/2" },
+    "motor": { "src": "/img/kaput/motor.jpg", "alt": "Kaputun altında motorla çalışan bir usta", "oran": "4/5" },
+    "alt": { "src": "/img/kaput/alt.jpg", "alt": "Liftteki aracın teker göbeğinde çalışan bir usta", "oran": "3/2" },
+    "elektrik": { "src": "/img/kaput/elektrik.jpg", "alt": "Araç içindeki yuvarlak klima menfezi", "oran": "4/5" }
+  },
+  "atolye": { "src": "/img/kaput/atolye.jpg", "alt": "Pencereli bir atölyede tezgâhta çalışan usta" },
+  "galeri": [
+    { "src": "/img/kaput/bolme.jpg", "baslik": "Motor bölmesi", "alt": "Kaputu açık kırmızı bir aracın motor bölmesi" },
+    { "src": "/img/kaput/lastik.jpg", "baslik": "Lastik değişimi", "alt": "Yol kenarında lastik değiştiren bir kişi" },
+    { "src": "/img/kaput/aku.jpg", "baslik": "Akü ve şarj", "alt": "Takviye kabloları bağlı bir akü" }
+  ],
+  "sss": [
+    { "soru": "Periyodik bakım için randevu gerekiyor mu?", "bilgi": "Randevu" },
+    { "soru": "Hangi araçlara bakılıyor?", "bilgi": "Araçlar" },
+    { "soru": "Parça seçimi nasıl yapılıyor?", "bilgi": "Parça" },
+    { "soru": "Yapılan işlerin kaydı tutuluyor mu?", "bilgi": "Kayıt" },
+    { "soru": "Serviste hangi cihazlar var?", "bilgi": "Donanım" }
+  ],
+  "randevu": { "dilimDakika": 120, "gunSayisi": 6 }
+}

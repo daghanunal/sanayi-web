@@ -1,0 +1,12 @@
+Servis Defteri preseti görselleri: fotoğraf yok, hepsi projenin kendi 3D varlıklarından Blender Cycles ile
+üretilmiş sabit render'lar (temsilî; marka ya da model göstermez). Footer'da "3D görseller temsilîdir" yazar.
+
+Kaynak varlıklar (public/lib3d, projenin kendi Blender betikleri, CC0 Poly Haven "studio" HDRI ışığıyla):
+kapak.webp     engine v2 (engine-hi-v2.glb), az 38 el 18
+bakim.webp     car_sedan (car_sedan-hi-v1.glb), yandan, boya #27344b
+motor.webp     gearbox (gearbox-hi-v1.glb), az 35 el 15
+alt.webp       wheel (wheel-hi-v1.glb), az 28 el 8
+elektrik.webp  ac_compressor (ac_compressor-hi-v1.glb), az 35 el 20
+
+Üretim: .shots/servis-defteri/tools/plate.py (assets3d/render_cycles.py kalıbı, şeffaf zemin + gölge yakalayıcı,
+assets3d/lock.sh ile), .shots/servis-defteri/tools/finish.py (gölge yumuşatma, kırpma, WebP).

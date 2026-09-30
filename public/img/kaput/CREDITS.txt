@@ -1,0 +1,13 @@
+Kaput preseti görselleri. Pexels Lisansı: ticari kullanım serbest, atıf gerekmez (https://www.pexels.com/license/).
+Hepsi aynı sıcak editoryal renk ayarıyla (hafif desatüre, sıcak gölge) yeniden işlendi; uzun kenar ≤ 1800 px.
+
+bakim.jpg: "Open Hood of a Car" (Sergey Meshkov), https://www.pexels.com/photo/open-hood-of-a-car-8478228/ · akü etiketi bulanıklaştırıldı
+motor.jpg: "A Mechanic Fixing a Car" (Artem Podrez), https://www.pexels.com/photo/a-mechanic-fixing-a-car-8985714/ · 4:5 kırpıldı
+alt.jpg: "Mechanic Fixing the Under Chassis of a Car" (Gustavo Fring), https://www.pexels.com/photo/mechanic-fixing-the-under-chassis-of-a-car-6870302/
+elektrik.jpg: "Gray and Black Car Aircon in Close Up Shot" (Erik Mclean), https://www.pexels.com/photo/gray-and-black-car-aircon-in-close-up-shot-13850014/ · 4:5 kırpıldı
+atolye.jpg: "Self employed male mechanic working in garage", https://www.pexels.com/photo/self-employed-male-mechanic-working-in-garage-3822900/ · 16:10 kırpıldı
+bolme.jpg: "Red Car Engine Bay", https://www.pexels.com/photo/red-car-engine-bay-4116220/ · motor kapağındaki üretici logosu bulanıklaştırıldı
+lastik.jpg: "A Man Fixing a Flat Tire", https://www.pexels.com/photo/a-man-fixing-a-flat-tire-12478166/ · 4:5 kırpıldı
+aku.jpg: "Car Battery with Jumper Cables Attached", https://www.pexels.com/photo/car-battery-with-jumper-cables-attached-32282232/ · kaynak public/img/cekici-sinematik/aku-kablo.jpg (akü markası kaldırılmış hâli)
+
+Açılış sahnesi: lib3d `car` + `engine` (v2), projenin kendi Blender varlıkları, gerçek zamanlı three.js.

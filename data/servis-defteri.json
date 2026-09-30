@@ -1,0 +1,41 @@
+{
+  "preset": "servis-defteri",
+  "_not": "Yalnız Servis Defteri tasarımına özel alanlar. İşletme, hizmet, saat, periyodik ve yorum verisi data/bakim.json'dan gelir. cizelge, bakim.json → periyodik.adimlar'ın kilometre sütunlarına dökülmüş hâlidir; o değişirse bu da güncellenir.",
+  "levhalar": {
+    "kapak": { "src": "/img/servis-defteri/kapak.webp", "alt": "Dört silindirli benzinli motorun temsilî 3D görseli", "baslik": "Benzinli motor", "w": 1135, "h": 1014 },
+    "bakim": { "src": "/img/servis-defteri/bakim.webp", "alt": "Dört kapılı bir binek aracın yandan temsilî 3D görseli", "baslik": "Binek araç", "w": 1319, "h": 446 },
+    "motor": { "src": "/img/servis-defteri/motor.webp", "alt": "Manuel şanzımanın temsilî 3D görseli", "baslik": "Manuel şanzıman", "w": 866, "h": 844 },
+    "alt": { "src": "/img/servis-defteri/alt.webp", "alt": "Fren diski ve kaliperi görünen tekerleğin temsilî 3D görseli", "baslik": "Tekerlek ve fren", "w": 834, "h": 805 },
+    "elektrik": { "src": "/img/servis-defteri/elektrik.webp", "alt": "Klima kompresörünün temsilî 3D görseli", "baslik": "Klima kompresörü", "w": 830, "h": 740 }
+  },
+  "cizelge": {
+    "adim": 15000,
+    "kolon": 8,
+    "satirlar": [
+      { "id": "yag", "is": "Motor yağı ve yağ filtresi", "her": 15000 },
+      { "id": "hava-k", "is": "Hava filtresi kontrolü", "her": 15000, "yerine": "hava" },
+      { "id": "fren", "is": "Fren ve lastik kontrolü", "her": 15000 },
+      { "id": "polen", "is": "Polen filtresi", "her": 15000, "yillik": true },
+      { "id": "klima", "is": "Klima kontrolü", "her": 15000, "yillik": true },
+      { "id": "aku", "is": "Akü testi", "her": 15000, "yillik": true },
+      { "id": "hava", "is": "Hava filtresi", "her": 30000 },
+      { "id": "yakit", "is": "Yakıt filtresi", "her": 30000, "yakit": "dizel" },
+      { "id": "buji", "is": "Bujiler", "her": 30000, "yakit": "benzin" },
+      { "id": "triger", "is": "Triger seti ve devirdaim pompası", "aralik": [60000, 120000] },
+      { "id": "sanziman", "is": "Şanzıman yağı", "aralik": [60000, 120000] }
+    ],
+    "sureli": [
+      { "id": "hidrolik", "is": "Fren hidroliği", "yil": 2 },
+      { "id": "antifriz", "is": "Antifriz kontrolü", "yil": 2 }
+    ],
+    "yakitlar": [
+      { "id": "benzin", "ad": "Benzinli", "alt": "LPG'li ve hibrit dahil", "mesaj": "benzinli" },
+      { "id": "dizel", "ad": "Dizel", "alt": "Dizel motorlu araç", "mesaj": "dizel" }
+    ],
+    "sureler": [
+      { "id": "0", "ad": "1 yıldan az" },
+      { "id": "1", "ad": "1–2 yıl" },
+      { "id": "2", "ad": "2 yıldan fazla" }
+    ]
+  }
+}

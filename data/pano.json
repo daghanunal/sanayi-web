@@ -1,0 +1,25 @@
+{
+  "preset": "pano",
+  "_not": "Yalnız Pano tasarımına özel alanlar. İşletme, hizmet, saat, periyodik, marka ve yorum verisi data/bakim.json'dan gelir.",
+  "kapak": {
+    "src": "/img/pano/kapak.jpg", "srcM": "/img/pano/kapak-m.jpg", "w": 1720, "h": 1200, "wM": 1000, "hM": 1250,
+    "alt": "Lifte kaldırılmış beyaz bir aracın yanında duran mavi tulumlu usta",
+    "baslik": "Lift ve alt takım kontrolü"
+  },
+  "grupGorsel": {
+    "bakim": { "src": "/img/pano/bakim.jpg", "w": 1120, "h": 1400, "alt": "Kaputu açık bir aracın motor bölmesi, siyah beyaz" },
+    "motor": { "src": "/img/pano/motor.jpg", "w": 1120, "h": 1400, "alt": "Sehpadaki motor bloğunda çalışan usta" },
+    "alt": { "src": "/img/pano/alt.jpg", "w": 1500, "h": 1000, "alt": "Lifteki aracın altında alt takımı kontrol eden usta" },
+    "elektrik": { "src": "/img/pano/elektrik.jpg", "w": 1120, "h": 1400, "alt": "Gösterge panelinde yanan uyarı lambaları" }
+  },
+  "surecGorsel": { "src": "/img/pano/surec.jpg", "w": 1800, "h": 1013, "alt": "Aydınlık bir serviste sehpadaki motorla çalışan usta" },
+  "hakkindaGorsel": { "src": "/img/pano/hakkinda.jpg", "w": 1120, "h": 1400, "alt": "Servis holünde duran mavi tulumlu usta" },
+  "galeri": [
+    { "src": "/img/pano/g-isik.jpg", "w": 1500, "h": 1000, "baslik": "Alt takım kontrolü", "alt": "Aracın altını lambayla kontrol eden usta" },
+    { "src": "/img/pano/g-teker.jpg", "w": 1073, "h": 1400, "baslik": "Tekerlek sökümü", "alt": "Tekerleği göbekten çıkaran eller" },
+    { "src": "/img/pano/g-lift.jpg", "w": 1500, "h": 1000, "baslik": "Lift", "alt": "Lifte kaldırılmış aracın arka tarafı" },
+    { "src": "/img/pano/g-motor.jpg", "w": 1500, "h": 1000, "baslik": "Motor sökümü", "alt": "Sehpadaki motorun başında çalışan usta" },
+    { "src": "/img/pano/g-hol.jpg", "w": 1500, "h": 1000, "baslik": "Servis holü", "alt": "Takım tezgâhları arasında aracın altında çalışan usta" }
+  ],
+  "arac": { "enEskiYil": 1990, "diger": "Diğer" }
+}

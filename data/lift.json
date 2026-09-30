@@ -1,0 +1,51 @@
+{
+  "preset": "lift",
+  "_not": "Yalnız Lift tasarımına özel alanlar. İşletme, hizmet, saat ve yorum verisi data/bakim.json'dan gelir.",
+  "odaklar": [
+    {
+      "id": "genel", "ad": "Genel bakım", "etiket": "Tüm araç",
+      "parcalar": ["yag", "arac"],
+      "belirtiler": ["Periyodik bakım zamanı geldi", "Yağ değişimi zamanı geldi", "Muayeneye girecek"]
+    },
+    {
+      "id": "motor", "ad": "Motor", "etiket": "Kaputun altı",
+      "parcalar": ["motor", "triger", "ariza", "sanziman"],
+      "belirtiler": ["Arıza lambası yandı", "Motor tekliyor", "Çekişten düştü", "Triger değişim zamanı geldi", "Debriyaj kaçırıyor"]
+    },
+    {
+      "id": "aku", "ad": "Akü", "etiket": "Motor bölmesi",
+      "parcalar": ["aku"],
+      "belirtiler": ["Sabah zor çalışıyor", "Akü uyarısı yanıyor", "Marşa basınca tık sesi geliyor"]
+    },
+    {
+      "id": "sogutma", "ad": "Radyatör", "etiket": "Ön panel",
+      "parcalar": ["sogutma"],
+      "belirtiler": ["Hararet yapıyor", "Antifriz eksiliyor", "Fan durmadan çalışıyor"]
+    },
+    {
+      "id": "klima", "ad": "Klima", "etiket": "Kabin",
+      "parcalar": ["klima"],
+      "belirtiler": ["Klima serin üflemiyor", "Klimadan koku geliyor"]
+    },
+    {
+      "id": "far", "ad": "Far", "etiket": "Ön aydınlatma",
+      "parcalar": ["far"],
+      "belirtiler": ["Ampul yanmıyor", "Far ayarı bozuk"]
+    },
+    {
+      "id": "fren", "ad": "Fren", "etiket": "Ön teker",
+      "parcalar": ["fren"],
+      "belirtiler": ["Frenden ses geliyor", "Frende direksiyon titriyor", "Fren pedalı yumuşak"]
+    },
+    {
+      "id": "lastik", "ad": "Lastik ve süspansiyon", "etiket": "Arka teker",
+      "parcalar": ["lastik", "suspansiyon"],
+      "belirtiler": ["Direksiyon titriyor", "Araç bir yana çekiyor", "Alttan tıkırtı geliyor", "Lastik değişimi"]
+    },
+    {
+      "id": "egzoz", "ad": "Egzoz", "etiket": "Arka alt",
+      "parcalar": ["egzoz"],
+      "belirtiler": ["Egzozdan ses geliyor", "Egzoz duman atıyor", "DPF uyarısı yandı"]
+    }
+  ]
+}

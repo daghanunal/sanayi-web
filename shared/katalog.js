@@ -154,7 +154,7 @@ export const PRESETS = [
   { id: 'dizel-klasik', grup: 'klasik', sektor: 'dizel', ad: 'Ateşleme', icin: 'Dizel enjektör ve pompa', renk: '#e0362c' },
   { id: 'kurumsal-restoran', grup: 'kurumsal', sektor: 'restoran', ad: 'Çini Sofra', icin: 'Ocakbaşı restoran', renk: '#0d3b33' },
   { id: 'kurumsal-kilit', grup: 'kurumsal', sektor: 'kilit', ad: 'Diş Kodu', icin: 'Oto kilit ve anahtar', renk: '#00c2b3' },
-  { id: 'restoran-sinematik', grup: 'sinematik', sektor: 'restoran', ad: 'Kor Filmi', icin: 'Ocakbaşı restoran', renk: '#ff5d1f' },
+  { id: 'restoran-sinematik', grup: 'sinematik', sektor: 'restoran', ad: 'Kor', icin: 'Ocakbaşı restoran', renk: '#ff5d1f' },
   { id: 'kilit-sinematik', grup: 'sinematik', sektor: 'kilit', ad: 'Pim Hattı', icin: 'Oto kilit ve anahtar', renk: '#e8b04e' },
   { id: 'kilit-klasik', grup: 'klasik', sektor: 'kilit', ad: 'Çift Flaş', icin: 'Oto kilit ve anahtar', renk: '#ff5b24' },
   { id: 'mimarlik-klasik', grup: 'klasik', sektor: 'mimarlik', ad: 'Eşik', icin: 'Mimarlık ofisi', renk: '#d0a857' },
@@ -174,7 +174,7 @@ export const PRESETS = [
 ];
 
 // Henüz yapılmamış ya da yayına alınmamış presetler burada gizlenir.
-export const HAZIR_OLMAYAN = new Set(['lift', 'kaput', 'servis-defteri', 'pano', 'bakim-kinetik', 'kurumsal-bakim', 'kurumsal-bakim2']);
+export const HAZIR_OLMAYAN = new Set(['bakim-kinetik', 'kurumsal-bakim', 'kurumsal-bakim2']);
 export const hazirPresetler = () => PRESETS.filter((p) => !HAZIR_OLMAYAN.has(p.id));
 
 export const presetById = (id) => PRESETS.find((p) => p.id === id);

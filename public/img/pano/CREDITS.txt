@@ -1,0 +1,18 @@
+Pano preseti görselleri. Pexels Lisansı: ticari kullanım serbest, atıf gerekmez (https://www.pexels.com/license/).
+Hepsi aynı editoryal renk ayarıyla (hafif desatüre, hafif kontrast) işlendi; uzun kenar ≤ 1800 px. Fotoğraflar temsilîdir.
+Çoğu aynı çekimden (Artem Podrez, servis holü serisi); işletmenin kendisi gibi sunulmaz, başlıklar konu adıdır.
+
+kapak.jpg, kapak-m.jpg  https://www.pexels.com/photo/8986145/  · sağ üstteki yazılı tabela kadraj dışında bırakıldı
+bakim.jpg               https://www.pexels.com/photo/8986174/  · 4:5 kırpıldı
+motor.jpg               https://www.pexels.com/photo/8986146/  · 4:5 kırpıldı
+alt.jpg                 https://www.pexels.com/photo/8986100/
+elektrik.jpg            https://www.pexels.com/photo/16341407/ · gösterge paneli uyarı lambaları, 4:5 kırpıldı
+surec.jpg               https://www.pexels.com/photo/8986029/  · 16:9 kırpıldı
+hakkinda.jpg            https://www.pexels.com/photo/8986045/  · 4:5 kırpıldı
+g-isik.jpg              https://www.pexels.com/photo/8986036/
+g-teker.jpg             https://www.pexels.com/photo/8986175/  · lastik yazısı kadraj dışı, jant kapağındaki üretici logosu bulanıklaştırıldı
+g-lift.jpg              https://www.pexels.com/photo/8986138/  · bagaj kapağındaki model yazısı bulanıklaştırıldı
+g-hol.jpg               https://www.pexels.com/photo/8986148/
+g-motor.jpg             https://www.pexels.com/photo/8986037/
+
+Hazırlık betiği: .shots/pano/tools/prep.py
